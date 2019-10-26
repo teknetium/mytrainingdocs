@@ -1,0 +1,40 @@
+.view-title {
+  font-size: 24px;
+  font-weight: 400;
+  color: #000;
+  margin-bottom: 16px;
+}
+.list-item {}
+
+.list-item:hover {
+  background-color: #f1f5fe;
+}
+
+.selected-row {
+  background-color: #f1f5fe;
+  font-weight: 400;
+  border-right: 3px solid blue;
+  color:blue;
+}
+.regular-row {
+}
+
+.ant-table-body {
+  border: 0 !important;
+}
+.myTables th {
+  margin: 0 !important;
+  padding: 10px !important;
+}
+.ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row) > td,
+.ant-table-thead > tr:hover:not(.ant-table-expanded-row) > td,
+.ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+  background-color: #f1f5fe;
+  font-weight: 400;
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: .7;
+}

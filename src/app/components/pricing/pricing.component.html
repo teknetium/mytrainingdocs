@@ -1,0 +1,96 @@
+<section class="section" id="price">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="text-center">
+                <h2 class="mb-0 text-capitalize">Our <span class="font-weight-bold">Pricing</span></h2>
+                <div class="main-title-border">
+                </div>
+                <div class="m-b-10">
+                  <h6>Billing Cycle</h6>
+                  <nz-radio-group [(ngModel)]="plans">
+                    <label nz-radio-button nzValue="monthly" (click)="planChange()">Monthly</label>
+                    <label nz-radio-button nzValue="annually" (click)="planChange()">Annually</label>
+                  </nz-radio-group>
+                </div>
+              </div>
+            </div>
+          </div>
+    
+          <div class="row align-items-center">
+            <div class="col-md-4">
+              <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
+                <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
+                  <div class="media align-items-center">
+                    <nz-avatar nzIcon="user" [nzSize]="55" class="ant-avatar-blue"></nz-avatar>
+                    <div class="m-l-15" style="text-align: center;">
+                      <h3 class="m-b-0">Small Team</h3>
+                      <span class="font-size-12">less than 20 users</span>
+                      <h2 class="m-b-0">
+                        ${{feesBasic}}
+                        <span class="font-size-13 font-weight-semibold">/user /{{duration}}</span>
+                      </h2>
+                    </div>
+                  </div>
+                </div>
+    
+                <div class="text-center">
+                  <div>
+                    <a class="btn btn-custom text-white">Choose Plan</a>
+                  </div>
+                </div>
+              </nz-card>
+            </div>
+            <div class="col-md-4">
+              <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
+                <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
+                  <div class="media align-items-center">
+                    <nz-avatar nzIcon="team" [nzSize]="55" class="ant-avatar-cyan"></nz-avatar>
+                    <div class="m-l-15" style="text-align: center;">
+                      <h3 class="m-b-0">Large Team</h3>
+                      <span class="font-size-12">less than 100 users</span>
+                      <h2 class=" m-b-0">
+                        ${{feesStandard}}
+                        <span class="font-size-13 font-weight-semibold">/user /{{duration}}</span>
+                      </h2>
+                    </div>
+                  </div>
+                </div>
+    
+    
+                <div class="text-center">
+                  <div>
+                    <a class="btn btn-custom text-white">Choose Plan</a>
+                  </div>
+                </div>
+              </nz-card>
+            </div>
+            <div class="col-md-4">
+              <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
+                <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
+                  <div class="media align-items-center">
+                    <nz-avatar nzIcon="crown" [nzSize]="55" class="ant-avatar-gold"></nz-avatar>
+                    <div class="m-l-15" style="text-align: center;">
+                      <h3 class="m-b-0">Enterprise</h3>
+                      <span class="font-size-12">100 users or more</span>
+                      <h6>Contact Us for Pricing</h6>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <div>
+                    <a class="btn btn-custom text-white" >Choose Plan</a>
+                  </div>
+                </div>
+              </nz-card>
+            </div>
+          </div>
+          <div class="row">
+              <div class="bg-purple-opacity text-purple" style="border-radius:20px;border:1px solid #595ff5;position:relative;top:-280px;width:100%;padding:10px;text-align:center;font-size:20px;">
+                <span style="font-size:16px;">All plans include</span><br>
+                <span style="font-weight: 500;font-size:20px;">Unlimited File Uploads</span><br><span style="font-size:16px;">and</span><br><span style="font-weight: 500;font-size:20px;">24/7 Support</span>
+              </div>
+            </div>
+        </div>
+      </section>
+    

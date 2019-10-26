@@ -1,0 +1,296 @@
+html {
+  scroll-behavior: smooth;
+}
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+  float: left;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.ant-menu-item, .ant-menu-submenu-title {
+  padding:0 !important;
+}
+
+.login {
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s;
+  margin: 3px;
+
+}
+
+.sidebar-divider {
+  display:inline-block;
+  min-width:80%;
+  width:80%;
+  margin: 5px 10% 5px 10%;
+  opacity:.6;
+}
+
+.icon-style {
+  border: 1px solid #999999;
+  padding: 4px 5px 2px 2px;
+  background-color: white;
+  border-radius: 6px;
+}
+
+.header-button-container {
+  float: right;
+  display: inline;
+}
+
+.wrapper {
+  width: 250px;
+
+}
+
+.nugget-wrapper {
+  text-align: center;
+  margin-top: 2px;
+  margin-left: 10%;
+}
+
+
+
+.badged-icon {
+  font-size: 24px;
+}
+
+.tour-button {
+  border: 2px solid #d3adf7;
+  margin: 1px 6px 1px 5px;
+  padding: 5px;
+}
+
+.purple-buttons {
+  border: 1px solid #d3adf7;
+  margin: 1px 6px 1px 5px;
+  padding: 5px;
+}
+
+.geekblue-buttons {
+  border: 1px solid #adc6ff;
+  margin: 1px 6px 1px 1px;
+  padding: 5px;
+}
+
+.purple-buttons:hover {
+  border: 2px solid #722ed1;
+  margin: 0px 5px 0px 4px;
+}
+
+.geekblue-buttons:hover {
+  border: 2px solid #2f54eb;
+  margin: 0px 5px 0px 0px;
+}
+
+.data-group {
+  margin-left: 35%;
+  width: 25%;
+  float:left;
+  display: inline-block;
+}
+
+
+.data-item {
+  width:64px;
+  height: 60px;
+  padding-top: .7em;
+  text-align: center;
+  display: inline-block;
+  margin-left:2%;
+  font-size: 20px;
+  border: 2px solid white;
+  border-radius: 3px;
+}
+
+.data-item:hover {
+  border-bottom: 2px solid #3b5bc0;
+}
+
+.selectedDataItem {
+  border-bottom: 2px solid #3b5bc0;
+}
+
+.data-item:focus {
+  outline: white;
+}
+
+.ant-layout-header {
+  line-height:1em;
+}
+
+.my-header {
+  background:rgba(255, 255, 255, .85);
+  z-index:1;
+  position:fixed;
+  top:0;
+  right:0;
+  left:0;
+  color:black;
+  padding: 12px;
+  display: inline;
+}
+
+.tag-button-style {
+  font-size:16px;
+  padding: 3px;
+  opacity: .7;
+}
+
+
+.DisplayNone {
+  display: none;
+}
+
+.signup {
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s;
+  margin: 3px;
+}
+
+.logo {
+  background: rgba(236, 236, 236, 1.0);
+  overflow: hidden;
+  border:1px solid #aaaaaa;
+  float:left;
+  width:200px;
+  border-radius: 20px;
+}
+
+.logo1 {
+  background: rgba(255, 255, 255, .2);
+  overflow: hidden;
+  float:left;
+  width:200px;
+  border-radius: 20px;
+}
+
+.logo-img {
+  margin: 0 10px;
+}
+
+.logo-collapsed {
+  padding: 0 10px;
+}
+
+.appname-container {
+  white-space:nowrap;
+  display: inline;
+}
+
+.appname1 {
+  font-size: 16px;
+  color: #8c0000;
+  font-weight: 400;
+}
+
+.appname2 {
+  font-size: 16px;
+  color: black;
+  font-weight: 600;
+}
+
+.nav-text {
+  font-size: 12px;
+}
+
+.view-title {
+  font-size: 24px;
+  font-weight: 400;
+  color: #000;
+  margin-bottom: 24px;
+}
+
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td {
+    padding: 6px !important;
+}
+
+.relatedObjectPanelTitle {
+  font-size: 12px;
+  background-color: #efefef;
+  width:100%;
+  text-align: center;
+  padding:6px;
+  border-bottom:1px solid #e0e0e0;
+}
+
+.relatedObject {
+  display:block;
+  width:100%;
+  min-height: 200px;
+  border:1px solid #e0e0e0;
+  margin-bottom: 20px;
+}
+.explorer-toolbar {
+  padding: 5px;
+  background-color: #f4f4f4;
+  display: block;
+  width: 100%;
+
+}
+.explorer-header {
+  background-color: #3b5bc0;
+  color: white;
+  width: 100%;
+}
+
+.toolbar-button {
+  display: inline-block;
+  float: left;
+  margin-right: 2px;
+}
+
+.help-container {
+  display: inline-block;
+}
+
+.help-img {
+  float:left;
+  display: inline-block;
+}
+
+.small-help-img {
+  height: 120px;
+  display: inline-block;
+  float: left;
+}
+
+.banner {
+  display: block;
+  padding: 0 60px;
+  margin:0 20px;
+}
+
+.help-text-container {
+  display: inline-block;
+  float: left;
+  margin-left: 50px;
+}
+
+.help-text {
+  font-size: 16px;
+}
+
+.help-close {
+  padding:2px 5px;
+  font-size: 12px;
+  float:right;
+  border: 1px solid #fff;
+}
+
+.help-close:hover {
+  background-color: #efefef;
+  border: 1px solid #dfdfdf;
+  border-radius: 2px;
+}
+

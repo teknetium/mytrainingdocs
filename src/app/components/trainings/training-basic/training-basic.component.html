@@ -1,0 +1,180 @@
+<div style="padding:20px;">
+    <div style="text-align: center;">
+        <h2>Basic Training Template</h2>
+    </div>
+    <div>
+        <button nzType="primary" nz-button (click)="saveTraining()" style="margin-right:5px;" nzSize="small">
+            Preview Training
+        </button>
+        <button nzType="primary" nz-button (click)="saveTraining()" nzSize="small">
+            Save Training
+        </button>
+    </div>
+
+    <div #myContainer *ngIf="selectedTraining$ | async as training" style="position:relative;width:100%;padding:30px;">
+        <!--
+        <img [src]="training.image" alt="title image"
+            style="z-index:-1;position:absolute;left:0;top:0;width: 100%; height:25%;background: transparent;" />
+            -->
+        <div style="border:1px solid #dddddd;border-radius:10px;height:200px;overflow:hidden;">
+            <div style="padding:30px;width:35%;float:left;">
+                <div style="width:100%;background: rgba(255, 255, 255, .3);">
+                    <i [ngClass]="training.iconClass" style="display: inline-block;font-size:2em;"
+                        [ngStyle]="{'color': training.iconColor}"></i>
+                    <div style="display:inline-block;font-size:2em;margin-left:20px;">
+                        {{training.title}}
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div style="display: block;width:100%;font-size:1em;">
+                    {{training.description}}
+                </div>
+            </div>
+            <div style="float:right;overflow: hidden;width:60%;display: inline-block;">
+                <img [src]="training.image" alt="img" />
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        <div style="margin-top:20px;">
+            <ng-container *ngIf="training.sections.length > 1">
+                <nz-collapse [nzBordered]="false" nzAccordion style="">
+                    <nz-collapse-panel *ngFor="let section of training.sections; index as i" [nzHeader]="template"
+                        style="padding:20px;" nzActive="false" nzShowArrow="true"
+                        (nzActiveChange)="activateSection($event, i)">
+
+                        <div style="padding:0 50px;width:100%;" >
+                            <h2>Introduction</h2>
+                            {{section.intro}}
+
+                            <button *ngIf="section.files.length > 0" nzType="danger" nz-button
+                                (click)="deleteContent(i)" nzSize="small" style="margin:10px 0;display: block;">
+                                Delete Content
+                            </button>
+                            <mtd-files *ngIf="section.files.length > 0" [showFile]="section.files[0]" readOnly="true" [height]="collapsePanelHeight[i]">
+                            </mtd-files>
+                            <div *ngIf="section.files.length === 0" style="display:block;width:100%;">
+                                <i style="font-size:40px;margin-top: 10px;" twoToneColor="#3f87f5" nz-icon
+                                    nzType="file-unknown" theme="twotone" (click)="isFileSelectModalVisible = true"></i>
+                            </div>
+                            <button nzType="primary" nz-button (click)="addSectionAssessment(i)" nzSize="small"
+                                style="margin-top:20px;display: block;">
+                                Add Section Assessment
+                            </button>
+                            <nz-modal [(nzVisible)]="isFileSelectModalVisible" nzTitle="Select Document"
+                                (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+                                <ul style="list-style-type:none;">
+                                    <li *ngFor="let item of files$ | async; index as i" class="fileList"
+                                        (click)="selectFile(item, i)" style="padding:5px 0;"
+                                        [ngClass]="{'selected-file': selectedFileIndex === i}">
+                                        <div style="display: inline-block;">
+                                            <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24"
+                                                [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
+                                                theme="twotone"></i>
+                                            <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
+                                                [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
+                                        </div>
+                                        <div class="" style="display: inline-block;">
+                                            {{ item.name }} &nbsp;&nbsp;
+                                        </div>
+                                        <ng-template #titleTemplate>
+                                            <div style="display: inline-block;">
+                                                <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24"
+                                                    [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
+                                                    theme="twotone"></i>
+                                                <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
+                                                    [ngStyle]="{'color': item.iconColor}"
+                                                    [ngClass]="item.iconClass"></i>
+                                            </div>
+                                            <div class="" style="display: inline-block;">
+                                                {{ item.name }} &nbsp;&nbsp;
+                                            </div>
+                                        </ng-template>
+                                        <ng-template #contentTemplate>
+                                            <div style="width:300px;">
+                                                {{ item.description}}
+                                            </div>
+                                        </ng-template>
+                                    </li>
+                                </ul>
+                            </nz-modal>
+                            <ng-template #template>
+                                <div>
+                                    <span style="font-size:22px;font-weight:500;margin-right:20px;">Section
+                                        {{i + 1}}</span>
+                                    <span style="font-size:18px;">{{section.title}}</span>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </nz-collapse-panel>
+                </nz-collapse>
+                <button nzType="primary" nz-button (click)="addSection()" nzSize="small"
+                    style="margin-top:20px;display: block;">
+                    Add Section
+                </button>
+                <button nzType="primary" nz-button (click)="addFinalAssessment()" nzSize="small"
+                    style="margin-top:20px;display: block;">
+                    Add Final Assessment
+                </button>
+            </ng-container>
+            <div *ngIf="training.sections.length === 1" >
+                <h1>{{training.sections[0].title}}</h1>
+                <h2>Introduction</h2>
+                {{training.sections[0].intro}}
+                <button *ngIf="training.sections[0].files.length > 0" nzType="danger" nz-button
+                    (click)="deleteContent(0)" nzSize="small" style="margin:10px 0;display: block;">
+                    Delete Content
+                </button>
+                <mtd-files *ngIf="training.sections[0].files.length > 0" [showFile]="training.sections[0].files[0]"
+                    readOnly="true" [height]="collapsePanelHeight[0]"></mtd-files>
+                <div *ngIf="training.sections[0].files.length === 0" style="display:block;width:100%;">
+                    <i style="font-size:40px;margin-top: 10px;" twoToneColor="#3f87f5" nz-icon nzType="file-unknown"
+                        theme="twotone" (click)="isFileSelectModalVisible = true"></i>
+                </div>
+                <button nzType="primary" nz-button (click)="addSection()" nzSize="small"
+                    style="margin-top:20px;display: block;">
+                    Add Section
+                </button>
+                <button nzType="primary" nz-button (click)="addAssessment()" nzSize="small"
+                    style="margin-top:20px;display: block;">
+                    Add Assessment
+                </button>
+
+                <nz-modal [(nzVisible)]="isFileSelectModalVisible" nzTitle="Select Document"
+                    (nzOnCancel)="handleCancel()" nzOkDisabled="true">
+                    <ul style="list-style-type:none;">
+                        <li *ngFor="let item of files$ | async; index as i" class="fileList"
+                            (click)="selectFile(item, i)" style="padding:5px 0;">
+                            <div style="display: inline-block;">
+                                <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24"
+                                    [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
+                                    theme="twotone"></i>
+                                <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
+                                    [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
+                            </div>
+                            <div class="" style="display: inline-block;">
+                                &nbsp;&nbsp;{{ item.name }}
+                            </div>
+                            <ng-template #titleTemplate>
+                                <div style="display: inline-block;">
+                                    <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24"
+                                        [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
+                                        theme="twotone"></i>
+                                    <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
+                                        [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
+                                </div>
+                                <div class="" style="display: inline-block;">
+                                    {{ item.name }} &nbsp;&nbsp;
+                                </div>
+                            </ng-template>
+                            <ng-template #contentTemplate>
+                                <div style="width:300px;">
+                                    {{ item.description}}
+                                </div>
+                            </ng-template>
+                        </li>
+                    </ul>
+                </nz-modal>
+            </div>
+        </div>
+    </div>
+</div>

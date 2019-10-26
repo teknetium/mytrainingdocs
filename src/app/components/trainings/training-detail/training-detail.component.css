@@ -1,0 +1,38 @@
+.ant-form-item {
+  margin-bottom: 0px !important;
+}
+
+.role-new-panel {
+}
+
+.info {
+  border: 1px solid #b2c6fa;
+  border-radius: 3px;
+  color: #3958e2;
+  background-color: #f1f5fe;
+  width: 100%;
+  margin-bottom: 1em;
+  padding: 10px;
+  position: relative;
+}
+
+.ro-row {
+  display: block;
+  width: 90%;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.ro-label {
+  font-weight: 500;
+  width: 25%;
+  float: left;
+  display: inline-block;
+  text-align: right;
+}
+.ro-value {
+  font-weight: 300;
+  width: 70%;
+  float: right;
+  display: inline-block;
+}

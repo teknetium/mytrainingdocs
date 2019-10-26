@@ -1,0 +1,437 @@
+<div style="width:100%;">
+  <!-- END NAVBAR -->
+  <div
+    style="background: rgba(4, 23, 63, 0.9);font-size: 14px;position: fixed; top:0; left:0; height: 64px;z-index: 100;text-align: center;width:100%;">
+    <div
+      style="position: absolute;left: 10px;top: 10px;height: 44px;border-radius: 24px;padding: 5px 8px; background: rgba(255,255,255,.3); width: 180px;">
+      <img height="35" src="assets/images/logo/logo.png">
+    </div>
+    <div class="nav-link">
+      <a [ngx-scroll-to]="destinations['benefits'].ngxScrollToDestination"
+        [ngx-scroll-to-duration]="ngxScrollToDuration" [ngx-scroll-to-easing]="ngxScrollToEasing">
+        Benefits
+      </a>
+    </div>
+    <!--
+    <div class="nav-link">
+      <a   [ngx-scroll-to]="destinations['howitworks'].ngxScrollToDestination"
+           [ngx-scroll-to-duration]="ngxScrollToDuration"
+           [ngx-scroll-to-easing]="ngxScrollToEasing"
+      >How It Works</a>
+    </div>
+    -->
+    <div class="nav-link">
+      <a [ngx-scroll-to]="destinations['price'].ngxScrollToDestination" [ngx-scroll-to-duration]="ngxScrollToDuration"
+        [ngx-scroll-to-easing]="ngxScrollToEasing">Pricing</a>
+    </div>
+    <div class="nav-link">
+      <a [ngx-scroll-to]="destinations['faq'].ngxScrollToDestination" [ngx-scroll-to-duration]="ngxScrollToDuration"
+        [ngx-scroll-to-easing]="ngxScrollToEasing">FAQ</a>
+    </div>
+    <div class="nav-link">
+      <a [ngx-scroll-to]="destinations['contact'].ngxScrollToDestination" [ngx-scroll-to-duration]="ngxScrollToDuration"
+        [ngx-scroll-to-easing]="ngxScrollToEasing">Contact Us</a>
+    </div>
+    <div style="width:20%;position: fixed; top:0; right:0;height: 64px;">
+      <div class="nav-link"
+        style="cursor:pointer;width:10%;font-size: 14px;height: 64px;width:100px;z-index: 100;float:right;"
+        (click)="signup()">
+        Sign Up
+      </div>
+      <div class="nav-link" style="cursor:pointer;font-size: 14px;z-index: 100;;height: 64px; float:right;"
+        (click)="login()">
+        Log In
+      </div>
+    </div>
+  </div>
+
+  <!-- START HOME -->
+  <section class="section  home-half" id="home" style="position: relative;overflow: hidden;padding:150px 0;">
+    <img src="assets/images/others/bb6.jpg" style="position: absolute;left: 0;top: 0;width: 100%;height: 100%;">
+    <div class="home-table">
+      <div class="home-table-center">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-12">
+              <div class="text-center header_content mx-auto" style="margin-bottom: 50px;">
+                <!--
+                <h5 class="header_small_title"><span>New</span></h5>
+                -->
+                <h4 class="header_title mb-0 text-white pt-4" style="font-size:40px !important;">Finally, a Training
+                  Management System designed for TEAMS!</h4>
+                <p class="header_subtitle pt-4 mx-auto"
+                  style="color:#bbbbbb !important;font-size:22px !important;font-weight: 300;"><b>SIMPLE</b> to setup,
+                  <b>EASY</b> to use, and
+                  <b>SCALES</b> to large organizations.</p>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="">
+            <div class="row" style="width:100%;">
+              <div class="col-lg-12 text-center">
+                <div class="text-center" style="display: inline-block;">
+                  <h3 class="mb-0 text-capitalize" style="color:cyan;"><span style="font-size:2em;">5</span>&nbsp;
+                    &nbsp;easy steps to a complete Training Management solution for your
+                    team!</h3>
+                </div>
+              </div>
+            </div>
+
+            <div class="how-container mt-4 pt-4">
+
+              <div *ngFor="let step of howItWorks; let i = index">
+                <div [id]="step.id" class="how-step" style="display: inline-block;margin-right:10px">
+                  <div class="text-center work_box mt-3 p-3">
+                    <div class="how-work-icon-container">
+                      <i *ngFor="let class of step.iconClasses;" [ngClass]="class" style="color:cyan;"></i>
+                    </div>
+                    <div class="work_content mt-4" style="color:cyan">
+                      {{step.title}}
+                    </div>
+                  </div>
+                </div>
+                <i *ngIf="i < howStepCount - 1" class="fal fa-angle-right"
+                  style="display: inline-block; color:cyan;font-size: 40px;margin-top: 50px;margin-right:10px;float: right;"></i>
+              </div>
+            </div>
+          </div>
+          <h3 style="text-align: center;color:cyan;margin-top:50px;">And then you are DONE!</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END HOME -->
+  <section class="section" id="benefits">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="text-center">
+          <h2 class="mb-0 text-capitalize">Top <span class="font-weight-bold">Benefits</span></h2>
+          <div class="main-title-border">
+            <i class="mdi mdi-atom"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display: block;">
+      <div class="benefit-container">
+        <div *ngFor="let item of benefits; let i = index" class="benefit-item lan_box_ser text-center p-4 mt-3"
+          (mouseleave)="loseFocus(i)" (mouseenter)="focus(i)">
+          <div class="ser_icon">
+            <i [ngClass]="item.class"></i>
+          </div>
+          <div class="service-content mt-4" style="margin-bottom: 10px;height: 80px;">
+            <h5>{{item.title}}</h5>
+            <p class="mt-3 text-muted mb-0" style="font-size: 12px;" [innerHTML]="item.blurb"></p>
+          </div>
+          <!--
+          <div>
+            <button class="btn-custom btn-xs w-30 learn-more" (click)="showLearnMore(i)">learn more</button>
+          </div>
+          -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nz-drawer *ngIf="benefit$ | async as bene" nzClosable="true" [nzVisible]="visible" [nzPlacement]="placement"
+    [nzTitle]="bene.title" (nzOnClose)="close()">
+    <div>
+      <div style="display: inline-block;float:left;">
+        <i [ngClass]="bene.class" style="font-size:40px;"></i>
+      </div>
+      <div style="display: inline-block;float:left;" [innerHTML]="bene.learnMore">
+      </div>
+
+    </div>
+  </nz-drawer>
+  <!-- START CTA -->
+  <section class="section bg-light" style="margin-bottom: 50px;">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <div class="text-center">
+            <h2 class="font-weight-bold">Are You Ready To Tap Into The Power? Let's Get Started!</h2>
+            <p class="text-muted mx-auto cta-desc mt-4 pt-2">Start your 14 day free trail today. No credit card needed.
+            </p>
+            <div class="mt-4 pt-3">
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-custom btn-rounded" (click)="signup()">Start Free Trial</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END CTA -->
+  <section class="section" id="price">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="text-center">
+            <h2 class="mb-0 text-capitalize">Our <span class="font-weight-bold">Pricing</span></h2>
+            <div class="main-title-border">
+            </div>
+            <div class="m-b-10">
+              <h6>Billing Cycle</h6>
+              <nz-radio-group [(ngModel)]="plans">
+                <label nz-radio-button nzValue="monthly" (click)="planChange()">Monthly</label>
+                <label nz-radio-button nzValue="annually" (click)="planChange()">Annually</label>
+              </nz-radio-group>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row align-items-center">
+        <div class="col-md-4">
+          <nz-card>
+            <div class="d-flex p-b-20" style="padding:30px;margin-bottom:200px;">
+              <div class="media align-items-center">
+                <nz-avatar nzIcon="user" [nzSize]="55" class="ant-avatar-blue"></nz-avatar>
+                <div class="m-l-15" style="text-align: center;">
+                  <h3 class="m-b-0">Small Team</h3>
+                  <span class="font-size-12">less than 20 users</span>
+                  <h2 class="font-weight-bold  m-b-0">
+                    ${{feesBasic}}
+                    <span class="font-size-13 font-weight-semibold">/user /{{duration}}</span>
+                  </h2>
+                  <span *ngIf="plans === 'annually'" class="text-danger font-size-11"> (Save 17%)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center">
+              <div>
+                <a class="btn btn-custom text-white" [ngx-scroll-to]="destinations['contact'].ngxScrollToDestination"
+                  [ngx-scroll-to-duration]="ngxScrollToDuration" [ngx-scroll-to-easing]="ngxScrollToEasing">Choose
+                  Plan</a>
+              </div>
+            </div>
+          </nz-card>
+        </div>
+        <div class="col-md-4">
+          <nz-card>
+            <div class="d-flex p-b-20" style="padding:30px;margin-bottom:200px;">
+              <div class="media align-items-center">
+                <nz-avatar nzIcon="team" [nzSize]="55" class="ant-avatar-cyan"></nz-avatar>
+                <div class="m-l-15" style="text-align: center;">
+                  <h3 class="m-b-0">Large Team</h3>
+                  <span class="font-size-12">less than 100 users</span>
+                  <h2 class="font-weight-bold  m-b-0">
+                    ${{feesStandard}}
+                    <span class="font-size-13 font-weight-semibold">/user /{{duration}}</span>
+                  </h2>
+                  <span *ngIf="plans === 'annually'" class="text-danger font-size-11"> (Save 20%)</span>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="text-center">
+              <div>
+                <a class="btn btn-custom text-white" [ngx-scroll-to]="destinations['contact'].ngxScrollToDestination"
+                  [ngx-scroll-to-duration]="ngxScrollToDuration" [ngx-scroll-to-easing]="ngxScrollToEasing">Choose
+                  Plan</a>
+              </div>
+            </div>
+          </nz-card>
+        </div>
+        <div class="col-md-4">
+          <nz-card>
+            <div class="d-flex p-b-20" style="padding:30px;margin-bottom:200px;">
+              <div class="media align-items-center">
+                <nz-avatar nzIcon="crown" [nzSize]="55" class="ant-avatar-gold"></nz-avatar>
+                <div class="m-l-15" style="text-align: center;">
+                  <h3 class="m-b-0">Enterprise</h3>
+                  <span class="font-size-12">100 users or more</span>
+                  <h6>Contact Us for Pricing</h6>
+                </div>
+              </div>
+            </div>
+            <div class="text-center">
+              <div>
+                <a class="btn btn-custom text-white" [ngx-scroll-to]="destinations['contact'].ngxScrollToDestination"
+                  [ngx-scroll-to-duration]="ngxScrollToDuration" [ngx-scroll-to-easing]="ngxScrollToEasing">Choose
+                  Plan</a>
+              </div>
+            </div>
+          </nz-card>
+        </div>
+      </div>
+      <div class="row">
+          <div class="bg-purple-opacity text-purple" style="border-radius:20px;border:1px solid #595ff5;position:relative;top:-280px;width:100%;padding:10px;text-align:center;font-size:20px;">
+            <span style="font-size:16px;">All plans include</span><br>
+            <span style="font-weight: 500;font-size:20px;">Unlimited File Uploads</span><br><span style="font-size:16px;">and</span><br><span style="font-weight: 500;font-size:20px;">24/7 Support</span>
+          </div>
+        </div>
+    </div>
+  </section>
+  <!-- END PRICING -->
+
+
+  <!-- START FAQ -->
+  <section class="section bg-light" id="faq">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="text-center">
+            <h2 class="mb-0 text-capitalize"><span class="font-weight-bold">FAQ</span></h2>
+            <div class="main-title-border">
+              <i class="mdi mdi-atom"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nz-collapse nzAccordion>
+        <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="panel.name" [nzActive]="panel.active">
+          <div [innerHTML]="panel.content" style="padding-left:20px;"></div>
+        </nz-collapse-panel>
+      </nz-collapse>
+    </div>
+  </section>
+  <!-- END FAQ -->
+
+  <!-- START CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <div class="text-center">
+            <h2 class="font-weight-bold">Questions? Ready to get started?</h2>
+            <p class="text-muted mx-auto cta-desc mt-4 pt-2">Use the contact form below for any questions you may have.
+              We
+              will respond promptly. Or Start your 14 day free trail today. No credit card needed.</p>
+            <div class="mt-4 pt-3">
+              <button type="button" class="btn btn-custom btn-rounded" (click)="signup()">Start Free Trial</button>
+              <!--
+              <button type="button" class="btn btn-custom btn-rounded" style="background: rgba(50,110,246, .25);" (click)="signup()">Start Free Trial</button>
+              -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END CTA -->
+
+  <!-- START CONTACT -->
+  <section class="section bg-light" id="contact">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="text-center">
+            <h2 class="mb-0 text-capitalize">Get in <span class="font-weight-bold">Touch</span></h2>
+            <div class="main-title-border">
+              <i class="mdi mdi-atom"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4 pt-4">
+        <div class="col-lg-12">
+          <div class="contact_form">
+            <div id="message"></div>
+            <form method="post" action="" name="contact-form" id="working_form">
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group mt-2">
+                    <input name="name" id="name" type="text" class="form-control" placeholder="Name...">
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group mt-2">
+                    <input name="email" id="email" type="email" class="form-control" placeholder="Email...">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="form-group mt-2">
+                    <input type="text" class="form-control" id="subject" placeholder="Subject..." />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="form-group mt-2">
+                    <textarea name="comments" id="comments" rows="4" class="form-control"
+                      placeholder="Message..."></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12 text-center">
+                  <input type="submit" id="submit" name="send" class="submitBnt btn btn-custom" value="Send Message"
+                    disabled="true">
+                  <div id="simple-msg"></div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END CONTACT -->
+
+  <!--START FOOTER-->
+  <footer class="pt-5 footer">
+    <div class="container">
+      <!--
+        <div class="row pb-4">
+          <div class="col-lg-3">
+            <h6 class="footer-title text-uppercase">About Pioted</h6>
+            <p class="mt-3 about_footer_color desc-line-height">Lorem ipsum dolor sit amet, consectetur adipiscing elit.sapien et lacus tempus varius.</p>
+          </div>
+          <div class="col-lg-3">
+            <h6 class="footer-title text-uppercase">Important Link</h6>
+            <ul class="list-unstyled footer_menu_list margin-t-30">
+              <li><a href="">Terms & Condition</a></li>
+              <li><a href="">Privacy Policy</a></li>
+              <li><a href="">Return Policy</a></li>
+              <li><a href="">Services</a></li>
+              <li><a href="">Sitemap</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3">
+            <h6 class="footer-title text-uppercase">Our Pages</h6>
+            <ul class="list-unstyled footer_menu_list margin-t-30">
+              <li><a href="">Home</a></li>
+              <li><a href="">Features</a></li>
+              <li><a href="">About</a></li>
+              <li><a href="">Client</a></li>
+              <li><a href="">Pricing</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3">
+            <h6 class="footer-title text-uppercase">Contact Us</h6>
+            <p class="mb-1 about_footer_color mt-3"><i class="mdi mdi-email-outline"></i> : <span>support@website.com</span></p>
+            <p class="mb-1 about_footer_color"><i class="mdi mdi-cellphone"></i> : <span>+1 234 569 798</span></p>
+            <p class="mb-1 about_footer_color"><i class="mdi mdi-earth"></i> : <span>www.website.com</span></p>
+            <p class="mb-1 about_footer_color"><i class="mdi mdi-hospital-building"></i> : <span>9:00 AM - 6:00 PM</span></p>
+            <p class="mb-1 about_footer_color"><i class="mdi mdi-map-marker"></i> : <span>97 Ilchester Road, Muirhead, KY15 2GP</span></p>
+          </div>
+        </div>
+      <div class="footer-border"></div>
+        -->
+      <div class="row">
+        <div class="col-sm-12" style="height: 60px;">
+          <div class="footer-alt text-center">
+            <p class="copy-rights">2019 &copy; Teknetium</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!--END FOOTER-->
+
+  <!-- BACK TO TOP -->
+  <a href="#" class="" style="position: fixed;right:20px;bottom: 10px;font-size:40px;"> <i
+      class="fad fa-chevron-square-up" style="background: rgba(50,110,246, .25) !important;"> </i> </a>
+  <a [ngx-scroll-to]="destinations['home'].ngxScrollToDestination" [ngx-scroll-to-duration]="ngxScrollToDuration"
+    [ngx-scroll-to-easing]="ngxScrollToEasing"><i class="fad fa-chevron-square-up"
+      style="background: rgba(50,110,246, .25) !important;"> </i></a>
+
+</div>

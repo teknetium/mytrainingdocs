@@ -1,0 +1,15 @@
+.current-template {
+    color: blue;
+}
+
+
+.fileList {
+    background-color: white;
+}
+.fileList:hover {
+    background-color: #efefef;
+    cursor: pointer;
+}
+.selected-file {
+    background-color: #efefef;
+}

@@ -1,0 +1,103 @@
+<div>
+    <!--
+    <div style="width:100%;padding:10px;">
+        <div class="filex" *ngFor="let item of toList; index as i"
+            [ngClass]="{'active-file': (selectedFileIndex$ | async) === i}" (click)="selectFile($event, i)" nz-popover
+            [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="right"
+            (contextmenu)="contextMenu($event,contextDropdownTpl, selected = item.name)">
+            <div class="font-size-30">
+                <i class="font-size-24" [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
+                    theme="twotone"></i>
+                <span class="m-l-5 font-size-12 text-muted">{{item.size}}</span>
+            </div>
+            <div>
+                <span class="mb-0 font-size-10" style="width:300px;overflow:scroll;">{{item.name}}</span>
+            </div>
+            <ng-template #titleTemplate>
+                <div style="display: inline-block;">
+                    <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor"
+                        nz-icon [nzType]="item.iconClass" theme="twotone"></i>
+                    <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
+                        [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
+                </div>
+                <div class="" style="display: inline-block;">
+                    {{ item.name }} &nbsp;&nbsp;
+                </div>
+            </ng-template>
+            <ng-template #contentTemplate>
+                <div style="width:300px;">
+                    {{ item.description}}
+                </div>
+            </ng-template>
+        </div>
+    </div>
+-->
+    <div class="from-list"
+        style="min-height:150px;width:45%;padding:10px;border:1px solid #eeeeee;display: inline-block;">
+        <span style="font-weight: 500;;">All Files</span>
+        <ul style="list-style-type:none;">
+            <li *ngFor="let item of fromList; index as i" class="fileList" nz-popover [nzPopoverTitle]="titleTemplate"
+                [nzPopoverContent]="contentTemplate" nzPopoverPlacement="right" (click)="selectItem(i)"
+                [ngClass]="{'active-item': isSelected(i)}" style="padding:5px 0;" class="from-list-item">
+                <div style="display: inline-block;">
+                    <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor"
+                        nz-icon [nzType]="item.iconClass" theme="twotone"></i>
+                    <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
+                        [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
+                </div>
+                <div class="" style="display: inline-block;">
+                    {{ item.name }} &nbsp;&nbsp;
+                </div>
+                <ng-template #titleTemplate>
+                    <div style="display: inline-block;">
+                        <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor"
+                            nz-icon [nzType]="item.iconClass" theme="twotone"></i>
+                        <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
+                            [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
+                    </div>
+                    <div class="" style="display: inline-block;">
+                        {{ item.name }} &nbsp;&nbsp;
+                    </div>
+                </ng-template>
+                <ng-template #contentTemplate>
+                    <div style="width:300px;">
+                        {{ item.description}}
+                    </div>
+                </ng-template>
+            </li>
+        </ul>
+
+    </div>
+    <div style="display: inline-block;width:10%;padding:20px;">
+        <button nzType="primary" nz-button (click)="addToList()">
+            <span style="font-size: 20px;width:100%;">>></span>
+        </button>
+
+    </div>
+    <div class="to-list"
+        style="min-height:150px;display: inline-block;width:45%;padding:10px;border:1px solid #eeeeee;float:right;">
+        <span style="font-weight: 500;;">Files for this Section</span>
+        <ul style="list-style-type:none;">
+            <li *ngFor="let item of toList$ | async; index as i" class="fileList"
+                [ngClass]="{'active-to-item': currentToItem === i}" style="padding:5px 0;" class="to-list-item">
+                <div style="display: inline-block;">
+                    <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor"
+                        nz-icon [nzType]="item.iconClass" theme="twotone"></i>
+                    <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
+                        [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
+                </div>
+                <div class="" style="display: inline-block;">
+                    {{ item.name }} &nbsp;&nbsp;
+                </div>
+
+                <div *ngIf="toList.length > 1" style="display: inline-block;float:right;">
+                    &nbsp;<i *ngIf="i > 0" nz-icon nzType="up-circle" theme="twotone" twoToneColor="#3f87f5"
+                        (click)="moveItemUp(i)"></i>&nbsp;
+                    &nbsp;<i *ngIf="(i < toList.length - 1)" nz-icon nzType="down-circle" theme="twotone"
+                        twoToneColor="#3f87f5" (click)="moveItemDown(i)"></i>&nbsp;
+                </div>
+            </li>
+        </ul>
+
+    </div>
+</div>

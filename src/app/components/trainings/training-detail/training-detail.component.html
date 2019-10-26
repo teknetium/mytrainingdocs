@@ -1,0 +1,139 @@
+<div *ngIf="(selectedTraining$ | async) as selectedTraining" style="font-size: 12px;">
+  <form style="" nz-form [formGroup]="trainingForm"
+        (ngSubmit)="submitForm($event, trainingForm.value)">
+    <div class="row"
+         style="background-color: #eaeaea;border-bottom: 1px solid #d0d0d0;border-top: 1px solid #d0d0d0; width:100%;padding:5px;">
+      <button *ngIf="action !== 'new'" class="toolbar-button" nzType="default"
+              style="color:blue;float:left;font-size:12px;margin-right:2px;" nz-button nzSize="medium"
+              (click)="viewTraining()">
+        <i class="far fa-eye"></i> View Training
+      </button>
+
+      <button style="font-size:12px;" nz-button nzType="default" type="submit"
+              [disabled]="!trainingForm.dirty || !trainingForm.valid">
+        {{ submitLabel }}
+      </button>
+
+      <button style="font-size:12px;" nz-button nzType="default" [disabled]="!trainingForm.dirty || !trainingForm.valid" (click)="cancel()">Cancel</button>
+
+      <button *ngIf="action !== 'new'" class="toolbar-button" nz-button nzType="default"
+              style="color:red;font-size:12px;margin-right:2px;" nzSize="medium"
+              nz-popconfirm
+              nzPopconfirmTitle="Delete this training?"
+              nzPopconfirmPlacement="bottom"
+              (nzOnConfirm)="deleteConfirm()"
+              (nzOnCancel)="deleteCancel()"
+              nz-tooltip nzPlacement="top" [nzTitle]="'Delete Training'">
+        <i class="far fa-trash-alt" style=""></i> Delete Training
+      </button>
+    </div>
+
+    <div style="padding:5px;">
+
+      <div *ngIf="(selectedTraining !== null)">
+        <div style="width:50%;float:left;">
+          <nz-form-item style="display: block;">
+            <nz-form-label style="font-size:12px;" nzRequired [nzSpan]="10">Icon</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+              <nz-input-group [nzPrefix]="prefixTemplate">
+                <input [ipFallbackIcon]="fallbackIcon"
+                       [iconPicker]="iconClass"
+                       [ipIconPack]="['fa5']"
+                       [ipPosition]="'bottom'"
+                       [ipWidth]="'250px'"
+                       [ipPlaceHolder]="'Choose an icon'"
+                       (iconPickerSelect)="onIconPickerSelect($event)"
+                       type="text" nz-input placeholder="  Click to Choose Icon" />
+              </nz-input-group>
+              <ng-template #prefixTemplate>
+                <i [ngClass]="iconClass" style="cursor:pointer;font-size:16px;width:50px;"></i>
+              </ng-template>
+
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label style="font-size:12px;" nzRequired [nzSpan]="10">Icon Color</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+      <span
+        [style.color]="iconColor"
+        [cpPosition]="'right'"
+        [cpPositionRelativeToArrow]="true"
+        (colorPickerChange)="onColorChange($event)"
+        [(colorPicker)]="iconColor"
+        style="cursor: pointer;" [ngStyle]="{'color': iconColor}">
+        <i class="fas fa-palette" style="font-size:16px;" [ngStyle]="{'color': iconColor}"></i>
+      </span>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item style="">
+            <nz-form-label style="font-size:12px;" [nzSpan]="10" nzRequired>Training Type</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+              <nz-radio-group style="font-size:12px;" formControlName="type">
+                <label nz-radio nzValue="online">Online</label>
+                <label nz-radio nzValue="inperson">In Person</label>
+              </nz-radio-group>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label style="font-size:12px;" [nzSpan]="10" nzRequired>Time To Complete</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+              <nz-input-number style="font-size:12px;" formControlName="estimatedTimeToComplete" nzMin="15" nzMax="240"
+                               nzStep="15"></nz-input-number>
+              <!--
+              <input nz-input type="number" formControlName="estimatedTimeToComplete" placeholder="Estimated Time To Complete">
+              -->
+              <span style="display: inline-block"> &nbsp;&nbsp;minutes</span>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div style="display: inline-block;float:right;width:50%;">
+          <nz-form-item>
+            <nz-form-label style="font-size:12px;" [nzSpan]="6" nzRequired>Title</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+              <input nz-input type="text" style="font-size:12px;" formControlName="title" placeholder="Training Title">
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label style="font-size:12px;" [nzSpan]="6" nzRequired>Description</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+              <input style="font-size:12px;" type="text" formControlName="description" nz-input
+                     placeholder="Training Description">
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label style="font-size:12px;" [nzSpan]="6" nzRequired>Files</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+              <nz-select style="font-size:12px;" formControlName="files" nzMode="tags" nzPlaceHolder="Select Files">
+                <nz-option *ngFor="let option of filesForSelect$ | async" [nzLabel]="option.label"
+                           [nzValue]="option.value"></nz-option>
+
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <!--
+          <nz-form-item>
+            <nz-form-label style="font-size:12px;" [nzSpan]="6">Tags</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+              <nz-select style="font-size:12px;" formControlName="tags" nzMode="tags" nzPlaceHolder="Enter tag text">
+                <nz-option *ngFor="let option of tagsForSelect$ | async" [nzLabel]="option.label"
+                           [nzValue]="option.value"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          -->
+          <!--
+          <nz-form-item>
+            <nz-form-control [nzOffset]="7" [nzSpan]="12">
+              <button style="font-size:12px;" nz-button type="submit" nzType="default"
+                      [disabled]="!trainingForm.dirty || !trainingForm.valid">
+                {{ submitLabel }}
+              </button>
+            </nz-form-control>
+          </nz-form-item>
+          -->
+        </div>
+        <div style="clear: both"></div>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,108 @@
+<div class="" style="width:100%;">
+    <div [ngClass]="{'files-compact': mode === 'brief', 'files-full': mode === 'full'}">
+        <div>
+            <div class="" style="display: inline-block;padding:5px;cursor: pointer;">
+                <i nz-tooltip nzTooltipTitle="Add New File" class="action" nz-icon nzType="file-add" theme="outline"
+                    (click)="openPicker($event)"></i>
+            </div>
+            <nz-radio-group *ngIf="(files.length > 0)" class="m-r-10" nzSize="small" [(ngModel)]="view"
+                style="display: inline-block;float: right;">
+                <label nz-radio-button nzValue="cardView">
+                    <i class="font-size-16" nz-icon nzType="appstore" theme="outline"></i>
+                </label>
+                <label nz-radio-button nzValue="listView">
+                    <i class="font-size-16" nz-icon nzType="ordered-list" theme="outline"></i>
+                </label>
+            </nz-radio-group>
+        </div>
+        <div *ngIf="view === 'cardView'" style="border-top:1px solid #efefef;padding-top:10px;margin-top:10px;">
+            <div class="filex" *ngFor="let item of files$ | async; index as i"
+                [ngClass]="{'active-file': (selectedFileIndex$ | async) === i}" (click)="selectFile($event, i)"
+                nz-popover [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="right"
+                (contextmenu)="contextMenu($event,contextDropdownTpl, selected = item.name)">
+                <div class="font-size-30">
+                    <i class="font-size-24" [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
+                        theme="twotone"></i>
+                    <span class="m-l-5 font-size-12 text-muted">{{item.size}}</span>
+                </div>
+                <div>
+                    <span class="mb-0 font-size-10" style="width:300px;overflow:scroll;">{{item.name}}</span>
+                </div>
+                <ng-template #titleTemplate>
+                        <div style="display: inline-block;">
+                                <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor"
+                                    nz-icon [nzType]="item.iconClass" theme="twotone"></i>
+                                <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
+                                    [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
+                            </div>
+                            <div class="" style="display: inline-block;">
+                                {{ item.name }} &nbsp;&nbsp;
+                            </div>
+                </ng-template>
+                <ng-template #contentTemplate>
+                        <div style="width:300px;">
+                        {{ item.description}}
+                    </div>
+                    </ng-template>
+            </div>
+        </div>
+        <ul *ngIf="view === 'listView'"
+            style="border-top:1px solid #efefef;padding-top:10px;margin-top:10px;list-style-type:none;">
+            <li *ngIf="mode === 'full'">
+                <div style="display:inline-block;width:5%;padding-left:5px;font-size:12px;"></div>
+                <div style="display:inline-block;width:30%;font-size:12px;font-weight:600;">Name</div>
+                <div style="display:inline-block;width:10%;font-size:12px;font-weight:600;">Version</div>
+                <div style="display:inline-block;width:20%;font-size:12px;font-weight:600;">Date Uploaded</div>
+                <div style="display:inline-block;width:20%;font-size:12px;font-weight:600;">Owner</div>
+                <div style="display:inline-block;width:10%;font-size:12px;font-weight:600;">Size</div>
+            </li>
+            <div *ngFor="let item of files$ | async; index as i"  nz-popover [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="right" class="fileList">
+                <li (click)="selectFile($event, i)" [ngClass]="{'active-file': (selectedFileIndex$ | async) === i}"
+                    style="padding:5px 0;">
+                    <div [ngClass]="{'listItem1-compact': mode === 'brief', 'listItem1-full': mode === 'full'}">
+                        <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor"
+                            nz-icon [nzType]="item.iconClass" theme="twotone"></i>
+                        <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
+                            [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
+                    </div>
+                    <div [ngClass]="{'listItem2-compact': mode === 'brief', 'listItem2-full': mode === 'full'}">
+                        {{ item.name }} &nbsp;&nbsp;
+                    </div>
+                    <div *ngIf="mode === 'full'" style="width:10%;display:inline-block;font-size:12px;">
+                        {{ item.versions[0].version }} &nbsp;&nbsp;
+                    </div>
+                    <div *ngIf="mode === 'full'" style="width:20%;display:inline-block;font-size:12px;">
+                        {{ item.versions[0].dateUploaded | date:'medium' }} &nbsp;&nbsp;
+                    </div>
+                    <div *ngIf="mode === 'full'" style="width:20%;display:inline-block;font-size:12px;">
+                        {{ item.versions[0].owner }} &nbsp;&nbsp;
+                    </div>
+
+                    <div [ngClass]="{'listItem3-compact': mode === 'brief', 'listItem3-full': mode === 'full'}">
+                        {{item.size}}
+                    </div>
+                    <div style="clear: both;"></div>
+                </li>
+                <ng-template #titleTemplate>
+                        <div style="display: inline-block;">
+                                <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor"
+                                    nz-icon [nzType]="item.iconClass" theme="twotone"></i>
+                                <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
+                                    [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
+                            </div>
+                            <div class="" style="display: inline-block;">
+                                {{ item.name }} &nbsp;&nbsp;
+                            </div>
+                </ng-template>
+                <ng-template #contentTemplate>
+                        <div style="width:300px;">
+                        {{ item.description}}
+                    </div>
+                    </ng-template>
+            </div>
+        </ul>
+    </div>
+    <div [ngClass]="{'viewer-compact': mode === 'brief', 'viewer-full': mode === 'full'}">
+        <mtd-files></mtd-files>
+    </div>
+</div>

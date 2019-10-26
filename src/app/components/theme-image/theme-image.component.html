@@ -1,0 +1,20 @@
+<img *ngIf="popover === 'true'" [@yogaPoses]="(trigger$ | async) ? 'open' : 'closed'" class="centered-image" [src]="image$ | async"
+     [height]="height" style="cursor:pointer;"
+     nz-popover [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate"/>
+<img *ngIf="popover === 'false'" [@yogaPoses]="(trigger$ | async) ? 'open' : 'closed'" class="small-help-img" [src]="image$ | async"
+     [height]="height" style="cursor:pointer;"/>
+<ng-template #titleTemplate>Choose a Theme</ng-template>
+<ng-template #contentTemplate style="background-color: white;width:100px;">
+    <button nz-button style="background-color: white;padding:5px; height:64px;width:64px;" [ngStyle]="{'border': (theme$ | async) === 'dogs' ? '1px solid blue' : '0 solid red'}"
+            (click)="setTheme('dogs')" nzType="default">
+      <img src="../assets/dog47.jpg" height="48" />
+    </button>
+    <button nz-button [ngStyle]="{'border': (theme$ | async) === 'yoga' ? '1px solid blue' : '0 solid red'}" style="margin-left: 5px;background-color: white;padding:5px; height:64px;width:64px;"
+            (click)="setTheme('yoga')" nzType="default">
+      <img src="../assets/yoga17.png"  height="48" />
+    </button>
+  <!--
+    <div style="clear: both;"></div>
+    <label style="display:block;" nz-checkbox [(ngModel)]="staticImage" (ngModelChange)="onStaticChange($event)">Use Static Image</label> {{staticImage}}
+    -->
+</ng-template>
