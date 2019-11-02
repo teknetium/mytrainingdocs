@@ -49,7 +49,7 @@ module.exports = function(app, config) {
  |--------------------------------------
  */
 
-  const trainingListProjection = "_id title type owner description teamId iconType iconClass iconColor iconSource dateCreated sections tags estimatedTimeToComplete";
+  const trainingListProjection = "_id title type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated sections tags estimatedTimeToComplete";
   const userListProjection = "_id uid userType userStatus myTrainings trainingStatus firstName lastName email org directReports tags supervisor profilePicUrl";
   const fileListProjection = "_id name size teamId iconColor iconSource iconType iconClass description tags versions";
 
@@ -115,6 +115,12 @@ module.exports = function(app, config) {
       dateCreated: req.body.dateCreated,
       estimatedTimeToComplete: req.body.estimatedTimeToComplete,
       description: req.body.description,
+      execSummary: req.body.execSummary,
+      execSummaryLabel: req.body.execSummaryLabel,
+      introduction: req.body.introduction,
+      introductionLabel: req.body.introductionLabel,
+      goals: req.body.goals,
+      goalsLabel: req.body.goalsLabel,
       image: req.body.image,
       iconClass: req.body.iconClass,
       iconColor: req.body.iconColor,
@@ -148,6 +154,9 @@ module.exports = function(app, config) {
       training.dateCreated = req.body.dateCreated;
       training.estimatedTimeToComplete = req.body.estimatedTimeToComplete;
       training.description = req.body.description;
+      training.introduction = req.body.introduction;
+      training.goals = req.body.goals;
+      training.execSummary = req.body.execSummary;
       training.image = req.body.image;
       training.iconClass = req.body.iconClass;
       training.iconColor = req.body.iconColor;

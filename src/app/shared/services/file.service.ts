@@ -11,6 +11,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -137,7 +138,22 @@ export class FileService {
       iconColor: '#a0d911',
       iconType: 'txt'
     },
-  };
+    unknown: {
+      iconClass: 'file-unknown',
+      iconColor: '#ff0000',
+      iconType: 'unknown'
+    },
+    html: {
+      iconClass: 'html5',
+      iconColor: '#e9913a',
+      iconType: 'html'
+  },
+  mp3: {
+    iconClass: 'audio',
+    iconColor: '#e9764f',
+    iconType: 'audio'
+},
+};
 
   iconClass = '';
   iconColor = '';
@@ -174,16 +190,16 @@ export class FileService {
   previewUrlBase = this.base;
   downloadUrlBase = 'https://cdn.filestackcontent.com/';
   docPreviewUrlBS$ = new BehaviorSubject<SafeResourceUrl>(null);
-  videoBS$ = new BehaviorSubject<SafeResourceUrl>(null);
-  docDownloadUrlBS$ = new BehaviorSubject<string>('');
+//  videoBS$ = new BehaviorSubject<SafeResourceUrl>(null);
+//  docDownloadUrlBS$ = new BehaviorSubject<string>('');
   selectedFileBS$ = new BehaviorSubject<FileModel>(null);
-  selectedFileToEditBS$ = new BehaviorSubject<FileModel>(null);
-  selectedFileIndexBS$ = new BehaviorSubject<number>(-1);
-  statusMessageBS$ = new BehaviorSubject<{ color: string, msg: string }>(null);
-  titleBS$ = new BehaviorSubject<string>('');
-  showStatusBS$ = new BehaviorSubject<boolean>(false);
-  showSelectedIndexFeedbackBS$ = new BehaviorSubject<boolean>(true);
-  showSelectedItemBS$ = new BehaviorSubject<boolean>(false);
+//  selectedFileToEditBS$ = new BehaviorSubject<FileModel>(null);
+//  selectedFileIndexBS$ = new BehaviorSubject<number>(-1);
+//  statusMessageBS$ = new BehaviorSubject<{ color: string, msg: string }>(null);
+//  titleBS$ = new BehaviorSubject<string>('');
+//  showStatusBS$ = new BehaviorSubject<boolean>(false);
+//  showSelectedIndexFeedbackBS$ = new BehaviorSubject<boolean>(true);
+//  showSelectedItemBS$ = new BehaviorSubject<boolean>(false);
   uploadResultsBS$ = new BehaviorSubject<PickerResponse>(null);
   filesForSelect$ = new BehaviorSubject<{ label: string, value: string }[]>([]);
   fileOptions: [{ label: string, value: string }] = [null];
@@ -201,6 +217,13 @@ export class FileService {
   actionBS$ = new BehaviorSubject<string>('');
 
   fileIdHash = {};
+  fileIdIndexHash = {};
+// pDoc - private document hash 
+// pSFHash - private selected file hash 
+// pSFIHash - private selected file index hash
+  pDocHash = {};
+  pSFHash = {};
+  pSFIHash = {};
 
   constructor(private http: HttpClient, private userService: UserService, private auth: AuthService, private sanitizer: DomSanitizer) {
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
@@ -222,6 +245,10 @@ export class FileService {
           for (const file of files) {
             this.fileIdHash[file._id] = file;
           }
+
+          for (const index in files) {
+            this.fileIdIndexHash[this.files[index]._id] = index;
+          }
           this.loadData();
         })
       }
@@ -240,6 +267,7 @@ export class FileService {
     this.files$.next(this.files);
     this.fileCnt$.next(this.files.length);
     let i;
+    /*
     if (this.action === 'save') {
       i = this.selectedFileIndexBS$.value;
     } else if (this.action === 'init') {
@@ -255,11 +283,7 @@ export class FileService {
         i = this.selectedFileIndexBS$.value;
       }
     }
-
-    console.log('fileService:loadData', i, this.action);
-    this.selectItem(i);
-    console.log('loadData', i, this.action, this.selectedFileIndexBS$.value);
-
+*/
     const fileOptions: { label: string, value: string }[] = [];
     for (const file of this.files) {
       fileOptions.push({ label: file.name, value: file._id });
@@ -286,20 +310,44 @@ export class FileService {
     return this.actionBS$.asObservable();
   }
 
-  getDocPreviewUrlStream(): Observable<SafeResourceUrl> {
-    return this.docPreviewUrlBS$.asObservable();
+  setupPDocStream(streamId: string) {
+    console.log('fileService.setupPDocStream', streamId);
+    if (!this.pDocHash[streamId]) {
+      this.pDocHash[streamId] = new BehaviorSubject<SafeResourceUrl>(null);
+    }
   }
 
-  getVideoStream(): Observable<SafeResourceUrl> {
-    return this.videoBS$.asObservable();
+  setupPSFStream(streamId: string) {
+    if (!this.pSFHash[streamId]) {
+      this.pSFHash[streamId] = new BehaviorSubject<FileModel>(null);
+    }
   }
 
-  getSelectedFileStream(): Observable<FileModel> {
-    return this.selectedFileBS$.asObservable();
+  setupPSFIStream(streamId: string) {
+    if (!this.pSFIHash[streamId]) {
+      this.pSFIHash[streamId] = new BehaviorSubject<number>(-1);
+    }
   }
 
-  getSelectedFileIndexStream(): Observable<number> {
-    return this.selectedFileIndexBS$.asObservable();
+  getPDocStream(streamId: string): Observable<SafeResourceUrl> {
+    if (!this.pDocHash[streamId]) {
+      this.pDocHash[streamId] = new BehaviorSubject<SafeResourceUrl>(null);
+    }
+    return this.pDocHash[streamId].asObservable();
+  }
+
+  getPSFStream(streamId: string): Observable<FileModel> {
+    if (!this.pSFHash[streamId]) {
+      this.pSFHash[streamId] = new BehaviorSubject<FileModel>(null);
+    }
+    return this.pSFHash[streamId].asObservable();
+  }
+
+  getPSFIStream(streamId: string): Observable<number> {
+    if (!this.pSFIHash[streamId]) {
+      this.pSFIHash[streamId] = new BehaviorSubject<number>(-1);
+    }
+    return this.pSFIHash[streamId].asObservable();
   }
 
   getFile(id): FileModel {
@@ -329,6 +377,8 @@ export class FileService {
         this.uploadType = 'newFile';
         return;
       }
+      console.log('processResults', results);
+
       for (const file of results.filesUploaded) {
         this.action = 'newFile';
         let sizeStr: string;
@@ -340,7 +390,30 @@ export class FileService {
         } else {
           sizeStr = (file.size / 1000000).toFixed(1) + ' MB';
         }
-        const fileExt = file.filename.substring(file.filename.indexOf('.') + 1);
+      
+        let fileExt: string;
+
+        if (file.filename.indexOf('.') > 0) {
+          fileExt = file.filename.substring(file.filename.lastIndexOf('.') + 1);
+        } else {
+          fileExt = 'unkwown'
+        }
+
+        let iconClass: string;
+        let iconType: string;
+        let iconColor: string;
+
+        if (!this.fileTypeHash[fileExt]) {
+          iconClass = 'file-unknown';
+          iconType = 'unknown';
+          iconColor = '#ff0000';
+        } else {
+          iconClass = this.fileTypeHash[fileExt].iconClass;
+          iconType = this.fileTypeHash[fileExt].iconType;
+          iconColor = this.fileTypeHash[fileExt].iconColor;
+        }
+
+        
         this.newFile = <FileModel>{
           _id: file.handle,
           name: file.filename,
@@ -349,12 +422,14 @@ export class FileService {
           teamId: this.authenticatedUser._id,
           description: '',
           versions: [{ version: '1.0.0', changeLog: 'New Upload', owner: this.authenticatedUser._id, fsHandle: file.handle, url: file.url, dateUploaded: new Date().getTime() }],
-          iconClass: this.fileTypeHash[fileExt].iconClass,
-          iconType: this.fileTypeHash[fileExt].iconType,
-          iconColor: this.fileTypeHash[fileExt].iconColor,
+          iconClass: iconClass,
+          iconType: iconType,
+          iconColor: iconColor,
           iconSource: 'ngZorro',
           tags: []
         };
+
+        console.log('processResults', this.newFile);
 
         this.postFile$(this.newFile).subscribe(data => {
           this.newFile = data;
@@ -367,7 +442,7 @@ export class FileService {
   }
 
   cancelEdit(): void {
-    this.selectedFileToEditBS$.next(null);
+//    this.selectedFileToEditBS$.next(null);
   }
 
   fileAlert(alert) {
@@ -384,28 +459,67 @@ export class FileService {
       });
   }
 
-  viewFile(file: FileModel, versionIndex: number) {
+  getSafeUrl(fileId: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.fileIdHash[fileId].versions[0].fsHandle));
+  }
+
+  viewFile(file: FileModel, versionIndex: number, streamId: string) {
+    console.log('In fileService:viewFile');
     let mediaItem: SafeResourceUrl;
     if (file.iconType === 'video') {
       mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.versions[versionIndex].url));
-      this.videoBS$.next(mediaItem);
+      if (!this.pDocHash[streamId]) {
+        console.log('ERROR ...fileService.viewFile, privateVideoPreviewStreamHash is null...', streamId);        
+      } 
+      this.pDocHash[streamId].next(mediaItem);
+
     } else {
       mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + file.versions[versionIndex].fsHandle);
+      console.log('fileService.viewFile', mediaItem, streamId);
+      this.pDocHash[streamId].next(mediaItem);
       this.docPreviewUrlBS$.next(mediaItem);
     }
-    console.log('fileService.viewFile', mediaItem);
   }
 
-  selectFileById(id) {
-    this.selectedFileBS$.next(this.fileIdHash[id]);
+  selectItemById(id, streamId: string) {
+    this.selectItem(this.fileIdIndexHash[id], streamId);
   }
 
-  selectItem(index) {
+  /*
+  setupPrivateDocumentStream(pSId: string) {
+    console.log('setupPrivateDocumentStream', pSId);
+    this.privateDocumentStreamHash[pSId] = new BehaviorSubject<FileModel>(null);
+  }
+  setupPrivateVideoStream(pSId: string) {
+    console.log('setupPrivateVideoStream', pSId);
+    this.privateVideoStreamHash[pSId] = new BehaviorSubject<FileModel>(null);
+  }
+*/
+  
+  pubToPDoc$(index: number, streamId: string) {
+    console.log('pubToPDoc$')
+    this.pDocHash[streamId].next(this.files[index]);
+  }
+
+  pubByIdToPDoc$(id: string, streamId: string) {
+    this.pDocHash[streamId].next(this.fileIdHash[id]);
+  }
+
+  selectItem(index, streamId) {
     if (index < 0 || index >= this.files.length) {
       //      this.showSelectedItemBS$.next(false);
-      this.selectedFileBS$.next(null);
+      if (this.pSFHash[streamId]) {
+        this.pSFHash[streamId].next(null);
+      }
+
+      if (this.pSFIHash[streamId]) {
+        this.pSFIHash[streamId].next(null);
+      }
+      
+      if (this.pDocHash[streamId]) {
+        this.pDocHash[streamId].next(null);
+      }
       this.docPreviewUrlBS$.next(null);
-      this.selectedFileIndexBS$.next(index);
       return;
     }
     this.selectedFile = this.files[index];
@@ -417,22 +531,32 @@ export class FileService {
     //    this.docDownloadUrlBS$.next(downloadUrl);
     //    this.docPreviewUrlBS$.next(previewUrl);
     //    this.showSelectedIndexFeedbackBS$.next(true)
-    this.selectedFileBS$.next(this.files[index]);
-    this.selectedFileIndexBS$.next(index);
-    //    this.showSelectedItemBS$.next(true);
-    //    this.showSelectedIndexFeedbackBS$.next(true);
+    this.pSFHash[streamId].next(this.files[index]);
+    this.pSFIHash[streamId].next(index);
+    this.selectedFileBS$.next(this.selectedFile);
+    this.viewFile(this.selectedFile, 0, streamId);
   }
 
   setAction(action: string) {
 
   }
 
+  /*
   selectFileToEdit(index): void {
     this.selectedFileToEditBS$.next(this.files[index]);
   }
+  */
 
   getFilesStream(): Observable<FileModel[]> {
     return this.files$.asObservable();
+  }
+
+  getSelectedFileStream(): Observable<FileModel> {
+    return this.selectedFileBS$.asObservable();
+  }
+
+  getDocPreviewStream(): Observable<SafeResourceUrl> {
+    return this.docPreviewUrlBS$.asObservable();
   }
 
   getFileCntStream(): Observable<number> {
@@ -459,7 +583,9 @@ export class FileService {
           return;
         }
         this.files = files;
+        this.selectedFileBS$.next(null);
         this.loadData();
+//        this.selectItem(-1, '');
       })
     });
 
@@ -476,6 +602,11 @@ export class FileService {
   pickNewVersion(version: { version: string, changeLog: string, owner: string, fsHandle: string, url: string, dateUploaded: number }) {
     this.uploadType = 'newVersion';
     this.newVersion = version;
+    this.client.picker(this.options).open();
+  }
+
+  pickBannerImage() {
+    this.uploadType = 'newTrainingBanner';
     this.client.picker(this.options).open();
   }
 
@@ -525,7 +656,6 @@ export class FileService {
 
   private _handleError(err: HttpErrorResponse | any): Observable<any> {
     const errorMsg = err.message || 'Error: Unable to complete request.';
-    this.statusMessageBS$.next({ color: 'red', msg: errorMsg });
     if (err.message && err.message.indexOf('No JWT present') > -1) {
       this.auth.login();
     }

@@ -141,7 +141,6 @@ export class AppComponent implements OnInit {
     private zorroNotificationService: NzNotificationService,
     private fileService: FileService,
   ) {
-    this.docUrl$ = this.fileService.getDocPreviewUrlStream();
     this.image$ = this.imageBS$.asObservable();
   }
 

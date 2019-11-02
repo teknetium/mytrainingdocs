@@ -46,20 +46,23 @@ export class FileManagerComponent {
 
     @Input() mode = 'full';
 
+    streamId: string = '';
+
     constructor(
         private colorConfig: ThemeConstantService,
         private fileService: FileService,
         private router: Router,
         private nzContextMenuService: NzContextMenuService) {
-        this.files$ = this.fileService.getFilesStream();
-        this.selectedFile$ = this.fileService.getSelectedFileStream();
-        this.selectedFileIndex$ = this.fileService.getSelectedFileIndexStream();
     }
 
     ngOnInit(): void {
-        //        this.fileManagerSvc.getFileManagerJson().subscribe(data => {
-        //            this.files = data;
-        //        });
+        this.streamId = String(new Date().getTime());
+        this.files$ = this.fileService.getFilesStream();
+        this.fileService.setupPSFStream(this.streamId);
+        this.fileService.setupPSFIStream(this.streamId);
+        this.fileService.setupPDocStream(this.streamId)
+        this.selectedFile$ = this.fileService.getPSFStream(this.streamId);
+        this.selectedFileIndex$ = this.fileService.getPSFIStream(this.streamId);
         this.files$.subscribe(files => {
             if (!files) {
                 return;
@@ -71,36 +74,24 @@ export class FileManagerComponent {
     changeView() {
         this.listView = !this.listView;
     }
-
+/*
     contextMenu($event: MouseEvent, contextDropdownTpl: NzDropdownMenuComponent, selected: string): void {
         this.nzContextMenuService.create($event, contextDropdownTpl);
         //        this.selectedFile = selected;
         this.isDetailsOpen = true;
     }
+    */
 
     selectFile(event: any, i: number) {
         if (this.selectedFileIndex === i) {
             this.selectedFileIndex = -1;
+            this.fileService.selectItem(-1, this.streamId);
         } else {
             this.selectedFileIndex = i;
+            this.selectedFile = this.files[this.selectedFileIndex];
         }
-        this.selectedFile = this.files[this.selectedFileIndex];
-        this.fileService.selectItem(this.selectedFileIndex);
+        this.fileService.selectItem(this.selectedFileIndex, this.streamId);
     }
-
-    redirect() {
-        this.isVisible = false;
-        this.fileService.selectItem(this.selectedFileIndex);
-        this.router.navigate([`admin/files`]);
-    }
-
-    //    showEditDialog() {
-    //
-    //    }
-
-    //    unselectFile() {
-    //        this.selectedFile = '';
-    //    }
 
     close(): void {
         this.nzContextMenuService.close();
@@ -147,7 +138,6 @@ export class FileManagerComponent {
     }
 
     dismissModal() {
-        this.fileService.selectItem(-1);
         this.isVisible = false;
     }
 }

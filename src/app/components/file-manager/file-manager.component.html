@@ -1,4 +1,4 @@
-<div class="" style="width:100%;">
+<div class="" style="width:100%;height:100%;">
     <div [ngClass]="{'files-compact': mode === 'brief', 'files-full': mode === 'full'}">
         <div>
             <div class="" style="display: inline-block;padding:5px;cursor: pointer;">
@@ -17,9 +17,7 @@
         </div>
         <div *ngIf="view === 'cardView'" style="border-top:1px solid #efefef;padding-top:10px;margin-top:10px;">
             <div class="filex" *ngFor="let item of files$ | async; index as i"
-                [ngClass]="{'active-file': (selectedFileIndex$ | async) === i}" (click)="selectFile($event, i)"
-                nz-popover [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="right"
-                (contextmenu)="contextMenu($event,contextDropdownTpl, selected = item.name)">
+                [ngClass]="{'active-file': (selectedFileIndex$ | async) === i}" (click)="selectFile($event, i)">
                 <div class="font-size-30">
                     <i class="font-size-24" [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
                         theme="twotone"></i>
@@ -40,11 +38,15 @@
                             </div>
                 </ng-template>
                 <ng-template #contentTemplate>
+                    <div *ngIf="item.description.length === 0">
+                        No Description
+                    </div>
                         <div style="width:300px;">
                         {{ item.description}}
                     </div>
                     </ng-template>
             </div>
+            <nz-empty *ngIf="files.length === 0"></nz-empty>
         </div>
         <ul *ngIf="view === 'listView'"
             style="border-top:1px solid #efefef;padding-top:10px;margin-top:10px;list-style-type:none;">
@@ -56,7 +58,7 @@
                 <div style="display:inline-block;width:20%;font-size:12px;font-weight:600;">Owner</div>
                 <div style="display:inline-block;width:10%;font-size:12px;font-weight:600;">Size</div>
             </li>
-            <div *ngFor="let item of files$ | async; index as i"  nz-popover [nzPopoverTitle]="titleTemplate" [nzPopoverContent]="contentTemplate" nzPopoverPlacement="right" class="fileList">
+            <div *ngFor="let item of files$ | async; index as i" class="fileList">
                 <li (click)="selectFile($event, i)" [ngClass]="{'active-file': (selectedFileIndex$ | async) === i}"
                     style="padding:5px 0;">
                     <div [ngClass]="{'listItem1-compact': mode === 'brief', 'listItem1-full': mode === 'full'}">
@@ -103,6 +105,6 @@
         </ul>
     </div>
     <div [ngClass]="{'viewer-compact': mode === 'brief', 'viewer-full': mode === 'full'}">
-        <mtd-files></mtd-files>
+        <mtd-files height="800" [streamId]="streamId"></mtd-files>
     </div>
 </div>

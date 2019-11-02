@@ -1,10 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { TrainingModel } from '../../../shared/interfaces/training.type'
-import { Observable } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy, AfterViewInit, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { TrainingModel, Section, Assessment } from '../../../shared/interfaces/training.type'
+import { Observable, BehaviorSubject } from 'rxjs';
 import { TrainingService } from '../../../shared/services/training.service';
 import { FileService } from '../../../shared/services/file.service';
 import { FileModel } from '../../../shared/interfaces/file.type';
-import { Section } from '../../../shared/interfaces/training.type';
+import { ScrollToAnimationEasing, ScrollToOffsetMap } from '@nicky-lenaers/ngx-scroll-to';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'mtd-training-basic',
@@ -12,82 +14,194 @@ import { Section } from '../../../shared/interfaces/training.type';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./training-basic.component.css']
 })
-export class TrainingBasicComponent implements OnInit {
+export class TrainingBasicComponent implements OnInit, AfterViewInit {
 
   trainings$: Observable<TrainingModel[]>;
   files$: Observable<FileModel[]>;
+  action$: Observable<string>;
+  
+  @ViewChild('toc', { static: false }) toc: ElementRef;
+
+  // the following 2 variables warrant a brief description
+  // Each section in a training object will have a corresponding document stream 
+  sF$: Observable<FileModel>;
+  sFI$: Observable<number>;
+  showEditor$: Observable<boolean>;
 
   selectedTraining$: Observable<TrainingModel>;
+  selectedTrainingIndex$: Observable<number>;
+  selectedTrainingIndex;
   currentSectionIndex = 0;
+  currentSection: Section;
   fontSize = 10;
   selectedTraining: TrainingModel;
   imageWidth;
   currentTemplate;
   isFileSelectModalVisible = false;
-  selectedFileIndex = -1;
-  collapsePanelHeight = [200];
+  fallbackIcon = 'fa fa-graduation-cap';
+  bannerImage$: Observable<FileModel>;
+  headerOpen = false;
+  mode = 'edit';
+  fullscreen = false;
+  rating = 0;
+
+  sectionDocUrlHash = {};
+
+  offsetLeft;
+
+  public ngxScrollToDuration: number;
+  public ngxScrollToEasing: ScrollToAnimationEasing;
+  public ngxScrollToOffset = 60;
+
 
   constructor(private trainingService: TrainingService, private fileService: FileService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.showEditor$ = this.trainingService.getShowEditorStream();
     this.trainings$ = this.trainingService.getAllTrainingsObservable();
     this.files$ = this.fileService.getFilesStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
-
+    this.selectedTrainingIndex$ = this.trainingService.getSelectedTrainingIndexStream();
+    this.action$ = this.trainingService.getActionStream();
     this.selectedTraining$.subscribe(training => {
       if (!training) {
         return;
       }
 
       this.selectedTraining = training;
-    })
+      for (const section of training.sections) {
+        this.fileService.setupPDocStream(section._id);
+        this.fileService.setupPSFStream(section._id);
+        this.fileService.setupPSFIStream(section._id);
 
-    this.trainingService.addNewTraining();
+        if (!section.file) {
+          console.log('ERROR: TrainingBasicComponent:ngOnInit - no document set on training', training.title);
+        } else {
+          this.sectionDocUrlHash[section._id] = this.fileService.getSafeUrl(section.file);
+          this.fileService.selectItemById(section.file, section._id);
+        }
+
+      }
+
+    });
+    this.selectedTrainingIndex$.subscribe(index => {
+      this.selectedTrainingIndex = index;
+    });
+
+    this.ngxScrollToDuration = 1000;
+    this.ngxScrollToEasing = 'easeOutCubic';
+    this.ngxScrollToOffset = 0;
   }
 
-  selectFile(file: FileModel, index) {
-    this.selectedFileIndex = index;
-    this.selectedTraining.sections[this.currentSectionIndex].files.push(file._id);
-    this.collapsePanelHeight[this.currentSectionIndex] = 500;
-    this.isFileSelectModalVisible = false;
-    this.cd.detectChanges();
-  }
-
-  saveTraining() {
-
-  }
-
-  activateSection(active, sectionIndex) {
-    if (active) {
-      this.currentSectionIndex = sectionIndex;
-      this.fileService.selectFileById(this.selectedTraining.sections[sectionIndex].files[0]);
+  ngAfterViewInit() {
+    if (this.toc) {
+      this.offsetLeft = this.toc.nativeElement.offsetLeft;
+      console.log('ngAfterViewInit', this.offsetLeft);
     }
   }
 
-  addSectionAssessment(i) {
+  onIconPickerSelect(icon) {
+    this.selectedTraining.iconClass = icon;
+    console.log('onIconPickerSelect', icon);
   }
+
+  onColorChange(newColor) {
+    this.selectedTraining.iconColor = newColor;
+  }
+
+  setBannerImage() {
+    //    this.fileService.openPicker();
+  }
+
+  selectFile(file: FileModel, index: number) {
+    console.log('selectFile', this.currentSectionIndex, file);
+    this.currentSection.file = file._id;
+    this.isFileSelectModalVisible = false;
+    if (file.iconType === 'video') {
+      this.fileService.selectItem(index, this.currentSection._id);
+    } else {
+      this.fileService.selectItem(index, this.currentSection._id);
+//      this.sectionDocUrlHash[this.currentSection._id] = this.fileService.getSafeUrl(this.currentSection.file);
+
+//      this.fileService.selectItem(index, this.currentSection._id);
+    }
+  }
+
+  postFileSelectionModal(section: Section) {
+    this.isFileSelectModalVisible = true;
+    this.currentSection = section;
+  }
+
+  createTraining() {
+    this.trainingService.createTraining(this.selectedTraining);
+
+  }
+
+  saveTraining() {
+    this.trainingService.saveTraining(this.selectedTraining);
+  }
+
+  headerActiveChange() {
+    this.headerOpen = !this.headerOpen;
+  }
+
 
   addFinalAssessment(i) {
   }
 
   addSection() {
-    this.collapsePanelHeight.push(200);
     const newSection = <Section>{
-        title: 'New Section',
-        intro: 'This is an introduction to the first document in this section',
-        files: [],
-        assessment: null
+      _id: String(new Date().getTime()),
+      title: 'New Section',
+      intro: 'This is an introduction to the first document in this section',
+      file: null,
     };
     this.selectedTraining.sections.push(newSection);
+    this.fileService.setupPDocStream(newSection._id);
+    this.fileService.setupPSFStream(newSection._id);
+    this.fileService.setupPSFIStream(newSection._id);
+
+//    this.fileService.selectItemById(newSection.file, newSection._id);
+}
+
+  setContent(section: Section) {
+    section.file = null;
+    this.postFileSelectionModal(section);
   }
 
-  deleteContent(i) {
-    this.selectedTraining.sections[i].files = [];
-    this.collapsePanelHeight[i] = 200;
+  deleteSection(i) {
+    this.selectedTraining.sections.splice(i, 1);
+  }
+
+  cloneTraining(training) {
+    this.trainingService.cloneTraining(training);
+  }
+
+  cancel() {
+    this.trainingService.changeEditorVisualState(false);
   }
 
   handleCancel() {
     this.isFileSelectModalVisible = false;
+  }
+
+  deleteItemConfirm(id) {
+    this.trainingService.deleteTraining(id);
+  }
+
+  deleteItemCancel() {
+
+  }
+
+  setMode(mode) {
+    this.trainingService.setViewMode(mode);
+    this.mode = mode;
+  }
+
+  tabChange(index) {
+    //    console.log('tabChange', this.selectedTraining.sections[index]);
+
+    //    this.fileService.selectFileById(this.selectedTraining.sections[index].file);
   }
 }
 

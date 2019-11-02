@@ -29,45 +29,63 @@
                 <span class="text-gray font-size-16"> &nbsp;Jobs - </span>
                 <span class="m-b-0 m-r-5 font-size-24">&nbsp;{{jobCnt$ | async}}</span>
             </div>
-            <!--
-                <div class="media align-items-center m-r-40 m-v-5">
-                    <div class="font-size-27"> 
-                        <i class="text-success" style="vertical-align: .2em !important;" nz-icon nzType="solution" theme="outline"></i>
-                    </div>
-                    <div class="d-flex align-items-center m-l-10">
-                        <span class="m-b-0 m-r-5 font-size-30">0</span>
-                        <span class="text-gray font-size-20">Trainings</span>
-                    </div>
-                </div>
-                <div class="media align-items-center m-r-40 m-v-5">
-                    <div class="font-size-27">
-                        <i class="text-primary" style="vertical-align: .2em !important;" nz-icon nzType="team" theme="outline"></i>
-                    </div>
-                    <div class="d-flex align-items-center m-l-10">
-                        <span class="m-b-0 m-r-5 font-size-30">0</span>
-                        <span class="text-gray font-size-20 ">Users</span>
-                    </div>
-                </div>
-                <div class="media align-items-center m-v-5">
-                        <div class="font-size-27">
-                            <i class="text-warning fal fa-hard-hat" style="vertical-align: .1em !important;" ></i>
-                        </div>
-                        <div class="d-flex align-items-center m-l-10">
-                            <span class="m-b-0 m-r-5 font-size-30">0</span>
-                            <span class="text-gray font-size-20 ">Jobs</span>
-                        </div>
-                    </div>
-                </div>
-                -->
         </div>
     </div>
-    <nz-card style="width:100%;">
-        <h3>This is the Getting Started step wizard.</h3>
-        The following steps guide you through the complete setup of myTrainingdocs for your team.
-    </nz-card>
+</div>
+<div style="width:100%; height:100%;">
+    <h3>This is the Getting Started step wizard.</h3>
+    The following steps guide you through the complete setup of myTrainingdocs for your team.
+    <!--
+        <button nz-button nzType="primary" nzSize="small" (click)="showMainIntro = false">Dismiss
+        </button>
+        -->
 
+    <nz-tabset nzTabPosition="top" nzSize="large" style="margin-top: 20px;">
+        <nz-tab [nzTitle]="header1Template" style="width:100%;height:900px;">
+            <h4 style="text-align: center;">Step 1 - Upload Files</h4>
+            <div>
+                <nz-alert class="m-b-10" nzType="info" nzMessage="Managing Your Files"
+                    nzDescription="Selecting the 'add file' icon brings up the file upload dialog where you can select files from your local machine, Google Drive, or Dropbox.  Once uploaded, selecting the file will show the file in our document viewer and let you edit properties of the file."
+                    nzShowIcon nzCloseable>
+                </nz-alert>
+                <mtd-file-mgr mode="brief" style="height: 900px;"></mtd-file-mgr>
+            </div>
+        </nz-tab>
+        <nz-tab [nzTitle]="header2Template">
+            <div style="width:100%;height:80%;">
+                <h4 style="text-align: center;">Step 2 - Create Trainings</h4>
+                <mtd-trainings></mtd-trainings>
+            </div>
+        </nz-tab>
+        <nz-tab [nzTitle]="header3Template">
+            <h4 style="text-align: center;">Step 3 - Add Team Members</h4>
+            <div>
+                <mtd-users></mtd-users>
+            </div>
+        </nz-tab>
+        <nz-tab [nzTitle]="header4Template">
+            <h4 style="text-align: center;">Step 4 - Define Jobs</h4>
+            <div>
+                <mtd-users></mtd-users>
+            </div>
+        </nz-tab>
+        <nz-tab [nzTitle]="header5Template">
+            <h4 style="text-align: center;">Step 5 - Assign Trainings to Jobs</h4>
+            <div>
+                Place Holder
+            </div>
+        </nz-tab>
+        <nz-tab [nzTitle]="header6Template">
+            <h4 style="text-align: center;">Step 6 - Assign Jobs to People</h4>
+            <div>
+                Place Holder
+            </div>
+        </nz-tab>
+    </nz-tabset>
+
+    <!--
     <nz-collapse [nzBordered]="true" nzAccordion>
-        <nz-collapse-panel (nzActiveChange)="activateStep($event, 1)" [nzHeader]="header1Template" nzActive="false"
+        <nz-collapse-panel id="step1" (nzActiveChange)="activateStep($event, 1)" [nzHeader]="header1Template" nzActive="false"
             nzShowArrow="false">
             <div style="max-height:550px;overflow:scroll;">
                 <nz-alert class="m-b-10" nzType="info" nzMessage="Managing Your Files"
@@ -77,94 +95,64 @@
                 <mtd-file-mgr mode="brief"></mtd-file-mgr>
             </div>
         </nz-collapse-panel>
-        <nz-collapse-panel [nzHeader]="header2Template" nzActive="false" nzShowArrow="false">
-            <div style="overflow:scroll;">
-                <div style="width:100%;">
-                    <span style="font-size: 14px;">Select a training template : </span>
-                    <div style="display: inline-block;margin-right: 20px;margin-left:30px;">
-                        <i class="fal fa-file-alt" style="font-size: 28px;" nz-tooltip
-                            nzTooltipTitle="Basic Training Template" (click)="currentTemplate='basic'"
-                            [ngClass]="{'current-template': currentTemplate === 'basic'}"></i>
-                            Basic
-                    </div>
-                    <div style="display: inline-block;margin-right: 20px;">
-                        <i class="fal fa-file-audio" style="font-size: 28px;" nz-tooltip
-                            nzTooltipTitle="Audio Training Template" (click)="currentTemplate='audio'"
-                            [ngClass]="{'current-template': currentTemplate === 'audio'}"></i>
-                            Audio
-                    </div>
-                    <div style="display: inline-block;margin-right: 20px;">
-                        <i class="fal fa-file-video" style="font-size: 28px;" nz-tooltip
-                            nzTooltipTitle="Video Training Template" (click)="currentTemplate='video'"
-                            [ngClass]="{'current-template': currentTemplate === 'video'}"></i>
-                            Video
-                    </div>
-                </div>
-                <mtd-training-basic *ngIf="currentTemplate === 'basic'"></mtd-training-basic>
-                <div *ngIf="currentTemplate === 'audio'">
-                    <h2 style="text-align: center;margin-top:20px;">Audio Training Template  -  Coming Soon</h2>
-                </div>
-                <div *ngIf="currentTemplate === 'video'">
-                    <h2 style="text-align: center;margin-top:20px;">Video Training Template  -  Coming Soon</h2>
-                </div>
-                </div>
+        <nz-collapse-panel id="step2" (nzActiveChange)="activateStep($event, 2)" [nzHeader]="header2Template" nzActive="false" nzShowArrow="false">
+            <mtd-trainings></mtd-trainings>
         </nz-collapse-panel>
-        <nz-collapse-panel [nzHeader]="header3Template" nzActive="false" nzShowArrow="false">
+        <nz-collapse-panel id="step3" (nzActiveChange)="activateStep($event, 3)" [nzHeader]="header3Template" nzActive="false" nzShowArrow="false">
             <div style="max-height:550px;overflow:scroll;">
                 <mtd-users></mtd-users>
             </div>
         </nz-collapse-panel>
-        <nz-collapse-panel [nzHeader]="header4Template" nzActive="false" nzShowArrow="false">
+        <nz-collapse-panel id="step4" (nzActiveChange)="activateStep($event, 4)" [nzHeader]="header4Template" nzActive="false" nzShowArrow="false">
             <div style="max-height:550px;overflow:scroll;">
                 <mtd-users></mtd-users>
             </div>
         </nz-collapse-panel>
-        <nz-collapse-panel [nzHeader]="header5Template" nzActive="false" nzShowArrow="false">
+        <nz-collapse-panel id="step5" (nzActiveChange)="activateStep($event, 5)" [nzHeader]="header5Template" nzActive="false" nzShowArrow="false">
             <div style="max-height:550px;overflow:scroll;">
                 Place Holder
             </div>
         </nz-collapse-panel>
-        <nz-collapse-panel [nzHeader]="header6Template" nzActive="false" nzShowArrow="false">
+        <nz-collapse-panel id="step6" (nzActiveChange)="activateStep($event, 6)" [nzHeader]="header6Template" nzActive="false" nzShowArrow="false">
             <div style="max-height:550px;overflow:scroll;">
                 Place Holder
             </div>
         </nz-collapse-panel>
     </nz-collapse>
-    <ng-template #header1Template>
-        <div>
-            <span style="font-size: 20px;color:blue;">Step 1</span>
-            <span style="font-size: 16px;">&nbsp;&nbsp;-&nbsp;&nbsp;Upload Training Content</span>
-            <nz-tag style="float:right;border-radius:3px;border-color: rgb(162,212, 251);" [nzColor]="'blue'">5 minutes
-            </nz-tag>
+-->
+    <ng-template #header1Template style="width:16%;">
+        <div style="text-align: center;">
+            <div style="font-size: 20px;color:blue;margin-bottom:5px;">Step 1</div>
+            <div style="font-size: 10px;">Upload Files</div>
         </div>
     </ng-template>
-    <ng-template #header2Template>
-        <span style="font-size: 20px;color:blue;">Step 2</span>
-        <span style="font-size: 16px;">&nbsp;&nbsp;-&nbsp;&nbsp;Create Trainings</span>
-        <nz-tag style="float:right;border-radius:3px;border-color: rgb(162,212, 251);" [nzColor]="'blue'">30 minutes
-        </nz-tag>
+    <ng-template #header2Template style="width:16%;">
+        <div style="text-align: center;">
+            <div style="font-size: 20px;color:blue;margin-bottom:5px;">Step 2</div>
+            <div style="font-size: 10px;">Create Trainings</div>
+        </div>
     </ng-template>
-    <ng-template #header3Template>
-        <span style="font-size: 20px;color:blue;">Step 3</span>
-        <span style="font-size: 16px;">&nbsp;&nbsp;-&nbsp;&nbsp;Add Team Members</span>
-        <nz-tag style="float:right;border-radius:3px;border-color: rgb(162,212, 251);" [nzColor]="'blue'">30 minutes
-        </nz-tag>
+    <ng-template #header3Template style="width:16%;">
+        <div style="text-align: center;">
+            <div style="font-size: 20px;color:blue;margin-bottom:5px;">Step 3</div>
+            <div style="font-size: 10px;">Add Team Members</div>
+        </div>
     </ng-template>
-    <ng-template #header4Template>
-        <span style="font-size: 20px;color:blue;">Step 4</span>
-        <span style="font-size: 16px;">&nbsp;&nbsp;-&nbsp;&nbsp;Define Jobs</span>
-        <nz-tag style="float:right;border-radius:3px;border-color: rgb(162,212, 251);" [nzColor]="'blue'">5 minutes
-        </nz-tag>
+    <ng-template #header4Template style="width:16%;">
+        <div style="text-align: center;">
+            <div style="font-size: 20px;color:blue;margin-bottom:5px;">Step 4</div>
+            <div style="font-size: 10px;">Define Jobs</div>
+        </div>
     </ng-template>
-    <ng-template #header5Template>
-        <span style="font-size: 20px;color:blue;">Step 5</span>
-        <span style="font-size: 16px;">&nbsp;&nbsp;-&nbsp;&nbsp;Assign Trainings to Jobs</span>
-        <nz-tag style="float:right;border-radius:3px;border-color: rgb(162,212, 251);" [nzColor]="'blue'">15 minutes
-        </nz-tag>
+    <ng-template #header5Template style="width:100px;">
+        <div style="text-align: center;">
+            <div style="font-size: 20px;color:blue;margin-bottom:5px;">Step 5</div>
+            <div style="font-size: 10px;">Assign Trainings to Jobs</div>
+        </div>
     </ng-template>
-    <ng-template #header6Template>
-        <span style="font-size: 20px;color:blue;">Step 6</span>
-        <span style="font-size: 16px;">&nbsp;&nbsp;-&nbsp;&nbsp;Assign Jobs to People</span>
-        <nz-tag style="float:right;border-radius:3px;border-color: rgb(162,212, 251);" [nzColor]="'blue'">15 minutes
-        </nz-tag>
+    <ng-template #header6Template style="width:16%;">
+        <div style="text-align: center;">
+            <div style="font-size: 20px;color:blue;margin-bottom:5px;">Step 6</div>
+            <div style="font-size: 10px;">Assign Jobs to People</div>
+        </div>
     </ng-template>

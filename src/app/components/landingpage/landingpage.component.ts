@@ -157,7 +157,7 @@ export class LandingpageComponent implements OnInit {
 
   destinations = {
     home:{
-      ngxScrollToDestination: 'top'
+      ngxScrollToDestination: 'home'
     },
     benefits: {
       ngxScrollToDestination: 'benefits'

@@ -9,7 +9,7 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { ProjectsModule } from '../projects/projects.module';
 import { MembersModule } from '../members/members.module';
-import { NzCardModule, NzTagModule, NzAlertModule } from 'ng-zorro-antd';
+import { NzCardModule, NzTagModule, NzAlertModule, NzTabsModule, NzButtonModule } from 'ng-zorro-antd';
 import { TrainingsModule } from '../trainings/trainings.module';
 
 @NgModule({
@@ -27,7 +27,9 @@ import { TrainingsModule } from '../trainings/trainings.module';
     NzCardModule,
     NzTagModule,
     NzAlertModule,
-    TrainingsModule
+    TrainingsModule,
+    NzTabsModule,
+    NzButtonModule
   ],
   exports: [
     GettingstartedComponent

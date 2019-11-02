@@ -12,26 +12,32 @@ export interface TrainingModel {
   iconClass: string,
   iconColor: string,
   iconSource: string,
+  introductionLabel: string,
+  introduction: string,
+  execSummary: string,
+  execSummaryLabel: string,
+  goals: string,
+  goalsLabel: string,
   sections: Section[],
-  assessment: Assessment
+  assessment: Assessment,
   tags: string[]
 }
 
 export interface Section {
+  _id: string,
   title: string,
   intro: string,
-  files: string[],
-  assessment: Assessment
+  file: string,
 }
 
 export interface Assessment {
-  questions: Question[]
-}
-
-export interface Question {
-  question: string,
-  choices: string[],
-  answer: number
+  questions: [
+    {
+      question: string,
+      choices: string[],
+      answer: number[]
+    }
+  ]
 }
 
 export interface Comment {

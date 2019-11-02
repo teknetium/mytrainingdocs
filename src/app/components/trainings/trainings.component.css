@@ -38,3 +38,9 @@
   cursor: not-allowed;
   opacity: .7;
 }
+
+.active-item {
+  background-color: #efefef;
+  border: 1px solid #dddddd;
+  color: blue;
+}

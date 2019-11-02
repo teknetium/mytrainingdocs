@@ -7,17 +7,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-var QuestionSchema = new Schema({
-  question: String,
-  choices: [String],
-  answer: Number
-});
-
-var AssessmentSchema = new Schema({
-  questions: [QuestionSchema]
-});
-
-
 
 const trainingSchema = new Schema({
   _id: { type: String, required: true },
@@ -28,18 +17,31 @@ const trainingSchema = new Schema({
   dateCreated: { type: Number, required: true },
   estimatedTimeToComplete: { type: Number, required: true },
   description: { type: String, required: true },
+  introduction: { type: String, required: false },
+  introductionLabel: { type: String, required: false },
+  execSummary: { type: String, required: false },
+  execSummaryLabel: { type: String, required: false },
+  goals: { type: String, required: false },
+  goalsLabel: { type: String, required: false },
   image: { type: String, required: false },
   iconClass: { type: String, required: true },
   iconColor: { type: String, required: true },
   iconSource: { type: String, required: true },
-  sections: {
+  execSummary: { type: String, required: false },
+  sections: [{
+    _id: { type: String, required: true },
     title: { type: String },
     intro: { type: String },
-    files: { type: [String] },
-    assessment: AssessmentSchema
-  },
+    file: { type: String },
+  }],
   tags: [String],
-  assessment: AssessmentSchema,
-  });
+  assessment: {
+    questions: [{
+      question: String,
+      choices: [String],
+      answer: [Number]
+    }]
+  }
+});
 
 module.exports = mongoose.model("Training", trainingSchema);

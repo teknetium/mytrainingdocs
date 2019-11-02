@@ -1,179 +1,323 @@
-<div style="padding:20px;">
-    <div style="text-align: center;">
-        <h2>Basic Training Template</h2>
-    </div>
-    <div>
-        <button nzType="primary" nz-button (click)="saveTraining()" style="margin-right:5px;" nzSize="small">
-            Preview Training
-        </button>
-        <button nzType="primary" nz-button (click)="saveTraining()" nzSize="small">
-            Save Training
-        </button>
-    </div>
+<div *ngIf="showEditor$ | async">
+    <div *ngIf="selectedTraining$ | async as training" [ngClass]="{'fullscreen': fullscreen, 'regular': !fullscreen}">
+        <div [ngClass]="{'toolbar-fullscreen': fullscreen, 'toolbar': !fullscreen}">
+            {{offsetLeft}}
+            <button *ngIf="mode === 'edit'" style="font-size:12px;display:inline-block;" nz-button nzType="default"
+                nzSize="small" (click)="setMode('preview')">
+                Preview
+            </button>
+            <button *ngIf="mode === 'preview'" style="font-size:12px;display:inline-block;" nz-button nzType="default"
+                nzSize="small" (click)="setMode('edit')">
+                Edit
+            </button>
+            <button *ngIf="(action$ | async) === 'newTraining' && mode === 'edit'" nzType="default" nz-button
+                nzSize="small" style="font-size:12px;display: inline-block;" (click)="createTraining()">Create
+            </button>
+            <button *ngIf="(action$ | async) !== 'newTraining' && mode === 'edit'" nzType="default" nz-button
+                nzSize="small" style="font-size:12px;display: inline-block;" (click)="saveTraining()">Save
+            </button>
+            <button *ngIf="mode === 'edit'" style="font-size:12px;display:inline-block;" nz-button nzType="default"
+                nzSize="small" (click)="cancel()">
+                Cancel
+            </button>
+            <button *ngIf="mode === 'edit'" class="toolbar-button" nz-button nzType="default"
+                style="font-size:12px;display:inline-block;" nzSize="small" (click)="cloneTraining(training)">
+                Clone Training
+            </button>
+            <button *ngIf="mode === 'edit'" class="toolbar-button" nz-button nzType="default"
+                style="font-size:12px;display:inline-block;" nzSize="small" (click)="addSection()">
+                Add Section
+            </button>
+            <button *ngIf="mode === 'edit'" class="toolbar-button" nz-button nzType="default"
+                style="color:red;font-size:12px;display:inline-block;" nzSize="small" nz-popconfirm
+                nzPopconfirmTitle="Delete this Training?" nzPopconfirmPlacement="bottom"
+                (nzOnConfirm)="deleteItemConfirm(training._id)" (nzOnCancel)="deleteItemCancel()">
+                Delete Training
+            </button>
+            <i *ngIf="fullscreen" nz-icon style="font-size:30px;float:right;display:inline-block;"
+                nzType="fullscreen-exit" (click)="fullscreen = !fullscreen" nz-tooltip nzTooltipTitle="Shrink">
+            </i>
+            <i *ngIf="!fullscreen" style="font-size:30px;float:right;display:inline-block;" nz-icon nzType="fullscreen"
+                (click)="fullscreen = !fullscreen" nz-tooltip nzTooltipTitle="Expand">
+            </i>
+        </div>
 
-    <div #myContainer *ngIf="selectedTraining$ | async as training" style="position:relative;width:100%;padding:30px;">
-        <!--
-        <img [src]="training.image" alt="title image"
-            style="z-index:-1;position:absolute;left:0;top:0;width: 100%; height:25%;background: transparent;" />
+        <div #myContainer *ngIf="selectedTraining$ | async as training"
+            [ngClass]="{'container-fullscreen': fullscreen, 'container': !fullscreen}">
+            <div #toc [ngClass]="{'toc-fullscreen': fullscreen, 'toc': !fullscreen}">
+                <ol class="foo">
+                    <li class="">
+                        <a ngx-scroll-to="banner" [ngx-scroll-to-duration]="ngxScrollToDuration"
+                            [ngx-scroll-to-easing]="ngxScrollToEasing" ngx-scroll-to-offset="-60">Introduction</a>
+                    </li>
+                    <li class="">
+                        <a ngx-scroll-to="maincontent" [ngx-scroll-to-duration]="ngxScrollToDuration"
+                            [ngx-scroll-to-easing]="ngxScrollToEasing">Main Content</a>
+                        <ol style="list-style-type:lower-roman;list-style-position:inside;">
+                            <li *ngFor="let section of training.sections; index as i">
+                                <a ngx-scroll-to="section{{i + 1}}" [ngx-scroll-to-duration]="ngxScrollToDuration"
+                                    [ngx-scroll-to-easing]="ngxScrollToEasing" ngx-scroll-to-offset="-30">Section
+                                    {{i + 1}}</a>
+                            </li>
+                        </ol>
+                    </li>
+                    <li class="">
+                        <a ngx-scroll-to="assessment" [ngx-scroll-to-duration]="ngxScrollToDuration"
+                            [ngx-scroll-to-easing]="ngxScrollToEasing" ngx-scroll-to-offset="0">Assessment</a>
+                    </li>
+                    <li class="">
+                        <a ngx-scroll-to="ratingscomments" [ngx-scroll-to-duration]="ngxScrollToDuration"
+                            [ngx-scroll-to-easing]="ngxScrollToEasing" ngx-scroll-to-offset="0">Ratings & Comments</a>
+                    </li>
+                    <!--
+            <nz-anchor>
+                <nz-link nzHref="#titlebanner" nzTitle="Title Banner"></nz-link>
+                <nz-link nzHref="maincontent" nzTitle="main-content">
+                    <nz-link *ngFor="let section of training.sections; index as i" nzHref="section{{i+1}}"
+                        nzTitle="section {{i+1}}"></nz-link>
+                </nz-link>
+            </nz-anchor>
             -->
-        <div style="border:1px solid #dddddd;border-radius:10px;height:200px;overflow:hidden;">
-            <div style="padding:30px;width:35%;float:left;">
-                <div style="width:100%;background: rgba(255, 255, 255, .3);">
-                    <i [ngClass]="training.iconClass" style="display: inline-block;font-size:2em;"
-                        [ngStyle]="{'color': training.iconColor}"></i>
-                    <div style="display:inline-block;font-size:2em;margin-left:20px;">
-                        {{training.title}}
+                </ol>
+            </div>
+            <!--
+            <nz-tabset nzTabPosition="left" nzSize="small" (nzSelectedIndexChange)="tabChange($event)">
+            <nz-tab nzTitle="Title Banner">
+            -->
+            <div style="width:75%;display:inline-block;float: right;">
+                <div id="banner" style="padding:20px ;border:1px solid #dddddd;border-radius:10px;margin-bottom:10px;">
+                    <div style="width:15%;height:100%;display: inline-block; float: left;">
+                        <i *ngIf="mode === 'edit'" [ipFallbackIcon]="fallbackIcon" [iconPicker]="training.iconClass"
+                            [ipIconPack]="['fa5']" [ipPosition]="'bottom'" [ipWidth]="'250px'"
+                            [ipPlaceHolder]="'Choose an icon'" (iconPickerSelect)="onIconPickerSelect($event)"
+                            [ngClass]="training.iconClass" style="display: inline-block;font-size:50px;cursor: pointer;"
+                            [ngStyle]="{'color': training.iconColor}"></i>
+                        <i *ngIf="mode === 'preview'" [ngClass]="training.iconClass"
+                            style="display: inline-block;font-size:50px;" [ngStyle]="{'color': training.iconColor}"></i>
+                        <span *ngIf="mode === 'edit'" [style.color]="iconColor" [cpPosition]="'right'"
+                            [cpPositionRelativeToArrow]="true" (colorPickerChange)="onColorChange($event)"
+                            [(colorPicker)]="training.iconColor" style="cursor: pointer;margin-left:10px;"
+                            [ngStyle]="{'color': training.iconColor}">
+                            <i class="fas fa-palette" style="font-size:24px;color:red;"></i>
+                        </span>
+                    </div>
+                    <div style="display: inline-block;width:50%;height: 100%; float: left;">
+
+                        <div style="display:inline-block;font-size:2.0em;width:100%;">
+                            <p *ngIf="mode === 'edit'" nz-paragraph nzEditable [(nzContent)]="training.title"></p>
+                            <span *ngIf="mode === 'preview'">{{training.title}}</span>
+                        </div>
+                        <div style="display: block;width:100%;font-size:1em;">
+                            <p *ngIf="mode === 'edit'" nz-paragraph nzEditable [(nzContent)]="training.description"></p>
+                            <span *ngIf="mode === 'preview'">{{training.description}}</span>
+                        </div>
+                    </div>
+                    <div style="display: inline-block;width:35%;height: 100%;float:right;">
+
+                        <div style="display: block;width:100%;font-size:10px;margin-top:5px;">
+                            {{training.owner}}
+                        </div>
+                        <div style="display: block;width:100%;font-size:10px;margin-top:5px;">
+                            {{training.dateCreated | date:'medium'}}
+                        </div>
+                        <div style="display:block;width:100%;margin-top:5px;">
+                            <span style="font-size:10px;display:inline-block;">Estimated Time to Complete : </span>
+                            <span *ngIf="mode === 'preview'"
+                                style="display: inline-block;">&nbsp;&nbsp;{{training.estimatedTimeToComplete}}</span>
+                            <nz-input-number *ngIf="mode === 'edit'" [(ngModel)]="training.estimatedTimeToComplete"
+                                style="display:inline-block;" nzMin="15" nzMax="300" nzStep="15">
+                            </nz-input-number>
+                            <span style="font-size:10px;">&nbsp;minutes</span>
+
+                        </div>
                     </div>
                     <div style="clear: both;"></div>
-                </div>
-                <div style="display: block;width:100%;font-size:1em;">
-                    {{training.description}}
-                </div>
-            </div>
-            <div style="float:right;overflow: hidden;width:60%;display: inline-block;">
-                <img [src]="training.image" alt="img" />
-            </div>
-            <div style="clear: both;"></div>
-        </div>
-        <div style="margin-top:20px;">
-            <ng-container *ngIf="training.sections.length > 1">
-                <nz-collapse [nzBordered]="false" nzAccordion style="">
-                    <nz-collapse-panel *ngFor="let section of training.sections; index as i" [nzHeader]="template"
-                        style="padding:20px;" nzActive="false" nzShowArrow="true"
-                        (nzActiveChange)="activateSection($event, i)">
+                    <div style="margin-top:50px;">
+                        <h4>
+                            <p *ngIf="mode === 'edit'" nz-paragraph nzEditable
+                                [(nzContent)]="training.introductionLabel">
+                            </p>
+                        </h4>
+                        <span *ngIf="mode === 'preview'">
+                            <h4>{{training.introductionLabel}}</h4>
+                        </span>
+                    </div>
 
-                        <div style="padding:0 50px;width:100%;" >
-                            <h2>Introduction</h2>
-                            {{section.intro}}
+                    <div style="padding-left: 30px;">
+                        <span style="font-size:14px;">
+                            <p *ngIf="mode === 'edit'" nz-paragraph nzEditable [(nzContent)]="training.introduction"
+                                style=""></p>
+                            <span *ngIf="mode === 'preview'">
+                                {{training.introduction}}
+                            </span>
+                        </span>
+                    </div>
+                    <div style="margin-top:50px;">
+                        <h4>
+                            <p *ngIf="mode === 'edit'" nz-paragraph nzEditable
+                                [(nzContent)]="training.execSummaryLabel">
+                            </p>
+                        </h4>
+                        <span *ngIf="mode === 'preview'">
+                            <h4>{{training.execSummaryLabel}}</h4>
+                        </span>
+                    </div>
 
-                            <button *ngIf="section.files.length > 0" nzType="danger" nz-button
-                                (click)="deleteContent(i)" nzSize="small" style="margin:10px 0;display: block;">
-                                Delete Content
-                            </button>
-                            <mtd-files *ngIf="section.files.length > 0" [showFile]="section.files[0]" readOnly="true" [height]="collapsePanelHeight[i]">
-                            </mtd-files>
-                            <div *ngIf="section.files.length === 0" style="display:block;width:100%;">
-                                <i style="font-size:40px;margin-top: 10px;" twoToneColor="#3f87f5" nz-icon
-                                    nzType="file-unknown" theme="twotone" (click)="isFileSelectModalVisible = true"></i>
-                            </div>
-                            <button nzType="primary" nz-button (click)="addSectionAssessment(i)" nzSize="small"
-                                style="margin-top:20px;display: block;">
-                                Add Section Assessment
-                            </button>
-                            <nz-modal [(nzVisible)]="isFileSelectModalVisible" nzTitle="Select Document"
-                                (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
-                                <ul style="list-style-type:none;">
-                                    <li *ngFor="let item of files$ | async; index as i" class="fileList"
-                                        (click)="selectFile(item, i)" style="padding:5px 0;"
-                                        [ngClass]="{'selected-file': selectedFileIndex === i}">
-                                        <div style="display: inline-block;">
-                                            <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24"
-                                                [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
-                                                theme="twotone"></i>
-                                            <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
-                                                [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
-                                        </div>
-                                        <div class="" style="display: inline-block;">
-                                            {{ item.name }} &nbsp;&nbsp;
-                                        </div>
-                                        <ng-template #titleTemplate>
-                                            <div style="display: inline-block;">
-                                                <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24"
-                                                    [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
-                                                    theme="twotone"></i>
-                                                <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
-                                                    [ngStyle]="{'color': item.iconColor}"
-                                                    [ngClass]="item.iconClass"></i>
-                                            </div>
-                                            <div class="" style="display: inline-block;">
-                                                {{ item.name }} &nbsp;&nbsp;
-                                            </div>
-                                        </ng-template>
-                                        <ng-template #contentTemplate>
-                                            <div style="width:300px;">
-                                                {{ item.description}}
-                                            </div>
-                                        </ng-template>
-                                    </li>
-                                </ul>
-                            </nz-modal>
-                            <ng-template #template>
-                                <div>
-                                    <span style="font-size:22px;font-weight:500;margin-right:20px;">Section
-                                        {{i + 1}}</span>
-                                    <span style="font-size:18px;">{{section.title}}</span>
+                    <div style="padding-left: 30px;">
+                        <span style="font-size:14px;">
+                            <p *ngIf="mode === 'edit'" nz-paragraph nzEditable [(nzContent)]="training.execSummary"
+                                style=""></p>
+                            <span *ngIf="mode === 'preview'">
+                                {{training.execSummary}}
+                            </span>
+                        </span>
+                    </div>
+                    <div style="margin-top:50px;">
+                        <h4>
+                            <p *ngIf="mode === 'edit'" nz-paragraph nzEditable [(nzContent)]="training.goalsLabel">
+                            </p>
+                        </h4>
+                        <span *ngIf="mode === 'preview'">
+                            <h4>{{training.goalsLabel}}</h4>
+                        </span>
+                    </div>
+
+                    <div style="padding-left: 30px;">
+                        <span style="font-size:14px;">
+                            <p *ngIf="mode === 'edit'" nz-paragraph nzEditable [(nzContent)]="training.goals" style="">
+                            </p>
+                            <span *ngIf="mode === 'preview'">
+                                {{training.goals}}
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <!--
+            </nz-tab>
+            <nz-tab [nzTitle]="template" *ngFor="let section of training.sections; index as i"
+                style="padding:0 20px 20px 20px;width:100%;">
+                            -->
+
+                <div *ngIf="mode === 'edit'" id="maincontent" style="font-size: 20px;font-weight:500;">Main Content
+                </div>
+                <div id="section{{i+1}}" *ngFor="let section of training.sections; index as i"
+                    style="margin-bottom:10px;">
+                    <span *ngIf="mode === 'edit'" style="font-size: 20px;font-weight:500;">Section {{i + 1}}</span>
+                    <div
+                        style="padding:0 20px 20px 20px ;width:100%;border:1px solid #dddddd;border-radius:10px;margin-bottom:10px;">
+                        <i *ngIf="mode === 'edit' && i > 0" style="font-size:20px;float:right;" nz-icon nzType="delete"
+                            (click)="deleteSection(i)"></i>
+                        <div style="clear:both;"></div>
+                        <div>
+                            <h3 *ngIf="mode === 'preview'">{{section.title}}</h3>
+                            <p *ngIf="mode === 'edit'" nz-paragraph nzEditable [(nzContent)]="section.title"></p>
+                            <span *ngIf="mode === 'preview'">{{section.intro}}</span>
+                            <p *ngIf="mode === 'edit'" nz-paragraph nzEditable [(nzContent)]="section.intro"></p>
+                            <ng-container *ngIf="mode === 'edit'">
+                                <div style="display:block;width:100%;">
+                                    <i style="font-size:30px;margin-top: 10px;" twoToneColor="#3f87f5" nz-icon
+                                        nzType="file-unknown" theme="twotone" (click)="setContent(section)"></i>
                                 </div>
-                            </ng-template>
+                            </ng-container>
+                            <div *ngIf="section.file" style="width:100%;display:block;height: 500px;">
+                                <iframe [src]="fileService.pDocHash[section._id] | async" allowfullscreen
+                                    style="width:100%;height:100%;"></iframe>
+                            </div>
                         </div>
-                    </nz-collapse-panel>
-                </nz-collapse>
-                <button nzType="primary" nz-button (click)="addSection()" nzSize="small"
-                    style="margin-top:20px;display: block;">
-                    Add Section
-                </button>
-                <button nzType="primary" nz-button (click)="addFinalAssessment()" nzSize="small"
-                    style="margin-top:20px;display: block;">
-                    Add Final Assessment
-                </button>
-            </ng-container>
-            <div *ngIf="training.sections.length === 1" >
-                <h1>{{training.sections[0].title}}</h1>
-                <h2>Introduction</h2>
-                {{training.sections[0].intro}}
-                <button *ngIf="training.sections[0].files.length > 0" nzType="danger" nz-button
-                    (click)="deleteContent(0)" nzSize="small" style="margin:10px 0;display: block;">
-                    Delete Content
-                </button>
-                <mtd-files *ngIf="training.sections[0].files.length > 0" [showFile]="training.sections[0].files[0]"
-                    readOnly="true" [height]="collapsePanelHeight[0]"></mtd-files>
-                <div *ngIf="training.sections[0].files.length === 0" style="display:block;width:100%;">
-                    <i style="font-size:40px;margin-top: 10px;" twoToneColor="#3f87f5" nz-icon nzType="file-unknown"
-                        theme="twotone" (click)="isFileSelectModalVisible = true"></i>
+                        <nz-modal [(nzVisible)]="isFileSelectModalVisible" nzTitle="Select Document"
+                            (nzOnCancel)="handleCancel()" nzOkDisabled="true">
+                            <ul style="list-style-type:none;">
+                                <li *ngFor="let item of files$ | async; index as i" class="fileList"
+                                    (click)="selectFile(item, i)" style="padding:5px 0;">
+                                    <div style="display: inline-block;">
+                                        <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24"
+                                            [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
+                                            theme="twotone"></i>
+                                        <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
+                                            [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
+                                    </div>
+                                    <div class="" style="display: inline-block;">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;{{ item.name }}
+                                    </div>
+                                </li>
+                            </ul>
+                        </nz-modal>
+                        <ng-template #template>
+                            <span style="font-size:12px;">Section {{i + 1}}</span>
+                        </ng-template>
+                    </div>
                 </div>
-                <button nzType="primary" nz-button (click)="addSection()" nzSize="small"
-                    style="margin-top:20px;display: block;">
-                    Add Section
-                </button>
-                <button nzType="primary" nz-button (click)="addAssessment()" nzSize="small"
-                    style="margin-top:20px;display: block;">
-                    Add Assessment
-                </button>
+                <!--
+            </nz-tab>
+            -->
+                <!--
+    <div *ngIf="training.sections.length === 1">
+        <div *ngIf="mode === 'edit'">
+            <button nzType="primary" nz-button (click)="addSection()" nzSize="small"
+                style="display: inline-block;margin-right:5px;">
+                Add Section
+            </button>
+            <button nzType="primary" nz-button (click)="addAssessment()" nzSize="small" style="display: inline-block;">
+                Add Assessment
+            </button>
+        </div>
+        <h3>
+            <p *ngIf="mode === 'edit'" nz-paragraph nzEditable [(nzContent)]="training.sections[0].title">
+            </p>
+            <span *ngIf="mode === 'preview'">{{training.sections[0].title}}</span>
+        </h3>
+        <h4 *ngIf="mode === 'edit'">Introduction</h4>
+        <p *ngIf="mode === 'edit'" nz-paragraph nzEditable [(nzContent)]="training.sections[0].intro">
+        </p>
+        <span *ngIf="mode === 'preview'">{{training.sections[0].intro}}</span>
+        <ng-container *ngIf="mode === 'edit'">
+            <button *ngIf="training.sections[0].files.length > 0" nzType="danger" nz-button (click)="setContent(0)"
+                nzSize="small" style="margin:0;display: block;;margin-bottom:5px;">
+                Change Content
+            </button>
+        </ng-container>
+        <mtd-files *ngIf="training.sections[0].files.length > 0" [showFile]="training.sections[0].file"
+            readOnly="true" height="800"></mtd-files>
+        <ng-container *ngIf="mode === 'edit'">
+            <div *ngIf="training.sections[0].files.length === 0" style="display:block;width:100%;">
+                <i style="font-size:40px;margin-top: 10px;" twoToneColor="#3f87f5" nz-icon nzType="file-unknown"
+                    theme="twotone" (click)="postFileSelectionModal(0)"></i>
+            </div>
+        </ng-container>
+    </div>
+    <nz-modal [(nzVisible)]="isFileSelectModalVisible" nzTitle="Select Document" (nzOnCancel)="handleCancel()"
+        nzOkDisabled="true">
+        <ul style="list-style-type:none;">
+            <li *ngFor="let item of files$ | async; index as i" class="fileList" (click)="selectFile(item, i)"
+                style="padding:5px 0;">
+                <div style="display: inline-block;">
+                    <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor"
+                        nz-icon [nzType]="item.iconClass" theme="twotone"></i>
+                    <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
+                        [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
+                </div>
+                <div class="" style="display: inline-block;">
+                    &nbsp;&nbsp;&nbsp;&nbsp;{{ item.name }}
+                </div>
+            </li>
+        </ul>
+    </nz-modal>
+    -->
+                <span style="font-size: 24px;font-weight:500;">Assessment</span>
+                <div id="assessment" style="">
+                    <div *ngIf="mode === 'edit'"
+                        style="margin-bottom: 10px;border:1px solid #dddddd;border-radius:10px;padding:20px;">
+                        <button nzType="primary" nz-button (click)="addQuesiton()" nzSize="small"
+                            style="margin-left:5px;display: inline-block;">
+                            Add Question
+                        </button>
+                    </div>
+                </div>
+                <span style="font-size: 24px;font-weight:500;">Ratings & Comments</span>
+                <div id="ratingscomments" style="padding:20px;border:1px solid #dddddd;border-radius:10px;">
+                    <nz-rate [(ngModel)]="rating"></nz-rate>
+                </div>
 
-                <nz-modal [(nzVisible)]="isFileSelectModalVisible" nzTitle="Select Document"
-                    (nzOnCancel)="handleCancel()" nzOkDisabled="true">
-                    <ul style="list-style-type:none;">
-                        <li *ngFor="let item of files$ | async; index as i" class="fileList"
-                            (click)="selectFile(item, i)" style="padding:5px 0;">
-                            <div style="display: inline-block;">
-                                <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24"
-                                    [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
-                                    theme="twotone"></i>
-                                <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
-                                    [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
-                            </div>
-                            <div class="" style="display: inline-block;">
-                                &nbsp;&nbsp;{{ item.name }}
-                            </div>
-                            <ng-template #titleTemplate>
-                                <div style="display: inline-block;">
-                                    <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24"
-                                        [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
-                                        theme="twotone"></i>
-                                    <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
-                                        [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
-                                </div>
-                                <div class="" style="display: inline-block;">
-                                    {{ item.name }} &nbsp;&nbsp;
-                                </div>
-                            </ng-template>
-                            <ng-template #contentTemplate>
-                                <div style="width:300px;">
-                                    {{ item.description}}
-                                </div>
-                            </ng-template>
-                        </li>
-                    </ul>
-                </nz-modal>
             </div>
         </div>
     </div>

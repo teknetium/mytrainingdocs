@@ -25,6 +25,7 @@ export class FilesComponent implements OnInit {
   isAuthenticated = false;
   authenticatedUser$: Observable<UserModel>;
   selectedFile$: Observable<FileModel>;
+  selectedFileIndex$: Observable<number>;
   headerOpen = false;
   authenticatedUser: UserModel;
   isVisible = false;
@@ -69,7 +70,8 @@ export class FilesComponent implements OnInit {
 
   @Input() showFile = null;
   @Input() readOnly = 'false';
-  @Input() height = '200';
+  @Input() height = '600';
+  @Input() streamId = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -78,21 +80,27 @@ export class FilesComponent implements OnInit {
     private userService: UserService,
   ) {
     //    this.files$ = this.fileService.getFilesStream();
+
+    this.selectedFile$ = this.fileService.getSelectedFileStream();
+    this.selectedFileIndex$ = this.fileService.getPSFIStream(this.streamId);
+    this.document$ = this.fileService.getDocPreviewStream();
+    this.uploadedFile$ = this.fileService.getUploadedFileStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.isAuthenticated$ = this.auth.getIsAuthenticatedStream();
     this.isAuthenticated$.subscribe((value) => {
       this.isAuthenticated = value;
     });
-    this.selectedFile$ = this.fileService.getSelectedFileStream();
-    this.document$ = this.fileService.getDocPreviewUrlStream();
-    this.video$ = this.fileService.getVideoStream();
-    this.uploadedFile$ = this.fileService.getUploadedFileStream();
+
     this.setFontSize(0);
 
     this.action$ = this.fileService.getActionStream();
   }
 
   ngOnInit() {
+
+    console.log('ngOnInit of FilesComponent - streamId ', this.streamId);
+
+
     this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
@@ -105,7 +113,11 @@ export class FilesComponent implements OnInit {
       description: [''],
     });
 
+//    this.fileService.setupPrivateDocumentPreviewStream(this.streamId);
+//    this.fileService.setupPrivateVideoPreviewStream(this.streamId);
+
     this.selectedFile$.subscribe((file) => {
+      console.log('selectedFile.subscribe', file);
       this.headerOpen = false;
 
       if (file) {
@@ -121,22 +133,23 @@ export class FilesComponent implements OnInit {
       }
     });
 
-    if (this.showFile) {
-      this.fileService.selectFileById(this.showFile);
-    }
+    //    if (this.showFile) {
+    //      this.fileService.selectFileById(this.showFile);
+    //    }
 
     this.action$.subscribe(action => {
       this.action = action;
-    })
+    });
+
   }
 
   onPlayerReady(api: VgAPI) {
     this.vgApi = api;
-/*
-    this.vgApi.getDefaultMedia().subscriptions.loadedMetadata.subscribe(
-      this.playVideo.bind(this)
-    );
-*/
+    /*
+        this.vgApi.getDefaultMedia().subscriptions.loadedMetadata.subscribe(
+          this.playVideo.bind(this)
+        );
+    */
   }
 
   playVideo() {
@@ -217,7 +230,6 @@ export class FilesComponent implements OnInit {
 
   deleteFileConfirm(): void {
     this.fileService.deleteFile(this.selectedFile._id);
-    this.fileService.selectItem(-1);
   }
 
   viewFile(file: FileModel) {
@@ -225,13 +237,13 @@ export class FilesComponent implements OnInit {
       return;
     }
     this.currentVersionIndex = 0;
-    this.fileService.viewFile(file, this.currentVersionIndex);
+    this.fileService.viewFile(file, this.currentVersionIndex, this.streamId);
     this.isVisible = false;
   }
 
   viewVersion(index) {
     this.currentVersionIndex = index;
-    this.fileService.viewFile(this.selectedFile, this.currentVersionIndex);
+    this.fileService.viewFile(this.selectedFile, this.currentVersionIndex, this.streamId);
     this.isVisible = false;
   }
 

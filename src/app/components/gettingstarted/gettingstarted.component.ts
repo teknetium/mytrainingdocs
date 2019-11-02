@@ -7,12 +7,14 @@ import { JobService } from '../../shared/services/job.service';
 import { Observable } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.model';
 
+
 @Component({
   selector: 'app-gettingstarted',
   templateUrl: './gettingstarted.component.html',
   styleUrls: ['./gettingstarted.component.css']
 })
 export class GettingstartedComponent implements OnInit {
+
 
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
@@ -21,6 +23,7 @@ export class GettingstartedComponent implements OnInit {
   trainingCnt$: Observable<number>;
   jobCnt$: Observable<number>;
   currentTemplate = '';
+  showMainIntro = true;
 
   constructor(private auth: AuthService,
     private userService: UserService,
@@ -45,7 +48,9 @@ export class GettingstartedComponent implements OnInit {
   }
 
   activateStep(event, stepNum) {
-    this.fileService.selectItem(-1);
+    if (stepNum === 1) {
+//      this.fileService.selectItem(-1);
+    }
   }
 
 }

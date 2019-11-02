@@ -1,4 +1,4 @@
-<div *ngIf="selectedFile$ | async as file" style="display:block;width:100%;height:100%;position:relative;">
+<div *ngIf="selectedFile$ | async as file" style="display:block;width:100%; position:relative;">
   <nz-collapse *ngIf="readOnly !== 'true'" [nzBordered]="false" nzAccordion>
     <nz-collapse-panel [nzHeader]="headerTemplate" [nzActive]="headerOpen" nzShowArrow="false"
       (nzActiveChange)="headerActiveChange()">
@@ -89,7 +89,7 @@
     </div>
   </ng-template>
   <ng-container *ngIf="selectedFile$ | async as file">{{ updateSelectedFile(file)}}</ng-container>
-  <vg-player (onPlayerReady)="onPlayerReady($event)" *ngIf="selectedFile.iconType === 'video'">
+  <vg-player (onPlayerReady)="onPlayerReady($event)" *ngIf="selectedFile.iconType === 'video'" [ngStyle]="{'height.px': height}">
     <!--
     <vg-overlay-play></vg-overlay-play>
     <vg-buffering></vg-buffering>
@@ -117,10 +117,11 @@
     </vg-controls>
 
     <video [vgMedia]="media" #media id="singleVideo" preload="auto" crossorigin>
-      <source src="http://static.videogular.com/assets/videos/videogular.mp4" type="video/mp4">
+      <source [src]="video$ | async" type="video/mp4">
     </video>
   </vg-player>
-  <div #docViewer *ngIf="selectedFile.iconType !== 'video'" style="width:100%;height:100%;display:block;" [ngStyle]="{'height.px': height}">
+  <div #docViewer style="width:100%;display:block;"
+    [ngStyle]="{'height.px': height}">
     <!--
     <div style="width:100%;font-size: 20px;">Version {{selectedFile.versions[currentVersionIndex].version}}</div>
     -->

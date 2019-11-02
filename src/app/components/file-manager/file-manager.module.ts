@@ -1,7 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FileManagerComponent } from './file-manager.component';
-import { NzDropDownModule, NzProgressModule, NzUploadModule, NzIconModule, NzTabsModule, NzAvatarModule, NzCardModule, NzToolTipModule, NzModalModule, NzRadioModule, NzTypographyModule, NzTableModule, NzPopoverModule } from 'ng-zorro-antd';
+import {
+  NzDropDownModule,
+  NzProgressModule,
+  NzUploadModule,
+  NzIconModule,
+  NzTabsModule,
+  NzAvatarModule,
+  NzCardModule,
+  NzToolTipModule,
+  NzModalModule,
+  NzRadioModule,
+  NzTypographyModule,
+  NzTableModule,
+  NzPopoverModule,
+  NzEmptyModule
+} from 'ng-zorro-antd';
 import { FilesModule } from '../files/files.module';
 import { ThemeImageModule } from '../theme-image/theme-image.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -33,7 +48,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     NzTypographyModule,
     NzDropDownModule,
     NzTableModule,
-    NzPopoverModule
+    NzPopoverModule,
+    NzEmptyModule,
   ],
   exports: [
     FileManagerComponent

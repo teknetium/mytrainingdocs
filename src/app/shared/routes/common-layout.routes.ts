@@ -9,6 +9,7 @@ import { PricingComponent } from '../../components/pricing/pricing.component';
 import { ProfileComponent } from '../../components/profile/profile.component';
 import { GettingstartedComponent } from '../../components/gettingstarted/gettingstarted.component';
 import { LandingpageComponent } from '../../components/landingpage/landingpage.component';
+import { TrainingsComponent } from '../../components/trainings/trainings.component';
 
 
 export const CommonLayout_ROUTES: Routes = [
@@ -73,7 +74,7 @@ export const CommonLayout_ROUTES: Routes = [
             }, 
             {
                 path: 'trainings',
-                component: ProjectListComponent,
+                component: TrainingsComponent,
                 data: {
                     title: 'Trainings'
                 }

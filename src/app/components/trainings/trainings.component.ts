@@ -19,28 +19,24 @@ export class TrainingsComponent implements OnInit {
 
   isAuthenticated$: Observable<boolean>;
   trainings$: Observable<TrainingModel[]>;
-  showInfoPanel: boolean;
+  trainings: TrainingModel[];
 
-  trainingForm: FormGroup;
   iconColor = 'red';
   iconClass = 'far fa-fw fa-file';
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
-  selectedTraining$: Observable<TrainingModel>;
-  selectedTrainingIndex$: Observable<number>;
-  status$: Observable<{ color: string, msg: string }>;
-
-  title$: Observable<string>;
-  showStatus$: Observable<boolean>;
-  showSelectedItem$: Observable<boolean>;
-  showSelectedIndexFeedback$: Observable<boolean>;
-
+  selectedItem$: Observable<TrainingModel>;
+  selectedItemIndex$: Observable<number>;
+  selectedItemIndex = -1;
+  viewMode$: Observable<string>;
+  viewMode = 'edit';
 
   constructor(
     private formBuilder: FormBuilder,
     private trainingService: TrainingService,
     private userService: UserService) {
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
+    this.viewMode$ = this.trainingService.getViewModeStream();
   }
 
   ngOnInit() {
@@ -50,10 +46,22 @@ export class TrainingsComponent implements OnInit {
       }
       this.authenticatedUser = user;
       this.trainings$ = this.trainingService.getAllTrainingsObservable();
-      this.showSelectedIndexFeedback$ = this.trainingService.getShowSelectedIndexFeedbackStream();
-      this.showSelectedItem$ = this.trainingService.getShowSelectedItemStream();
-      this.selectedTrainingIndex$ = this.trainingService.getSelectedTrainingIndexStream();
-      this.trainingService.selectItem(0);
+      this.selectedItemIndex$ = this.trainingService.getSelectedTrainingIndexStream();
+      this.trainings$.subscribe(trainingList => {
+        if (trainingList) {
+          this.trainings = trainingList;
+        } else {
+          this.trainings = [];
+        }
+      });
+
+      this.selectedItemIndex$.subscribe(index => {
+        this.selectedItemIndex = index;
+      })
+
+    });
+    this.viewMode$.subscribe(mode => {
+      this.viewMode = mode;
     });
   }
 
@@ -61,7 +69,14 @@ export class TrainingsComponent implements OnInit {
     this.trainingService.addNewTraining();
   }
 
-  selectTraining(index) {
+  selectItem(index) {
+    if (index === this.selectedItemIndex) {
+      this.selectedItemIndex = -1;
+      this.trainingService.selectItem(-1); 
+      return;
+    }
     this.trainingService.selectItem(index);
+    this.selectedItemIndex = index;
   }
+
 }

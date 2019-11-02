@@ -6,7 +6,7 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Section, Assessment, Question, Comment } from '../interfaces/training.type';
+import { TrainingModel, Section, Assessment } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.model';
 
 
@@ -23,18 +23,19 @@ export class TrainingService {
   private myTrainingsBS$: BehaviorSubject<TrainingModel[]>;
   private allTrainingCntBS$: BehaviorSubject<number>;
   private myTrainingCntBS$: BehaviorSubject<number>;
+  private viewModeBS$ = new BehaviorSubject<string>('edit');
 
   statusMessageBS$ = new BehaviorSubject<{ color: string, msg: string }>(null);
   titleBS$ = new BehaviorSubject<string>('');
   selectedTrainingBS$ = new BehaviorSubject<TrainingModel>(null);
   selectedTrainingIndexBS$ = new BehaviorSubject<number>(null);
-  showStatusBS$ = new BehaviorSubject<boolean>(false);
-  showSelectedIndexFeedbackBS$ = new BehaviorSubject<boolean>(true);
-  showSelectedItemBS$ = new BehaviorSubject<boolean>(false);
+  
   action = '';
   actionBS$ = new BehaviorSubject<string>('');
   trainingsForSelectBS$ = new BehaviorSubject<{ label: string, value: string }[]>([]);
   trainingOptions: [{ label: string, value: string }] = [null];
+
+  showEditor$ = new BehaviorSubject<boolean>(false);
 
   // Using Angular DI we use the HTTP service
   constructor(private http: HttpClient, private auth: AuthService, private userService: UserService, private fileService: FileService) {
@@ -50,14 +51,12 @@ export class TrainingService {
       }
 
     });
-
-
   }
 
   loadData() {
     this.getTrainings$(this.authenticatedUser._id).subscribe(trainingList => {
       this.allTrainings = trainingList;
-
+/*
       let i;
       if (this.action === 'save') {
         i = this.selectedTrainingIndexBS$.value;
@@ -72,28 +71,57 @@ export class TrainingService {
           i = this.selectedTrainingIndexBS$.value;
         }
       }
-      this.selectItem(i);
+      */
+      
       this.allTrainingsBS$.next(this.allTrainings);
       //      this.myTrainingCntBS$.next(this.myTrainings.length);
       this.allTrainingCntBS$.next(this.allTrainings.length);
+      this.showEditor$.next(false);
+      this.selectedTrainingIndexBS$.next(-1);
+
     });
+  }
+
+  getShowEditorStream() {
+    return this.showEditor$.asObservable();
+  }
+
+  changeEditorVisualState(newState) {
+    this.showEditor$.next(newState);
+    this.selectedTrainingIndexBS$.next(-1);
   }
 
   getTrainingOptionsStream(): Observable<{ label: string, value: string }[]> {
     return this.trainingsForSelectBS$.asObservable();
   }
 
+  cloneTraining(training: TrainingModel) {
+    let clone = Object.assign({}, training);
+    clone._id = String(new Date().getTime());
+    clone.title = 'Clone Of - ' + clone.title;
+    this.createTraining(clone);
+    this.allTrainings.push(clone);
+    this.allTrainingsBS$.next(this.allTrainings); 
+  }
+
+  setViewMode(mode) {
+    this.viewModeBS$.next(mode);
+  }
+
   selectItem(index) {
     if (index < 0 || index >= this.allTrainings.length) {
       //      this.showSelectedItemBS$.next(false);
       //      this.showSelectedIndexFeedbackBS$.next(false);
-      this.selectedTrainingBS$.next(null);
-      this.selectedTrainingIndexBS$.next(index);
+      this.showEditor$.next(false);
+      this.selectedTrainingIndexBS$.next(-1);
       this.setAction('');
       return;
     }
+    this.showEditor$.next(true);
     this.selectedTrainingBS$.next(this.allTrainings[index]);
     this.selectedTrainingIndexBS$.next(index);
+    this.actionBS$.next('editTraining');
+
     //    this.showSelectedItemBS$.next(true);
     //    this.showStatusBS$.next(false);
     //    this.showSelectedIndexFeedbackBS$.next(true);
@@ -103,20 +131,16 @@ export class TrainingService {
     this.actionBS$.next(action);
   }
 
+  getViewModeStream(): Observable<string> {
+    return this.viewModeBS$.asObservable();
+  }
+
   getActionStream(): Observable<string> {
     return this.actionBS$.asObservable();
   }
 
-  getShowSelectedItemStream(): Observable<boolean> {
-    return this.showSelectedItemBS$.asObservable();
-  }
-
   getSelectedTrainingIndexStream(): Observable<number> {
     return this.selectedTrainingIndexBS$.asObservable();
-  }
-
-  getShowSelectedIndexFeedbackStream(): Observable<boolean> {
-    return this.showSelectedIndexFeedbackBS$.asObservable();
   }
 
   getStatusStream(): Observable<{ color: string, msg: string }> {
@@ -143,49 +167,53 @@ export class TrainingService {
   }
 
   addNewTraining() {
-    const assessment = <Assessment>{
-      questions: []
+    const section = <Section>{
+      _id: String(new Date().getTime()),
+      title: 'Section Title',
+      intro: 'Section Intro',
+      file: '',
+      assessment: null
     }
-
-    const sections = <Section[]>[
-      {
-        title: 'Your title goes here',
-        intro: 'This is an introduction to the first document',
-        files: [],
-        assessment: null
-      }
-    ];
 
     const newTraining = <TrainingModel>{
       _id: String(new Date().getTime()),
-      title: 'New Training',
-      description: 'This is a useless description',
       type: 'online',
-      iconClass: 'fal fa-file-alt',
-      iconColor: 'red',
-      iconSource: 'fontawesome',
+      title: 'New Training',
       teamId: this.authenticatedUser._id,
       owner: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),
       estimatedTimeToComplete: 0,
+      description: 'This is a useless description',
+      introduction: 'This is the introduction to this training.',
+      introductionLabel: 'Introduction',
+      execSummaryLabel: 'Executive Summary',
+      execSummary: 'Tell the execs whatever they need to hear.',
+      goals: 'What your manager hopes you get out of this experience.',
+      goalsLabel: 'Goals',
       image: 'assets/images/others/blue_matrix-Banner.jpg',
-      sections: sections,
-      assessment: assessment,
+      iconClass: 'fal fa-graduation-cap',
+      iconColor: 'black',
+      iconSource: 'fontawesome',
+      sections: [section],
+      assessment: null,
       tags: []
     };
 //    this.allTrainings.push(newTraining);
 //    this.allTrainingsBS$.next(this.allTrainings);
 //    this.selectedTrainingIndexBS$.next(this.allTrainings.length - 1);
-    this.actionBS$.next('new');
+    this.actionBS$.next('newTraining');
     //    this.showSelectedIndexFeedbackBS$.next(true);
     //    this.showSelectedItemBS$.next(true);
     this.selectedTrainingBS$.next(newTraining);
+    this.showEditor$.next(true);
 
   }
 
   createTraining(training: TrainingModel) {
     this.postTraining$(training).subscribe(trainingObj => {
       this.loadData();
+      this.showEditor$.next(false);
+      this.selectedTrainingIndexBS$.next(-1);
     });
   }
 
@@ -193,7 +221,9 @@ export class TrainingService {
     this.deleteTraining$(id).subscribe(item => {
       this.allTrainings.splice(this.selectedTrainingIndexBS$.value, 1);
       this.loadData();
-    })
+      this.showEditor$.next(false);
+      this.selectedTrainingIndexBS$.next(-1);
+      })
   }
 
   private get _authHeader(): string {

@@ -7,7 +7,7 @@ export interface FileModel {
   description: string,
   versions: [{version: string, changeLog: string, owner: string, fsHandle: string, url: string, dateUploaded: number} | null],
   iconClass: string,
-  iconType: 'pdf' | 'doc' | 'xls' | 'ppt' | 'txt' | 'image' | 'video' | 'audio',
+  iconType: 'pdf' | 'doc' | 'xls' | 'ppt' | 'txt' | 'image' | 'video' | 'audio' | 'unknown' | 'html',
   iconColor: string,
   iconSource: 'fontawesome' | 'ngZorro',
   tags: string[]

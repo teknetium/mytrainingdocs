@@ -2,10 +2,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TrainingsComponent } from './trainings.component';
-import { TrainingDetailComponent } from './training-detail/training-detail.component';
 import { TrainingBasicComponent } from './training-basic/training-basic.component';
 
-import { NzTableModule, NzCollapseModule } from 'ng-zorro-antd';
+import { NzTableModule, NzCollapseModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule } from 'ng-zorro-antd';
 import { NzButtonModule } from 'ng-zorro-antd';
 import { NzIconModule } from 'ng-zorro-antd';
 import { NzTagModule } from 'ng-zorro-antd';
@@ -25,11 +24,11 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { FilesModule } from '../files/files.module';
 import { FileManagerModule } from '../file-manager/file-manager.module';
 import { MultiSelectorModule } from '../multi-selector/multi-selector.module';
+import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 
 @NgModule({
   declarations: [
     TrainingsComponent,
-    TrainingDetailComponent,
     TrainingBasicComponent
   ],
   imports: [
@@ -57,12 +56,16 @@ import { MultiSelectorModule } from '../multi-selector/multi-selector.module';
     FilesModule,
     FileManagerModule,
     MultiSelectorModule,
-    NzButtonModule
-
+    NzButtonModule,
+    NzTypographyModule,
+    NzTabsModule,
+    NzAnchorModule,
+    ScrollToModule,
+    NzRateModule,
+    NzEmptyModule
   ],
   exports: [
     TrainingsComponent,
-    TrainingDetailComponent,
     TrainingBasicComponent
   ]
 })

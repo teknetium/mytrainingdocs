@@ -1,88 +1,43 @@
-<!--
 <div class="" style="width:100%;">
-  <div [ngClass]="{'trainings-compact': mode === 'brief', 'trainings-full': mode === 'full'}">
+  <div *ngIf="viewMode === 'edit'" style="width:100%;display: block;">
     <div>
-      <div class="" style="display: inline-block;padding:5px;cursor: pointer;">
-          <button nz-button nzSize="small" nzType="default" (click)="newTraining()">New Training</button>
+      <span style="font-size:12px;display: block;"> New Training Templates :</span>
+      <div style="display: inline-block;margin-right: 10px;margin-left:10px;cursor: pointer;" (click)="newTraining()">
+        <i class="fal fa-file-alt" style="font-size: 24px;" nz-tooltip nzTooltipTitle="Basic Training Template"></i>
       </div>
-      <nz-radio-group *ngIf="(trainings.length > 0)" class="m-r-10" nzSize="small" [(ngModel)]="view"
-        style="display: inline-block;float: right;">
-        <label nz-radio-button nzValue="cardView" nzTitle="Card View" nzPlacement="bottom" nz-tooltip>
-          <i class="font-size-16" nz-icon nzType="appstore" theme="outline"></i>
-        </label>
-        <label nz-radio-button nzValue="listView" nzTitle="List View" nzPlacement="bottom" nz-tooltip>
-          <i class="font-size-16" nz-icon nzType="ordered-list" theme="outline"></i>
-        </label>
-      </nz-radio-group>
-    </div>
-    <div *ngIf="view === 'cardView'" style="border-top:1px solid #efefef;padding-top:10px;margin-top:10px;">
-      <div class="filex" *ngFor="let item of files$ | async; index as i"
-        [ngClass]="{'active-file': (selectedFileIndex$ | async) === i}" (click)="selectFile($event, i)"
-        (contextmenu)="contextMenu($event,contextDropdownTpl, selected = item.name)">
-        <div class="font-size-30">
-          <i *ngIf="item.iconType == 'pdf'" [twoToneColor]="colorRed" nz-icon nzType="file-pdf" theme="twotone"></i>
-          <i *ngIf="item.iconType == 'doc'" [twoToneColor]="colorBlue" nz-icon nzType="file-word" theme="twotone"></i>
-          <i *ngIf="item.iconType == 'xls'" [twoToneColor]="colorCyan" nz-icon nzType="file-excel" theme="twotone"></i>
-          <i *ngIf="item.iconType == 'ppt'" [twoToneColor]="colorVolcano" nz-icon nzType="file-ppt" theme="twotone"></i>
-          <i *ngIf="item.iconType == 'txt'" [twoToneColor]="colorLime" nz-icon nzType="file-text" theme="twotone"></i>
-          <i *ngIf="item.iconType == 'image'" [twoToneColor]="colorMagenta" nz-icon nzType="file-image"
-            theme="twotone"></i>
-          <i *ngIf="item.iconType == 'video'" [twoToneColor]="colorPurple" nz-icon nzType="video-camera"
-            theme="twotone"></i>
-          <span class="m-l-5 font-size-12 text-muted">{{item.size}}</span>
-        </div>
-        <div>
-          <span class="mb-0 font-size-10" style="width:300px;overflow:scroll;">{{item.name}}</span>
-        </div>
+      <div style="display: inline-block;margin-right: 10px;cursor: pointer;">
+        <i class="fal fa-file-audio" style="font-size: 24px;" nz-tooltip nzTooltipTitle="Audio Training Template"></i>
+      </div>
+      <div style="display: inline-block;margin-right: 10px;cursor: pointer;">
+        <i class="fal fa-file-video" style="font-size: 24px;" nz-tooltip nzTooltipTitle="Video Training Template"></i>
       </div>
     </div>
-    <ul *ngIf="view === 'listView'"
-      style="border-top:1px solid #efefef;padding-top:10px;margin-top:10px;list-style-type:none;">
-      <li *ngIf="mode === 'full'">
-        <div style="display:inline-block;width:5%;padding-left:5px;font-size:12px;"></div>
-        <div style="display:inline-block;width:30%;font-size:12px;font-weight:600;">Name</div>
-        <div style="display:inline-block;width:10%;font-size:12px;font-weight:600;">Version</div>
-        <div style="display:inline-block;width:20%;font-size:12px;font-weight:600;">Date Uploaded</div>
-        <div style="display:inline-block;width:20%;font-size:12px;font-weight:600;">Owner</div>
-        <div style="display:inline-block;width:10%;font-size:12px;font-weight:600;">Size</div>
-      </li>
-      <div *ngFor="let item of files$ | async; index as i" style="cursor: pointer;border-bottom: 1px solid #efefef;">
-        <li (click)="selectFile($event, i)" [ngClass]="{'active-file': (selectedFileIndex$ | async) === i}"
-          style="padding:5px 0;">
-          <div *ngFor="let training of trainings$ | async; let i = index"
-            style="font-size:12px;padding:10px;margin-top:1px;" class="list-item" (click)="selectTraining(i)"
-            [ngClass]="{'selected-row': i === (selectedTrainingIndex$ | async) && (showSelectedIndexFeedback$ | async)}">
-            <i class="fa-fw" style="font-size: 14px;" [ngClass]="training.iconClass"
-              [ngStyle]="{'color': training.iconColor}"></i>&nbsp;&nbsp;
-            {{ training.title }}
+    <div style="border-top:1px solid #efefef;border-bottom:1px solid #efefef;padding-top:10px;margin:10px 0 5px 0;">
+      <span style="font-weight:500;">Trainings</span>
+    </div>
+
+    <ul style="list-style-type:none;">
+      <div *ngFor="let item of trainings$ | async; index as i">
+        <li (click)="selectItem(i)" [ngClass]="{'active-item': selectedItemIndex === i}"
+          style="padding:5px 0;cursor: pointer;">
+          <div style="display: inline-block;width:10%;padding-left:5px;">
+            <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor" nz-icon
+              [nzType]="item.iconClass" theme="twotone"></i>
+            <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-20" [ngStyle]="{'color': item.iconColor}"
+              [ngClass]="item.iconClass"></i>
+          </div>
+          <div style="display: inline-block;;width:40%;font-size:12px;">
+            &nbsp;&nbsp;&nbsp;&nbsp;{{ item.title }}
+          </div>
+          <div style="display: inline-block;font-size:12px;">
+            &nbsp;&nbsp;&nbsp;&nbsp;{{ item.description }}
           </div>
         </li>
       </div>
     </ul>
+    <nz-empty *ngIf="trainings.length === 0"></nz-empty>
   </div>
-  <div [ngClass]="{'viewer-compact': mode === 'brief', 'viewer-full': mode === 'full'}">
-    <mtd-training-detail></mtd-training-detail>
-  </div>
-</div>
--->
-<div class="">
-  <div style="display: block;">
-    <div style="display: inline-block;width:20%;float:left;border-right: 1px solid #999999;">
-      <div style="font-size:12px;padding:10px;margin-top:1px;">
-        <button nz-button nzSize="small" nzType="default" (click)="newTraining()">New Training</button>
-      </div>
-      <div style="">
-        <div *ngFor="let training of trainings$ | async; let i = index"
-          style="font-size:12px;padding:10px;margin-top:1px;" class="list-item" (click)="selectTraining(i)"
-          [ngClass]="{'selected-row': i === (selectedTrainingIndex$ | async) && (showSelectedIndexFeedback$ | async)}">
-          <i class="fa-fw" style="font-size: 14px;" [ngClass]="training.iconClass"
-            [ngStyle]="{'color': training.iconColor}"></i>&nbsp;&nbsp;
-          {{ training.title }}
-        </div>
-      </div>
-    </div>
-    <div style="display: inline-block;width:80%;">
-      <mtd-training-detail></mtd-training-detail>
-    </div>
+  <div style="width:100%;display:block;margin-top:20px;">
+    <mtd-training-basic></mtd-training-basic>
   </div>
 </div>
