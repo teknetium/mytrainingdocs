@@ -19,7 +19,7 @@ export class TrainingBasicComponent implements OnInit, AfterViewInit {
   trainings$: Observable<TrainingModel[]>;
   files$: Observable<FileModel[]>;
   action$: Observable<string>;
-  
+
   @ViewChild('toc', { static: false }) toc: ElementRef;
 
   // the following 2 variables warrant a brief description
@@ -35,15 +35,19 @@ export class TrainingBasicComponent implements OnInit, AfterViewInit {
   currentSection: Section;
   fontSize = 10;
   selectedTraining: TrainingModel;
+  trainingTpl: TrainingModel;
   imageWidth;
   currentTemplate;
   isFileSelectModalVisible = false;
+  isIconSelectModalVisible = false;
   fallbackIcon = 'fa fa-graduation-cap';
   bannerImage$: Observable<FileModel>;
   headerOpen = false;
   mode = 'edit';
   fullscreen = false;
   rating = 0;
+  trainings: TrainingModel[];
+  iconSearchStr = '';
 
   sectionDocUrlHash = {};
 
@@ -64,6 +68,7 @@ export class TrainingBasicComponent implements OnInit, AfterViewInit {
     this.selectedTrainingIndex$ = this.trainingService.getSelectedTrainingIndexStream();
     this.action$ = this.trainingService.getActionStream();
     this.selectedTraining$.subscribe(training => {
+
       if (!training) {
         return;
       }
@@ -78,6 +83,7 @@ export class TrainingBasicComponent implements OnInit, AfterViewInit {
           console.log('ERROR: TrainingBasicComponent:ngOnInit - no document set on training', training.title);
         } else {
           this.sectionDocUrlHash[section._id] = this.fileService.getSafeUrl(section.file);
+
           this.fileService.selectItemById(section.file, section._id);
         }
 
@@ -91,6 +97,10 @@ export class TrainingBasicComponent implements OnInit, AfterViewInit {
     this.ngxScrollToDuration = 1000;
     this.ngxScrollToEasing = 'easeOutCubic';
     this.ngxScrollToOffset = 0;
+
+    this.trainings$.subscribe(trainingList => {
+      this.trainings = trainingList;
+    })
   }
 
   ngAfterViewInit() {
@@ -101,12 +111,16 @@ export class TrainingBasicComponent implements OnInit, AfterViewInit {
   }
 
   onIconPickerSelect(icon) {
+    if (!this.selectedTraining) {
+      console.log('onIconPickerSelect: selectedTraining is null', this.selectedTraining);
+    }
     this.selectedTraining.iconClass = icon;
-    console.log('onIconPickerSelect', icon);
+    this.contentChanged(icon, 'iconClass');
   }
 
   onColorChange(newColor) {
     this.selectedTraining.iconColor = newColor;
+    this.contentChanged(newColor, 'iconColor');
   }
 
   setBannerImage() {
@@ -121,9 +135,10 @@ export class TrainingBasicComponent implements OnInit, AfterViewInit {
       this.fileService.selectItem(index, this.currentSection._id);
     } else {
       this.fileService.selectItem(index, this.currentSection._id);
-//      this.sectionDocUrlHash[this.currentSection._id] = this.fileService.getSafeUrl(this.currentSection.file);
+      this.trainingService.saveTraining(this.selectedTraining);
+      //      this.sectionDocUrlHash[this.currentSection._id] = this.fileService.getSafeUrl(this.currentSection.file);
 
-//      this.fileService.selectItem(index, this.currentSection._id);
+//        this.fileService.selectItem(index, this.currentSection._id);
     }
   }
 
@@ -137,14 +152,9 @@ export class TrainingBasicComponent implements OnInit, AfterViewInit {
 
   }
 
-  saveTraining() {
-    this.trainingService.saveTraining(this.selectedTraining);
-  }
-
   headerActiveChange() {
     this.headerOpen = !this.headerOpen;
   }
-
 
   addFinalAssessment(i) {
   }
@@ -161,32 +171,31 @@ export class TrainingBasicComponent implements OnInit, AfterViewInit {
     this.fileService.setupPSFStream(newSection._id);
     this.fileService.setupPSFIStream(newSection._id);
 
-//    this.fileService.selectItemById(newSection.file, newSection._id);
-}
+    this.trainingService.saveTraining(this.selectedTraining);
+    //    this.fileService.selectItemById(newSection.file, newSection._id);
+  }
 
   setContent(section: Section) {
-    section.file = null;
     this.postFileSelectionModal(section);
+
   }
 
   deleteSection(i) {
     this.selectedTraining.sections.splice(i, 1);
+    this.trainingService.saveTraining(this.selectedTraining);
   }
 
-  cloneTraining(training) {
-    this.trainingService.cloneTraining(training);
-  }
-
-  cancel() {
+  close() {
     this.trainingService.changeEditorVisualState(false);
+    this.fullscreen = false;
   }
 
   handleCancel() {
     this.isFileSelectModalVisible = false;
   }
 
-  deleteItemConfirm(id) {
-    this.trainingService.deleteTraining(id);
+  deleteItemConfirm() {
+    this.trainingService.deleteTraining(this.selectedTraining._id);
   }
 
   deleteItemCancel() {
@@ -198,10 +207,30 @@ export class TrainingBasicComponent implements OnInit, AfterViewInit {
     this.mode = mode;
   }
 
-  tabChange(index) {
-    //    console.log('tabChange', this.selectedTraining.sections[index]);
-
-    //    this.fileService.selectFileById(this.selectedTraining.sections[index].file);
+  contentChanged(newVal: string, propName: string) {
+    this.selectedTraining[propName] = newVal;
+    this.trainingService.saveTraining(this.selectedTraining);
   }
-}
 
+  sectionChanged(newVal: string, index: number, propName: string) {
+    let section: Section;
+    section = this.selectedTraining.sections[index];
+    section[propName] = newVal;
+
+    this.trainingService.saveTraining(this.selectedTraining);
+  }
+
+  handleIconSelectCancel() {
+    this.isIconSelectModalVisible = false;
+  }
+
+  handleIconSelectConfirm() {
+    this.isIconSelectModalVisible = false;
+  }
+
+  setIcon($event) {
+    this.selectedTraining.iconClass = $event;
+    this.isIconSelectModalVisible = false;
+  }
+
+}

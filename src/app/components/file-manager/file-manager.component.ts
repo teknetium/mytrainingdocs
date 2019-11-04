@@ -61,8 +61,8 @@ export class FileManagerComponent {
         this.fileService.setupPSFStream(this.streamId);
         this.fileService.setupPSFIStream(this.streamId);
         this.fileService.setupPDocStream(this.streamId)
-        this.selectedFile$ = this.fileService.getPSFStream(this.streamId);
-        this.selectedFileIndex$ = this.fileService.getPSFIStream(this.streamId);
+        this.selectedFile$ = this.fileService.getSelectedFileStream();
+        this.selectedFileIndex$ = this.fileService.getSelectedFileIndexStream();
         this.files$.subscribe(files => {
             if (!files) {
                 return;

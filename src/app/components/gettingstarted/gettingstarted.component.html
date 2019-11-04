@@ -35,11 +35,6 @@
 <div style="width:100%; height:100%;">
     <h3>This is the Getting Started step wizard.</h3>
     The following steps guide you through the complete setup of myTrainingdocs for your team.
-    <!--
-        <button nz-button nzType="primary" nzSize="small" (click)="showMainIntro = false">Dismiss
-        </button>
-        -->
-
     <nz-tabset nzTabPosition="top" nzSize="large" style="margin-top: 20px;">
         <nz-tab [nzTitle]="header1Template" style="width:100%;height:900px;">
             <h4 style="text-align: center;">Step 1 - Upload Files</h4>
@@ -83,43 +78,6 @@
         </nz-tab>
     </nz-tabset>
 
-    <!--
-    <nz-collapse [nzBordered]="true" nzAccordion>
-        <nz-collapse-panel id="step1" (nzActiveChange)="activateStep($event, 1)" [nzHeader]="header1Template" nzActive="false"
-            nzShowArrow="false">
-            <div style="max-height:550px;overflow:scroll;">
-                <nz-alert class="m-b-10" nzType="info" nzMessage="Managing Your Files"
-                    nzDescription="Selecting the 'add file' icon brings up the file upload dialog where you can select files from your local machine, Google Drive, or Dropbox.  Once uploaded, selecting the file will show the file in our document viewer and let you edit properties of the file."
-                    nzShowIcon>
-                </nz-alert>
-                <mtd-file-mgr mode="brief"></mtd-file-mgr>
-            </div>
-        </nz-collapse-panel>
-        <nz-collapse-panel id="step2" (nzActiveChange)="activateStep($event, 2)" [nzHeader]="header2Template" nzActive="false" nzShowArrow="false">
-            <mtd-trainings></mtd-trainings>
-        </nz-collapse-panel>
-        <nz-collapse-panel id="step3" (nzActiveChange)="activateStep($event, 3)" [nzHeader]="header3Template" nzActive="false" nzShowArrow="false">
-            <div style="max-height:550px;overflow:scroll;">
-                <mtd-users></mtd-users>
-            </div>
-        </nz-collapse-panel>
-        <nz-collapse-panel id="step4" (nzActiveChange)="activateStep($event, 4)" [nzHeader]="header4Template" nzActive="false" nzShowArrow="false">
-            <div style="max-height:550px;overflow:scroll;">
-                <mtd-users></mtd-users>
-            </div>
-        </nz-collapse-panel>
-        <nz-collapse-panel id="step5" (nzActiveChange)="activateStep($event, 5)" [nzHeader]="header5Template" nzActive="false" nzShowArrow="false">
-            <div style="max-height:550px;overflow:scroll;">
-                Place Holder
-            </div>
-        </nz-collapse-panel>
-        <nz-collapse-panel id="step6" (nzActiveChange)="activateStep($event, 6)" [nzHeader]="header6Template" nzActive="false" nzShowArrow="false">
-            <div style="max-height:550px;overflow:scroll;">
-                Place Holder
-            </div>
-        </nz-collapse-panel>
-    </nz-collapse>
--->
     <ng-template #header1Template style="width:16%;">
         <div style="text-align: center;">
             <div style="font-size: 20px;color:blue;margin-bottom:5px;">Step 1</div>

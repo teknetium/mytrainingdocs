@@ -29,12 +29,12 @@ export class TrainingService {
   titleBS$ = new BehaviorSubject<string>('');
   selectedTrainingBS$ = new BehaviorSubject<TrainingModel>(null);
   selectedTrainingIndexBS$ = new BehaviorSubject<number>(null);
+  currentTrainingIndex = -1;
   
   action = '';
   actionBS$ = new BehaviorSubject<string>('');
   trainingsForSelectBS$ = new BehaviorSubject<{ label: string, value: string }[]>([]);
   trainingOptions: [{ label: string, value: string }] = [null];
-
   showEditor$ = new BehaviorSubject<boolean>(false);
 
   // Using Angular DI we use the HTTP service
@@ -76,8 +76,7 @@ export class TrainingService {
       this.allTrainingsBS$.next(this.allTrainings);
       //      this.myTrainingCntBS$.next(this.myTrainings.length);
       this.allTrainingCntBS$.next(this.allTrainings.length);
-      this.showEditor$.next(false);
-      this.selectedTrainingIndexBS$.next(-1);
+      this.selectItemForEditing(this.currentTrainingIndex);
 
     });
   }
@@ -95,19 +94,30 @@ export class TrainingService {
     return this.trainingsForSelectBS$.asObservable();
   }
 
-  cloneTraining(training: TrainingModel) {
-    let clone = Object.assign({}, training);
-    clone._id = String(new Date().getTime());
-    clone.title = 'Clone Of - ' + clone.title;
-    this.createTraining(clone);
-    this.allTrainings.push(clone);
-    this.allTrainingsBS$.next(this.allTrainings); 
-  }
-
   setViewMode(mode) {
     this.viewModeBS$.next(mode);
   }
 
+  selectItemForEditing(index) {
+    if (index < 0 || index >= this.allTrainings.length) {
+      //      this.showSelectedItemBS$.next(false);
+      //      this.showSelectedIndexFeedbackBS$.next(false);
+      this.showEditor$.next(false);
+      this.selectedTrainingIndexBS$.next(-1);
+      this.currentTrainingIndex = -1;
+      this.setAction('');
+      return;
+    }
+
+    this.currentTrainingIndex = index;
+
+    this.showEditor$.next(true);
+    this.selectedTrainingBS$.next(this.allTrainings[index]);
+    this.selectedTrainingIndexBS$.next(index);
+    this.actionBS$.next('editTraining');
+
+  }
+/*
   selectItem(index) {
     if (index < 0 || index >= this.allTrainings.length) {
       //      this.showSelectedItemBS$.next(false);
@@ -117,6 +127,7 @@ export class TrainingService {
       this.setAction('');
       return;
     }
+
     this.showEditor$.next(true);
     this.selectedTrainingBS$.next(this.allTrainings[index]);
     this.selectedTrainingIndexBS$.next(index);
@@ -126,7 +137,7 @@ export class TrainingService {
     //    this.showStatusBS$.next(false);
     //    this.showSelectedIndexFeedbackBS$.next(true);
   }
-
+*/
   setAction(action: string) {
     this.actionBS$.next(action);
   }
@@ -201,11 +212,16 @@ export class TrainingService {
 //    this.allTrainings.push(newTraining);
 //    this.allTrainingsBS$.next(this.allTrainings);
 //    this.selectedTrainingIndexBS$.next(this.allTrainings.length - 1);
+    this.postTraining$(newTraining).subscribe(trainingObj => {
+      this.loadData();
+      this.showEditor$.next(false);
+      this.selectedTrainingIndexBS$.next(-1);
+    });
     this.actionBS$.next('newTraining');
     //    this.showSelectedIndexFeedbackBS$.next(true);
     //    this.showSelectedItemBS$.next(true);
-    this.selectedTrainingBS$.next(newTraining);
-    this.showEditor$.next(true);
+//    this.selectedTrainingBS$.next(newTraining);
+//    this.showEditor$.next(true);
 
   }
 
@@ -240,7 +256,9 @@ export class TrainingService {
 
   saveTraining(training: TrainingModel) {
     this.editTraining$(training).subscribe(data => {
+
       this.loadData();
+      this.selectItemForEditing(this.currentTrainingIndex);
     });
   }
 

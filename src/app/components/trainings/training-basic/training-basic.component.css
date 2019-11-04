@@ -11,13 +11,12 @@
     right:0;
     bottom:0;
     z-index: 1000;
+    padding-right:10px;
 }
 
 .regular {
     overflow: scroll;
-    display:block;
     width:100%;
-    height:2000px;
     position:relative;
 }
 
@@ -49,7 +48,6 @@ ol.foo {
     list-style-position:inside;
 }
 
-
 .toolbar {
     width:100%;
     display:block;
@@ -70,8 +68,9 @@ ol.foo {
     right:0;
 }
 .container {
-    position:relative;
     width:100%;
+    height:500px;
+    overflow-y:scroll;
     padding: 0 !important;
 }
 
@@ -82,12 +81,11 @@ ol.foo {
 
 .toc {
     width:25%;
-    height:100%;
     display:inline-block;
 }
 
 .toc-fullscreen {
     position:fixed;
-    top:80px;
+    top:50px;
     left:0;
 }

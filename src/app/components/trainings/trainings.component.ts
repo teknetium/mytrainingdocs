@@ -31,6 +31,8 @@ export class TrainingsComponent implements OnInit {
   viewMode$: Observable<string>;
   viewMode = 'edit';
 
+  editorClone: TrainingModel;
+
   constructor(
     private formBuilder: FormBuilder,
     private trainingService: TrainingService,
@@ -72,10 +74,10 @@ export class TrainingsComponent implements OnInit {
   selectItem(index) {
     if (index === this.selectedItemIndex) {
       this.selectedItemIndex = -1;
-      this.trainingService.selectItem(-1); 
+      this.trainingService.selectItemForEditing(-1); 
       return;
     }
-    this.trainingService.selectItem(index);
+    this.trainingService.selectItemForEditing(index);
     this.selectedItemIndex = index;
   }
 

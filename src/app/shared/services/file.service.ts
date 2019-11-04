@@ -194,7 +194,7 @@ export class FileService {
 //  docDownloadUrlBS$ = new BehaviorSubject<string>('');
   selectedFileBS$ = new BehaviorSubject<FileModel>(null);
 //  selectedFileToEditBS$ = new BehaviorSubject<FileModel>(null);
-//  selectedFileIndexBS$ = new BehaviorSubject<number>(-1);
+  selectedFileIndexBS$ = new BehaviorSubject<number>(-1);
 //  statusMessageBS$ = new BehaviorSubject<{ color: string, msg: string }>(null);
 //  titleBS$ = new BehaviorSubject<string>('');
 //  showStatusBS$ = new BehaviorSubject<boolean>(false);
@@ -311,8 +311,8 @@ export class FileService {
   }
 
   setupPDocStream(streamId: string) {
-    console.log('fileService.setupPDocStream', streamId);
     if (!this.pDocHash[streamId]) {
+      console.log('fileService.setupPDocStream', streamId);
       this.pDocHash[streamId] = new BehaviorSubject<SafeResourceUrl>(null);
     }
   }
@@ -520,6 +520,8 @@ export class FileService {
         this.pDocHash[streamId].next(null);
       }
       this.docPreviewUrlBS$.next(null);
+      this.selectedFileIndexBS$.next(index);
+      this.selectedFileBS$.next(null);
       return;
     }
     this.selectedFile = this.files[index];
@@ -532,7 +534,7 @@ export class FileService {
     //    this.docPreviewUrlBS$.next(previewUrl);
     //    this.showSelectedIndexFeedbackBS$.next(true)
     this.pSFHash[streamId].next(this.files[index]);
-    this.pSFIHash[streamId].next(index);
+    this.selectedFileIndexBS$.next(index);
     this.selectedFileBS$.next(this.selectedFile);
     this.viewFile(this.selectedFile, 0, streamId);
   }
@@ -553,6 +555,10 @@ export class FileService {
 
   getSelectedFileStream(): Observable<FileModel> {
     return this.selectedFileBS$.asObservable();
+  }
+
+  getSelectedFileIndexStream(): Observable<number> {
+    return this.selectedFileIndexBS$.asObservable();
   }
 
   getDocPreviewStream(): Observable<SafeResourceUrl> {

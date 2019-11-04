@@ -120,12 +120,8 @@
       <source [src]="video$ | async" type="video/mp4">
     </video>
   </vg-player>
-  <div #docViewer style="width:100%;display:block;"
-    [ngStyle]="{'height.px': height}">
-    <!--
-    <div style="width:100%;font-size: 20px;">Version {{selectedFile.versions[currentVersionIndex].version}}</div>
-    -->
-    <iframe [src]="document$ | async" allowfullscreen style="width:100%;height:100%;"></iframe>
+  <div #docViewer style="width:100%;display:block;" [ngStyle]="{'height.px': height}">
+      <iframe [src]="document$ | async" allowfullscreen style="width:100%;height:100%;"></iframe>
   </div>
 
   <nz-modal [(nzVisible)]="isNewVersionModalVisible" [nzTitle]="file.name" nzWidth="60%" nzOkDisabled="false"

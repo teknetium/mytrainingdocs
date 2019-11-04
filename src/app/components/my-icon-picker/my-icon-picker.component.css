@@ -1,0 +1,17 @@
+.icon-container {
+    display: flex;
+    padding:10px;
+    flex-flow: row wrap;
+}
+
+.icon-box {
+    font-size:24px;
+    padding:5px;
+    margin:3px;
+    border: 1px solid #e7e7e7;
+    border-radius: 4px;
+}
+
+.icon-box:hover {
+    background-color: #f4f4f4;
+}

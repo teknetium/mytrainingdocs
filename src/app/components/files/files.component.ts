@@ -83,6 +83,7 @@ export class FilesComponent implements OnInit {
 
     this.selectedFile$ = this.fileService.getSelectedFileStream();
     this.selectedFileIndex$ = this.fileService.getPSFIStream(this.streamId);
+    this.selectedFileIndex$ = this.fileService.getSelectedFileIndexStream();
     this.document$ = this.fileService.getDocPreviewStream();
     this.uploadedFile$ = this.fileService.getUploadedFileStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();

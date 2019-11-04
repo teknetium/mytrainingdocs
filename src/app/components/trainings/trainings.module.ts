@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TrainingsComponent } from './trainings.component';
 import { TrainingBasicComponent } from './training-basic/training-basic.component';
 
-import { NzTableModule, NzCollapseModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule } from 'ng-zorro-antd';
+import { NzTableModule, NzCollapseModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule } from 'ng-zorro-antd';
 import { NzButtonModule } from 'ng-zorro-antd';
 import { NzIconModule } from 'ng-zorro-antd';
 import { NzTagModule } from 'ng-zorro-antd';
@@ -16,7 +16,6 @@ import { NzSelectModule } from 'ng-zorro-antd';
 import { NzToolTipModule } from 'ng-zorro-antd';
 import { NzRadioModule } from 'ng-zorro-antd';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { IconPickerModule } from 'ngx-icon-picker';
 import { NzInputModule } from 'ng-zorro-antd';
 import { NzAlertModule } from 'ng-zorro-antd';
 import { RouterModule } from '@angular/router';
@@ -25,6 +24,7 @@ import { FilesModule } from '../files/files.module';
 import { FileManagerModule } from '../file-manager/file-manager.module';
 import { MultiSelectorModule } from '../multi-selector/multi-selector.module';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
+import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,6 @@ import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
   imports: [
     RouterModule,
     ColorPickerModule,
-    IconPickerModule,
     NzAlertModule,
     NzToolTipModule,
     NzInputNumberModule,
@@ -62,7 +61,9 @@ import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
     NzAnchorModule,
     ScrollToModule,
     NzRateModule,
-    NzEmptyModule
+    NzEmptyModule,
+    NzAffixModule,
+    MyIconPickerModule
   ],
   exports: [
     TrainingsComponent,

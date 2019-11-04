@@ -28,7 +28,7 @@ import { ProjectsModule } from './components/projects/projects.module';
 import { SettingModule } from './components/setting/setting.module';
 import { FilesModule } from './components/files/files.module';
 import { TrainingsModule } from './components/trainings/trainings.module';
-import { IconPickerComponent } from './components/icon-picker/icon-picker.component';
+import { MyIconPickerModule } from './components/my-icon-picker/my-icon-picker.module';
 
 
 registerLocaleData(en);
@@ -38,7 +38,6 @@ registerLocaleData(en);
         AppComponent,
         CommonLayoutComponent,
         FullLayoutComponent,
-        IconPickerComponent,
     ],
     imports: [
         MailModule,
@@ -60,7 +59,8 @@ registerLocaleData(en);
         LandingpageModule,
         CallbackModule,
         FilesModule,
-        TrainingsModule
+        TrainingsModule,
+        MyIconPickerModule
     ],
     providers: [
         { 

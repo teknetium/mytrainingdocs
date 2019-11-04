@@ -44,3 +44,8 @@
   border: 1px solid #dddddd;
   color: blue;
 }
+
+.training-item {
+  background-color: white;
+  border:1px solid #efefef;
+}

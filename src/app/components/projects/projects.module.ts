@@ -17,7 +17,6 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { RouterModule } from '@angular/router';
-import { IconPickerModule } from 'ngx-icon-picker';
 import { ColorPickerModule } from 'ngx-color-picker';
 
 
@@ -49,7 +48,6 @@ import { ColorPickerModule } from 'ngx-color-picker';
     NzTableModule,
     NzIconModule,
     NzButtonModule,
-    IconPickerModule,
     ColorPickerModule,
     NzInputNumberModule
   ],

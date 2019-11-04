@@ -2,7 +2,7 @@
     <div [ngClass]="{'files-compact': mode === 'brief', 'files-full': mode === 'full'}">
         <div>
             <div class="" style="display: inline-block;padding:5px;cursor: pointer;">
-                <i nz-tooltip nzTooltipTitle="Add New File" class="action" nz-icon nzType="file-add" theme="outline"
+                <i nz-tooltip nzTooltipTitle="Add New File" class="action" nz-icon twoToneColor="#619ef3" nzType="file-add" theme="twotone"
                     (click)="openPicker($event)"></i>
             </div>
             <nz-radio-group *ngIf="(files.length > 0)" class="m-r-10" nzSize="small" [(ngModel)]="view"
@@ -26,25 +26,6 @@
                 <div>
                     <span class="mb-0 font-size-10" style="width:300px;overflow:scroll;">{{item.name}}</span>
                 </div>
-                <ng-template #titleTemplate>
-                        <div style="display: inline-block;">
-                                <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor"
-                                    nz-icon [nzType]="item.iconClass" theme="twotone"></i>
-                                <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
-                                    [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
-                            </div>
-                            <div class="" style="display: inline-block;">
-                                {{ item.name }} &nbsp;&nbsp;
-                            </div>
-                </ng-template>
-                <ng-template #contentTemplate>
-                    <div *ngIf="item.description.length === 0">
-                        No Description
-                    </div>
-                        <div style="width:300px;">
-                        {{ item.description}}
-                    </div>
-                    </ng-template>
             </div>
             <nz-empty *ngIf="files.length === 0"></nz-empty>
         </div>
@@ -85,22 +66,6 @@
                     </div>
                     <div style="clear: both;"></div>
                 </li>
-                <ng-template #titleTemplate>
-                        <div style="display: inline-block;">
-                                <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor"
-                                    nz-icon [nzType]="item.iconClass" theme="twotone"></i>
-                                <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
-                                    [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
-                            </div>
-                            <div class="" style="display: inline-block;">
-                                {{ item.name }} &nbsp;&nbsp;
-                            </div>
-                </ng-template>
-                <ng-template #contentTemplate>
-                        <div style="width:300px;">
-                        {{ item.description}}
-                    </div>
-                    </ng-template>
             </div>
         </ul>
     </div>

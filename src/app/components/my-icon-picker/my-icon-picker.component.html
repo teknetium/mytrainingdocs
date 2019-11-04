@@ -1,0 +1,14 @@
+<div>
+        <nz-radio-group [(ngModel)]="iconTheme" (ngModelChange)="themeChanged($event)">
+            <label nz-radio nzValue="fas">Solid</label>
+            <label nz-radio nzValue="far">Regular</label>
+            <label nz-radio nzValue="fal">Lite</label>
+        </nz-radio-group>
+
+    <input nz-input placeholder="Basic usage" [(ngModel)]="iconSearchStr" (keypress)="keypressCallback($event)" />
+    <div class="icon-container">
+        <div *ngFor="let icon of matchingIcons$ | async; index as i" (click)="selectIcon(i)">
+            <i [ngClass]="icon" class="icon-box" ></i>
+        </div>
+    </div>
+</div>

@@ -1,41 +1,23 @@
 <div class="" style="width:100%;">
-  <div *ngIf="viewMode === 'edit'" style="width:100%;display: block;">
+  <div *ngIf="viewMode === 'edit'" style="width:100%;display: block;padding:5px;">
     <div>
-      <span style="font-size:12px;display: block;"> New Training Templates :</span>
-      <div style="display: inline-block;margin-right: 10px;margin-left:10px;cursor: pointer;" (click)="newTraining()">
-        <i class="fal fa-file-alt" style="font-size: 24px;" nz-tooltip nzTooltipTitle="Basic Training Template"></i>
-      </div>
-      <div style="display: inline-block;margin-right: 10px;cursor: pointer;">
-        <i class="fal fa-file-audio" style="font-size: 24px;" nz-tooltip nzTooltipTitle="Audio Training Template"></i>
-      </div>
-      <div style="display: inline-block;margin-right: 10px;cursor: pointer;">
-        <i class="fal fa-file-video" style="font-size: 24px;" nz-tooltip nzTooltipTitle="Video Training Template"></i>
+      <i (click)="selectItem(i)" twoToneColor="#619ef3" nz-icon nzType="book" theme="twotone"
+        style="cursor: pointer;display:inline-block;font-size:24px;"
+        nz-tooltip nzTooltipTitle="New Training" (click)="newTraining()"></i>
+      <div style="display:block;border-top:1px solid #efefef;padding-top:10px;margin-top:10px;">
+        <div *ngFor="let item of trainings$ | async; index as i" (click)="selectItem(i)" class="training-item"
+          [ngClass]="{'active-item': selectedItemIndex === i}"
+          style="text-align: center;display:inline-block;cursor: pointer;padding:10px 5px 5px 5px;margin-right:5px;border-radius: 4px;">
+          <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor" nz-icon
+            [nzType]="item.iconClass" theme="twotone"></i>
+          <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-20" [ngStyle]="{'color': item.iconColor}"
+            [ngClass]="item.iconClass"></i>
+          <div style="display: block;font-size:10px;">
+            {{ item.title }}
+          </div>
+        </div>
       </div>
     </div>
-    <div style="border-top:1px solid #efefef;border-bottom:1px solid #efefef;padding-top:10px;margin:10px 0 5px 0;">
-      <span style="font-weight:500;">Trainings</span>
-    </div>
-
-    <ul style="list-style-type:none;">
-      <div *ngFor="let item of trainings$ | async; index as i">
-        <li (click)="selectItem(i)" [ngClass]="{'active-item': selectedItemIndex === i}"
-          style="padding:5px 0;cursor: pointer;">
-          <div style="display: inline-block;width:10%;padding-left:5px;">
-            <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor" nz-icon
-              [nzType]="item.iconClass" theme="twotone"></i>
-            <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-20" [ngStyle]="{'color': item.iconColor}"
-              [ngClass]="item.iconClass"></i>
-          </div>
-          <div style="display: inline-block;;width:40%;font-size:12px;">
-            &nbsp;&nbsp;&nbsp;&nbsp;{{ item.title }}
-          </div>
-          <div style="display: inline-block;font-size:12px;">
-            &nbsp;&nbsp;&nbsp;&nbsp;{{ item.description }}
-          </div>
-        </li>
-      </div>
-    </ul>
-    <nz-empty *ngIf="trainings.length === 0"></nz-empty>
   </div>
   <div style="width:100%;display:block;margin-top:20px;">
     <mtd-training-basic></mtd-training-basic>
