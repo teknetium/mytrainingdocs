@@ -27,16 +27,17 @@ export class UserService {
   private titleBS$ = new BehaviorSubject<string>('');
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
   private selectedUserIndexBS$ = new BehaviorSubject<number>(null);
-  private tags: string[] = [];
+  private newUser$: Observable<UserModel>;
+  
 
 
   // Observables
-  private newUser$: Observable<UserModel>;
+  private newuser$: Observable<UserModel>;
   private authenticatedUserProfile$: Observable<Auth0ProfileModel>;
 
   private action: string;
 
-
+  view = 'card';
 
   constructor(
     private http: HttpClient,
@@ -55,9 +56,10 @@ export class UserService {
         firstName: profile.firstName,
         lastName:profile.lastName,
         email: profile.email,
-        org: profile.email.substring(profile.email.indexOf('@') + 1),
+        teamId: profile.uid,
         userStatus: 'new-supervisor',
         trainingStatus: 'uptodate',
+        jobs: [],
         directReports: [],
         profilePicUrl: '',
         supervisorId: ''
@@ -81,7 +83,7 @@ export class UserService {
   }
 
   loadData() {
-    this.getTeam$(this.authenticatedUser._id).subscribe((userList) => {
+    this.getTeam$(this.authenticatedUser.teamId).subscribe((userList) => {
       this.myTeam = userList;
       this.myTeamBS$.next(this.myTeam);
       this.myTeamCntBS$.next(this.myTeam.length);
@@ -106,33 +108,14 @@ export class UserService {
   }
 
   addNewUser() {
-    /*
-    const newUser = {
-      _id: '',
-      uid: '',
-      userType: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      org: '',
-      userStatus: 'new-user',
-      trainingStatus: '',
-      myTrainings: [],
-      directReports: [],
-      profilePicUrl: '',
-      supervisor: this.authenticatedUser._id,
-      tags: []
-    };
-    */
-
     const newUser = <UserModel> {
-      _id: '',
+      _id: String(new Date().getTime()),
       uid: '',
       userType: 'individualContributor',
       firstName: 'New',
       lastName: 'User',
-      email: 'new-user@domain.com',
-      org: this.authenticatedUser.org,
+      email: '',
+      teamId: this.authenticatedUser.uid,
       userStatus: 'new-user',
       trainingStatus: 'uptodate',
       directReports: [],
@@ -147,8 +130,6 @@ export class UserService {
   }
 
   createNewUser(user: UserModel) {
-    user._id = user.email;
-    user.userStatus = 'active';
     this.postUser$(user).subscribe(data => {
       this.loadData();
     })
@@ -240,9 +221,9 @@ export class UserService {
       );
   }
 
-  getAllUsers$(org: string): Observable<UserModel[]> {
+  getAllUsers$(teamId: string): Observable<UserModel[]> {
     return this.http
-      .get<UserModel>(`${ENV.BASE_API}users/${org}`, {
+      .get<UserModel>(`${ENV.BASE_API}users/${teamId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
@@ -250,9 +231,9 @@ export class UserService {
       );
   }
 
-  getTeam$(uid: string): Observable<UserModel[]> {
+  getTeam$(teamId: string): Observable<UserModel[]> {
     return this.http
-      .get<UserModel>(`${ENV.BASE_API}team/${uid}`, {
+      .get<UserModel>(`${ENV.BASE_API}users/${teamId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

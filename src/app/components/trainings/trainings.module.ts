@@ -22,7 +22,6 @@ import { RouterModule } from '@angular/router';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { FilesModule } from '../files/files.module';
 import { FileManagerModule } from '../file-manager/file-manager.module';
-import { MultiSelectorModule } from '../multi-selector/multi-selector.module';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
 
@@ -54,7 +53,6 @@ import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
     NzCollapseModule,
     FilesModule,
     FileManagerModule,
-    MultiSelectorModule,
     NzButtonModule,
     NzTypographyModule,
     NzTabsModule,
@@ -63,7 +61,8 @@ import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
     NzRateModule,
     NzEmptyModule,
     NzAffixModule,
-    MyIconPickerModule
+    MyIconPickerModule,
+    NzRateModule
   ],
   exports: [
     TrainingsComponent,

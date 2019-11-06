@@ -1,16 +1,17 @@
-<div *ngIf="showEditor$ | async">
+<div *ngIf="(showEditor$ | async) && selectedTraining">
     <div [ngClass]="{'fullscreen': fullscreen, 'regular': !fullscreen}">
-        <div [ngClass]="{'toolbar-fullscreen': fullscreen, 'toolbar': !fullscreen}">
-            {{offsetLeft}}
-            <button *ngIf="mode === 'edit'" style="font-size:12px;display:inline-block;" nz-button nzType="default"
-                nzSize="small" (click)="setMode('preview')">
-                Preview
-            </button>
-            <button *ngIf="mode === 'preview'" style="font-size:12px;display:inline-block;" nz-button nzType="default"
-                nzSize="small" (click)="setMode('edit')">
-                Edit
-            </button>
-            <!--
+        <ng-container *ngIf="selectedTraining$ | async">
+            <div [ngClass]="{'toolbar-fullscreen': fullscreen, 'toolbar': !fullscreen}">
+                {{offsetLeft}}
+                <button *ngIf="mode === 'edit'" style="font-size:12px;display:inline-block;" nz-button nzType="default"
+                    nzSize="small" (click)="setMode('preview')">
+                    Preview
+                </button>
+                <button *ngIf="mode === 'preview'" style="font-size:12px;display:inline-block;" nz-button
+                    nzType="default" nzSize="small" (click)="setMode('edit')">
+                    Edit
+                </button>
+                <!--
             <button *ngIf="(action$ | async) === 'newTraining' && mode === 'edit'" nzType="default" nz-button
                 nzSize="small" style="font-size:12px;display: inline-block;" (click)="createTraining()">Create
             </button>
@@ -19,27 +20,29 @@
                 [disabled]="!dirty">Save
             </button>
         -->
-            <button *ngIf="mode === 'edit'" style="font-size:12px;display:inline-block;" nz-button nzType="default"
-                nzSize="small" (click)="close()">
-                Close
-            </button>
-            <button *ngIf="mode === 'edit'" class="toolbar-button" nz-button nzType="default"
-                style="font-size:12px;display:inline-block;" nzSize="small" (click)="addSection()">
-                Add Section
-            </button>
-            <button *ngIf="mode === 'edit'" class="toolbar-button" nz-button nzType="default"
-                style="color:red;font-size:12px;display:inline-block;" nzSize="small" nz-popconfirm
-                nzPopconfirmTitle="Delete this Training?" nzPopconfirmPlacement="bottom"
-                (nzOnConfirm)="deleteItemConfirm()" (nzOnCancel)="deleteItemCancel()">
-                Delete Training
-            </button>
-            <i *ngIf="fullscreen" nz-icon style="font-size:30px;float:right;display:inline-block;cursor: pointer;"
-                nzType="fullscreen-exit" (click)="fullscreen = !fullscreen" nz-tooltip nzTooltipTitle="Shrink">
-            </i>
-            <i *ngIf="!fullscreen" style="font-size:30px;float:right;display:inline-block;cursor: pointer;" nz-icon
-                nzType="fullscreen" (click)="fullscreen = !fullscreen" nz-tooltip nzTooltipTitle="Expand">
-            </i>
-        </div>
+                <button *ngIf="mode === 'edit'" style="font-size:12px;display:inline-block;" nz-button nzType="default"
+                    nzSize="small" (click)="close()">
+                    Close
+                </button>
+                <button *ngIf="mode === 'edit'" class="toolbar-button" nz-button nzType="default"
+                    style="font-size:12px;display:inline-block;" nzSize="small" (click)="addSection()">
+                    Add Section
+                </button>
+                <button *ngIf="mode === 'edit'" class="toolbar-button" nz-button nzType="default"
+                    style="color:red;font-size:12px;display:inline-block;" nzSize="small" nz-popconfirm
+                    nzPopconfirmTitle="Delete this Training?" nzPopconfirmPlacement="bottom"
+                    (nzOnConfirm)="deleteItemConfirm()" (nzOnCancel)="deleteItemCancel()">
+                    Delete Training
+                </button>
+                <i *ngIf="fullscreen" nz-icon style="font-size:30px;float:right;display:inline-block;cursor: pointer;"
+                    nzType="fullscreen-exit" (click)="fullscreen = !fullscreen" nz-tooltip nzTooltipTitle="Shrink">
+                </i>
+                <i *ngIf="!fullscreen" style="font-size:30px;float:right;display:inline-block;cursor: pointer;" nz-icon
+                    nzType="fullscreen" (click)="fullscreen = !fullscreen" nz-tooltip nzTooltipTitle="Expand">
+                </i>
+            </div>
+        </ng-container>
+
 
         <div #myContainer *ngIf="selectedTraining$ | async as selectedTraining"
             [ngClass]="{'container-fullscreen': fullscreen, 'container': !fullscreen}">
@@ -88,20 +91,24 @@
             -->
             <div style="width:75%;display:inline-block;float: right;">
                 <div id="introduction"
-                    style="padding:20px ;border:1px solid #dddddd;border-radius:10px;margin-bottom:10px;">
-                    <div style="width:15%;height:100%;display: inline-block; float: left;">
-                        <i *ngIf="mode === 'edit'" [ngClass]="selectedTraining.iconClass"
-                            style="display: inline-block;font-size:50px;cursor: pointer;"
-                            [ngStyle]="{'color': selectedTraining.iconColor}" (click)="isIconSelectModalVisible = true"></i>
+                    style="background-color:#fbfbfb;padding:20px ;border:1px solid #dddddd;border-radius:10px;margin-bottom:30px;">
+                    <div style="width:15%;height:100%;display: inline-block; float: left;text-align: center;">
+                        <div *ngIf="mode === 'edit'" style="min-width:30px; min-height:30px;" (click)="isIconSelectModalVisible = true"
+                         nz-tooltip nzTooltipTitle="Choose an icon for your training">
+                            <i  [ngClass]="selectedTraining.iconClass"
+                                style="display: block;font-size:50px;cursor: pointer;"
+                                [ngStyle]="{'color': selectedTraining.iconColor}"></i>
+                        </div>
                         <i *ngIf="mode === 'preview'" [ngClass]="selectedTraining.iconClass"
                             style="display: inline-block;font-size:50px;"
                             [ngStyle]="{'color': selectedTraining.iconColor}"></i>
-                        <span *ngIf="mode === 'edit'" [style.color]="iconColor" [cpPosition]="'right'"
+                        <div *ngIf="mode === 'edit'" [style.color]="iconColor" [cpPosition]="'right'"
                             [cpPositionRelativeToArrow]="true" (colorPickerChange)="onColorChange($event)"
-                            [(colorPicker)]="selectedTraining.iconColor" style="cursor: pointer;margin-left:10px;"
-                            [ngStyle]="{'color': selectedTraining.iconColor}">
+                            [(colorPicker)]="selectedTraining.iconColor" style="cursor: pointer;margin-top:20px;"
+                            [ngStyle]="{'color': selectedTraining.iconColor}"
+                            nz-tooltip nzTooltipTitle="Select icon color">
                             <i class="fas fa-palette" style="font-size:24px;color:red;"></i>
-                        </span>
+                        </div>
                     </div>
                     <div style="display: inline-block;width:50%;height: 100%; float: left;">
                         {{trainingTitle}}
@@ -221,7 +228,7 @@
                     <span *ngIf="mode === 'edit'" style="font-size: 20px;font-weight:500;">Section -
                         {{section.title}}</span>
                     <div
-                        style="padding:0 20px 20px 20px ;width:100%;border:1px solid #dddddd;border-radius:10px;margin-bottom:10px;">
+                        style="padding:0 20px 20px 20px ;width:100%;border:1px solid #dddddd;border-radius:10px;margin-bottom:30px;background-color:#fbfbfb;">
                         <div style="padding:5px;cursor: pointer;margin-top:20px;" nz-tooltip
                             nzTooltipTitle="Delete Section">
                             <i *ngIf="mode === 'edit' && i > 0" style="font-size:20px;float:right;" nz-icon
@@ -229,7 +236,7 @@
                         </div>
                         <div style="clear:both;"></div>
                         <div>
-                            <h5 *ngIf="mode === 'preview'">{{section.title}}</h5>
+                            <h4 *ngIf="mode === 'preview'">{{section.title}}</h4>
                             <p *ngIf="mode === 'edit'" nz-paragraph
                                 (nzContentChange)="sectionChanged($event, i, 'title')" nzEditable
                                 [(nzContent)]="section.title" style="font-size:18px;"></p>
@@ -240,7 +247,8 @@
                             <ng-container *ngIf="mode === 'edit'">
                                 <div style="display:block;width:100%;">
                                     <i style="font-size:30px;margin-top: 10px;" twoToneColor="#3f87f5" nz-icon
-                                        nzType="file-unknown" theme="twotone" (click)="setContent(section)"></i>
+                                        nzType="file-unknown" theme="twotone" (click)="setContent(section)"
+                                         nz-tooltip nzTooltipTitle="Change Content"></i>
                                 </div>
                             </ng-container>
                             <div *ngIf="section.file" style="width:100%;margin-top:20px;display:block;height: 500px;">
@@ -269,9 +277,9 @@
                     </div>
                 </div>
                 <span style="font-size: 24px;font-weight:500;">Assessment</span>
-                <div id="assessment" style="">
+                <div id="assessment" style="background-color:#fbfbfb;">
                     <div *ngIf="mode === 'edit'"
-                        style="margin-bottom: 10px;border:1px solid #dddddd;border-radius:10px;padding:20px;">
+                        style="margin-bottom: 30px;border:1px solid #dddddd;border-radius:10px;padding:20px;">
                         <button nzType="primary" nz-button (click)="addQuesiton()" nzSize="small"
                             style="margin-left:5px;display: inline-block;">
                             Add Question
@@ -279,7 +287,7 @@
                     </div>
                 </div>
                 <span style="font-size: 24px;font-weight:500;">Ratings & Comments</span>
-                <div id="ratingscomments" style="padding:20px;border:1px solid #dddddd;border-radius:10px;">
+                <div id="ratingscomments" style="padding:20px;border:1px solid #dddddd;border-radius:10px;background-color:#fbfbfb;">
                     <nz-rate [(ngModel)]="rating"></nz-rate>
                 </div>
                 <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon"

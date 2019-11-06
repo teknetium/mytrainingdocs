@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
   templateUrl: './my-icon-picker.component.html',
   styleUrls: ['./my-icon-picker.component.css']
 })
-export class MyIconPickerComponent implements OnInit {
+export class MyIconPickerComponent implements OnInit, AfterViewInit {
 
   iconCats = [
     {
@@ -74,9 +74,6 @@ export class MyIconPickerComponent implements OnInit {
       category: ['alert']
     }];
   icons = [
-    'Security',
-    'Social',
-    'Tabletop Gaming',
     'abacus',
     'acorn',
     'ad',
@@ -1797,12 +1794,22 @@ export class MyIconPickerComponent implements OnInit {
   matchingIcons$: Observable<string[]> = this.matchingIconsBS$.asObservable();
   matchingIcons: string[] = [];
   @Output() icon = new EventEmitter<string>();
-  iconTheme = 'far';
-
+  iconTheme = 'fal';
+  iconClass: string = '';
+  @ViewChild('iconSearch', { static: false }) iconSearch: ElementRef;
 
   constructor() { }
 
   ngOnInit() {
+    this.searchForIcons();
+  }
+
+  ngAfterViewInit() {
+    this.iconSearch.nativeElement.focus();
+    }
+
+  mouseOver(i) {
+    this.iconClass = this.matchingIcons[i];
   }
 
   themeChanged($event) {
@@ -1811,19 +1818,21 @@ export class MyIconPickerComponent implements OnInit {
 
   selectIcon(i) {
     this.icon.emit(this.matchingIcons[i]);
+    this.iconSearchStr = '';
+    this.searchForIcons();
   }
 
   keypressCallback(keyPress) {
     clearTimeout(this.timer1);
 
-    this.timer1 = setTimeout(() => { this.searchForIcons(); }, 700);
+    this.timer1 = setTimeout(() => { this.searchForIcons(); }, 400);
   }
 
   searchForIcons() {
     this.matchingIcons = [];
     for (const iconStr of this.icons) {
       if (iconStr.indexOf(this.iconSearchStr) >= 0) {
-        this.matchingIcons.push(this.iconTheme + ' fa-' + iconStr);
+        this.matchingIcons.push(this.iconTheme + ' fa-fw fa-' + iconStr);
       }
     }
 

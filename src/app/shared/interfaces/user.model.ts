@@ -5,10 +5,11 @@ export interface UserModel {
   firstName: string,
   lastName: string,
   email: string,
-  org: string,
+  teamId: string,
   userStatus: string,
   trainingStatus: string,
-  directReports: Array<string>,
+  jobs: string[],
+  directReports: string[],
   profilePicUrl: string,
   supervisorId: string,
 }

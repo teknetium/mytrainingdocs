@@ -1,17 +1,23 @@
 .icon-container {
     display: flex;
-    padding:10px;
     flex-flow: row wrap;
+    max-height:500px;
+    overflow-y:scroll;
+    margin-top: 20px;
 }
 
 .icon-box {
-    font-size:24px;
-    padding:5px;
+    font-size:22px;
+    padding:12px 0;
     margin:3px;
     border: 1px solid #e7e7e7;
     border-radius: 4px;
+    width: 46px;
+    height:46px;
+    text-align: center;
 }
 
 .icon-box:hover {
-    background-color: #f4f4f4;
+    background-color: #f8ffef;
+    border-color: #c3e999;
 }

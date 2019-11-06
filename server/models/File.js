@@ -19,8 +19,7 @@ fileSchema.add({
   iconClass: { type: String, required: true },
   iconType: { type: String, required: true },
   iconColor: { type: String, required: true },
-  iconSource: { type: String, required: true },
-  tags: [String]
+  iconSource: { type: String, required: true }
 })
 
 module.exports = mongoose.model("File", fileSchema);

@@ -237,7 +237,7 @@ export class FileService {
         } else {
           uid = this.authenticatedUser.supervisorId;
         }
-        this.getAllFiles$(uid).subscribe(files => {
+        this.getAllFiles$(this.authenticatedUser.teamId).subscribe(files => {
           if (!files) {
             return;
           }
@@ -419,7 +419,7 @@ export class FileService {
           name: file.filename,
           size: sizeStr,
           mimeType: file.mimetype,
-          teamId: this.authenticatedUser._id,
+          teamId: this.authenticatedUser.teamId,
           description: '',
           versions: [{ version: '1.0.0', changeLog: 'New Upload', owner: this.authenticatedUser._id, fsHandle: file.handle, url: file.url, dateUploaded: new Date().getTime() }],
           iconClass: iconClass,
@@ -584,7 +584,7 @@ export class FileService {
   deleteFile(id: string): void {
     this.action = 'delete';
     this.deleteFile$(id).subscribe(val => {
-      this.getAllFiles$(this.authenticatedUser._id).subscribe(files => {
+      this.getAllFiles$(this.authenticatedUser.teamId).subscribe(files => {
         if (!files) {
           return;
         }
@@ -616,9 +616,9 @@ export class FileService {
     this.client.picker(this.options).open();
   }
 
-  getAllFiles$(uid): Observable<FileModel[]> {
+  getAllFiles$(teamId): Observable<FileModel[]> {
     return this.http
-      .get<FileModel[]>(`${ENV.BASE_API}files/${uid}`, {
+      .get<FileModel[]>(`${ENV.BASE_API}files/${teamId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
       .pipe(

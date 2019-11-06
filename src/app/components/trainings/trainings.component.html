@@ -1,21 +1,51 @@
 <div class="" style="width:100%;">
-  <div *ngIf="viewMode === 'edit'" style="width:100%;display: block;padding:5px;">
+  <div style="width:100%;display: block;padding:5px;">
     <div>
-      <i (click)="selectItem(i)" twoToneColor="#619ef3" nz-icon nzType="book" theme="twotone"
-        style="cursor: pointer;display:inline-block;font-size:24px;"
-        nz-tooltip nzTooltipTitle="New Training" (click)="newTraining()"></i>
-      <div style="display:block;border-top:1px solid #efefef;padding-top:10px;margin-top:10px;">
-        <div *ngFor="let item of trainings$ | async; index as i" (click)="selectItem(i)" class="training-item"
-          [ngClass]="{'active-item': selectedItemIndex === i}"
-          style="text-align: center;display:inline-block;cursor: pointer;padding:10px 5px 5px 5px;margin-right:5px;border-radius: 4px;">
-          <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24" [twoToneColor]="item.iconColor" nz-icon
-            [nzType]="item.iconClass" theme="twotone"></i>
-          <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-20" [ngStyle]="{'color': item.iconColor}"
-            [ngClass]="item.iconClass"></i>
-          <div style="display: block;font-size:10px;">
-            {{ item.title }}
-          </div>
+      <div>
+        <div style="display:inline-block;">
+          <span style="display:inline-block;">New Training Templates&nbsp;&nbsp;&nbsp;&nbsp; </span>
+          <i twoToneColor="#619ef3" nz-icon nzType="book" theme="twotone"
+            style="cursor: pointer;display:inline-block;font-size:24px;" nz-tooltip nzTooltipTitle="Basic Template"
+            (click)="newTraining()"></i>
         </div>
+        <nz-radio-group class="m-r-10" nzSize="small" [(ngModel)]="renderMode"
+          style="display: inline-block;float: right;" (ngModelChange)=renderModeChanged($event)>
+          <label nz-radio-button nzValue="smallCell">
+            <i class="font-size-14" nz-icon nzType="appstore" theme="outline"></i>
+          </label>
+          <label nz-radio-button nzValue="largeCell">
+            <i class="font-size-20" nz-icon nzType="appstore" theme="outline"></i>
+          </label>
+          <label nz-radio-button nzValue="list">
+            <i class="font-size-16" nz-icon nzType="ordered-list" theme="outline"></i>
+          </label>
+        </nz-radio-group>
+        <div style="clear: both;"></div>
+      </div>
+      <div
+        [ngClass]="{'training-cell-container': (renderMode === 'smallCell' || renderMode === 'largeCell'), 'training-list-container': renderMode === 'list'}">
+        <div *ngFor="let item of trainings$ | async; index as i" (click)="selectItem(i)"
+          [ngClass]="{'cell-item-sm': renderMode === 'smallCell', 'cell-item-lg': renderMode === 'largeCell','active-item': selectedItemIndex === i}">
+          <div *ngIf="renderMode === 'smallCell' || renderMode === 'largeCell'">
+            <i [ngStyle]="{'color': item.iconColor, 'font-size.px': cellFontSize}" [ngClass]="item.iconClass"></i>
+            <div *ngIf="renderMode === 'largeCell'"
+              [ngClass]="{'label-sm':  renderMode === 'smallCell', 'label-lg':  renderMode === 'largeCell'}">
+              {{ item.title }}
+            </div>
+          </div>
+          <div *ngIf="renderMode === 'list'" class="list-item">
+            <i [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass" class="font-size-18"
+              style="display:inline-block;margin-right:10px;"></i>
+            <div style="display:inline-block;font-size: 12px;">
+              {{ item.title }}
+            </div>
+          </div>
+
+        </div>
+        <!--
+        <nz-empty *ngIf="trainings && trainings.length === 0"></nz-empty>
+        -->
+
       </div>
     </div>
   </div>

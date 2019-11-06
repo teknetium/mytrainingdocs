@@ -30,6 +30,8 @@ export class TrainingsComponent implements OnInit {
   selectedItemIndex = -1;
   viewMode$: Observable<string>;
   viewMode = 'edit';
+  renderMode = 'largeCell';
+  cellFontSize = 22;
 
   editorClone: TrainingModel;
 
@@ -69,6 +71,7 @@ export class TrainingsComponent implements OnInit {
 
   newTraining() {
     this.trainingService.addNewTraining();
+    this.trainingService.changeEditorVisualState(false);
   }
 
   selectItem(index) {
@@ -79,6 +82,16 @@ export class TrainingsComponent implements OnInit {
     }
     this.trainingService.selectItemForEditing(index);
     this.selectedItemIndex = index;
+  }
+
+  renderModeChanged(event) {
+    if (event === 'smallCell') {
+      this.cellFontSize = 16;
+    } else if (event === 'largeCell') {
+      this.cellFontSize = 22;
+    } else {
+      this.cellFontSize = 12;
+    }
   }
 
 }

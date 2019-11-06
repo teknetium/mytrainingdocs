@@ -230,6 +230,7 @@ export class TrainingBasicComponent implements OnInit, AfterViewInit {
 
   setIcon($event) {
     this.selectedTraining.iconClass = $event;
+    this.trainingService.saveTraining(this.selectedTraining);
     this.isIconSelectModalVisible = false;
   }
 

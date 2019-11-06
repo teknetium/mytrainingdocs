@@ -50,8 +50,8 @@ module.exports = function(app, config) {
  */
 
   const trainingListProjection = "_id title type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated sections tags estimatedTimeToComplete";
-  const userListProjection = "_id uid userType userStatus myTrainings trainingStatus firstName lastName email org directReports tags supervisor profilePicUrl";
-  const fileListProjection = "_id name size teamId iconColor iconSource iconType iconClass description tags versions";
+  const userListProjection = "_id uid userType userStatus jobs trainingStatus firstName lastName email teamId directReports supervisor profilePicUrl";
+  const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
 
   // GET API root
   app.get("/api/", (req, res) => {
@@ -75,8 +75,8 @@ module.exports = function(app, config) {
     );
   });
 
-  app.get("/api/team/:uid", (req, res) => {
-    User.find({supervisor: req.params.uid},
+  app.get("/api/users/:teamId", (req, res) => {
+    User.find({teamId: req.params.teamId},
       userListProjection, (err, users) => {
         let usersArr = [];
         if (err) {
@@ -92,6 +92,7 @@ module.exports = function(app, config) {
   });
 
   // GET training by training ID
+  /*
   app.get("/api/training/:id", jwtCheck, (req, res) => {
     Training.findById(req.params.id, (err, training) => {
       if (err) {
@@ -103,7 +104,7 @@ module.exports = function(app, config) {
       res.send(training);
     });
   });
-
+*/
   // POST a new event
   app.post("/api/training/new", jwtCheck, (req, res) => {
     const training = new Training({
@@ -221,14 +222,13 @@ module.exports = function(app, config) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        org: req.body.org,
+        teamId: req.body.teamId,
         userStatus: req.body.userStatus,
         trainingStatus: req.body.trainingStatus,
         directReports: req.body.directReports,
-        myTrainings: req.body.myTrainings,
+        jobs: req.body.jobs,
         profilePicUrl: req.body.profilePicUrl,
-        supervisor: req.body.supervisor,
-        tags: req.body.tags,
+        supervisorId: req.body.supervisorId,
       });
 //      user.save((err2) => {
       User.create(user, function(err2, userObj) {
@@ -249,17 +249,16 @@ module.exports = function(app, config) {
       }
       user.uid = req.body.uid;
       user.userType = req.body.userType;
-      user.org = req.body.org;
+      user.teamId = req.body.teamId;
       user.firstName = req.body.firstName;
       user.lastName = req.body.lastName;
       user.email = req.body.email;
       user.userStatus = req.body.userStatus;
       user.trainingStatus = req.body.trainingStatus;
       user.directReports = req.body.directReports;
-      user.myTrainings = req.body.myTrainings;
+      user.jobs = req.body.jobs;
       user.profilePicUrl = req.body.profilePicUrl;
-      user.supervisor = req.body.supervisor;
-      user.tags = req.body.tags;
+      user.supervisorId = req.body.supervisorId;
       user._id = req.body._id;
 
       user.save(err2 => {
@@ -290,8 +289,8 @@ module.exports = function(app, config) {
   //
   // FILE methods
   //
-  app.get("/api/files/:uid", (req, res) => {
-    File.find({teamId: req.params.uid}, fileListProjection, (err, files) => {
+  app.get("/api/files/:teamId", (req, res) => {
+    File.find({teamId: req.params.teamId}, fileListProjection, (err, files) => {
       let filesArr = [];
       if (err) {
         return res.status(500).send({message: err.message});
@@ -316,7 +315,6 @@ module.exports = function(app, config) {
       iconColor: req.body.iconColor,
       iconSource: req.body.iconSource,
       description: req.body.description,
-      tags: req.body.tags,
       _id: req.body._id,
     });
     File.create(file, function(err2, fileObj) {

@@ -44,6 +44,7 @@ export class GettingstartedComponent implements OnInit {
         return;
       }
       this.authenticatedUser = user;
+
     })
   }
 

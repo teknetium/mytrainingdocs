@@ -54,7 +54,7 @@ export class TrainingService {
   }
 
   loadData() {
-    this.getTrainings$(this.authenticatedUser._id).subscribe(trainingList => {
+    this.getTrainings$(this.authenticatedUser.teamId).subscribe(trainingList => {
       this.allTrainings = trainingList;
 /*
       let i;
@@ -190,7 +190,7 @@ export class TrainingService {
       _id: String(new Date().getTime()),
       type: 'online',
       title: 'New Training',
-      teamId: this.authenticatedUser._id,
+      teamId: this.authenticatedUser.teamId,
       owner: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),
       estimatedTimeToComplete: 0,
@@ -216,6 +216,7 @@ export class TrainingService {
       this.loadData();
       this.showEditor$.next(false);
       this.selectedTrainingIndexBS$.next(-1);
+      this.showEditor$.next(false);
     });
     this.actionBS$.next('newTraining');
     //    this.showSelectedIndexFeedbackBS$.next(true);
@@ -246,9 +247,9 @@ export class TrainingService {
     return `Bearer ${this.auth.accessToken}`;
   }
 
-  getTrainings$(org: string): Observable<TrainingModel[]> {
+  getTrainings$(teamId: string): Observable<TrainingModel[]> {
     return this.http
-      .get<TrainingModel[]>(`${ENV.BASE_API}trainings/${org}`)
+      .get<TrainingModel[]>(`${ENV.BASE_API}trainings/${teamId}`)
       .pipe(
         catchError((error) => this._handleError(error))
       );

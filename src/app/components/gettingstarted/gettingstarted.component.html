@@ -32,10 +32,24 @@
         </div>
     </div>
 </div>
+        <h4>This is the Getting Started step wizard.</h4>
+        The following steps guide you through the complete setup of myTrainingdocs for your team.
+        <div class="help-panel">
+            <div>
+                <div style="display:inline-block;margin-bottom:10px;">
+                    <i class="fal fa-head-side-brain" style="color:#b20fc3;font-size:30px;"></i>
+                </div>
+                <div style="display:inline-block;margin-left:20px;">
+                    <span>Things to Know</span>
+                </div>
+            </div>
+            <div style="display:inline-block;">
+                Selecting this icon anywhere on the site will provide help information specific to where you are.
+        
+            </div>
+        </div>
 <div style="width:100%; height:100%;">
-    <h3>This is the Getting Started step wizard.</h3>
-    The following steps guide you through the complete setup of myTrainingdocs for your team.
-    <nz-tabset nzTabPosition="top" nzSize="large" style="margin-top: 20px;">
+    <nz-tabset nzTabPosition="top" nzSelectedIndex="-1" nzSize="large" style="margin-top: 20px;">
         <nz-tab [nzTitle]="header1Template" style="width:100%;height:900px;">
             <h4 style="text-align: center;">Step 1 - Upload Files</h4>
             <div>
@@ -114,3 +128,7 @@
             <div style="font-size: 10px;">Assign Jobs to People</div>
         </div>
     </ng-template>
+    <nz-modal [(nzVisible)]="showWelcomeDialog" nzTitle="Welcome!" nzClosable="false" (nzOnOk)="handleOk()"
+        nzCancelDisabled="true">
+    </nz-modal>
+</div>

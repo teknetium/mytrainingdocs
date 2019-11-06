@@ -1,7 +1,7 @@
 import { Component } from '@angular/core'
 
 @Component({
-    selector: 'mtd-users',
+    selector: '',
     templateUrl: './members.component.html'
 })
 

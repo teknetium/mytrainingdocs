@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MyIconPickerComponent } from './my-icon-picker.component';
-import { NzInputModule, NzRadioModule } from 'ng-zorro-antd';
+import { NzInputModule, NzRadioModule, NzIconModule, NzButtonModule } from 'ng-zorro-antd';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
@@ -13,7 +13,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NzInputModule,
     FormsModule,
     ReactiveFormsModule,
-    NzRadioModule
+    NzRadioModule,
+    NzIconModule,
+    NzButtonModule
   ],
   exports: [
     MyIconPickerComponent
