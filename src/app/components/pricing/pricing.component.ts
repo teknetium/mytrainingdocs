@@ -10,8 +10,8 @@ export class PricingComponent {
 
     duration:string = "month";
   
-    feesBasic: number = 15;
-    feesStandard: number = 12;
+    feesBasic: number = 18;
+    feesStandard: number = 15;
   
     planChange() {
         if (this.plans == 'annually') {

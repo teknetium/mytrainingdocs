@@ -8,7 +8,7 @@ import { TrainingModel } from './shared/interfaces/training.type';
 import { Router } from '@angular/router';
 import { FileModel } from './shared/interfaces/file.type';
 import { FileService } from './shared/services/file.service';
-import { Auth0ProfileModel } from './shared/models/auth0Profile.model';
+// import { Auth0ProfileModel } from './shared/models/auth0Profile.model';
 import { NotificationService } from './shared/services/notification.service';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { NzNotificationService } from 'ng-zorro-antd/notification';

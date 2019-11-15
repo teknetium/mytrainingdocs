@@ -16,6 +16,7 @@ const userSchema = new Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: false },
   teamId: { type: String, required: false },
+  adminUp: Boolean,
   jobs: [String],
   userStatus: { type: String, required: false },
   trainingStatus: { type: String, required: false },

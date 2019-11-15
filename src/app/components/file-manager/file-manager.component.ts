@@ -25,6 +25,7 @@ export class FileManagerComponent {
     themeColors = this.colorConfig.get().colors;
     //    selectedFile: string = '';
     selectedFile$: Observable<FileModel>;
+    uploadedFile$: Observable<FileModel>;
     selectedFileIndex = -1;
     selectedFileIndex$: Observable<number>;
     listView: boolean = false;
@@ -58,17 +59,31 @@ export class FileManagerComponent {
     ngOnInit(): void {
         this.streamId = String(new Date().getTime());
         this.files$ = this.fileService.getFilesStream();
-        this.fileService.setupPSFStream(this.streamId);
-        this.fileService.setupPSFIStream(this.streamId);
-        this.fileService.setupPDocStream(this.streamId)
+        this.fileService.setupPrivateDocumentStream(this.streamId);
+        this.fileService.setupPrivateSelectedFileStream(this.streamId);
+        this.fileService.setupPrivateSelectedFileIndexStream(this.streamId)
         this.selectedFile$ = this.fileService.getSelectedFileStream();
         this.selectedFileIndex$ = this.fileService.getSelectedFileIndexStream();
+        this.uploadedFile$ = this.fileService.getUploadedFileStream();
         this.files$.subscribe(files => {
             if (!files) {
                 return;
             }
             this.files = files;
-        })
+//            this.fileService.selectItem(0, this.streamId);
+        });
+        this.selectedFile$.subscribe(file => {
+            if (!file) {
+                return;
+            }
+            this.selectedFile = file;
+        });
+
+        this.uploadedFile$.subscribe(file => {
+            if (file) {
+                this.fileService.selectItemById(file._id, this.streamId);
+            }
+        });
     }
 
     changeView() {

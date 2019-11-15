@@ -4,7 +4,7 @@ import { AsyncSubject, BehaviorSubject, Subscription, of, timer } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { AUTH_CONFIG } from './auth.config';
 import * as auth0 from 'auth0-js';
-import { Auth0ProfileModel } from '../models/auth0Profile.model';
+import { Auth0ProfileModel } from '../interfaces/auth0Profile.type';
 import { Location } from '@angular/common';
 
 import { ENV } from './env.config';
@@ -38,8 +38,6 @@ export class AuthService {
   userMetaData = {
     firstName: '',
     lastName: '',
-    companyName: '',
-    companySize: '',
     role: '',
   };
   uid: string;
@@ -129,13 +127,12 @@ export class AuthService {
     // If initial login, set profile and admin information
     if (profile) {
       this.userMetaData = profile['https://mytrainingdocs.com/user_metadata'];
-      this.authenticatedUserProfile = new Auth0ProfileModel(
-        profile.sub.substring(profile.sub.indexOf('|') + 1),
-        this.userMetaData.firstName,
-        this.userMetaData.lastName,
-        profile.email,
-        this.userMetaData.role
-      );
+      this.authenticatedUserProfile = <Auth0ProfileModel>{
+        uid: profile.sub.substring(profile.sub.indexOf('|') + 1),
+        email: profile.email,
+        firstName: this.userMetaData.firstName,
+        lastName: this.userMetaData.lastName
+      };
       this.setAuthenticatedUserProfile(this.authenticatedUserProfile);
     }
     // Update login status in loggedIn$ stream

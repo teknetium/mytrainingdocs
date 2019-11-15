@@ -7,6 +7,27 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const portletSchema = new Schema({
+    _id: { type: String, required: true },
+    file: { type: String },
+    width: { type: Number },
+    height: { type: Number },
+    xLoc: { type: Number },
+    yLoc: { type: Number }
+})
+
+const pageSchema = new Schema({
+  _id: { type: String, required: true },
+  title: { type: String },
+  intro: { type: String },
+  portlets: [portletSchema],
+})
+
+const assessmentSchema = new Schema({
+  _id: { type: String, required: true },
+  items: [{ question: { type: String }, choices: [{ text: String, correct: Boolean }] }]
+})
+
 
 const trainingSchema = new Schema({
   _id: { type: String, required: true },
@@ -28,20 +49,9 @@ const trainingSchema = new Schema({
   iconColor: { type: String, required: true },
   iconSource: { type: String, required: true },
   execSummary: { type: String, required: false },
-  sections: [{
-    _id: { type: String, required: true },
-    title: { type: String },
-    intro: { type: String },
-    file: { type: String },
-  }],
-  tags: [String],
-  assessment: {
-    questions: [{
-      question: String,
-      choices: [String],
-      answer: [Number]
-    }]
-  }
+  pages: [pageSchema],
+  useAssessment: { type: Boolean },
+  assessment: assessmentSchema
 });
 
 module.exports = mongoose.model("Training", trainingSchema);

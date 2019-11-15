@@ -184,9 +184,9 @@ export class FileService {
   };
   //  https://cdn.filestackcontent.com/preview=css:"https://cdn.filestackcontent.com/CSS_FILEHANDLE"/DOCUMENT_FILEHANDLE
 
-
+// https://cdn.filestackcontent.com/zWy9yljTOWm8maPCZsOe
   //  base = 'https://cdn.filestackcontent.com/NttQ1hlThmc1RCKFGp1w/';GOAupu3Rvy8N0588a9UQ Elm6IuwWQum1SY060hqx
-  base = 'https://cdn.filestackcontent.com/preview=css:"https://cdn.filestackcontent.com/XQFgPLfQP1g1nT4mwxFw"/';
+  base = 'https://cdn.filestackcontent.com/preview=css:"https://cdn.filestackcontent.com/2fnGzVLASRGFGHQ1reBF"/';
   previewUrlBase = this.base;
   downloadUrlBase = 'https://cdn.filestackcontent.com/';
   docPreviewUrlBS$ = new BehaviorSubject<SafeResourceUrl>(null);
@@ -221,9 +221,9 @@ export class FileService {
 // pDoc - private document hash 
 // pSFHash - private selected file hash 
 // pSFIHash - private selected file index hash
-  pDocHash = {};
-  pSFHash = {};
-  pSFIHash = {};
+  privateDocumentHash = {};
+  privateSelectedFileHash = {};
+  privateSelectedFileIndexHash = {};
 
   constructor(private http: HttpClient, private userService: UserService, private auth: AuthService, private sanitizer: DomSanitizer) {
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
@@ -237,7 +237,7 @@ export class FileService {
         } else {
           uid = this.authenticatedUser.supervisorId;
         }
-        this.getAllFiles$(this.authenticatedUser.teamId).subscribe(files => {
+        this.getAllFiles$(this.authenticatedUser.uid).subscribe(files => {
           if (!files) {
             return;
           }
@@ -266,8 +266,9 @@ export class FileService {
 
     this.files$.next(this.files);
     this.fileCnt$.next(this.files.length);
-    let i;
+    
     /*
+    let i;
     if (this.action === 'save') {
       i = this.selectedFileIndexBS$.value;
     } else if (this.action === 'init') {
@@ -283,13 +284,16 @@ export class FileService {
         i = this.selectedFileIndexBS$.value;
       }
     }
-*/
+    */
+    
+    /*
     const fileOptions: { label: string, value: string }[] = [];
     for (const file of this.files) {
       fileOptions.push({ label: file.name, value: file._id });
 
     }
     this.filesForSelect$.next(fileOptions);
+    */
   }
 
   getFileOptionsStream(): Observable<{ label: string, value: string }[]> {
@@ -310,44 +314,44 @@ export class FileService {
     return this.actionBS$.asObservable();
   }
 
-  setupPDocStream(streamId: string) {
-    if (!this.pDocHash[streamId]) {
-      console.log('fileService.setupPDocStream', streamId);
-      this.pDocHash[streamId] = new BehaviorSubject<SafeResourceUrl>(null);
+  setupPrivateDocumentStream(streamId: string) {
+    if (!this.privateDocumentHash[streamId]) {
+      console.log('fileService.setupPrivateDocumentStream', streamId);
+      this.privateDocumentHash[streamId] = new BehaviorSubject<SafeResourceUrl>(null);
     }
   }
 
-  setupPSFStream(streamId: string) {
-    if (!this.pSFHash[streamId]) {
-      this.pSFHash[streamId] = new BehaviorSubject<FileModel>(null);
+  setupPrivateSelectedFileStream(streamId: string) {
+    if (!this.privateSelectedFileHash[streamId]) {
+      this.privateSelectedFileHash[streamId] = new BehaviorSubject<FileModel>(null);
     }
   }
 
-  setupPSFIStream(streamId: string) {
-    if (!this.pSFIHash[streamId]) {
-      this.pSFIHash[streamId] = new BehaviorSubject<number>(-1);
+  setupPrivateSelectedFileIndexStream(streamId: string) {
+    if (!this.privateSelectedFileIndexHash[streamId]) {
+      this.privateSelectedFileIndexHash[streamId] = new BehaviorSubject<number>(-1);
     }
   }
 
-  getPDocStream(streamId: string): Observable<SafeResourceUrl> {
-    if (!this.pDocHash[streamId]) {
-      this.pDocHash[streamId] = new BehaviorSubject<SafeResourceUrl>(null);
+  getPrivateDocumentStream(streamId: string): Observable<SafeResourceUrl> {
+    if (!this.privateDocumentHash[streamId]) {
+      this.privateDocumentHash[streamId] = new BehaviorSubject<SafeResourceUrl>(null);
     }
-    return this.pDocHash[streamId].asObservable();
+    return this.privateDocumentHash[streamId].asObservable();
   }
 
-  getPSFStream(streamId: string): Observable<FileModel> {
-    if (!this.pSFHash[streamId]) {
-      this.pSFHash[streamId] = new BehaviorSubject<FileModel>(null);
+  getPrivateSelectedFileStream(streamId: string): Observable<FileModel> {
+    if (!this.privateSelectedFileHash[streamId]) {
+      this.privateSelectedFileHash[streamId] = new BehaviorSubject<FileModel>(null);
     }
-    return this.pSFHash[streamId].asObservable();
+    return this.privateSelectedFileHash[streamId].asObservable();
   }
 
-  getPSFIStream(streamId: string): Observable<number> {
-    if (!this.pSFIHash[streamId]) {
-      this.pSFIHash[streamId] = new BehaviorSubject<number>(-1);
+  getPrivateSelectedFileIndexStream(streamId: string): Observable<number> {
+    if (!this.privateSelectedFileIndexHash[streamId]) {
+      this.privateSelectedFileIndexHash[streamId] = new BehaviorSubject<number>(-1);
     }
-    return this.pSFIHash[streamId].asObservable();
+    return this.privateSelectedFileIndexHash[streamId].asObservable();
   }
 
   getFile(id): FileModel {
@@ -419,7 +423,7 @@ export class FileService {
           name: file.filename,
           size: sizeStr,
           mimeType: file.mimetype,
-          teamId: this.authenticatedUser.teamId,
+          teamId: this.authenticatedUser.uid,
           description: '',
           versions: [{ version: '1.0.0', changeLog: 'New Upload', owner: this.authenticatedUser._id, fsHandle: file.handle, url: file.url, dateUploaded: new Date().getTime() }],
           iconClass: iconClass,
@@ -429,11 +433,11 @@ export class FileService {
           tags: []
         };
 
-        console.log('processResults', this.newFile);
-
         this.postFile$(this.newFile).subscribe(data => {
           this.newFile = data;
           this.files.push(this.newFile);
+          this.fileIdHash[this.newFile._id] = this.newFile;
+          this.fileIdIndexHash[this.newFile._id] = this.files.length - 1;
           this.fileUploaded$.next((this.newFile));
           this.loadData();
         });
@@ -468,15 +472,15 @@ export class FileService {
     let mediaItem: SafeResourceUrl;
     if (file.iconType === 'video') {
       mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.versions[versionIndex].url));
-      if (!this.pDocHash[streamId]) {
+      if (!this.privateDocumentHash[streamId]) {
         console.log('ERROR ...fileService.viewFile, privateVideoPreviewStreamHash is null...', streamId);        
       } 
-      this.pDocHash[streamId].next(mediaItem);
+      this.privateDocumentHash[streamId].next(mediaItem);
 
     } else {
       mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + file.versions[versionIndex].fsHandle);
       console.log('fileService.viewFile', mediaItem, streamId);
-      this.pDocHash[streamId].next(mediaItem);
+      this.privateDocumentHash[streamId].next(mediaItem);
       this.docPreviewUrlBS$.next(mediaItem);
     }
   }
@@ -496,28 +500,28 @@ export class FileService {
   }
 */
   
-  pubToPDoc$(index: number, streamId: string) {
+  publishToPrivateDoc$(fileIndex: number, streamId: string) {
     console.log('pubToPDoc$')
-    this.pDocHash[streamId].next(this.files[index]);
+    this.privateDocumentHash[streamId].next(this.files[fileIndex]);
   }
 
-  pubByIdToPDoc$(id: string, streamId: string) {
-    this.pDocHash[streamId].next(this.fileIdHash[id]);
+  publishByIdToPDoc$(id: string, streamId: string) {
+    this.privateDocumentHash[streamId].next(this.fileIdHash[id]);
   }
 
   selectItem(index, streamId) {
     if (index < 0 || index >= this.files.length) {
       //      this.showSelectedItemBS$.next(false);
-      if (this.pSFHash[streamId]) {
-        this.pSFHash[streamId].next(null);
+      if (this.privateSelectedFileHash[streamId]) {
+        this.privateSelectedFileHash[streamId].next(null);
       }
 
-      if (this.pSFIHash[streamId]) {
-        this.pSFIHash[streamId].next(null);
+      if (this.privateSelectedFileIndexHash[streamId]) {
+        this.privateSelectedFileIndexHash[streamId].next(null);
       }
       
-      if (this.pDocHash[streamId]) {
-        this.pDocHash[streamId].next(null);
+      if (this.privateDocumentHash[streamId]) {
+        this.privateDocumentHash[streamId].next(null);
       }
       this.docPreviewUrlBS$.next(null);
       this.selectedFileIndexBS$.next(index);
@@ -533,7 +537,7 @@ export class FileService {
     //    this.docDownloadUrlBS$.next(downloadUrl);
     //    this.docPreviewUrlBS$.next(previewUrl);
     //    this.showSelectedIndexFeedbackBS$.next(true)
-    this.pSFHash[streamId].next(this.files[index]);
+    this.privateSelectedFileHash[streamId].next(this.files[index]);
     this.selectedFileIndexBS$.next(index);
     this.selectedFileBS$.next(this.selectedFile);
     this.viewFile(this.selectedFile, 0, streamId);
@@ -584,7 +588,7 @@ export class FileService {
   deleteFile(id: string): void {
     this.action = 'delete';
     this.deleteFile$(id).subscribe(val => {
-      this.getAllFiles$(this.authenticatedUser.teamId).subscribe(files => {
+      this.getAllFiles$(this.authenticatedUser.uid).subscribe(files => {
         if (!files) {
           return;
         }
@@ -616,9 +620,9 @@ export class FileService {
     this.client.picker(this.options).open();
   }
 
-  getAllFiles$(teamId): Observable<FileModel[]> {
+  getAllFiles$(uid): Observable<FileModel[]> {
     return this.http
-      .get<FileModel[]>(`${ENV.BASE_API}files/${teamId}`, {
+      .get<FileModel[]>(`${ENV.BASE_API}files/${uid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
       .pipe(

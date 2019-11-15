@@ -1,4 +1,3 @@
-
 export interface TrainingModel {
   _id: string,
   type: string,
@@ -18,26 +17,38 @@ export interface TrainingModel {
   execSummaryLabel: string,
   goals: string,
   goalsLabel: string,
-  sections: Section[],
+  pages: Page[],
   assessment: Assessment,
-  tags: string[]
+  useAssessment: boolean
 }
 
-export interface Section {
+export interface AssessmentItem {
+  question: string,
+  choices: {
+    text: string,
+    correct: boolean
+  }[]
+}
+  
+export interface Assessment {
+  _id: string,
+  items: AssessmentItem[]
+}
+
+export interface Page {
   _id: string,
   title: string,
   intro: string,
-  file: string,
+  portlets: Portlet[]
 }
 
-export interface Assessment {
-  questions: [
-    {
-      question: string,
-      choices: string[],
-      answer: number[]
-    }
-  ]
+export interface Portlet {
+  _id: string,
+  file: string,
+  width: number,
+  height: number,
+  xLoc: number,
+  yLoc: number
 }
 
 export interface Comment {

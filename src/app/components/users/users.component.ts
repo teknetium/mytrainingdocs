@@ -98,19 +98,20 @@ export class UsersComponent implements OnInit {
   userStatus = 'newUser';
   view = 'card';
 
-  newTeamMember = <UserModel>{
-    _id: String(new Date().getTime()),
-    teamId: '',
+  newTeamMember: UserModel = {
+    _id: null,
+    teamId: null,
     firstName: '',
     lastName: '',
     email: '',
+    adminUp: false,
     userType: 'individualContributor',
     uid: '',
     userStatus: '',
     trainingStatus: 'uptodate',
     directReports: [],
     profilePicUrl: '',
-    supervisorId: '',
+    supervisorId: null,
     jobs: []
   }
 
@@ -175,7 +176,9 @@ export class UsersComponent implements OnInit {
         return;
       }
       this.authenticatedUser = user;
-      this.newTeamMember.teamId = this.authenticatedUser.teamId;
+      this.newTeamMember.teamId = this.authenticatedUser.uid;
+      this.newTeamMember.supervisorId = this.authenticatedUser.uid;
+      this.newTeamMember._id = String(new Date().getTime());
     });
 
     for (const userType of this.userTypes) {

@@ -49,8 +49,8 @@ module.exports = function(app, config) {
  |--------------------------------------
  */
 
-  const trainingListProjection = "_id title type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated sections tags estimatedTimeToComplete";
-  const userListProjection = "_id uid userType userStatus jobs trainingStatus firstName lastName email teamId directReports supervisor profilePicUrl";
+  const trainingListProjection = "_id title type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete assessment useAssessment";
+  const userListProjection = "_id uid userType userStatus jobs trainingStatus firstName lastName email adminUp teamId directReports supervisor profilePicUrl";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
 
   // GET API root
@@ -126,9 +126,9 @@ module.exports = function(app, config) {
       iconClass: req.body.iconClass,
       iconColor: req.body.iconColor,
       iconSource: req.body.iconSource,
-      sections: req.body.sections,
-      tags: req.body.tags,
+      pages: req.body.pages,
       assessment: req.body.assessment,
+      useAssessment: req.body.useAssessment
     });
     Training.create(training, function(err, trainingObj) {
       if (err) {
@@ -165,9 +165,9 @@ module.exports = function(app, config) {
       training.iconClass = req.body.iconClass;
       training.iconColor = req.body.iconColor;
       training.iconSource = req.body.iconSource;
-      training.sections = req.body.sections;
-      training.tags = req.body.tags;
+      training.pages = req.body.pages;
       training.assessment = req.body.assessment;
+      training.useAssessment = req.body.useAssessment;
 
       training.save(err2 => {
         if (err) {
@@ -206,6 +206,31 @@ module.exports = function(app, config) {
       res.send(user);
     });
   });
+
+  app.get("/api/user/:email", jwtCheck, (req, res) => {
+    User.findOne({ email: req.params.email }, userListProjection, (err, user) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (!user) {
+        return res.status(400).send({ message: "User not found." });
+      }
+      res.send(user);
+    });
+  });
+
+  app.get("/api/user/:uid", jwtCheck, (req, res) => {
+    User.findOne({ uid: req.params.uid }, userListProjection, (err, user) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (!user) {
+        return res.status(400).send({ message: "User not found." }); 
+      }
+      res.send(user);
+    });
+  });
+
   app.post("/api/user/new", jwtCheck, (req, res) => {
     User.findById(req.body._id, (err, existingUser) => {
       if (err) {
@@ -222,6 +247,7 @@ module.exports = function(app, config) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
+        adminUp: req.body.admin,
         teamId: req.body.teamId,
         userStatus: req.body.userStatus,
         trainingStatus: req.body.trainingStatus,
@@ -290,7 +316,8 @@ module.exports = function(app, config) {
   // FILE methods
   //
   app.get("/api/files/:teamId", (req, res) => {
-    File.find({teamId: req.params.teamId}, fileListProjection, (err, files) => {
+//    File.find({ teamId: req.params.teamId }, fileListProjection, (err, files) => {
+      File.find({}, fileListProjection, (err, files) => {
       let filesArr = [];
       if (err) {
         return res.status(500).send({message: err.message});
@@ -341,7 +368,6 @@ module.exports = function(app, config) {
       file.iconColor = req.body.iconColor;
       file.iconSource = req.body.iconSource;
       file.description = req.body.description;
-      file.tags = req.body.tags;
       file.versions = req.body.versions;
       file._id = req.body._id;
 

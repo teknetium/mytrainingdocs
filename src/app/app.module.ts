@@ -29,8 +29,10 @@ import { SettingModule } from './components/setting/setting.module';
 import { FilesModule } from './components/files/files.module';
 import { TrainingsModule } from './components/trainings/trainings.module';
 import { MyIconPickerModule } from './components/my-icon-picker/my-icon-picker.module';
-import { AssessmentComponent } from './components/assessment/assessment.component';
 import { UsersModule } from './components/users/users.module';
+import { AdminModule } from './components/admin/admin.module';
+import { JobsModule } from './components/jobs/jobs.module';
+import { SignupModule } from './components/signup/signup.module';
 
 
 registerLocaleData(en);
@@ -39,8 +41,7 @@ registerLocaleData(en);
     declarations: [
         AppComponent,
         CommonLayoutComponent,
-        FullLayoutComponent,
-        AssessmentComponent,
+        FullLayoutComponent
     ],
     imports: [
         MailModule,
@@ -64,7 +65,10 @@ registerLocaleData(en);
         FilesModule,
         TrainingsModule,
         MyIconPickerModule,
-        UsersModule
+        UsersModule,
+        AdminModule,
+        JobsModule,
+        SignupModule
     ],
     providers: [
         { 

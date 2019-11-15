@@ -1,0 +1,70 @@
+<div class="page-header" *ngIf="authenticatedUser$ | async as user">
+    <div class="d-md-flex align-items-md-center justify-content-between">
+        <div class="media m-v-10 align-items-center">
+            <div class="media-body m-l-15">
+                <h4 class="m-b-0">Welcome, {{ user.firstName }}!</h4>
+            </div>
+        </div>
+        <div class="d-md-flex align-items-center d-none">
+            <div class="media align-items-center m-r-20 m-v-5">
+                <i class="text-danger font-size-20" style="vertical-align: .2em !important;" nz-icon nzType="file"
+                    theme="outline"></i>
+                <span class="text-gray font-size-16"> &nbsp;Files - </span>
+                <span class="m-b-0 m-r-5 font-size-24">&nbsp;{{fileCnt$ | async}}</span>
+            </div>
+            <div class="media align-items-center m-r-20 m-v-5">
+                <i class="text-success font-size-20" style="vertical-align: .2em !important;" nz-icon nzType="solution"
+                    theme="outline"></i>
+                <span class="text-gray font-size-16"> &nbsp;Trainings - </span>
+                <span class="m-b-0 m-r-5 font-size-24">&nbsp;{{trainingCnt$ | async}}</span>
+            </div>
+            <div class="media align-items-center m-r-20 m-v-5">
+                <i class="text-primary font-size-20" style="vertical-align: .2em !important;" nz-icon nzType="team"
+                    theme="outline"></i>
+                <span class="text-gray font-size-16"> &nbsp;Users - </span>
+                <span class="m-b-0 m-r-5 font-size-24">&nbsp;{{userCnt$ | async}}</span>
+            </div>
+            <div class="media align-items-center m-r-20 m-v-5">
+                <i class="text-warning fal fa-hard-hat font-size-20" style="vertical-align: .2em !important;"></i>
+                <span class="text-gray font-size-16"> &nbsp;Jobs - </span>
+                <span class="m-b-0 m-r-5 font-size-24">&nbsp;{{jobCnt$ | async}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="width:100%; height:100%;">
+    <nz-tabset nzTabPosition="top" nzSelectedIndex="-1" nzSize="large" style="margin-top: 20px;">
+        <nz-tab nzTitle="Files" style="width:100%;height:70;">
+            <div>
+                <!--
+                <nz-alert class="m-b-10" nzType="info" nzMessage="Managing Your Files"
+                    nzDescription="Selecting the 'add file' icon brings up the file upload dialog where you can select files from your local machine, Google Drive, or Dropbox.  Once uploaded, selecting the file will show the file in our document viewer and let you edit properties of the file."
+                    nzShowIcon nzCloseable>
+                </nz-alert>
+                -->
+                <mtd-file-mgr style="height: 100%;"></mtd-file-mgr>
+            </div>
+        </nz-tab>
+        <nz-tab nzTitle="Trainings" style="width:100%;height:70;">
+            <div style="width:100%;height:100%;">
+                <mtd-trainings></mtd-trainings>
+            </div>
+        </nz-tab>
+        <nz-tab nzTitle="Users">
+            <div>
+                <mtd-users></mtd-users>
+            </div>
+        </nz-tab>
+        <nz-tab nzTitle="Jobs">
+            <div>
+                <mtd-users></mtd-users>
+            </div>
+        </nz-tab>
+    </nz-tabset>
+
+    <!--
+    <nz-modal [(nzVisible)]="showWelcomeDialog" nzTitle="Welcome!" nzClosable="false" (nzOnOk)="handleOk()"
+        nzCancelDisabled="true">
+    </nz-modal>
+    -->
+</div>

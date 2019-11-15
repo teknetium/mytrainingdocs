@@ -7,7 +7,7 @@ import { ThemeConstantService } from '../../services/theme-constant.service';
     templateUrl: './side-nav.component.html'
 })
 
-export class SideNavComponent{
+export class SideNavComponent {
 
     menuItems = [
         {
@@ -29,7 +29,7 @@ export class SideNavComponent{
             iconColor: '',
             icon: 'dashboard',
             active: 'false',
-        }, 
+        },
         {
             path: '/myteam',
             title: 'My Team',
@@ -38,6 +38,68 @@ export class SideNavComponent{
             iconTheme: 'outline',
             iconColor: '',
             icon: 'team',
+            active: 'false',
+        },
+        {
+            path: '/mytrainings',
+            title: 'My Trainings',
+            submenu: [],
+            iconType: 'nzIcon',
+            iconTheme: 'outline',
+            iconColor: '',
+            icon: 'solution',
+            active: 'false',
+        },
+        {
+            path: '/admin',
+            title: 'Admin',
+            submenu: [],
+            iconType: 'nzIcon',
+            iconTheme: 'outline',
+            iconColor: '',
+            icon: 'control',
+            active: 'false',
+        },
+        {
+            path: '/pricing',
+            title: 'Pricing',
+            submenu: [],
+            iconType: 'nzIcon',
+            iconTheme: 'outline',
+            iconColor: '',
+            icon: 'dollar',
+            active: 'false',
+        }
+        /*
+        {
+            path: '/trainings',
+            title: 'Trainings',
+            submenu: [],
+            iconType: 'nzIcon',
+            iconTheme: 'outline',
+            iconColor: '',
+            icon: 'book',
+            active: 'false',
+        },
+        {
+            path: '/users',
+            title: 'Users',
+            submenu: [],
+            iconType: 'nzIcon',
+            iconTheme: 'outline',
+            iconColor: '',
+            icon: 'team',
+            active: 'false',
+        },
+        {
+            path: '/jobs',
+            title: 'Jobs',
+            submenu: [],
+            iconSource: 'ngZorro',
+            iconType: 'nzIcon',
+            iconTheme: 'outline',
+            iconColor: '',
+            icon: 'book',
             active: 'false',
         },
         {
@@ -51,63 +113,33 @@ export class SideNavComponent{
             active: 'false',
         },
         {
-            path: '',
-            title: 'Admin',
-            iconType: 'nzIcon',
-            iconTheme: 'outline',
-            iconColor: '',
-            icon: 'crown',
-            active: 'false',
-            submenu: [
-                {
-                    path: '/admin/files',
-                    title: 'Files',
-                    submenu: [],
-                    iconType: 'nzIcon',
-                    iconTheme: 'outline',
-                    iconColor: '',
-                    icon: 'file',
-                    active: 'false',
-                },
-                {
-                    path: '/admin/trainings',
-                    title: 'Trainings',
-                    submenu: [],
-                    iconType: 'nzIcon',
-                    iconTheme: 'outline',
-                    iconColor: '',
-                    icon: 'solution',
-                    active: 'false',
-                },
-                {
-                    path: '/admin/settings',
-                    title: 'Settings',
-                    submenu: [],
-                    iconType: 'nzIcon',
-                    iconTheme: 'outline',
-                    iconColor: '',
-                    icon: 'control',
-                    active: 'false',
-                }
-            ]
-        },
-        {
-            path: '/pricing',
-            title: 'Pricing',
+            path: '/notifications',
+            title: 'Notifications',
             submenu: [],
             iconType: 'nzIcon',
             iconTheme: 'outline',
             iconColor: '',
-            icon: 'dollar',
+            icon: 'bell',
             active: 'false',
-        }
+        },
+        {
+            path: '/settings',
+            title: 'Settings',
+            submenu: [],
+            iconType: 'nzIcon',
+            iconTheme: 'outline',
+            iconColor: '',
+            icon: 'control',
+            active: 'false',
+        },
+        */
     ];
 
     themeImageWidth = 150;
-    isFolded : boolean;
-    isSideNavDark : boolean;
+    isFolded: boolean;
+    isSideNavDark: boolean;
 
-    constructor( private themeService: ThemeConstantService) {}
+    constructor(private themeService: ThemeConstantService) { }
 
     ngOnInit(): void {
         this.themeService.isMenuFoldedChanges.subscribe(isFolded => this.isFolded = isFolded);

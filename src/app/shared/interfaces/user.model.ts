@@ -1,11 +1,12 @@
 export interface UserModel {
   _id: string,
   uid: string,
-  userType: 'supervisor' | 'individualContributor' | 'volunteer' | 'customer',
+  userType: 'supervisor' | 'individualContributor' | 'volunteer' | 'customer' | 'candidate',
   firstName: string,
   lastName: string,
   email: string,
   teamId: string,
+  adminUp: boolean,
   userStatus: string,
   trainingStatus: string,
   jobs: string[],

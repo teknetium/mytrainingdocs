@@ -19,8 +19,6 @@ export class FilesComponent implements OnInit {
 
   vgApi: VgAPI;
 
-  uploadedFile$: Observable<FileModel>;
-
   isAuthenticated$: Observable<boolean>;
   isAuthenticated = false;
   authenticatedUser$: Observable<UserModel>;
@@ -70,7 +68,7 @@ export class FilesComponent implements OnInit {
 
   @Input() showFile = null;
   @Input() readOnly = 'false';
-  @Input() height = '600';
+  @Input() height = '500';
   @Input() streamId = '';
 
   constructor(
@@ -82,10 +80,9 @@ export class FilesComponent implements OnInit {
     //    this.files$ = this.fileService.getFilesStream();
 
     this.selectedFile$ = this.fileService.getSelectedFileStream();
-    this.selectedFileIndex$ = this.fileService.getPSFIStream(this.streamId);
+//    this.selectedFileIndex$ = this.fileService.getPrivateSelectedFileIndexStream(this.streamId);
     this.selectedFileIndex$ = this.fileService.getSelectedFileIndexStream();
     this.document$ = this.fileService.getDocPreviewStream();
-    this.uploadedFile$ = this.fileService.getUploadedFileStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.isAuthenticated$ = this.auth.getIsAuthenticatedStream();
     this.isAuthenticated$.subscribe((value) => {
@@ -98,9 +95,6 @@ export class FilesComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    console.log('ngOnInit of FilesComponent - streamId ', this.streamId);
-
 
     this.authenticatedUser$.subscribe(user => {
       if (!user) {
@@ -119,7 +113,7 @@ export class FilesComponent implements OnInit {
 
     this.selectedFile$.subscribe((file) => {
       console.log('selectedFile.subscribe', file);
-      this.headerOpen = false;
+      this.headerOpen = true;
 
       if (file) {
 

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { distinctUntilChanged, filter, map, startWith } from "rxjs/operators";
-import { IBreadcrumb } from "../../shared/interfaces/breadcrumb.type";
 import { ThemeConstantService } from '../../shared/services/theme-constant.service';
 import { AuthService } from '../../shared/services/auth.service';
 
@@ -14,7 +13,6 @@ import { AuthService } from '../../shared/services/auth.service';
 export class CommonLayoutComponent  {
 
     isAuthenticated$: Observable<boolean>;
-    breadcrumbs$: Observable<IBreadcrumb[]>;
     contentHeaderDisplay: string;
     isFolded : boolean ;
     isSideNavDark : boolean;
@@ -51,17 +49,12 @@ export class CommonLayoutComponent  {
     }
 
     ngOnInit() {
-        this.breadcrumbs$ = this.router.events.pipe(
-            startWith(new NavigationEnd(0, '/', '/')),
-            filter(event => event instanceof NavigationEnd),distinctUntilChanged(),
-            map(data => this.buildBreadCrumb(this.activatedRoute.root))
-        );
         this.themeService.isMenuFoldedChanges.subscribe(isFolded => this.isFolded = isFolded);
         this.themeService.isSideNavDarkChanges.subscribe(isDark => this.isSideNavDark = isDark);
         this.themeService.selectedHeaderColor.subscribe(color => this.selectedHeaderColor = color);   
         this.themeService.isExpandChanges.subscribe(isExpand => this.isExpand = isExpand);     
     }
-
+/*
     private buildBreadCrumb(route: ActivatedRoute, url: string = '', breadcrumbs: IBreadcrumb[] = []): IBreadcrumb[] {
         let label = '', path = '/', display = null;
 
@@ -87,4 +80,5 @@ export class CommonLayoutComponent  {
         }
         return newBreadcrumbs;
     }
+    */
 }

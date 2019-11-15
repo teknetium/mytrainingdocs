@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
-import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject} from 'rxjs';
+import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
 import { UserModel } from '../interfaces/user.model';
-import { Auth0ProfileModel } from '../models/auth0Profile.model';
+import { Auth0ProfileModel } from '../interfaces/auth0Profile.type';
 import { Router } from '@angular/router';
 
 
@@ -18,7 +18,7 @@ export class UserService {
   private authenticatedUser: UserModel;
 
   // Writable streams
-//  private authenticatedUser$ = new AsyncSubject<UserModel>();
+  //  private authenticatedUser$ = new AsyncSubject<UserModel>();
   private authenticatedUserBS$ = new BehaviorSubject<UserModel>(null);
   private myTeamBS$ = new BehaviorSubject<UserModel[]>([]);
   private myTeamCntBS$ = new BehaviorSubject<number>(0);
@@ -28,7 +28,7 @@ export class UserService {
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
   private selectedUserIndexBS$ = new BehaviorSubject<number>(null);
   private newUser$: Observable<UserModel>;
-  
+
 
 
   // Observables
@@ -37,6 +37,7 @@ export class UserService {
 
   private action: string;
 
+  authProfile: Auth0ProfileModel;
   view = 'card';
 
   constructor(
@@ -49,32 +50,51 @@ export class UserService {
     this.authenticatedUserProfile$ = this.auth.getAuthenticatedUserProfileStream();
     this.authenticatedUserProfile$.subscribe((profile) => {
 
-      this.authenticatedUser = <UserModel> {
-        _id: profile.email,
-        uid: profile.uid,
-        userType: profile.userType,
-        firstName: profile.firstName,
-        lastName:profile.lastName,
-        email: profile.email,
-        teamId: profile.uid,
-        userStatus: 'new-supervisor',
-        trainingStatus: 'uptodate',
-        jobs: [],
-        directReports: [],
-        profilePicUrl: '',
-        supervisorId: ''
-      }
+      this.getUserByUid(profile.uid).subscribe(
+        user => {
+          this.authenticatedUser = user;
+          this.authenticatedUserBS$.next(this.authenticatedUser);
+          this.loadData(); this.loadData();
+        },
+        err => {
+          this.getUserByEmail(profile.email.toLowerCase()).subscribe(
+            res => {
+              res.uid = profile.uid;
+              this.updateUser(res);
+              this.authenticatedUser = res;
+              this.authenticatedUserBS$.next(this.authenticatedUser);
+              this.loadData(); this.loadData();
+            },
+            err => {
+              this.authenticatedUser = <UserModel>{
+                _id: profile.uid,
+                uid: profile.uid,
+                userType: 'supervisor',
+                firstName: profile.firstName,
+                lastName: profile.lastName,
+                email: profile.email,
+                teamId: null,
+                adminUp: false,
+                userStatus: 'new-supervisor',
+                trainingStatus: 'uptodate',
+                jobs: [],
+                directReports: [],
+                profilePicUrl: '',
+                supervisorId: null  
+              }
 
-      console.log('userService  ', this.authenticatedUser);
+              this.newUser$ = this.postUser$(this.authenticatedUser);
+              this.newUser$.subscribe((data) => {
+                this.authenticatedUser = data;
+                this.authenticatedUserBS$.next(this.authenticatedUser);
+                //        this.authenticatedUser$.complete();
+                this.loadData(); this.loadData();
+                //        this.router.navigate([`gettingstarted`]);
+              });
 
-      this.newUser$ = this.postUser$(this.authenticatedUser);
-      this.newUser$.subscribe((data) => {
-        this.authenticatedUser = data;
-        this.authenticatedUserBS$.next(this.authenticatedUser);
-//        this.authenticatedUser$.complete();
-        this.loadData();
-//        this.router.navigate([`gettingstarted`]);
-      });
+            }
+          )
+        });
     });
   }
 
@@ -83,7 +103,7 @@ export class UserService {
   }
 
   loadData() {
-    this.getTeam$(this.authenticatedUser.teamId).subscribe((userList) => {
+    this.getTeam$(this.authenticatedUser.uid).subscribe((userList) => {
       this.myTeam = userList;
       this.myTeamBS$.next(this.myTeam);
       this.myTeamCntBS$.next(this.myTeam.length);
@@ -108,7 +128,7 @@ export class UserService {
   }
 
   addNewUser() {
-    const newUser = <UserModel> {
+    const newUser = <UserModel>{
       _id: String(new Date().getTime()),
       uid: '',
       userType: 'individualContributor',
@@ -122,7 +142,7 @@ export class UserService {
       profilePicUrl: '',
       supervisorId: this.authenticatedUser._id
     }
-  
+
     this.action = 'new';
     this.actionBS$.next(this.action);
     this.selectedUserBS$.next(newUser);
@@ -136,7 +156,7 @@ export class UserService {
   }
 
   deleteUser(id: string) {
-    this.deleteUser$(id).subscribe( data => {
+    this.deleteUser$(id).subscribe(data => {
       this.loadData();
     });
   }
@@ -152,17 +172,17 @@ export class UserService {
   getSelectedUserIndexStream(): Observable<number> {
     return this.selectedUserIndexBS$.asObservable();
   }
-/*
-  getMyTrainingsStream(user: UserModel): Observable<{tid: string, status: string, dueDate: number, completedDate: number}> {
-    return user
-  }
-*/
+  /*
+    getMyTrainingsStream(user: UserModel): Observable<{tid: string, status: string, dueDate: number, completedDate: number}> {
+      return user
+    }
+  */
   assignTraining(user: UserModel, tid: string) {
     const status = 'uptodate';
     const dueDate = 0;
     const completedDate = 0;
-    const userTraining = {tid, status, dueDate, completedDate};
-//    user.myTrainings.push(userTraining);
+    const userTraining = { tid, status, dueDate, completedDate };
+    //    user.myTrainings.push(userTraining);
   }
 
   selectUser(index: number) {
@@ -214,6 +234,25 @@ export class UserService {
   getUser$(userId: string): Observable<UserModel> {
     return this.http
       .get<UserModel>(`${ENV.BASE_API}user/${userId}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  getUserByEmail(email: string): Observable<UserModel> {
+    return this.http
+      .get<UserModel>(`${ENV.BASE_API}user/${email}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+
+  getUserByUid(uid: string): Observable<UserModel> {
+    return this.http
+      .get<UserModel>(`${ENV.BASE_API}user/${uid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

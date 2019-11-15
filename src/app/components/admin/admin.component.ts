@@ -9,17 +9,15 @@ import { UserModel } from '../../shared/interfaces/user.model';
 
 
 @Component({
-  selector: 'app-gettingstarted',
-  templateUrl: './gettingstarted.component.html',
-  styleUrls: ['./gettingstarted.component.css']
+  selector: 'app-admin',
+  templateUrl: './admin.component.html',
+  styleUrls: ['./admin.component.css']
 })
-export class GettingstartedComponent implements OnInit {
-
+export class AdminComponent implements OnInit {
 
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
   userCnt$: Observable<number>;
-  myTeamCnt$: Observable<number>;
   fileCnt$: Observable<number>;
   trainingCnt$: Observable<number>;
   jobCnt$: Observable<number>;
@@ -36,7 +34,6 @@ export class GettingstartedComponent implements OnInit {
     this.fileCnt$ = this.fileService.getFileCntStream();
     this.trainingCnt$ = this.trainingService.getAllTrainingCntObservable();
     this.userCnt$ = this.userService.getMyTeamCntStream();
-    this.myTeamCnt$ = this.userService.getMyTeamCntStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
   }
 
@@ -52,7 +49,7 @@ export class GettingstartedComponent implements OnInit {
 
   activateStep(event, stepNum) {
     if (stepNum === 1) {
-//      this.fileService.selectItem(-1);
+      //      this.fileService.selectItem(-1);
     }
   }
 

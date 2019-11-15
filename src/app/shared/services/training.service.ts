@@ -6,7 +6,7 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Section, Assessment } from '../interfaces/training.type';
+import { TrainingModel, Page, Portlet } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.model';
 
 
@@ -54,7 +54,7 @@ export class TrainingService {
   }
 
   loadData() {
-    this.getTrainings$(this.authenticatedUser.teamId).subscribe(trainingList => {
+    this.getTrainings$(this.authenticatedUser.uid).subscribe(trainingList => {
       this.allTrainings = trainingList;
 /*
       let i;
@@ -178,19 +178,28 @@ export class TrainingService {
   }
 
   addNewTraining() {
-    const section = <Section>{
+    const baseId = new Date().getTime();
+    const portlet1 = <Portlet>{
+      _id: String(baseId + '-01'),
+      file: null,
+      width: 100,
+      height: 80,
+      xLoc: 0,
+      yLoc: 0
+    };
+
+    const page = <Page>{
       _id: String(new Date().getTime()),
-      title: 'Section Title',
-      intro: 'Section Intro',
-      file: '',
-      assessment: null
-    }
+      title: 'Page Title',
+      intro: 'Page Intro',
+      portlets: [portlet1],
+    };
 
     const newTraining = <TrainingModel>{
       _id: String(new Date().getTime()),
       type: 'online',
       title: 'New Training',
-      teamId: this.authenticatedUser.teamId,
+      teamId: this.authenticatedUser.uid,
       owner: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),
       estimatedTimeToComplete: 0,
@@ -201,20 +210,18 @@ export class TrainingService {
       execSummary: 'Tell the execs whatever they need to hear.',
       goals: 'What your manager hopes you get out of this experience.',
       goalsLabel: 'Goals',
-      image: 'assets/images/others/blue_matrix-Banner.jpg',
+      image: 'assets/images/others/bb.jpg',
       iconClass: 'fal fa-graduation-cap',
       iconColor: 'black',
       iconSource: 'fontawesome',
-      sections: [section],
-      assessment: null,
-      tags: []
+      pages: [page],
+      assessment: null
     };
 //    this.allTrainings.push(newTraining);
 //    this.allTrainingsBS$.next(this.allTrainings);
 //    this.selectedTrainingIndexBS$.next(this.allTrainings.length - 1);
     this.postTraining$(newTraining).subscribe(trainingObj => {
       this.loadData();
-      this.showEditor$.next(false);
       this.selectedTrainingIndexBS$.next(-1);
       this.showEditor$.next(false);
     });
