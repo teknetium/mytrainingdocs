@@ -97,9 +97,9 @@ $body-color:                $gray !default;
 //
 // Configuration of template
 $header-height:            70px;
-$side-nav-width:           280px;
-$side-nav-width-laptop:    230px;
-$side-nav-folded:          80px;
+$side-nav-width:           0;
+$side-nav-width-laptop:    0;
+$side-nav-folded:          0;
 $layout-content-gutter:    25px;
 $layout-content-gutter-sm: 15px;
 $footer-height:            65px;

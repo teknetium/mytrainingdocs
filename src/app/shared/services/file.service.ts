@@ -250,6 +250,7 @@ export class FileService {
             this.fileIdIndexHash[this.files[index]._id] = index;
           }
           this.loadData();
+          this.setAction('init');
         })
       }
     });
@@ -267,7 +268,6 @@ export class FileService {
     this.files$.next(this.files);
     this.fileCnt$.next(this.files.length);
     
-    /*
     let i;
     if (this.action === 'save') {
       i = this.selectedFileIndexBS$.value;
@@ -284,7 +284,6 @@ export class FileService {
         i = this.selectedFileIndexBS$.value;
       }
     }
-    */
     
     /*
     const fileOptions: { label: string, value: string }[] = [];
@@ -372,6 +371,7 @@ export class FileService {
     if (results.filesUploaded.length > 0) {
       console.log('processResults : ', this.uploadType);
       if (this.uploadType === 'newVersion') {
+        this.setAction('newVersion');
         const uploadedFile = results.filesUploaded[0];
 
         this.newVersion.fsHandle = uploadedFile.handle;
@@ -379,12 +379,13 @@ export class FileService {
         this.selectedFile.versions.unshift(this.newVersion);
         this.saveFile(this.selectedFile);
         this.uploadType = 'newFile';
+        
         return;
       }
       console.log('processResults', results);
 
       for (const file of results.filesUploaded) {
-        this.action = 'newFile';
+        this.setAction('newFile');
         let sizeStr: string;
 
         if (file.size < 1000) {
@@ -472,15 +473,15 @@ export class FileService {
     let mediaItem: SafeResourceUrl;
     if (file.iconType === 'video') {
       mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.versions[versionIndex].url));
-      if (!this.privateDocumentHash[streamId]) {
+      if (!this.privateSelectedFileHash[streamId]) {
         console.log('ERROR ...fileService.viewFile, privateVideoPreviewStreamHash is null...', streamId);        
       } 
-      this.privateDocumentHash[streamId].next(mediaItem);
+      this.privateSelectedFileHash[streamId].next(mediaItem);
 
     } else {
       mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + file.versions[versionIndex].fsHandle);
       console.log('fileService.viewFile', mediaItem, streamId);
-      this.privateDocumentHash[streamId].next(mediaItem);
+      this.privateSelectedFileHash[streamId].next(mediaItem);
       this.docPreviewUrlBS$.next(mediaItem);
     }
   }
@@ -500,6 +501,7 @@ export class FileService {
   }
 */
   
+  /*
   publishToPrivateDoc$(fileIndex: number, streamId: string) {
     console.log('pubToPDoc$')
     this.privateDocumentHash[streamId].next(this.files[fileIndex]);
@@ -508,7 +510,7 @@ export class FileService {
   publishByIdToPDoc$(id: string, streamId: string) {
     this.privateDocumentHash[streamId].next(this.fileIdHash[id]);
   }
-
+*/
   selectItem(index, streamId) {
     if (index < 0 || index >= this.files.length) {
       //      this.showSelectedItemBS$.next(false);
@@ -523,6 +525,7 @@ export class FileService {
       if (this.privateDocumentHash[streamId]) {
         this.privateDocumentHash[streamId].next(null);
       }
+
       this.docPreviewUrlBS$.next(null);
       this.selectedFileIndexBS$.next(index);
       this.selectedFileBS$.next(null);
@@ -544,7 +547,8 @@ export class FileService {
   }
 
   setAction(action: string) {
-
+    this.action = action;
+    this.actionBS$.next(this.action);
   }
 
   /*

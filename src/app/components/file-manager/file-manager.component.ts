@@ -16,8 +16,9 @@ import { Router } from '@angular/router';
 export class FileManagerComponent {
 
     files$: Observable<FileModel[]>;
-    files: FileModel[] = [];
+    files: FileModel[] = null;
     selectedFile: FileModel;
+    action$: Observable<string>;
 
     newVersion = {};
     isNewVersionModalVisible = false;
@@ -59,7 +60,7 @@ export class FileManagerComponent {
     ngOnInit(): void {
         this.streamId = String(new Date().getTime());
         this.files$ = this.fileService.getFilesStream();
-        this.fileService.setupPrivateDocumentStream(this.streamId);
+//        this.fileService.setupPrivateDocumentStream(this.streamId);
         this.fileService.setupPrivateSelectedFileStream(this.streamId);
         this.fileService.setupPrivateSelectedFileIndexStream(this.streamId)
         this.selectedFile$ = this.fileService.getSelectedFileStream();
@@ -84,6 +85,17 @@ export class FileManagerComponent {
                 this.fileService.selectItemById(file._id, this.streamId);
             }
         });
+/*
+        this.action$.subscribe(action => {
+            if (action === 'init') {
+                this.fileService.selectItem(0, this.streamId);
+            } else if (action === 'newFile') {
+                this.fileService.selectItem(, this.streamId);
+            }
+            }
+        })
+        */
+
     }
 
     changeView() {
@@ -100,12 +112,12 @@ export class FileManagerComponent {
     selectFile(event: any, i: number) {
         if (this.selectedFileIndex === i) {
             this.selectedFileIndex = -1;
-            this.fileService.selectItem(-1, this.streamId);
+//            this.fileService.selectItem(-1, this.streamId);
         } else {
             this.selectedFileIndex = i;
             this.selectedFile = this.files[this.selectedFileIndex];
         }
-        this.fileService.selectItem(this.selectedFileIndex, this.streamId);
+//        this.fileService.selectItem(this.selectedFileIndex, this.streamId);
     }
 
     close(): void {

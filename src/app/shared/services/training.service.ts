@@ -6,7 +6,7 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Page, Portlet } from '../interfaces/training.type';
+import { TrainingModel, Page, Portlet, TextBlock } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.model';
 
 
@@ -182,17 +182,58 @@ export class TrainingService {
     const portlet1 = <Portlet>{
       _id: String(baseId + '-01'),
       file: null,
-      width: 100,
-      height: 80,
+      width: 300,
+      height: 200,
+      xLoc: 0,
+      yLoc: 0
+    };
+    const textBlock1 = <TextBlock>{
+      _id: String(baseId + '-01'),
+      label: '1  This is the LABEL of this text block.',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
+      width: 300,
+      height: 200,
       xLoc: 0,
       yLoc: 0
     };
 
-    const page = <Page>{
+    const textBlock2 = <TextBlock>{
+      _id: String(baseId + '-01'),
+      label: '2  This is the LABEL of this text block.',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
+      width: 40,
+      height: 20,
+      xLoc: 0,
+      yLoc: 0
+    };
+
+    const mainContentPage = <Page>{
       _id: String(new Date().getTime()),
-      title: 'Page Title',
-      intro: 'Page Intro',
+      title: 'Title Page',
+      intro: 'Introduction',
       portlets: [portlet1],
+      textBlocks: [textBlock1, textBlock2]
+    };
+    const introPage = <Page>{
+      _id: String(new Date().getTime()),
+      title: 'Title Page',
+      intro: 'Introduction',
+      portlets: [portlet1],
+      textBlocks: [textBlock1, textBlock2]
+    };
+    const assessmentPage = <Page>{
+      _id: String(new Date().getTime()),
+      title: 'Assessments',
+      intro: 'Create a test to evaluate mastery of the content presented in this training. Questions are multiple choice and can have multiple correct choices. Each test must include at least 3 questions.',
+      portlets: [],
+      textBlocks: []
+    };
+    const rateCommentPage = <Page>{
+      _id: String(new Date().getTime()),
+      title: 'Ratings and Comments',
+      intro: '',
+      portlets: [portlet1],
+      textBlocks: [textBlock1, textBlock2]
     };
 
     const newTraining = <TrainingModel>{
@@ -202,20 +243,21 @@ export class TrainingService {
       teamId: this.authenticatedUser.uid,
       owner: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),
-      estimatedTimeToComplete: 0,
+      estimatedTimeToComplete: 30,
       description: 'This is a useless description',
-      introduction: 'This is the introduction to this training.',
-      introductionLabel: 'Introduction',
-      execSummaryLabel: 'Executive Summary',
-      execSummary: 'Tell the execs whatever they need to hear.',
-      goals: 'What your manager hopes you get out of this experience.',
-      goalsLabel: 'Goals',
       image: 'assets/images/others/bb.jpg',
+      introductionLabel: 'Training Introduction',
+      introduction: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ',
+      execSummaryLabel: 'Executive Summary Label',
+      execSummary: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      goalsLabel: 'Gaols Label',
+      goals: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       iconClass: 'fal fa-graduation-cap',
       iconColor: 'black',
       iconSource: 'fontawesome',
-      pages: [page],
-      assessment: null
+      pages: [mainContentPage],
+      assessment: null,
+      useAssessment: false
     };
 //    this.allTrainings.push(newTraining);
 //    this.allTrainingsBS$.next(this.allTrainings);

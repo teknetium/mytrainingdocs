@@ -17,7 +17,6 @@ import { FullLayoutComponent } from './layouts/full-layout/full-layout.component
 
 import { NgChartjsModule } from 'ng-chartjs';
 import { ThemeConstantService } from './shared/services/theme-constant.service';
-import { GettingstartedModule } from './components/gettingstarted/gettingstarted.module';
 import { LandingpageModule } from './components/landingpage/landingpage.module';
 import { CallbackModule } from './components/callback/callback.module';
 import { MailModule } from './components/mail/mail.module';
@@ -30,9 +29,11 @@ import { FilesModule } from './components/files/files.module';
 import { TrainingsModule } from './components/trainings/trainings.module';
 import { MyIconPickerModule } from './components/my-icon-picker/my-icon-picker.module';
 import { UsersModule } from './components/users/users.module';
-import { AdminModule } from './components/admin/admin.module';
 import { JobsModule } from './components/jobs/jobs.module';
 import { SignupModule } from './components/signup/signup.module';
+import { HomeComponent } from './components/home/home.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
+import { MyteamComponent } from './components/myteam/myteam.component';
 
 
 registerLocaleData(en);
@@ -41,7 +42,10 @@ registerLocaleData(en);
     declarations: [
         AppComponent,
         CommonLayoutComponent,
-        FullLayoutComponent
+        FullLayoutComponent,
+        HomeComponent,
+        CalendarComponent,
+        MyteamComponent,
     ],
     imports: [
         MailModule,
@@ -59,17 +63,15 @@ registerLocaleData(en);
         NgChartjsModule,
         DashboardModule,
         FileManagerModule,
-        GettingstartedModule,
         LandingpageModule,
         CallbackModule,
         FilesModule,
         TrainingsModule,
         MyIconPickerModule,
         UsersModule,
-        AdminModule,
         JobsModule,
-        SignupModule
-    ],
+        SignupModule,
+        TrainingsModule    ],
     providers: [
         { 
             provide: NZ_I18N,

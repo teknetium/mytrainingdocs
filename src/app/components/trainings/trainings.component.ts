@@ -8,13 +8,15 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserModel} from '../../shared/interfaces/user.model';
 import {SafeResourceUrl} from '@angular/platform-browser';
 import {UserService} from '../../shared/services/user.service';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'mtd-trainings',
   templateUrl: './trainings.component.html',
-  styleUrls: ['./trainings.component.css']
+  styleUrls: ['./trainings.component.css'],
 })
+
 export class TrainingsComponent implements OnInit {
 
   isAuthenticated$: Observable<boolean>;
@@ -32,6 +34,7 @@ export class TrainingsComponent implements OnInit {
   viewMode = 'edit';
   renderMode = 'largeCell';
   cellFontSize = 22;
+  isOpen = false;
 
   editorClone: TrainingModel;
 
@@ -78,10 +81,12 @@ export class TrainingsComponent implements OnInit {
     if (index === this.selectedItemIndex) {
       this.selectedItemIndex = -1;
       this.trainingService.selectItemForEditing(-1); 
+      this.isOpen = false;
       return;
     }
     this.trainingService.selectItemForEditing(index);
     this.selectedItemIndex = index;
+    this.isOpen = true;
   }
 
   renderModeChanged(event) {

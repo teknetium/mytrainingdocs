@@ -228,7 +228,7 @@
                                 <!-- this next block uses the filestack document previewer -->
                                 <div *ngIf="!(portlet.file === null)  && previewDocTypes.includes(fileService.getFile(portlet.file).iconType)"
                                     style="width:100%;height:100%">
-                                    <iframe [src]="fileService.privateDocumentHash[portlet._id] | async" allowfullscreen
+                                    <iframe [src]="privateDocumentHash[portlet._id]" allowfullscreen
                                         width="100%" height="100%">
                                     </iframe>
                                 </div>

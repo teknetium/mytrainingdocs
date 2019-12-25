@@ -8,15 +8,15 @@ export interface TrainingModel {
   estimatedTimeToComplete: number,
   description: string,
   image: string,
+  introductionLabel: string,
+  introduction: string,
+  execSummaryLabel: string,
+  execSummary: string,
+  goalsLabel: string,
+  goals: string,
   iconClass: string,
   iconColor: string,
   iconSource: string,
-  introductionLabel: string,
-  introduction: string,
-  execSummary: string,
-  execSummaryLabel: string,
-  goals: string,
-  goalsLabel: string,
   pages: Page[],
   assessment: Assessment,
   useAssessment: boolean
@@ -38,13 +38,21 @@ export interface Assessment {
 export interface Page {
   _id: string,
   title: string,
-  intro: string,
-  portlets: Portlet[]
+  portlets: Portlet[],
+  textBlocks: TextBlock[]
 }
 
 export interface Portlet {
   _id: string,
   file: string,
+  width: number,
+  height: number,
+  xLoc: number,
+  yLoc: number
+}
+export interface TextBlock {
+  _id: string,
+  content: string,
   width: number,
   height: number,
   xLoc: number,

@@ -1,3 +1,7 @@
+.menu-item-selected {
+    color: blue;
+}
+
 .header {
     background: $white;
     height: $header-height;
@@ -44,6 +48,7 @@
 
 
         .nav-left,
+        .nav-middle,
         .nav-right {
             list-style-type: none;
             padding-left: 0px;

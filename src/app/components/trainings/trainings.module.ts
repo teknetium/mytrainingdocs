@@ -24,11 +24,14 @@ import { FilesModule } from '../files/files.module';
 import { FileManagerModule } from '../file-manager/file-manager.module';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
+import { TrainingViewerComponent } from './training-viewer/training-viewer.component';
 
 @NgModule({
   declarations: [
     TrainingsComponent,
-    TrainingBasicComponent
+    TrainingBasicComponent,
+    TrainingsComponent,
+    TrainingViewerComponent
   ],
   imports: [
     RouterModule,
@@ -68,7 +71,9 @@ import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
   ],
   exports: [
     TrainingsComponent,
-    TrainingBasicComponent
+    TrainingBasicComponent,
+    TrainingsComponent,
+    TrainingViewerComponent
   ]
 })
 export class TrainingsModule { }

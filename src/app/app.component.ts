@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { AuthService } from './shared/services/auth.service';
 import { TrainingService } from './shared/services/training.service';
 import { UserService } from './shared/services/user.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, from } from 'rxjs';
 import { UserModel } from './shared/interfaces/user.model';
 import { TrainingModel } from './shared/interfaces/training.type';
 import { Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { NotificationService } from './shared/services/notification.service';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { LandingpageComponent } from './components/landingpage/landingpage.component';
 
 @Component({
   selector: 'app-root',
@@ -113,6 +114,7 @@ export class AppComponent implements OnInit {
   allTrainings$: Observable<TrainingModel[]>;
   myTeam$: Observable<UserModel[]>;
   files$: Observable<FileModel[]>;
+  isAuthenticated$: Observable<boolean>;
 
   list = new Array<any>([]);
   isLoggedIn = false;
@@ -130,6 +132,8 @@ export class AppComponent implements OnInit {
   currentDogImageNumber = 1;
   numYogaImages = 28;
   themeValue = 'dogs';
+  searchVisible: boolean = false;
+  quickViewVisible: boolean = false;
 
 
   constructor(
@@ -149,6 +153,7 @@ export class AppComponent implements OnInit {
     this.allTrainings$ = this.trainingService.getAllTrainingsObservable();
     this.myTrainings$ = this.trainingService.getMyTrainingsObservable();
     this.files$ = this.fileService.getFilesStream();
+    this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
 
     this.currentYogaImageNumber = 0;
 
@@ -210,5 +215,39 @@ export class AppComponent implements OnInit {
   logout() {
     this.authService.logout();
   }
+  searchToggle(): void {
+    this.searchVisible = !this.searchVisible;
+  }
+
+  quickViewToggle(): void {
+    this.quickViewVisible = !this.quickViewVisible;
+  }
+
+  notificationList = [
+    {
+      title: 'You received a new message',
+      time: '8 min',
+      icon: 'mail',
+      color: 'ant-avatar-' + 'blue'
+    },
+    {
+      title: 'New user registered',
+      time: '7 hours',
+      icon: 'user-add',
+      color: 'ant-avatar-' + 'cyan'
+    },
+    {
+      title: 'System Alert',
+      time: '8 hours',
+      icon: 'warning',
+      color: 'ant-avatar-' + 'red'
+    },
+    {
+      title: 'You have a new update',
+      time: '2 days',
+      icon: 'sync',
+      color: 'ant-avatar-' + 'gold'
+    }
+  ];
 
 }

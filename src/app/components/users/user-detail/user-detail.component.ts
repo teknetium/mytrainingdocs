@@ -111,7 +111,7 @@ export class UserDetailComponent implements OnInit {
           userStatus: item.userStatus,
           trainingStatus: item.trainingStatus,
           directReports: item.directReports,
-          jobs: item.jobs,
+          jobTitle: item.jobTitle,
           profilePicUrl: item.profilePicUrl,
           supervisorId: item.supervisorId,
           _id: item._id,

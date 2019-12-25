@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { UserModel } from '../../interfaces/user.model';
 import { Observable } from 'rxjs';
+import { NgZorroAntdModule, NZ_ICONS } from 'ng-zorro-antd';
 
 @Component({
     selector: 'app-header',
@@ -24,16 +25,17 @@ export class HeaderComponent{
     constructor( private themeService: ThemeConstantService, private auth: AuthService, private userService: UserService) {}
 
     ngOnInit(): void {
+        /*
         this.themeService.isMenuFoldedChanges.subscribe(isFolded => this.isFolded = isFolded);
         this.themeService.isExpandChanges.subscribe(isExpand => this.isExpand = isExpand);
-    
+    */
         this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
         this.authenticatedUser$.subscribe( user => {
             this.authenticatedUser = user;
         });
         this.isAuthenticated$ = this.auth.getIsAuthenticatedStream();
     }
-
+/*
     toggleFold() {
         this.isFolded = !this.isFolded;
         this.themeService.toggleFold(this.isFolded);
@@ -45,7 +47,7 @@ export class HeaderComponent{
         this.themeService.toggleExpand(this.isExpand);
         this.themeService.toggleFold(this.isFolded);
     }
-
+*/
     searchToggle(): void {
         this.searchVisible = !this.searchVisible;
     }

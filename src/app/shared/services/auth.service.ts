@@ -43,7 +43,7 @@ export class AuthService {
   uid: string;
 
   constructor(private router: Router, private location: Location) {
-    this.isAuthenticated$.next(false);
+//    this.isAuthenticated$.next(false);
     // If app auth token is not expired, request new token
     if (JSON.parse(localStorage.getItem('expires_at')) > Date.now()) {
       this.renewToken();
@@ -78,17 +78,17 @@ export class AuthService {
   signup() {
     this._auth0.authorize({action: 'signup'});
   }
-
+/*
   signupBeta() {
     this._auth0.authorize({action: 'signup', beta: 'true'});
   }
-
+*/
   login() {
     this._auth0.authorize({action: 'login'});
   }
 
   handleAuth() {
-    console.log(this.location);
+    console.log('handleAuth', this.location);
     // When Auth0 hash parsed, get profile
     this._auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken) {
@@ -97,7 +97,7 @@ export class AuthService {
         this._getProfile(authResult);
       } else if (err) {
         this._clearRedirect();
-//        this.router.navigate([`home?${err.error}`]);
+        this.router.navigate([`landingpage`]);
         console.error(`Error authenticating: ${err.error}`);
       }
     });
@@ -109,6 +109,8 @@ export class AuthService {
       if (profile) {
         this._setSession(authResult, profile);
         console.log('USER PROFILE', profile);
+        console.log('urlFrom', localStorage.getItem('urlFrom'));
+
         if (localStorage.getItem('urlFrom') === '/callback') {
           this._redirect();
           localStorage.removeItem('urlFrom');
@@ -116,7 +118,7 @@ export class AuthService {
       } else if (err) {
         console.warn(`Error retrieving profile: ${err.error}`);
       }
-    });
+    }); 
   }
 
   private _setSession(authResult, profile?) {
@@ -155,7 +157,9 @@ export class AuthService {
     const fullRedirect = decodeURI(localStorage.getItem('authRedirect'));
     const redirectArr = fullRedirect.split('?tab=');
     const navArr = [redirectArr[0] || '/'];
-    const tabObj = redirectArr[1] ? { queryParams: { tab: redirectArr[1] }} : '';
+    const tabObj = redirectArr[1] ? { queryParams: { tab: redirectArr[1] } } : '';
+    
+    console.log('_redirect', navArr, tabObj);
 
     if (!tabObj) {
       this.router.navigate(navArr);
@@ -185,7 +189,7 @@ export class AuthService {
     // End Auth0 authentication session
     this._auth0.logout({
       clientId: AUTH_CONFIG.CLIENT_ID,
-      returnTo: ENV.BASE_URI
+      returnTo: ENV.BASE_URI + '/landingpage'
     });
   }
 

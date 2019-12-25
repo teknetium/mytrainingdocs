@@ -53,6 +53,7 @@ export class TrainingBasicComponent implements OnInit, AfterViewInit {
   previewDocTypes: string[] = ['pdf', 'doc', 'ppt', 'xls'];
 
   pageDocUrlHash = {};
+  privateDocumentHash 
   currentPageId = 'intro';
   dragging = false;
   currentEvent: any;
@@ -151,8 +152,8 @@ export class TrainingBasicComponent implements OnInit, AfterViewInit {
       for (const page of training.pages) {
         for (const portlet of page.portlets) {
           this.fileService.setupPrivateDocumentStream(portlet._id);
-          this.fileService.setupPrivateSelectedFileStream(portlet._id);
-          this.fileService.setupPrivateSelectedFileIndexStream(portlet._id);
+//          this.fileService.setupPrivateSelectedFileStream(portlet._id);
+//          this.fileService.setupPrivateSelectedFileIndexStream(portlet._id);
 
           if (!portlet.file) {
             console.log('ERROR: TrainingBasicComponent:ngOnInit - no document set on training', training.title);

@@ -80,16 +80,22 @@
       </form>
     </nz-collapse-panel>
   </nz-collapse>
-  <ng-template #headerTemplate>
-    <div style="width:100%;text-align: center;">
+  <ng-template #headerTemplate >
+    <div style="width:20%;text-align: left;color:#cccccc;position:absolute;left:0;">
+      <span *ngIf="!headerOpen" style="font-size: 10px;">show details</span>
+      <span *ngIf="headerOpen" style="font-size: 10px;">hide details</span>
+    </div>
+    <div style="width:100%;display: inline-block;text-align: center;font-size:16px;color:blue;">
       {{file.name}}
-      <i *ngIf="!headerOpen" style="font-size: 12px;vertical-align: middle;margin-left:15px;" nz-icon
-        nzType="right"></i>
-      <i *ngIf="headerOpen" style="font-size: 12px;vertical-align: middle;margin-left:15px;" nz-icon nzType="down"></i>
+    </div>
+    <div style="text-align: right;display: inline-block;color:#cccccc;position:absolute;right:0;">
+      <span *ngIf="!headerOpen" style="font-size: 10px;">show details</span>
+      <span *ngIf="headerOpen" style="font-size: 10px;">hide details</span>
     </div>
   </ng-template>
   <ng-container *ngIf="selectedFile$ | async as file">{{ updateSelectedFile(file)}}</ng-container>
-  <vg-player (onPlayerReady)="onPlayerReady($event)" *ngIf="selectedFile.iconType === 'video'" [ngStyle]="{'height.px': height}">
+  <vg-player (onPlayerReady)="onPlayerReady($event)" *ngIf="selectedFile.iconType === 'video'"
+    [ngStyle]="{'height.px': height}">
     <!--
     <vg-overlay-play></vg-overlay-play>
     <vg-buffering></vg-buffering>
@@ -121,7 +127,7 @@
     </video>
   </vg-player>
   <div #docViewer style="width:100%;display:block;" [ngStyle]="{'height.px': height}">
-      <iframe [src]="document$ | async" allowfullscreen style="width:100%;height:100%;"></iframe>
+    <iframe [src]="document$ | async" allowfullscreen style="width:100%;height:100%;"></iframe>
   </div>
 
   <nz-modal [(nzVisible)]="isNewVersionModalVisible" [nzTitle]="file.name" nzWidth="60%" nzOkDisabled="false"

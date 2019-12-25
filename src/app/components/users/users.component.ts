@@ -112,9 +112,8 @@ export class UsersComponent implements OnInit {
     directReports: [],
     profilePicUrl: '',
     supervisorId: null,
-    jobs: []
+    jobTitle: ''
   }
-
 
   constructor(
     private userService: UserService,

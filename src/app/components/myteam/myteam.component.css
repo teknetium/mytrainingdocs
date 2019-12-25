@@ -1,0 +1,62 @@
+.my-team {
+    display: inline-block;
+    width: 25%;
+    border-right: 1px solid #e0e0e0;
+}
+
+.my-team-rightside {
+    display: inline-block;
+    width: 75%;
+    float:right;
+}
+
+.team-container {
+    padding-right: 10px;
+    height:700px;
+}
+
+.my-team-header {
+    display: block;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+    height: 44px;
+}
+
+.direct-report-container {
+    margin-left: 20px;
+    border-left: 1px solid #bbbbbb;
+}
+
+.direct-report-cell {
+    width: 100px;
+    border-bottom: 1px solid #bbbbbb;
+    margin-bottom: 10px;
+}
+
+.direct-report {
+    position: relative;
+    top: 10px;
+    left: 10px;
+}
+
+.supervisor {
+    display: block;
+}
+
+.user-button {
+    background-color: #fafafa;
+    border:1px solid #bbbbbb;
+    border-radius: 4px;
+    width:170px;
+    padding:5px;
+}
+
+.user-button:hover {
+    border-color: #3b5ae3;
+}
+
+.user-selected {
+    background-color: #f3f7fe;
+    color: #3b5ae3;
+    border-color: #3b5ae3;    
+}

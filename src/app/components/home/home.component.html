@@ -1,0 +1,15 @@
+<div *ngIf="authenticatedUser$ | async as user" style="height: 100%;width:100%;">
+    <div class="calendar">
+        <app-calendar></app-calendar>
+    </div>
+    <div *ngIf="user.userType === 'supervisor' || user.adminUp">
+        <div class="myteam-container">
+            <app-myteam></app-myteam>
+        </div>
+    </div>
+    <div *ngIf="user.userType !== 'supervisor' && !user.adminUp">
+        <div class="mytrainings">
+            <mtd-trainings></mtd-trainings>
+        </div>
+    </div>
+</div>

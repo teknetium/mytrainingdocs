@@ -1,7 +1,7 @@
 export interface JobModel {
   _id: string,
   title: string,
-  org: string,
+  teamId: string,
   description: string,
   iconClass: string,
   iconColor: string,
