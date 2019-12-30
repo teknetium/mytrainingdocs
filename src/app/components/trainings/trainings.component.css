@@ -4,7 +4,9 @@
   color: #000;
   margin-bottom: 16px;
 }
-.list-item {}
+.list-item {
+  width: fit-content;
+}
 
 .list-item:hover {
   background-color: #f1f5fe;
@@ -44,11 +46,10 @@
   color: blue;
 }
 
-.training-cell-container {
-  display:block;
-  border-top:1px solid #efefef;
-  padding-top:10px;
-  margin-top:10px;
+.training-container {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
 }
 .training-list-container {
   display:flex;
@@ -59,50 +60,37 @@
   max-height:120px;
 }
 
-.cell-item-lg {
-  text-align: center;
-  display:inline-block;
-  cursor: pointer;
-  padding:20px 5px;
-  width:110px; 
-  height:100px;
-  margin-right:5px;
-  border-radius: 4px;
-  background-color: white;
-  border:1px solid #efefef;
-}
-
-.cell-item-lg:hover {
-  border: 1px solid #6939c9;
+.selected-item {
+  background-color: #e2eafb;
 }
 .cell-item-sm {
   text-align: center;
   display:inline-block;
-  cursor: pointer;
-  padding:20px 5px;
-  width:60px;
-  height: 50px;
-  margin-right:5px;
+  padding:5px;
+  width:fit-content;
+  height: fit-content;
+  margin-right:10px;
   border-radius: 4px;
   background-color: white;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
   border:1px solid #efefef;
 }
 
 .cell-item-sm:hover {
-  border: 1px solid #6939c9;
+  background-color: #e2eafb;
 }
 .list-item {
-  padding:4px;
-  cursor: pointer;
-  border: 1px solid transparent;
 }
 
 .list-item:hover {
-  border: 1px solid #6939c9;
+  background-color: #f0f0f0;
 }
 
 .item-sm {
-  font-size: 16px;
+  font-size: 10px;
+  max-width: 150px;
+  white-space: nowrap;
+  overflow:scroll;
 }
 .item-lg {
   font-size: 22px;
@@ -120,7 +108,5 @@
   display: block;
   font-size:10px;
   overflow: hidden;
-  width: 50px;
-  height:15px;
   margin-top:5px;
 }

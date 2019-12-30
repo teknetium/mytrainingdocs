@@ -7,6 +7,7 @@ export interface TrainingModel {
   dateCreated: number,
   estimatedTimeToComplete: number,
   description: string,
+  jobTitle: string,
   image: string,
   introductionLabel: string,
   introduction: string,

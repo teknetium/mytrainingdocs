@@ -106,6 +106,7 @@ export class TrainingService {
       this.selectedTrainingIndexBS$.next(-1);
       this.currentTrainingIndex = -1;
       this.setAction('');
+      this.selectedTrainingBS$.next(null);
       return;
     }
 
@@ -209,7 +210,7 @@ export class TrainingService {
 
     const mainContentPage = <Page>{
       _id: String(new Date().getTime()),
-      title: 'Title Page',
+      title: 'Upload Your Content Here',
       intro: 'Introduction',
       portlets: [portlet1],
       textBlocks: [textBlock1, textBlock2]
@@ -244,13 +245,14 @@ export class TrainingService {
       owner: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),
       estimatedTimeToComplete: 30,
+      jobTitle: 'sample job title',
       description: 'This is a useless description',
       image: 'assets/images/others/bb.jpg',
       introductionLabel: 'Training Introduction',
       introduction: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ',
       execSummaryLabel: 'Executive Summary Label',
       execSummary: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      goalsLabel: 'Gaols Label',
+      goalsLabel: 'Goals Label',
       goals: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       iconClass: 'fal fa-graduation-cap',
       iconColor: 'black',

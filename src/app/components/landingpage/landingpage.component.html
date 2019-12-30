@@ -293,8 +293,8 @@
         </div>
       </div>
       <nz-collapse nzAccordion>
-        <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="panel.name" [nzActive]="panel.active">
-          <div [innerHTML]="panel.content" style="padding-left:20px;"></div>
+        <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="panel.question" [nzActive]="panel.active">
+          <div [innerHTML]="panel.answer" style="padding-left:20px;"></div>
         </nz-collapse-panel>
       </nz-collapse>
     </div>

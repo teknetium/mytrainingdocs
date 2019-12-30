@@ -20,7 +20,6 @@ const userSchema = new Schema({
   jobTitle: String,
   userStatus: { type: String, required: false },
   trainingStatus: { type: String, required: false },
-  directReports: [String],
   profilePicUrl: String,
   supervisorId: String,
 });

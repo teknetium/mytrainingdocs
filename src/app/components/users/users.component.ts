@@ -107,9 +107,8 @@ export class UsersComponent implements OnInit {
     adminUp: false,
     userType: 'individualContributor',
     uid: '',
-    userStatus: '',
+    userStatus: 'pending',
     trainingStatus: 'uptodate',
-    directReports: [],
     profilePicUrl: '',
     supervisorId: null,
     jobTitle: ''
@@ -262,7 +261,6 @@ export class UsersComponent implements OnInit {
 
   handleAddUser() {
     console.log('handleAddUser', this.newTeamMember);
-    this.authenticatedUser.directReports.push(this.newTeamMember._id);
     this.userService.updateUser(this.authenticatedUser);
     this.userService.createNewUser(this.newTeamMember);
     this.showNewUserModal = false;

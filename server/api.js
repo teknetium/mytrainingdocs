@@ -50,8 +50,8 @@ module.exports = function(app, config) {
  |--------------------------------------
  */
 
-  const trainingListProjection = "_id title type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete assessment useAssessment";
-  const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId directReports supervisor profilePicUrl";
+  const trainingListProjection = "_id title type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle assessment useAssessment";
+  const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId supervisor profilePicUrl";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id name type creationDate actionDate teamId description";
 
@@ -88,6 +88,7 @@ module.exports = function(app, config) {
       owner: req.body.owner,
       dateCreated: req.body.dateCreated,
       estimatedTimeToComplete: req.body.estimatedTimeToComplete,
+      jobTitle: req.body.jobTitle,
       description: req.body.description,
       execSummary: req.body.execSummary,
       execSummaryLabel: req.body.execSummaryLabel,
@@ -125,6 +126,7 @@ module.exports = function(app, config) {
       training.owner = req.body.owner;
       training.dateCreated = req.body.dateCreated;
       training.estimatedTimeToComplete = req.body.estimatedTimeToComplete;
+      training.jobTitle = req.body.jobTitle;
       training.description = req.body.description;
       training.introduction = req.body.introduction;
       training.introductionLabel = req.body.introductionLabel;
@@ -236,11 +238,10 @@ module.exports = function(app, config) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        adminUp: req.body.admin,
+        adminUp: req.body.adminUp,
         teamId: req.body.teamId,
         userStatus: req.body.userStatus,
         trainingStatus: req.body.trainingStatus,
-        directReports: req.body.directReports,
         jobTitle: req.body.jobTitle,
         profilePicUrl: req.body.profilePicUrl,
         supervisorId: req.body.supervisorId,
@@ -268,9 +269,9 @@ module.exports = function(app, config) {
       user.firstName = req.body.firstName;
       user.lastName = req.body.lastName;
       user.email = req.body.email;
+      adminUp = req.body.adminUp,
       user.userStatus = req.body.userStatus;
       user.trainingStatus = req.body.trainingStatus;
-      user.directReports = req.body.directReports;
       user.jobTitle = req.body.jobTitle;
       user.profilePicUrl = req.body.profilePicUrl;
       user.supervisorId = req.body.supervisorId;

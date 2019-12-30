@@ -3,11 +3,11 @@ import { TrainingModel } from '../../shared/interfaces/training.type';
 import { TrainingService } from '../../shared/services/training.service';
 import { AuthService } from '../../shared/services/auth.service';
 
-import {BehaviorSubject, Observable} from 'rxjs';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {UserModel} from '../../shared/interfaces/user.model';
-import {SafeResourceUrl} from '@angular/platform-browser';
-import {UserService} from '../../shared/services/user.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserModel } from '../../shared/interfaces/user.model';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { UserService } from '../../shared/services/user.service';
 import { Router } from '@angular/router';
 
 
@@ -22,6 +22,7 @@ export class TrainingsComponent implements OnInit {
   isAuthenticated$: Observable<boolean>;
   trainings$: Observable<TrainingModel[]>;
   trainings: TrainingModel[];
+  cellFontSize = '28';
 
   iconColor = 'red';
   iconClass = 'far fa-fw fa-file';
@@ -32,11 +33,9 @@ export class TrainingsComponent implements OnInit {
   selectedItemIndex = -1;
   viewMode$: Observable<string>;
   viewMode = 'edit';
-  renderMode = 'largeCell';
-  cellFontSize = 22;
   isOpen = false;
+  trainingSelected: TrainingModel;
 
-  editorClone: TrainingModel;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -67,36 +66,36 @@ export class TrainingsComponent implements OnInit {
       })
 
     });
-    this.viewMode$.subscribe(mode => {
-      this.viewMode = mode;
-    });
   }
 
   newTraining() {
     this.trainingService.addNewTraining();
     this.trainingService.changeEditorVisualState(false);
   }
+  confirmDelete(item: TrainingModel) {
+    this.trainingService.deleteTraining(item._id);
+  }
+
+  editTraining(item: TrainingModel, index) {
+    this.viewMode = 'edit';
+    this.trainingSelected = item;
+    this.selectItem(index);
+    this.trainingService.selectItemForEditing(index);
+  }
+
+  viewTraining(item: TrainingModel, index) {
+    this.viewMode = 'view';
+    this.trainingSelected = item;
+    this.selectItem(index);
+    this.trainingService.selectItemForEditing(index);
+}
 
   selectItem(index) {
     if (index === this.selectedItemIndex) {
       this.selectedItemIndex = -1;
-      this.trainingService.selectItemForEditing(-1); 
-      this.isOpen = false;
       return;
     }
-    this.trainingService.selectItemForEditing(index);
     this.selectedItemIndex = index;
-    this.isOpen = true;
-  }
-
-  renderModeChanged(event) {
-    if (event === 'smallCell') {
-      this.cellFontSize = 16;
-    } else if (event === 'largeCell') {
-      this.cellFontSize = 22;
-    } else {
-      this.cellFontSize = 12;
-    }
   }
 
 }

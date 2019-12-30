@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TrainingsComponent } from './trainings.component';
 import { TrainingBasicComponent } from './training-basic/training-basic.component';
 
-import { NzTableModule, NzCollapseModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule } from 'ng-zorro-antd';
+import { NzTableModule, NzCollapseModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule } from 'ng-zorro-antd';
 import { NzButtonModule } from 'ng-zorro-antd';
 import { NzIconModule } from 'ng-zorro-antd';
 import { NzTagModule } from 'ng-zorro-antd';
@@ -67,7 +67,8 @@ import { TrainingViewerComponent } from './training-viewer/training-viewer.compo
     MyIconPickerModule,
     NzRateModule,
     NzCheckboxModule,
-    NzSwitchModule
+    NzSwitchModule,
+    NzPopoverModule
   ],
   exports: [
     TrainingsComponent,

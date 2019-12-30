@@ -1,7 +1,7 @@
 <div *ngIf="!(isAuthenticated$ | async)">
     <mtd-landingpage></mtd-landingpage>
 </div>
-<nz-layout>
+<nz-layout style="height:100%;">
     <nz-header style="padding:0 !important;">
         <div style="float:left;">
             <div class="logo">
@@ -26,7 +26,7 @@
                     <i nz-icon nzType="dollar" theme="outline" style="font-size:20px;"></i>Pricing
                 </a>
             </li>
-            <li  nz-menu-item style="float:right;">
+            <li nz-menu-item style="float:right;">
                 <a (click)="quickViewToggle()">
                     <i nz-icon nzType="appstore" theme="outline" style="color:white;font-size:20px;"></i>
                 </a>
@@ -127,10 +127,8 @@
             </li>
         </ul>
     </nz-header>
-    <nz-content>
-        <div class="inner-content">
-            <router-outlet></router-outlet>
-        </div>
+    <nz-content class="inner-content">
+        <router-outlet></router-outlet>
     </nz-content>
     <nz-footer class="footer">Copyright ©2020 Teknetium, LLC</nz-footer>
 </nz-layout>

@@ -1,7 +1,42 @@
 <div *ngIf="(showEditor$ | async) && selectedTraining">
     <div [ngClass]="{'fullscreen': fullscreen, 'regular': !fullscreen}">
-        <ng-container *ngIf="selectedTraining$ | async">
-            <div [ngClass]="{'toolbar-fullscreen': fullscreen, 'toolbar': !fullscreen}">
+        <ng-container *ngIf="selectedTraining$ | async as selectedTraining">
+            <div [ngClass]="{'header-fullscreen': fullscreen, 't-header': !fullscreen}">
+                <div class="header-left">
+                    <i [ngClass]="selectedTraining.iconClass" style="display: block;font-size:40px;cursor: pointer;"
+                        [ngStyle]="{'color': selectedTraining.iconColor}" (click)="isIconSelectModalVisible = true"></i>
+
+                    <div *ngIf="mode === 'edit'" [style.color]="iconColor" [cpPosition]="'right'"
+                        [cpPositionRelativeToArrow]="true" (colorPickerChange)="onColorChange($event)"
+                        [(colorPicker)]="selectedTraining.iconColor" style="cursor: pointer;"
+                        [ngStyle]="{'color': selectedTraining.iconColor}" nz-tooltip nzTooltipTitle="Select icon color">
+                        <i class="fas fa-palette" style="font-size:14px;color:red;"></i>
+                    </div>
+                </div>
+                <div class="header-middle">
+                    <div class="middle-top">
+                        <div style="display: inline-block;">
+                            <p *ngIf="mode === 'edit'" nz-paragraph style="color:black;margin-bottom:0;"
+                                (nzContentChange)="contentChanged($event, 'title')" nzEditable
+                                [(nzContent)]="selectedTraining.title"></p>
+                            <span *ngIf="mode === 'preview'">{{selectedTraining.title}}</span>
+                        </div>
+                    </div>
+                    <div class="middle-bottom">
+                        <div>
+                            <i nz-icon nzType="minus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
+                                style="float:left;cursor:pointer;font-size:20px;margin:8px;" (click)="addUser()"
+                                nz-tooltip nzTooltipTitle="Add New User"></i>
+                            <i nz-icon nzType="clock-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+                                style="float:left;cursor:pointer;font-size:20px;margin:8px;" (click)="addUser()"
+                                nz-tooltip nzTooltipTitle="Add New User"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+
+                </div>
+                <!--
                 <button *ngIf="mode === 'edit'" style="font-size:12px;display:inline-block;" nz-button nzType="default"
                     nzSize="small" (click)="setMode('preview')">
                     Preview
@@ -14,12 +49,6 @@
                     nzSize="small" (click)="close()">
                     Close
                 </button>
-                <!--
-                <button *ngIf="mode === 'edit'" class="toolbar-button" nz-button nzType="default"
-                    style="font-size:12px;display:inline-block;" nzSize="small" (click)="addSection()">
-                    Add Section
-                </button>
-                -->
                 <button *ngIf="mode === 'edit'" class="toolbar-button" nz-button nzType="default"
                     style="color:red;font-size:12px;display:inline-block;" nzSize="small" nz-popconfirm
                     nzPopconfirmTitle="Delete this Training?" nzPopconfirmPlacement="bottom"
@@ -32,14 +61,17 @@
                 <i *ngIf="!fullscreen" style="font-size:30px;float:right;display:inline-block;cursor: pointer;" nz-icon
                     nzType="fullscreen" (click)="fullscreen = !fullscreen" nz-tooltip nzTooltipTitle="Expand">
                 </i>
+                -->
             </div>
         </ng-container>
 
 
         <div #myContainer *ngIf="selectedTraining$ | async as selectedTraining"
             [ngClass]="{'container-fullscreen': fullscreen, 'container': !fullscreen}">
-            <div #toc [ngClass]="{'toc-fullscreen': fullscreen, 'toc': !fullscreen}">
-                <div style="font-size:22px;font-weight:300;border-bottom:1px solid #bbbbbb;margin-bottom:10px; "> Table
+            <div #toc class="toc">
+                <div
+                    style="padding: 10px;font-size:18px;font-weight:300;border-bottom:1px solid #bbbbbb;margin-bottom:10px; ">
+                    Table
                     of Contents</div>
                 <div class="toc-entry" (click)="setCurrentPage('intro')"
                     [ngClass]="{'active-toc':currentPageId === 'intro'}">
@@ -58,17 +90,14 @@
                     Ratings & Comments
                 </div>
             </div>
-            <div style="width:75%;height:900px;display:inline-block;float: right;border-left:1px sold #bbbbbb;">
+            <div class="main-content">
                 <div *ngIf="currentPageId === 'intro'">
+                    <!--
                     <div style="border:2px solid #bbbbbb;padding:10px;color:black;"
                         [ngStyle]="{'border-color': selectedTraining.iconColor}">
                         <div style="width:15%;display: inline-block; float: left;text-align: center;">
-                            <div *ngIf="mode === 'edit'" style="min-width:30px; min-height:30px;color:black;"
-                                (click)="isIconSelectModalVisible = true" nz-tooltip
+                            <div *ngIf="mode === 'edit'" style="min-width:30px; min-height:30px;color:black;" nz-tooltip
                                 nzTooltipTitle="Choose an icon for your training">
-                                <i [ngClass]="selectedTraining.iconClass"
-                                    style="display: block;font-size:40px;cursor: pointer;"
-                                    [ngStyle]="{'color': selectedTraining.iconColor}"></i>
                             </div>
                             <i *ngIf="mode === 'preview'" [ngClass]="selectedTraining.iconClass"
                                 style="display: inline-block;font-size:40px;"
@@ -119,6 +148,7 @@
                         </div>
                         <div style="clear: both;"></div>
                     </div>
+                    -->
                     <div style="margin-top:50px;">
                         <h4>
                             <p *ngIf="mode === 'edit'" nz-paragraph
@@ -205,7 +235,7 @@
                             <span style="font-size:18px;">
                                 <p *ngIf="mode === 'edit'" nz-paragraph
                                     (nzContentChange)="pageContentChanged($event, pageIndex, 'intro')" nzEditable
-                                    [(nzContent)]="selectedTraining.introduction" style=""></p>
+                                    [(nzContent)]="selectedTraining.introduction"></p>
                                 <span *ngIf="mode === 'preview'">
                                     {{page.intro}}
                                 </span>
@@ -228,8 +258,8 @@
                                 <!-- this next block uses the filestack document previewer -->
                                 <div *ngIf="!(portlet.file === null)  && previewDocTypes.includes(fileService.getFile(portlet.file).iconType)"
                                     style="width:100%;height:100%">
-                                    <iframe [src]="privateDocumentHash[portlet._id]" allowfullscreen
-                                        width="100%" height="100%">
+                                    <iframe [src]="privateDocumentHash[portlet._id]" allowfullscreen width="100%"
+                                        height="100%">
                                     </iframe>
                                 </div>
                             </div>

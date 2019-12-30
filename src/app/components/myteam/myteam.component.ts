@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
 import { EventService } from '../../shared/services/event.service';
-import { Observable } from 'rxjs';
+import { TrainingService } from '../../shared/services/training.service';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.model';
 import { EventModel } from '../../shared/interfaces/event.type';
 import { User } from 'src/app/shared/interfaces/user.type';
@@ -25,6 +26,8 @@ export class MyteamComponent implements OnInit {
     uptodate: '#52c41a',
     pastdue: 'red'
   }
+  selectedUserBS$ = new BehaviorSubject<UserModel>(null);
+  selectedUser$: Observable<UserModel> = this.selectedUserBS$.asObservable();
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
   myTeam: UserModel[];
@@ -41,9 +44,8 @@ export class MyteamComponent implements OnInit {
     adminUp: false,
     userType: 'individualContributor',
     uid: '',
-    userStatus: '',
+    userStatus: 'pending',
     trainingStatus: 'uptodate',
-    directReports: [],
     profilePicUrl: '',
     supervisorId: null,
     jobTitle: ''
@@ -53,7 +55,8 @@ export class MyteamComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private eventService: EventService
+    private eventService: EventService,
+    private trainingService: TrainingService
   ) {
     this.myTeam$ = this.userService.getMyTeamStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
@@ -89,10 +92,13 @@ export class MyteamComponent implements OnInit {
 
   handleAddUser() {
     console.log('handleAddUser', this.newTeamMember);
-    this.authenticatedUser.directReports.push(this.newTeamMember._id);
     this.userService.updateUser(this.authenticatedUser);
     this.userService.createNewUser(this.newTeamMember);
     this.showNewUserModal = false;
+    this.newTeamMember.firstName = '';
+    this.newTeamMember.lastName = '';
+    this.newTeamMember.email = '';
+    this.newTeamMember.adminUp = false;
   }
 
   selectUser(index) {
@@ -102,6 +108,18 @@ export class MyteamComponent implements OnInit {
     } else {
       this.supervisorSelected = false;
       this.userIndexSelected = index;
+      this.selectedUserBS$.next(this.myTeam[index]);
     }
+  }
+
+  createNewTraining() {
+    this.trainingService.addNewTraining();
+  }
+
+  confirmDelete() {
+    this.userService.deleteUser(this.myTeam[this.userIndexSelected]._id);
+    this.selectedUserBS$.next(null);
+    this.userIndexSelected = -1;
+    this.supervisorSelected = false;
   }
 }

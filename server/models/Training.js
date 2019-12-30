@@ -37,6 +37,7 @@ const trainingSchema = new Schema({
   owner: { type: String, required: true },
   dateCreated: { type: Number, required: true },
   estimatedTimeToComplete: { type: Number, required: true },
+  jobTitle: { type: String, required: false },
   description: { type: String, required: true },
   image: { type: String, required: false },
   introductionLabel: { type: String, required: false },

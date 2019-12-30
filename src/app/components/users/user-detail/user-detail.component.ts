@@ -89,7 +89,6 @@ export class UserDetailComponent implements OnInit {
       email: ['', Validators.required],
       userStatus: ['', Validators.required],
       trainingStatus: ['',Validators.required],
-      directReports: [''],
       profilePicUrl: [''],
       supervisor: [''],
 //      trainings: ['',Validators.required],
@@ -110,7 +109,6 @@ export class UserDetailComponent implements OnInit {
           email: item.email,
           userStatus: item.userStatus,
           trainingStatus: item.trainingStatus,
-          directReports: item.directReports,
           jobTitle: item.jobTitle,
           profilePicUrl: item.profilePicUrl,
           supervisorId: item.supervisorId,
@@ -186,7 +184,6 @@ export class UserDetailComponent implements OnInit {
     this.selectedUser.teamId = value.teamId;
     this.selectedUser.userStatus = value.userStatus;
     this.selectedUser.trainingStatus = value.trainingStatus;
-    this.selectedUser.directReports = value.directReports;
     this.selectedUser.profilePicUrl = value.profilePicUrl;
     this.selectedUser.supervisorId = value.supervisorId;
 

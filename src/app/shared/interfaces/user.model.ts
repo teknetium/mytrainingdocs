@@ -7,10 +7,9 @@ export interface UserModel {
   email: string,
   teamId: string,
   adminUp: boolean,
-  userStatus: string,
+  userStatus: 'pending' | 'active' | 'new-supervisor' | 'new-user',
   trainingStatus: 'uptodate' | 'pastdue',
   jobTitle: string,
-  directReports: string[],
   profilePicUrl: string,
   supervisorId: string,
 }

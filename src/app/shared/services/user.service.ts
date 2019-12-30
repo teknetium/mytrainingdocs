@@ -77,8 +77,7 @@ export class UserService {
                 adminUp: false,
                 userStatus: 'new-supervisor',
                 trainingStatus: 'uptodate',
-                jobs: [],
-                directReports: [],
+                jobTitle: '',
                 profilePicUrl: '',
                 supervisorId: null  
               }
@@ -138,7 +137,6 @@ export class UserService {
       teamId: this.authenticatedUser.uid,
       userStatus: 'new-user',
       trainingStatus: 'uptodate',
-      directReports: [],
       profilePicUrl: '',
       supervisorId: this.authenticatedUser._id
     }

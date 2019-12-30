@@ -1,56 +1,30 @@
-<div class="" style="width:100%;height:100%;">
-  <div style="width:100%;display: block;padding:5px;">
-    <div>
-      <div>
-        <div style="display:inline-block;">
-          <span style="display:inline-block;">New Training Templates&nbsp;&nbsp;&nbsp;&nbsp; </span>
-          <i twoToneColor="#619ef3" nz-icon nzType="book" theme="twotone"
-            style="cursor: pointer;display:inline-block;font-size:24px;" nz-tooltip nzTooltipTitle="Basic Template"
-            (click)="newTraining()"></i>
-        </div>
-        <nz-radio-group class="m-r-10" nzSize="small" [(ngModel)]="renderMode"
-          style="display: inline-block;float: right;" (ngModelChange)=renderModeChanged($event)>
-          <label nz-radio-button nzValue="smallCell">
-            <i class="font-size-14" nz-icon nzType="appstore" theme="outline"></i>
-          </label>
-          <label nz-radio-button nzValue="largeCell">
-            <i class="font-size-20" nz-icon nzType="appstore" theme="outline"></i>
-          </label>
-          <label nz-radio-button nzValue="list">
-            <i class="font-size-16" nz-icon nzType="ordered-list" theme="outline"></i>
-          </label>
-        </nz-radio-group>
-        <div style="clear: both;"></div>
+<div class="training-container">
+  <ng-container *ngFor="let item of trainings index as i">
+    <div class="cell-item-sm" [ngClass]="{'selected-item': selectedItemIndex === i}">
+      <i [ngStyle]="{'color': item.iconColor, 'font-size.px': cellFontSize}" [ngClass]="item.iconClass"></i>
+      <div class="item-sm">
+        {{ item.title }}
       </div>
-      <div
-        [ngClass]="{'training-cell-container': (renderMode === 'smallCell' || renderMode === 'largeCell'), 'training-list-container': renderMode === 'list'}">
-        <div *ngFor="let item of trainings$ | async; index as i" (click)="selectItem(i)"
-          [ngClass]="{'cell-item-sm': renderMode === 'smallCell', 'cell-item-lg': renderMode === 'largeCell','active-item': selectedItemIndex === i}">
-          <div *ngIf="renderMode === 'smallCell' || renderMode === 'largeCell'">
-            <i [ngStyle]="{'color': item.iconColor, 'font-size.px': cellFontSize}" [ngClass]="item.iconClass"></i>
-            <div *ngIf="renderMode === 'largeCell'"
-              [ngClass]="{'label-sm':  renderMode === 'smallCell', 'label-lg':  renderMode === 'largeCell'}">
-              {{ item.title }}
-            </div>
-          </div>
-          <div *ngIf="renderMode === 'list'" class="list-item">
-            <i [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass" class="font-size-18"
-              style="display:inline-block;margin-right:10px;"></i>
-            <div style="display:inline-block;font-size: 12px;">
-              {{ item.title }}
-            </div>
-          </div>
+      <div>
+        <i nz-icon nzType="minus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
+          style="cursor:pointer;font-size:12px;margin-right:15px;" nz-tooltip nzTooltipTitle="Delete Training"
+          nz-popconfirm nzPopconfirmTitle="Delete this Training?" [nzPopconfirmTrigger]="'click'"
+          [nzPopconfirmPlacement]="'bottom'" (nzOnConfirm)="confirmDelete(item)"></i>
 
-        </div>
-        <div *ngIf="trainings && trainings.length === 0" style="text-align: center;">
-          <i style="font-size:50px;opacity:.3;" nz-icon nzType="frown" theme="twotone" twoToneColor="#619ef3"></i>
-          <span style="font-size:26px;font-weight: 300;display:block;opacity:.4;">No Data</span>  
-        </div>
-
+        <i nz-icon nzType="edit" [nzTheme]="'twotone'" [nzTwotoneColor]="'blue'" (click)="editTraining(item, i)"
+          style="cursor:pointer;font-size:12px;margin-right:15px;" nz-tooltip nzTooltipTitle="Edit Training"></i>
+        <i nz-icon nzType="eye" [nzTheme]="'twotone'" [nzTwotoneColor]="'purple'" (click)="viewTraining(item, i)"
+          style="cursor:pointer;font: size 12px;" nz-tooltip nzTooltipTitle="View Training"></i>
       </div>
     </div>
+  </ng-container>
+  <div *ngIf="trainings && trainings.length === 0" style="text-align: center;">
+    <i style="font-size:50px;opacity:.3;" nz-icon nzType="frown" theme="twotone" twoToneColor="#619ef3"></i>
+    <span style="font-size:26px;font-weight: 300;display:block;opacity:.4;">No Data</span>
   </div>
-  <div style="width:100%;display:block;margin-top:20px;height: 600px;">
-    <mtd-training-basic></mtd-training-basic>
+  <div *ngIf="viewMode === 'view'" style="margin-top:20px;height: 90%;">
+    <mtd-training-viewer [mode]="viewMode" ></mtd-training-viewer>
   </div>
-</div>
+  <div *ngIf="viewMode === 'edit'" style="margin-top:20px;height: 90%;">
+    <mtd-training-viewer [mode]="viewMode" ></mtd-training-viewer>
+  </div>

@@ -125,13 +125,13 @@ export class LandingpageComponent implements OnInit {
   panels = [
     {
       active: false,
-      name: 'What type of content does myTrainingdocs come with?',
-      content: 'myTrainingdocs does not come with any content preloaded.  You are responsible for uploading all the content your team uses.'
+      question: 'What type of content does myTrainingdocs come with?',
+      answer: 'myTrainingdocs does not come with any content preloaded.  You are responsible for uploading all the content your team uses.'
     },
     {
       active: false,
-      name: 'How does myTrainingdocs handle document versioning?',
-      content: `<p>myTrainingdocs allows you to easily manage any number of versions of a given file.
+      question: 'How does myTrainingdocs handle document versioning?',
+      answer: `<p>myTrainingdocs allows you to easily manage any number of versions of a given file.
       When uploading a new version, you choose the level of impact on the users
       <ul>
       <li>minor - No impact</li>
@@ -141,8 +141,8 @@ export class LandingpageComponent implements OnInit {
     },
     {
       active: false,
-      name: 'How is job information used by myTrainingdocs? ',
-      content: `We use Jobs to define, prioritize and set due dates for a set of trainings required for a given role in your team.  
+      question: 'How is job information used by myTrainingdocs? ',
+      answer: `We use Jobs to define, prioritize and set due dates for a set of trainings required for a given role in your team.  
       Changes made to job information are automatically propogated to all users associated with that job.`
     }
   ];
