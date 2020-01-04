@@ -7,6 +7,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.model';
 import { EventModel } from '../../shared/interfaces/event.type';
 import { User } from 'src/app/shared/interfaces/user.type';
+import { TrainingModel } from 'src/app/shared/interfaces/training.type';
 
 @Component({
   selector: 'app-myteam',
@@ -32,6 +33,7 @@ export class MyteamComponent implements OnInit {
   authenticatedUser$: Observable<UserModel>;
   myTeam: UserModel[];
   myTeam$: Observable<UserModel[]>;
+  trainingCnt$: Observable<number>;
   userHash = {};
   showNewUserModal = false;
   supervisorSelected = true;
@@ -51,6 +53,8 @@ export class MyteamComponent implements OnInit {
     jobTitle: ''
   }
   userIndexSelected = -1;
+  myTeamHelpPanelIsVisible = true;
+  myTeamTrainingsHelpPanelIsVisible = true;
 
   constructor(
     private authService: AuthService,
@@ -60,6 +64,7 @@ export class MyteamComponent implements OnInit {
   ) {
     this.myTeam$ = this.userService.getMyTeamStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
+    this.trainingCnt$ = this.trainingService.getAllTrainingCntObservable();
   }
 
   ngOnInit() {
@@ -80,6 +85,7 @@ export class MyteamComponent implements OnInit {
         this.userHash[user._id] = user;
       }
     });
+
   }
 
   addUser() {
@@ -111,15 +117,15 @@ export class MyteamComponent implements OnInit {
       this.selectedUserBS$.next(this.myTeam[index]);
     }
   }
-
-  createNewTraining() {
-    this.trainingService.addNewTraining();
-  }
-
   confirmDelete() {
     this.userService.deleteUser(this.myTeam[this.userIndexSelected]._id);
     this.selectedUserBS$.next(null);
     this.userIndexSelected = -1;
     this.supervisorSelected = false;
   }
+
+  createNewTraining() {
+    this.trainingService.addNewTraining();
+  }
+
 }

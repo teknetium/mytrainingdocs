@@ -18,8 +18,7 @@
   border-right: 3px solid blue;
   color:blue;
 }
-.regular-row {
-}
+
 .ant-table-body {
   border: 0 !important;
 }
@@ -48,9 +47,10 @@
 
 .training-container {
   width: 100%;
-  height: 100%;
+  height: 95%;
   padding: 10px;
 }
+
 .training-list-container {
   display:flex;
   flex-flow: column wrap;
@@ -60,8 +60,14 @@
   max-height:120px;
 }
 
+.not-allowed {
+  cursor: not-allowed;
+  opacity: .2;
+}
+
 .selected-item {
-  background-color: #e2eafb;
+  border:1px solid purple !important;
+  background-color: #e2eafb !important;
 }
 .cell-item-sm {
   text-align: center;

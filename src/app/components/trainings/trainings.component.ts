@@ -23,12 +23,15 @@ export class TrainingsComponent implements OnInit {
   trainings$: Observable<TrainingModel[]>;
   trainings: TrainingModel[];
   cellFontSize = '28';
+  deleteDisabled = true;
+  popOverTrigger = null;
+  cursor = ''
 
   iconColor = 'red';
   iconClass = 'far fa-fw fa-file';
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
-  selectedItem$: Observable<TrainingModel>;
+  selectedTraining$: Observable<TrainingModel>;
   selectedItemIndex$: Observable<number>;
   selectedItemIndex = -1;
   viewMode$: Observable<string>;
@@ -41,6 +44,7 @@ export class TrainingsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private trainingService: TrainingService,
     private userService: UserService) {
+    this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.viewMode$ = this.trainingService.getViewModeStream();
   }
@@ -62,6 +66,7 @@ export class TrainingsComponent implements OnInit {
       });
 
       this.selectedItemIndex$.subscribe(index => {
+        console.log('selectedItemIndex$', index);
         this.selectedItemIndex = index;
       })
 
@@ -72,8 +77,10 @@ export class TrainingsComponent implements OnInit {
     this.trainingService.addNewTraining();
     this.trainingService.changeEditorVisualState(false);
   }
-  confirmDelete(item: TrainingModel) {
-    this.trainingService.deleteTraining(item._id);
+  confirmDelete() {
+    this.trainingService.deleteTraining(this.trainings[this.selectedItemIndex]._id);
+    console.log('confirmDelete', this.selectedItemIndex);
+    this.selectItem(-1);
   }
 
   editTraining(item: TrainingModel, index) {
@@ -88,14 +95,30 @@ export class TrainingsComponent implements OnInit {
     this.trainingSelected = item;
     this.selectItem(index);
     this.trainingService.selectItemForEditing(index);
-}
+  }
 
   selectItem(index) {
     if (index === this.selectedItemIndex) {
       this.selectedItemIndex = -1;
-      return;
+      this.trainingService.selectItemForEditing(-1);
+      this.deleteDisabled = true;
+    } else {
+      this.selectedItemIndex = index;
+      this.trainingService.selectItemForEditing(index);
+      if (index === -1) {
+        this.deleteDisabled = true;
+      } else {
+        this.deleteDisabled = false;
+      }
     }
-    this.selectedItemIndex = index;
   }
+
+  closeTraining() {
+    this.selectedItemIndex = -1;
+    this.trainingService.selectItemForEditing(-1);
+    this.deleteDisabled = true;
+  }
+
+
 
 }

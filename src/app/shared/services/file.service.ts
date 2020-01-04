@@ -264,7 +264,6 @@ export class FileService {
   }
 
   loadData() {
-
     this.files$.next(this.files);
     this.fileCnt$.next(this.files.length);
     

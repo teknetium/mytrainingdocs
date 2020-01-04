@@ -212,6 +212,7 @@ export class TrainingService {
       _id: String(new Date().getTime()),
       title: 'Upload Your Content Here',
       intro: 'Introduction',
+      file: null,
       portlets: [portlet1],
       textBlocks: [textBlock1, textBlock2]
     };
@@ -219,6 +220,7 @@ export class TrainingService {
       _id: String(new Date().getTime()),
       title: 'Title Page',
       intro: 'Introduction',
+      file: null,
       portlets: [portlet1],
       textBlocks: [textBlock1, textBlock2]
     };
@@ -226,6 +228,7 @@ export class TrainingService {
       _id: String(new Date().getTime()),
       title: 'Assessments',
       intro: 'Create a test to evaluate mastery of the content presented in this training. Questions are multiple choice and can have multiple correct choices. Each test must include at least 3 questions.',
+      file: null,
       portlets: [],
       textBlocks: []
     };
@@ -233,6 +236,7 @@ export class TrainingService {
       _id: String(new Date().getTime()),
       title: 'Ratings and Comments',
       intro: '',
+      file: null,
       portlets: [portlet1],
       textBlocks: [textBlock1, textBlock2]
     };
@@ -257,7 +261,8 @@ export class TrainingService {
       iconClass: 'fal fa-graduation-cap',
       iconColor: 'black',
       iconSource: 'fontawesome',
-      pages: [mainContentPage],
+      files: [],
+      pages: [],
       assessment: null,
       useAssessment: false
     };

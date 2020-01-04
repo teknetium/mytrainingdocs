@@ -50,7 +50,7 @@ module.exports = function(app, config) {
  |--------------------------------------
  */
 
-  const trainingListProjection = "_id title type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle assessment useAssessment";
+  const trainingListProjection = "_id title type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId supervisor profilePicUrl";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id name type creationDate actionDate teamId description";
@@ -100,6 +100,7 @@ module.exports = function(app, config) {
       iconClass: req.body.iconClass,
       iconColor: req.body.iconColor,
       iconSource: req.body.iconSource,
+      files: req.body.files,
       pages: req.body.pages,
       assessment: req.body.assessment,
       useAssessment: req.body.useAssessment
@@ -138,6 +139,7 @@ module.exports = function(app, config) {
       training.iconClass = req.body.iconClass;
       training.iconColor = req.body.iconColor;
       training.iconSource = req.body.iconSource;
+      training.files = req.body.files;
       training.pages = req.body.pages;
       training.assessment = req.body.assessment;
       training.useAssessment = req.body.useAssessment;

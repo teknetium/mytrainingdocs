@@ -25,13 +25,15 @@ import { FileManagerModule } from '../file-manager/file-manager.module';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
 import { TrainingViewerComponent } from './training-viewer/training-viewer.component';
+import { TrainingDetailsComponent } from './training-details/training-details.component';
 
 @NgModule({
   declarations: [
     TrainingsComponent,
     TrainingBasicComponent,
     TrainingsComponent,
-    TrainingViewerComponent
+    TrainingViewerComponent,
+    TrainingDetailsComponent
   ],
   imports: [
     RouterModule,

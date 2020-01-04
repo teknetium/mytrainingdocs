@@ -6,7 +6,6 @@
 }
 
 .my-team-rightside {
-    display: inline-block;
     width: 78%;
     height:100%;    
     float:right;
@@ -17,6 +16,10 @@
     height:fit-content;
 }
 
+.my-tabs {
+    height: 90%;
+    background-color: violet;
+}
 .my-team-header {
     display: block;
     border-bottom: 1px solid #e0e0e0;
@@ -64,6 +67,6 @@
 }
 
 .legend {
-    font-size: 12px;
+    font-size: 10px;
     margin-bottom: 10px;    
 }

@@ -4,6 +4,7 @@ import { TrainingService } from '../../../shared/services/training.service';
 import { Observable } from 'rxjs';
 import { TrainingModel, Page, Portlet, Assessment } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { FileModel } from 'src/app/shared/interfaces/file.type';
 
 @Component({
   selector: 'mtd-training-viewer',
@@ -32,12 +33,26 @@ export class TrainingViewerComponent implements OnInit {
 
   isIconSelectModalVisible = false;
   selectedTraining$: Observable<TrainingModel>;
-  showEditor$: Observable<boolean>;
+  selectedTrainingIndex$: Observable<number>;
+  fileUploaded$: Observable<FileModel>;
   currentPageId = 'intro';
   isOpen = true;
   pageContainerMarginLeft = '270';
   selectedTraining: TrainingModel;
   fullscreen = false;
+  helpPanelIsVisible = true;
+
+  helpTextHash = {
+    intro: `<h5>Intro</h5>Click on the blue pencil icon in the page below to customize the content for the training
+    you are creating. `,
+
+    mainContent: `<h5>Main Content</h5>This is where you upload a single document or multiple documents for this training.<br><br>
+    Each document is associated with it's own page in the training and it's own entry in the <b>Table of Contents<b>.`,
+
+    assessment: `<h5>Assessment</h5>`,
+
+    ratingsComments: `<h5>Ratings & Comments</h5>`,
+  }
 
   private items = [
     {
@@ -121,33 +136,37 @@ export class TrainingViewerComponent implements OnInit {
   };
 
 
-  @Input() mode = 'view';
+  @Input() mode = 'edit';
   pageDocUrlHash = {};
 
-
+  selectedTrainingIndex = -1;
   styleMap = new Map();
-  constructor(private trainingService: TrainingService, private fileService: FileService) { }
+
+  constructor(private trainingService: TrainingService, private fileService: FileService) {
+    this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
+    this.selectedTrainingIndex$ = this.trainingService.getSelectedTrainingIndexStream();
+  }
 
   ngOnInit() {
-    this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
-    this.showEditor$ = this.trainingService.getShowEditorStream();
+    this.fileUploaded$ = this.fileService.getUploadedFileStream();
+    this.selectedTrainingIndex$.subscribe(index => {
+      this.selectedTrainingIndex = index;
+    })
     this.selectedTraining$.subscribe(training => {
 
       this.selectedTraining = training;
       if (training) {
         for (const page of training.pages) {
-          for (const portlet of page.portlets) {
-            this.fileService.setupPrivateDocumentStream(portlet._id);
-            //          this.fileService.setupPrivateSelectedFileStream(portlet._id);
-            //          this.fileService.setupPrivateSelectedFileIndexStream(portlet._id);
+          this.fileService.setupPrivateDocumentStream(page._id);
+          //          this.fileService.setupPrivateSelectedFileStream(portlet._id);
+          //          this.fileService.setupPrivateSelectedFileIndexStream(portlet._id);
 
-            if (!portlet.file) {
-              console.log('ERROR: TrainingBasicComponent:ngOnInit - no document set on training', training.title);
-            } else {
-              this.pageDocUrlHash[page._id] = this.fileService.getSafeUrl(portlet.file);
+          if (!page.file) {
+            console.log('ERROR: TrainingViewerComponent:ngOnInit - no document set on training', training.title);
+          } else {
+            this.pageDocUrlHash[page._id] = this.fileService.getSafeUrl(page.file);
 
-              this.fileService.selectItemById(portlet.file, portlet._id);
-            }
+            this.fileService.selectItemById(page.file, page._id);
           }
 
         }
@@ -160,19 +179,17 @@ export class TrainingViewerComponent implements OnInit {
           this.applyAssessment = false;
         }
       }
-
     });
 
-    /*
-    this.showEditor$.subscribe(
-      res => {
-        this.isOpen = res;
+
+    this.fileUploaded$.subscribe(file => {
+      if (!file) {
+        return;
       }
-    )
-*/
+      this.selectedTraining.files.push(file._id);
+    })
 
     for (const item of this.items) {
-
       console.log('adding to styleMap', item.name, this.styleMap);
       this.styleMap.set(item.name, new Map());
     }
@@ -284,6 +301,18 @@ export class TrainingViewerComponent implements OnInit {
     this.trainingService.saveTraining(this.selectedTraining);
   }
 
+  saveTraining() {
+    this.trainingService.saveTraining(this.selectedTraining);
+
+  }
+
+  openPicker() {
+    this.fileService.openPicker();
+  }
+
+  confirmDelete() {
+    this.trainingService.deleteTraining(this.selectedTraining._id);
+    this.trainingService.selectItemForEditing(this.selectedTrainingIndex);
+  }
+
 }
-
-

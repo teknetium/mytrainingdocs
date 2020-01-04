@@ -19,6 +19,7 @@ const portletSchema = new Schema({
 const pageSchema = new Schema({
   _id: { type: String, required: true },
   title: { type: String },
+  file: { type: String },
   intro: { type: String },
   portlets: [portletSchema],
 })
@@ -49,6 +50,7 @@ const trainingSchema = new Schema({
   iconClass: { type: String, required: true },
   iconColor: { type: String, required: true },
   iconSource: { type: String, required: true },
+  files: [String],
   pages: [pageSchema],
   useAssessment: { type: Boolean },
   assessment: assessmentSchema

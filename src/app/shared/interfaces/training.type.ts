@@ -18,6 +18,7 @@ export interface TrainingModel {
   iconClass: string,
   iconColor: string,
   iconSource: string,
+  files: string[],
   pages: Page[],
   assessment: Assessment,
   useAssessment: boolean
@@ -39,6 +40,7 @@ export interface Assessment {
 export interface Page {
   _id: string,
   title: string,
+  file: string,
   portlets: Portlet[],
   textBlocks: TextBlock[]
 }

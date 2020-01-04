@@ -1,37 +1,24 @@
-<div class="file-mgr-toplevel" style="background-image: url('selectedFile.versions[0].url');">
-    <div [ngClass]="{'files-compact': mode === 'brief', 'files-full': mode === 'full'}">
-        <div>
-            <div class="" style="display: inline-block;padding:5px;cursor: pointer;">
-                <i nz-tooltip nzTooltipTitle="Add New File" class="action" nz-icon twoToneColor="#619ef3"
-                    nzType="file-add" theme="twotone" (click)="openPicker($event)"></i>
+<div>
+    <i nz-tooltip nzTooltipTitle="Add New File" class="action" nz-icon twoToneColor="#619ef3" nzType="file-add"
+        theme="twotone" (click)="openPicker($event)"></i>
+    <div *ngIf="view === 'cardView'" style="border-top:1px solid #efefef;padding-top:10px;margin-top:10px;">
+        <div class="filex" *ngFor="let item of files$ | async; index as i"
+            [ngClass]="{'active-file': (selectedFileIndex$ | async) === i}" (click)="selectFile($event, i)">
+            <div class="font-size-30">
+                <i class="font-size-24" [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
+                    theme="twotone"></i>
+                <span class="m-l-5 font-size-12 text-muted">{{item.size}}</span>
             </div>
-            <nz-radio-group *ngIf="(files.length > 0)" class="m-r-10" nzSize="small" [(ngModel)]="view"
-                style="display: inline-block;float: right;">
-                <label nz-radio-button nzValue="cardView">
-                    <i class="font-size-16" nz-icon nzType="appstore" theme="outline"></i>
-                </label>
-                <label nz-radio-button nzValue="listView">
-                    <i class="font-size-16" nz-icon nzType="ordered-list" theme="outline"></i>
-                </label>
-            </nz-radio-group>
-        </div>
-        <div *ngIf="view === 'cardView'" style="border-top:1px solid #efefef;padding-top:10px;margin-top:10px;">
-            <div class="filex" *ngFor="let item of files$ | async; index as i"
-                [ngClass]="{'active-file': (selectedFileIndex$ | async) === i}" (click)="selectFile($event, i)">
-                <div class="font-size-30">
-                    <i class="font-size-24" [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
-                        theme="twotone"></i>
-                    <span class="m-l-5 font-size-12 text-muted">{{item.size}}</span>
-                </div>
-                <div>
-                    <span class="mb-0 font-size-10" style="width:300px;overflow:scroll;">{{item.name}}</span>
-                </div>
-            </div>
-            <div *ngIf="files.length === 0" style="text-align: center;">
-                <i style="font-size:50px;opacity:.3;" nz-icon nzType="frown" theme="twotone" twoToneColor="#619ef3"></i>
-                <span style="font-size:26px;font-weight: 300;display:block;opacity:.4;">No Data</span>
+            <div>
+                <span class="mb-0 font-size-10" style="width:300px;overflow:scroll;">{{item.name}}</span>
             </div>
         </div>
+        <div *ngIf="files.length === 0" style="text-align: center;">
+            <i style="font-size:50px;opacity:.3;" nz-icon nzType="frown" theme="twotone" twoToneColor="#619ef3"></i>
+            <span style="font-size:26px;font-weight: 300;display:block;opacity:.4;">No Data</span>
+        </div>
+    </div>
+    <!--
         <ul *ngIf="view === 'listView'"
             style="border-top:1px solid #efefef;padding-top:10px;margin-top:10px;list-style-type:none;">
             <li *ngIf="mode === 'full'">
@@ -71,8 +58,8 @@
                 </li>
             </div>
         </ul>
-    </div>
-    <div [ngClass]="{'viewer-compact': mode === 'brief', 'viewer-full': mode === 'full'}">
-        <mtd-files [streamId]="streamId"></mtd-files>
-    </div>
+        -->
+</div>
+<div>
+    <mtd-files [streamId]="streamId"></mtd-files>
 </div>
