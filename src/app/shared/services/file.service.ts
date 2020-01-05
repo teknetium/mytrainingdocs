@@ -216,6 +216,8 @@ export class FileService {
   };
   actionBS$ = new BehaviorSubject<string>('');
 
+  fileIdStreamHash = {};
+
   fileIdHash = {};
   fileIdIndexHash = {};
 // pDoc - private document hash 
@@ -435,6 +437,16 @@ export class FileService {
 
         this.postFile$(this.newFile).subscribe(data => {
           this.newFile = data;
+
+          let mediaItem: SafeResourceUrl;
+          mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + this.newFile.versions[0].fsHandle);
+
+          console.log('processResults', this.newFile, mediaItem);
+          this.fileIdStreamHash[this.newFile._id] = new BehaviorSubject<SafeResourceUrl>(
+            this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + this.newFile.versions[0].fsHandle));
+
+          console.log('fileService:postFile$', this.newFile);
+          
           this.files.push(this.newFile);
           this.fileIdHash[this.newFile._id] = this.newFile;
           this.fileIdIndexHash[this.newFile._id] = this.files.length - 1;
@@ -443,6 +455,10 @@ export class FileService {
         });
       }
     }
+  }
+
+  getFileIdStream(id): Observable<SafeResourceUrl> {
+    return this.fileIdStreamHash[id].asObservable();
   }
 
   cancelEdit(): void {
@@ -464,7 +480,7 @@ export class FileService {
   }
 
   getSafeUrl(fileId: string): SafeResourceUrl {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.fileIdHash[fileId].versions[0].fsHandle));
+    return this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + this.fileIdHash[fileId].versions[0].fsHandle);
   }
 
   viewFile(file: FileModel, versionIndex: number, streamId: string) {

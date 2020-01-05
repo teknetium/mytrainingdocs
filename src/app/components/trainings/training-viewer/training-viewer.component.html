@@ -147,17 +147,15 @@
                         [ngClass]="{'active-toc':currentPageId === 'intro'}">
                         {{selectedTraining.introductionLabel}}
                     </div>
-                    <div class="toc-entry" (click)="setCurrentPage('mainContent')"
+                    <div *ngIf="mode === 'edit'" class="toc-entry" (click)="setCurrentPage('mainContent')"
                         [ngClass]="{'active-toc':currentPageId === 'mainContent'}">
                         Upload Your Content Here
                     </div>
 
-                    <ng-container *ngIf="mode === 'view'">
-                        <div class="toc-entry" *ngFor="let page of selectedTraining.pages; index as i"
-                            (click)="setCurrentPage(page._id)" [ngClass]="{'active-toc':currentPageId === page._id}">
-                            {{page.title}}
-                        </div>
-                    </ng-container>
+                    <div class="toc-entry" *ngFor="let page of selectedTraining.pages; index as i"
+                        (click)="setCurrentPage(page._id)" [ngClass]="{'active-toc':currentPageId === page._id}">
+                        {{page.title}}
+                    </div>
                     <div class="toc-entry" (click)="setCurrentPage('assessment')"
                         [ngClass]="{'active-toc':currentPageId === 'assessment'}">
                         Assessment
@@ -188,8 +186,9 @@
                         </div>
                         <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
 
-                            <input style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;" nz-input
-                                [(ngModel)]="selectedTraining.jobTitle" nzSize="small" (blur)="saveTraining()" />
+                            <input style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;"
+                                nz-input [(ngModel)]="selectedTraining.jobTitle" nzSize="small"
+                                (blur)="saveTraining()" />
 
                         </div>
                     </div>
@@ -270,7 +269,7 @@
                     -->
                 </div>
 
-                <div *ngIf="mode === 'view'">
+                <div>
                     <div *ngFor="let page of selectedTraining.pages; index as pageIndex">
                         <div *ngIf="currentPageId === page._id" class="page">
                             <div>
@@ -285,8 +284,8 @@
                                 </span>
                             </div>
 
-                            <div style="padding-left: 30px;">
-                                <span style="font-size:18px;">
+                            <div style="padding-left: 30px;margin-bottom: 40px;">
+                                <span style="font-size:16px;">
                                     <p *ngIf="mode === 'edit'" nz-paragraph
                                         (nzContentChange)="pageContentChanged($event, pageIndex, 'intro')" nzEditable
                                         [(nzContent)]="page.intro"></p>
@@ -295,56 +294,14 @@
                                     </span>
                                 </span>
                             </div>
-                            <div style="width:100%;height:100%;">
-
-                                <!--
-                                <div *ngIf="mode === 'edit'">
-                                    <i style="font-size:30px;margin-top: 10px;" twoToneColor="#3f87f5" nz-icon
-                                        nzType="file-unknown" theme="twotone" (click)="setContent(portlet)" nz-tooltip
-                                        nzTooltipTitle="Change Content">
-                                    </i>
-                                </div>
-                                -->
-                                <div style="width:100%;height:100%;">
-                                    <div
-                                        *ngIf="!(page.file === null) && fileService.getFile(page.file).iconType === 'image'">
-                                        <img [src]="fileService.getFile(page.file).versions[0].url" alt="blah" />
-                                    </div>
-                                    <!-- this next block uses the filestack document viewer -->
-                                    <div *ngIf="!(page.file === null)  && previewDocTypes.includes(fileService.getFile(page.file).iconType)"
-                                        style="width:100%;height:100%">
-                                        <iframe [src]="privateDocumentHash[page._id]" allowfullscreen width="100%"
-                                            height="100%">
-                                        </iframe>
-                                    </div>
+                            <div style="text-align: center;height:90%;">
+                                <div style="width:100%;height:900px;display:inline-block;">
+                                    <iframe [src]="(docStreamPageHash[page._id] | async)" allowfullscreen width="100%"
+                                        height="100%">
+                                    </iframe>
                                 </div>
                             </div>
                         </div>
-                        <!--
-                        <nz-modal [(nzVisible)]="isFileSelectModalVisible" nzTitle="Select Document"
-                            (nzOnCancel)="handleCancel()" nzOkDisabled="true">
-                            <ul style="list-style-type:none;">
-                                <li *ngFor="let item of files$ | async; index as i" class="fileList"
-                                    (click)="selectFile(item, i)" style="padding:5px 0;">
-                                    <div style="display: inline-block;">
-                                        <i *ngIf="item.iconSource === 'ngZorro'" class="font-size-24"
-                                            [twoToneColor]="item.iconColor" nz-icon [nzType]="item.iconClass"
-                                            theme="twotone"></i>
-                                        <i *ngIf="item.iconSource === 'fontawesome'" class="font-size-24"
-                                            [ngStyle]="{'color': item.iconColor}" [ngClass]="item.iconClass"></i>
-                                    </div>
-                                    <div class="" style="display: inline-block;">
-                                        &nbsp;&nbsp;&nbsp;&nbsp;{{ item.name }}
-                                    </div>
-                                </li>
-                            </ul>
-                        </nz-modal>
-                        -->
-                        <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon"
-                            (nzOnCancel)="handleIconSelectCancel()" nzOkDisabled="false"
-                            (nzOnOk)="handleIconSelectConfirm()">
-                            <mtd-icon-picker (icon)="setIcon($event)"></mtd-icon-picker>
-                        </nz-modal>
                     </div>
                 </div>
                 <div *ngIf="currentPageId === 'assessment'" class="page">

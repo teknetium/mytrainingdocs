@@ -36,6 +36,7 @@ export class TrainingService {
   trainingsForSelectBS$ = new BehaviorSubject<{ label: string, value: string }[]>([]);
   trainingOptions: [{ label: string, value: string }] = [null];
   showEditor$ = new BehaviorSubject<boolean>(false);
+  trainingIdHash = {};
 
   // Using Angular DI we use the HTTP service
   constructor(private http: HttpClient, private auth: AuthService, private userService: UserService, private fileService: FileService) {
@@ -48,14 +49,27 @@ export class TrainingService {
         this.authenticatedUser = user;
         this.action = 'init';
         this.loadData();
-      }
+        this.getTrainings$(this.authenticatedUser.uid).subscribe(trainingList => {
+          if (!trainingList) {
+            return;
+          }
 
+          this.allTrainings = trainingList;
+
+          for (const training of this.allTrainings) {
+            this.trainingIdHash[training._id] = training;
+          }
+        });
+      }
     });
   }
 
   loadData() {
     this.getTrainings$(this.authenticatedUser.uid).subscribe(trainingList => {
       this.allTrainings = trainingList;
+      for (const training of this.allTrainings) {
+        this.trainingIdHash[training._id] = training;
+      }
 /*
       let i;
       if (this.action === 'save') {
@@ -280,6 +294,20 @@ export class TrainingService {
 //    this.selectedTrainingBS$.next(newTraining);
 //    this.showEditor$.next(true);
 
+  }
+
+  addNewPage(trainingId, fileId, pageTitle) {
+    const newPage = <Page>{
+      _id: String(new Date().getTime()),
+      title: pageTitle,
+      intro: 'Introduction to the document',
+      file: fileId,
+      portlets: [],
+      textBlocks: []
+    };
+    
+    this.trainingIdHash[trainingId].pages.push(newPage);
+    this.saveTraining(this.trainingIdHash[trainingId]);
   }
 
   createTraining(training: TrainingModel) {

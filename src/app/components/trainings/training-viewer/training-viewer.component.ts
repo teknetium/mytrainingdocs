@@ -1,9 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FileService } from '../../../shared/services/file.service';
 import { TrainingService } from '../../../shared/services/training.service';
-import { Observable } from 'rxjs';
+import { UserService } from '../../../shared/services/user.service';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { TrainingModel, Page, Portlet, Assessment } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FileModel } from 'src/app/shared/interfaces/file.type';
 
 @Component({
@@ -47,6 +49,7 @@ export class TrainingViewerComponent implements OnInit {
 
   tempIcon = '';
   tempIconColor = '';
+  authenticatedUser$ = this.userService.getAuthenticatedUserStream();
 
   helpTextHash = {
     intro: `<h5>Intro</h5>Click on the blue pencil icon in the page below to customize the content for the training
@@ -143,204 +146,216 @@ export class TrainingViewerComponent implements OnInit {
 
 
   @Input() mode = 'edit';
+  docStreamPageHash = {};
   pageDocUrlHash = {};
   mainContentContainerHeight = 51;
+  pageIdBSHash = {};
 
   selectedTrainingIndex = -1;
   styleMap = new Map();
 
-  constructor(private trainingService: TrainingService, private fileService: FileService) {
-    this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
-    this.selectedTrainingIndex$ = this.trainingService.getSelectedTrainingIndexStream();
-  }
+  constructor(private trainingService: TrainingService, private fileService: FileService, private sanitizer: DomSanitizer, private userService: UserService) {
+    this.authenticatedUser$ = userService.getAuthenticatedUserStream();
+      this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
+      this.selectedTrainingIndex$ = this.trainingService.getSelectedTrainingIndexStream();
+    }
 
-  ngOnInit() {
-    this.fileUploaded$ = this.fileService.getUploadedFileStream();
-    this.selectedTrainingIndex$.subscribe(index => {
-      this.selectedTrainingIndex = index;
-    })
-    this.selectedTraining$.subscribe(training => {
+    ngOnInit() {
+      this.fileUploaded$ = this.fileService.getUploadedFileStream();
+      this.selectedTrainingIndex$.subscribe(index => {
+        this.selectedTrainingIndex = index;
+      })
+      this.selectedTraining$.subscribe(training => {
 
-      this.selectedTraining = training;
-      if (training) {
-        for (const page of training.pages) {
-          this.fileService.setupPrivateDocumentStream(page._id);
-          //          this.fileService.setupPrivateSelectedFileStream(portlet._id);
-          //          this.fileService.setupPrivateSelectedFileIndexStream(portlet._id);
+        this.selectedTraining = training;
+        if (training) {
+          for (const page of training.pages) {
+            //          this.fileService.setupPrivateDocumentStream(page._id);
+            //          this.fileService.setupPrivateSelectedFileStream(portlet._id);
+            //          this.fileService.setupPrivateSelectedFileIndexStream(portlet._id);
 
-          if (!page.file) {
-            console.log('ERROR: TrainingViewerComponent:ngOnInit - no document set on training', training.title);
-          } else {
-            this.pageDocUrlHash[page._id] = this.fileService.getSafeUrl(page.file);
+            if (!page.file) {
+              console.log('ERROR: TrainingViewerComponent:ngOnInit - no document set on training', training.title);
+            } else {
+              this.pageDocUrlHash[page._id] = this.fileService.getSafeUrl(page.file);
+              console.log('OnInnit', this.pageDocUrlHash[page._id]);
+              this.pageIdBSHash[page._id] = new BehaviorSubject<SafeResourceUrl>(null);
+              this.docStreamPageHash[page._id] = this.pageIdBSHash[page._id].asObservable();
 
-            this.fileService.selectItemById(page.file, page._id);
+
+              //            this.fileService.selectItemById(page.file, page._id);
+            }
+
           }
 
+          if (this.selectedTraining.assessment) {
+            this.assessment = this.selectedTraining.assessment;
+            this.applyAssessment = true;
+          } else {
+            this.assessment = this.newAssessment;
+            this.applyAssessment = false;
+          }
+
+          this.tempIconColor = this.selectedTraining.iconColor;
+          this.tempIcon = this.selectedTraining.iconClass;
         }
+      });
 
-        if (this.selectedTraining.assessment) {
-          this.assessment = this.selectedTraining.assessment;
-          this.applyAssessment = true;
-        } else {
-          this.assessment = this.newAssessment;
-          this.applyAssessment = false;
+
+      this.fileUploaded$.subscribe(file => {
+        if (!file) {
+          return;
         }
+        this.selectedTraining.files.push(file._id);
+        this.trainingService.addNewPage(this.selectedTraining._id, file._id, file.name);
+      })
 
-        this.tempIconColor = this.selectedTraining.iconColor;
-        this.tempIcon = this.selectedTraining.iconClass;
+      for (const item of this.items) {
+        console.log('adding to styleMap', item.name, this.styleMap);
+        this.styleMap.set(item.name, new Map());
       }
-    });
+      console.log('styleMap...', this.styleMap);
 
+      this.styleMap.get('toc-container').set('width.%', 25);
+      this.styleMap.get('main-content').set('width.%', 73);
+      this.styleMap.get('toc-entry').set('width.%', 100);
+      this.styleMap.get('toc-title').set('font-size.px', 18);
+      this.styleMap.get('toc-title').set('margin-top.px', 10);
+      this.styleMap.get('toc-title').set('color', 'red');
+      this.styleMap.get('page').set('font-size.px', 26);
+    }
 
-    this.fileUploaded$.subscribe(file => {
-      if (!file) {
-        return;
+    setCurrentPage(pageId) {
+      console.log('setCurrentPage', pageId);
+      this.currentPageId = pageId;
+      if (this.pageIdBSHash[pageId]) {
+        console.log('setCurrentPage', this.pageDocUrlHash[pageId]);
+        this.pageIdBSHash[pageId].next(this.pageDocUrlHash[pageId]);
       }
-      this.selectedTraining.files.push(file._id);
-    })
-
-    for (const item of this.items) {
-      console.log('adding to styleMap', item.name, this.styleMap);
-      this.styleMap.set(item.name, new Map());
     }
-    console.log('styleMap...', this.styleMap);
 
-    this.styleMap.get('toc-container').set('width.%', 25);
-    this.styleMap.get('main-content').set('width.%', 73);
-    this.styleMap.get('toc-entry').set('width.%', 100);
-    this.styleMap.get('toc-title').set('font-size.px', 18);
-    this.styleMap.get('toc-title').set('margin-top.px', 10);
-    this.styleMap.get('toc-title').set('color', 'red');
-    this.styleMap.get('page').set('font-size.px', 26);
-  }
-
-  setCurrentPage(pageId) {
-    console.log('setCurrentPage', pageId);
-    this.currentPageId = pageId;
-  }
-
-  setIcon(event) {
-    console.log('training-viewer:setIcon', event);
-    this.tempIcon = event.icon;
-    this.tempIconColor = event.color;
-    this.okDisabled = false;
-  }
-
-  contentChanged(newVal: string, propName: string) {
-    this.selectedTraining[propName] = newVal;
-    this.trainingService.saveTraining(this.selectedTraining);
-  }
-
-  pageContentChanged(newVal: string, index: number, propName: string) {
-    this.selectedTraining.pages[index][propName] = newVal;
-    this.trainingService.saveTraining(this.selectedTraining);
-  }
-
-  pageChanged(newVal: string, index: number, propName: string) {
-    let page: Page;
-    page = this.selectedTraining.pages[index];
-    page[propName] = newVal;
-
-    this.trainingService.saveTraining(this.selectedTraining);
-  }
-
-  handleIconSelectCancel() {
-    this.tempIconColor = '';
-    this.tempIcon = '';
-    this.isIconSelectModalVisible = false;
-    this.okDisabled = true;
-  }
-
-  handleIconSelectConfirm() {
-    this.selectedTraining.iconClass = this.tempIcon;
-    this.selectedTraining.iconColor = this.tempIconColor;
-    this.trainingService.saveTraining(this.selectedTraining);
-
-    this.isIconSelectModalVisible = false;
-    this.okDisabled = true; 
-  }
-
-  closeViewer() {
-    this.trainingService.selectItemForEditing(-1);
-    this.fullscreen = false;
-  }
-
-  toggleTOC(state: boolean) {
-    this.isOpen = state;
-    if (state) {
-      this.pageContainerMarginLeft = '270';
-    } else {
-      this.pageContainerMarginLeft = '20';
+    setIcon(event) {
+      console.log('training-viewer:setIcon', event);
+      this.tempIcon = event.icon;
+      this.tempIconColor = event.color;
+      this.okDisabled = false;
     }
-  }
 
-
-  addNewQuestion() {
-    this.assessment.items.push(this.newItem);
-
-    this.selectedTraining.assessment = this.assessment;
-    this.trainingService.saveTraining(this.selectedTraining);
-  }
-
-  addNewChoice(itemIndex) {
-    const newChoice = {
-      text: 'New Choice',
-      correct: false
+    contentChanged(newVal: string, propName: string) {
+      this.selectedTraining[propName] = newVal;
+      this.trainingService.saveTraining(this.selectedTraining);
     }
-    this.assessment.items[itemIndex].choices.push(newChoice);
-    this.selectedTraining.assessment = this.assessment;
-    this.trainingService.saveTraining(this.selectedTraining);
 
-  }
+    pageContentChanged(newVal: string, index: number, propName: string) {
+      this.selectedTraining.pages[index][propName] = newVal;
+      this.trainingService.saveTraining(this.selectedTraining);
+    }
 
-  applyAssessmentChanged(event) {
-    console.log('apply assessment', event);
-    if (event) {
+    pageChanged(newVal: string, index: number, propName: string) {
+      let page: Page;
+      page = this.selectedTraining.pages[index];
+      page[propName] = newVal;
+
+      this.trainingService.saveTraining(this.selectedTraining);
+    }
+
+    handleIconSelectCancel() {
+      this.tempIconColor = '';
+      this.tempIcon = '';
+      this.isIconSelectModalVisible = false;
+      this.okDisabled = true;
+    }
+
+    handleIconSelectConfirm() {
+      this.selectedTraining.iconClass = this.tempIcon;
+      this.selectedTraining.iconColor = this.tempIconColor;
+      this.trainingService.saveTraining(this.selectedTraining);
+
+      this.isIconSelectModalVisible = false;
+      this.okDisabled = true;
+    }
+
+    closeViewer() {
+      this.trainingService.selectItemForEditing(-1);
+      this.fullscreen = false;
+    }
+
+    toggleTOC(state: boolean) {
+      this.isOpen = state;
+      if (state) {
+        this.pageContainerMarginLeft = '270';
+      } else {
+        this.pageContainerMarginLeft = '20';
+      }
+    }
+
+
+    addNewQuestion() {
+      this.assessment.items.push(this.newItem);
+
       this.selectedTraining.assessment = this.assessment;
-    } else {
-      this.selectedTraining.assessment = null;
+      this.trainingService.saveTraining(this.selectedTraining);
     }
-    this.trainingService.saveTraining(this.selectedTraining);
-  }
 
-  questionChanged(event, itemIndex) {
-    this.assessment.items[itemIndex].question = event;
-    this.selectedTraining.assessment = this.assessment;
-    this.trainingService.saveTraining(this.selectedTraining);
-  }
+    addNewChoice(itemIndex) {
+      const newChoice = {
+        text: 'New Choice',
+        correct: false
+      }
+      this.assessment.items[itemIndex].choices.push(newChoice);
+      this.selectedTraining.assessment = this.assessment;
+      this.trainingService.saveTraining(this.selectedTraining);
 
-  choiceContentChanged(event, itemIndex, choiceIndex, propName) {
-    this.assessment.items[itemIndex].choices[choiceIndex][propName] = event;
-    this.selectedTraining.assessment = this.assessment;
-    this.trainingService.saveTraining(this.selectedTraining);
-  }
-
-  saveTraining() {
-    this.trainingService.saveTraining(this.selectedTraining);
-
-  }
-
-  openPicker() {
-    this.fileService.openPicker();
-  }
-
-  confirmDelete() {
-    this.trainingService.deleteTraining(this.selectedTraining._id);
-    this.trainingService.selectItemForEditing(this.selectedTrainingIndex);
-  }
-
-  showIconSelectModal() {
-    this.tempIcon = this.selectedTraining.iconClass;
-    this.tempIconColor = this.selectedTraining.iconColor;
-
-    this.isIconSelectModalVisible = true;
-  }
-
-  switchMode(newMode: string) {
-    this.mode = newMode;
-    if (newMode === 'view') {
-      this.currentPageId = 'intro';
     }
-  }
 
-}
+    applyAssessmentChanged(event) {
+      console.log('apply assessment', event);
+      if (event) {
+        this.selectedTraining.assessment = this.assessment;
+      } else {
+        this.selectedTraining.assessment = null;
+      }
+      this.trainingService.saveTraining(this.selectedTraining);
+    }
+
+    questionChanged(event, itemIndex) {
+      this.assessment.items[itemIndex].question = event;
+      this.selectedTraining.assessment = this.assessment;
+      this.trainingService.saveTraining(this.selectedTraining);
+    }
+
+    choiceContentChanged(event, itemIndex, choiceIndex, propName) {
+      this.assessment.items[itemIndex].choices[choiceIndex][propName] = event;
+      this.selectedTraining.assessment = this.assessment;
+      this.trainingService.saveTraining(this.selectedTraining);
+    }
+
+    saveTraining() {
+      this.trainingService.saveTraining(this.selectedTraining);
+
+    }
+
+    openPicker() {
+      this.fileService.openPicker();
+    }
+
+    confirmDelete() {
+      this.trainingService.deleteTraining(this.selectedTraining._id);
+      this.trainingService.selectItemForEditing(this.selectedTrainingIndex);
+    }
+
+    showIconSelectModal() {
+      this.tempIcon = this.selectedTraining.iconClass;
+      this.tempIconColor = this.selectedTraining.iconColor;
+
+      this.isIconSelectModalVisible = true;
+    }
+
+    switchMode(newMode: string) {
+      this.mode = newMode;
+      if (newMode === 'view') {
+        this.currentPageId = 'intro';
+      }
+    }
+
+  }
