@@ -35,12 +35,18 @@ export class TrainingViewerComponent implements OnInit {
   selectedTraining$: Observable<TrainingModel>;
   selectedTrainingIndex$: Observable<number>;
   fileUploaded$: Observable<FileModel>;
-  currentPageId = 'intro';
+  currentPageId = 'config';
   isOpen = true;
   pageContainerMarginLeft = '270';
   selectedTraining: TrainingModel;
   fullscreen = false;
   helpPanelIsVisible = true;
+
+  okDisabled = true;
+  cancelDisabled = false;
+
+  tempIcon = '';
+  tempIconColor = '';
 
   helpTextHash = {
     intro: `<h5>Intro</h5>Click on the blue pencil icon in the page below to customize the content for the training
@@ -138,6 +144,7 @@ export class TrainingViewerComponent implements OnInit {
 
   @Input() mode = 'edit';
   pageDocUrlHash = {};
+  mainContentContainerHeight = 51;
 
   selectedTrainingIndex = -1;
   styleMap = new Map();
@@ -178,6 +185,9 @@ export class TrainingViewerComponent implements OnInit {
           this.assessment = this.newAssessment;
           this.applyAssessment = false;
         }
+
+        this.tempIconColor = this.selectedTraining.iconColor;
+        this.tempIcon = this.selectedTraining.iconClass;
       }
     });
 
@@ -204,20 +214,16 @@ export class TrainingViewerComponent implements OnInit {
     this.styleMap.get('page').set('font-size.px', 26);
   }
 
-  onColorChange(newColor) {
-    this.selectedTraining.iconColor = newColor;
-    this.contentChanged(newColor, 'iconColor');
-  }
-
   setCurrentPage(pageId) {
     console.log('setCurrentPage', pageId);
     this.currentPageId = pageId;
   }
 
   setIcon(event) {
-    this.selectedTraining.iconClass = event;
-    this.trainingService.saveTraining(this.selectedTraining);
-    this.isIconSelectModalVisible = false;
+    console.log('training-viewer:setIcon', event);
+    this.tempIcon = event.icon;
+    this.tempIconColor = event.color;
+    this.okDisabled = false;
   }
 
   contentChanged(newVal: string, propName: string) {
@@ -239,11 +245,19 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   handleIconSelectCancel() {
+    this.tempIconColor = '';
+    this.tempIcon = '';
     this.isIconSelectModalVisible = false;
+    this.okDisabled = true;
   }
 
   handleIconSelectConfirm() {
+    this.selectedTraining.iconClass = this.tempIcon;
+    this.selectedTraining.iconColor = this.tempIconColor;
+    this.trainingService.saveTraining(this.selectedTraining);
+
     this.isIconSelectModalVisible = false;
+    this.okDisabled = true; 
   }
 
   closeViewer() {
@@ -313,6 +327,20 @@ export class TrainingViewerComponent implements OnInit {
   confirmDelete() {
     this.trainingService.deleteTraining(this.selectedTraining._id);
     this.trainingService.selectItemForEditing(this.selectedTrainingIndex);
+  }
+
+  showIconSelectModal() {
+    this.tempIcon = this.selectedTraining.iconClass;
+    this.tempIconColor = this.selectedTraining.iconColor;
+
+    this.isIconSelectModalVisible = true;
+  }
+
+  switchMode(newMode: string) {
+    this.mode = newMode;
+    if (newMode === 'view') {
+      this.currentPageId = 'intro';
+    }
   }
 
 }

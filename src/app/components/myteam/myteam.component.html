@@ -68,24 +68,39 @@
     </div>
     <div class="my-team-rightside">
         <div *ngIf="supervisorSelected" style="height:inherit;">
-                    <div class="" style="width:100%;height:44px;">
-                        <span style="display:inline-block;margin-left:10px;font-size:24px;font-weight: 300;">My Team's
-                            Trainings</span>
-                        <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-                            style="float:left;cursor:pointer;font-size:20px;margin:8px;" nz-tooltip nzTooltipTitle="Create New Training"
-                            (click)="createNewTraining()"></i>
-                    </div>
-                        <mtd-trainings></mtd-trainings>
-            <!--
-            <div class="" style="width:100%;height:44px;margin-bottom:20px;">
+            <div class="" style="width:100%;height:44px;margin-bottom:10px;">
                 <span
                     style="display:inline-block;margin-left:10px;font-size:24px;font-weight: 300;">{{authenticatedUser.firstName}}
                     {{authenticatedUser.lastName}}</span>
                 &nbsp;
+                <!--
                 <i nz-icon nzType="crown" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6939c9'"
                     style="display:inline-block;font-size:24px;vertical-align:baseline;" nz-tooltip
                     nzTooltipTitle="Admin User"></i>
+                    -->
             </div>
+            <nz-tabset style="height:94%;">
+                <nz-tab nzTitle="My Team's Trainings" class="my-tabs">
+                    <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+                        style="float:left;cursor:pointer;font-size:20px;margin:8px;" nz-tooltip
+                        nzTooltipTitle="Create New Training" (click)="createNewTraining()"></i>
+                    <mtd-trainings></mtd-trainings>
+
+                </nz-tab>
+                <nz-tab nzTitle="Team Dashboard">
+
+                </nz-tab>
+            </nz-tabset>
+            <!--
+            <div class="" style="width:100%;height:44px;">
+                <span style="display:inline-block;margin-left:10px;font-size:24px;font-weight: 300;">My Team's
+                    Trainings</span>
+                <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+                    style="float:left;cursor:pointer;font-size:20px;margin:8px;" nz-tooltip
+                    nzTooltipTitle="Create New Training" (click)="createNewTraining()"></i>
+            </div>
+            -->
+            <!--
             -->
             <!--
             <div style="height:93%;">

@@ -1793,9 +1793,11 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   matchingIconsBS$ = new BehaviorSubject<string[]>([]);
   matchingIcons$: Observable<string[]> = this.matchingIconsBS$.asObservable();
   matchingIcons: string[] = [];
-  @Output() icon = new EventEmitter<string>();
+  @Output() icon = new EventEmitter<{icon:string, color:string}>();
   iconTheme = 'fal';
-  iconClass: string = '';
+  iconClass: string = 'fal fa-file-certificate';
+  iconColor: string = 'black';
+  selectedIcon: string = '';
   @ViewChild('iconSearch', { static: false }) iconSearch: ElementRef;
 
   constructor() { }
@@ -1816,8 +1818,14 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
     this.searchForIcons();
   }
 
+  chooseIcon(i) {
+    this.selectedIcon = this.matchingIcons[i];
+    console.log('chooseIcon', this.selectedIcon);
+  }
+
   selectIcon(i) {
-    this.icon.emit(this.matchingIcons[i]);
+    this.selectedIcon = this.matchingIcons[i];
+    this.icon.emit({ icon: this.matchingIcons[i], color: this.iconColor });
     this.iconSearchStr = '';
     this.searchForIcons();
   }
@@ -1837,5 +1845,10 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
     }
 
     this.matchingIconsBS$.next(this.matchingIcons);
+  }
+
+  onColorChange(newColor) {
+    this.iconColor = newColor;
+    this.icon.emit({ icon: this.selectedIcon, color: this.iconColor });
   }
 }

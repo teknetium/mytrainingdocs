@@ -1,16 +1,55 @@
-<div>
+<div style="width:fit-content;height:fit-content;">
     <nz-radio-group *ngIf="false" [(ngModel)]="iconTheme" (ngModelChange)="themeChanged($event)">
         <label nz-radio nzValue="fas">Solid</label>
         <label nz-radio nzValue="far">Regular</label>
         <label nz-radio nzValue="fal">Light</label>
     </nz-radio-group>
-    <input #iconSearch type="text" nz-input placeholder="Enter search text" [(ngModel)]="iconSearchStr"
-        (keyup)="keypressCallback($event)" autofocus/>
-    <span style="font-size:12px;display:block;color:#888888;">{{iconClass.substring(iconClass.indexOf('-')+1)}}</span>
+    <div style="text-align: center;margin-bottom: 30px;">
 
-    <div class="icon-container">
-        <div *ngFor="let icon of matchingIcons$ | async; index as i" (mouseover)="mouseOver(i)" (click)="selectIcon(i)">
-            <i [ngClass]="icon" class="icon-box"></i>
+        <i [ngClass]="selectedIcon" style="font-size:40px;"
+            [ngStyle]="{'color':    iconColor}">
+        </i>
+        <p *ngIf="selectedIcon === ''">No Icon Selected</p>
+
+    </div>
+    <div style="height: 500px;width:100%;">
+        <div style="display:inline-block;width:60%;margin-right: 20px;float:left;height:100%;">
+            <div style="text-align: center;font-size:24px;">
+                Select an Icon
+            </div>
+            <input #iconSearch type="text" nz-input placeholder="Enter search text" [(ngModel)]="iconSearchStr"
+                (keyup)="keypressCallback($event)" autofocus />
+            <span
+                style="font-size:12px;display:block;color:#888888;">{{iconClass.substring(iconClass.indexOf('-')+1)}}</span>
+
+            <div style="display:inline-block;height:85%;">
+                <div class="icon-container">
+                    <div *ngFor="let icon of matchingIcons$ | async; index as i" (mouseover)="mouseOver(i)"
+                        style="display:inline-block;" (click)="selectIcon(i)">
+                        <i [ngClass]="icon" class="icon-box"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:inline-block;width:30%;margin-left:20px;">
+            <div style="text-align: center;font-size:24px;">
+                Select a Color
+            </div>
+
+            <div [style.color]="iconColor" [cpPosition]="'right'" [cpPositionRelativeToArrow]="true"
+                [cpDialogDisplay]="'inline'" [cpToggle]="true" [(colorPicker)]="iconColor"
+                (colorPickerChange)="onColorChange($event)" style="display:inline-block;cursor: pointer;" nz-tooltip
+                nzTooltipPlacement="bottom" nzTooltipTitle="Select icon color">
+            </div>
         </div>
     </div>
+    <!--
+    <span [style.background]="arrayColors[selectedColor]" [cpToggle]="true" [cpDialogDisplay]="'inline'"
+        [cpCancelButton]="true" [(colorPicker)]="arrayColors[selectedColor]"></span>
+    
+    <div [style.background]="arrayColors['color1']" (click)="selectedColor='color1'"></div>
+    
+    <div [style.background]="arrayColors['color2']" (click)="selectedColor='color2'"></div>
+-->
 </div>

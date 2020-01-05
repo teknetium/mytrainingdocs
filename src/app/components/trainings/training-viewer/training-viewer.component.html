@@ -33,8 +33,8 @@
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
             </i>
             <nz-rate [ngModel]="rating" nzAllowHalf></nz-rate>
-            <i nz-icon nzType="edit" [nzTheme]="'twotone'" (click)="mode = 'edit'" [nzTwotoneColor]="'orange'" nz-tooltip
-                nzTooltipTitle="Edit Mode"
+            <i nz-icon nzType="edit" [nzTheme]="'twotone'" (click)="switchMode('edit')" [nzTwotoneColor]="'orange'"
+                nz-tooltip nzTooltipTitle="Edit Mode"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;margin-left:20px;">
             </i>
 
@@ -45,14 +45,14 @@
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;"
                 nz-tooltip nzTooltipTitle="Close Training">
             </i>
-            <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
-                nz-tooltip nzTooltipTitle="Delete Training" nz-popconfirm nzPopconfirmTitle="Delete this Training?"
+            <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'" nz-tooltip
+                nzTooltipTitle="Delete Training" nz-popconfirm nzPopconfirmTitle="Delete this Training?"
                 [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'bottom'" (nzOnConfirm)="confirmDelete(item)"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
             </i>
             <i nz-icon nzType="eye" [nzTheme]="'twotone'" nz-tooltip nzTooltipTitle="Preview"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;"
-                (click)="mode='view'">
+                (click)="switchMode('view')">
             </i>
 
         </div>
@@ -66,49 +66,39 @@
             </div>
             -->
         <div class="header-left">
-            <i *ngIf="mode === 'edit'" [ngClass]="selectedTraining.iconClass"
-                style="display: block;font-size:40px;cursor: pointer;" [ngStyle]="{'color': selectedTraining.iconColor}"
-                (click)="isIconSelectModalVisible = true">
+            <i *ngIf="mode === 'edit'" [ngClass]="selectedTraining.iconClass" nz-tooltip
+                nzTooltipTitle="click to change icon" style="display: inline-block;font-size:40px;cursor: pointer;"
+                [ngStyle]="{'color': selectedTraining.iconColor}" (click)="showIconSelectModal()">
             </i>
+            <!--
+            <i *ngIf="mode === 'edit'" nz-icon nzType="edit" [nzTheme]="'twotone'" (click)="mode = 'edit'" nz-tooltip
+                nzTooltipTitle="Edit Mode"
+                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;margin-left:20px;">
+            </i>
+            -->
+
             <i *ngIf="mode === 'view'" [ngClass]="selectedTraining.iconClass"
                 style="display: inlne-block;font-size:40px; " [ngStyle]="{'color': selectedTraining.iconColor}">
             </i>
+            <!--
             <div *ngIf="mode === 'edit'" [style.color]="iconColor" [cpPosition]="'right'"
                 [cpPositionRelativeToArrow]="true" (colorPickerChange)="onColorChange($event)"
-                [(colorPicker)]="selectedTraining.iconColor" style="cursor: pointer;"
+                [(colorPicker)]="selectedTraining.iconColor" style="display:inline-block;cursor: pointer;"
                 [ngStyle]="{'color': selectedTraining.iconColor}" nz-tooltip nzTooltipPlacement="bottom"
                 nzTooltipTitle="Select icon color">
                 <i class="fas fa-palette" style="font-size:14px;color:red;"></i>
             </div>
+            -->
         </div>
         <div class="header-right">
             <div *ngIf="mode === 'edit'">
-                <div style="display:inline-block;margin-right:30px;">
+                <div style="margin-right:30px;">
                     <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Training Title</label>
                     <input style="display:inline-block;color:black;margin-bottom:0;font-size:14px;" nz-input
                         [(ngModel)]="selectedTraining.title" nzSize="small" (blur)="saveTraining()" />
 
                     <span *ngIf="mode === 'view'"
                         style="font-size:18px;display:block;">&nbsp;{{selectedTraining.title}}</span>
-                </div>
-                <div style="display:inline-block;margin-right:30px;">
-
-                    <label style="margin-bottom: 0;display: block;font-size:12px;color:#bbbbbb;">Estimated Time To
-                        Complete</label>
-                    <nz-input-number nzSize="small" nzId="estTimeToComplete" class="foo" style="font-size:12px;"
-                        [(ngModel)]="selectedTraining.estimatedTimeToComplete" [nzMin]="10" [nzMax]="240" [nzStep]="5"
-                        (blur)="saveTraining()">
-                    </nz-input-number>
-                    <span *ngIf="mode === 'view'">{{ selectedTraining.estimatedTimeToComplete}}</span>
-                    <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes</span>
-                </div>
-
-                <div style="display:inline-block;">
-                    <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Job Title</label>
-                    <input style="display:inline-block;color:black;margin-bottom:0;font-size:14px;" nz-input
-                        [(ngModel)]="selectedTraining.jobTitle" nzSize="small" (blur)="saveTraining()" />
-
-                    <span *ngIf="mode === 'view'" style="display:block;">&nbsp;{{selectedTraining.jobTitle}}</span>
                 </div>
             </div>
             <div *ngIf="mode === 'view'">
@@ -126,12 +116,14 @@
             </div>
         </div>
         -->
-        <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" (nzOnCancel)="handleIconSelectCancel()"
-            nzOkDisabled="false" (nzOnOk)="handleIconSelectConfirm()">
+        <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800"
+            (nzOnCancel)="handleIconSelectCancel()" [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled"
+            (nzOnOk)="handleIconSelectConfirm()" style="width:800px;">
             <mtd-icon-picker (icon)="setIcon($event)"></mtd-icon-picker>
         </nz-modal>
     </div>
-    <div style="width:100%; height: 84%; overflow: scroll;">
+    <div style="width:100%;overflow: scroll;"
+        [ngClass]="{'main-content-container-fullscreen': fullscreen, 'main-content-container': !fullscreen}">
         <div class="main-content">
             <div *ngIf="!isOpen" class="toc-opener">
                 <i nz-icon nzType="menu-unfold" [nzTheme]="'outline'" (click)="toggleTOC(true)"
@@ -145,11 +137,16 @@
                         <i nz-icon nzType="menu-fold" [nzTheme]="'outline'" (click)="toggleTOC(false)"
                             style="float:right;cursor:pointer;font-size:24px;vertical-align: baseline;margin-left:20px;"></i>
                     </div>
+
+                    <div *ngIf="mode === 'edit'" class="toc-entry" (click)="setCurrentPage('config')"
+                        [ngClass]="{'active-toc':currentPageId === 'config'}">
+                        Training Configuration
+                    </div>
+
                     <div class="toc-entry" (click)="setCurrentPage('intro')"
                         [ngClass]="{'active-toc':currentPageId === 'intro'}">
                         {{selectedTraining.introductionLabel}}
                     </div>
-
                     <div class="toc-entry" (click)="setCurrentPage('mainContent')"
                         [ngClass]="{'active-toc':currentPageId === 'mainContent'}">
                         Upload Your Content Here
@@ -168,6 +165,35 @@
                 </div>
             </div>
             <div class="page-container" [ngStyle]="{'margin-left.px': pageContainerMarginLeft}">
+                <div *ngIf="currentPageId === 'config' && mode === 'edit'" class="page">
+                    <h3>Training Configuration</h3>
+                    <div class="config-page-row">
+                        <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
+                            <label style="margin-bottom: 0;display: inline-block;font-size:12px;color:#bbbbbb;">
+                                Estimated Time To Complete
+                            </label>
+                        </div>
+                        <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
+                            <nz-input-number nzSize="small" nzId="estTimeToComplete" class="foo" style="font-size:12px;"
+                                [(ngModel)]="selectedTraining.estimatedTimeToComplete" [nzMin]="10" [nzMax]="240"
+                                [nzStep]="5" (blur)="saveTraining()">
+                            </nz-input-number>
+                            <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes</span>
+                        </div>
+                    </div>
+
+                    <div class="config-page-row">
+                        <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
+                            <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Job Title</label>
+                        </div>
+                        <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
+
+                            <input style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;" nz-input
+                                [(ngModel)]="selectedTraining.jobTitle" nzSize="small" (blur)="saveTraining()" />
+
+                        </div>
+                    </div>
+                </div>
                 <div *ngIf="currentPageId === 'intro'" class="page">
                     <div style="margin-top:50px;">
                         <span>
@@ -320,10 +346,6 @@
                             <mtd-icon-picker (icon)="setIcon($event)"></mtd-icon-picker>
                         </nz-modal>
                     </div>
-                </div>
-                <div *ngIf="currentPageId === 'ratingsComments'" class="page">
-                    <h3>Ratings & Comments</h3>
-                    <nz-rate [(ngModel)]="rating" style="display:block;text-align:left;"></nz-rate>
                 </div>
                 <div *ngIf="currentPageId === 'assessment'" class="page">
                     <h3>Assessment</h3>

@@ -13,6 +13,11 @@
 	z-index: 1000;
 }
 
+.config-page-row {
+    display:block;
+    margin-top:10px;
+}
+
 .header-left {
 	display: inline-block;
 	width: 60px;
@@ -42,13 +47,21 @@
 	margin-bottom: 5px;
 }
 
+.main-content-container-fullscreen {
+    height:90%;
+}
+
+.main-content-container {
+    height:51%;
+}
+
 .training-header {
 	width: 100%;
 	display: block;
 	background-color: #fcfcfc;
 	border-bottom: 1px solid #dddddd;
 	height: fit-content;
-    padding:20px 10px 30px 10px;
+    padding:10px    ;
 	position: relative;
 }
 
