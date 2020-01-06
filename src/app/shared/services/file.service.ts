@@ -24,10 +24,12 @@ export class FileService {
   private files: FileModel[] = [];
   private files$ = new BehaviorSubject<FileModel[]>(null);
   private fileCnt$ = new BehaviorSubject<number>(0);
+
   private filesAlertBS$ = new BehaviorSubject<{ show: boolean, type: string, message: string, description: string }>(null);
 
   private failedFiles$ = new BehaviorSubject<FileModel[]>(null);
   private fileUploaded$ = new BehaviorSubject<FileModel>(null);
+  private newVersion$ = new BehaviorSubject<FileModel>(null);
   private filesUploadedCnt$ = new BehaviorSubject<number>(0);
 
   processResultCnt = 0;
@@ -358,6 +360,10 @@ export class FileService {
     return this.fileIdHash[id];
   }
 
+  getNewVersionStream(): Observable<FileModel> {
+    return this.newVersion$.asObservable();
+  }
+
   processResults(results: PickerResponse) {
 
     this.closePicker();
@@ -379,7 +385,9 @@ export class FileService {
         this.newVersion.url = uploadedFile.url;
         this.selectedFile.versions.unshift(this.newVersion);
         this.saveFile(this.selectedFile);
+        this.fileIdHash[this.selectedFile._id] = this.selectedFile  ;
         this.uploadType = 'newFile';
+        this.newVersion$.next(this.selectedFile);
         
         return;
       }

@@ -342,8 +342,8 @@ export class TrainingService {
   saveTraining(training: TrainingModel) {
     this.editTraining$(training).subscribe(data => {
 
-      this.loadData();
-      this.selectItemForEditing(this.currentTrainingIndex);
+ //      this.loadData();
+ //      this.selectItemForEditing(this.currentTrainingIndex);
     });
   }
 

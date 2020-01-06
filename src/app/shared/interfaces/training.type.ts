@@ -42,7 +42,7 @@ export interface Page {
   title: string,
   file: string,
   portlets: Portlet[],
-  textBlocks: TextBlock[]
+  intro: string
 }
 
 export interface Portlet {
