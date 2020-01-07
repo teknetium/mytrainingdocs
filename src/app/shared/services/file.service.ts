@@ -3,14 +3,13 @@ import * as cms from 'filestack-js';
 import { PickerDisplayMode, PickerOptions, PickerResponse } from 'filestack-js/build/main/lib/picker';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BehaviorSubject, Observable, throwError as ObservableThrowError } from 'rxjs';
-import { FileModel } from '../interfaces/file.type';
+import { FileModel , Version} from '../interfaces/file.type';
 import { UserService } from './user.service';
 import { UserModel } from '../interfaces/user.model';
 import { ENV } from './env.config';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
-
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +28,7 @@ export class FileService {
 
   private failedFiles$ = new BehaviorSubject<FileModel[]>(null);
   private fileUploaded$ = new BehaviorSubject<FileModel>(null);
-  private newVersion$ = new BehaviorSubject<FileModel>(null);
+  private newVersion$ = new BehaviorSubject<Version>(null);
   private filesUploadedCnt$ = new BehaviorSubject<number>(0);
 
   processResultCnt = 0;
@@ -208,7 +207,7 @@ export class FileService {
   selectedFile: FileModel;
   action = '';
   uploadType = 'newFile';
-  newVersion = {
+  newVersion = <Version>{
     version: '',
     changeLog: '',
     owner: '',
@@ -217,6 +216,7 @@ export class FileService {
     dateUploaded: 0
   };
   actionBS$ = new BehaviorSubject<string>('');
+
 
   fileIdStreamHash = {};
 
@@ -228,6 +228,7 @@ export class FileService {
   privateDocumentHash = {};
   privateSelectedFileHash = {};
   privateSelectedFileIndexHash = {};
+  fsHandleSafeUrlBS$Hash = {};
 
   constructor(private http: HttpClient, private userService: UserService, private auth: AuthService, private sanitizer: DomSanitizer) {
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
@@ -248,6 +249,9 @@ export class FileService {
           this.files = files;
           for (const file of files) {
             this.fileIdHash[file._id] = file;
+            for (const version of file.versions) {
+              this.fsHandleSafeUrlBS$Hash[version.fsHandle] = new BehaviorSubject<SafeResourceUrl>(null);
+            }
           }
 
           for (const index in files) {
@@ -265,6 +269,9 @@ export class FileService {
   }
   private get _authHeader(): string {
     return `Bearer ${this.auth.accessToken}`;
+  }
+  getSafeUrl$ForFsHandle(fsHandle) {
+    return this.fsHandleSafeUrlBS$Hash[fsHandle].asObservable();
   }
 
   loadData() {
@@ -297,7 +304,11 @@ export class FileService {
     this.filesForSelect$.next(fileOptions);
     */
   }
-
+/*
+  getSafeUrlStream(fsHandle) {
+    return this.safeUrlBS$.asObservable();
+  }
+*/
   getFileOptionsStream(): Observable<{ label: string, value: string }[]> {
     return this.filesForSelect$.asObservable();
   }
@@ -360,7 +371,7 @@ export class FileService {
     return this.fileIdHash[id];
   }
 
-  getNewVersionStream(): Observable<FileModel> {
+  getNewVersionStream(): Observable<Version> {
     return this.newVersion$.asObservable();
   }
 
@@ -378,6 +389,9 @@ export class FileService {
     if (results.filesUploaded.length > 0) {
       console.log('processResults : ', this.uploadType);
       if (this.uploadType === 'newVersion') {
+
+        console.log('fileService.processResults new version ', this.newVersion);
+
         this.setAction('newVersion');
         const uploadedFile = results.filesUploaded[0];
 
@@ -385,10 +399,11 @@ export class FileService {
         this.newVersion.url = uploadedFile.url;
         this.selectedFile.versions.unshift(this.newVersion);
         this.saveFile(this.selectedFile);
-        this.fileIdHash[this.selectedFile._id] = this.selectedFile  ;
+        this.fileIdHash[this.selectedFile._id] = this.selectedFile;
         this.uploadType = 'newFile';
-        this.newVersion$.next(this.selectedFile);
-        
+        this.newVersion$.next(this.newVersion);
+        console.log('fileService.processResults new version ', this.selectedFile);
+
         return;
       }
       console.log('processResults', results);
@@ -487,8 +502,12 @@ export class FileService {
       });
   }
 
-  getSafeUrl(fileId: string): SafeResourceUrl {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + this.fileIdHash[fileId].versions[0].fsHandle);
+  getFsHandleStream(fsHandle): Observable<SafeResourceUrl> {
+    return this.fsHandleSafeUrlBS$Hash[fsHandle].asObservable();
+  }
+
+  selectFsHandle(fsHandle: string) {
+    this.fsHandleSafeUrlBS$Hash[fsHandle].next(this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + fsHandle));
   }
 
   viewFile(file: FileModel, versionIndex: number, streamId: string) {
@@ -535,6 +554,10 @@ export class FileService {
   }
 */
   selectItem(index, streamId) {
+    if (streamId === null) {
+      this.selectedFile = this.files[index];
+      return;
+    }
     if (index < 0 || index >= this.files.length) {
       //      this.showSelectedItemBS$.next(false);
       if (this.privateSelectedFileHash[streamId]) {
@@ -636,7 +659,7 @@ export class FileService {
     this.client.picker(this.options).close();
   }
 
-  pickNewVersion(version: { version: string, changeLog: string, owner: string, fsHandle: string, url: string, dateUploaded: number }) {
+  pickNewVersion(version: Version) {
     this.uploadType = 'newVersion';
     this.newVersion = version;
     this.client.picker(this.options).open();

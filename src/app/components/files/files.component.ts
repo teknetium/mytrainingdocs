@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild, HostListener, ElementRef, AfterViewInit } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { FileModel } from '../../shared/interfaces/file.type';
+import { FileModel, Version } from '../../shared/interfaces/file.type';
 import { FileService } from '../../shared/services/file.service';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
@@ -44,7 +44,7 @@ export class FilesComponent implements OnInit {
   light = '300';
   currentVersionIndex = 0;
   isNewVersionModalVisible = false;
-  newVersion = {
+  newVersion = <Version>{
     version: '',
     changeLog: '',
     owner: '',
@@ -207,7 +207,7 @@ export class FilesComponent implements OnInit {
   }
 
   uploadNewVersion() {
-    this.newVersion = {
+    this.newVersion = <Version>{
       version: '',
       changeLog: '',
       owner: '',

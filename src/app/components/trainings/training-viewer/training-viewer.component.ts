@@ -6,7 +6,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { TrainingModel, Page, Portlet, Assessment } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { FileModel } from 'src/app/shared/interfaces/file.type';
+import { FileModel, Version } from 'src/app/shared/interfaces/file.type';
 import { UserModel } from 'src/app/shared/interfaces/user.model';
 
 @Component({
@@ -38,7 +38,7 @@ export class TrainingViewerComponent implements OnInit {
   selectedTraining$: Observable<TrainingModel>;
   selectedTrainingIndex$: Observable<number>;
   fileUploaded$: Observable<FileModel>;
-  newVersion$: Observable<FileModel>;
+  safeUrl$: Observable<SafeResourceUrl>;
   currentPageId = 'config';
   isOpen = true;
   pageContainerMarginLeft = '270';
@@ -158,7 +158,7 @@ export class TrainingViewerComponent implements OnInit {
   error1 = false;
   error2 = false;
   changeLevel = '';
-  newVersion = {
+  newVersion = <Version>{
     version: '',
     changeLog: '',
     owner: '',
@@ -168,17 +168,20 @@ export class TrainingViewerComponent implements OnInit {
   };
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
+  selectedFile: FileModel;
+  fsHandleSafeUrl$Hash = {};
+  newVersion$: Observable<Version>;
 
 
   constructor(private trainingService: TrainingService, private fileService: FileService, private sanitizer: DomSanitizer, private userService: UserService) {
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
     this.selectedTrainingIndex$ = this.trainingService.getSelectedTrainingIndexStream();
+    this.newVersion$ = this.fileService.getNewVersionStream();
   }
 
   ngOnInit() {
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
-    this.newVersion$ = this.fileService.getNewVersionStream();
     this.selectedTrainingIndex$.subscribe(index => {
       this.selectedTrainingIndex = index;
     })
@@ -186,6 +189,9 @@ export class TrainingViewerComponent implements OnInit {
 
       this.selectedTraining = training;
       if (training) {
+        this.pageFileHash['intro'] = null;
+        this.pageFileHash['config'] = null;
+        this.pageFileHash['assessment'] = null;
         for (const page of training.pages) {
           //          this.fileService.setupPrivateDocumentStream(page._id);
           //          this.fileService.setupPrivateSelectedFileStream(portlet._id);
@@ -194,11 +200,12 @@ export class TrainingViewerComponent implements OnInit {
           if (!page.file) {
             console.log('ERROR: TrainingViewerComponent:ngOnInit - no document set on training', training.title);
           } else {
-            this.pageFileHash[page._id] = page.file;
-            this.pageDocUrlHash[page._id] = this.fileService.getSafeUrl(page.file);
-            console.log('OnInnit', this.pageDocUrlHash[page._id]);
-            this.pageIdBSHash[page._id] = new BehaviorSubject<SafeResourceUrl>(null);
-            this.docStreamPageHash[page._id] = this.pageIdBSHash[page._id].asObservable();
+            let file: FileModel = this.fileService.getFile(page.file);
+            this.pageFileHash[page._id] = file;
+
+            for (const version of file.versions) {
+              this.fsHandleSafeUrl$Hash[version.fsHandle] = this.fileService.getFsHandleStream(version.fsHandle);
+            }
 
 
             //            this.fileService.selectItemById(page.file, page._id);
@@ -222,24 +229,19 @@ export class TrainingViewerComponent implements OnInit {
       }
     });
 
-    this.newVersion$.subscribe(newVersion => {
-      if (!newVersion) {
-        return;
-      }
-      this.pageDocUrlHash[this.currentPageId] = this.fileService.getSafeUrl(newVersion._id);
-      this.pageIdBSHash[this.currentPageId].next(this.pageDocUrlHash[this.currentPageId]);
-    })
-
     this.fileUploaded$.subscribe(file => {
       if (!file) {
         return;
       }
-      if (this.selectedTraining.files.includes(file._id)) {
-        console.log('fileUploadStream - file alread added to training', this.selectedTraining);
+
+      this.trainingService.addNewPage(this.selectedTraining._id, file._id, file.name);
+    })
+
+    this.newVersion$.subscribe(newVersion => {
+      if (!newVersion) {
         return;
       }
-      this.selectedTraining.files.push(file._id);
-      this.trainingService.addNewPage(this.selectedTraining._id, file._id, file.name);
+      this.pageFileHash[this.currentPageId].versions.unshift(newVersion);
     })
 
     this.authenticatedUser$.subscribe(user => {
@@ -250,9 +252,8 @@ export class TrainingViewerComponent implements OnInit {
   setCurrentPage(pageId) {
     console.log('setCurrentPage', pageId);
     this.currentPageId = pageId;
-    if (this.pageIdBSHash[pageId]) {
-      console.log('setCurrentPage', this.pageDocUrlHash[pageId]);
-      this.pageIdBSHash[pageId].next(this.pageDocUrlHash[pageId]);
+    if (this.pageFileHash[pageId]) {
+      this.fileService.selectFsHandle(this.pageFileHash[pageId].versions[0].fsHandle);
     }
   }
 
@@ -354,7 +355,7 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   uploadNewVersion() {
-    this.newVersion = {
+    this.newVersion = <Version>{
       version: '',
       changeLog: '',
       owner: '',
