@@ -303,11 +303,11 @@ export class TrainingService {
       intro: 'Introduction to the document',
       file: fileId,
       portlets: [],
-      textBlocks: []
     };
     
     this.trainingIdHash[trainingId].pages.push(newPage);
     this.saveTraining(this.trainingIdHash[trainingId]);
+    this.selectedTrainingBS$.next(this.trainingIdHash[trainingId]);
   }
 
   createTraining(training: TrainingModel) {

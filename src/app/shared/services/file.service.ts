@@ -270,6 +270,7 @@ export class FileService {
   private get _authHeader(): string {
     return `Bearer ${this.auth.accessToken}`;
   }
+  
   getSafeUrl$ForFsHandle(fsHandle) {
     return this.fsHandleSafeUrlBS$Hash[fsHandle].asObservable();
   }
@@ -464,10 +465,6 @@ export class FileService {
           let mediaItem: SafeResourceUrl;
           mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + this.newFile.versions[0].fsHandle);
 
-          console.log('processResults', this.newFile, mediaItem);
-          this.fileIdStreamHash[this.newFile._id] = new BehaviorSubject<SafeResourceUrl>(
-            this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + this.newFile.versions[0].fsHandle));
-
           console.log('fileService:postFile$', this.newFile);
           
           this.files.push(this.newFile);
@@ -475,6 +472,8 @@ export class FileService {
           this.fileIdIndexHash[this.newFile._id] = this.files.length - 1;
           this.fileUploaded$.next((this.newFile));
           this.loadData();
+          this.fsHandleSafeUrlBS$Hash[this.newFile.versions[0].fsHandle] = new BehaviorSubject<SafeResourceUrl>(mediaItem);
+
         });
       }
     }
@@ -503,6 +502,9 @@ export class FileService {
   }
 
   getFsHandleStream(fsHandle): Observable<SafeResourceUrl> {
+    if (!this.fsHandleSafeUrlBS$Hash[fsHandle]) {
+      this.fsHandleSafeUrlBS$Hash[fsHandle] = new BehaviorSubject<SafeResourceUrl>(null);
+    }
     return this.fsHandleSafeUrlBS$Hash[fsHandle].asObservable();
   }
 
