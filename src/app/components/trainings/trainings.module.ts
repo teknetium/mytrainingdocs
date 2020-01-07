@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TrainingsComponent } from './trainings.component';
-import { TrainingBasicComponent } from './training-basic/training-basic.component';
 
 import { NzTableModule, NzCollapseModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule } from 'ng-zorro-antd';
 import { NzButtonModule } from 'ng-zorro-antd';
@@ -30,7 +29,6 @@ import { TrainingDetailsComponent } from './training-details/training-details.co
 @NgModule({
   declarations: [
     TrainingsComponent,
-    TrainingBasicComponent,
     TrainingsComponent,
     TrainingViewerComponent,
     TrainingDetailsComponent
@@ -74,7 +72,6 @@ import { TrainingDetailsComponent } from './training-details/training-details.co
   ],
   exports: [
     TrainingsComponent,
-    TrainingBasicComponent,
     TrainingsComponent,
     TrainingViewerComponent
   ]
