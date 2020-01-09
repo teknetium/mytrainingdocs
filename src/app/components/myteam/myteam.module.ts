@@ -1,15 +1,31 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NzTagModule, NzToolTipModule } from 'ng-zorro-antd';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NzTagModule, NzToolTipModule, NzTabsModule, NzIconModule, NzModalModule, NzInputModule, NzRadioModule } from 'ng-zorro-antd';
+import { MyteamComponent } from './myteam.component';
+import { TrainingsModule } from '../trainings/trainings.module';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    MyteamComponent
+  ],
   imports: [
     CommonModule,
     NzTagModule,
-    NzToolTipModule
+    NzToolTipModule,
+    NzTabsModule,
+    NzIconModule,
+    NzModalModule,
+    TrainingsModule,
+    NzInputModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NzRadioModule
+  ],
+  exports: [
+    MyteamComponent
   ]
 })
 export class MyteamModule { }

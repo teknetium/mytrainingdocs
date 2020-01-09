@@ -166,9 +166,6 @@
     border-bottom-right-radius: 10px;
 }
 
-.true {
-    opacity: 1.0;
-}
-.false {
-    opacity:.3;
+.small ::ng-deep .ant-rate-star {
+    font-size: 14px;
 }

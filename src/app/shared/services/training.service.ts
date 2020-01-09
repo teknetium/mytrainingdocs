@@ -342,7 +342,7 @@ export class TrainingService {
   saveTraining(training: TrainingModel) {
     this.editTraining$(training).subscribe(data => {
 
- //      this.loadData();
+    this.loadData();
  //      this.selectItemForEditing(this.currentTrainingIndex);
     });
   }

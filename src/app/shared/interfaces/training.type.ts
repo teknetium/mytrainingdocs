@@ -1,3 +1,5 @@
+import { CalendarModule } from "src/app/components/calendar/calendar.module";
+
 export interface TrainingModel {
   _id: string,
   type: string,
@@ -21,7 +23,8 @@ export interface TrainingModel {
   files: string[],
   pages: Page[],
   assessment: Assessment,
-  useAssessment: boolean
+  useAssessment: boolean,
+  comments: Comment[]
 }
 
 export interface AssessmentItem {
@@ -35,6 +38,14 @@ export interface AssessmentItem {
 export interface Assessment {
   _id: string,
   items: AssessmentItem[]
+}
+
+export interface Comment {
+  _id: string,
+  author: string,
+  content: string,
+  avatar: string,
+  children: Comment[]
 }
 
 export interface Page {

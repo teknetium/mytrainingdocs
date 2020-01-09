@@ -12,8 +12,6 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { FileManagerModule } from './components/file-manager/file-manager.module';
 
 import { AppComponent } from './app.component';
-import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
-import { FullLayoutComponent } from './layouts/full-layout/full-layout.component';
 
 import { NgChartjsModule } from 'ng-chartjs';
 import { ThemeConstantService } from './shared/services/theme-constant.service';
@@ -31,9 +29,9 @@ import { MyIconPickerModule } from './components/my-icon-picker/my-icon-picker.m
 import { UsersModule } from './components/users/users.module';
 import { JobsModule } from './components/jobs/jobs.module';
 import { SignupModule } from './components/signup/signup.module';
-import { HomeComponent } from './components/home/home.component';
-import { CalendarComponent } from './components/calendar/calendar.component';
-import { MyteamComponent } from './components/myteam/myteam.component';
+import { HomeModule } from './components/home/home.module';
+import { ConfigModule } from './components/config/config.module';
+import { CalendarModule } from './components/calendar/calendar.module';
 
 
 registerLocaleData(en);
@@ -41,11 +39,6 @@ registerLocaleData(en);
 @NgModule({
     declarations: [
         AppComponent,
-        CommonLayoutComponent,
-        FullLayoutComponent,
-        HomeComponent,
-        CalendarComponent,
-        MyteamComponent,
     ],
     imports: [
         MailModule,
@@ -71,7 +64,11 @@ registerLocaleData(en);
         UsersModule,
         JobsModule,
         SignupModule,
-        TrainingsModule    ],
+        TrainingsModule,
+        HomeModule,
+        ConfigModule,
+        CalendarModule
+    ],
     providers: [
         { 
             provide: NZ_I18N,

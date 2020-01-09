@@ -24,6 +24,13 @@ const pageSchema = new Schema({
   portlets: [portletSchema],
 })
 
+const commentSchema = new Schema({
+  _id: { type: String, required: true },
+  author: { type: String, required: true },
+  content: { type: String, required: true },
+  avatar: { type: String }
+})
+
 const assessmentSchema = new Schema({
   _id: { type: String, required: true },
   items: [{ question: { type: String }, choices: [{ text: String, correct: Boolean }] }]
@@ -53,7 +60,8 @@ const trainingSchema = new Schema({
   files: [String],
   pages: [pageSchema],
   useAssessment: { type: Boolean },
-  assessment: assessmentSchema
+  assessment: assessmentSchema,
+  comments: [commentSchema]
 });
 
 module.exports = mongoose.model("Training", trainingSchema);

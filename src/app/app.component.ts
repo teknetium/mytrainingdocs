@@ -156,7 +156,6 @@ export class AppComponent implements OnInit {
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
 
     this.currentYogaImageNumber = 0;
-
   };
 
   newTheme(val) {
@@ -172,7 +171,6 @@ export class AppComponent implements OnInit {
 //    return JSON.stringify(file);
     return '';
   }
-
 
   pauseYogaSequence() {
     this.pauseYoga = true;

@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TrainingsComponent } from './trainings.component';
+import { TrainingViewerComponent } from './training-viewer/training-viewer.component';
 
-import { NzTableModule, NzCollapseModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule } from 'ng-zorro-antd';
+import { NzTableModule, NzCollapseModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule, NzCommentModule, NzAvatarModule, NzListModule } from 'ng-zorro-antd';
 import { NzButtonModule } from 'ng-zorro-antd';
 import { NzIconModule } from 'ng-zorro-antd';
 import { NzTagModule } from 'ng-zorro-antd';
@@ -23,15 +24,11 @@ import { FilesModule } from '../files/files.module';
 import { FileManagerModule } from '../file-manager/file-manager.module';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
-import { TrainingViewerComponent } from './training-viewer/training-viewer.component';
-import { TrainingDetailsComponent } from './training-details/training-details.component';
 
 @NgModule({
   declarations: [
     TrainingsComponent,
-    TrainingsComponent,
     TrainingViewerComponent,
-    TrainingDetailsComponent
   ],
   imports: [
     RouterModule,
@@ -68,10 +65,12 @@ import { TrainingDetailsComponent } from './training-details/training-details.co
     NzRateModule,
     NzCheckboxModule,
     NzSwitchModule,
-    NzPopoverModule
+    NzPopoverModule,
+    NzCommentModule,
+    NzAvatarModule,
+    NzListModule
   ],
   exports: [
-    TrainingsComponent,
     TrainingsComponent,
     TrainingViewerComponent
   ]

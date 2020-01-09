@@ -8,6 +8,10 @@
             <i *ngIf="fullscreen" nz-icon nzType="fullscreen-exit" [nzTheme]="'outline'" (click)="fullscreen = false"
                 style="position:absolute;top:10px;right:10px;cursor:pointer;font-size:20px;vertical-align: baseline;"
                 nz-tooltip nzTooltipTitle="Shrink"></i>
+            <i nz-icon nzType="close-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" (click)="closeViewer()"
+                style="position:absolute;top:10px;right:40px;cursor:pointer;font-size:20px;vertical-align: baseline;"
+                nz-tooltip nzTooltipTitle="Close Training">
+            </i>
         </div>
         <div *ngIf="mode === 'view'"
             style="position:absolute;bottom:5px;right:5px;height:fit-content;width: fit-content;">
@@ -17,15 +21,15 @@
             <i nz-icon nzType="dislike" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" (click)="dislike()"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
             </i>
-            <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'" (click)="addComment()"
-                nz-tooltip nzTooltipTitle="Add Comment"
+            <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
+                (click)="setCurrentPage('comments')" nz-tooltip nzTooltipTitle="show Comments"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
             </i>
             <i nz-icon nzType="check-square" [nzTheme]="'twotone'" (click)="markCompleted()" nz-tooltip
                 nzTooltipTitle="Mark As Completed"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
             </i>
-            <nz-rate [ngModel]="rating" nzAllowHalf></nz-rate>
+            <nz-rate [ngModel]="rating" nzAllowHalf class="small"></nz-rate>
             <i nz-icon nzType="edit" [nzTheme]="'twotone'" (click)="switchMode('edit')" [nzTwotoneColor]="'orange'"
                 nz-tooltip nzTooltipTitle="Edit Mode"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;margin-left:20px;">
@@ -34,18 +38,22 @@
         </div>
         <div *ngIf="mode === 'edit'"
             style="position:absolute;bottom:5px;right:5px;height:fit-content;width: fit-content;">
-            <i nz-icon nzType="close-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'" (click)="closeViewer()"
-                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;"
-                nz-tooltip nzTooltipTitle="Close Training">
+            <i nz-icon nzType="setting" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
+                (click)="setCurrentPage('config')" nz-tooltip nzTooltipTitle="Training Configuration"
+                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
             </i>
-            <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-tooltip
-                nzTooltipTitle="Delete Training" nz-popconfirm nzPopconfirmTitle="Delete this Training?"
-                [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'bottom'" (nzOnConfirm)="confirmDelete(item)"
+            <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
+                (click)="setCurrentPage('comments')" nz-tooltip nzTooltipTitle="View/Add Comments"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
             </i>
             <i nz-icon nzType="eye" [nzTheme]="'twotone'" nz-tooltip nzTooltipTitle="Preview"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;"
                 (click)="switchMode('view')">
+            </i>
+            <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-tooltip
+                nzTooltipTitle="Delete Training" nz-popconfirm nzPopconfirmTitle="Delete this Training?"
+                [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'bottom'" (nzOnConfirm)="confirmDelete(item)"
+                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
             </i>
 
         </div>
@@ -101,11 +109,6 @@
                             style="float:right;cursor:pointer;font-size:24px;vertical-align: baseline;margin-left:10px;"></i>
                     </div>
 
-                    <div *ngIf="mode === 'edit'" class="toc-entry" (click)="setCurrentPage('config')"
-                        [ngClass]="{'active-toc':currentPageId === 'config'}">
-                        Training Configuration
-                    </div>
-
                     <div class="toc-entry" (click)="setCurrentPage('intro')"
                         [ngClass]="{'active-toc':currentPageId === 'intro'}">
                         {{selectedTraining.introductionLabel}}
@@ -120,9 +123,8 @@
                             [nzTwotoneColor]="'red'" nz-tooltip nzTooltipTitle="Delete Page" nz-popconfirm
                             nzPopconfirmTitle="Delete this Page?" [nzPopconfirmTrigger]="'click'"
                             [nzPopconfirmPlacement]="'right'" (nzOnConfirm)="confirmDeletePage(pageIndex)"
-                            style="float:right;;cursor:pointer;font-size:18px;vertical-align: baseline;">
+                            style="float:right;;cursor:pointer;font-size:16px;vertical-align: baseline;">
                         </i>
-
                     </div>
                     <div class="toc-entry" (click)="setCurrentPage('assessment')"
                         [ngClass]="{'active-toc':currentPageId === 'assessment'}">
@@ -132,7 +134,10 @@
             </div>
             <div class="page-container" [ngStyle]="{'margin-left.px': pageContainerMarginLeft}">
                 <div *ngIf="currentPageId === 'config' && mode === 'edit'" class="page">
-                    <h3 style="text-align: center;margin-bottom:30px;">Training Configuration</h3>
+                    <i nz-icon nzType="setting" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
+                        style="display:inline-block;cursor:pointer;font-size:24px;vertical-align: baseline;margin-right:20px;">
+                    </i>
+                    <h3 style="display:inline-block;text-align: left;margin-bottom:30px;">Training Configuration</h3>
                     <div class="config-page-row">
                         <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
                             <label style="margin-bottom: 0;display: inline-block;font-size:12px;color:#bbbbbb;">
@@ -159,6 +164,40 @@
                                 (blur)="saveTraining()" />
 
                         </div>
+                    </div>
+                </div>
+                <div *ngIf="currentPageId === 'comments' && mode === 'edit'" class="page">
+                    <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
+                        style="display:inline-block;cursor:pointer;font-size:24px;vertical-align: baseline;margin-right:20px;">
+                    </i>
+                    <h3 style="display:inline-block;text-align: left;margin-bottom:30px;">Comments</h3>
+                    <div style="padding:20px;background-color:white;">
+                        <nz-list *ngIf="data.length" [nzDataSource]="data" [nzRenderItem]="item"
+                            [nzItemLayout]="'horizontal'">
+                            <ng-template #item let-item>
+                                <nz-comment [nzAuthor]="item.author" [nzDatetime]="item.displayTime">
+                                    <nz-avatar nz-comment-avatar nzIcon="user" [nzSrc]="item.avatar"></nz-avatar>
+                                    <nz-comment-content>
+                                        <p>{{ item.content }}</p>
+                                    </nz-comment-content>
+                                </nz-comment>
+                            </ng-template>
+                        </nz-list>
+                        <nz-comment>
+                            <nz-avatar nz-comment-avatar nzIcon="user" [nzSrc]="user.avatar"></nz-avatar>
+                            <nz-comment-content>
+                                <nz-form-item>
+                                    <textarea [(ngModel)]="inputValue" nz-input rows="4"></textarea>
+                                </nz-form-item>
+                                <nz-form-item>
+                                    <button nz-button nzType="primary" [nzLoading]="submitting" [disabled]="!inputValue"
+                                        (click)="handleSubmit()">
+                                        Add Comment
+                                    </button>
+                                </nz-form-item>
+                            </nz-comment-content>
+                        </nz-comment>
+
                     </div>
                 </div>
                 <div *ngIf="currentPageId === 'intro'" class="page">
@@ -224,9 +263,8 @@
                         <div *ngIf="currentPageId === page._id" class="page">
                             <div>
                                 <h3 *ngIf="mode === 'edit'" style="text-align: center;margin-bottom:30px;">
-                                    <p nz-paragraph
-                                        (nzContentChange)="pageContentChanged($event, pageIndex, 'title')" nzEditable
-                                        [(nzContent)]="page.title">
+                                    <p nz-paragraph (nzContentChange)="pageContentChanged($event, pageIndex, 'title')"
+                                        nzEditable [(nzContent)]="page.title">
                                     </p>
                                 </h3>
                                 <span *ngIf="mode === 'view'">
@@ -245,20 +283,22 @@
                                 </span>
                             </div>
                             <div *ngIf="mode === 'edit'">
-                                <button *ngIf="mode === 'edit'" nz-button nzType="primary" [nzSize]="'small'"
+                                <button *ngIf="mode === 'edit'" nz-button nzType="default" [nzSize]="'small'"
                                     (click)="uploadNewVersion()">
                                     <i nz-icon nzType="upload" [nzTheme]="'outline'"></i>
                                     <span style="font-size:12px;">Upload New Version</span>
                                 </button>
-                                <div style="display:block;width:100%;margin-top:2px;margin-bottom:5px;font-size:14px;">
+                                <div
+                                    style="text-align:center;display:block;width:100%;margin-top:2px;margin-bottom:5px;font-size:12px;">
                                     <nz-table nzSize="small" nzBordered="false" nzShowPagination="false"
                                         [nzData]="fileService.getFile(page.file).versions"
-                                        style="width:100%;background-color: #fafafa;font-size:12px;">
+                                        style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
                                         <thead>
                                             <tr style="font-size:12px;">
                                                 <th>Version</th>
                                                 <th>Comments</th>
                                                 <th>Date Uploaded</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -266,14 +306,17 @@
                                                 [ngClass]="{'current-version': currentVersionIndex === i}"
                                                 (click)="viewVersion(i)"
                                                 style="cursor: pointer;font-size:12px;background-color: white;line-height:10px;">
-                                                <td style="font-size:12px;">
+                                                <td style="font-size:12px;width:10%;">
                                                     {{ version.version }}
                                                 </td>
-                                                <td style="font-size:12px;">
+                                                <td style="font-size:12px;width:50%;">
                                                     {{ version.changeLog }}
                                                 </td>
-                                                <td style="font-size:12px;">
+                                                <td style="font-size:12px;width:20%;">
                                                     {{ version.dateUploaded | date:'medium'}}
+                                                </td>
+                                                <td style="font-size:14px;width:15%;text-align: center;">
+                                                    <i nz-icon nzType="download" [nzTheme]="'outline'" nz-tooltip nzTooltipTitle="Download Document" ></i>
                                                 </td>
                                             </tr>
                                         </tbody>

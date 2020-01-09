@@ -153,6 +153,7 @@ export class TrainingViewerComponent implements OnInit {
   mainContentContainerHeight = 51;
   pageIdBSHash = {};
   isNewVersionModalVisible = false;
+  commentsVisible = false;
 
   selectedTrainingIndex = -1;
   error1 = false;
@@ -171,6 +172,16 @@ export class TrainingViewerComponent implements OnInit {
   selectedFile: FileModel;
   fsHandleSafeUrl$Hash = {};
   newVersion$: Observable<Version>;
+
+  data: any[] = [];
+  submitting = false;
+  user = {
+    author: 'Han Solo',
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+  };
+  inputValue = '';
+
+
 
 
   constructor(private trainingService: TrainingService, private fileService: FileService, private sanitizer: DomSanitizer, private userService: UserService) {
@@ -224,7 +235,7 @@ export class TrainingViewerComponent implements OnInit {
         this.tempIconColor = this.selectedTraining.iconColor;
         this.tempIcon = this.selectedTraining.iconClass;
 
-        this.currentPageId = 'config';
+//        this.currentPageId = 'config';
         this.mode = 'edit';
       }
     });
@@ -249,6 +260,31 @@ export class TrainingViewerComponent implements OnInit {
     })
   }
 
+  handleSubmit(): void {
+    this.submitting = true;
+    const content = this.inputValue;
+    this.inputValue = '';
+    setTimeout(() => {
+      this.submitting = false;
+      this.data = [
+        ...this.data,
+        {
+          ...this.user,
+          content,
+          datetime: new Date(),
+          displayTime: 'foo'
+          //          displayTime: distanceInWords(new Date(), new Date())
+        }
+      ].map(e => {
+        return {
+          ...e,
+          displayTime: 'foo'
+//          displayTime: distanceInWords(new Date(), e.datetime)
+        };
+      });
+    }, 800);
+  }
+
   setCurrentPage(pageId) {
     console.log('setCurrentPage', pageId);
     this.currentPageId = pageId;
@@ -267,11 +303,13 @@ export class TrainingViewerComponent implements OnInit {
   contentChanged(newVal: string, propName: string) {
     this.selectedTraining[propName] = newVal;
     this.trainingService.saveTraining(this.selectedTraining);
+    this.setCurrentPage(this.currentPageId);
   }
 
   pageContentChanged(newVal: string, index: number, propName: string) {
     this.selectedTraining.pages[index][propName] = newVal;
     this.trainingService.saveTraining(this.selectedTraining);
+    this.setCurrentPage(this.currentPageId);
   }
 
   pageChanged(newVal: string, index: number, propName: string) {
@@ -280,6 +318,7 @@ export class TrainingViewerComponent implements OnInit {
     page[propName] = newVal;
 
     this.trainingService.saveTraining(this.selectedTraining);
+    this.setCurrentPage(this.currentPageId);
   }
 
   handleIconSelectCancel() {
@@ -297,6 +336,7 @@ export class TrainingViewerComponent implements OnInit {
     this.selectedTraining.iconClass = this.tempIcon;
     this.selectedTraining.iconColor = this.tempIconColor;
     this.trainingService.saveTraining(this.selectedTraining);
+    this.setCurrentPage(this.currentPageId);
 
     this.isIconSelectModalVisible = false;
     this.okDisabled = true;
@@ -332,6 +372,7 @@ export class TrainingViewerComponent implements OnInit {
       return;
     }
 
+    console.log('handleNewVersionContinue', this.currentPageId, this.pageFileHash);
     const versionArray = this.fileService.getFile(this.pageFileHash[this.currentPageId]).versions[0].version.split('.', 3);
     let majorNum = parseInt(versionArray[0], 10);
     let middleNum = parseInt(versionArray[1], 10);
@@ -372,6 +413,7 @@ export class TrainingViewerComponent implements OnInit {
 
     this.selectedTraining.assessment = this.assessment;
     this.trainingService.saveTraining(this.selectedTraining);
+    this.setCurrentPage(this.currentPageId);
   }
 
   addNewChoice(itemIndex) {
@@ -383,6 +425,7 @@ export class TrainingViewerComponent implements OnInit {
     this.selectedTraining.assessment = this.assessment;
     this.trainingService.saveTraining(this.selectedTraining);
 
+    this.setCurrentPage(this.currentPageId);
   }
 
   applyAssessmentChanged(event) {
@@ -393,23 +436,27 @@ export class TrainingViewerComponent implements OnInit {
       this.selectedTraining.assessment = null;
     }
     this.trainingService.saveTraining(this.selectedTraining);
+    this.setCurrentPage(this.currentPageId);
   }
 
   questionChanged(event, itemIndex) {
     this.assessment.items[itemIndex].question = event;
     this.selectedTraining.assessment = this.assessment;
     this.trainingService.saveTraining(this.selectedTraining);
+    this.setCurrentPage(this.currentPageId);
   }
 
   choiceContentChanged(event, itemIndex, choiceIndex, propName) {
     this.assessment.items[itemIndex].choices[choiceIndex][propName] = event;
     this.selectedTraining.assessment = this.assessment;
     this.trainingService.saveTraining(this.selectedTraining);
+    this.setCurrentPage(this.currentPageId);
   }
 
   saveTraining() {
     this.trainingService.saveTraining(this.selectedTraining);
 
+    this.setCurrentPage(this.currentPageId);
   }
 
   openPicker() {
@@ -452,4 +499,7 @@ export class TrainingViewerComponent implements OnInit {
     this.currentPageId = 'intro';
   }
 
+  showComments() {
+    this.commentsVisible = !this.commentsVisible;
+  }
 }

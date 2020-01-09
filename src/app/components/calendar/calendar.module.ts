@@ -1,12 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CalendarComponent } from './calendar.component';
+import { NzBadgeModule, NzIconModule, NzTabsModule, NzToolTipModule, NzModalModule } from 'ng-zorro-antd';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    CalendarComponent
+  ],
   imports: [
-    CommonModule
+    CommonModule,
+    NzBadgeModule,
+    NzIconModule,
+    NzTabsModule,
+    NzToolTipModule,
+    NzModalModule    
+  ],
+  exports: [
+    CalendarComponent
   ]
 })
 export class CalendarModule { }

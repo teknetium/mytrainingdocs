@@ -6,62 +6,12 @@
       <div class="item-sm">
         {{ item.title }}
       </div>
-        <!--
-      <div>
-        <i nz-icon nzType="minus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
-          style="cursor:pointer;font-size:12px;margin-right:15px;" nz-tooltip nzTooltipTitle="Delete Training"
-          nz-popconfirm nzPopconfirmTitle="Delete this Training?" [nzPopconfirmTrigger]="'click'"
-          [nzPopconfirmPlacement]="'bottom'" (nzOnConfirm)="confirmDelete(item)"></i>
-
-        <i nz-icon nzType="edit" [nzTheme]="'twotone'" [nzTwotoneColor]="'blue'" (click)="editTraining(item, i)"
-          style="cursor:pointer;font-size:12px;margin-right:15px;" nz-tooltip nzTooltipTitle="Edit Training"></i>
-        <i nz-icon nzType="eye" [nzTheme]="'twotone'" [nzTwotoneColor]="'purple'" (click)="viewTraining(item, i)"
-          style="cursor:pointer;font: size 12px;" nz-tooltip nzTooltipTitle="View Training"></i>
-      </div>
-      -->
     </div>
   </div>
   <div *ngIf="trainings && trainings.length === 0" style="text-align: center;">
     <i style="font-size:50px;opacity:.3;" nz-icon nzType="frown" theme="twotone" twoToneColor="#619ef3"></i>
     <span style="font-size:26px;font-weight: 300;display:block;opacity:.4;">No Data</span>
   </div>
-<!--
-  <div *ngIf="selectedTraining$ | async as selectedTraining" style="margin-top:20px;height:90%;">
-    <div style="text-align: center;">
-      <i [ngClass]="selectedTraining.iconClass" style="display: inlne-block;font-size:28px; "
-        [ngStyle]="{'color': selectedTraining.iconColor}">
-      </i>
-      <span style="display:inline-block;font-size: 22px;">&nbsp;&nbsp; {{selectedTraining.title}}&nbsp;&nbsp;</span>
-      <i nz-icon nzType="close-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" (click)="closeTraining()"
-        style="display:inline-block;cursor:pointer;font-size:22px;vertical-align: baseline;" nz-tooltip
-        nzTooltipTitle="Close Training"></i>
-    </div>
-    <nz-tabset>
-      <nz-tab [nzTitle]="editTitleTemplate">
-        <ng-template #editTitleTemplate>
-          <i nz-icon [nzType]="'edit'" [nzTheme]="'twotone'" style="font-size:20px;" [nzTwotoneColor]="'blue'"></i>
-          Edit Training
-        </ng-template>
-        <mtd-training-viewer [mode]="'edit'" style="height: 60%;"></mtd-training-viewer>
-      </nz-tab>
-      <nz-tab [nzTitle]="viewTitleTemplate">
-        <ng-template #viewTitleTemplate>
-          <i nz-icon [nzType]="'eye'" [nzTheme]="'twotone'" style="font-size:20px;" [nzTwotoneColor]="'magenta'"></i>
-          View Training
-        </ng-template>
-        <mtd-training-viewer [mode]="'view'" style="height: 60%;"></mtd-training-viewer>
-      </nz-tab>
-      <nz-tab [nzTitle]="statsTitleTemplate">
-        <ng-template #statsTitleTemplate>
-          <i nz-icon [nzType]="'pie-chart'" [nzTheme]="'twotone'" style="font-size:20px;"
-            [nzTwotoneColor]="'orange'"></i>
-          Training Details
-        </ng-template>
-        <mtd-training-details></mtd-training-details>
-      </nz-tab>
-    </nz-tabset>
-  </div>
-  -->
 
   <div  style="margin-top:20px;height: 93%;">
     <mtd-training-viewer></mtd-training-viewer>
