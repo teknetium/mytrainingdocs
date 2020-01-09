@@ -114,11 +114,10 @@
 	height: 50px;
 	position: absolute;
     top: 20px;
-    padding-left: 10px;
 	margin-left: 0;
     z-index: 1000;
     font-size: 30px;
-	width: 60px;
+	width: 50px;
 	border: 1px solid #dddddd;
 	background-color: white;
 	border-top-right-radius: 20px;

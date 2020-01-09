@@ -94,7 +94,7 @@
         <div class="main-content">
             <div *ngIf="!isOpen" class="toc-opener">
                 <i nz-icon nzType="menu-unfold" [nzTheme]="'outline'" (click)="toggleTOC(true)"
-                    style="cursor:pointer;font-size:24px;vertical-align: baseline;"></i>
+                    style="cursor:pointer;font-size:24px;vertical-align: middle;"></i>
 
             </div>
             <div [@tocToggle]="isOpen ? 'open' : 'closed'" class="toc">
@@ -116,14 +116,14 @@
 
                     <div class="toc-entry" *ngFor="let page of selectedTraining.pages; index as pageIndex"
                         (click)="setCurrentPage(page._id)" [ngClass]="{'active-toc':currentPageId === page._id}">
-                        <div style="display:inline-block;">
+                        <div style="display:inline-block;line-height:18px;">
                             {{page.title}}
                         </div>
                         <i *ngIf="mode === 'edit'" nz-icon nzType="delete" [nzTheme]="'twotone'"
                             [nzTwotoneColor]="'red'" nz-tooltip nzTooltipTitle="Delete Page" nz-popconfirm
                             nzPopconfirmTitle="Delete this Page?" [nzPopconfirmTrigger]="'click'"
                             [nzPopconfirmPlacement]="'right'" (nzOnConfirm)="confirmDeletePage(pageIndex)"
-                            style="float:right;;cursor:pointer;font-size:16px;vertical-align: baseline;">
+                            style="float:right;;cursor:pointer;font-size:14px;vertical-align: baseline;line-height:18px;">
                         </i>
                     </div>
                     <div class="toc-entry" (click)="setCurrentPage('assessment')"
@@ -312,7 +312,7 @@
                                                 <td style="font-size:12px;width:50%;">
                                                     {{ version.changeLog }}
                                                 </td>
-                                                <td style="font-size:12px;width:20%;">
+                                                <td style="font-size:12px;width:25%;">
                                                     {{ version.dateUploaded | date:'medium'}}
                                                 </td>
                                                 <td style="font-size:14px;width:15%;text-align: center;">
