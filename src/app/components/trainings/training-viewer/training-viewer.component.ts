@@ -192,6 +192,7 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.currentPageId = 'intro';
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     this.selectedTrainingIndex$.subscribe(index => {
       this.selectedTrainingIndex = index;
@@ -235,7 +236,6 @@ export class TrainingViewerComponent implements OnInit {
         this.tempIconColor = this.selectedTraining.iconColor;
         this.tempIcon = this.selectedTraining.iconClass;
 
-//        this.currentPageId = 'config';
         this.mode = 'edit';
       }
     });

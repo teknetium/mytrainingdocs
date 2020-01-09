@@ -2,41 +2,11 @@
     <div class="my-team">
         <div class="my-team-header">
             <span style="display:inline-block;font-size:24px;font-weight: 300;">My Team</span>
-            <!--
-                    <button nz-button nzType="default" style="float:right;" (click)="addUser()">
-                        Add User
-                    </button>
-                    -->
             <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
                 style="float:right;cursor:pointer;font-size:20px;margin:8px;" (click)="addUser()" nz-tooltip
                 nzTooltipTitle="Add New User"></i>
-            <!--
-            <i nz-icon nzType="question-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
-                (click)="myTeamHelpPanelIsVisible = !myTeamHelpPanelIsVisible"
-                style="float:right;cursor:pointer;font-size:20px;margin:8px 0;" nz-tooltip
-                nzTooltipTitle="Toggle Help Visibility"></i>
-                -->
         </div>
-        <!--
-        <div *ngIf="myTeamHelpPanelIsVisible"
-            style="border:1px solid #7051bb;width:100%;height:fit-content;background-color: #f7f1fe;position: relative;margin-bottom:10px;">
-            <i nz-icon nzType="question-circle" [nzTheme]="'twotone'" [twoToneColor]="'#6e3fbe'"
-                style="display:inline-block;font-size:16px;margin-left:5px;margin-top:10px;float:left;"></i>
-            <div style="font-size:12px;display:inline-block;padding:5px;width:90%;">
-                Click the green plus icon to add team members.
-            </div>
-        </div>
-        -->
         <div class="team-container">
-            <!--
-            <div class="legend">
-                Training Status :&nbsp;&nbsp;
-                <i class="fas fa-user" style="color:#52c41a;"></i>
-                &nbsp;&nbsp;Up To Date&nbsp;&nbsp;
-                <i class="fas fa-user" style="color:red;"></i>
-                &nbsp;&nbsp;Past Due&nbsp;&nbsp;
-            </div>
--->
             <div class="supervisor">
                 <div class="user-button" (click)="selectUser(-1)" [ngClass]="{'user-selected': supervisorSelected}">
                     <i [ngClass]="userTypeIconHash[authenticatedUser.userType]"></i> &nbsp;
@@ -73,11 +43,6 @@
                     style="display:inline-block;margin-left:10px;font-size:24px;font-weight: 300;">{{authenticatedUser.firstName}}
                     {{authenticatedUser.lastName}}</span>
                 &nbsp;
-                <!--
-                <i nz-icon nzType="crown" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6939c9'"
-                    style="display:inline-block;font-size:24px;vertical-align:baseline;" nz-tooltip
-                    nzTooltipTitle="Admin User"></i>
-                    -->
             </div>
             <nz-tabset style="height:94%;">
                 <nz-tab nzTitle="My Team's Trainings" class="my-tabs">
@@ -91,64 +56,6 @@
 
                 </nz-tab>
             </nz-tabset>
-            <!--
-            <div class="" style="width:100%;height:44px;">
-                <span style="display:inline-block;margin-left:10px;font-size:24px;font-weight: 300;">My Team's
-                    Trainings</span>
-                <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-                    style="float:left;cursor:pointer;font-size:20px;margin:8px;" nz-tooltip
-                    nzTooltipTitle="Create New Training" (click)="createNewTraining()"></i>
-            </div>
-            -->
-            <!--
-            -->
-            <!--
-            <div style="height:93%;">
-                <nz-tabset style="height:100%;border-bottom: 5px solid black;">
-                    <nz-tab nzTitle="My Team's Trainings" class="my-tabs">
-
-                    </nz-tab>
-                    <nz-tab nzTitle="Tab 2">
-                        Content of Tab Pane 2
-                    </nz-tab>
-                    <nz-tab nzTitle="Tab 3">
-                        Content of Tab Pane 3
-                    </nz-tab>
-                </nz-tabset>
-            </div>
-            -->
-            <!--
-            <div class="" style="width:100%;height:44px;">
-                <span style="display:inline-block;margin-left:10px;font-size:24px;font-weight: 300;">My Team's
-                    Trainings</span>
-                <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-                    style="float:left;cursor:pointer;font-size:20px;margin:8px;" nz-tooltip
-                    nzTooltipTitle="Create New Training" (click)="createNewTraining()"></i>
-                    <button nz-button nzType="default" style="float:right;" (click)="createNewTraining()">
-                        Create Training
-                    </button>
-                    -->
-
-            <!--
-                <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-                    style="float:left;cursor:pointer;font-size:20px;margin:8px;" nz-tooltip
-                    nzTooltipTitle="Create New Training" (click)="createNewTraining()"></i>
-                <i nz-icon nzType="question-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
-                    (click)="myTeamTrainingsHelpPanelIsVisible = !myTeamTrainingsHelpPanelIsVisible"
-                    style="float:right;cursor:pointer;font-size:20px;margin:8px;" nz-tooltip
-                    nzTooltipTitle="Toggle Help Visibility"></i>
-                    -->
-            <!--
-            <div *ngIf="myTeamTrainingsHelpPanelIsVisible"
-                style="border:1px solid #7051bb;width:100%;height:fit-content;background-color: #f7f1fe;position: relative;margin-bottom:5px;">
-                <i nz-icon nzType="question-circle" [nzTheme]="'twotone'" [twoToneColor]="'#6e3fbe'"
-                    style="display:inline-block;font-size:20px;margin-left:10px;margin-top:10px;float:left;"></i>
-                <div style="font-size:14px;display:inline-block;padding:10px;width:90%;">
-                    Click the green plus icon to create a new training.
-                    Then click on the blue pencil icon in the 'New Training' item to customize and upload your content.
-                </div>
-            </div>
-            -->
         </div>
         <div *ngIf="!supervisorSelected && selectedUser$ | async as selectedUser">
             <div class="" style="width:100%;height:44px;margin-bottom:20px;">
@@ -174,15 +81,15 @@
     </div>
     <nz-modal [(nzVisible)]="showNewUserModal" nzTitle="Team Member Registration" (nzOnCancel)="handleCancel()"
         (nzOnOk)="handleAddUser()">
-        <input nz-input type="text" placeholder="First Name" [(ngModel)]="newTeamMember.firstName"
+        <input nz-input type="text" placeholder="First Name" ngDefaultControl [(ngModel)]="newTeamMember.firstName"
             style="margin-bottom:10px;">
-        <input nz-input type="text" placeholder="Last Name" [(ngModel)]="newTeamMember.lastName"
+        <input nz-input type="text" placeholder="Last Name" ngDefaultControl [(ngModel)]="newTeamMember.lastName"
             style="margin-bottom:10px;">
-        <input nz-input type="text" placeholder="Email" [(ngModel)]="newTeamMember.email" style="margin-bottom:20px;">
-        <input nz-input type="text" placeholder="Job Title" [(ngModel)]="newTeamMember.jobTitle"
+        <input nz-input type="text" placeholder="Email" ngDefaultControl [(ngModel)]="newTeamMember.email" style="margin-bottom:20px;">
+        <input nz-input type="text" placeholder="Job Title" ngDefaultControl [(ngModel)]="newTeamMember.jobTitle"
             style="display:inline-block;margin-bottom:20px;">
         <span style="margin-right:20px;">User Type</span>
-        <nz-radio-group [(ngModel)]="newTeamMember.userType" style="margin-bottom:20px;">
+        <nz-radio-group  ngDefaultControl [(ngModel)]="newTeamMember.userType" style="margin-bottom:20px;">
             <label nz-tooltip nzTitle="Individual Contributor" nz-radio nzValue="individualContributor">
                 <i class="fas fa-user" style="font-size:22px;"></i>
             </label>
@@ -195,10 +102,7 @@
             <label nz-tooltip nzTitle="Customer" nz-radio nzValue="customer">
                 <i class="fal fa-user-crown" style="font-size:22px;"></i>
             </label>
-            <label nz-tooltip nzTitle="Candidate" nz-radio nzValue="candidate">
-                <i class="fas fa-user-graduate" style="font-size:22px;"></i>
-            </label>
         </nz-radio-group>
-        <label nz-checkbox [(ngModel)]="newTeamMember.adminUp">Admin Access</label>
+        <label nz-checkbox ngDefaultControl [(ngModel)]="newTeamMember.adminUp">Admin Access</label>
     </nz-modal>
 </div>
