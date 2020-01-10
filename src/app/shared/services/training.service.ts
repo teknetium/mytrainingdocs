@@ -259,6 +259,8 @@ export class TrainingService {
       _id: String(new Date().getTime()),
       type: 'online',
       title: 'New Training',
+      status: 'Under Development',
+      rating: [],
       teamId: this.authenticatedUser.uid,
       owner: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),

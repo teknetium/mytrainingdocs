@@ -50,10 +50,11 @@ module.exports = function(app, config) {
  |--------------------------------------
  */
 
-  const trainingListProjection = "_id title type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment";
+  const trainingListProjection = "_id title type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId supervisor profilePicUrl";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id name type creationDate actionDate teamId description";
+  const commentListProjection = "_id tid author avatar content date";
 
   // GET API root
   app.get("/api/", (req, res) => {
@@ -103,7 +104,9 @@ module.exports = function(app, config) {
       files: req.body.files,
       pages: req.body.pages,
       assessment: req.body.assessment,
-      useAssessment: req.body.useAssessment
+      useAssessment: req.body.useAssessment,
+      rating: req.body.rating,
+      status: req.body.status
     });
     Training.create(training, function (err, trainingObj) {
       if (err) {
@@ -141,6 +144,8 @@ module.exports = function(app, config) {
       training.iconSource = req.body.iconSource;
       training.files = req.body.files;
       training.pages = req.body.pages;
+      training.rating = req.body.rating;
+      training.status = req.body.status;
       training.assessment = req.body.assessment;
       training.useAssessment = req.body.useAssessment;
 
@@ -460,6 +465,40 @@ module.exports = function(app, config) {
         }
         res.status(200).send({ message: "Event successfully deleted." });
       });
+    });
+  });
+
+  //
+  // EVENT methods
+  //
+  app.get("/api/comments/:trainingId", (req, res) => {
+    Comment.find({}, commentListProjection, (err, comments) => {
+      let commentsArr = [];
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (comments) {
+        comments.forEach(comment => {
+          commentsArr.push(comment);
+        });
+      }
+      res.send(eventsArr);
+    });
+  });
+  app.post("/api/comments/new", jwtCheck, (req, res) => {
+    const comment = new Comment({
+      tid: req.body.tid,
+      date: req.body.date,
+      content: req.body.content,
+      author: req.body.author,
+      avatar: req.body.avatar,
+      _id: req.body._id,
+    });
+    Comment.create(comment, function (err2, commentObj) {
+      if (err2) {
+        return res.status(500).send({ message: err2.message });
+      }
+      res.send(commentObj);
     });
   });
 };

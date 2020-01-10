@@ -13,37 +13,79 @@
                 nz-tooltip nzTooltipTitle="Close Training">
             </i>
         </div>
-        <div *ngIf="mode === 'view'"
+        <div *ngIf="mode === 'view' && selectedTraining.status === 'Under Development'"
             style="position:absolute;bottom:5px;right:5px;height:fit-content;width: fit-content;">
-            <i nz-icon nzType="like" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'" (click)="like()"
-                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:10px;">
-            </i>
-            <i nz-icon nzType="dislike" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" (click)="dislike()"
-                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
-            </i>
+
             <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
                 (click)="setCurrentPage('comments')" nz-tooltip nzTooltipTitle="show Comments"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
             </i>
-            <i nz-icon nzType="check-square" [nzTheme]="'twotone'" (click)="markCompleted()" nz-tooltip
+            <i nz-icon nzType="check-square" [nzTheme]="'twotone'" (click)="markCompleted(selectedTraining)" nz-tooltip
                 nzTooltipTitle="Mark As Completed"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
             </i>
-            <nz-rate [ngModel]="rating" nzAllowHalf class="small"></nz-rate>
             <i nz-icon nzType="edit" [nzTheme]="'twotone'" (click)="switchMode('edit')" [nzTwotoneColor]="'orange'"
                 nz-tooltip nzTooltipTitle="Edit Mode"
-                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;margin-left:20px;">
+                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
             </i>
 
         </div>
-        <div *ngIf="mode === 'edit'"
+        <div *ngIf="selectedTraining.status === 'In Review'"
             style="position:absolute;bottom:5px;right:5px;height:fit-content;width: fit-content;">
-            <i nz-icon nzType="setting" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
-                (click)="setCurrentPage('config')" nz-tooltip nzTooltipTitle="Training Configuration"
-                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
-            </i>
+            <ng-container *ngIf="isAuthenticated$ | async">
+                <span style="display:inline-block;font-size:12px;">Training Status&nbsp;&nbsp;:&nbsp;&nbsp;</span>
+                <span nz-dropdown [nzDropdownMenu]="menu"
+                    style="display:inline-block;font-size:12px;color: #3958e3;margin-right:20px;">{{ selectedTraining.status }}
+                    <i nz-icon nzType="down" style="font-size:12px;vertical-align: middle;"></i>
+                </span>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu nzSelectable>
+
+                        <li style="font-size:12px;color: #3958e3;" nz-menu-item (click)="setStatus('Under Development')"
+                            [ngClass]="{'disabled-status': selectedTraining.status === 'Under Development'}">Under
+                            Development</li>
+                        <li style="font-size:12px;color: #3958e3;" nz-menu-item (click)="setStatus('In Review')"
+                            [ngClass]="{'disabled-status': selectedTraining.status === 'In Review'}">In Review</li>
+                        <li style="font-size:12px;color: #3958e3;" nz-menu-item (click)="setStatus('In Production')"
+                            [ngClass]="{'disabled-status': selectedTraining.status === 'In Production'}">In Production
+                        </li>
+                    </ul>
+                </nz-dropdown-menu>
+            </ng-container>
             <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
                 (click)="setCurrentPage('comments')" nz-tooltip nzTooltipTitle="View/Add Comments"
+                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
+            </i>
+
+        </div>
+        <div *ngIf="mode === 'edit' && (selectedTraining.status === 'Under Development' || selectedTraining.status === 'In Production')"
+            style="position:absolute;bottom:5px;right:5px;height:fit-content;width: fit-content;">
+            <ng-container>
+                <span style="display:inline-block;font-size:12px;">Training Status&nbsp;&nbsp;:&nbsp;&nbsp;</span>
+                <span nz-dropdown [nzDropdownMenu]="menu"
+                    style="display:inline-block;font-size:12px;color: #3958e3;margin-right:20px;">{{ selectedTraining.status }}
+                    <i nz-icon nzType="down" style="font-size:12px;vertical-align: middle;"></i>
+                </span>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu nzSelectable>
+
+                        <li style="font-size:12px;color: #3958e3;" nz-menu-item (click)="setStatus('Under Development')"
+                            [ngClass]="{'disabled-status': selectedTraining.status === 'Under Development'}">Under
+                            Development</li>
+                        <li style="font-size:12px;color: #3958e3;" nz-menu-item (click)="setStatus('In Review')"
+                            [ngClass]="{'disabled-status': selectedTraining.status === 'In Review'}">In Review</li>
+                        <li style="font-size:12px;color: #3958e3;" nz-menu-item (click)="setStatus('In Production')"
+                            [ngClass]="{'disabled-status': selectedTraining.status === 'In Production'}">In Production
+                        </li>
+                    </ul>
+                </nz-dropdown-menu>
+            </ng-container>
+            <i nz-icon nzType="question-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#d64594'"
+                (click)="setCurrentPage('trainingHelp')" nz-tooltip nzTooltipTitle="Help"
+                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
+            </i>
+            <i nz-icon nzType="setting" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
+                (click)="setCurrentPage('config')" nz-tooltip nzTooltipTitle="Training Configuration"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
             </i>
             <i nz-icon nzType="eye" [nzTheme]="'twotone'" nz-tooltip nzTooltipTitle="Preview"
@@ -69,13 +111,14 @@
         </div>
         <div class="header-right">
             <div *ngIf="mode === 'edit'">
-                <div style="margin-right:30px;">
+                <div style="margin-right:30px;display: inline-block;">
                     <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Training Title</label>
                     <input style="display:inline-block;color:black;margin-bottom:0;font-size:14px;" nz-input
                         [(ngModel)]="selectedTraining.title" nzSize="small" (blur)="saveTraining()" />
-
+                    <!--
                     <span *ngIf="mode === 'view'"
                         style="font-size:18px;display:block;">&nbsp;{{selectedTraining.title}}</span>
+                    -->
                 </div>
             </div>
             <div *ngIf="mode === 'view'">
@@ -83,10 +126,19 @@
 
             </div>
         </div>
+
         <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800"
             (nzOnCancel)="handleIconSelectCancel()" [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled"
             (nzOnOk)="handleIconSelectConfirm()" style="width:800px;">
             <mtd-icon-picker (icon)="setIcon($event)"></mtd-icon-picker>
+        </nz-modal>
+        <nz-modal [(nzVisible)]="markCompletedModalIsVisible" nzTitle="Mark this Training as Completed" nzWidth="800"
+            (nzOnCancel)="handleMarkAsCompletedCancel()" (nzOnOk)="markTrainingAsComplete(selectedTraining)"
+            style="width:800px;">
+            <span style="display:block;">Rate this Training</span>
+            <nz-rate style="display:block;margin-bottom:20px;" [ngModel]="rating" nzAllowHalf class="small"></nz-rate>
+            <span style="display:block;">Comments/Feedback</span>
+            <textarea style="display:block;" rows="4" nz-input [(ngModel)]="inputValue"></textarea>
         </nz-modal>
     </div>
     <div style="width:100%;overflow: scroll;"
@@ -166,7 +218,17 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="currentPageId === 'comments' && mode === 'edit'" class="page">
+                <div *ngIf="currentPageId === 'trainingHelp' && mode === 'edit'" class="page">
+                    <i nz-icon nzType="question-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#d64594'"
+                        style="display:inline-block;cursor:pointer;font-size:24px;vertical-align: baseline;margin-right:20px;">
+                    </i>
+                    <h3 style="display:inline-block;text-align: left;margin-bottom:30px;">Training Help</h3>
+
+                    <div>
+
+                    </div>
+                </div>
+                <div *ngIf="currentPageId === 'comments' && mode === 'view'" class="page">
                     <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
                         style="display:inline-block;cursor:pointer;font-size:24px;vertical-align: baseline;margin-right:20px;">
                     </i>
@@ -316,7 +378,8 @@
                                                     {{ version.dateUploaded | date:'medium'}}
                                                 </td>
                                                 <td style="font-size:14px;width:15%;text-align: center;">
-                                                    <i nz-icon nzType="download" [nzTheme]="'outline'" nz-tooltip nzTooltipTitle="Download Document" ></i>
+                                                    <i nz-icon nzType="download" [nzTheme]="'outline'" nz-tooltip
+                                                        nzTooltipTitle="Download Document"></i>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -418,7 +481,7 @@
                                 </div>
                                 <div *ngFor="let choice of item.choices; index as choiceIndex"
                                     style="width:100%;padding-left:80px;height:26px;">
-                                    <div *ngIf="mode === 'edit'" style="">
+                                    <div *ngIf="mode === 'edit'">
                                         <label nz-checkbox [(ngModel)]="choice.correct"
                                             (ngModelChange)="choiceContentChanged($event, itemIndex, choiceIndex, 'correct')"
                                             style="display:inline-block;">&nbsp;&nbsp;</label>

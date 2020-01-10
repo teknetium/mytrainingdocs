@@ -166,5 +166,18 @@
 }
 
 .small ::ng-deep .ant-rate-star {
-    font-size: 14px;
+    font-size: 24px;
+}
+
+.selected {
+	opacity: 1.0;
+}
+
+.not-selected {
+	opacity: .2;
+}
+
+.disabled-status {
+	opacity: .4;
+	cursor: not-allowed;
 }

@@ -2,7 +2,8 @@ import { CalendarModule } from "src/app/components/calendar/calendar.module";
 
 export interface TrainingModel {
   _id: string,
-  type: string,
+  type: 'online',
+  status: 'Under Development' | 'In Review' | 'In Production',
   title: string,
   teamId: string,
   owner: string,
@@ -22,9 +23,9 @@ export interface TrainingModel {
   iconSource: string,
   files: string[],
   pages: Page[],
+  rating: number[],
   assessment: Assessment,
-  useAssessment: boolean,
-  comments: Comment[]
+  useAssessment: boolean
 }
 
 export interface AssessmentItem {

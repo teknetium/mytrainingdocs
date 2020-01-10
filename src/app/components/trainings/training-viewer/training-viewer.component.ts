@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FileService } from '../../../shared/services/file.service';
 import { TrainingService } from '../../../shared/services/training.service';
 import { UserService } from '../../../shared/services/user.service';
+import { AuthService } from '../../../shared/services/auth.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { TrainingModel, Page, Portlet, Assessment } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -34,6 +35,7 @@ import { UserModel } from 'src/app/shared/interfaces/user.model';
 })
 export class TrainingViewerComponent implements OnInit {
 
+  isAuthenticated$: Observable<boolean>;
   isIconSelectModalVisible = false;
   selectedTraining$: Observable<TrainingModel>;
   selectedTrainingIndex$: Observable<number>;
@@ -48,6 +50,8 @@ export class TrainingViewerComponent implements OnInit {
 
   okDisabled = true;
   cancelDisabled = false;
+
+  rating = 0;
 
   tempIcon = '';
   tempIconColor = '';
@@ -154,6 +158,8 @@ export class TrainingViewerComponent implements OnInit {
   pageIdBSHash = {};
   isNewVersionModalVisible = false;
   commentsVisible = false;
+  like = false;
+  dislike = false;
 
   selectedTrainingIndex = -1;
   error1 = false;
@@ -181,10 +187,16 @@ export class TrainingViewerComponent implements OnInit {
   };
   inputValue = '';
 
+  markCompletedModalIsVisible = false;
 
 
-
-  constructor(private trainingService: TrainingService, private fileService: FileService, private sanitizer: DomSanitizer, private userService: UserService) {
+  constructor(
+    private trainingService: TrainingService,
+    private fileService: FileService,
+    private sanitizer: DomSanitizer,
+    private userService: UserService,
+    private authService: AuthService) {
+    this.isAuthenticated$ = authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
     this.selectedTrainingIndex$ = this.trainingService.getSelectedTrainingIndexStream();
@@ -192,7 +204,7 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentPageId = 'intro';
+    this.currentPageId = 'trainingHelp';
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     this.selectedTrainingIndex$.subscribe(index => {
       this.selectedTrainingIndex = index;
@@ -477,9 +489,7 @@ export class TrainingViewerComponent implements OnInit {
 
   switchMode(newMode: string) {
     this.mode = newMode;
-    if (newMode === 'view') {
-      this.currentPageId = 'intro';
-    }
+    this.currentPageId = 'intro';
   }
 
   setTrue(itemIndex, choiceIndex) {
@@ -501,5 +511,26 @@ export class TrainingViewerComponent implements OnInit {
 
   showComments() {
     this.commentsVisible = !this.commentsVisible;
+  }
+
+  markCompleted(training) {
+    this.markCompletedModalIsVisible = true;
+  }
+
+  handleMarkAsCompletedCancel() {
+    this.markCompletedModalIsVisible = false;
+  }
+
+  markTrainingAsComplete(training) {
+    training.rating.push(this.rating);
+  }
+
+  setStatus(status) {
+    this.selectedTraining.status = status;
+    if (status === 'Under Development') {
+      this.currentPageId = 'trainingHelp';
+    } else {
+      this.currentPageId = 'intro';
+    }
   }
 }
