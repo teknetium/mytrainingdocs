@@ -531,6 +531,11 @@ export class TrainingViewerComponent implements OnInit {
 
   setStatus(status) {
     this.selectedTraining.status = status;
+    if (status === 'Under Development') {
+      this.currentPageId = 'config';
+    } else {
+      this.currentPageId = 'intro';
+    }
   }
 
   selectChoice(itemIndex, choiceIndex) {

@@ -8,11 +8,29 @@ import { UserModel } from '../../shared/interfaces/user.model';
 import { EventModel } from '../../shared/interfaces/event.type';
 import { User } from 'src/app/shared/interfaces/user.type';
 import { TrainingModel } from 'src/app/shared/interfaces/training.type';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-myteam',
   templateUrl: './myteam.component.html',
-  styleUrls: ['./myteam.component.css']
+  styleUrls: ['./myteam.component.css'],
+  animations: [
+    trigger('supervisorSignupToggle', [
+      // ...
+      state('closed', style({
+        'height': '0'
+      })),
+      state('open', style({
+        'height': '50px',
+      })),
+      transition('open => closed', [
+        animate('300ms')
+      ]),
+      transition('* => open', [
+        animate('300ms')
+      ]),
+    ])
+  ]
 })
 export class MyteamComponent implements OnInit {
 
@@ -23,6 +41,9 @@ export class MyteamComponent implements OnInit {
     customer: 'fas fa-fw fa-user-crown',
     candidate: 'fas fa-fw fa-user-graduate'
   }
+  includeNewSupervisorsTeam = false;
+  isNewSupervisorPanelOpen = false;
+
   trainingStatusColorHash = {
     uptodate: '#52c41a',
     pastdue: 'red'
@@ -118,6 +139,7 @@ export class MyteamComponent implements OnInit {
     }
   }
   confirmDelete() {
+    console.log('myTeam.confirmDelete')
     this.userService.deleteUser(this.myTeam[this.userIndexSelected]._id);
     this.selectedUserBS$.next(null);
     this.userIndexSelected = -1;
@@ -128,4 +150,7 @@ export class MyteamComponent implements OnInit {
     this.trainingService.addNewTraining();
   }
 
+  newSupervisorSelected(open: boolean) {
+    this.isNewSupervisorPanelOpen = open;
+  }
 }

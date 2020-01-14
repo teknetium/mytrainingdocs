@@ -52,6 +52,7 @@ module.exports = function(app, config) {
  */
 
   const trainingListProjection = "_id title type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status";
+  const userTrainingListProjection = "_id tid uid status dueDate timeToDate";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId supervisor profilePicUrl";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id name type creationDate actionDate teamId description";
@@ -73,6 +74,8 @@ module.exports = function(app, config) {
     html: '<strong>and easy to do anywhere, even with Node.js</strong>',
   };
   sgMail.send(msg);
+
+
   //
   // Training API
   //
@@ -169,7 +172,6 @@ module.exports = function(app, config) {
       });
     });
   });
-
   app.delete("/api/trainings/:id", jwtCheck, (req, res) => {
     Training.findById(req.params.id, (err, foo) => {
       if (err) {
@@ -183,6 +185,81 @@ module.exports = function(app, config) {
           return res.status(500).send({ message: err2.message });
         }
         res.status(200).send({ message: "training successfully deleted." });
+      });
+    });
+  });
+
+  //
+  // UserTraining API
+  //
+  app.get("/api/usertraining/:userId", (req, res) => {
+    UserTraining.find({ uid: req.params.userId },
+      userTrainingListProjection, (err, userTrainings) => {
+        let userTrainingsArr = [];
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        if (userTrainings) {
+          userTrainings.forEach(userTraining => {
+            userTrainingsArr.push(userTraining);
+          });
+        }
+        res.send(userTrainingsArr);
+      },
+    );
+  });
+  app.post("/api/usertraining/new", jwtCheck, (req, res) => {
+    const userTraining = new UserTraining({
+      _id: req.body._id,
+      tid: req.body.tid,
+      uid: req.body.uid,
+      status: req.body.status,
+      dueDate: req.body.dueDate,
+      timeToDate: req.body.timeToDate
+    });
+    UserTraining.create(userTraining, function (err, userTrainingObj) {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      res.send(userTrainingObj);
+    });
+  });
+  app.put("/api/usertraining/:id", jwtCheck, (req, res) => {
+    UserTraining.findById(req.params.id, (err, userTraining) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (!userTraining) {
+        return res.status(400).send({ message: "UserTraining not found." });
+      }
+      userTraining._id = req.body._id;
+      userTraining.tid = req.body.tid;
+      userTraining.uid = req.body.uid;
+      userTraining.status = req.body.status;
+      userTraining.dueDate = req.body.dueDate;
+      userTraining.timeToDate = req.body.timeToDate;
+
+      userTraining.save(err2 => {
+        if (err) {
+          return res.status(500).send({ message: err2.message });
+        }
+        res.send(userTraining);
+      });
+    });
+  });
+  app.delete("/api/usertraining/:id", jwtCheck, (req, res) => {
+    UserTraining.findById(req.params.id, (err, userTraining) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (!userTraining) {
+        return res.status(400).send({ message: "UserTraining not found." });
+      }
+      userTraining.remove(err2 => {
+        if (err2) {
+          return res.status(500).send({ message: err2.message });
+        }
+        res.status(200).send({ message: "userTraining successfully deleted." });
       });
     });
   });

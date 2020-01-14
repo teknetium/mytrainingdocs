@@ -75,7 +75,7 @@ export class UserService {
                 email: profile.email,
                 teamId: null,
                 adminUp: false,
-                userStatus: 'new-supervisor',
+                userStatus: 'new-supervisor-without-team',
                 trainingStatus: 'uptodate',
                 jobTitle: '',
                 profilePicUrl: '',

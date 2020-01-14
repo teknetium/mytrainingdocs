@@ -267,7 +267,7 @@
                             <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Assessment Time Limit</label>
                         </div>
                         <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
-                            <nz-input-number nzSize="small" nzId="estTimeToComplete" class="foo" style="font-size:12px;"
+                            <nz-input-number nzSize="small" nzId="timeLimit" class="foo" style="font-size:12px;"
                                 [(ngModel)]="selectedTraining.assessment.timeLimit" [nzMin]="0" [nzMax]="60"
                                 [nzStep]="1" (blur)="saveTraining()">
                             </nz-input-number>

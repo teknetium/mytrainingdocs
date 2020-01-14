@@ -7,7 +7,7 @@ export interface UserModel {
   email: string,
   teamId: string,
   adminUp: boolean,
-  userStatus: 'pending' | 'active' | 'new-supervisor' | 'new-user',
+  userStatus: 'pending' | 'active' | 'new-supervisor-including-team' | 'new-supervisor-without-team' | 'new-user',
   trainingStatus: 'uptodate' | 'pastdue',
   jobTitle: string,
   profilePicUrl: string,
