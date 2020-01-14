@@ -6,7 +6,7 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Page, Portlet, TextBlock } from '../interfaces/training.type';
+import { TrainingModel, Page, Portlet, TextBlock, Assessment } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.model';
 
 
@@ -255,6 +255,13 @@ export class TrainingService {
       textBlocks: [textBlock1, textBlock2]
     };
 
+    const assessment = <Assessment>{
+      _id: String(new Date().getTime()),
+      type: 'choiceFeedback',
+      timeLimit: 0,
+      items: []
+    }
+
     const newTraining = <TrainingModel>{
       _id: String(new Date().getTime()),
       type: 'online',
@@ -279,7 +286,7 @@ export class TrainingService {
       iconSource: 'fontawesome',
       files: [],
       pages: [],
-      assessment: null,
+      assessment: assessment,
       useAssessment: false
     };
 //    this.allTrainings.push(newTraining);

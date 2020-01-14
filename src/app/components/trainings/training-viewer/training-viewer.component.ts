@@ -56,19 +56,6 @@ export class TrainingViewerComponent implements OnInit {
   tempIcon = '';
   tempIconColor = '';
 
-
-  helpTextHash = {
-    intro: `<h5>Intro</h5>Click on the blue pencil icon in the page below to customize the content for the training
-    you are creating. `,
-
-    mainContent: `<h5>Main Content</h5>This is where you upload a single document or multiple documents for this training.<br><br>
-    Each document is associated with it's own page in the training and it's own entry in the <b>Table of Contents<b>.`,
-
-    assessment: `<h5>Assessment</h5>`,
-
-    ratingsComments: `<h5>Ratings & Comments</h5>`,
-  }
-
   private items = [
     {
       name: 'toc-container',
@@ -86,13 +73,16 @@ export class TrainingViewerComponent implements OnInit {
       name: 'page',
     }
   ]
-  useAssessment = false;
+
   applyAssessment = false;
+  alpha = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
   assessment: Assessment;
 
   newAssessment: Assessment = {
     _id: String(new Date().getTime()),
+    type: 'choiceFeedback',
+    timeLimit: 0,
     items: [
       {
         question: 'This is question 1',
@@ -105,7 +95,8 @@ export class TrainingViewerComponent implements OnInit {
             text: 'This is the second choice',
             correct: false
           }
-        ]
+        ],
+        selection: -1
       },
       {
         question: 'This is question 2',
@@ -118,7 +109,9 @@ export class TrainingViewerComponent implements OnInit {
             text: 'This is the second choice',
             correct: false
           }
-        ]
+        ],
+        selection: -1
+
       },
       {
         question: 'This is question 3',
@@ -131,7 +124,9 @@ export class TrainingViewerComponent implements OnInit {
             text: 'This is the second choice',
             correct: false
           }
-        ]
+        ],
+        selection: -1
+
       },
     ]
   };
@@ -147,8 +142,11 @@ export class TrainingViewerComponent implements OnInit {
         text: 'This is the second choice',
         correct: false
       }
-    ]
+    ],
+    selection: -1
   };
+  
+  currentChoiceIndex = -1;
 
   @Input() mode = 'edit';
   docStreamPageHash = {};
@@ -160,6 +158,11 @@ export class TrainingViewerComponent implements OnInit {
   commentsVisible = false;
   like = false;
   dislike = false;
+  assessmentType = {
+    choice: false,
+    question: false,
+    assessment: false
+  }
 
   selectedTrainingIndex = -1;
   error1 = false;
@@ -204,7 +207,7 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentPageId = 'trainingHelp';
+    this.currentPageId = 'intro';
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     this.selectedTrainingIndex$.subscribe(index => {
       this.selectedTrainingIndex = index;
@@ -291,7 +294,7 @@ export class TrainingViewerComponent implements OnInit {
         return {
           ...e,
           displayTime: 'foo'
-//          displayTime: distanceInWords(new Date(), e.datetime)
+          //          displayTime: distanceInWords(new Date(), e.datetime)
         };
       });
     }, 800);
@@ -466,6 +469,7 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   saveTraining() {
+    console.log('saveTrainging', this.selectedTraining);
     this.trainingService.saveTraining(this.selectedTraining);
 
     this.setCurrentPage(this.currentPageId);
@@ -527,10 +531,26 @@ export class TrainingViewerComponent implements OnInit {
 
   setStatus(status) {
     this.selectedTraining.status = status;
-    if (status === 'Under Development') {
-      this.currentPageId = 'trainingHelp';
-    } else {
-      this.currentPageId = 'intro';
+  }
+
+  selectChoice(itemIndex, choiceIndex) {
+    this.selectedTraining.assessment.items[itemIndex].selection = choiceIndex;
+    this.currentChoiceIndex = choiceIndex;
+  }
+
+  setAssessmentType(type) {
+    if (type === 'choieFeedback') {
+      this.assessmentType.choice = true;
+      this.assessmentType.question = false;
+      this.assessmentType.assessment = false;
+    } else if (type === 'questionFeedback') {
+      this.assessmentType.choice = false;
+      this.assessmentType.question = true;
+      this.assessmentType.assessment = false;
+    } else if (type === 'assessmentFeedback') {
+      this.assessmentType.choice = false;
+      this.assessmentType.question = false;
+      this.assessmentType.assessment = true;
     }
   }
 }

@@ -60,7 +60,7 @@
 	display: block;
 	background-color: #fcfcfc;
 	border-bottom: 1px solid #dddddd;
-	height: fit-content;
+	height: 85px;
     padding:10px    ;
 	position: relative;
 }

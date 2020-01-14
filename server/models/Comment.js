@@ -16,4 +16,4 @@ const commentSchema = new Schema({
   date: { type: Number, required: true }
 })
 
-module.exports = mongoose.model("Comment", eventSchema);
+module.exports = mongoose.model("Comment", commentSchema);

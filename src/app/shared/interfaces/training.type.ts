@@ -33,11 +33,14 @@ export interface AssessmentItem {
   choices: {
     text: string,
     correct: boolean
-  }[]
+  }[],
+  selection: number
 }
   
 export interface Assessment {
   _id: string,
+  type: 'choiceFeedback' | 'questionFeedback' | 'assessmentFeedback',
+  timeLimit: number,
   items: AssessmentItem[]
 }
 

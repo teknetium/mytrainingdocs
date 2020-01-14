@@ -26,6 +26,8 @@ const pageSchema = new Schema({
 
 const assessmentSchema = new Schema({
   _id: { type: String, required: true },
+  type: { type: String, required: true },
+  timeLimit: { type: Number, required: false },
   items: [{ question: { type: String }, choices: [{ text: String, correct: Boolean }] }]
 })
 
