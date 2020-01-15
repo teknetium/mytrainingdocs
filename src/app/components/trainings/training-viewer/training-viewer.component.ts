@@ -257,11 +257,21 @@ export class TrainingViewerComponent implements OnInit {
     });
 
     this.fileUploaded$.subscribe(file => {
+      let found = false;
       if (!file) {
         return;
       }
 
-      this.trainingService.addNewPage(this.selectedTraining._id, file._id, file.name);
+      for (const page of this.selectedTraining.pages) {
+        if (page.file === file._id) {
+          console.log('TrainingViewer:ngOnInit - fileUploaded$.subscribe - duplicate file', this.selectedTraining);
+          found = true;
+        }
+      }
+
+      if (!found) {
+        this.trainingService.addNewPage(this.selectedTraining._id, file._id, file.name);
+      }
     })
 
     this.newVersion$.subscribe(newVersion => {
@@ -512,6 +522,7 @@ export class TrainingViewerComponent implements OnInit {
 
   confirmDeletePage(pageIndex) {
     this.selectedTraining.pages.splice(pageIndex, 1);
+    this.trainingService.saveTraining(this.selectedTraining);
     this.currentPageId = 'intro';
   }
 
