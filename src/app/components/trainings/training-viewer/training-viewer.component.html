@@ -1,6 +1,6 @@
 <div *ngIf="selectedTraining$ | async as selectedTraining"
     [ngClass]="{'training-viewer': !fullscreen, 'training-viewer-fullscreen': fullscreen}">
-    <div class="training-header">
+    <div class="training-header" [ngClass]="{'activeHelp': currentHelpPanel === 'trainingHeader'}">
         <div>
             <i *ngIf="!fullscreen" nz-icon nzType="fullscreen" [nzTheme]="'outline'" (click)="fullscreen = true"
                 style="position:absolute;top:10px;right:10px;cursor:pointer;font-size:20px;vertical-align: baseline;"
@@ -100,12 +100,13 @@
                     </ul>
                 </nz-dropdown-menu>
             </ng-container>
-            <!--
-            <i nz-icon nzType="question-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#d64594'"
-                (click)="setCurrentPage('trainingHelp')" nz-tooltip nzTooltipTitle="Help"
+
+            <i nz-icon nzType="car" [nzTheme]="'twotone'" [nzTwotoneColor]="'#d64594'"
+                (click)="setCurrentPage('trainingWizardTour')" nz-tooltip
+                nzTooltipTitle="Take the Training Wizard Tour!"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
             </i>
-            -->
+
             <i nz-icon nzType="setting" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
                 (click)="setCurrentPage('config')" nz-tooltip nzTooltipTitle="Training Configuration"
                 style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
@@ -178,7 +179,8 @@
                     style="cursor:pointer;font-size:24px;vertical-align: middle;"></i>
 
             </div>
-            <div [@tocToggle]="isOpen ? 'open' : 'closed'" class="toc">
+            <div [@tocToggle]="isOpen ? 'open' : 'closed'" class="toc"
+                [ngClass]="{'activeHelp': currentHelpPanel === 'tableOfContents'}">
                 <div style="position: relative;text-align: left;">
                     <div class="toc-title">
                         Table of Contents
@@ -217,7 +219,8 @@
                     </div>
                 </div>
             </div>
-            <div class="page-container" [ngStyle]="{'margin-left.px': pageContainerMarginLeft}">
+            <div class="page-container" [ngStyle]="{'margin-left.px': pageContainerMarginLeft}"
+                [ngClass]="{'activeHelp': currentHelpPanel === 'mainContent'}">
                 <div *ngIf="currentPageId === 'config' && mode === 'edit' && selectedTraining.status === 'Under Development'"
                     class="page">
                     <i nz-icon nzType="setting" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
@@ -271,71 +274,171 @@
                                 [(ngModel)]="selectedTraining.assessment.timeLimit" [nzMin]="0" [nzMax]="60"
                                 [nzStep]="1" (blur)="saveTraining()">
                             </nz-input-number>
-                            <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes&nbsp;&nbsp;( 0 indicates no time limit )</span>
-                            
+                            <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes&nbsp;&nbsp;( 0
+                                indicates no time limit )</span>
+
                         </div>
                     </div>
                 </div>
-                <!--
-                <div *ngIf="currentPageId === 'trainingHelp' && mode === 'edit' && selectedTraining.status === 'Under Development'" class="page">
-                    <i nz-icon nzType="question-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#d64594'"
+
+                <div *ngIf="currentPageId === 'trainingWizardTour' && mode === 'edit' && selectedTraining.status === 'Under Development'"
+                    class="page" [ngClass]="{'activeHelp': currentHelpPanel === 'mainContent'}">
+                    <i nz-icon nzType="car" [nzTheme]="'twotone'" [nzTwotoneColor]="'#d64594'"
                         style="display:inline-block;cursor:pointer;font-size:24px;vertical-align: baseline;margin-right:20px;">
                     </i>
-                    <h3 style="display:inline-block;text-align: left;margin-bottom:30px;">Training Help</h3>
+                    <h3 style="display:inline-block;text-align: left;margin-bottom:30px;">Training Wizard Tour </h3>
 
-                    <div style="padding: 0 2    0px;">
-                        <nz-collapse [nzBordered]="false">
-                            <nz-collapse-panel [nzHeader]="trainingHeader">
+                    <div>
+                        <div>
+                            <div style="text-align: center;margin-bottom:10px;font-size: 18px;">
+                                Welcome to the Training Wizard Tour!
+                            </div>
+                            <p>
+                                This page introduces you to the 3 components of the Training Wizard. &nbsp;&nbsp;
+                                To get started with the tour, simply click on the top panel header below.
+                            </p>
+                        </div>
+                        <nz-collapse [nzBordered]="false" [nzAccordion]="true">
+                            <nz-collapse-panel [nzHeader]="trainingHeader"
+                                (nzActiveChange)="setCurrentHelpPanel('trainingHeader')">
+                                <div style="padding:0 30px;margin-bottom:20px;">
+                                    This component gives you access to the following features and functions:
+                                </div>
                                 <div style="display:block;">
                                     <div
-                                        style="width:20%;text-align: right;display:inline-block;padding-right:10px;font-size:14px;font-weight:300;color:#999999;">
-                                        Training Status
+                                        style="width:20%;text-align: right;float:left;padding-right:10px;font-size:14px;font-weight:300;color:#999999;">
+                                        <i class="fal fa-graduation-cap" style="font-size:18px;color:black;"></i>
                                     </div>
                                     <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
-                                        Under Development
-                                        <div style="font-size:12px;width:80%;text-align:left;display:inline-block;padding-left:10px;">
-                                            This is the initial status when creating a new training. 
-                                        </div>
+                                        This is the icon that will be used to identify your training. Clicking the icon
+                                        brings up the customization dialog.
                                     </div>
                                 </div>
-                                <div style="display:block;margin-top: 20px;">
+                                <div style="display:block;margin-top:20px;">
                                     <div
-                                        style="width:25%;text-align: right;display:inline-block;padding-right:10px;font-size:18px;font-weight:400">
-                                        <i nz-icon nzType="setting" [nzTheme]="'twotone'"
-                                            [nzTwotoneColor]="'orange'"></i>
+                                        style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
+                                        <i nz-icon nzType="car" [nzTheme]="'twotone'" [nzTwotoneColor]="'#d64594'"
+                                            style="font-size:18px;vertical-align: top;"></i>
                                     </div>
-                                    <div style="width:75%;text-align:left;display:inline-block;padding-left:10px;">
+                                    <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
+                                        This loads the page you are currently viewing.
+                                    </div>
+                                </div>
+                                <div style="display:block;margin-top:20px;">
+                                    <div
+                                        style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
+                                        <i nz-icon nzType="setting" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
+                                            style="font-size:18px;vertical-align: top;"></i>
+                                    </div>
+                                    <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
                                         This loads the Training Configuration page.
                                     </div>
                                 </div>
-                                <div style="display:block;margin-top: 20px;">
+                                <div style="display:block;margin-top:20px;">
                                     <div
-                                        style="width:25%;text-align: right;display:inline-block;padding-right:10px;font-size:18px;font-weight:400">
-                                        Training Status
+                                        style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
+                                        <i nz-icon nzType="file-add" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+                                            style="font-size:18px;vertical-align: top;"></i>
                                     </div>
-                                    <div style="width:75%;text-align:left;display:inline-block;padding-left:10px;">
-                                        There are 3 training status
+                                    <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
+                                        Clicking on this icon brings up the file upload dialog. From there you can
+                                        identfy and upload the documents used in this training.
+                                    </div>
+                                </div>
+                                <div style="display:block;margin-top:20px;">
+                                    <div
+                                        style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
+                                        <i nz-icon nzType="eye" [nzTheme]="'twotone'"
+                                            style="font-size:18px;vertical-align: top;"></i>
+                                    </div>
+                                    <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
+                                        Clicking on this icon puts the training in preview mode, removing all of the
+                                        edit and configuration elements.
+                                    </div>
+                                </div>
+                                <div style="display:block;margin-top:20px;">
+                                    <div
+                                        style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
+                                        <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
+                                            style="font-size:18px;vertical-align: top;"></i>
+                                    </div>
+                                    <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
+                                        Clicking on this icon deletes the training.
+                                    </div>
+                                </div>
+                                <div style="display:block;margin-top:20px;">
+                                    <div
+                                        style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
+                                        <i nz-icon nzType="fullscreen" [nzTheme]="'outline'"
+                                            style="font-size:18px;vertical-align: top;"></i>
+                                    </div>
+                                    <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
+                                        Clicking on this icon switches to fullscreen mode.
+                                    </div>
+                                </div>
+                                <div style="display:block;margin-top:20px;">
+                                    <div
+                                        style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
+                                        <i nz-icon nzType="close-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
+                                            style="font-size:18px;vertical-align: top;"></i>
+                                    </div>
+                                    <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
+                                        Clicking on this icon closes the training.
+                                    </div>
+                                </div>
+                                <div style="display:block;margin-top:20px;">
+                                    <div
+                                        style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
+                                        <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
+                                            style="font-size:18px;vertical-align: top;"></i>
+                                    </div>
+                                    <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
+                                        Clicking on this icon loads the comment page. This is only available in Preview
+                                        mode or when the training status is 'In Review' or 'In Production'.
                                     </div>
                                 </div>
                             </nz-collapse-panel>
-                            <nz-collapse-panel [nzHeader]="tableOfContents">
+                            <nz-collapse-panel [nzHeader]="tableOfContents"
+                                (nzActiveChange)="setCurrentHelpPanel('tableOfContents')">
+                                <div style="padding:0 30px;margin-bottom:20px;">
+                                    This component provides page navigation. &nbsp;&nbsp; When documents are uploaded to
+                                    a training, the document
+                                    name is added to this component.
+                                </div>
                             </nz-collapse-panel>
-                            <nz-collapse-panel [nzHeader]="mainContent">
+                            <nz-collapse-panel [nzHeader]="mainContent"
+                                (nzActiveChange)="setCurrentHelpPanel('mainContent')">
+                                <div style="padding:0 30px;margin-bottom:20px;">
+                                    This is the content viewing component. &nbsp;&nbsp; Selecting entries in the Table
+                                    of Contents
+                                    loads the selected page here.
+                                </div>
                             </nz-collapse-panel>
                             <ng-template #trainingHeader>
-                                <span style="font-size:16px;font-weight:300;">Training Header</span>
+                                <span style="font-size:16px;font-weight:300;"
+                                    [ngClass]="{'activeHelpPanelHeader': currentHelpPanel === 'trainingHeader'}">Training
+                                    Header</span>
                             </ng-template>
                             <ng-template #tableOfContents>
-                                <span style="font-size:16px;font-weight:300;">Table Of Contents</span>
+                                <span style="font-size:16px;font-weight:300;"
+                                    [ngClass]="{'activeHelpPanelHeader': currentHelpPanel === 'tableOfContents'}">Table
+                                    Of Contents</span>
                             </ng-template>
                             <ng-template #mainContent>
-                                <span style="font-size:16px;font-weight:300;">Main Content Area</span>
+                                <span style="font-size:16px;font-weight:300;"
+                                    [ngClass]="{'activeHelpPanelHeader': currentHelpPanel === 'mainContent'}">Main
+                                    Content Area</span>
                             </ng-template>
                         </nz-collapse>
+                        <i nz-icon nzType="close-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
+                            (click)="currentHelpPanel = ''"
+                            style="cursor:pointer;font-size:24px;vertical-align: baseline;" nz-tooltip
+                            nzTooltipTitle="Close Training Wizard Tour">
+                        </i>
 
                     </div>
                 </div>
-                -->
+
                 <div *ngIf="currentPageId === 'comments' && (mode === 'view' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production')"
                     class="page">
                     <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
@@ -372,7 +475,7 @@
                     </div>
                 </div>
                 <div *ngIf="currentPageId === 'intro'" class="page">
-                    <h3 style="text-align: center;margin-bottom:30px;">{{selectedTraining.introductionLabel}}</h3>
+                    <h3 style="text-align: center;margin-bottom:20px;">{{selectedTraining.introductionLabel}}</h3>
 
                     <div>
                         <span style="font-size:14px;">
@@ -385,7 +488,7 @@
                             </span>
                         </span>
                     </div>
-                    <div style="margin-top:50px;">
+                    <div style="margin-top:30px;">
                         <h4>
                             <p *ngIf="mode === 'edit' && selectedTraining.status === 'Under Development'" nz-paragraph
                                 (nzContentChange)="contentChanged($event, 'execSummaryLabel')" nzEditable
@@ -398,7 +501,7 @@
                         </span>
                     </div>
 
-                    <div style="padding: 30px;">
+                    <div style="padding:0 30px;">
                         <span style="font-size:14px;">
                             <p *ngIf="mode === 'edit' && selectedTraining.status === 'Under Development'" nz-paragraph
                                 (nzContentChange)="contentChanged($event, 'execSummary')" nzEditable
@@ -409,7 +512,7 @@
                             </span>
                         </span>
                     </div>
-                    <div style="margin-top:50px;">
+                    <div style="margin-top:30px;">
                         <h4>
                             <p *ngIf="mode === 'edit' && selectedTraining.status === 'Under Development'" nz-paragraph
                                 (nzContentChange)="contentChanged($event, 'goalsLabel')" nzEditable
@@ -422,7 +525,7 @@
                         </span>
                     </div>
 
-                    <div style="padding: 30px;">
+                    <div style="padding:0 30px;">
                         <span style="font-size:14px;">
                             <p *ngIf="mode === 'edit' && selectedTraining.status === 'Under Development'" nz-paragraph
                                 (nzContentChange)="contentChanged($event, 'goals')" nzEditable

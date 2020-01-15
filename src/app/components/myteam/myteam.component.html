@@ -2,17 +2,19 @@
     <div class="my-team">
         <div class="my-team-header">
             <span style="display:inline-block;font-size:24px;font-weight: 300;margin-bottom:20px;">My Team</span>
-            <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-                style="float:right;cursor:pointer;font-size:20px;margin:8px;" (click)="addUser()" nz-tooltip
-                nzTooltipTitle="Add New User"></i>
         </div>
         <div class="team-container">
             <div class="supervisor">
-                <div class="user-button" (click)="selectUser(-1)" [ngClass]="{'user-selected': supervisorSelected}">
+                <div class="user-button" (click)="selectUser(-1)" [ngClass]="{'user-selected': supervisorSelected}"
+                style="float:left;">
                     <i [ngClass]="userTypeIconHash[authenticatedUser.userType]"></i> &nbsp;
                     <span style="display:inline-block"> {{ authenticatedUser.firstName }}
                         {{ authenticatedUser.lastName }} </span>
                 </div>
+                <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+                    style="float:right;cursor:pointer;font-size:20px;margin:8px;" (click)="addUser()" nz-tooltip
+                    nzTooltipTitle="Add New User"></i>
+                    <div style="clear: both;"></div>
             </div>
             <div class="direct-report-container">
                 <div *ngFor="let user of myTeam$ | async; let i = index;" class="direct-report-cell">

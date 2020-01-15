@@ -180,3 +180,12 @@
 	opacity: .4;
 	cursor: not-allowed;
 }
+
+.activeHelp {
+	border: 2px solid #d64594;
+	background-color: #fcf1f6 !important;
+}
+
+.activeHelpPanelHeader {
+	color:#d64594;
+}

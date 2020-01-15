@@ -189,6 +189,7 @@ export class TrainingViewerComponent implements OnInit {
     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
   };
   inputValue = '';
+  currentHelpPanel = '';
 
   markCompletedModalIsVisible = false;
 
@@ -207,7 +208,7 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentPageId = 'intro';
+    this.currentPageId = 'trainingWizardTour';
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     this.selectedTrainingIndex$.subscribe(index => {
       this.selectedTrainingIndex = index;
@@ -306,6 +307,7 @@ export class TrainingViewerComponent implements OnInit {
     if (this.pageFileHash[pageId]) {
       this.fileService.selectFsHandle(this.pageFileHash[pageId].versions[0].fsHandle);
     }
+    this.currentHelpPanel = '';
   }
 
   setIcon(event) {
@@ -531,11 +533,7 @@ export class TrainingViewerComponent implements OnInit {
 
   setStatus(status) {
     this.selectedTraining.status = status;
-    if (status === 'Under Development') {
-      this.currentPageId = 'config';
-    } else {
-      this.currentPageId = 'intro';
-    }
+    this.currentPageId = 'intro';
   }
 
   selectChoice(itemIndex, choiceIndex) {
@@ -557,5 +555,9 @@ export class TrainingViewerComponent implements OnInit {
       this.assessmentType.question = false;
       this.assessmentType.assessment = true;
     }
+  }
+
+  setCurrentHelpPanel(panelName: string): void {
+    this.currentHelpPanel = panelName;
   }
 }
