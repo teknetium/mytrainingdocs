@@ -1,6 +1,8 @@
-<div *ngIf="authenticatedUser$ | async as user" style="height:96%;width:100%;">
+<div *ngIf="authenticatedUser$ | async as user" style="height:100%;width:100%;">
     <div class="calendar">
+<!--
         <app-calendar></app-calendar>
+        -->
     </div>
     <div class="myteam-container" *ngIf="user.userType === 'supervisor' || user.adminUp">
         <app-myteam></app-myteam>

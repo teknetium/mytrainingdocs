@@ -1,10 +1,11 @@
 <div class="training-container">
-  <div *ngFor="let item of trainings index as i" style="display:inline-block;">
-    <div class="cell-item-sm" [ngClass]="{'selected-item': selectedItemIndex === i}"
-      (click)="selectItem(i)">
-      <i [ngStyle]="{'color': item.iconColor, 'font-size.px': cellFontSize}" [ngClass]="item.iconClass"></i>
-      <div class="item-sm">
-        {{ item.title }}
+  <div style="height:70px;display:inline-block;">
+    <div *ngFor="let item of trainings index as i" style="display:inline-block;">
+      <div class="cell-item-sm" [ngClass]="{'selected-item': selectedItemIndex === i}" (click)="selectItem(i)">
+        <i [ngStyle]="{'color': item.iconColor, 'font-size.px': cellFontSize}" [ngClass]="item.iconClass"></i>
+        <div class="item-sm">
+          {{ item.title }}
+        </div>
       </div>
     </div>
   </div>
@@ -13,6 +14,6 @@
     <span style="font-size:26px;font-weight: 300;display:block;opacity:.4;">No Data</span>
   </div>
 
-  <div  style="margin-top:20px;height: 93%;">
+  <div style="padding-top:5px;height: 92%;">
     <mtd-training-viewer></mtd-training-viewer>
   </div>

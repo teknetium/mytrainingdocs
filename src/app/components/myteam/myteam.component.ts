@@ -76,6 +76,7 @@ export class MyteamComponent implements OnInit {
   userIndexSelected = -1;
   myTeamHelpPanelIsVisible = true;
   myTeamTrainingsHelpPanelIsVisible = true;
+  currentTab = 'myTeamTrainings';
 
   constructor(
     private authService: AuthService,
@@ -152,5 +153,9 @@ export class MyteamComponent implements OnInit {
 
   newSupervisorSelected(open: boolean) {
     this.isNewSupervisorPanelOpen = open;
+  }
+
+  setCurrentTab(tabName) {
+    this.currentTab = tabName;
   }
 }

@@ -2,6 +2,7 @@
     display: inline-block;
     width: 22%;
     height: 100%;
+    padding-left:10px;
     border-right: 1px solid #e0e0e0;
 }
 
@@ -16,11 +17,7 @@
     height:fit-content;
 }
 
-.my-tabs {
-    height: 90%;
-    background-color: violet;
-}
-.my-team-header {
+.mm-header {
     display: block;
     border-bottom: 1px solid #e0e0e0;
     margin-bottom: 5px;
@@ -69,4 +66,23 @@
 .legend {
     font-size: 10px;
     margin-bottom: 10px;    
+}
+
+.tab-titles {
+    width:fit-content;
+    height:40px;
+    padding:10px 20px;
+    margin-right: 2px;
+    display: inline-block;
+}
+
+.tab-titles:hover {
+    color: blue;
+    background-color: #f4f4f4;
+}
+
+.selected-tab {
+    border-bottom:2px solid blue;
+    color: blue;
+    background-color: #f4f4f4;
 }

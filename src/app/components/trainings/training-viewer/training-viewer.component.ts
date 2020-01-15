@@ -41,7 +41,7 @@ export class TrainingViewerComponent implements OnInit {
   selectedTrainingIndex$: Observable<number>;
   fileUploaded$: Observable<FileModel>;
   safeUrl$: Observable<SafeResourceUrl>;
-  currentPageId = 'config';
+  currentPageId = 'intro';
   isOpen = true;
   pageContainerMarginLeft = '270';
   selectedTraining: TrainingModel;

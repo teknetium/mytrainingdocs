@@ -272,7 +272,7 @@ export class TrainingService {
       owner: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),
       estimatedTimeToComplete: 30,
-      jobTitle: 'sample job title',
+      jobTitle: '',
       description: 'This is a useless description',
       image: 'assets/images/others/bb.jpg',
       introductionLabel: 'Training Introduction',
