@@ -7,8 +7,8 @@ import {BehaviorSubject, Observable} from 'rxjs';
 })
 export class ThemeImageService {
 
-  yogaImageBase = '../assets/yoga';
-  dogImageBase = '../assets/dog';
+  yogaImageBase = '../assets/images/yoga';
+  dogImageBase = '../assets/images/dog';
 
   themeBS$ = new BehaviorSubject<string>('dogs');
 
@@ -22,15 +22,15 @@ export class ThemeImageService {
   themeHash = {
     dogs: {
       count: 50,
-      baseUrl: '../assets/dog',
+      baseUrl: '../assets/images/dog',
       extension: '.jpg',
-      image: '../assets/dog42.jpg'
+      image: '../assets/images/dog42.jpg'
     },
     yoga: {
       count: 29,
-      baseUrl: '../assets/yoga',
+      baseUrl: '../assets/images/yoga',
       extension: '.png',
-      image: '../assets/yoga17.png'
+      image: '../assets/images/yoga17.png'
     }
   }
 

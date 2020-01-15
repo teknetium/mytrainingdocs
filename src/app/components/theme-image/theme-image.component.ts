@@ -64,8 +64,8 @@ export class ThemeImageComponent implements OnInit {
     this.image$ = this.imageBS$.asObservable();
     this.theme$ = this.themeImageService.getThemeStream();
 
-    this.yogaImageBase = '../assets/yoga';
-    this.dogImageBase = '../assets/dog';
+    this.yogaImageBase = '../assets/images/yoga';
+    this.dogImageBase = '../assets/images/dog';
     this.currentImageNum = 0;
     this.currentImage = '';
   }
