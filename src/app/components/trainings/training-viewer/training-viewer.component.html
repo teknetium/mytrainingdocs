@@ -749,7 +749,7 @@
                     <div
                         *ngIf="mode === 'view' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production'">
                         <div *ngFor="let item of assessment.items; index as itemIndex"
-                            style="width:90%;border-bottom: 1px solid #bbbbbb;position:relative;">
+                            style="width:90%;border-bottom: 1px solid #bbbbbb;position:relative;padding:10px">
                             <div style="color:black;font-size:16px;font-weight:500;margin-right:20px;float:left;">
                                 Question
                                 {{ itemIndex + 1 }}
@@ -760,7 +760,7 @@
                                     {{item.question}}
                                 </div>
                             </div>
-                            <div>
+                            <div style="padding:10px 0 0 0;">
                                 <div *ngFor="let choice of item.choices; index as choiceIndex"
                                     style="width:100%;padding-left:80px;height:26px;">
                                     <div

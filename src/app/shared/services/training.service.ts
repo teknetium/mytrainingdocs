@@ -281,7 +281,7 @@ export class TrainingService {
       execSummary: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
       goalsLabel: 'Goals Label',
       goals: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-      iconClass: 'fal fa-graduation-cap',
+      iconClass: 'fad fa-graduation-cap',
       iconColor: 'black',
       iconSource: 'fontawesome',
       files: [],

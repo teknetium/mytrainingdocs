@@ -1,9 +1,4 @@
 <div style="width:fit-content;height:fit-content;">
-    <nz-radio-group *ngIf="false" [(ngModel)]="iconTheme" (ngModelChange)="themeChanged($event)">
-        <label nz-radio nzValue="fas">Solid</label>
-        <label nz-radio nzValue="far">Regular</label>
-        <label nz-radio nzValue="fal">Light</label>
-    </nz-radio-group>
     <div style="text-align: center;margin-bottom: 30px;">
 
         <i [ngClass]="selectedIcon" style="font-size:40px;"
@@ -20,7 +15,7 @@
             <input #iconSearch type="text" nz-input placeholder="Enter search text" [(ngModel)]="iconSearchStr"
                 (keyup)="keypressCallback($event)" autofocus />
             <span
-                style="font-size:12px;display:block;color:#888888;">{{iconClass.substring(iconClass.indexOf('-')+1)}}</span>
+                style="font-size:12px;display:block;color:#888888;">{{iconClass}}</span>
 
             <div style="display:inline-block;height:85%;">
                 <div class="icon-container">
