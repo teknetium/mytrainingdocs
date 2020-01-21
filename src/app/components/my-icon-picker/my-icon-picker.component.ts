@@ -22,6 +22,13 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   duotoneIconNames = [];
   iconHash = {};
 
+  maxFontSize = 44;
+  minFontSize = 18;
+  maxPadding = 20;
+  minPadding = 5;
+  sliderValue = 50;
+  fontSize = 36;
+  padding = 12;
   styles = [];
 
   timer1;
@@ -30,9 +37,11 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   matchingIcons$: Observable<string[]> = this.matchingIconsBS$.asObservable();
   matchingIcons: string[] = [];
   @Output() icon = new EventEmitter<{icon:string, color:string}>();
-  iconClass: string = 'fal fa-file-certificate';
+  iconName: string = '';
+  currentIcon = -1;
   iconColor: string = 'black';
   selectedIcon: string = '';
+  selectedIconIndex = -1;
   @ViewChild('iconSearch', { static: false }) iconSearch: ElementRef;
 
   constructor() {
@@ -40,7 +49,7 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
     for (const iconName of this.iconNames) {
       if (icons[iconName].styles.includes('duotone')) {
         this.duotoneIconNames.push(iconName);
-        this.matchingIcons.push('fad fa-' + iconName);
+        this.matchingIcons.push('fad fa-fw fa-' + iconName);
       }
     }
     this.matchingIconsBS$.next(this.matchingIcons);
@@ -50,12 +59,24 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
 //    this.searchForIcons();
   }
 
+  sizeChange(val) {
+    this.fontSize = this.minFontSize + Math.floor(((this.maxFontSize - this.minFontSize) * (val / 100)));
+    this.padding = this.minPadding + Math.floor(((this.maxPadding - this.minPadding) * (val / 100)));
+    console.log('sizeChange() ', this.fontSize, this.padding);
+  }
+
   ngAfterViewInit() {
     this.iconSearch.nativeElement.focus();
     }
 
-  mouseOver(i) {
-    this.iconClass = this.matchingIcons[i];
+  mouseEnter(i) {
+    this.currentIcon = i;
+    this.iconName = this.matchingIcons[i].substring(13);
+  }
+
+  mouseLeave(i) {
+    this.currentIcon = -1;
+    this.iconName = '';
   }
 
   themeChanged($event) {
@@ -68,6 +89,8 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   }
 
   selectIcon(i) {
+
+    this.selectedIconIndex = i;
     this.selectedIcon = this.matchingIcons[i];
     this.icon.emit({ icon: this.matchingIcons[i], color: this.iconColor });
   }
@@ -79,6 +102,7 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   }
 
   searchForIcons() {
+    this.selectedIconIndex = -1;
     this.matchingIcons = [];
     /*
     for (const iconStr of this.iconNamesSolid) {
@@ -91,7 +115,7 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
     */
     for (const iconStr of this.duotoneIconNames) {
       if (iconStr.indexOf(this.iconSearchStr) >= 0) {
-            this.matchingIcons.push('fad fa-' + iconStr);
+            this.matchingIcons.push('fad fa-fw fa-' + iconStr);
       }
     }
 
