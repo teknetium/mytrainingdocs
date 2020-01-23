@@ -41,6 +41,7 @@ export class ThemeImageComponent implements OnInit {
 
   theme$: Observable<string>;
 
+  imageThemeActive = false;
   yogaImageBase;
   dogImageBase;
   currentImageNum: number;
@@ -94,6 +95,10 @@ export class ThemeImageComponent implements OnInit {
   }
 
   fadeIn() {
+    if (!this.imageThemeActive) {
+      return;
+    }
+
     this.imageBS$.next(this.themeImageService.getImageUrl());
 
     this.triggerBS$.next(true);
@@ -110,5 +115,9 @@ export class ThemeImageComponent implements OnInit {
     setTimeout(() => {
       this.fadeIn();
     }, 500);
+  }
+
+  toggleImageTheme() {
+    this.imageThemeActive = !this.imageThemeActive;
   }
 }

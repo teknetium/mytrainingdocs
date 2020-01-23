@@ -29,8 +29,24 @@ import { UserModel } from 'src/app/shared/interfaces/user.model';
       transition('* => open', [
         animate('200ms')
       ]),
+    ]),
+    trigger('questionSlide', [
+      // ...
+      state('closed', style({
+        'margin-left': '900px'
+      })),
+      state('open', style({
+        'margin-left': '0',
+      })),
+      transition('closed => open', [
+        animate('200ms')
+      ]),
+      transition('* => open', [
+        animate('200ms')
+      ]),
     ])
   ]
+
 
 })
 export class TrainingViewerComponent implements OnInit {
@@ -83,49 +99,32 @@ export class TrainingViewerComponent implements OnInit {
     _id: String(new Date().getTime()),
     type: 'choiceFeedback',
     timeLimit: 0,
+    passingGrade: 70,
     items: [
       {
         question: 'This is question 1',
         choices: [
-          {
-            text: 'This is the first choice',
-            correct: false
-          },
-          {
-            text: 'This is the second choice',
-            correct: false
-          }
+          'This is the first choice',
+          'This is the second choice',
         ],
-        selection: -1
+        correctChoice: -1
       },
       {
         question: 'This is question 2',
         choices: [
-          {
-            text: 'This is the first choice',
-            correct: false
-          },
-          {
-            text: 'This is the second choice',
-            correct: false
-          }
+          'This is the first choice',
+          'This is the second choice',
         ],
-        selection: -1
+        correctChoice: -1
 
       },
       {
         question: 'This is question 3',
         choices: [
-          {
-            text: 'This is the first choice',
-            correct: false
-          },
-          {
-            text: 'This is the second choice',
-            correct: false
-          }
+          'This is the first choice',
+          'This is the second choice',
         ],
-        selection: -1
+        correctChoice: -1
 
       },
     ]
@@ -134,19 +133,14 @@ export class TrainingViewerComponent implements OnInit {
   newItem = {
     question: 'Enter the question',
     choices: [
-      {
-        text: 'This is the first choice',
-        correct: false
-      },
-      {
-        text: 'This is the second choice',
-        correct: false
-      }
+      'This is the first choice',
+      'This is the second choice',
     ],
-    selection: -1
+    correctChoice: -1
   };
-  
-  currentChoiceIndex = -1;
+  assessmentResponseHash = {};
+  assessmentResponse = [];
+  showNext = false;
 
   @Input() mode = 'edit';
   docStreamPageHash = {};
@@ -190,7 +184,13 @@ export class TrainingViewerComponent implements OnInit {
   };
   inputValue = '';
   currentHelpPanel = '';
+  currentAssessmentItemIndex = 0;
+  assessmentComplete = false;
+  assessmentCorrectCnt = 0;
+  passedAssessment = false;
+  slideNewQuestion = false;
 
+  score = 0;
   markCompletedModalIsVisible = false;
 
 
@@ -329,13 +329,13 @@ export class TrainingViewerComponent implements OnInit {
 
   contentChanged(newVal: string, propName: string) {
     this.selectedTraining[propName] = newVal;
-    this.trainingService.saveTraining(this.selectedTraining);
+    this.trainingService.saveTraining(this.selectedTraining, true);
     this.setCurrentPage(this.currentPageId);
   }
 
   pageContentChanged(newVal: string, index: number, propName: string) {
     this.selectedTraining.pages[index][propName] = newVal;
-    this.trainingService.saveTraining(this.selectedTraining);
+    this.trainingService.saveTraining(this.selectedTraining, true);
     this.setCurrentPage(this.currentPageId);
   }
 
@@ -344,7 +344,7 @@ export class TrainingViewerComponent implements OnInit {
     page = this.selectedTraining.pages[index];
     page[propName] = newVal;
 
-    this.trainingService.saveTraining(this.selectedTraining);
+    this.trainingService.saveTraining(this.selectedTraining, true);
     this.setCurrentPage(this.currentPageId);
   }
 
@@ -362,7 +362,7 @@ export class TrainingViewerComponent implements OnInit {
   handleIconSelectConfirm() {
     this.selectedTraining.iconClass = this.tempIcon;
     this.selectedTraining.iconColor = this.tempIconColor;
-    this.trainingService.saveTraining(this.selectedTraining);
+    this.trainingService.saveTraining(this.selectedTraining, true);
     this.setCurrentPage(this.currentPageId);
 
     this.isIconSelectModalVisible = false;
@@ -439,18 +439,15 @@ export class TrainingViewerComponent implements OnInit {
     this.assessment.items.push(this.newItem);
 
     this.selectedTraining.assessment = this.assessment;
-    this.trainingService.saveTraining(this.selectedTraining);
+    this.trainingService.saveTraining(this.selectedTraining, true);
     this.setCurrentPage(this.currentPageId);
   }
 
   addNewChoice(itemIndex) {
-    const newChoice = {
-      text: 'New Choice',
-      correct: false
-    }
+    const newChoice = 'New Choice';
     this.assessment.items[itemIndex].choices.push(newChoice);
     this.selectedTraining.assessment = this.assessment;
-    this.trainingService.saveTraining(this.selectedTraining);
+    this.trainingService.saveTraining(this.selectedTraining, true);
 
     this.setCurrentPage(this.currentPageId);
   }
@@ -462,27 +459,24 @@ export class TrainingViewerComponent implements OnInit {
     } else {
       this.selectedTraining.assessment = null;
     }
-    this.trainingService.saveTraining(this.selectedTraining);
+    this.trainingService.saveTraining(this.selectedTraining, true);
     this.setCurrentPage(this.currentPageId);
   }
 
-  questionChanged(event, itemIndex) {
-    this.assessment.items[itemIndex].question = event;
-    this.selectedTraining.assessment = this.assessment;
-    this.trainingService.saveTraining(this.selectedTraining);
+  questionChanged() {
+    this.trainingService.saveTraining(this.selectedTraining, false);
     this.setCurrentPage(this.currentPageId);
   }
 
-  choiceContentChanged(event, itemIndex, choiceIndex, propName) {
-    this.assessment.items[itemIndex].choices[choiceIndex][propName] = event;
-    this.selectedTraining.assessment = this.assessment;
-    this.trainingService.saveTraining(this.selectedTraining);
+  choiceContentChanged(choice: string, itemIndex: number, choiceIndex: number) {
+    this.selectedTraining.assessment.items[itemIndex].choices[choiceIndex] = choice;
+    this.trainingService.saveTraining(this.selectedTraining, false);
     this.setCurrentPage(this.currentPageId);
   }
 
   saveTraining() {
     console.log('saveTrainging', this.selectedTraining);
-    this.trainingService.saveTraining(this.selectedTraining);
+    this.trainingService.saveTraining(this.selectedTraining, true);
 
     this.setCurrentPage(this.currentPageId);
   }
@@ -509,12 +503,9 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   setTrue(itemIndex, choiceIndex) {
-    this.selectedTraining.assessment.items[itemIndex].choices[choiceIndex].correct = true;
+    this.selectedTraining.assessment.items[itemIndex].correctChoice = choiceIndex;
   }
 
-  setFalse(itemIndex, choiceIndex) {
-    this.selectedTraining.assessment.items[itemIndex].choices[choiceIndex].correct = false;
-  }
 
   confirmDeleteQuestion(questionIndex) {
     this.selectedTraining.assessment.items.splice(questionIndex, 1);
@@ -522,7 +513,7 @@ export class TrainingViewerComponent implements OnInit {
 
   confirmDeletePage(pageIndex) {
     this.selectedTraining.pages.splice(pageIndex, 1);
-    this.trainingService.saveTraining(this.selectedTraining);
+    this.trainingService.saveTraining(this.selectedTraining, true);
     this.currentPageId = 'intro';
   }
 
@@ -547,13 +538,43 @@ export class TrainingViewerComponent implements OnInit {
     this.currentPageId = 'intro';
   }
 
-  selectChoice(itemIndex, choiceIndex) {
-    this.selectedTraining.assessment.items[itemIndex].selection = choiceIndex;
-    this.currentChoiceIndex = choiceIndex;
+  answeredQuestion(itemIndex) {
+    this.showNext = true;
+    if (this.assessmentResponseHash[this.currentAssessmentItemIndex] === this.selectedTraining.assessment.items[itemIndex].correctChoice) {
+      this.assessmentCorrectCnt++;
+      this.score = (this.assessmentCorrectCnt / this.selectedTraining.assessment.items.length) * 100;
+    }
+  }
+
+  nextQuestion() {
+    this.slideNewQuestion = true;
+    this.currentAssessmentItemIndex++;
+    if (this.currentAssessmentItemIndex === this.selectedTraining.assessment.items.length) {
+      this.currentAssessmentItemIndex = 0;
+      this.assessmentComplete = true;
+      this.score = (this.assessmentCorrectCnt / this.selectedTraining.assessment.items.length) * 100.0;
+      if (this.score < this.selectedTraining.assessment.passingGrade) {
+        this.passedAssessment = false;
+      } else {
+        this.passedAssessment = true;
+      }
+    }
+    this.showNext = false;
+    this.slideNewQuestion = false;
+  }
+
+  retake() {
+    this.assessmentComplete = false;
+    this.currentAssessmentItemIndex = 0;
+    this.passedAssessment = false;
+    this.assessmentCorrectCnt = 0;
+    for (let i = 0; i < this.selectedTraining.assessment.items.length; i++) {
+      this.assessmentResponseHash[i] = null;
+    }
   }
 
   setAssessmentType(type) {
-    if (type === 'choieFeedback') {
+    if (type === 'choiceFeedback') {
       this.assessmentType.choice = true;
       this.assessmentType.question = false;
       this.assessmentType.assessment = false;

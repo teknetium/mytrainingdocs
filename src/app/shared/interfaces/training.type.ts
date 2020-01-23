@@ -3,6 +3,7 @@ import { CalendarModule } from "src/app/components/calendar/calendar.module";
 export interface TrainingModel {
   _id: string,
   type: 'online',
+  version: string,
   status: 'Under Development' | 'In Review' | 'In Production',
   title: string,
   teamId: string,
@@ -25,22 +26,27 @@ export interface TrainingModel {
   pages: Page[],
   rating: number[],
   assessment: Assessment,
-  useAssessment: boolean
+  useAssessment: boolean,
 }
 
 export interface AssessmentItem {
   question: string,
-  choices: {
-    text: string,
-    correct: boolean
-  }[],
-  selection: number
+  choices: string[],
+  correctChoice: number
 }
   
+export interface TrainingArchive {
+  _id: string,
+  archiveDate: number,
+  version: string,
+  training: TrainingModel
+}
+
 export interface Assessment {
   _id: string,
   type: 'choiceFeedback' | 'questionFeedback' | 'assessmentFeedback',
   timeLimit: number,
+  passingGrade: number,
   items: AssessmentItem[]
 }
 

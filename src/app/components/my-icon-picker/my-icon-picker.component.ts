@@ -36,7 +36,8 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   matchingIconsBS$ = new BehaviorSubject<string[]>([]);
   matchingIcons$: Observable<string[]> = this.matchingIconsBS$.asObservable();
   matchingIcons: string[] = [];
-  @Output() icon = new EventEmitter<{icon:string, color:string}>();
+  iconSearchTermHash = {};
+  @Output() icon = new EventEmitter<{ icon: string, color: string }>();
   iconName: string = '';
   currentIcon = -1;
   iconColor: string = 'black';
@@ -50,24 +51,24 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
       if (icons[iconName].styles.includes('duotone')) {
         this.duotoneIconNames.push(iconName);
         this.matchingIcons.push('fad fa-fw fa-' + iconName);
+        this.iconSearchTermHash[iconName] = icons[iconName].search.terms;
       }
     }
     this.matchingIconsBS$.next(this.matchingIcons);
-   }
+  }
 
   ngOnInit() {
-//    this.searchForIcons();
+    //    this.searchForIcons();
   }
 
   sizeChange(val) {
     this.fontSize = this.minFontSize + Math.floor(((this.maxFontSize - this.minFontSize) * (val / 100)));
     this.padding = this.minPadding + Math.floor(((this.maxPadding - this.minPadding) * (val / 100)));
-    console.log('sizeChange() ', this.fontSize, this.padding);
   }
 
   ngAfterViewInit() {
     this.iconSearch.nativeElement.focus();
-    }
+  }
 
   mouseEnter(i) {
     this.currentIcon = i;
@@ -115,7 +116,14 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
     */
     for (const iconStr of this.duotoneIconNames) {
       if (iconStr.indexOf(this.iconSearchStr) >= 0) {
-            this.matchingIcons.push('fad fa-fw fa-' + iconStr);
+        this.matchingIcons.push('fad fa-fw fa-' + iconStr);
+        continue;
+      }
+      for (const term of this.iconSearchTermHash[iconStr]) {
+        if (typeof term === 'string' && term.indexOf(this.iconSearchStr) >= 0) {
+          this.matchingIcons.push('fad fa-fw fa-' + iconStr);
+          break;
+        }
       }
     }
 

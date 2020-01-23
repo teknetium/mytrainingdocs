@@ -17,7 +17,6 @@ import { NgChartjsModule } from 'ng-chartjs';
 import { ThemeConstantService } from './shared/services/theme-constant.service';
 import { LandingpageModule } from './components/landingpage/landingpage.module';
 import { CallbackModule } from './components/callback/callback.module';
-import { MailModule } from './components/mail/mail.module';
 import { PricingModule } from './components/pricing/pricing.module';
 import { MembersModule } from './components/members/members.module';
 import { ProfileModule } from './components/profile/profile.module';
@@ -41,7 +40,6 @@ registerLocaleData(en);
         AppComponent,
     ],
     imports: [
-        MailModule,
         PricingModule,
         MembersModule,
         ProfileModule,

@@ -30,7 +30,7 @@ export class TrainingService {
   selectedTrainingBS$ = new BehaviorSubject<TrainingModel>(null);
   selectedTrainingIndexBS$ = new BehaviorSubject<number>(null);
   currentTrainingIndex = -1;
-  
+
   action = '';
   actionBS$ = new BehaviorSubject<string>('');
   trainingsForSelectBS$ = new BehaviorSubject<{ label: string, value: string }[]>([]);
@@ -70,23 +70,23 @@ export class TrainingService {
       for (const training of this.allTrainings) {
         this.trainingIdHash[training._id] = training;
       }
-/*
-      let i;
-      if (this.action === 'save') {
-        i = this.selectedTrainingIndexBS$.value;
-      } else if (this.action === 'init') {
-        i = -1;
-      } else if (this.action === 'add') {
-        i = this.allTrainings.length - 1;
-      } else {
-        if (this.selectedTrainingIndexBS$.value > this.allTrainings.length - 1) {
-          i = this.allTrainings.length - 1;
-        } else {
-          i = this.selectedTrainingIndexBS$.value;
-        }
-      }
-      */
-      
+      /*
+            let i;
+            if (this.action === 'save') {
+              i = this.selectedTrainingIndexBS$.value;
+            } else if (this.action === 'init') {
+              i = -1;
+            } else if (this.action === 'add') {
+              i = this.allTrainings.length - 1;
+            } else {
+              if (this.selectedTrainingIndexBS$.value > this.allTrainings.length - 1) {
+                i = this.allTrainings.length - 1;
+              } else {
+                i = this.selectedTrainingIndexBS$.value;
+              }
+            }
+            */
+
       this.allTrainingsBS$.next(this.allTrainings);
       //      this.myTrainingCntBS$.next(this.myTrainings.length);
       this.allTrainingCntBS$.next(this.allTrainings.length);
@@ -132,27 +132,27 @@ export class TrainingService {
     this.actionBS$.next('editTraining');
 
   }
-/*
-  selectItem(index) {
-    if (index < 0 || index >= this.allTrainings.length) {
-      //      this.showSelectedItemBS$.next(false);
-      //      this.showSelectedIndexFeedbackBS$.next(false);
-      this.showEditor$.next(false);
-      this.selectedTrainingIndexBS$.next(-1);
-      this.setAction('');
-      return;
+  /*
+    selectItem(index) {
+      if (index < 0 || index >= this.allTrainings.length) {
+        //      this.showSelectedItemBS$.next(false);
+        //      this.showSelectedIndexFeedbackBS$.next(false);
+        this.showEditor$.next(false);
+        this.selectedTrainingIndexBS$.next(-1);
+        this.setAction('');
+        return;
+      }
+  
+      this.showEditor$.next(true);
+      this.selectedTrainingBS$.next(this.allTrainings[index]);
+      this.selectedTrainingIndexBS$.next(index);
+      this.actionBS$.next('editTraining');
+  
+      //    this.showSelectedItemBS$.next(true);
+      //    this.showStatusBS$.next(false);
+      //    this.showSelectedIndexFeedbackBS$.next(true);
     }
-
-    this.showEditor$.next(true);
-    this.selectedTrainingBS$.next(this.allTrainings[index]);
-    this.selectedTrainingIndexBS$.next(index);
-    this.actionBS$.next('editTraining');
-
-    //    this.showSelectedItemBS$.next(true);
-    //    this.showStatusBS$.next(false);
-    //    this.showSelectedIndexFeedbackBS$.next(true);
-  }
-*/
+  */
   setAction(action: string) {
     this.actionBS$.next(action);
   }
@@ -259,12 +259,14 @@ export class TrainingService {
       _id: String(new Date().getTime()),
       type: 'choiceFeedback',
       timeLimit: 0,
+      passingGrade: 70,
       items: []
     }
 
     const newTraining = <TrainingModel>{
       _id: String(new Date().getTime()),
       type: 'online',
+      version: '1.0.0',
       title: 'New Training',
       status: 'Under Development',
       rating: [],
@@ -289,9 +291,9 @@ export class TrainingService {
       assessment: assessment,
       useAssessment: false
     };
-//    this.allTrainings.push(newTraining);
-//    this.allTrainingsBS$.next(this.allTrainings);
-//    this.selectedTrainingIndexBS$.next(this.allTrainings.length - 1);
+    //    this.allTrainings.push(newTraining);
+    //    this.allTrainingsBS$.next(this.allTrainings);
+    //    this.selectedTrainingIndexBS$.next(this.allTrainings.length - 1);
     this.postTraining$(newTraining).subscribe(trainingObj => {
       this.loadData();
       this.selectedTrainingIndexBS$.next(-1);
@@ -300,8 +302,8 @@ export class TrainingService {
     this.actionBS$.next('newTraining');
     //    this.showSelectedIndexFeedbackBS$.next(true);
     //    this.showSelectedItemBS$.next(true);
-//    this.selectedTrainingBS$.next(newTraining);
-//    this.showEditor$.next(true);
+    //    this.selectedTrainingBS$.next(newTraining);
+    //    this.showEditor$.next(true);
 
   }
 
@@ -313,9 +315,9 @@ export class TrainingService {
       file: fileId,
       portlets: [],
     };
-    
+
     this.trainingIdHash[trainingId].pages.push(newPage);
-    this.saveTraining(this.trainingIdHash[trainingId]);
+    this.saveTraining(this.trainingIdHash[trainingId], true);
     this.selectedTrainingBS$.next(this.trainingIdHash[trainingId]);
   }
 
@@ -333,7 +335,7 @@ export class TrainingService {
       this.loadData();
       this.showEditor$.next(false);
       this.selectedTrainingIndexBS$.next(-1);
-      })
+    })
   }
 
   private get _authHeader(): string {
@@ -348,11 +350,13 @@ export class TrainingService {
       );
   }
 
-  saveTraining(training: TrainingModel) {
+  saveTraining(training: TrainingModel, loadData: boolean) {
     this.editTraining$(training).subscribe(data => {
 
-    this.loadData();
- //      this.selectItemForEditing(this.currentTrainingIndex);
+      if (loadData) {
+        this.loadData();
+      }
+      //      this.selectItemForEditing(this.currentTrainingIndex);
     });
   }
 

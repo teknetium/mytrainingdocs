@@ -28,13 +28,21 @@ const assessmentSchema = new Schema({
   _id: { type: String, required: true },
   type: { type: String, required: true },
   timeLimit: { type: Number, required: false },
-  items: [{ question: { type: String }, choices: [{ text: String, correct: Boolean }] }]
+  passingGrade: { type: Number, required: false },
+  items: [
+    {
+      question: { type: String },
+      choices: { type: [String] },
+      correctChoice: { type: Number }
+    }
+  ]
 })
 
 
 const trainingSchema = new Schema({
   _id: { type: String, required: true },
   type: { type: String, required: true },
+  version: { type: String, required: true },
   status: { type: String, required: true },
   title: { type: String, required: true },
   teamId: { type: String, required: true },

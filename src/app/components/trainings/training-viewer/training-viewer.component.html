@@ -227,56 +227,77 @@
                         style="display:inline-block;cursor:pointer;font-size:24px;vertical-align: baseline;margin-right:20px;">
                     </i>
                     <h3 style="display:inline-block;text-align: left;margin-bottom:30px;">Training Configuration</h3>
-                    <div class="config-page-row">
-                        <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
-                            <label style="margin-bottom: 0;display: inline-block;font-size:12px;color:#bbbbbb;">
-                                Estimated Time To Complete
-                            </label>
+                    <div>
+                        <h5>General</h5>
+                        <div class="config-page-row">
+                            <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
+                                <label style="margin-bottom: 0;display: inline-block;font-size:12px;color:#bbbbbb;">
+                                    Estimated Time To Complete
+                                </label>
+                            </div>
+                            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
+                                <nz-input-number nzSize="small" nzId="estTimeToComplete" class="foo"
+                                    style="font-size:12px;" [(ngModel)]="selectedTraining.estimatedTimeToComplete"
+                                    [nzMin]="10" [nzMax]="240" [nzStep]="5" (blur)="saveTraining()">
+                                </nz-input-number>
+                                <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes</span>
+                            </div>
                         </div>
-                        <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
-                            <nz-input-number nzSize="small" nzId="estTimeToComplete" class="foo" style="font-size:12px;"
-                                [(ngModel)]="selectedTraining.estimatedTimeToComplete" [nzMin]="10" [nzMax]="240"
-                                [nzStep]="5" (blur)="saveTraining()">
-                            </nz-input-number>
-                            <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes</span>
+
+                        <div class="config-page-row">
+                            <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
+                                <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Job Title</label>
+                            </div>
+                            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
+
+                                <input
+                                    style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;"
+                                    nz-input [(ngModel)]="selectedTraining.jobTitle" nzSize="small"
+                                    (blur)="saveTraining()" />
+
+                            </div>
                         </div>
                     </div>
+                    <div style="margin-top:30px;">
+                        <h5>Assessment</h5>
+                        <div class="config-page-row">
+                            <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
+                                <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Use Assessment</label>
+                            </div>
+                            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
 
-                    <div class="config-page-row">
-                        <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
-                            <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Job Title</label>
+                                <label nz-checkbox [(ngModel)]="selectedTraining.useAssessment"
+                                    (click)="saveTraining()"></label>
+
+                            </div>
                         </div>
-                        <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
+                        <div class="config-page-row">
+                            <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
+                                <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Assessment Time
+                                    Limit</label>
+                            </div>
+                            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
+                                <nz-input-number nzSize="small" nzId="timeLimit" class="foo" style="font-size:12px;"
+                                    [(ngModel)]="selectedTraining.assessment.timeLimit" [nzMin]="0" [nzMax]="60"
+                                    [nzStep]="1" (blur)="saveTraining()">
+                                </nz-input-number>
+                                <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes&nbsp;&nbsp;( 0
+                                    indicates no time limit )</span>
 
-                            <input style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;"
-                                nz-input [(ngModel)]="selectedTraining.jobTitle" nzSize="small"
-                                (blur)="saveTraining()" />
-
+                            </div>
                         </div>
-                    </div>
-                    <div class="config-page-row">
-                        <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
-                            <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Use Assessment</label>
-                        </div>
-                        <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
+                        <div class="config-page-row">
+                            <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
+                                <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Passing Grade</label>
+                            </div>
+                            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
+                                <nz-input-number nzSize="small" nzId="passingGrade" class="foo" style="font-size:12px;"
+                                    [(ngModel)]="selectedTraining.assessment.passingGrade" [nzMin]="50" [nzMax]="100"
+                                    [nzStep]="5">
+                                </nz-input-number>
+                                <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp;%</span>
 
-                            <label nz-checkbox [(ngModel)]="selectedTraining.useAssessment"
-                                (click)="saveTraining()"></label>
-
-                        </div>
-                    </div>
-                    <div class="config-page-row">
-                        <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
-                            <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Assessment Time Limit</label>
-                        </div>
-                        <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
-                            <nz-input-number nzSize="small" nzId="timeLimit" class="foo" style="font-size:12px;"
-                                [(ngModel)]="selectedTraining.assessment.timeLimit" [nzMin]="0" [nzMax]="60"
-                                [nzStep]="1" (blur)="saveTraining()">
-                            </nz-input-number>
-                            <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes&nbsp;&nbsp;( 0
-                                indicates no time limit )</span>
-
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -433,7 +454,7 @@
                         <i nz-icon nzType="close-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
                             (click)="currentHelpPanel = ''"
                             style="cursor:pointer;font-size:24px;vertical-align: baseline;" nz-tooltip
-                            nzTooltipTitle="Close Training Wizard Tour">
+                            nzTooltipTitle="End the Training Wizard Tour">
                         </i>
 
                     </div>
@@ -660,32 +681,8 @@
                 <div *ngIf="currentPageId === 'assessment'" class="page">
                     <h3 style="text-align: center;margin-bottom:30px;">Assessment</h3>
                     <div *ngIf="mode === 'edit' && selectedTraining.status === 'Under Development'">
-                        <div style="margin-bottom: 20px;">
-                            <div *ngIf="mode === 'edit' && selectedTraining.status === 'Under Development'">
-                                Create a test to evaluate mastery of the content presented in this training.<br>
-
-                                <div style="padding:30px 0 0 30px;">
-                                    <div>
-                                        <label nz-checkbox [(ngModel)]="assessmentType.choice"
-                                            (click)="setAssessmentType('choiceFeedback')"></label>
-                                        Choice Feedback
-                                    </div>
-                                    <div>
-                                        <label nz-checkbox [(ngModel)]="assessmentType.question"
-                                            (click)="setAssessmentType('questionFeedback')"></label>
-                                        Question Feedback
-                                    </div>
-                                    <div>
-                                        <label nz-checkbox [(ngModel)]="assessmentType.assessment"
-                                            (click)="setAssessmentType('assessmentFeedback')"></label>
-                                        Assessment Feedback
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
                         <div *ngFor="let item of assessment.items; index as itemIndex"
-                            style="width:90%;border-bottom: 1px solid #bbbbbb;position:relative;">
+                            style="width:90%;border-bottom: 1px solid #bbbbbb;position:relative;margin-top:10px;">
                             <div style="position:absolute;top:5px; right:5px;">
                                 <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-tooltip
                                     nzTooltipTitle="Delete Question" nz-popconfirm
@@ -701,44 +698,27 @@
                             </div>
 
                             <div style="display: inline-block;width:80%;font-size:16px;">
-                                <p *ngIf="mode === 'edit' && selectedTraining.status === 'Under Development'"
-                                    nz-paragraph (nzContentChange)="questionChanged($event, itemIndex)" nzEditable
-                                    [(nzContent)]="item.question" style="color:black;font-weight: 200;">
-                                </p>
-                                <div *ngIf="mode === 'view' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production'"
-                                    style="color:black;font-weight: 200;">
-                                    {{item.question}}
-                                </div>
+                                <input nz-input type="text" nzSize="small" placeholder="Question" ngDefaultControl
+                                    [(ngModel)]="item.question" style="margin-bottom:10px;" (blur)="questionChanged()">
+
                             </div>
                             <div>
-                                <div *ngIf="mode === 'edit' && selectedTraining.status === 'Under Development'">
-                                    <div style="font-size:16px;">Choices</div>
-                                </div>
-                                <div *ngFor="let choice of item.choices; index as choiceIndex"
-                                    style="width:100%;padding-left:80px;height:26px;">
-                                    <div *ngIf="mode === 'edit' && selectedTraining.status === 'Under Development'">
-                                        <label nz-checkbox [(ngModel)]="choice.correct"
-                                            (ngModelChange)="choiceContentChanged($event, itemIndex, choiceIndex, 'correct')"
-                                            style="display:inline-block;">&nbsp;&nbsp;</label>
-                                        <span style="font-weight:500;">{{alpha[choiceIndex]}}&nbsp;&nbsp;&nbsp;</span>
-                                        <p nz-paragraph
-                                            (nzContentChange)="choiceContentChanged($event, itemIndex, choiceIndex, 'text')"
-                                            nzEditable [(nzContent)]="choice.text"
-                                            style="display:inline-block;width:90%;">
+                                <div style="font-size:16px;">Choices</div>
+                                <nz-radio-group [(ngModel)]="item.correctChoice" style="display:block;"
+                                    (ngModelChange)="saveTraining()">
+                                    <div *ngFor="let choice of item.choices; index as choiceIndex"
+                                        style="width:100%;padding-left:50px;margin-bottom: 10px;">
+                                        <label nz-radio [nzValue]="choiceIndex" style="display:inline-block;"></label>
+                                        <span style="font-weight:500;">{{alpha[choiceIndex]}}&nbsp;&nbsp;</span>
+                                        <input nz-input type="text" placeholder="Choice Text" ngDefaultControl
+                                            (blur)="choiceContentChanged(choice, itemIndex, choiceIndex)"
+                                            [(ngModel)]="choice" nzSize="small" style="width:90%;">
                                     </div>
-                                    <div *ngIf="mode === 'view' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production'"
-                                        style="font-size:14px;display:inline-block; margin-left:20px;line-height:20px;height:22px;">
-                                        <label nz-checkbox style="display:inline-block;">&nbsp;&nbsp;</label>
-                                        <span style="font-weight:500;">{{alpha[choiceIndex]}}&nbsp;&nbsp;&nbsp;</span>
-                                        <span style="font-size:14px;">{{choice.text}}</span>
-                                    </div>
-                                </div>
-                                <i *ngIf="mode === 'edit' && selectedTraining.status === 'Under Development'"
-                                    class="font-size-18" [twoToneColor]="'#  3f87f5'" nz-icon nzType="plus-square"
+                                </nz-radio-group>
+                                <i class="font-size-18" [twoToneColor]="'#3f87f5'" nz-icon nzType="plus-square"
                                     theme="twotone" [nzTwotoneColor]="'#52c41a'" (click)="addNewChoice(itemIndex)"
-                                    style="padding-left:80px;margin-bottom:10px;cursor: pointer;" nz-tooltip
-                                    nzTooltipTitle="Add new Choice"></i>
-
+                                    style="display:block;text-align:left;padding-left:50px;margin-bottom:10px;cursor: pointer;"
+                                    nz-tooltip nzTooltipTitle="Add new Choice"></i>
                             </div>
                         </div>
                         <i *ngIf="mode === 'edit' && selectedTraining.status === 'Under Development'"
@@ -748,34 +728,68 @@
                     </div>
                     <div
                         *ngIf="mode === 'view' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production'">
-                        <div *ngFor="let item of assessment.items; index as itemIndex"
-                            style="width:90%;border-bottom: 1px solid #bbbbbb;position:relative;padding:10px">
-                            <div style="color:black;font-size:16px;font-weight:500;margin-right:20px;float:left;">
-                                Question
-                                {{ itemIndex + 1 }}
+                        <div>
+                            <div *ngIf="assessmentComplete && passedAssessment">
+                                <h5>Congratulations, You Passed!</h5>
+                                You correctly answered {{ assessmentCorrectCnt }} of {{ assessment.items.length }}
+                                questions.
                             </div>
+                            <div *ngIf="assessmentComplete && !passedAssessment">
+                                <h5 style="display:block;">Sorry, You Failed!</h5>
+                                You correctly answered {{ assessmentCorrectCnt }} of {{ assessment.items.length }}
+                                questions.
 
-                            <div style="display: inline-block;width:80%;font-size:16px;">
-                                <div style="color:black;font-weight: 200;">
-                                    {{item.question}}
-                                </div>
-                            </div>
-                            <div style="padding:10px 0 0 0;">
-                                <div *ngFor="let choice of item.choices; index as choiceIndex"
-                                    style="width:100%;padding-left:80px;height:26px;">
-                                    <div
-                                        style="font-size:14px;display:inline-block; margin-left:20px;line-height:20px;height:22px;">
-                                        <i *ngIf="selectedTraining.assessment.items[itemIndex].selection >= 0  && selectedTraining.assessment.items[itemIndex].choices[currentChoiceIndex]"
-                                            [twoToneColor]="'#3f87f5'" nz-icon nzType="check-circle" theme="twotone"
-                                            [nzTwotoneColor]="'#52c41a'" style="margin-top:10px;cursor: pointer;"></i>
-                                        <label nz-checkbox style="display:inline-block;"
-                                            (click)="selectChoice(itemIndex, choiceIndex)  ">&nbsp;&nbsp;</label>
-                                        <span style="font-weight:500;">{{alpha[choiceIndex]}}&nbsp;&nbsp;&nbsp;</span>
-                                        <span style="font-size:14px;">{{choice.text}}</span>
-                                    </div>
-                                </div>
+                                <button nz-button nzType="primary" (click)="retake()"
+                                    style="display:block;">Retake</button>
+
                             </div>
                         </div>
+                        <ng-container *ngFor="let item of assessment.items; index as itemIndex">
+                            <div *ngIf="!assessmentComplete && currentAssessmentItemIndex === itemIndex"
+                                style="width:90%;position:relative;padding:10px">
+                                <ng-container [@questionSlide]="slideNewQuestion ? 'open' : 'closed'"  style="margin-left:900px;">
+                                    <div
+                                        style="color:black;font-size:16px;font-weight:500;margin-right:20px;float:left;">
+                                        Question
+                                        {{ itemIndex + 1 }}
+                                    </div>
+
+                                    <div style="display: inline-block;width:80%;font-size:16px;">
+                                        <div style="color:black;font-weight: 200;">
+                                            {{item.question}}
+                                        </div>
+                                    </div>
+                                    <div style="padding:10px 0 0 0;">
+                                        <nz-radio-group [(ngModel)]="assessmentResponseHash[itemIndex]"
+                                            [nzDisabled]="showNext" style="display:block;"
+                                            (ngModelChange)="answeredQuestion(itemIndex)">
+                                            <div *ngFor="let choice of item.choices; index as choiceIndex"
+                                                style="width:100%;padding-left:50px;position:relative;" [ngClass]="">
+                                                <i *ngIf="(assessmentResponseHash[itemIndex] !== null || assessmentResponseHash[itemIndex] !== undefined) && assessmentResponseHash[itemIndex] === choiceIndex && assessmentResponseHash[itemIndex] !== item.correctChoice"
+                                                    nz-icon nzType="close-circle" theme="twotone"
+                                                    [nzTwotoneColor]="'red'"
+                                                    style="position:absolute;top:0;left:20px;font-size: 20px;vertical-align: top;"></i>
+                                                <i *ngIf="(assessmentResponseHash[itemIndex] !== null || assessmentResponseHash[itemIndex] !== undefined) && assessmentResponseHash[itemIndex] === choiceIndex && assessmentResponseHash[itemIndex] === item.correctChoice"
+                                                    nz-icon nzType="check-circle" theme="twotone"
+                                                    [nzTwotoneColor]="'#52c41a'"
+                                                    style="position:absolute;top:0;left:20px;font-size: 20px;vertical-align: top;"></i>
+                                                <i *ngIf="showNext && item.correctChoice === choiceIndex" nz-icon
+                                                    nzType="check-circle" theme="twotone" [nzTwotoneColor]="'#52c41a'"
+                                                    style="position:absolute;top:0;left:20px;font-size: 20px;vertical-align: top;"></i>
+                                                <label nz-radio [nzValue]="choiceIndex"
+                                                    style="display:inline-block;"></label>
+                                                <span
+                                                    style="font-weight:500;">{{alpha[choiceIndex]}}&nbsp;)&nbsp;&nbsp;</span>
+                                                <span style="font-size:14px;">{{choice}}</span>
+                                            </div>
+                                        </nz-radio-group>
+                                    </div>
+                                </ng-container>
+                                <div *ngIf="showNext" style="margin-top: 20px;">
+                                    <button nz-button nzType="primary" (click)="nextQuestion()">Next Question</button>
+                                </div>
+                            </div>
+                        </ng-container>
                     </div>
                 </div>
             </div>

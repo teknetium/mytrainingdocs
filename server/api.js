@@ -51,7 +51,7 @@ module.exports = function(app, config) {
  |--------------------------------------
  */
 
-  const trainingListProjection = "_id title type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status";
+  const trainingListProjection = "_id title version type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status";
   const userTrainingListProjection = "_id tid uid status dueDate timeToDate";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId supervisor profilePicUrl";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
@@ -62,18 +62,6 @@ module.exports = function(app, config) {
   app.get("/api/", (req, res) => {
     res.send("API works");
   });
-  // using Twilio SendGrid's v3 Node.js Library
-  // https://github.com/sendgrid/sendgrid-nodejs
-  //const sgMail = require('@sendgrid/mail');
-  //sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-  //const msg = {
-  //  to: 'glayer@gmail.com',
-  //  from: 'test@example.com',
-  //  subject: 'Sending with Twilio SendGrid is Fun',
-  //  text: 'and easy to do anywhere, even with Node.js',
-  //  html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-  //};
-  //sgMail.send(msg);
 
 
   //
@@ -100,6 +88,7 @@ module.exports = function(app, config) {
       _id: req.body._id,
       title: req.body.title,
       type: req.body.type,
+      version: req.body.version,
       teamId: req.body.teamId,
       owner: req.body.owner,
       dateCreated: req.body.dateCreated,
@@ -140,6 +129,7 @@ module.exports = function(app, config) {
       }
       training._id = req.body._id;
       training.type = req.body.type;
+      training.version = req.body.version;
       training.title = req.body.title;
       training.teamId = req.body.teamId;
       training.owner = req.body.owner;
