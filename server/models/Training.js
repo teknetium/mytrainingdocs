@@ -65,7 +65,8 @@ const trainingSchema = new Schema({
   pages: [pageSchema],
   useAssessment: { type: Boolean },
   assessment: assessmentSchema,
-  rating: [Number]
+  rating: [Number],
+  interestList: [String]
 });
 
 module.exports = mongoose.model("Training", trainingSchema);

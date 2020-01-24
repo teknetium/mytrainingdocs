@@ -51,7 +51,7 @@ module.exports = function(app, config) {
  |--------------------------------------
  */
 
-  const trainingListProjection = "_id title version type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status";
+  const trainingListProjection = "_id title version type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status interestList";
   const userTrainingListProjection = "_id tid uid status dueDate timeToDate";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId supervisor profilePicUrl";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
@@ -110,7 +110,8 @@ module.exports = function(app, config) {
       assessment: req.body.assessment,
       useAssessment: req.body.useAssessment,
       rating: req.body.rating,
-      status: req.body.status
+      status: req.body.status,
+      interestList: req.body.interestList
     });
     Training.create(training, function (err, trainingObj) {
       if (err) {
@@ -153,6 +154,7 @@ module.exports = function(app, config) {
       training.status = req.body.status;
       training.assessment = req.body.assessment;
       training.useAssessment = req.body.useAssessment;
+      training.interestList = req.body.interestList;
 
       training.save(err2 => {
         if (err) {

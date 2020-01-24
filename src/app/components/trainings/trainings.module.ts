@@ -24,6 +24,8 @@ import { FilesModule } from '../files/files.module';
 import { FileManagerModule } from '../file-manager/file-manager.module';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
+import { VgCoreModule } from 'videogular2/compiled/core';
+import { VgControlsModule } from 'videogular2/compiled/controls';
 
 @NgModule({
   declarations: [
@@ -69,7 +71,9 @@ import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
     NzCommentModule,
     NzAvatarModule,
     NzListModule,
-    NzDropDownModule
+    NzDropDownModule,
+    VgCoreModule,
+    VgControlsModule,
   ],
   exports: [
     TrainingsComponent,

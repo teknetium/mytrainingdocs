@@ -289,7 +289,8 @@ export class TrainingService {
       files: [],
       pages: [],
       assessment: assessment,
-      useAssessment: false
+      useAssessment: false,
+      interestList: []
     };
     //    this.allTrainings.push(newTraining);
     //    this.allTrainingsBS$.next(this.allTrainings);

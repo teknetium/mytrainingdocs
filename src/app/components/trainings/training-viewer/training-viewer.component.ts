@@ -9,6 +9,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FileModel, Version } from 'src/app/shared/interfaces/file.type';
 import { UserModel } from 'src/app/shared/interfaces/user.model';
+import { VgAPI } from 'videogular2/compiled/core';
 
 @Component({
   selector: 'mtd-training-viewer',
@@ -32,24 +33,28 @@ import { UserModel } from 'src/app/shared/interfaces/user.model';
     ]),
     trigger('questionSlide', [
       // ...
-      state('closed', style({
-        'margin-left': '900px'
+      state('in', style({
+        'left': '0',
+        'opacity': '1'
       })),
-      state('open', style({
-        'margin-left': '0',
+      state('out', style({
+        'left': ' 600px',
+        'opacity': '0'
       })),
-      transition('closed => open', [
+      transition('in => out', [
         animate('200ms')
       ]),
-      transition('* => open', [
+      transition('out => in', [
         animate('200ms')
-      ]),
+      ])
     ])
   ]
 
 
 })
 export class TrainingViewerComponent implements OnInit {
+
+  vgApi: VgAPI;
 
   isAuthenticated$: Observable<boolean>;
   isIconSelectModalVisible = false;
@@ -184,14 +189,17 @@ export class TrainingViewerComponent implements OnInit {
   };
   inputValue = '';
   currentHelpPanel = '';
-  currentAssessmentItemIndex = 0;
+  currentAssessmentItemIndex = -1;
   assessmentComplete = false;
+  assessmentInProgress = false;
   assessmentCorrectCnt = 0;
+  assessmentIncorrectCnt = 0;
   passedAssessment = false;
-  slideNewQuestion = false;
+  slideNewQuestionHash = {};
 
   score = 0;
   markCompletedModalIsVisible = false;
+  emailAddr: string;
 
 
   constructor(
@@ -286,6 +294,19 @@ export class TrainingViewerComponent implements OnInit {
     })
   }
 
+  onPlayerReady(api: VgAPI) {
+    this.vgApi = api;
+    /*
+        this.vgApi.getDefaultMedia().subscriptions.loadedMetadata.subscribe(
+          this.playVideo.bind(this)
+        );
+    */
+  }
+
+  playVideo() {
+    this.vgApi.play();
+  }
+
   handleSubmit(): void {
     this.submitting = true;
     const content = this.inputValue;
@@ -312,7 +333,9 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   setCurrentPage(pageId) {
-    console.log('setCurrentPage', pageId);
+    if (this.assessmentInProgress) {
+      return;
+    }
     this.currentPageId = pageId;
     if (this.pageFileHash[pageId]) {
       this.fileService.selectFsHandle(this.pageFileHash[pageId].versions[0].fsHandle);
@@ -498,8 +521,11 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   switchMode(newMode: string) {
+    this.assessmentInProgress = false;
+    this.currentAssessmentItemIndex = -1;
     this.mode = newMode;
     this.currentPageId = 'intro';
+    
   }
 
   setTrue(itemIndex, choiceIndex) {
@@ -509,6 +535,7 @@ export class TrainingViewerComponent implements OnInit {
 
   confirmDeleteQuestion(questionIndex) {
     this.selectedTraining.assessment.items.splice(questionIndex, 1);
+    this.trainingService.saveTraining(this.selectedTraining, true);
   }
 
   confirmDeletePage(pageIndex) {
@@ -538,29 +565,61 @@ export class TrainingViewerComponent implements OnInit {
     this.currentPageId = 'intro';
   }
 
+  addEmailToInterestList() {
+    this.selectedTraining.interestList.push(this.emailAddr);
+    this.emailAddr = '';
+    this.trainingService.saveTraining(this.selectedTraining, true);
+  }
+
+  deleteInterestListItem(index) {
+    this.selectedTraining.interestList.splice(index, 1);
+    this.trainingService.saveTraining(this.selectedTraining, true);    
+  }
+
   answeredQuestion(itemIndex) {
     this.showNext = true;
     if (this.assessmentResponseHash[this.currentAssessmentItemIndex] === this.selectedTraining.assessment.items[itemIndex].correctChoice) {
       this.assessmentCorrectCnt++;
       this.score = (this.assessmentCorrectCnt / this.selectedTraining.assessment.items.length) * 100;
+    } else {
+      this.assessmentIncorrectCnt++;
+    }
+  }
+
+  beginAssessment() {
+    this.assessmentInProgress = true;
+    this.nextQuestion();
+  }
+
+  resetAssessment() {
+    this.assessmentInProgress = false;
+    this.assessmentComplete = false;
+    this.currentAssessmentItemIndex = -1;
+    this.passedAssessment = false;
+    this.assessmentCorrectCnt = 0;
+    this.assessmentIncorrectCnt = 0;
+    for (let i = 0; i < this.selectedTraining.assessment.items.length; i++) {
+      this.assessmentResponseHash[i] = null;
     }
   }
 
   nextQuestion() {
-    this.slideNewQuestion = true;
+    this.slideNewQuestionHash[this.currentAssessmentItemIndex] = false;
     this.currentAssessmentItemIndex++;
+    this.showNext = false;
     if (this.currentAssessmentItemIndex === this.selectedTraining.assessment.items.length) {
-      this.currentAssessmentItemIndex = 0;
+      this.currentAssessmentItemIndex = -1;
       this.assessmentComplete = true;
+      this.assessmentInProgress = false;
       this.score = (this.assessmentCorrectCnt / this.selectedTraining.assessment.items.length) * 100.0;
       if (this.score < this.selectedTraining.assessment.passingGrade) {
         this.passedAssessment = false;
       } else {
         this.passedAssessment = true;
       }
+    } else {
+      this.slideNewQuestionHash[this.currentAssessmentItemIndex] = true;
     }
-    this.showNext = false;
-    this.slideNewQuestion = false;
   }
 
   retake() {
@@ -568,9 +627,11 @@ export class TrainingViewerComponent implements OnInit {
     this.currentAssessmentItemIndex = 0;
     this.passedAssessment = false;
     this.assessmentCorrectCnt = 0;
+    this.assessmentIncorrectCnt = 0;
     for (let i = 0; i < this.selectedTraining.assessment.items.length; i++) {
       this.assessmentResponseHash[i] = null;
     }
+    this.slideNewQuestionHash[this.currentAssessmentItemIndex] = true;
   }
 
   setAssessmentType(type) {
