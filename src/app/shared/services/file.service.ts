@@ -249,10 +249,10 @@ export class FileService {
           }
           this.files = files;
           for (const file of files) {
-            this.fileHandleHash[file.versions[0].fsHandle] = file;
             this.fileIdHash[file._id] = file;
             for (const version of file.versions) {
               this.fsHandleSafeUrlBS$Hash[version.fsHandle] = new BehaviorSubject<SafeResourceUrl>(null);
+              this.fileHandleHash[version.fsHandle] = file;
             }
           }
 
@@ -527,8 +527,8 @@ export class FileService {
       mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.versions[0].url));
     } else {
       mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI((this.previewUrlBase) + fsHandle));
-      this.fsHandleSafeUrlBS$Hash[fsHandle].next(mediaItem);
     }
+    this.fsHandleSafeUrlBS$Hash[fsHandle].next(mediaItem);
   }
 
   viewFile(file: FileModel, versionIndex: number, streamId: string) {
@@ -574,6 +574,7 @@ export class FileService {
     this.privateDocumentHash[streamId].next(this.fileIdHash[id]);
   }
 */
+  
   selectItem(index, streamId) {
     if (streamId === null) {
       this.selectedFile = this.files[index];

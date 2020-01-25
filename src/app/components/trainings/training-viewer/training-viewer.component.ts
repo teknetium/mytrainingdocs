@@ -229,9 +229,6 @@ export class TrainingViewerComponent implements OnInit {
         this.pageFileHash['config'] = null;
         this.pageFileHash['assessment'] = null;
         for (const page of training.pages) {
-          //          this.fileService.setupPrivateDocumentStream(page._id);
-          //          this.fileService.setupPrivateSelectedFileStream(portlet._id);
-          //          this.fileService.setupPrivateSelectedFileIndexStream(portlet._id);
 
           if (!page.file) {
             console.log('ERROR: TrainingViewerComponent:ngOnInit - no document set on training', training.title);
@@ -242,9 +239,6 @@ export class TrainingViewerComponent implements OnInit {
             for (const version of file.versions) {
               this.fsHandleSafeUrl$Hash[version.fsHandle] = this.fileService.getFsHandleStream(version.fsHandle);
             }
-
-
-            //            this.fileService.selectItemById(page.file, page._id);
           }
 
         }
@@ -344,7 +338,6 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   setIcon(event) {
-    console.log('training-viewer:setIcon', event);
     this.tempIcon = event.icon;
     this.tempIconColor = event.color;
     this.okDisabled = false;
@@ -422,7 +415,6 @@ export class TrainingViewerComponent implements OnInit {
       return;
     }
 
-    console.log('handleNewVersionContinue', this.currentPageId, this.pageFileHash);
     const versionArray = this.fileService.getFile(this.pageFileHash[this.currentPageId]).versions[0].version.split('.', 3);
     let majorNum = parseInt(versionArray[0], 10);
     let middleNum = parseInt(versionArray[1], 10);
@@ -476,7 +468,6 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   applyAssessmentChanged(event) {
-    console.log('apply assessment', event);
     if (event) {
       this.selectedTraining.assessment = this.assessment;
     } else {
@@ -498,7 +489,6 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   saveTraining() {
-    console.log('saveTrainging', this.selectedTraining);
     this.trainingService.saveTraining(this.selectedTraining, true);
 
     this.setCurrentPage(this.currentPageId);
@@ -527,11 +517,6 @@ export class TrainingViewerComponent implements OnInit {
     this.currentPageId = 'intro';
     
   }
-
-  setTrue(itemIndex, choiceIndex) {
-    this.selectedTraining.assessment.items[itemIndex].correctChoice = choiceIndex;
-  }
-
 
   confirmDeleteQuestion(questionIndex) {
     this.selectedTraining.assessment.items.splice(questionIndex, 1);
