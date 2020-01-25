@@ -1,3 +1,7 @@
+<div *ngIf="selectedTraining$ | async as selectedTraining" style="margin-bottom: 10px;text-align: center;">
+    <i class="fad fa-hat-wizard" style="color:#951eca;font-size:24px;margin-right:10px;vertical-align: baseline;display:inline-block;"></i>
+    <span style="display:inline-block;font-size:20px;">Training Wizard</span>
+</div>
 <div *ngIf="selectedTraining$ | async as selectedTraining"
     [ngClass]="{'training-viewer': !fullscreen, 'training-viewer-fullscreen': fullscreen}">
     <div class="training-header" [ngClass]="{'activeHelp': currentHelpPanel === 'trainingHeader'}">
@@ -36,17 +40,12 @@
                     </ul>
                 </nz-dropdown-menu>
             </ng-container>
-            <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
-                (click)="setCurrentPage('comments')" nz-tooltip nzTooltipTitle="show Comments"
-                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
-            </i>
             <i *ngIf="!selectedTraining.useAssessment" nz-icon nzType="check-square" [nzTheme]="'twotone'"
                 (click)="markCompleted(selectedTraining)" nz-tooltip nzTooltipTitle="Mark As Completed"
-                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
+                class="header-icon">
             </i>
             <i nz-icon nzType="edit" [nzTheme]="'twotone'" (click)="switchMode('edit')" [nzTwotoneColor]="'orange'"
-                nz-tooltip nzTooltipTitle="Edit Mode"
-                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;">
+                nz-tooltip nzTooltipTitle="Edit Mode" class="header-icon">
             </i>
 
         </div>
@@ -72,11 +71,11 @@
                     </ul>
                 </nz-dropdown-menu>
             </ng-container>
+            <!--
             <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
-                (click)="setCurrentPage('comments')" nz-tooltip nzTooltipTitle="View/Add Comments"
-                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;">
+                (click)="setCurrentPage('comments')" nz-tooltip nzTooltipTitle="View/Add Comments" class="header-icon">
             </i>
-
+-->
         </div>
         <div *ngIf="mode === 'edit' && (selectedTraining.status === 'Under Development' || selectedTraining.status === 'In Production')"
             style="position:absolute;bottom:5px;right:10px;height:fit-content;width: fit-content;">
@@ -101,28 +100,16 @@
                 </nz-dropdown-menu>
             </ng-container>
 
-            <i nz-icon nzType="car" [nzTheme]="'twotone'" [nzTwotoneColor]="'#d64594'"
-                (click)="setCurrentPage('trainingWizardTour')" nz-tooltip
-                nzTooltipTitle="Take the Training Wizard Tour!"
-                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
-            </i>
 
-            <i nz-icon nzType="setting" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
-                (click)="setCurrentPage('config')" nz-tooltip nzTooltipTitle="Training Configuration"
-                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;">
-            </i>
             <i nz-icon nzType="file-add" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'" nz-tooltip
-                nzTooltipTitle="Add New Document"
-                style="cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;"
-                (click)="fileService.openPicker($event)"></i>
-            <i nz-icon nzType="eye" [nzTheme]="'twotone'" nz-tooltip nzTooltipTitle="Preview"
-                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;margin-right:20px;"
+                nzTooltipTitle="Add New Document" class="header-icon" (click)="fileService.openPicker($event)"></i>
+            <i nz-icon nzType="eye" [nzTheme]="'twotone'" nz-tooltip nzTooltipTitle="Preview" class="header-icon"
                 (click)="switchMode('view')">
             </i>
             <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-tooltip
                 nzTooltipTitle="Delete Training" nz-popconfirm nzPopconfirmTitle="Delete this Training?"
                 [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'bottom'" (nzOnConfirm)="confirmDelete(item)"
-                style="display:inline-block;cursor:pointer;font-size:14px;vertical-align: baseline;">
+                class="header-icon">
             </i>
 
         </div>
@@ -194,12 +181,29 @@
                         <i nz-icon nzType="menu-fold" [nzTheme]="'outline'" (click)="toggleTOC(false)"
                             style="float:right;cursor:pointer;font-size:24px;vertical-align: baseline;margin-left:10px;"></i>
                     </div>
-
+                    <div *ngIf="mode === 'edit' && selectedTraining.status === 'Under Development'" class="toc-entry"
+                        (click)="setCurrentPage('trainingWizardTour')"
+                        [ngClass]="{'active-toc':currentPageId === 'trainingWizardTour'}">
+                        <i nz-icon nzType="car" [nzTheme]="'twotone'" [nzTwotoneColor]="'#d64594'"
+                            style="vertical-align: middle;margin-right:10px;"></i>
+                        Training Wizard Tour!
+                    </div>
+                    <div *ngIf="mode === 'edit' && selectedTraining.status === 'Under Development'" class="toc-entry"
+                        (click)="setCurrentPage('config')" [ngClass]="{'active-toc':currentPageId === 'config'}">
+                        <i nz-icon nzType="setting" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
+                            style="vertical-align: middle;margin-right:10px;"></i>
+                        Training Configuration
+                    </div>
+                    <div *ngIf="selectedTraining.status === 'In Review'" class="toc-entry"
+                        (click)="setCurrentPage('comments')" [ngClass]="{'active-toc':currentPageId === 'comments'}">
+                        <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
+                            style="vertical-align: middle;margin-right:10px;"></i>
+                        Comments
+                    </div>
                     <div class="toc-entry" (click)="setCurrentPage('intro')"
                         [ngClass]="{'active-toc':currentPageId === 'intro'}">
                         {{selectedTraining.introductionLabel}}
                     </div>
-
                     <div class="toc-entry" *ngFor="let page of selectedTraining.pages; index as pageIndex"
                         (click)="setCurrentPage(page._id)" [ngClass]="{'active-toc':currentPageId === page._id}">
                         <div style="display:inline-block;line-height:18px;">
@@ -351,13 +355,16 @@
                                 <div style="display:block;">
                                     <div
                                         style="width:20%;text-align: right;float:left;padding-right:10px;font-size:14px;font-weight:300;color:#999999;">
-                                        <i class="fal fa-graduation-cap" style="font-size:18px;color:black;"></i>
+                                        <i [ngClass]="selectedTraining.iconClass"
+                                            [ngStyle]="{'color': selectedTraining.iconColor}"
+                                            style="font-size:18px;color:black;"></i>
                                     </div>
                                     <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
                                         This is the icon that will be used to identify your training. Clicking the icon
                                         brings up the customization dialog.
                                     </div>
                                 </div>
+                                <!--
                                 <div style="display:block;margin-top:20px;">
                                     <div
                                         style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
@@ -378,6 +385,7 @@
                                         This loads the Training Configuration page.
                                     </div>
                                 </div>
+                                -->
                                 <div style="display:block;margin-top:20px;">
                                     <div
                                         style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
@@ -430,24 +438,54 @@
                                         Clicking on this icon closes the training.
                                     </div>
                                 </div>
-                                <div style="display:block;margin-top:20px;">
-                                    <div
-                                        style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
-                                        <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
-                                            style="font-size:18px;vertical-align: top;"></i>
-                                    </div>
-                                    <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
-                                        Clicking on this icon loads the comment page. This is only available in Preview
-                                        mode or when the training status is 'In Review' or 'In Production'.
-                                    </div>
-                                </div>
                             </nz-collapse-panel>
                             <nz-collapse-panel [nzHeader]="tableOfContents"
                                 (nzActiveChange)="setCurrentHelpPanel('tableOfContents')">
                                 <div style="padding:0 30px;margin-bottom:20px;">
-                                    This component provides page navigation. &nbsp;&nbsp; When documents are uploaded to
-                                    a training, the document
-                                    name is added to this component.
+                                    This component provides page navigation.
+                                    <br><br>
+                                    The following two pages are only available when the training status is
+                                    <span style="color:blue;">Under Development</span> and
+                                    you are in <span style="color:blue;">Preview</span> mode.
+                                    <div style="display:block;margin-top:20px;">
+                                        <div
+                                            style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
+                                            <i nz-icon nzType="car" [nzTheme]="'twotone'" [nzTwotoneColor]="'#d64594'"
+                                                style="font-size:18px;vertical-align: top;"></i>
+                                        </div>
+                                        <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
+                                            This loads the page you are currently viewing.
+                                        </div>
+                                    </div>
+                                    <div style="display:block;margin-top:20px;">
+                                        <div
+                                            style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
+                                            <i nz-icon nzType="setting" [nzTheme]="'twotone'"
+                                                [nzTwotoneColor]="'orange'"
+                                                style="font-size:18px;vertical-align: top;"></i>
+                                        </div>
+                                        <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
+                                            This loads the Training Configuration page.
+                                        </div>
+                                    </div>
+                                    <br><br>
+                                    The following page is available when the training status is
+                                    <span style="color:blue;">In Review</span>.
+                                    <div style="display:block;margin-top:20px;">
+                                        <div
+                                            style="width:20%;text-align: right;float:left;padding-right:10px;font-size:18px;font-weight:400">
+                                            <i nz-icon nzType="message" [nzTheme]="'twotone'"
+                                                [nzTwotoneColor]="'#6e3fbe'"
+                                                style="font-size:18px;vertical-align: top;"></i>
+                                        </div>
+                                        <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
+                                            Clicking on this icon loads the comment page. This is only available in
+                                            Preview
+                                            mode or when the training status is 'In Review' or 'In Production'.
+                                        </div>
+                                    </div>
+                                    <br><br>
+                                    When documents are uploaded to a training, the document name is added to this list.
                                 </div>
                             </nz-collapse-panel>
                             <nz-collapse-panel [nzHeader]="mainContent"
@@ -690,8 +728,8 @@
                                     </div>
                                 </nz-modal>
                             </div>
-                            <vg-player (onPlayerReady)="onPlayerReady($event)" *ngIf="pageFileHash[page._id].iconType === 'video'"
-                                style="margin-top:20px;">
+                            <vg-player (onPlayerReady)="onPlayerReady($event)"
+                                *ngIf="pageFileHash[page._id].iconType === 'video'" style="margin-top:20px;">
                                 <!--
     <vg-overlay-play></vg-overlay-play>
     <vg-buffering></vg-buffering>
@@ -719,10 +757,13 @@
                                 </vg-controls>
 
                                 <video [vgMedia]="media" #media id="singleVideo" preload="auto" crossorigin>
-                                    <source [src]="(fsHandleSafeUrl$Hash[pageFileHash[page._id].versions[0].fsHandle] | async)" type="video/mp4">
+                                    <source
+                                        [src]="(fsHandleSafeUrl$Hash[pageFileHash[page._id].versions[0].fsHandle] | async)"
+                                        type="video/mp4">
                                 </video>
                             </vg-player>
-                            <div *ngIf="pageFileHash[page._id].iconType !== 'video'" style="text-align: center;height:90%;margin-top:30px;">
+                            <div *ngIf="pageFileHash[page._id].iconType !== 'video'"
+                                style="text-align: center;height:90%;margin-top:30px;">
                                 <div style="width:100%;height:900px;display:inline-block;">
                                     <iframe
                                         [src]="(fsHandleSafeUrl$Hash[pageFileHash[page._id].versions[0].fsHandle] | async)"

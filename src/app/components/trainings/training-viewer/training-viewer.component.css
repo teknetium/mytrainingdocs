@@ -161,7 +161,8 @@
 	margin-top: 1px;
     width: 95%;
     border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	vertical-align: middle;
 }
 
 .small ::ng-deep .ant-rate-star {
@@ -174,6 +175,23 @@
 
 .not-selected {
 	opacity: .2;
+}
+
+.header-icon {
+	display:inline-block;
+	cursor:pointer;
+	font-size:16px;
+	vertical-align: baseline;
+	margin-left:20px;
+}
+
+.header-icon-container {
+	padding:5px;
+}
+
+.header-icon-selected {
+	border: 1px solid #bbbbbb;
+	background-color: #f5f5f5;
 }
 
 .disabled-status {
