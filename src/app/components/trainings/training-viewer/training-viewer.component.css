@@ -61,24 +61,8 @@
 	display: block;
 	background-color: #fcfcfc;
 	border-bottom: 1px solid #dddddd;
-	height: 85px;
     padding:10px    ;
 	position: relative;
-}
-
-.help-panel {
-    width: 100%;
-    height: fit-content;
-    background-color: #f7f1fe;
-    position: relative;
-    min-height: 80px;
-    margin-top: 20px;
-    border: 1px solid  #7051bb;
-}
-
-.help-content {
-    margin-left:80px;
-    padding:10px;
 }
 
 .page-container {
@@ -95,7 +79,8 @@
     border: 1px solid #dddddd;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
     text-align: left;
-    padding:50px 40px;
+	padding:50px 40px;
+	position: relative;
 }
 .toc {
 	height: fit-content;
@@ -164,6 +149,22 @@
 	border-bottom-right-radius: 10px;
 	vertical-align: middle;
 }
+.toc-entry:hover {
+	background-color: #eaf7fe;
+}
+
+.toc-main-content-entry {
+	padding: 5px 10px 5px 30px;
+	cursor: pointer;
+	margin-top: 1px;
+    width: 95%;
+    border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	vertical-align: middle;
+}
+.toc-main-content-entry:hover {
+		background-color: #eaf7fe;
+}
 
 .small ::ng-deep .ant-rate-star {
     font-size: 24px;
@@ -173,8 +174,22 @@
 	opacity: 1.0;
 }
 
+.disabled {
+	opacity:.3;
+	cursor:not-allowed !important;
+}
+
 .not-selected {
 	opacity: .2;
+}
+
+.page-action {
+	margin-left:10px;
+	display:inline-block;
+	cursor:pointer;
+	font-size:18px;
+	vertical-align: baseline;
+	line-height:18px;
 }
 
 .header-icon {
@@ -194,9 +209,8 @@
 	background-color: #f5f5f5;
 }
 
-.disabled-status {
-	opacity: .4;
-	cursor: not-allowed;
+.selected-status {
+	background-color: #eaf7fe;
 }
 
 .activeHelp {

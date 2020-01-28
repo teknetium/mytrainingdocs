@@ -74,6 +74,7 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
     NzDropDownModule,
     VgCoreModule,
     VgControlsModule,
+    NzSwitchModule
   ],
   exports: [
     TrainingsComponent,

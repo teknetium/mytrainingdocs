@@ -5,8 +5,13 @@ import { PricingComponent } from "./components/pricing/pricing.component";
 import { LandingpageComponent } from './components/landingpage/landingpage.component';
 import { CallbackComponent } from './components/callback/callback.component';
 import { HomeComponent } from './components/home/home.component';
+import { TrainingViewerComponent } from './components/trainings/training-viewer/training-viewer.component';
 
 const appRoutes: Routes = [
+    {
+        path: 'training/:id',
+        component: TrainingViewerComponent
+    },
     {
         path: 'landingpage',
         component: LandingpageComponent,

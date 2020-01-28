@@ -10,6 +10,9 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FileModel, Version } from 'src/app/shared/interfaces/file.type';
 import { UserModel } from 'src/app/shared/interfaces/user.model';
 import { VgAPI } from 'videogular2/compiled/core';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'mtd-training-viewer',
@@ -71,6 +74,11 @@ export class TrainingViewerComponent implements OnInit {
 
   okDisabled = true;
   cancelDisabled = false;
+  messageDialogVisible = false;
+
+  toAddresses: string[];
+  subject: string = 'Feedback Requested'
+  messageBody: string = 'Please'
 
   rating = 0;
 
@@ -146,8 +154,12 @@ export class TrainingViewerComponent implements OnInit {
   assessmentResponseHash = {};
   assessmentResponse = [];
   showNext = false;
+  runningTour = false;
 
-  @Input() mode = 'edit';
+  @Input() mode = 'Edit';
+  @Input() trainingStatus = 'Under Development';
+  @Input() trainingId = '';
+
   docStreamPageHash = {};
   pageDocUrlHash = {};
   pageFileHash = {};
@@ -194,6 +206,7 @@ export class TrainingViewerComponent implements OnInit {
   assessmentInProgress = false;
   assessmentCorrectCnt = 0;
   assessmentIncorrectCnt = 0;
+  answerIsCorrect = false;
   passedAssessment = false;
   slideNewQuestionHash = {};
 
@@ -202,10 +215,14 @@ export class TrainingViewerComponent implements OnInit {
   emailAddr: string;
 
 
+
+
   constructor(
     private trainingService: TrainingService,
     private fileService: FileService,
     private sanitizer: DomSanitizer,
+    private route: ActivatedRoute,
+    private router: Router,
     private userService: UserService,
     private authService: AuthService) {
     this.isAuthenticated$ = authService.getIsAuthenticatedStream();
@@ -225,6 +242,7 @@ export class TrainingViewerComponent implements OnInit {
 
       this.selectedTraining = training;
       if (training) {
+        this.currentPageId = 'trainingWizardTour';
         this.pageFileHash['intro'] = null;
         this.pageFileHash['config'] = null;
         this.pageFileHash['assessment'] = null;
@@ -254,7 +272,7 @@ export class TrainingViewerComponent implements OnInit {
         this.tempIconColor = this.selectedTraining.iconColor;
         this.tempIcon = this.selectedTraining.iconClass;
 
-        this.mode = 'edit';
+        this.mode = 'Edit';
       }
     });
 
@@ -467,16 +485,6 @@ export class TrainingViewerComponent implements OnInit {
     this.setCurrentPage(this.currentPageId);
   }
 
-  applyAssessmentChanged(event) {
-    if (event) {
-      this.selectedTraining.assessment = this.assessment;
-    } else {
-      this.selectedTraining.assessment = null;
-    }
-    this.trainingService.saveTraining(this.selectedTraining, true);
-    this.setCurrentPage(this.currentPageId);
-  }
-
   questionChanged() {
     this.trainingService.saveTraining(this.selectedTraining, false);
     this.setCurrentPage(this.currentPageId);
@@ -488,8 +496,8 @@ export class TrainingViewerComponent implements OnInit {
     this.setCurrentPage(this.currentPageId);
   }
 
-  saveTraining() {
-    this.trainingService.saveTraining(this.selectedTraining, true);
+  saveTraining(reload) {
+    this.trainingService.saveTraining(this.selectedTraining, reload);
 
     this.setCurrentPage(this.currentPageId);
   }
@@ -510,7 +518,7 @@ export class TrainingViewerComponent implements OnInit {
     this.isIconSelectModalVisible = true;
   }
 
-  switchMode(newMode: string) {
+  setMode(newMode: string) {
     this.assessmentInProgress = false;
     this.currentAssessmentItemIndex = -1;
     this.mode = newMode;
@@ -564,9 +572,11 @@ export class TrainingViewerComponent implements OnInit {
   answeredQuestion(itemIndex) {
     this.showNext = true;
     if (this.assessmentResponseHash[this.currentAssessmentItemIndex] === this.selectedTraining.assessment.items[itemIndex].correctChoice) {
+      this.answerIsCorrect = true;
       this.assessmentCorrectCnt++;
       this.score = (this.assessmentCorrectCnt / this.selectedTraining.assessment.items.length) * 100;
     } else {
+      this.answerIsCorrect = false;
       this.assessmentIncorrectCnt++;
     }
   }
@@ -574,6 +584,15 @@ export class TrainingViewerComponent implements OnInit {
   beginAssessment() {
     this.assessmentInProgress = true;
     this.nextQuestion();
+  }
+
+  beginTour() {
+    this.runningTour = true;
+  }
+
+  endTour() {
+    this.currentHelpPanel = '';
+    this.runningTour = false;
   }
 
   resetAssessment() {
@@ -637,5 +656,34 @@ export class TrainingViewerComponent implements OnInit {
 
   setCurrentHelpPanel(panelName: string): void {
     this.currentHelpPanel = panelName;
+  }
+
+  postMessageDialog() {
+    this.messageDialogVisible = true;
+  }
+
+  emailInterestList() {
+
+  }
+
+  handleEmailInterestListCancel() {
+    this.messageDialogVisible = false;
+  }
+
+  movePage(currentIndex, positions) {
+    // can't move first page up
+    if ( currentIndex === 0 && positions === -1 ) {
+      return;
+    }
+
+    // can't move last page down
+    if (currentIndex === this.selectedTraining.pages.length - 1 && positions === 1) {
+      return;
+    }
+
+    let pageToMove = this.selectedTraining.pages.splice(currentIndex, 1);
+    this.selectedTraining.pages.splice(currentIndex + positions, 0, pageToMove[0]);
+
+    this.trainingService.saveTraining(this.selectedTraining, false);    
   }
 }

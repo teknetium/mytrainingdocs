@@ -25,7 +25,13 @@ export class TrainingsComponent implements OnInit {
   cellFontSize = '28';
   deleteDisabled = true;
   popOverTrigger = null;
-  cursor = ''
+  cursor = '';
+  edit = false;
+  toolbarItem = '';
+  
+  listOfOption: Array<{ label: string; value: string }> = [];
+  listOfSelectedValue = [];
+
 
   iconColor = 'red';
   iconClass = 'far fa-fw fa-file';
@@ -38,12 +44,14 @@ export class TrainingsComponent implements OnInit {
   viewMode = 'edit';
   isOpen = false;
   trainingSelected: TrainingModel;
-
+  myTeam$: Observable<UserModel[]>;
+  myTeam: UserModel[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private trainingService: TrainingService,
     private userService: UserService) {
+    this.myTeam$ = this.userService.getMyTeamStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.viewMode$ = this.trainingService.getViewModeStream();
@@ -70,6 +78,20 @@ export class TrainingsComponent implements OnInit {
         this.selectedItemIndex = index;
       })
 
+      this.myTeam$.subscribe(users => {
+        if (users.length === 0) {
+          return;
+        }
+        this.myTeam = users;
+
+        const children: Array<{ label: string; value: string }> = [];
+        for (let i = 0; i < this.myTeam.length; i++) {
+          children.push({ label: this.myTeam[i].firstName + ' ' + this.myTeam[i].lastName, value: this.myTeam[i].uid });
+        }
+        this.listOfOption = children;
+
+      })
+
     });
   }
 
@@ -84,7 +106,7 @@ export class TrainingsComponent implements OnInit {
   }
 
   editTraining(item: TrainingModel, index) {
-    this.viewMode = 'edit';
+    this.viewMode = 'Edit';
     this.trainingSelected = item;
     this.selectItem(index);
     this.trainingService.selectItemForEditing(index);
@@ -95,6 +117,10 @@ export class TrainingsComponent implements OnInit {
     this.trainingSelected = item;
     this.selectItem(index);
     this.trainingService.selectItemForEditing(index);
+  }
+
+  selectToolbarItem(item) {
+    this.toolbarItem = item;
   }
 
   selectItem(index) {

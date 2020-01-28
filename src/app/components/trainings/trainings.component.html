@@ -13,7 +13,35 @@
     <i style="font-size:50px;opacity:.3;" nz-icon nzType="frown" theme="twotone" twoToneColor="#619ef3"></i>
     <span style="font-size:26px;font-weight: 300;display:block;opacity:.4;">No Data</span>
   </div>
+  <!--
+  <div *ngIf="selectedItemIndex > -1"
+    style="width:100%;background-color: #f5f5f5;padding:1px;border:1px solid #cccccc;">
+    <div class="training-toolbar-element" (click)="selectToolbarItem('edit')"
+      [ngClass]="{'toolbar-element-selected': toolbarItem === 'edit'}" nz-tooltip nzTooltipTitle="Edit Training">
+      <i nz-icon nzType="edit" theme="twotone"></i>
+    </div>
+    <div class="training-toolbar-element" (click)="selectToolbarItem('addToUser')"
+      [ngClass]="{'toolbar-element-selected': toolbarItem === 'addToUser'}" nz-tooltip
+      nzTooltipTitle="Assign Training to User">
+      <i nz-icon nzType="usergroup-add" [nzTheme]="'outline'" style="color:purple;"></i>
+    </div>
+    <div class="training-toolbar-element" (click)="selectToolbarItem('email')"
+      [ngClass]="{'toolbar-element-selected': toolbarItem === 'email'}" nz-tooltip nzTooltipTitle="Invite Reviewers">
+      <i nz-icon nzType="mail" theme="twotone" [nzTwotoneColor]="'orange'"></i>
+    </div>
+  </div>
 
-  <div style="padding-top:5px;height: 92%;">
+  <div *ngIf="toolbarItem === 'edit'" style="padding-top:5px;height: 92%;">
     <mtd-training-viewer></mtd-training-viewer>
   </div>
+
+  <div *ngIf="toolbarItem === 'addToUser'">
+    <div style="padding:20px;;display:inline-block;">
+    </div>
+  </div>
+
+  <div *ngIf="toolbarItem === 'email'">
+
+  </div>
+    -->
+  <mtd-training-viewer></mtd-training-viewer>
