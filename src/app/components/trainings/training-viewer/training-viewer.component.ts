@@ -496,8 +496,8 @@ export class TrainingViewerComponent implements OnInit {
     this.setCurrentPage(this.currentPageId);
   }
 
-  saveTraining(model:any, event:any, reload: boolean) {
-    console.log('saveTraining', model, event);
+  saveTraining(reload: boolean) {
+//    console.log('saveTraining', model, event);
 //    object[property] = model;
     this.trainingService.saveTraining(this.selectedTraining, reload);
 
