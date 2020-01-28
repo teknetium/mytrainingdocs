@@ -68,7 +68,7 @@
             <div *ngIf="mode === 'Edit'">
                 <div style="margin-right:30px;display: inline-block;">
                     <input style="display:inline-block;color:black;width:350px;font-size:14px;" nz-input
-                        [(ngModel)]="selectedTraining.title" nzSize="small" (blur)="saveTraining(false)" />
+                        [(ngModel)]="selectedTraining.title" nzSize="small" (keydown.enter)="saveTraining(true)" />
                 </div>
             </div>
             <div *ngIf="mode === 'Preview' || selectedTraining.status === 'In Production'">
@@ -194,7 +194,7 @@
                             <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
                                 <nz-input-number nzSize="small" nzId="estTimeToComplete" class="foo"
                                     style="font-size:12px;" [(ngModel)]="selectedTraining.estimatedTimeToComplete"
-                                    [nzMin]="10" [nzMax]="240" [nzStep]="5" (blur)="saveTraining(false)">
+                                    [nzMin]="10" [nzMax]="240" [nzStep]="5" (ngModelChange)="saveTraining(selectedTraining.estimatedTimeToComplete, $event, false)">
                                 </nz-input-number>
                                 <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes</span>
                             </div>
@@ -209,7 +209,7 @@
                                 <input
                                     style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;"
                                     nz-input [(ngModel)]="selectedTraining.jobTitle" nzSize="small"
-                                    (blur)="saveTraining(false)" />
+                                    (ngModelChange)="saveTraining(false)" />
                             </div>
                         </div>
                         <div class="config-page-row">
@@ -756,8 +756,8 @@
                                     </div>
                                     <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
                                         <nz-input-number nzSize="small" nzId="passingGrade" class="foo"
-                                            style="font-size:12px;"
-                                            [(ngModel)]="selectedTraining.assessment.passingGrade" [nzMin]="0"
+                                            style="font-size:12px;" (ngModelChange)="assessmentChanged($event)"
+                                            [(ngModel)]="selectedTraining.assessment.passingGrade" [nzMin]="40"
                                             [nzMax]="100" [nzStep]="5">
                                         </nz-input-number>
                                         <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp;%</span>
@@ -814,7 +814,7 @@
                                 nzTooltipTitle="Add new Question"></i>
                         </div>
                     </div>
-                    <div *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production'"
+                    <div *ngIf="mode === 'Preview' || selectedTraining.status === 'In Production'"
                         style="position:relative;">
                         <div *ngIf="currentAssessmentItemIndex === -1 && !assessmentComplete">
                             <button nz-button nzType="primary" (click)="beginAssessment()">Begin Assessment</button>

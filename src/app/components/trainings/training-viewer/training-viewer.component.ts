@@ -214,7 +214,7 @@ export class TrainingViewerComponent implements OnInit {
   markCompletedModalIsVisible = false;
   emailAddr: string;
 
-
+  passingGrade: number = 70;
 
 
   constructor(
@@ -496,7 +496,9 @@ export class TrainingViewerComponent implements OnInit {
     this.setCurrentPage(this.currentPageId);
   }
 
-  saveTraining(reload) {
+  saveTraining(model:any, event:any, reload: boolean) {
+    console.log('saveTraining', model, event);
+//    object[property] = model;
     this.trainingService.saveTraining(this.selectedTraining, reload);
 
     this.setCurrentPage(this.currentPageId);
@@ -652,6 +654,11 @@ export class TrainingViewerComponent implements OnInit {
       this.assessmentType.question = false;
       this.assessmentType.assessment = true;
     }
+  }
+
+  assessmentChanged(event) {
+    this.selectedTraining.assessment.passingGrade = event;
+    this.trainingService.saveTraining(this.selectedTraining, false);
   }
 
   setCurrentHelpPanel(panelName: string): void {
