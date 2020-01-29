@@ -15,40 +15,6 @@ import {ScrollToAnimationEasing, ScrollToOffsetMap} from '@nicky-lenaers/ngx-scr
 })
 export class LandingpageComponent implements OnInit {
 
-
-  howItWorks = [
-    {
-      id: 'how0',
-      title: 'Upload Training Content',
-      iconClasses: ['how-icon fal fa-cloud-upload'],
-      description: 'Your training content lives safe and secure in our cloud based training repository.'
-    },
-    {
-      id: 'how1',
-      title: 'Add Team Members',
-      iconClasses: ['how-icon fal fa-user-plus'],
-      description: 'You give us their name and email and we\'ll take care of the rest.'
-    },
-    {
-      id: 'how2',
-      title: 'Define Jobs',
-      iconClasses: ['how-icon fal fa-hard-hat'],
-      description: 'This simple notion provides the foundation for features that save your business significant time and money.'
-    },
-    {
-      id: 'how3',
-      title: 'Assign Trainings to Jobs',
-      iconClasses: ['how-icon fal fa-file-certificate', 'how-icon1 fal fa-long-arrow-right', 'how-icon2 fal fa-hard-hat' ],
-      description: 'The Job definition becomes the place of record for the prioritized list of trainings along with their due date.'
-    },
-    {
-      id: 'how4',
-      title: 'Assign Jobs to People',
-      iconClasses: ['how-icon fal fa-hard-hat', 'how-icon1 fal fa-long-arrow-right', 'how-icon2 fal fa-user'],
-      description: 'And you are DONE!'
-    },
-  ];
-
   benefits = [
     {
       focus: false,
@@ -61,8 +27,7 @@ export class LandingpageComponent implements OnInit {
       focus: false,
       title: 'Saves Time & Resources',
       class: 'fal fa-clock text-blue bg-blue-opacity',
-      blurb: 'Your entire team and all of your training content will be up and running in less than 2 hours! ' +
-        'If not, your first 3 months are free!',
+      blurb: 'Your entire team and all of your training content will be up and running in less than 30 minutes!',
       learnMore: ''
     },
     {
@@ -71,15 +36,6 @@ export class LandingpageComponent implements OnInit {
       class: 'fal fa-chart-bar text-purple bg-purple-opacity',
       blurb: 'Track training status, due dates, certification expiration dates, ' +
         'and more.  All delivered to you at your timing without ever logging into the site.',
-      learnMore: ''
-    },
-    {
-      focus: false,
-      title: 'Task Wizard Driven',
-      class: 'fal fa-tasks orange',
-      blurb: 'All application features are available through Task Wizards.' +
-        'These wizards guide you through each step of the task, ensuring prompt ' +
-        'and successful completion.',
       learnMore: ''
     },
     {
@@ -100,15 +56,14 @@ export class LandingpageComponent implements OnInit {
       focus: false,
       title: 'Supports Common Document Formats',
       class: 'fal fa-file-check purple2',
-      blurb: 'View documents without the application that created them. Supports the following types: pdf, doc, docx, xls, xlsx, ppt, pptx, odt, odp, jpg, png, gif, tiff, txt, html, psd, ai.',
+      blurb: 'View your training documents without the application that created them.',
       learnMore: ''
     },
     {
       focus: false,
       title: 'Fast, Easy Deployment',
       class: 'fal fa-shipping-fast orange',
-      blurb: 'Deploy to your individual team or your entire organization.  ' +
-        'Both in less than 2 hours!',
+      blurb: 'Our unique deployment model has each manager responsible for the setup of their team and their trainings, all in less than 30 minutes!',
       learnMore: ''
     }
     /*
@@ -162,9 +117,6 @@ export class LandingpageComponent implements OnInit {
     benefits: {
       ngxScrollToDestination: 'benefits'
     },
-    howitworks: {
-      ngxScrollToDestination: 'howitworks'
-    },
     price: {
       ngxScrollToDestination: 'price'
     },
@@ -214,7 +166,6 @@ export class LandingpageComponent implements OnInit {
       this.authenticatedUser = user;
       this.router.navigate(['']);
     });
-    this.howStepCount = this.howItWorks.length;
 
     /*
     setInterval(() => {
@@ -233,12 +184,12 @@ export class LandingpageComponent implements OnInit {
     this.benefitBS$.next(this.benefits[index]);
     this.visible = true;
   }
-
+/*
   setCurrentHowStep(index): void {
     this.currentHowStep = index;
     this.currentHowMsg = this.howItWorks[index].description;
   }
-
+*/
   start() {
     this.carouselDelay = 6000;
   }

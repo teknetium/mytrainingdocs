@@ -363,13 +363,13 @@ export class TrainingViewerComponent implements OnInit {
 
   contentChanged(newVal: string, propName: string) {
     this.selectedTraining[propName] = newVal;
-    this.trainingService.saveTraining(this.selectedTraining, true);
+    this.trainingService.saveTraining(this.selectedTraining, false);
     this.setCurrentPage(this.currentPageId);
   }
 
   pageContentChanged(newVal: string, index: number, propName: string) {
     this.selectedTraining.pages[index][propName] = newVal;
-    this.trainingService.saveTraining(this.selectedTraining, true);
+    this.trainingService.saveTraining(this.selectedTraining, false);
     this.setCurrentPage(this.currentPageId);
   }
 
@@ -378,7 +378,7 @@ export class TrainingViewerComponent implements OnInit {
     page = this.selectedTraining.pages[index];
     page[propName] = newVal;
 
-    this.trainingService.saveTraining(this.selectedTraining, true);
+    this.trainingService.saveTraining(this.selectedTraining, false);
     this.setCurrentPage(this.currentPageId);
   }
 
@@ -472,7 +472,7 @@ export class TrainingViewerComponent implements OnInit {
     this.assessment.items.push(this.newItem);
 
     this.selectedTraining.assessment = this.assessment;
-    this.trainingService.saveTraining(this.selectedTraining, true);
+    this.trainingService.saveTraining(this.selectedTraining, false);
     this.setCurrentPage(this.currentPageId);
   }
 
@@ -480,12 +480,12 @@ export class TrainingViewerComponent implements OnInit {
     const newChoice = 'New Choice';
     this.assessment.items[itemIndex].choices.push(newChoice);
     this.selectedTraining.assessment = this.assessment;
-    this.trainingService.saveTraining(this.selectedTraining, true);
+    this.trainingService.saveTraining(this.selectedTraining, false);
 
     this.setCurrentPage(this.currentPageId);
   }
 
-  questionChanged() {
+  questionChanged(item, itemIndex) {
     this.trainingService.saveTraining(this.selectedTraining, false);
     this.setCurrentPage(this.currentPageId);
   }
@@ -494,6 +494,10 @@ export class TrainingViewerComponent implements OnInit {
     this.selectedTraining.assessment.items[itemIndex].choices[choiceIndex] = choice;
     this.trainingService.saveTraining(this.selectedTraining, false);
     this.setCurrentPage(this.currentPageId);
+  }
+
+  correctChoiceChanged(item, itemIndex) {
+    console.log('correctChoiceChanged', item, itemIndex); 
   }
 
   saveTraining(reload: boolean) {
@@ -530,12 +534,12 @@ export class TrainingViewerComponent implements OnInit {
 
   confirmDeleteQuestion(questionIndex) {
     this.selectedTraining.assessment.items.splice(questionIndex, 1);
-    this.trainingService.saveTraining(this.selectedTraining, true);
+    this.trainingService.saveTraining(this.selectedTraining, false);
   }
 
   confirmDeletePage(pageIndex) {
     this.selectedTraining.pages.splice(pageIndex, 1);
-    this.trainingService.saveTraining(this.selectedTraining, true);
+    this.trainingService.saveTraining(this.selectedTraining, false);
     this.currentPageId = 'intro';
   }
 
@@ -561,14 +565,17 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   addEmailToInterestList() {
+    if (this.emailAddr === '') {
+      return;
+    }
     this.selectedTraining.interestList.push(this.emailAddr);
     this.emailAddr = '';
-    this.trainingService.saveTraining(this.selectedTraining, true);
+    this.trainingService.saveTraining(this.selectedTraining, false);
   }
 
   deleteInterestListItem(index) {
     this.selectedTraining.interestList.splice(index, 1);
-    this.trainingService.saveTraining(this.selectedTraining, true);    
+    this.trainingService.saveTraining(this.selectedTraining, false);    
   }
 
   answeredQuestion(itemIndex) {
