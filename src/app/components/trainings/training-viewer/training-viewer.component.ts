@@ -143,14 +143,6 @@ export class TrainingViewerComponent implements OnInit {
     ]
   };
 
-  newItem = {
-    question: 'Enter the question',
-    choices: [
-      'This is the first choice',
-      'This is the second choice',
-    ],
-    correctChoice: -1
-  };
   assessmentResponseHash = {};
   assessmentResponse = [];
   showNext = false;
@@ -469,7 +461,18 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   addNewQuestion() {
-    this.assessment.items.push(this.newItem);
+    let newItem = {
+      question: 'Enter the question',
+      choices: [
+        'first choice',
+        'second choice',
+        'third choice',
+        'forth choice',
+      ],
+      correctChoice: -1
+    };
+
+    this.assessment.items.push(newItem);
 
     this.selectedTraining.assessment = this.assessment;
     this.trainingService.saveTraining(this.selectedTraining, false);
@@ -486,6 +489,9 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   questionChanged(item, itemIndex) {
+
+    console.log('questionChanged', item, itemIndex); 
+    this.selectedTraining.assessment.items[itemIndex] = item;
     this.trainingService.saveTraining(this.selectedTraining, false);
     this.setCurrentPage(this.currentPageId);
   }
@@ -497,6 +503,8 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   correctChoiceChanged(item, itemIndex) {
+    this.selectedTraining.assessment.items[itemIndex] = item;
+    this.trainingService.saveTraining(this.selectedTraining, false);
     console.log('correctChoiceChanged', item, itemIndex); 
   }
 

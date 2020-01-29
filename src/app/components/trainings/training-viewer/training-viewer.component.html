@@ -784,7 +784,8 @@
                                 <div style="display: inline-block;width:80%;font-size:16px;">
                                     <input nz-input type="text" nzSize="small" placeholder="Question" ngDefaultControl
                                         [(ngModel)]="item.question" style="margin-bottom:10px;"
-                                        (keydown.enter)="questionChanged(item, itemIndex)">
+                                        (keydown.enter)="questionChanged(item, itemIndex)"
+                                        (blur)="questionChanged(item, itemIndex)">
 
                                 </div>
                                 <div>
@@ -798,6 +799,7 @@
                                             <span style="font-weight:500;">{{alpha[choiceIndex]}}&nbsp;&nbsp;</span>
                                             <input nz-input type="text" placeholder="Choice Text" ngDefaultControl
                                                 (keydown.enter)="choiceContentChanged(choice, itemIndex, choiceIndex)"
+                                                (blur)="choiceContentChanged(choice, itemIndex, choiceIndex)"
                                                 [(ngModel)]="choice" nzSize="small" style="width:90%;">
                                         </div>
                                     </nz-radio-group>
