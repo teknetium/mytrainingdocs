@@ -340,6 +340,9 @@ export class TrainingViewerComponent implements OnInit {
     if (this.assessmentInProgress) {
       return;
     }
+    if (pageId === 'assessment') {
+      this.resetAssessment();
+    }
     this.currentPageId = pageId;
     if (this.pageFileHash[pageId]) {
       this.fileService.selectFsHandle(this.pageFileHash[pageId].versions[0].fsHandle);
