@@ -27,7 +27,8 @@ export interface TrainingModel {
   rating: number[],
   assessment: Assessment,
   useAssessment: boolean,
-  interestList: string[]
+  interestList: string[],
+  shared: boolean
 }
 
 export interface AssessmentItem {

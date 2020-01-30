@@ -33,6 +33,8 @@ export class SignupComponent implements OnInit {
 
 
         this.email = params.email;
+        this._auth0.authorize({ action: 'signup', login_hint: this.email });
+        console.log('signup', this.email);
       });
   }
 

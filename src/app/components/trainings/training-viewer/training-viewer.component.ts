@@ -12,6 +12,9 @@ import { UserModel } from 'src/app/shared/interfaces/user.model';
 import { VgAPI } from 'videogular2/compiled/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+import { SendmailService } from '../../../shared/services/sendmail.service';
+import { MessageModel } from '../../../shared/interfaces/message';
+import { MessageSpan } from '@angular/compiler/src/i18n/i18n_ast';
 
 
 @Component({
@@ -216,6 +219,7 @@ export class TrainingViewerComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
+    private mailService: SendmailService,
     private authService: AuthService) {
     this.isAuthenticated$ = authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
@@ -684,7 +688,14 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   emailInterestList() {
-
+    let msg = <MessageModel>{
+      to: this.selectedTraining.interestList[0],
+      from: this.authenticatedUser.email,
+      subject: this.subject,
+      text: this.messageBody
+    }
+    this.mailService.sendMessage(msg);
+    this.messageDialogVisible = false;
   }
 
   handleEmailInterestListCancel() {

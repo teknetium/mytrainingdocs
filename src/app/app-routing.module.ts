@@ -6,8 +6,13 @@ import { LandingpageComponent } from './components/landingpage/landingpage.compo
 import { CallbackComponent } from './components/callback/callback.component';
 import { HomeComponent } from './components/home/home.component';
 import { TrainingViewerComponent } from './components/trainings/training-viewer/training-viewer.component';
+import { SignupComponent } from './components/signup/signup.component';
 
 const appRoutes: Routes = [
+    {
+        path: 'signup',
+        component: SignupComponent
+    },
     {
         path: 'training/:id',
         component: TrainingViewerComponent
@@ -24,11 +29,11 @@ const appRoutes: Routes = [
         path: 'home',
         component: HomeComponent,
     },
-    {
-        path: '', 
-        redirectTo: '/home',
-        pathMatch: 'full'
-    },
+//    {
+//        path: '', 
+//        redirectTo: '/home',
+//        pathMatch: 'full'
+//    },
     {
         path: 'callback', 
         component: CallbackComponent,

@@ -11,6 +11,7 @@ const User = require("./models/User");
 const File = require("./models/File");
 const Event = require("./models/Event");
 const Comment = require("./models/Comment");
+const sgMail = require('@sendgrid/mail');
 
 /*
  |--------------------------------------
@@ -45,13 +46,14 @@ module.exports = function(app, config) {
     next();
   };
 
+  sgMail.setApiKey(config.SENDGRID_API_KEY);
 /*
  |--------------------------------------
  | API Routes
  |--------------------------------------
  */
 
-  const trainingListProjection = "_id title version type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status interestList";
+  const trainingListProjection = "_id title version type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status interestList shared";
   const userTrainingListProjection = "_id tid uid status dueDate timeToDate";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId supervisor profilePicUrl";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
@@ -63,6 +65,17 @@ module.exports = function(app, config) {
     res.send("API works");
   });
 
+  
+  app.post("/api/sendmail", (req, res) => {
+    const msg = {
+      to: req.body.to,
+      from: req.body.from,
+      subject: req.body.subject,
+      text: req.body.text,
+      html: req.body.html,
+    };
+    sgMail.send(msg);
+  });
 
   //
   // Training API
@@ -111,7 +124,8 @@ module.exports = function(app, config) {
       useAssessment: req.body.useAssessment,
       rating: req.body.rating,
       status: req.body.status,
-      interestList: req.body.interestList
+      interestList: req.body.interestList,
+      shared: req.body.shared
     });
     Training.create(training, function (err, trainingObj) {
       if (err) {
@@ -155,6 +169,7 @@ module.exports = function(app, config) {
       training.assessment = req.body.assessment;
       training.useAssessment = req.body.useAssessment;
       training.interestList = req.body.interestList;
+      training.shared = req.body.shared;
 
       training.save(err2 => {
         if (err) {
