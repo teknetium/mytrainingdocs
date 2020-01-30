@@ -800,7 +800,7 @@
                                             style="width:100%;padding-left:50px;margin-bottom: 10px;">
                                             <label nz-radio [nzValue]="choiceIndex"
                                                 style="display:inline-block;width:5%;"></label>
-                                            <span style="font-weight:500;width:2%;">{{alpha[choiceIndex]}}&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                            <span style="font-weight:300;width:2%;color:#bbbbbb;">{{alpha[choiceIndex]}}&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                             <input nz-input type="text" placeholder="Choice Text" ngDefaultControl
                                                 (keydown.enter)="choiceContentChanged(choice, itemIndex, choiceIndex)"
                                                 (blur)="choiceContentChanged(choice, itemIndex, choiceIndex)"
@@ -866,7 +866,7 @@
                                 [ngStyle]="{'z-index': 10000 - itemIndex}">
                                 <div style="width:90%;position:relative;padding:10px">
                                     <div
-                                        style="color:#bbbbbb;font-size:16px;font-weight:200;margin-right:20px;float:left;">
+                                        style="color:#bbbbbb;font-size:16px;font-weight:300;margin-right:20px;float:left;">
                                         Question
                                         {{ itemIndex + 1 }}
                                     </div>
@@ -896,7 +896,7 @@
                                                 <label nz-radio [nzValue]="choiceIndex"
                                                     style="display:inline-block;"></label>
                                                 <span
-                                                    style="font-weight:200;color:#bbbbbb;">{{alpha[choiceIndex]}}&nbsp;)&nbsp;&nbsp;</span>
+                                                    style="font-weight:300;color:#bbbbbb;">{{alpha[choiceIndex]}}&nbsp;)&nbsp;&nbsp;</span>
                                                 <span style="font-size:14px;color:black;font-weight: 300;">{{choice}}</span>
                                             </div>
                                         </nz-radio-group>
