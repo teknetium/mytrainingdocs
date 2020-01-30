@@ -103,7 +103,7 @@ export class TrainingViewerComponent implements OnInit {
     }
   ]
 
-  applyAssessment = false;
+
   alpha = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
   assessment: Assessment;
@@ -251,14 +251,6 @@ export class TrainingViewerComponent implements OnInit {
             }
           }
 
-        }
-
-        if (this.selectedTraining.assessment) {
-          this.assessment = this.selectedTraining.assessment;
-          this.applyAssessment = true;
-        } else {
-          this.assessment = this.newAssessment;
-          this.applyAssessment = false;
         }
 
         this.tempIconColor = this.selectedTraining.iconColor;
@@ -475,17 +467,15 @@ export class TrainingViewerComponent implements OnInit {
       correctChoice: -1
     };
 
-    this.assessment.items.push(newItem);
+    this.selectedTraining.assessment.items.push(newItem);
 
-    this.selectedTraining.assessment = this.assessment;
     this.trainingService.saveTraining(this.selectedTraining, false);
     this.setCurrentPage(this.currentPageId);
   }
 
   addNewChoice(itemIndex) {
     const newChoice = 'New Choice';
-    this.assessment.items[itemIndex].choices.push(newChoice);
-    this.selectedTraining.assessment = this.assessment;
+    this.selectedTraining.assessment.items[itemIndex].choices.push(newChoice);
     this.trainingService.saveTraining(this.selectedTraining, false);
 
     this.setCurrentPage(this.currentPageId);
@@ -539,8 +529,9 @@ export class TrainingViewerComponent implements OnInit {
     this.assessmentInProgress = false;
     this.currentAssessmentItemIndex = -1;
     this.mode = newMode;
-    this.currentPageId = 'intro';
-    
+    if (newMode === 'Preview' && (this.currentPageId === 'config' || this.currentPageId === 'trainingWizardTour')) {
+      this.currentPageId = 'intro'
+    }
   }
 
   confirmDeleteQuestion(questionIndex) {
@@ -603,6 +594,7 @@ export class TrainingViewerComponent implements OnInit {
 
   beginAssessment() {
     this.assessmentInProgress = true;
+    this.currentAssessmentItemIndex = -1;
     this.nextQuestion();
   }
 
@@ -616,6 +608,7 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   resetAssessment() {
+    this.showNext = false;
     this.assessmentInProgress = false;
     this.assessmentComplete = false;
     this.currentAssessmentItemIndex = -1;
@@ -623,6 +616,7 @@ export class TrainingViewerComponent implements OnInit {
     this.assessmentCorrectCnt = 0;
     this.assessmentIncorrectCnt = 0;
     for (let i = 0; i < this.selectedTraining.assessment.items.length; i++) {
+      this.slideNewQuestionHash[i] = false;
       this.assessmentResponseHash[i] = null;
     }
   }
@@ -647,6 +641,7 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   retake() {
+    this.assessmentInProgress = true;
     this.assessmentComplete = false;
     this.currentAssessmentItemIndex = 0;
     this.passedAssessment = false;
