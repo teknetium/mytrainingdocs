@@ -866,12 +866,12 @@
                                 [ngStyle]="{'z-index': 10000 - itemIndex}">
                                 <div style="width:90%;position:relative;padding:10px">
                                     <div
-                                        style="color:black;font-size:16px;font-weight:500;margin-right:20px;float:left;">
+                                        style="color:#bbbbbb;font-size:16px;font-weight:200;margin-right:20px;float:left;">
                                         Question
                                         {{ itemIndex + 1 }}
                                     </div>
                                     <div style="display: inline-block;font-size:16px;">
-                                        <div style="color:black;font-weight: 200;">
+                                        <div style="color:black;font-weight: 300;">
                                             {{item.question}}
                                         </div>
                                     </div>
@@ -896,8 +896,8 @@
                                                 <label nz-radio [nzValue]="choiceIndex"
                                                     style="display:inline-block;"></label>
                                                 <span
-                                                    style="font-weight:500;">{{alpha[choiceIndex]}}&nbsp;)&nbsp;&nbsp;</span>
-                                                <span style="font-size:14px;">{{choice}}</span>
+                                                    style="font-weight:200;color:#bbbbbb;">{{alpha[choiceIndex]}}&nbsp;)&nbsp;&nbsp;</span>
+                                                <span style="font-size:14px;color:black;font-weight: 300;">{{choice}}</span>
                                             </div>
                                         </nz-radio-group>
                                     </div>

@@ -532,6 +532,7 @@ export class TrainingViewerComponent implements OnInit {
     if (newMode === 'Preview' && (this.currentPageId === 'config' || this.currentPageId === 'trainingWizardTour')) {
       this.currentPageId = 'intro'
     }
+    this.resetAssessment();
   }
 
   confirmDeleteQuestion(questionIndex) {
