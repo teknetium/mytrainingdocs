@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AUTH_CONFIG } from '../../shared/services/auth.config';
 import * as auth0 from 'auth0-js';
 import { ENV } from '../../shared/services/env.config';
-import { ActivatedRoute } from '@angular/router';
-import 'rxjs/add/operator/filter';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 
 
 @Component({
@@ -24,23 +24,17 @@ export class SignupComponent implements OnInit {
 
   email: string;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute) { 
+    this.route.paramMap.subscribe(params => {
+      this.email = params.get('id');
+      console.log('signup', this.email);
+      this._auth0.authorize({ action: 'signup', login_hint: this.email });
+    });
+    
 
-  ngOnInit() {
-    this.route.queryParams
-      .filter(params => params.email)
-      .subscribe(params => {
-
-
-        this.email = params.email;
-        this._auth0.authorize({ action: 'signup', login_hint: this.email });
-        console.log('signup', this.email);
-      });
   }
 
-
-  signup() {
-    this._auth0.authorize({ action: 'signup', login_hint: this.email});
+  ngOnInit() {
   }
 
 

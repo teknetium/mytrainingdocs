@@ -160,13 +160,14 @@ export class AuthService {
     const tabObj = redirectArr[1] ? { queryParams: { tab: redirectArr[1] } } : '';
     
     console.log('_redirect', navArr, tabObj);
-
+    this.router.navigate(['/home']);
+/*
     if (!tabObj) {
       this.router.navigate(navArr);
     } else {
       this.router.navigate(navArr, tabObj);
     }
-
+*/
     // Redirection completed; clear redirect from storage
     this._clearRedirect();
   }

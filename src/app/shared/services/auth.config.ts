@@ -15,6 +15,6 @@ export const AUTH_CONFIG: AuthConfig = {
   AUDIENCE: 'http://localhost:8083/api/', // e.g., http://localhost:8083/api/
   REDIRECT: `${ENV.BASE_URI}/callback`,
   SCOPE: 'openid profile email',
-  NAMESPACE: 'https://mytrainingdocs.com/home'
+  NAMESPACE: 'https://mytrainingdocs.com/'
 };
 

@@ -31,6 +31,7 @@ import { SignupModule } from './components/signup/signup.module';
 import { HomeModule } from './components/home/home.module';
 import { ConfigModule } from './components/config/config.module';
 import { CalendarModule } from './components/calendar/calendar.module';
+import { NewAppComponent } from './new-app/new-app.component';
 
 
 registerLocaleData(en);
@@ -38,6 +39,7 @@ registerLocaleData(en);
 @NgModule({
     declarations: [
         AppComponent,
+        NewAppComponent,
     ],
     imports: [
         PricingModule,

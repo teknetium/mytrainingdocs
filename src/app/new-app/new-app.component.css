@@ -1,0 +1,43 @@
+
+.logo {
+	background: rgba(255, 255, 255, 0.4);
+  float: left;
+  height: 44px;
+  border-radius: 24px;
+  margin:10px 0 0px 30px;
+  width: 180px;
+}
+
+[nz-menu] {
+	line-height: 64px;
+}
+
+nz-breadcrumb {
+	margin: 16px 0;
+}
+
+nz-content {
+	padding: 0;
+}
+
+nz-footer {
+	text-align: center;
+}
+
+.inner-content {
+	background: #fff;
+  height:100%;
+}
+
+.ant-menu.ant-menu-dark .ant-menu-item-selected {
+  background-color: #1a60a0 !important;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  padding: 10px;
+}

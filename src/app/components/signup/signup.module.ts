@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SignupComponent } from './signup.component';
+import { NzButtonModule } from 'ng-zorro-antd';
 
 
 
@@ -9,7 +10,8 @@ import { SignupComponent } from './signup.component';
     SignupComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    NzButtonModule
   ],
   exports: [
     SignupComponent

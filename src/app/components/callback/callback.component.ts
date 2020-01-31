@@ -14,7 +14,7 @@ export class CallbackComponent implements OnInit {
   }
 
   ngOnInit() {
-    localStorage.setItem('urlFrom', this.location.path());
+    localStorage.setItem('urlFrom', '/callback');
     this.auth.handleAuth();
   }
 }

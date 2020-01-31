@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MessageModel } from '../interfaces/message';
+import { MessageModel } from '../interfaces/message.type';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';

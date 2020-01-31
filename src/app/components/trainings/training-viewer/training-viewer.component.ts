@@ -13,7 +13,7 @@ import { VgAPI } from 'videogular2/compiled/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { SendmailService } from '../../../shared/services/sendmail.service';
-import { MessageModel } from '../../../shared/interfaces/message';
+import { MessageModel } from '../../../shared/interfaces/message.type';
 import { MessageSpan } from '@angular/compiler/src/i18n/i18n_ast';
 
 

@@ -9,6 +9,8 @@ import { EventModel } from '../../shared/interfaces/event.type';
 import { User } from 'src/app/shared/interfaces/user.type';
 import { TrainingModel } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { SendmailService } from '../../shared/services/sendmail.service';
+import { MessageModel } from '../../shared/interfaces/message.type';
 
 @Component({
   selector: 'app-myteam',
@@ -73,6 +75,7 @@ export class MyteamComponent implements OnInit {
     supervisorId: null,
     jobTitle: ''
   }
+  message: MessageModel;
   userIndexSelected = -1;
   myTeamHelpPanelIsVisible = true;
   myTeamTrainingsHelpPanelIsVisible = true;
@@ -82,6 +85,7 @@ export class MyteamComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private eventService: EventService,
+    private mailService: SendmailService,
     private trainingService: TrainingService
   ) {
     this.myTeam$ = this.userService.getMyTeamStream();
@@ -122,6 +126,14 @@ export class MyteamComponent implements OnInit {
     console.log('handleAddUser', this.newTeamMember);
     this.userService.updateUser(this.authenticatedUser);
     this.userService.createNewUser(this.newTeamMember);
+    let url = 'https://mytrainingdocs.com/signup/' + this.newTeamMember.email;
+    this.message = <MessageModel>{
+      to: this.newTeamMember.email,
+      from: this.authenticatedUser.email,
+      subject: 'Please Register',
+      html: 'Please <a href="' + url + '">register</a>'
+    }
+    this.mailService.sendMessage(this.message);
     this.showNewUserModal = false;
     this.newTeamMember.firstName = '';
     this.newTeamMember.lastName = '';
