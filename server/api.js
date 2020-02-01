@@ -77,6 +77,16 @@ module.exports = function(app, config) {
     sgMail.send(msg);
   });
 
+  app.get("/api/training/:id", (req, res) => {
+    Training.findOne({ _id: req.params.id },
+      trainingListProjection, (err, training) => {
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        res.send(training);
+      },
+    );
+  });
   //
   // Training API
   //

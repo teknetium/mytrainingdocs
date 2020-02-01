@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { AsyncSubject, BehaviorSubject, Subscription, of, timer } from 'rxjs';
+import { AsyncSubject, BehaviorSubject, Subscription, of, timer, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { AUTH_CONFIG } from './auth.config';
 import * as auth0 from 'auth0-js';
@@ -30,6 +30,7 @@ export class AuthService {
   loggedIn = false;
   loggedIn$ = new BehaviorSubject<boolean>(this.loggedIn);
   isAuthenticated$ = new BehaviorSubject<boolean>(false);
+  isAuthenticatedObservable: Observable<boolean> = this.isAuthenticated$.asObservable();
   authenticatedUserProfile$ = new AsyncSubject<Auth0ProfileModel>();
   loggingIn: boolean;
   // Subscribe to token expiration stream
@@ -67,7 +68,7 @@ export class AuthService {
     this.authenticatedUserProfile$.complete();
   }
 
-  getIsAuthenticatedStream() {
+  getIsAuthenticatedStream():Observable<boolean> {
     return this.isAuthenticated$.asObservable();
   }
 

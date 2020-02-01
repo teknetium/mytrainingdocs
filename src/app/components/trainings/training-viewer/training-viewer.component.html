@@ -1,4 +1,4 @@
-<div *ngIf="selectedTraining$ | async as selectedTraining" style="margin:10px;text-align: center;">
+<div *ngIf="!production && selectedTraining$ | async as selectedTraining" style="margin:10px;text-align: center;">
     <i class="fad fa-hat-wizard"
         style="color:#951eca;font-size:24px;margin-right:10px;vertical-align: baseline;display:inline-block;"></i>
     <span style="display:inline-block;font-size:20px;">Training Wizard</span>

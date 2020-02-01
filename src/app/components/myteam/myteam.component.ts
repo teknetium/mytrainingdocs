@@ -126,7 +126,7 @@ export class MyteamComponent implements OnInit {
     console.log('handleAddUser', this.newTeamMember);
     this.userService.updateUser(this.authenticatedUser);
     this.userService.createNewUser(this.newTeamMember);
-    let url = 'https://mytrainingdocs.com/signup/' + this.newTeamMember.email;
+    let url = 'http://localhost:4200/signup/' + this.newTeamMember.email;
     this.message = <MessageModel>{
       to: this.newTeamMember.email,
       from: this.authenticatedUser.email,

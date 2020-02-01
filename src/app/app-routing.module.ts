@@ -7,10 +7,15 @@ import { CallbackComponent } from './components/callback/callback.component';
 import { AppComponent } from './app.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { AuthenticatedROUTES } from './authenticated.routes';
+import { AuthGuard } from './shared/guard/auth.guard';
+import { TrainingViewerComponent } from './components/trainings/training-viewer/training-viewer.component';
+import { LoginComponent } from './components/login/login.component';
 
 const appRoutes: Routes = [
     {
         path: '',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
         component: NewAppComponent,
         children: AuthenticatedROUTES
     },
@@ -19,8 +24,16 @@ const appRoutes: Routes = [
         component: CallbackComponent,
     },
     {
+        path: 'training/:id',
+        component: TrainingViewerComponent
+    },
+    {
         path: 'signup/:id',
         component: SignupComponent
+    },
+    {
+        path: 'login',
+        component: LoginComponent
     },
     {
         path: 'landingpage',

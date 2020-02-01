@@ -11,10 +11,9 @@ import { FileModel, Version } from 'src/app/shared/interfaces/file.type';
 import { UserModel } from 'src/app/shared/interfaces/user.model';
 import { VgAPI } from 'videogular2/compiled/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { merge } from 'rxjs/operators';
 import { SendmailService } from '../../../shared/services/sendmail.service';
 import { MessageModel } from '../../../shared/interfaces/message.type';
-import { MessageSpan } from '@angular/compiler/src/i18n/i18n_ast';
 
 
 @Component({
@@ -65,6 +64,8 @@ export class TrainingViewerComponent implements OnInit {
   isAuthenticated$: Observable<boolean>;
   isIconSelectModalVisible = false;
   selectedTraining$: Observable<TrainingModel>;
+  training1$: Observable<TrainingModel>;
+  training2$: Observable<TrainingModel>;
   selectedTrainingIndex$: Observable<number>;
   fileUploaded$: Observable<FileModel>;
   safeUrl$: Observable<SafeResourceUrl>;
@@ -208,9 +209,9 @@ export class TrainingViewerComponent implements OnInit {
   score = 0;
   markCompletedModalIsVisible = false;
   emailAddr: string;
+  production = false;
 
   passingGrade: number = 70;
-
 
   constructor(
     private trainingService: TrainingService,
@@ -223,9 +224,15 @@ export class TrainingViewerComponent implements OnInit {
     private authService: AuthService) {
     this.isAuthenticated$ = authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
-    this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
+    this.training2$ = this.trainingService.getSelectedTrainingStream();
     this.selectedTrainingIndex$ = this.trainingService.getSelectedTrainingIndexStream();
     this.newVersion$ = this.fileService.getNewVersionStream();
+    this.route.paramMap.subscribe(params => {
+      this.production = true;
+      this.trainingId = params.get('id');
+      this.training1$ = this.trainingService.getTrainingById$(this.trainingId);
+      this.selectedTraining$ = this.training1$.pipe(merge(this.training2$));
+    });
   }
 
   ngOnInit() {
@@ -263,7 +270,6 @@ export class TrainingViewerComponent implements OnInit {
         this.mode = 'Edit';
       }
     });
-
     this.fileUploaded$.subscribe(file => {
       let found = false;
       if (!file) {
@@ -487,7 +493,7 @@ export class TrainingViewerComponent implements OnInit {
 
   questionChanged(item, itemIndex) {
 
-    console.log('questionChanged', item, itemIndex); 
+    console.log('questionChanged', item, itemIndex);
     this.selectedTraining.assessment.items[itemIndex] = item;
     this.trainingService.saveTraining(this.selectedTraining, false);
     this.setCurrentPage(this.currentPageId);
@@ -502,12 +508,12 @@ export class TrainingViewerComponent implements OnInit {
   correctChoiceChanged(item, itemIndex) {
     this.selectedTraining.assessment.items[itemIndex] = item;
     this.trainingService.saveTraining(this.selectedTraining, false);
-    console.log('correctChoiceChanged', item, itemIndex); 
+    console.log('correctChoiceChanged', item, itemIndex);
   }
 
   saveTraining(reload: boolean) {
-//    console.log('saveTraining', model, event);
-//    object[property] = model;
+    //    console.log('saveTraining', model, event);
+    //    object[property] = model;
     this.trainingService.saveTraining(this.selectedTraining, reload);
 
     this.setCurrentPage(this.currentPageId);
@@ -582,7 +588,7 @@ export class TrainingViewerComponent implements OnInit {
 
   deleteInterestListItem(index) {
     this.selectedTraining.interestList.splice(index, 1);
-    this.trainingService.saveTraining(this.selectedTraining, false);    
+    this.trainingService.saveTraining(this.selectedTraining, false);
   }
 
   answeredQuestion(itemIndex) {
@@ -704,7 +710,7 @@ export class TrainingViewerComponent implements OnInit {
 
   movePage(currentIndex, positions) {
     // can't move first page up
-    if ( currentIndex === 0 && positions === -1 ) {
+    if (currentIndex === 0 && positions === -1) {
       return;
     }
 
@@ -716,6 +722,6 @@ export class TrainingViewerComponent implements OnInit {
     let pageToMove = this.selectedTraining.pages.splice(currentIndex, 1);
     this.selectedTraining.pages.splice(currentIndex + positions, 0, pageToMove[0]);
 
-    this.trainingService.saveTraining(this.selectedTraining, false);    
+    this.trainingService.saveTraining(this.selectedTraining, false);
   }
 }

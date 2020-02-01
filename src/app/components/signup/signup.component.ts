@@ -27,7 +27,6 @@ export class SignupComponent implements OnInit {
   constructor(private route: ActivatedRoute) { 
     this.route.paramMap.subscribe(params => {
       this.email = params.get('id');
-      console.log('signup', this.email);
       this._auth0.authorize({ action: 'signup', login_hint: this.email });
     });
     

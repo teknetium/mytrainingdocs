@@ -5,6 +5,7 @@ import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 
+import { AuthGuard } from './shared/guard/auth.guard';
 import { AppRoutingModule } from './app-routing.module';
 import { TemplateModule } from './shared/template/template.module';
 import { SharedModule } from './shared/shared.module';
@@ -32,6 +33,11 @@ import { HomeModule } from './components/home/home.module';
 import { ConfigModule } from './components/config/config.module';
 import { CalendarModule } from './components/calendar/calendar.module';
 import { NewAppComponent } from './new-app/new-app.component';
+import { FileService } from './shared/services/file.service';
+import { TrainingService } from './shared/services/training.service';
+import { AuthService } from './shared/services/auth.service';
+import { UserService } from './shared/services/user.service';
+import { LoginModule } from './components/login/login.module';
 
 
 registerLocaleData(en);
@@ -67,14 +73,20 @@ registerLocaleData(en);
         TrainingsModule,
         HomeModule,
         ConfigModule,
-        CalendarModule
+        CalendarModule,
+        LoginModule
     ],
     providers: [
         { 
             provide: NZ_I18N,
             useValue: en_US, 
         },
-        ThemeConstantService
+        ThemeConstantService,
+        AuthGuard,
+        TrainingService,
+        AuthService,
+        UserService,
+        FileService,
     ],
     bootstrap: [AppComponent]
 })
