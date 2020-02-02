@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TrainingsComponent } from './trainings.component';
 import { TrainingViewerComponent } from './training-viewer/training-viewer.component';
 
-import { NzTableModule, NzCollapseModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule, NzCommentModule, NzAvatarModule, NzListModule, NzDrawerComponent, NzDropDownModule } from 'ng-zorro-antd';
+import { NzTableModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule, NzCommentModule, NzAvatarModule, NzListModule, NzDropDownModule, NzStepsModule } from 'ng-zorro-antd';
 import { NzButtonModule } from 'ng-zorro-antd';
 import { NzIconModule } from 'ng-zorro-antd';
 import { NzTagModule } from 'ng-zorro-antd';
@@ -52,7 +52,7 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
     NzButtonModule,
     NzModalModule,
     NzIconModule,
-    NzCollapseModule,
+    NzStepsModule,
     FilesModule,
     FileManagerModule,
     NzButtonModule,

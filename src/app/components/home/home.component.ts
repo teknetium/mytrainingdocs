@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
       }
     })
   }
+
   saveName() {
     this.userService.updateUser(this.authenticatedUser);
     this.showNewUserModal = false;

@@ -84,6 +84,8 @@ export class TrainingViewerComponent implements OnInit {
   subject: string = 'Feedback Requested'
   messageBody: string = 'Please'
 
+  currentStep = -1;
+
   rating = 0;
 
   tempIcon = '';
@@ -230,6 +232,7 @@ export class TrainingViewerComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.production = true;
       this.trainingId = params.get('id');
+      console.log('training-viewer:route.params', this.trainingId);
       this.training1$ = this.trainingService.getTrainingById$(this.trainingId);
       this.selectedTraining$ = this.training1$.pipe(merge(this.training2$));
     });
@@ -336,6 +339,11 @@ export class TrainingViewerComponent implements OnInit {
         };
       });
     }, 800);
+  }
+
+  setCurrentStepPanel(newIndex) {
+    this.currentStep = newIndex;
+    this.runningTour = true;
   }
 
   setCurrentPage(pageId) {
@@ -614,7 +622,7 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   endTour() {
-    this.currentHelpPanel = '';
+    this.currentStep = -1;
     this.runningTour = false;
   }
 

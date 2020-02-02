@@ -29,7 +29,7 @@
                             style="display:inline-block;font-size:18px;vertical-align:baseline;" nz-tooltip
                             nzTooltipTitle="Admin User"></i>
                         &nbsp;
-                        <i nz-icon nzType="warning" [nzTheme]="'twotone'" [nzTwotoneColor]="'#efb753'"
+                        <i *ngIf="user.userStatus === 'pending'" nz-icon nzType="warning" [nzTheme]="'twotone'" [nzTwotoneColor]="'#efb753'"
                             style="display:inline-block;font-size:18px;vertical-align:baseline;" nz-tooltip
                             nzTooltipTitle="User Account Pending"></i>
                     </div>

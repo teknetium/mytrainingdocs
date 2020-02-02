@@ -58,6 +58,7 @@ export class TrainingsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.selectItem(-1);
     this.authenticatedUser$.subscribe((user) => {
       if (!user) {
         return;

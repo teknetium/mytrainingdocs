@@ -61,6 +61,7 @@ export class UserService {
           this.getUserByEmail(profile.email).subscribe(
             res => {
               res.uid = profile.uid;
+              res.userStatus = 'active';
               this.updateUser(res);
               this.authenticatedUser = res;
               this.authenticatedUserBS$.next(this.authenticatedUser);
@@ -227,6 +228,15 @@ export class UserService {
         catchError((error) => this._handleError(error))
       );
 
+  }
+
+  activateUser(email: string) {
+    this.getUserByEmail(email).subscribe(user => {
+      user.userStatus = 'active';
+      this.putUser$(user).subscribe(updatedUser => {
+        console.log('set userStatus to active');
+      })
+    })
   }
 
   //
