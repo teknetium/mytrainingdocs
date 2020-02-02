@@ -50,6 +50,7 @@ export class UserService {
     this.authenticatedUserProfile$ = this.auth.getAuthenticatedUserProfileStream();
     this.authenticatedUserProfile$.subscribe((profile) => {
 
+      console.log('UserService', profile);
       this.getUserByUid(profile.uid).subscribe(
         user => {
           this.authenticatedUser = user;
@@ -57,7 +58,7 @@ export class UserService {
           this.loadData(); this.loadData();
         },
         err => {
-          this.getUserByEmail(profile.email.toLowerCase()).subscribe(
+          this.getUserByEmail(profile.email).subscribe(
             res => {
               res.uid = profile.uid;
               this.updateUser(res);
@@ -70,8 +71,8 @@ export class UserService {
                 _id: profile.uid,
                 uid: profile.uid,
                 userType: 'supervisor',
-                firstName: profile.firstName,
-                lastName: profile.lastName,
+                firstName: '',
+                lastName: '',
                 email: profile.email,
                 teamId: null,
                 adminUp: false,
@@ -87,7 +88,7 @@ export class UserService {
                 this.authenticatedUser = data;
                 this.authenticatedUserBS$.next(this.authenticatedUser);
                 //        this.authenticatedUser$.complete();
-                this.loadData(); this.loadData();
+                this.loadData();
                 //        this.router.navigate([`gettingstarted`]);
               });
 
@@ -240,7 +241,7 @@ export class UserService {
   }
   getUserByEmail(email: string): Observable<UserModel> {
     return this.http
-      .get<UserModel>(`${ENV.BASE_API}user/${email}`, {
+      .get<UserModel>(`${ENV.BASE_API}user/email/${email}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
@@ -250,7 +251,7 @@ export class UserService {
 
   getUserByUid(uid: string): Observable<UserModel> {
     return this.http
-      .get<UserModel>(`${ENV.BASE_API}user/${uid}`, {
+      .get<UserModel>(`${ENV.BASE_API}user/uid/${uid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

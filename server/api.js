@@ -311,7 +311,7 @@ module.exports = function(app, config) {
     });
   });
 
-  app.get("/api/user/:email", jwtCheck, (req, res) => {
+  app.get("/api/user/email/:email", jwtCheck, (req, res) => {
     User.findOne({ email: req.params.email }, userListProjection, (err, user) => {
       if (err) {
         return res.status(500).send({ message: err.message });
@@ -323,7 +323,7 @@ module.exports = function(app, config) {
     });
   });
 
-  app.get("/api/user/:uid", jwtCheck, (req, res) => {
+  app.get("/api/user/uid/:uid", jwtCheck, (req, res) => {
     User.findOne({ uid: req.params.uid }, userListProjection, (err, user) => {
       if (err) {
         return res.status(500).send({ message: err.message });

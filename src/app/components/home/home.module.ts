@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { CalendarModule } from '../calendar/calendar.module';
 import { MyteamModule } from '../myteam/myteam.module';
 import { HomeComponent } from './home.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TrainingsModule } from '../trainings/trainings.module';
+import { NzModalModule, NzInputModule } from 'ng-zorro-antd';
 
 @NgModule({
   declarations: [
@@ -13,7 +15,11 @@ import { TrainingsModule } from '../trainings/trainings.module';
     CommonModule,
     CalendarModule,
     MyteamModule,
-    TrainingsModule
+    TrainingsModule,
+    NzModalModule,
+    NzInputModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   exports: [
     HomeComponent

@@ -97,7 +97,6 @@ export class AuthService {
 
         this._getProfile(authResult);
       } else if (err) {
-        this._clearRedirect();
         this.router.navigate([`landingpage`]);
         console.error(`Error authenticating: ${err.error}`);
       }
@@ -113,6 +112,8 @@ export class AuthService {
         console.log('urlFrom', localStorage.getItem('urlFrom'));
 
         if (localStorage.getItem('urlFrom') === '/callback') {
+          console.log('_getProfile : urlFrom = /callback' );
+
           this._redirect();
           localStorage.removeItem('urlFrom');
         }
@@ -129,12 +130,12 @@ export class AuthService {
     this.accessToken = authResult.accessToken;
     // If initial login, set profile and admin information
     if (profile) {
-      this.userMetaData = profile['https://mytrainingdocs.com/user_metadata'];
+//      this.userMetaData = profile['https://mytrainingdocs.com/user_metadata'];
       this.authenticatedUserProfile = <Auth0ProfileModel>{
         uid: profile.sub.substring(profile.sub.indexOf('|') + 1),
         email: profile.email,
-        firstName: this.userMetaData.firstName,
-        lastName: this.userMetaData.lastName
+//        firstName: this.userMetaData.firstName,
+//        lastName: this.userMetaData.lastName
       };
       this.setAuthenticatedUserProfile(this.authenticatedUserProfile);
     }
@@ -153,29 +154,7 @@ export class AuthService {
   */
 
   private _redirect() {
-    // Redirect with or without 'tab' query parameter
-    // Note: does not support additional params besides 'tab'
-    const fullRedirect = decodeURI(localStorage.getItem('authRedirect'));
-    const redirectArr = fullRedirect.split('?tab=');
-    const navArr = [redirectArr[0] || '/'];
-    const tabObj = redirectArr[1] ? { queryParams: { tab: redirectArr[1] } } : '';
-    
-    console.log('_redirect', navArr, tabObj);
     this.router.navigate(['/home']);
-/*
-    if (!tabObj) {
-      this.router.navigate(navArr);
-    } else {
-      this.router.navigate(navArr, tabObj);
-    }
-*/
-    // Redirection completed; clear redirect from storage
-    this._clearRedirect();
-  }
-
-  private _clearRedirect() {
-    // Remove redirect from localStorage
-    localStorage.removeItem('authRedirect');
   }
 
   private _clearExpiration() {
@@ -187,7 +166,6 @@ export class AuthService {
     this.setLoggedIn(false);
     // Remove data from localStorage
     this._clearExpiration();
-    this._clearRedirect();
     // End Auth0 authentication session
     this._auth0.logout({
       clientId: AUTH_CONFIG.CLIENT_ID,

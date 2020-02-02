@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
 
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
+  showNewUserModal = false;
 
   constructor(private auth: AuthService, private userService: UserService, private eventService: EventService) {
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
@@ -23,8 +24,18 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.authenticatedUser$.subscribe(user => {
+      if (!user) {
+        return;
+      }
       this.authenticatedUser = user;
+      if (this.authenticatedUser.firstName === '') {
+        this.showNewUserModal = true;
+      }
     })
+  }
+  saveName() {
+    this.userService.updateUser(this.authenticatedUser);
+    this.showNewUserModal = false;
   }
 
   addEvent() {

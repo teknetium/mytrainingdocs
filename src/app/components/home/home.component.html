@@ -1,6 +1,6 @@
 <div *ngIf="authenticatedUser$ | async as user" style="height:100%;width:100%;">
     <div class="calendar">
-<!--
+        <!--
         <app-calendar></app-calendar>
         -->
     </div>
@@ -10,4 +10,21 @@
     <div class="mytrainings" *ngIf="user.userType !== 'supervisor' && !user.adminUp">
         <mtd-trainings></mtd-trainings>
     </div>
+    <nz-modal [(nzVisible)]="showNewUserModal" nzCancelDisabled="true" nzClosable="false" nzTitle="New User Info"
+        (nzOnOk)="saveName()">
+        <div style="padding:20px;color:black;">
+            <p style="font-size:16px;">
+                Please give us a bit more info about you...
+            </p>
+
+        </div>
+        <div style="z-index: 1000;background-color: white;">
+            <input nz-input type="text" placeholder="First Name" ngDefaultControl
+                [(ngModel)]="authenticatedUser.firstName" style="margin-bottom:10px;">
+            <input nz-input type="text" placeholder="Last Name" ngDefaultControl
+                [(ngModel)]="authenticatedUser.lastName" style="margin-bottom:10px;">
+
+        </div>
+    </nz-modal>
+
 </div>
