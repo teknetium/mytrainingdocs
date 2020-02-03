@@ -63,6 +63,7 @@ export class MyteamComponent implements OnInit {
   newTeamMember: UserModel = {
     _id: '',
     teamId: '',
+    org: '',
     firstName: '',
     lastName: '',
     email: '',
@@ -101,10 +102,13 @@ export class MyteamComponent implements OnInit {
       this.authenticatedUser = user;
       this.newTeamMember.teamId = this.authenticatedUser.uid;
       this.newTeamMember.supervisorId = this.authenticatedUser.uid;
+      this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@' + 1));
       this.newTeamMember._id = String(new Date().getTime());
     })
     this.myTeam$.subscribe(userList => {
-      console.log("myTeam$ subscribe", userList);
+      if (!userList) {
+        return;
+      }
       this.myTeam = userList;
 
       for (const user of this.myTeam) {
@@ -126,7 +130,7 @@ export class MyteamComponent implements OnInit {
     console.log('handleAddUser', this.newTeamMember);
     this.userService.updateUser(this.authenticatedUser);
     this.userService.createNewUser(this.newTeamMember);
-    let url = 'http://localhost:4200/signup/' + this.newTeamMember.email;
+    let url = 'https://mytrainingdocs.com/signup/' + this.newTeamMember.email;
     this.message = <MessageModel>{
       to: this.newTeamMember.email,
       from: this.authenticatedUser.email,

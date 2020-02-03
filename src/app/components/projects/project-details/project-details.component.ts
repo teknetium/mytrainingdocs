@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'mtd-training',
+    selector: 'app-training',
     templateUrl: './project-details.component.html',
     styles: [`
         :host ::ng-deep .ant-tabs-nav-wrap {

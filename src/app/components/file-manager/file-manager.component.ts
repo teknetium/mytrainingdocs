@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 
 
 @Component({
-    selector: 'mtd-file-mgr',
+    selector: 'app-file-mgr',
     templateUrl: './file-manager.component.html',
     styleUrls: ['./file-manager.component.css'],
 })

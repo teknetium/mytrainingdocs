@@ -5,6 +5,7 @@ export interface UserModel {
   firstName: string,
   lastName: string,
   email: string,
+  org: string,
   teamId: string,
   adminUp: boolean,
   userStatus: 'pending' | 'active' | 'new-supervisor-including-team' | 'new-supervisor-without-team' | 'new-user',

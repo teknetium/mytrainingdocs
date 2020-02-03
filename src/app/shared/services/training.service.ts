@@ -37,6 +37,7 @@ export class TrainingService {
   trainingOptions: [{ label: string, value: string }] = [null];
   showEditor$ = new BehaviorSubject<boolean>(false);
   trainingIdHash = {};
+  teamId;
 
   // Using Angular DI we use the HTTP service
   constructor(private http: HttpClient, private auth: AuthService, private userService: UserService, private fileService: FileService) {
@@ -48,7 +49,13 @@ export class TrainingService {
       if (user) {
         this.authenticatedUser = user;
         this.action = 'init';
+        if (this.authenticatedUser.userType === 'supervisor') {
+          this.teamId = this.authenticatedUser.uid;
+        } else if (this.authenticatedUser.userType === 'individualContributor' && this.authenticatedUser.adminUp) {
+          this.teamId = this.authenticatedUser.teamId;
+        }
         this.loadData();
+        /*
         this.getTrainings$(this.authenticatedUser.uid).subscribe(trainingList => {
           if (!trainingList) {
             return;
@@ -60,33 +67,17 @@ export class TrainingService {
             this.trainingIdHash[training._id] = training;
           }
         });
+        */
       }
     });
   }
 
   loadData() {
-    this.getTrainings$(this.authenticatedUser.uid).subscribe(trainingList => {
+    this.getTrainings$(this.teamId).subscribe(trainingList => {
       this.allTrainings = trainingList;
       for (const training of this.allTrainings) {
         this.trainingIdHash[training._id] = training;
       }
-      /*
-            let i;
-            if (this.action === 'save') {
-              i = this.selectedTrainingIndexBS$.value;
-            } else if (this.action === 'init') {
-              i = -1;
-            } else if (this.action === 'add') {
-              i = this.allTrainings.length - 1;
-            } else {
-              if (this.selectedTrainingIndexBS$.value > this.allTrainings.length - 1) {
-                i = this.allTrainings.length - 1;
-              } else {
-                i = this.selectedTrainingIndexBS$.value;
-              }
-            }
-            */
-
       this.allTrainingsBS$.next(this.allTrainings);
       //      this.myTrainingCntBS$.next(this.myTrainings.length);
       this.allTrainingCntBS$.next(this.allTrainings.length);
@@ -270,7 +261,7 @@ export class TrainingService {
       title: 'New Training',
       status: 'Under Development',
       rating: [],
-      teamId: this.authenticatedUser.uid,
+      teamId: this.teamId,
       owner: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),
       estimatedTimeToComplete: 30,

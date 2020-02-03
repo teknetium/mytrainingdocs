@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
+import { TrainingService } from '../../shared/services/training.service';
 import { EventService } from '../../shared/services/event.service';
 import { Observable } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.model';
 import { EventModel } from '../../shared/interfaces/event.type';
 import { User } from 'src/app/shared/interfaces/user.type';
+import { TrainingViewerComponent } from '../trainings/training-viewer/training-viewer.component';
 
 @Component({
   selector: 'app-home',
@@ -17,8 +19,12 @@ export class HomeComponent implements OnInit {
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
   showNewUserModal = false;
+  currentTab = 'myTrainings';
 
-  constructor(private auth: AuthService, private userService: UserService, private eventService: EventService) {
+  constructor(private auth: AuthService,
+    private userService: UserService,
+    private trainingService: TrainingService,
+    private eventService: EventService) {
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
   }
 
@@ -55,4 +61,11 @@ export class HomeComponent implements OnInit {
     this.eventService.addEvent(event);
   }
 
+  createNewTraining() {
+    this.trainingService.addNewTraining();
+  }
+
+  setCurrentTab(tabName) {
+    this.currentTab = tabName;
+  }
 }

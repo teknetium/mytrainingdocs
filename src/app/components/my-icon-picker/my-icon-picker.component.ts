@@ -4,7 +4,7 @@ import icons from '../../../assets/fontawesome-pro/metadata/icons.json';
 
 
 @Component({
-  selector: 'mtd-icon-picker',
+  selector: 'app-icon-picker',
   templateUrl: './my-icon-picker.component.html',
   styleUrls: ['./my-icon-picker.component.css']
 })

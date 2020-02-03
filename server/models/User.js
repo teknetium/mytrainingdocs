@@ -14,14 +14,15 @@ const userSchema = new Schema({
   userType: { type: String, required: true },
   firstName: { type: String, required: false },
   lastName: { type: String, required: false },
-  email: { type: String, required: false },
-  teamId: { type: String, required: false },
-  adminUp: Boolean,
-  jobTitle: String,
+  email: { type: String, required: true },
+  teamId: { type: String, required: true },
+  org: { type: String, required: true },
+  adminUp: { type: Boolean, required: false },
+  jobTitle: { type: String, required: false },
   userStatus: { type: String, required: false },
   trainingStatus: { type: String, required: false },
-  profilePicUrl: String,
-  supervisorId: String,
+  profilePicUrl: { type: String, required: false },
+  supervisorId: { type: String, required: false }
 });
 
 module.exports = mongoose.model("User", userSchema);

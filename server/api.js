@@ -55,7 +55,7 @@ module.exports = function(app, config) {
 
   const trainingListProjection = "_id title version type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status interestList shared";
   const userTrainingListProjection = "_id tid uid status dueDate timeToDate";
-  const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId supervisor profilePicUrl";
+  const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId org supervisorId profilePicUrl";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id name type creationDate actionDate teamId description";
   const commentListProjection = "_id tid author avatar content date";
@@ -353,6 +353,7 @@ module.exports = function(app, config) {
         email: req.body.email,
         adminUp: req.body.adminUp,
         teamId: req.body.teamId,
+        org: req.body.org,
         userStatus: req.body.userStatus,
         trainingStatus: req.body.trainingStatus,
         jobTitle: req.body.jobTitle,
@@ -379,10 +380,11 @@ module.exports = function(app, config) {
       user.uid = req.body.uid;
       user.userType = req.body.userType;
       user.teamId = req.body.teamId;
+      user.org = req.body.org;
       user.firstName = req.body.firstName;
       user.lastName = req.body.lastName;
       user.email = req.body.email;
-      adminUp = req.body.adminUp,
+      user.adminUp = req.body.adminUp,
       user.userStatus = req.body.userStatus;
       user.trainingStatus = req.body.trainingStatus;
       user.jobTitle = req.body.jobTitle;

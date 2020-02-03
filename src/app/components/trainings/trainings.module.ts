@@ -26,11 +26,13 @@ import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
 import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
+import { MyTrainingsComponent } from './my-trainings/my-trainings.component';
 
 @NgModule({
   declarations: [
     TrainingsComponent,
     TrainingViewerComponent,
+    MyTrainingsComponent,
   ],
   imports: [
     RouterModule,
@@ -78,7 +80,8 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
   ],
   exports: [
     TrainingsComponent,
-    TrainingViewerComponent
+    TrainingViewerComponent,
+    MyTrainingsComponent
   ]
 })
 export class TrainingsModule { }

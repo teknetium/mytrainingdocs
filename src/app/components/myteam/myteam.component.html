@@ -6,7 +6,7 @@
         <div class="team-container">
             <div class="supervisor">
                 <div class="user-button" (click)="selectUser(-1)" [ngClass]="{'user-selected': supervisorSelected}"
-                style="float:left;">
+                    style="float:left;">
                     <i [ngClass]="userTypeIconHash[authenticatedUser.userType]"></i> &nbsp;
                     <span style="display:inline-block"> {{ authenticatedUser.firstName }}
                         {{ authenticatedUser.lastName }} </span>
@@ -14,7 +14,7 @@
                 <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
                     style="float:right;cursor:pointer;font-size:20px;margin:8px;" (click)="addUser()" nz-tooltip
                     nzTooltipTitle="Add New User"></i>
-                    <div style="clear: both;"></div>
+                <div style="clear: both;"></div>
             </div>
             <div class="direct-report-container">
                 <div *ngFor="let user of myTeam$ | async; let i = index;" class="direct-report-cell">
@@ -29,15 +29,21 @@
                             style="display:inline-block;font-size:18px;vertical-align:baseline;" nz-tooltip
                             nzTooltipTitle="Admin User"></i>
                         &nbsp;
-                        <i *ngIf="user.userStatus === 'pending'" nz-icon nzType="warning" [nzTheme]="'twotone'" [nzTwotoneColor]="'#efb753'"
+                        <i *ngIf="user.userStatus === 'pending'" nz-icon nzType="warning" [nzTheme]="'twotone'"
+                            [nzTwotoneColor]="'#efb753'"
                             style="display:inline-block;font-size:18px;vertical-align:baseline;" nz-tooltip
                             nzTooltipTitle="User Account Pending"></i>
                     </div>
                 </div>
-
             </div>
-        <mtd-theme-image width="150" height="150" popover="true" style="position:fixed;left:50px;bottom:50px;">
-        </mtd-theme-image>
+            <div *ngIf="myTeam.length === 0" style="margin-top:20px;">
+                <span style="font-size:14px;font-weight:200;margin-top: 20px;"> You haven't added any team
+                    members!</span><br>
+                <button nz-button nzType="primary" (click)="addUser()" style="margin-top: 20px;">Add a team
+                    member</button>
+            </div>
+            <app-theme-image width="150" height="150" popover="true" style="position:fixed;left:50px;bottom:50px;">
+            </app-theme-image>
         </div>
     </div>
     <div class="my-team-rightside" style="width:77%;">
@@ -67,25 +73,11 @@
                         <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
                             style="float:left;cursor:pointer;font-size:20px;margin:5px 0 0 0;" nz-tooltip
                             nzTooltipTitle="Create New Training" (click)="createNewTraining()"></i>
-                        <mtd-trainings></mtd-trainings>
+                        <app-trainings></app-trainings>
 
                     </div>
                 </div>
             </div>
-            <!--
-            <nz-tabset id="supervisorTab" style="height:94%;" nzTabPosition="left">
-                <nz-tab nzTitle="My Team's Trainings"  style="height:94%;">
-                    <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-                        style="float:left;cursor:pointer;font-size:20px;margin:8px;" nz-tooltip
-                        nzTooltipTitle="Create New Training" (click)="createNewTraining()"></i>
-                    <mtd-trainings style="height:90%;"></mtd-trainings>
-
-                </nz-tab>
-                <nz-tab nzTitle="Team Dashboard">
-
-                </nz-tab>
-            </nz-tabset>
-            -->
         </div>
         <div *ngIf="!supervisorSelected && selectedUser$ | async as selectedUser">
             <div class="" style="width:100%;height:44px;margin-bottom:20px;">
@@ -149,9 +141,10 @@
         </div>
         <div [@supervisorSignupToggle]="isNewSupervisorPanelOpen ? 'open' : 'closed'"
             style="z-index: -1;height:50px;overflow: hidden;padding-left:30px;">
-            <label nz-checkbox ngDefaultControl [(ngModel)]="includeNewSupervisorsTeam">Have this supervisor registered
+            <label nz-checkbox ngDefaultControl [(ngModel)]="includeNewSupervisorsTeam">Have this supervisor register
                 their team</label>
         </div>
-        <label nz-checkbox ngDefaultControl [(ngModel)]="newTeamMember.adminUp">Admin Access</label>
+        <label nz-checkbox ngDefaultControl [(ngModel)]="newTeamMember.adminUp" nz-tooltip
+        nzTooltipTitle="Give this person the ability to create, update, delete trainings.">Training Admin Access</label>
     </nz-modal>
 </div>

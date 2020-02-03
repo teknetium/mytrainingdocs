@@ -17,7 +17,7 @@ import { MessageModel } from '../../../shared/interfaces/message.type';
 
 
 @Component({
-  selector: 'mtd-training-viewer',
+  selector: 'app-training-viewer',
   templateUrl: './training-viewer.component.html',
   styleUrls: ['./training-viewer.component.css'],
   animations: [
@@ -232,7 +232,6 @@ export class TrainingViewerComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.production = true;
       this.trainingId = params.get('id');
-      console.log('training-viewer:route.params', this.trainingId);
       this.training1$ = this.trainingService.getTrainingById$(this.trainingId);
       this.selectedTraining$ = this.training1$.pipe(merge(this.training2$));
     });

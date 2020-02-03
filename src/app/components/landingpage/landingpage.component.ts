@@ -8,7 +8,7 @@ import {ScrollToAnimationEasing, ScrollToOffsetMap} from '@nicky-lenaers/ngx-scr
 
 
 @Component({
-  selector: 'mtd-landingpage',
+  selector: 'app-landingpage',
   templateUrl: './landingpage.component.html',
   styleUrls: ['./landingpage.component.css'],
   encapsulation: ViewEncapsulation.Emulated

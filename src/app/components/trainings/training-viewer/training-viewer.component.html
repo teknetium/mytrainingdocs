@@ -1,6 +1,6 @@
-<div *ngIf="selectedTraining$ | async as selectedTraining"
+<div *ngIf="selectedTraining$ | async as selectedTraining" style="margin-top:10px;"
     [ngClass]="{'training-viewer': !fullscreen, 'training-viewer-fullscreen': fullscreen}">
-    <div style="display:block;margin-top:5px;text-align: center;background-color:#fcfcfc;">
+    <div style="display:block;padding-top:5px;text-align: center;background-color:#fcfcfc;">
         <i class="fad fa-hat-wizard"
             style="color:#951eca;font-size:20px;margin-right:10px;vertical-align: baseline;display:inline-block;"></i>
         <span style="display:inline-block;font-size:16px;">Training Wizard</span>
@@ -98,7 +98,7 @@
         <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800"
             (nzOnCancel)="handleIconSelectCancel()" [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled"
             (nzOnOk)="handleIconSelectConfirm()" style="width:800px;">
-            <mtd-icon-picker (icon)="setIcon($event)"></mtd-icon-picker>
+            <app-icon-picker (icon)="setIcon($event)"></app-icon-picker>
         </nz-modal>
         <nz-modal [(nzVisible)]="markCompletedModalIsVisible" nzTitle="Mark this Training as Completed" nzWidth="800"
             (nzOnCancel)="handleMarkAsCompletedCancel()" (nzOnOk)="markTrainingAsComplete(selectedTraining)"

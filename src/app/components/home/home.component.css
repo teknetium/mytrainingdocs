@@ -6,3 +6,21 @@
 .mytrainings {
     
 }
+.tab-titles {
+    width:fit-content;
+    height:40px;
+    padding:10px 20px;
+    margin-right: 2px;
+    display: inline-block;
+}
+
+.tab-titles:hover {
+    color: blue;
+    background-color: #f4f4f4;
+}
+
+.selected-tab {
+    border-bottom:2px solid blue;
+    color: blue;
+    background-color: #f4f4f4;
+}

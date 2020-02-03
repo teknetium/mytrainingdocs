@@ -6,7 +6,7 @@ import { UserService } from '../../../shared/services/user.service';
 import { TrainingService } from '../../../shared/services/training.service';
 
 @Component({
-  selector: 'mtd-user-detail',
+  selector: 'app-user-detail',
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.css']
 })

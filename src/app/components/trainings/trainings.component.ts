@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 
 
 @Component({
-  selector: 'mtd-trainings',
+  selector: 'app-trainings',
   templateUrl: './trainings.component.html',
   styleUrls: ['./trainings.component.css'],
 })
@@ -53,6 +53,8 @@ export class TrainingsComponent implements OnInit {
     private userService: UserService) {
     this.myTeam$ = this.userService.getMyTeamStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
+    this.trainings$ = this.trainingService.getAllTrainingsObservable();
+    this.selectedItemIndex$ = this.trainingService.getSelectedTrainingIndexStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.viewMode$ = this.trainingService.getViewModeStream();
   }
@@ -64,10 +66,9 @@ export class TrainingsComponent implements OnInit {
         return;
       }
       this.authenticatedUser = user;
-      this.trainings$ = this.trainingService.getAllTrainingsObservable();
-      this.selectedItemIndex$ = this.trainingService.getSelectedTrainingIndexStream();
       this.trainings$.subscribe(trainingList => {
         if (trainingList) {
+          console.log('trainings component', trainingList);
           this.trainings = trainingList;
         } else {
           this.trainings = [];
@@ -98,7 +99,7 @@ export class TrainingsComponent implements OnInit {
 
   newTraining() {
     this.trainingService.addNewTraining();
-    this.trainingService.changeEditorVisualState(false);
+    // this.trainingService.changeEditorVisualState(false);
   }
   confirmDelete() {
     this.trainingService.deleteTraining(this.trainings[this.selectedItemIndex]._id);

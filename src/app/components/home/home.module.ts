@@ -5,7 +5,7 @@ import { MyteamModule } from '../myteam/myteam.module';
 import { HomeComponent } from './home.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TrainingsModule } from '../trainings/trainings.module';
-import { NzModalModule, NzInputModule } from 'ng-zorro-antd';
+import { NzModalModule, NzInputModule, NzIconModule } from 'ng-zorro-antd';
 
 @NgModule({
   declarations: [
@@ -20,6 +20,7 @@ import { NzModalModule, NzInputModule } from 'ng-zorro-antd';
     NzInputModule,
     FormsModule,
     ReactiveFormsModule,
+    NzIconModule
   ],
   exports: [
     HomeComponent

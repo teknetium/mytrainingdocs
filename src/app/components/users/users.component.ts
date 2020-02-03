@@ -9,7 +9,7 @@ import { TrainingService } from '../../shared/services/training.service';
 
 
 @Component({
-  selector: 'mtd-users',
+  selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
@@ -104,6 +104,7 @@ export class UsersComponent implements OnInit {
     firstName: '',
     lastName: '',
     email: '',
+    org: '',
     adminUp: false,
     userType: 'individualContributor',
     uid: '',

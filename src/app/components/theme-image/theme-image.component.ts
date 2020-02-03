@@ -4,7 +4,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { ThemeImageService } from '../../shared/services/theme-image.service';
 
 @Component({
-  selector: 'mtd-theme-image',
+  selector: 'app-theme-image',
   templateUrl: './theme-image.component.html',
   styleUrls: ['./theme-image.component.css'],
   animations: [

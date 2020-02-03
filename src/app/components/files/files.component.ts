@@ -11,7 +11,7 @@ import { VgAPI } from 'videogular2/compiled/core';
 
 
 @Component({
-  selector: 'mtd-files',
+  selector: 'app-files',
   templateUrl: './files.component.html',
   styleUrls: ['./files.component.css']
 })
