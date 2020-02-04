@@ -64,7 +64,7 @@
             <div *ngIf="mode === 'Edit' && production === 'false'">
                 <div style="margin-right:30px;display: inline-block;">
                     <input style="display:inline-block;color:black;width:350px;font-size:14px;" nz-input
-                        [(ngModel)]="selectedTraining.title" nzSize="small" (keydown.enter)="saveTraining(true)" />
+                        [(ngModel)]="selectedTraining.title" nzSize="small" (keydown.enter)="saveTraining(true)" (blur)="saveTraining(true)"/>
                 </div>
             </div>
             <div *ngIf="mode === 'Preview' || production === 'true'">
