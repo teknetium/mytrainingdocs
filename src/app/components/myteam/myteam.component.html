@@ -100,13 +100,6 @@
                             (nzOnCancel)="handleCancelUserTraining()" (nzOnOk)="handleAssignUserTraining()"
                             style="width:500px;padding:10px;float:left;">
                             <div>
-                                <!--
-                                <div>
-                                    <span style="text-align:center;font-size:16px;font-weight: 200;color:#bbbbbb;">
-                                        All Trainings
-                                    </span>
-                                </div>
-                                -->
                                 <div style="background-color:white;display:inline-block;width:100%;">
                                     <div *ngFor="let training of trainings$ | async; index as allTrainingIndex;"
                                         class="all-training-list-entry" style="padding:10px 0;width:100%;"
@@ -137,15 +130,14 @@
                                         style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
                                         <thead>
                                             <tr style="font-size:12px;">
+                                                <th></th>
                                                 <th>Status</th>
                                                 <th>Title</th>
                                                 <th>Due Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr *ngFor="let userTraining of userTrainings$ | async; let i = index;"
-                                                [ngClass]="{'current-version': currentVersionIndex === i}"
-                                                (click)="viewVersion(i)"
+                                            <tr *ngFor="let userTraining of userTrainings$ | async; index as userTrainingIndex;"
                                                 style="cursor: pointer;font-size:12px;background-color: white;line-height:10px;">
                                                 <td style="font-size:12px;width:10%;">
                                                     <i [ngClass]="trainingIdHash[userTraining.tid].iconClass"
@@ -153,11 +145,19 @@
                                                         [ngStyle]="{'color': trainingIdHash[userTraining.tid].iconColor}">
                                                     </i>
                                                 </td>
+                                                <td style="font-size:12px;width:10%;">
+                                                    <i nz-icon [nzType]="statusIconHash[userTraining.status].icon" [nzTheme]="'twotone'"
+                                                        [nzTwotoneColor]="statusIconHash[userTraining.status].color" style="font-size:16px;"></i>
+                                                </td>
                                                 <td style="font-size:12px;width:50%;">
-                                            {{ trainingIdHash[userTraining.tid].title }}
+                                                    {{ trainingIdHash[userTraining.tid].title }}
                                                 </td>
                                                 <td style="font-size:12px;width:25%;">
-                                            {{ userTraining.dueDate }}
+                                                    {{ userTraining.dueDate | date:'medium'}}
+                                                </td>
+                                                <td>
+                                                    <i nz-icon [nzType]="'delete'" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" style="font-size:16px;"
+                                                    nz-popconfirm nzPopconfirmTitle="Delete this assigned training?" (nzOnConfirm)="confirmDeleteUserTraining(userTrainingIndex)"></i>
                                                 </td>
                                             </tr>
                                         </tbody>

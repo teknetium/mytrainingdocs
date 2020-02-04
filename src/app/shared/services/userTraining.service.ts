@@ -47,6 +47,14 @@ export class UserTrainingService {
     })
   }
 
+  deleteUserTraining(id, uid) {
+    this.deleteUserTraining$(id).subscribe(item => {
+      this.getTrainingsForUser$(uid).subscribe(list => {
+        this.userTrainingBS$.next(list);
+      })      
+    })
+  }
+
   loadTrainingsForUser(userId) {
     this.getTrainingsForUser$(userId).subscribe(list => {
       this.userTrainingBS$.next(list);
@@ -68,6 +76,15 @@ export class UserTrainingService {
 
   }
 
+  deleteUserTraining$(id: string): Observable<any> {
+    return this.http
+      .delete(`${ENV.BASE_API}usertraining/${id}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
 
   getTrainingsForUser$(uid): Observable<UserTrainingModel[]> {
     return this.http

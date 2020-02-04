@@ -157,6 +157,7 @@ export class TrainingViewerComponent implements OnInit {
   @Input() mode = 'Edit';
   @Input() trainingStatus = 'Under Development';
   @Input() trainingId = '';
+  @Input() production = false;
 
   docStreamPageHash = {};
   pageDocUrlHash = {};
@@ -211,7 +212,6 @@ export class TrainingViewerComponent implements OnInit {
   score = 0;
   markCompletedModalIsVisible = false;
   emailAddr: string;
-  production = false;
 
   passingGrade: number = 70;
 
@@ -238,7 +238,12 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentPageId = 'trainingWizardTour';
+    if (this.production) {
+      this.currentPageId = 'intro';
+    } else {
+      this.currentPageId = 'trainingWizardTour';
+    }
+    
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     this.selectedTrainingIndex$.subscribe(index => {
       this.selectedTrainingIndex = index;
@@ -247,7 +252,11 @@ export class TrainingViewerComponent implements OnInit {
 
       this.selectedTraining = training;
       if (training) {
-        this.currentPageId = 'trainingWizardTour';
+        if (this.production) {
+          this.currentPageId = 'intro';
+        } else {
+          this.currentPageId = 'trainingWizardTour';
+        }
         this.pageFileHash['intro'] = null;
         this.pageFileHash['config'] = null;
         this.pageFileHash['assessment'] = null;

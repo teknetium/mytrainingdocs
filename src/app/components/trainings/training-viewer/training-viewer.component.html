@@ -1,6 +1,6 @@
 <div *ngIf="selectedTraining$ | async as selectedTraining" style="margin-top:10px;"
     [ngClass]="{'training-viewer': !fullscreen, 'training-viewer-fullscreen': fullscreen}">
-    <div style="display:block;padding-top:5px;text-align: center;background-color:#fcfcfc;">
+    <div *ngIf="production === 'false'" style="display:block;padding-top:5px;text-align: center;background-color:#fcfcfc;">
         <i class="fad fa-hat-wizard"
             style="color:#951eca;font-size:20px;margin-right:10px;vertical-align: baseline;display:inline-block;"></i>
         <span style="display:inline-block;font-size:16px;">Training Wizard</span>
@@ -18,7 +18,7 @@
                 nz-tooltip nzTooltipTitle="Close Training">
             </i>
         </div>
-        <div *ngIf="trainingStatus === 'Under Development'"
+        <div *ngIf="trainingStatus === 'Under Development' && production === 'false'"
             style="position:absolute;bottom:5px;right:10px;height:fit-content;width: fit-content;">
 
             <div style="width:fit-content;display:inline-block;">
@@ -41,10 +41,6 @@
                 <i nz-icon nzType="mail" theme="twotone" [nzTwotoneColor]="'gold'" nz-tooltip
                     nzTooltipTitle="Email Interest List" class="header-icon" (click)="postMessageDialog()">
                 </i>
-                <!--
-                <i nz-icon nzType="file-add" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'" nz-tooltip
-                    nzTooltipTitle="Add New Document" class="header-icon" (click)="fileService.openPicker($event)"></i>
-                    -->
                 <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-tooltip
                     nzTooltipTitle="Delete Training" nz-popconfirm nzPopconfirmTitle="Delete this Training?"
                     [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'bottom'"
@@ -54,24 +50,24 @@
         </div>
 
         <div class="header-left">
-            <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'"
+            <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
                 [ngClass]="selectedTraining.iconClass" nz-tooltip nzTooltipTitle="click to change icon"
                 style="display: inline-block;font-size:40px;cursor: pointer;margin:10px;vertical-align: middle;"
                 [ngStyle]="{'color': selectedTraining.iconColor}" (click)="showIconSelectModal()">
             </i>
-            <i *ngIf="mode === 'Preview'" [ngClass]="selectedTraining.iconClass"
+            <i *ngIf="mode === 'Preview' || production === 'true'" [ngClass]="selectedTraining.iconClass"
                 style="display: inlne-block;font-size:40px;margin:10px;vertical-align: middle;"
                 [ngStyle]="{'color': selectedTraining.iconColor}">
             </i>
         </div>
         <div class="header-right">
-            <div *ngIf="mode === 'Edit'">
+            <div *ngIf="mode === 'Edit' && production === 'false'">
                 <div style="margin-right:30px;display: inline-block;">
                     <input style="display:inline-block;color:black;width:350px;font-size:14px;" nz-input
                         [(ngModel)]="selectedTraining.title" nzSize="small" (keydown.enter)="saveTraining(true)" />
                 </div>
             </div>
-            <div *ngIf="mode === 'Preview' || selectedTraining.status === 'In Production'">
+            <div *ngIf="mode === 'Preview' || production === 'true'">
                 <span
                     style="font-size:26px;display:inline-block;vertical-align: middle;">&nbsp;{{selectedTraining.title}}</span>
 
@@ -124,14 +120,14 @@
                         <i nz-icon nzType="menu-fold" [nzTheme]="'outline'" (click)="toggleTOC(false)"
                             style="float:right;cursor:pointer;font-size:24px;vertical-align: baseline;margin-left:10px;"></i>
                     </div>
-                    <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'" class="toc-entry"
+                    <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" class="toc-entry"
                         (click)="setCurrentPage('trainingWizardTour')"
                         [ngClass]="{'active-toc':currentPageId === 'trainingWizardTour', 'disabled': assessmentInProgress}">
                         <i nz-icon nzType="car" [nzTheme]="'twotone'" [nzTwotoneColor]="'#d64594'"
                             style="vertical-align: middle;margin-right:10px;"></i>
                         Training Wizard Tour
                     </div>
-                    <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'" class="toc-entry"
+                    <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" class="toc-entry"
                         (click)="setCurrentPage('config')"
                         [ngClass]="{'active-toc':currentPageId === 'config', 'disabled': assessmentInProgress}">
                         <i nz-icon nzType="setting" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
@@ -146,7 +142,7 @@
                         <div style="display:inline-block;line-height:18px;">
                             Main Content
                         </div>
-                        <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'" nz-icon
+                        <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-icon
                             nzType="file-add" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'" nz-tooltip
                             nzTooltipTitle="Add New Document"
                             style="cursor:pointer;line-height:18px;float:right;font-size:16px;margin-right:10px;"
@@ -159,33 +155,22 @@
                         <div style="display:inline-block;line-height:18px;">
                             {{page.title}}
                         </div>
-                        <!--
-                        <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'" nz-icon
-                            nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-tooltip
-                            nzTooltipTitle="Delete Page" nz-popconfirm nzPopconfirmTitle="Delete this Page?"
-                            [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'right'"
-                            (nzOnConfirm)="confirmDeletePage(pageIndex)"
-                            style="float:right;;cursor:pointer;font-size:14px;vertical-align: baseline;line-height:18px;">
-                        </i>
-                        -->
                     </div>
                     <div *ngIf="mode === 'Edit' || (mode === 'Preview' && selectedTraining.useAssessment)"
                         class="toc-entry" (click)="setCurrentPage('assessment')"
                         [ngClass]="{'active-toc':currentPageId === 'assessment'}">
                         Assessment
                     </div>
-                    <div *ngIf="selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production'"
+                    <div *ngIf="selectedTraining.status === 'In Review' || production === 'true'"
                         class="toc-entry" (click)="setCurrentPage('comments')"
                         [ngClass]="{'active-toc':currentPageId === 'comments'}">
-                        <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
-                            style="vertical-align: middle;margin-right:10px;"></i>
                         Comments
                     </div>
                 </div>
             </div>
             <div class="page-container" [ngStyle]="{'margin-left.px': pageContainerMarginLeft}"
                 [ngClass]="{'activeStep': currentStep === 2}">
-                <div *ngIf="currentPageId === 'config' && mode === 'Edit' && selectedTraining.status === 'Under Development'"
+                <div *ngIf="currentPageId === 'config' && mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
                     class="page">
                     <i nz-icon nzType="setting" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
                         style="display:inline-block;cursor:pointer;font-size:24px;vertical-align: baseline;margin-right:20px;">
@@ -261,7 +246,7 @@
                     </div>
                 </div>
 
-                <div *ngIf="currentPageId === 'trainingWizardTour' && mode === 'Edit' && selectedTraining.status === 'Under Development'"
+                <div *ngIf="currentPageId === 'trainingWizardTour' && mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
                     class="page" [ngClass]="{'activeStep': currentStep === 2}">
                     <i nz-icon nzType="car" [nzTheme]="'twotone'" [nzTwotoneColor]="'#d64594'"
                         style="display:inline-block;cursor:pointer;font-size:24px;vertical-align: baseline;margin-right:20px;">
@@ -410,11 +395,8 @@
                     </div>
                 </div>
 
-                <div *ngIf="currentPageId === 'comments' && (mode === 'Preview' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production')"
+                <div *ngIf="currentPageId === 'comments' && (mode === 'Preview' || selectedTraining.status === 'In Review' || production === 'true')"
                     class="page">
-                    <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'#6e3fbe'"
-                        style="display:inline-block;cursor:pointer;font-size:24px;vertical-align: baseline;margin-right:20px;">
-                    </i>
                     <h3 style="display:inline-block;text-align: left;margin-bottom:30px;">Comments</h3>
                     <div style="padding:20px;background-color:white;">
                         <nz-list *ngIf="data.length" [nzDataSource]="data" [nzRenderItem]="item"
@@ -450,60 +432,60 @@
 
                     <div>
                         <span style="font-size:14px;">
-                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'" nz-paragraph
+                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-paragraph
                                 (nzContentChange)="contentChanged($event, 'introduction')" nzEditable
                                 [(nzContent)]="selectedTraining.introduction"></p>
                             <span
-                                *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production'">
+                                *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || production === 'true'">
                                 {{selectedTraining.introduction}}
                             </span>
                         </span>
                     </div>
                     <div style="margin-top:30px;">
                         <h4>
-                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'" nz-paragraph
+                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-paragraph
                                 (nzContentChange)="contentChanged($event, 'execSummaryLabel')" nzEditable
                                 [(nzContent)]="selectedTraining.execSummaryLabel">
                             </p>
                         </h4>
                         <span
-                            *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production'">
+                            *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || production === 'true'">
                             <h4>{{selectedTraining.execSummaryLabel}}</h4>
                         </span>
                     </div>
 
                     <div style="padding:0 30px;">
                         <span style="font-size:14px;">
-                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'" nz-paragraph
+                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-paragraph
                                 (nzContentChange)="contentChanged($event, 'execSummary')" nzEditable
                                 [(nzContent)]="selectedTraining.execSummary"></p>
                             <span
-                                *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production'">
+                                *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || production === 'true'">
                                 {{selectedTraining.execSummary}}
                             </span>
                         </span>
                     </div>
                     <div style="margin-top:30px;">
                         <h4>
-                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'" nz-paragraph
+                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-paragraph
                                 (nzContentChange)="contentChanged($event, 'goalsLabel')" nzEditable
                                 [(nzContent)]="selectedTraining.goalsLabel">
                             </p>
                         </h4>
                         <span
-                            *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production'">
+                            *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || production === 'true'">
                             <h4>{{selectedTraining.goalsLabel}}</h4>
                         </span>
                     </div>
 
                     <div style="padding:0 30px;">
                         <span style="font-size:14px;">
-                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'" nz-paragraph
+                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-paragraph
                                 (nzContentChange)="contentChanged($event, 'goals')" nzEditable
                                 [(nzContent)]="selectedTraining.goals">
                             </p>
                             <span
-                                *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production'">
+                                *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || production === 'true'">
                                 {{selectedTraining.goals}}
                             </span>
                         </span>
@@ -514,18 +496,18 @@
                         <!-- page actions -->
                         <div *ngIf="currentPageId === page._id" class="page">
                             <div style="position:absolute;top:20px;right:20px;width:fit-content;height:fit-content;">
-                                <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'" nz-icon
+                                <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-icon
                                     nzType="up-square" [ngClass]="{'disabled': pageIndex === 0}" [nzTheme]="'twotone'"
                                     nz-tooltip nzTooltipTitle="Move document up in list"
                                     (click)="movePage(pageIndex, -1)" class="page-action">
                                 </i>
-                                <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'" nz-icon
+                                <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-icon
                                     nzType="down-square" [nzTheme]="'twotone'" nz-tooltip
                                     [ngClass]="{'disabled': pageIndex === selectedTraining.pages.length - 1}"
                                     nzTooltipTitle="Move document down in list" (click)="movePage(pageIndex, 1)"
                                     class="page-action">
                                 </i>
-                                <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'" nz-icon
+                                <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-icon
                                     nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-tooltip
                                     nzTooltipTitle="Delete Page" nz-popconfirm nzPopconfirmTitle="Delete this Page?"
                                     [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'right'"
@@ -534,31 +516,31 @@
 
                             </div>
                             <div>
-                                <h3 *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'"
+                                <h3 *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
                                     style="text-align: center;margin-bottom:30px;">
                                     <p nz-paragraph (nzContentChange)="pageContentChanged($event, pageIndex, 'title')"
                                         nzEditable [(nzContent)]="page.title">
                                     </p>
                                 </h3>
                                 <span
-                                    *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production'">
+                                    *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || production === 'true'">
                                     <h3 style="text-align: center;margin-bottom:30px;">{{page.title}}</h3>
                                 </span>
                             </div>
 
                             <div>
                                 <span style="font-size:16px;">
-                                    <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'"
+                                    <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
                                         nz-paragraph (nzContentChange)="pageContentChanged($event, pageIndex, 'intro')"
                                         nzEditable [(nzContent)]="page.intro"></p>
                                     <span
-                                        *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || selectedTraining.status === 'In Production'">
+                                        *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || production === 'true'">
                                         {{page.intro}}
                                     </span>
                                 </span>
                             </div>
-                            <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'">
-                                <button *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'"
+                            <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'">
+                                <button *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
                                     nz-button nzType="default" [nzSize]="'small'" (click)="uploadNewVersion()">
                                     <i nz-icon nzType="upload" [nzTheme]="'outline'"></i>
                                     <span style="font-size:12px;">Upload New Version</span>
@@ -683,7 +665,7 @@
                 </div>
                 <div *ngIf="currentPageId === 'assessment'" class="page">
                     <h3 style="text-align: center;margin-bottom:30px;">Assessment</h3>
-                    <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'">
+                    <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'">
                         <div style="display:block;margin-bottom:10px;">
                             <div style="display:inline-block;">
                                 <nz-switch nzSize="small" [(ngModel)]="selectedTraining.useAssessment"
@@ -761,19 +743,19 @@
                                         nz-tooltip nzTooltipTitle="Add new Choice"></i>
                                 </div>
                             </div>
-                            <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development'"
+                            <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
                                 class="font-size-18" [twoToneColor]="'#3f87f5'" nz-icon nzType="plus-square"
                                 theme="twotone" [nzTwotoneColor]="'#52c41a'" (click)="addNewQuestion()"
                                 style="margin-top:10px;cursor: pointer;" nz-tooltip
                                 nzTooltipTitle="Add new Question"></i>
                         </div>
                     </div>
-                    <div *ngIf="mode === 'Preview' || selectedTraining.status === 'In Production'"
+                    <div *ngIf="mode === 'Preview' || production === 'true'"
                         style="position:relative;">
                         <div *ngIf="currentAssessmentItemIndex === -1 && !assessmentComplete">
                             <button nz-button nzType="primary" (click)="beginAssessment()">Begin Assessment</button>
                         </div>
-                        <div *ngIf="assessmentComplete && selectedTraining.status === 'Under Development'">
+                        <div *ngIf="assessmentComplete && selectedTraining.status === 'Under Development' && production === 'false'">
                             <button nz-button nzType="primary" (click)="resetAssessment()">Reset Assessment</button>
                         </div>
                         <div *ngIf="currentAssessmentItemIndex > -1" style="margin-bottom:20px;">

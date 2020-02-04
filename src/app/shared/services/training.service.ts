@@ -51,7 +51,7 @@ export class TrainingService {
         this.action = 'init';
         if (this.authenticatedUser.userType === 'supervisor') {
           this.teamId = this.authenticatedUser.uid;
-        } else if (this.authenticatedUser.userType === 'individualContributor' && this.authenticatedUser.adminUp) {
+        } else if (this.authenticatedUser.userType === 'individualContributor') {
           this.teamId = this.authenticatedUser.teamId;
         }
         this.loadData();

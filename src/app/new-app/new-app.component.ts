@@ -114,6 +114,8 @@ export class NewAppComponent implements OnInit {
   myTeam$: Observable<UserModel[]>;
   files$: Observable<FileModel[]>;
   isAuthenticated$: Observable<boolean>;
+  authenticatedUser$: Observable<UserModel>;
+  authenticatedUser: UserModel;
 
   list = new Array<any>([]);
   isLoggedIn = false;
@@ -144,16 +146,23 @@ export class NewAppComponent implements OnInit {
     private zorroNotificationService: NzNotificationService,
     private fileService: FileService,
   ) {
-    this.image$ = this.imageBS$.asObservable();
-  }
-
-  ngOnInit(): void {
     this.myTeam$ = this.userService.getMyTeamStream();
     this.allTrainings$ = this.trainingService.getAllTrainingsObservable();
     this.myTrainings$ = this.trainingService.getMyTrainingsObservable();
     this.files$ = this.fileService.getFilesStream();
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
+    this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
+    this.image$ = this.imageBS$.asObservable();
+  }
 
+  ngOnInit(): void {
+
+    this.authenticatedUser$.subscribe(user => {
+      if (!user) {
+        return;
+      }
+      this.authenticatedUser = user;
+    })
     this.currentYogaImageNumber = 0;
   };
 

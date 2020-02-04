@@ -94,6 +94,20 @@ export class MyteamComponent implements OnInit {
   assignmentList: string[] = [];
   showUserTrainingModal = false;
   selectedTrainingIndex = -1;
+  statusIconHash = {
+    upToDate: {
+      icon: 'calendar',
+      color: 'green'
+    },
+    pastDue: {
+      icon: 'close-circle',
+      color: 'red'
+    },
+    completed: {
+      icon: 'check-circle',
+      color: 'blue'
+    }
+  };
 
   constructor(
     private authService: AuthService,
@@ -200,12 +214,16 @@ export class MyteamComponent implements OnInit {
       this.selectedUserBS$.next(this.myTeam[index]);
     }
   }
+  
   confirmDelete() {
-    console.log('myTeam.confirmDelete')
     this.userService.deleteUser(this.myTeam[this.userIndexSelected]._id);
     this.selectedUserBS$.next(null);
     this.userIndexSelected = -1;
     this.supervisorSelected = false;
+  }
+
+  confirmDeleteUserTraining(index) {
+    this.userTrainingService.deleteUserTraining(this.userTrainings[index]._id, this.selectedUser._id)
   }
 
   createNewTraining() {
@@ -228,6 +246,9 @@ export class MyteamComponent implements OnInit {
   selectTrainingForAssignment(index) {
     this.selectedTrainingIndex = index;
     this.assignmentList.push(this.trainings[index]._id);
+  }
+
+  deleteUserTraining(id) {
 
   }
 }
