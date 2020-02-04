@@ -95,6 +95,96 @@
             </div>
             <nz-tabset nzTabPosition="top">
                 <nz-tab nzTitle="Trainings">
+                    <div style="width:100%;">
+                        <nz-modal [(nzVisible)]="showUserTrainingModal" nzTitle="Assign Training To User"
+                            (nzOnCancel)="handleCancelUserTraining()" (nzOnOk)="handleAssignUserTraining()"
+                            style="width:500px;padding:10px;float:left;">
+                            <div>
+                                <!--
+                                <div>
+                                    <span style="text-align:center;font-size:16px;font-weight: 200;color:#bbbbbb;">
+                                        All Trainings
+                                    </span>
+                                </div>
+                                -->
+                                <div style="background-color:white;display:inline-block;width:100%;">
+                                    <div *ngFor="let training of trainings$ | async; index as allTrainingIndex;"
+                                        class="all-training-list-entry" style="padding:10px 0;width:100%;"
+                                        [ngClass]="{'selected-training': selectedTrainingIndex === allTrainingIndex}"
+                                        (click)="selectedTrainingIndex = allTrainingIndex">
+                                        <i [ngClass]="training.iconClass"
+                                            style="display:inline-block;font-size:20px;margin-right:10px;vertical-align: middle;"
+                                            [ngStyle]="{'color': training.iconColor}">
+                                        </i>
+                                        <div style="display:inline-block;font-size:14px;">
+                                            {{ training.title }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </nz-modal>
+                        <div style="width:100%;padding:0 10px 10px 10px;float:right;">
+                            <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+                                style="float:left;display:block;cursor:pointer;font-size:20px;margin:5px 0 0 0;"
+                                nz-tooltip nzTooltipTitle="Assign a training to the user"
+                                (click)="showUserTrainingModal = true"></i>
+                            <div style="clear:both;"></div>
+                            <div *ngIf="userTrainings.length > 0">
+                                <div
+                                    style="text-align:center;display:block;width:100%;margin-top:2px;margin-bottom:5px;font-size:12px;">
+                                    <nz-table nzSize="small" nzBordered="false" nzShowPagination="false"
+                                        [nzData]="userTrainings"
+                                        style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
+                                        <thead>
+                                            <tr style="font-size:12px;">
+                                                <th>Status</th>
+                                                <th>Title</th>
+                                                <th>Due Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let userTraining of userTrainings$ | async; let i = index;"
+                                                [ngClass]="{'current-version': currentVersionIndex === i}"
+                                                (click)="viewVersion(i)"
+                                                style="cursor: pointer;font-size:12px;background-color: white;line-height:10px;">
+                                                <td style="font-size:12px;width:10%;">
+                                                    <i [ngClass]="trainingIdHash[userTraining.tid].iconClass"
+                                                        style="font-size:20px;margin-right:10px;vertical-align: middle;"
+                                                        [ngStyle]="{'color': trainingIdHash[userTraining.tid].iconColor}">
+                                                    </i>
+                                                </td>
+                                                <td style="font-size:12px;width:50%;">
+                                            {{ trainingIdHash[userTraining.tid].title }}
+                                                </td>
+                                                <td style="font-size:12px;width:25%;">
+                                            {{ userTraining.dueDate }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </nz-table>
+                                </div>
+                                <!--
+                                <div style="background-color:white;width:100%;">
+                                    <div *ngFor="let userTraining of userTrainings$ | async; let i = index;"
+                                        class="all-training-list_entry" style="padding:10px;">
+                                        <div style="display:inline-block;">
+                                            <i [ngClass]="trainingIdHash[userTraining.tid].iconClass"
+                                                style="font-size:20px;margin-right:10px;vertical-align: middle;"
+                                                [ngStyle]="{'color': trainingIdHash[userTraining.tid].iconColor}">
+                                            </i>
+                                        </div>
+                                        <div style="display:inline-block;font-size:14px;">
+                                            {{ trainingIdHash[userTraining.tid].title }}
+                                        </div>
+                                        <div style="display:inline-block;font-size:14px;margin-left:20px;">
+                                            {{ userTraining.dueDate }}
+                                        </div>
+                                    </div>
+                                </div>
+                                -->
+                            </div>
+                        </div>
+                    </div>
                 </nz-tab>
                 <nz-tab nzTitle="Profile Info">
                 </nz-tab>
@@ -145,6 +235,7 @@
                 their team</label>
         </div>
         <label nz-checkbox ngDefaultControl [(ngModel)]="newTeamMember.adminUp" nz-tooltip
-        nzTooltipTitle="Give this person the ability to create, update, delete trainings.">Training Admin Access</label>
+            nzTooltipTitle="Give this person the ability to create, update, delete trainings.">Training Admin
+            Access</label>
     </nz-modal>
 </div>

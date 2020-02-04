@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
 import { EventService } from '../../shared/services/event.service';
+import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { TrainingService } from '../../shared/services/training.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.model';
@@ -11,6 +12,8 @@ import { TrainingModel } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
 import { MessageModel } from '../../shared/interfaces/message.type';
+import { UserTrainingModel } from '../../shared/interfaces/userTraining.type';
+
 
 @Component({
   selector: 'app-myteam',
@@ -45,6 +48,9 @@ export class MyteamComponent implements OnInit {
   }
   includeNewSupervisorsTeam = false;
   isNewSupervisorPanelOpen = false;
+  showAssignTrainingDialog = false;
+  userTrainings$: Observable<UserTrainingModel[]>;
+  userTrainings: UserTrainingModel[] = [];
 
   trainingStatusColorHash = {
     uptodate: '#52c41a',
@@ -52,12 +58,16 @@ export class MyteamComponent implements OnInit {
   }
   selectedUserBS$ = new BehaviorSubject<UserModel>(null);
   selectedUser$: Observable<UserModel> = this.selectedUserBS$.asObservable();
+  selectedUser: UserModel;
+  trainings$: Observable<TrainingModel[]>;
+  trainings: TrainingModel[] = [];
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
   myTeam: UserModel[];
   myTeam$: Observable<UserModel[]>;
   trainingCnt$: Observable<number>;
   userHash = {};
+  trainingIdHash = {};
   showNewUserModal = false;
   supervisorSelected = true;
   newTeamMember: UserModel = {
@@ -81,17 +91,24 @@ export class MyteamComponent implements OnInit {
   myTeamHelpPanelIsVisible = true;
   myTeamTrainingsHelpPanelIsVisible = true;
   currentTab = 'myTeamTrainings';
+  assignmentList: string[] = [];
+  showUserTrainingModal = false;
+  selectedTrainingIndex = -1;
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
     private eventService: EventService,
     private mailService: SendmailService,
+    private userTrainingService: UserTrainingService,
     private trainingService: TrainingService
   ) {
     this.myTeam$ = this.userService.getMyTeamStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.trainingCnt$ = this.trainingService.getAllTrainingCntObservable();
+    this.trainings$ = this.trainingService.getAllTrainingsObservable();
+    this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
+
   }
 
   ngOnInit() {
@@ -115,6 +132,25 @@ export class MyteamComponent implements OnInit {
         this.userHash[user._id] = user;
       }
     });
+
+    this.trainings$.subscribe(trainings => {
+      this.trainings = trainings;
+      for (const training of this.trainings) {
+        this.trainingIdHash[training._id] = training;
+      }
+    });
+
+    this.selectedUser$.subscribe(user => {
+      if (!user) {
+        return;
+      }
+      this.selectedUser = user;
+      this.userTrainingService.loadTrainingsForUser(this.selectedUser._id);
+    });
+
+    this.userTrainings$.subscribe(userTrainingList => {
+      this.userTrainings = userTrainingList;
+    })
 
   }
 
@@ -145,6 +181,15 @@ export class MyteamComponent implements OnInit {
     this.newTeamMember.adminUp = false;
   }
 
+  handleCancelUserTraining() {
+    this.showUserTrainingModal = false;
+  }
+
+  handleAssignUserTraining() {
+    this.userTrainingService.assignTraining(this.selectedUser._id, this.trainings[this.selectedTrainingIndex]._id);
+    this.showUserTrainingModal = false;
+  }
+
   selectUser(index) {
     if (index === -1) {
       this.supervisorSelected = true;
@@ -167,11 +212,22 @@ export class MyteamComponent implements OnInit {
     this.trainingService.addNewTraining();
   }
 
+  assignTrainings() {
+//    this.userTrainingService.assignTrainings();
+
+  }
+
   newSupervisorSelected(open: boolean) {
     this.isNewSupervisorPanelOpen = open;
   }
 
   setCurrentTab(tabName) {
     this.currentTab = tabName;
+  }
+
+  selectTrainingForAssignment(index) {
+    this.selectedTrainingIndex = index;
+    this.assignmentList.push(this.trainings[index]._id);
+
   }
 }

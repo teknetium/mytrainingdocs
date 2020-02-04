@@ -8,13 +8,15 @@ import { AuthService } from './auth.service';
 import { User } from '../interfaces/user.type';
 import { ENV } from './env.config';
 import { catchError } from 'rxjs/operators';
+import { DateTableComponent } from 'ng-zorro-antd';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserTrainingService {
 
-  userTrainingStreamHash = {};
+  userTrainingBS$ = new BehaviorSubject<UserTrainingModel[]>([]);
+
 
   constructor(private eventService: EventService, private http: HttpClient, private auth: AuthService) {
   }
@@ -22,15 +24,50 @@ export class UserTrainingService {
   markTrainingAsComplete(tid, uid) {
   }
 
-  getTrainingsForUserStream(uid: string): Observable<UserTrainingModel[]>  {
-    const userTrainingBS$ = new BehaviorSubject<UserTrainingModel[]>([]);
-    this.userTrainingStreamHash[uid] = userTrainingBS$.asObservable();
-    return this.userTrainingStreamHash[uid];
+  getUserTrainingStream(): Observable<UserTrainingModel[]>  {
+    return this.userTrainingBS$.asObservable();
+  }
+
+  assignTraining(uid, tid) {
+    const userTraining = <UserTrainingModel>{
+      _id: String(new Date().getTime()),
+      tid: tid,
+      uid: uid,
+      status: 'upToDate',
+      trainingVersion: '',
+      dueDate: new Date().getTime() + 1209600000,
+      dateCompleted: 0,
+      timeToDate: 0,
+      assessmentResponse: []
+    };
+    this.postUsertraining$(userTraining).subscribe(userTraining => {
+      this.getTrainingsForUser$(userTraining.uid).subscribe(list => {
+        this.userTrainingBS$.next(list);
+      })
+    })
+  }
+
+  loadTrainingsForUser(userId) {
+    this.getTrainingsForUser$(userId).subscribe(list => {
+      this.userTrainingBS$.next(list);
+    })
   }
 
   private get _authHeader(): string {
     return `Bearer ${this.auth.accessToken}`;
   }
+
+  postUsertraining$(userTraining: UserTrainingModel): Observable<UserTrainingModel> {
+    return this.http
+      .post<UserTrainingModel>(`${ENV.BASE_API}usertraining/new/`, userTraining, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+
+  }
+
 
   getTrainingsForUser$(uid): Observable<UserTrainingModel[]> {
     return this.http

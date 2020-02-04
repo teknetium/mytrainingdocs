@@ -57,6 +57,14 @@
     border-color: #3b5ae3;
 }
 
+.all-training-list-entry {
+    padding:5px;
+    margin-top:2px;
+}
+.all-training-list-entry:hover {
+    background-color: #e0eafd;
+}
+
 .user-selected {
     background-color: #e0eafd;
     color: #3b5ae3;
@@ -79,6 +87,11 @@
 .tab-titles:hover {
     color: blue;
     background-color: #f4f4f4;
+}
+
+.selected-training {
+    background-color: #e0eafd;
+    color:blue;
 }
 
 .selected-tab {

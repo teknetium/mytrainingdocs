@@ -5,11 +5,15 @@
         -->
     </div>
     <div class="myteam-container" *ngIf="user.userType === 'supervisor'">
-        <h4>Welcome {{user.firstName}}</h4>
+        <!--
+        <span style="font-size:20px;font-weight: 200;text-align: center;">Welcome {{user.firstName}}</span>
+        -->
         <app-myteam></app-myteam>
     </div>
     <div class="mytrainings" *ngIf="user.userType === 'individualContributor'" style="width:100%;height:100%;display:inline-block;padding:20px;">
+        <!--
         <h4>Welcome {{user.firstName}}</h4>
+        -->
         <div style="width:100%;height:100%;display:inline-block;">
             <div style="width:100%;height:40px;border-bottom:1px solid #cccccc;display:block;">
                 <div class="tab-titles" [ngClass]="{'selected-tab': currentTab === 'myTrainings'}"

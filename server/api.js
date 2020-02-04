@@ -7,6 +7,7 @@
 const jwt = require("express-jwt");
 const jwks = require("jwks-rsa");
 const Training = require("./models/Training");
+const UserTraining = require("./models/UserTraining");
 const User = require("./models/User");
 const File = require("./models/File");
 const Event = require("./models/Event");
@@ -54,7 +55,7 @@ module.exports = function(app, config) {
  */
 
   const trainingListProjection = "_id title version type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status interestList shared";
-  const userTrainingListProjection = "_id tid uid status dueDate timeToDate";
+  const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponse trainingVersion";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId org supervisorId profilePicUrl";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id name type creationDate actionDate teamId description";
@@ -232,7 +233,10 @@ module.exports = function(app, config) {
       uid: req.body.uid,
       status: req.body.status,
       dueDate: req.body.dueDate,
-      timeToDate: req.body.timeToDate
+      dateCompleted: req.body.dateCompleted,
+      timeToDate: req.body.timeToDate,
+      assessmentResponse: req.body.assessmentResponse,
+      trainingVersion: req.body.trainingVersion
     });
     UserTraining.create(userTraining, function (err, userTrainingObj) {
       if (err) {
@@ -254,6 +258,9 @@ module.exports = function(app, config) {
       userTraining.uid = req.body.uid;
       userTraining.status = req.body.status;
       userTraining.dueDate = req.body.dueDate;
+      userTraining.dateCompleted = req.body.dateCompleted;
+      userTraining.assessmentResponse = req.body.assessmentResponse;
+      userTraining.trainingVersion = req.body.trainingVersion;
       userTraining.timeToDate = req.body.timeToDate;
 
       userTraining.save(err2 => {
