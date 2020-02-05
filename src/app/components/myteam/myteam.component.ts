@@ -4,7 +4,7 @@ import { UserService } from '../../shared/services/user.service';
 import { EventService } from '../../shared/services/event.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { TrainingService } from '../../shared/services/training.service';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.model';
 import { EventModel } from '../../shared/interfaces/event.type';
 import { User } from 'src/app/shared/interfaces/user.type';
@@ -38,6 +38,12 @@ import { UserTrainingModel } from '../../shared/interfaces/userTraining.type';
   ]
 })
 export class MyteamComponent implements OnInit {
+
+  sub1: Subscription;
+  sub2: Subscription;
+  sub3: Subscription;
+  sub4: Subscription;
+  sub5: Subscription;
 
   userTypeIconHash = {
     individualContributor: 'fas fa-fw fa-user',
@@ -126,7 +132,7 @@ export class MyteamComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authenticatedUser$.subscribe(user => {
+    this.sub1 = this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
       }
@@ -136,7 +142,7 @@ export class MyteamComponent implements OnInit {
       this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@' + 1));
       this.newTeamMember._id = String(new Date().getTime());
     })
-    this.myTeam$.subscribe(userList => {
+    this.sub2 = this.myTeam$.subscribe(userList => {
       if (!userList) {
         return;
       }
@@ -147,14 +153,14 @@ export class MyteamComponent implements OnInit {
       }
     });
 
-    this.trainings$.subscribe(trainings => {
+    this.sub3 = this.trainings$.subscribe(trainings => {
       this.trainings = trainings;
       for (const training of this.trainings) {
         this.trainingIdHash[training._id] = training;
       }
     });
 
-    this.selectedUser$.subscribe(user => {
+    this.sub4 = this.selectedUser$.subscribe(user => {
       if (!user) {
         return;
       }
@@ -162,7 +168,7 @@ export class MyteamComponent implements OnInit {
       this.userTrainingService.loadTrainingsForUser(this.selectedUser._id);
     });
 
-    this.userTrainings$.subscribe(userTrainingList => {
+    this.sub5 = this.userTrainings$.subscribe(userTrainingList => {
       this.userTrainings = userTrainingList;
     })
 
@@ -249,6 +255,13 @@ export class MyteamComponent implements OnInit {
   }
 
   deleteUserTraining(id) {
+  }
 
+  ngOnDestroy() {
+    this.sub1.unsubscribe();
+    this.sub2.unsubscribe();
+    this.sub3.unsubscribe();
+    this.sub4.unsubscribe();
+    this.sub5.unsubscribe();
   }
 }

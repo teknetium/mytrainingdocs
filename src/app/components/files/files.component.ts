@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, HostListener, ElementRef, AfterViewInit } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { FileModel, Version } from '../../shared/interfaces/file.type';
 import { FileService } from '../../shared/services/file.service';
 import { AuthService } from '../../shared/services/auth.service';
@@ -71,6 +71,11 @@ export class FilesComponent implements OnInit {
   @Input() height = '500';
   @Input() streamId = '';
 
+  sub1: Subscription;
+  sub2: Subscription;
+  sub3: Subscription;
+  sub4: Subscription;
+
   constructor(
     private formBuilder: FormBuilder,
     private fileService: FileService,
@@ -85,7 +90,7 @@ export class FilesComponent implements OnInit {
     this.document$ = this.fileService.getDocPreviewStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.isAuthenticated$ = this.auth.getIsAuthenticatedStream();
-    this.isAuthenticated$.subscribe((value) => {
+    this.sub1 = this.isAuthenticated$.subscribe((value) => {
       this.isAuthenticated = value;
     });
 
@@ -96,7 +101,7 @@ export class FilesComponent implements OnInit {
 
   ngOnInit() {
 
-    this.authenticatedUser$.subscribe(user => {
+    this.sub2 = this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
       }
@@ -111,7 +116,7 @@ export class FilesComponent implements OnInit {
 //    this.fileService.setupPrivateDocumentPreviewStream(this.streamId);
 //    this.fileService.setupPrivateVideoPreviewStream(this.streamId);
 
-    this.selectedFile$.subscribe((file) => {
+    this.sub3 = this.selectedFile$.subscribe((file) => {
       console.log('selectedFile.subscribe', file);
       this.headerOpen = true;
 
@@ -132,10 +137,16 @@ export class FilesComponent implements OnInit {
     //      this.fileService.selectFileById(this.showFile);
     //    }
 
-    this.action$.subscribe(action => {
+    this.sub4 = this.action$.subscribe(action => {
       this.action = action;
     });
+  }
 
+  ngOnDestroy() {
+    this.sub1.unsubscribe();
+    this.sub2.unsubscribe();
+    this.sub3.unsubscribe();
+    this.sub4.unsubscribe();
   }
 
   onPlayerReady(api: VgAPI) {

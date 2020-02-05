@@ -3,7 +3,6 @@
         style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
         <thead>
             <tr style="font-size:12px;">
-                <th></th>
                 <th>Status</th>
                 <th>Title</th>
                 <th>Due Date</th>
@@ -13,30 +12,28 @@
         <tbody>
             <tr *ngFor="let userTraining of userTrainings$ | async; index as userTrainingIndex;"
                 style="cursor: pointer;font-size:12px;background-color: white;line-height:10px;">
-                <td style="font-size:12px;width:10%;">
-                    <i [ngClass]="trainingIdHash[userTraining.tid].iconClass"
-                        style="font-size:20px;margin-right:10px;vertical-align: middle;"
-                        [ngStyle]="{'color': trainingIdHash[userTraining.tid].iconColor}">
-                    </i>
-                </td>
-                <td style="font-size:12px;width:10%;">
+                <td style="font-size:12px;width:3%;" nz-tooltip [nzTooltipTitle]="statusIconHash[userTraining.status].desc">
                     <i nz-icon [nzType]="statusIconHash[userTraining.status].icon" [nzTheme]="'twotone'"
                         [nzTwotoneColor]="statusIconHash[userTraining.status].color" style="font-size:16px;"></i>
                 </td>
                 <td style="font-size:12px;width:40%;">
+                    <i [ngClass]="trainingIdHash[userTraining.tid].iconClass"
+                        style="font-size:20px;margin-right:10px;vertical-align: middle;"
+                        [ngStyle]="{'color': trainingIdHash[userTraining.tid].iconColor}">
+                    </i>
                     {{ trainingIdHash[userTraining.tid].title }}
                 </td>
                 <td style="font-size:12px;width:25%;">
                     {{ userTraining.dueDate | date:'medium'}}
                 </td>
                 <td style="font-size:12px;width:25%;">
-                    <div (click)="viewTraining(userTraining.tid)"
+                    <div (click)="viewTraining(userTraining.tid)" nz-tooltip nzTooltipTitle="Execute Training"
                         style="display:inline-block;padding:5px;margin-right:10px;">
-                        <i nz-icon [nzType]="'thunderbolt'" [nzTheme]="'twotone'" [nzTwotoneColor]="'gold'"
+                    <i nz-icon [nzType]="'thunderbolt'" [nzTheme]="'twotone'" [nzTwotoneColor]="'blue'"
                             style="font-size:16px;"></i>
                     </div>
                     <div style="display:inline-block;padding:5px;margin-right:10px;" nz-popconfirm
-                        nzPopconfirmTitle="Delete this assigned training?"
+                        nzPopconfirmTitle="Delete this assigned training?" nz-tooltip nzTooltipTitle="Delete this assigned training"
                         (nzOnConfirm)="confirmDeleteUserTraining(userTrainingIndex)">
                         <i nz-icon [nzType]="'delete'" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
                             style="font-size:16px;"></i>

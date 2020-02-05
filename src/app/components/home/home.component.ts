@@ -3,7 +3,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
 import { TrainingService } from '../../shared/services/training.service';
 import { EventService } from '../../shared/services/event.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.model';
 import { EventModel } from '../../shared/interfaces/event.type';
 import { User } from 'src/app/shared/interfaces/user.type';
@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
   authenticatedUser$: Observable<UserModel>;
   showNewUserModal = false;
   currentTab = 'myTrainings';
+  sub1: Subscription;
 
   constructor(private auth: AuthService,
     private userService: UserService,
@@ -29,7 +30,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authenticatedUser$.subscribe(user => {
+    this.sub1 = this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
       }
@@ -38,6 +39,10 @@ export class HomeComponent implements OnInit {
         this.showNewUserModal = true;
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.sub1.unsubscribe();
   }
 
   saveName() {

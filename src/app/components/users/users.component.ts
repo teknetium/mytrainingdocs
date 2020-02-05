@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.model';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -115,6 +115,12 @@ export class UsersComponent implements OnInit {
     jobTitle: ''
   }
 
+  sub1: Subscription;
+  sub2: Subscription;
+  sub3: Subscription;
+  sub4: Subscription;
+  sub5: Subscription;
+
   constructor(
     private userService: UserService,
     private auth: AuthService,
@@ -129,7 +135,7 @@ export class UsersComponent implements OnInit {
 
 
   ngOnInit() {
-    this.isAuthenticated$.subscribe((value) => {
+    this.sub1 = this.isAuthenticated$.subscribe((value) => {
       this.isAuthenticated = value;
     });
     if (!this.auth.isLoggedIn()) {
@@ -139,7 +145,7 @@ export class UsersComponent implements OnInit {
     this.selectedUserIndex$ = this.userService.getSelectedUserIndexStream();
     //    this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.myTeam$ = this.userService.getMyTeamStream();
-    this.myTeam$.subscribe(userList => {
+    this.sub2 = this.myTeam$.subscribe(userList => {
       this.myTeam = userList;
 
       for (const user of this.myTeam) {
@@ -161,7 +167,7 @@ export class UsersComponent implements OnInit {
       }
     }
 
-    this.selectedUser$.subscribe((item) => {
+    this.sub3 = this.selectedUser$.subscribe((item) => {
       if (item) {
         this.selectedUserId = item._id;
 
@@ -170,7 +176,7 @@ export class UsersComponent implements OnInit {
       }
     });
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
-    this.authenticatedUser$.subscribe((user) => {
+    this.sub4 = this.authenticatedUser$.subscribe((user) => {
       if (!user) {
         return;
       }
@@ -188,7 +194,7 @@ export class UsersComponent implements OnInit {
       this.trainingStatusHash[item.status] = item;
     }
     this.action$ = this.userService.getActionStream();
-    this.action$.subscribe(data => {
+    this.sub5 = this.action$.subscribe(data => {
       this.action = data;
       if (this.action === 'new') {
         this.disableDelete = true;
@@ -197,6 +203,14 @@ export class UsersComponent implements OnInit {
       }
     });
 
+  }
+
+  ngOnDestroy() {
+    this.sub1.unsubscribe();
+    this.sub2.unsubscribe();
+    this.sub3.unsubscribe();
+    this.sub4.unsubscribe();
+    this.sub5.unsubscribe();
   }
 
   viewChanged(event) {

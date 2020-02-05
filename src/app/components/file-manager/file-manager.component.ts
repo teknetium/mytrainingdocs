@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ThemeConstantService } from '../../shared/services/theme-constant.service';
 import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd';
 import { FileModel } from '../../shared/interfaces/file.type';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { FileService } from '../../shared/services/file.service';
 import { Router } from '@angular/router';
 
@@ -49,6 +49,9 @@ export class FileManagerComponent {
     @Input() mode = 'full';
 
     streamId: string = '';
+    sub1: Subscription;
+    sub2: Subscription;
+    sub3: Subscription;
 
     constructor(
         private colorConfig: ThemeConstantService,
@@ -66,21 +69,21 @@ export class FileManagerComponent {
         this.selectedFile$ = this.fileService.getSelectedFileStream();
         this.selectedFileIndex$ = this.fileService.getSelectedFileIndexStream();
         this.uploadedFile$ = this.fileService.getUploadedFileStream();
-        this.files$.subscribe(files => {
+        this.sub1 = this.files$.subscribe(files => {
             if (!files) {
                 return;
             }
             this.files = files;
 //            this.fileService.selectItem(0, this.streamId);
         });
-        this.selectedFile$.subscribe(file => {
+        this.sub2 = this.selectedFile$.subscribe(file => {
             if (!file) {
                 return;
             }
             this.selectedFile = file;
         });
 
-        this.uploadedFile$.subscribe(file => {
+        this.sub3 = this.uploadedFile$.subscribe(file => {
             if (file) {
                 this.fileService.selectItemById(file._id, this.streamId);
             }
@@ -95,7 +98,12 @@ export class FileManagerComponent {
             }
         })
         */
+    }
 
+    ngOnDestroy() {
+        this.sub1.unsubscribe();
+        this.sub2.unsubscribe();
+        this.sub3.unsubscribe();
     }
 
     changeView() {

@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AuthService} from '../../shared/services/auth.service';
 import {UserService} from '../../shared/services/user.service';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {UserModel} from '../../shared/interfaces/user.model';
 import {Router} from '@angular/router';
 import {ScrollToAnimationEasing, ScrollToOffsetMap} from '@nicky-lenaers/ngx-scroll-to';
@@ -145,6 +145,7 @@ export class LandingpageComponent implements OnInit {
   howStepCount;
   timerCnt = 0;
   currentHowMsg: string;
+  sub1: Subscription;
 
   constructor(
     private auth: AuthService,
@@ -159,13 +160,14 @@ export class LandingpageComponent implements OnInit {
 
   ngOnInit() {
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
-    this.authenticatedUser$.subscribe(user => {
+    this.sub1 = this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
       }
       this.authenticatedUser = user;
       this.router.navigate(['']);
     });
+
 
     /*
     setInterval(() => {
@@ -178,6 +180,9 @@ export class LandingpageComponent implements OnInit {
     this.setCurrentHowStep(0);
 
      */
+  }
+  ngOnDestroy() {
+    this.sub1.unsubscribe();
   }
 
   showLearnMore(index) {

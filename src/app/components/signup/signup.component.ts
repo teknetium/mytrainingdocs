@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AUTH_CONFIG } from '../../shared/services/auth.config';
 import * as auth0 from 'auth0-js';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -19,11 +20,13 @@ export class SignupComponent implements OnInit {
     audience: AUTH_CONFIG.AUDIENCE,
     scope: AUTH_CONFIG.SCOPE
   });
+  
+  sub1: Subscription;
 
   email: string;
 
   constructor(private route: ActivatedRoute ) { 
-    this.route.paramMap.subscribe(params => {
+    this.sub1 = this.route.paramMap.subscribe(params => {
       this.email = params.get('id');
       this._auth0.authorize({ action: 'signup', login_hint: this.email });
     });
@@ -32,6 +35,10 @@ export class SignupComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    this.sub1.unsubscribe();
   }
 
 

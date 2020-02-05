@@ -3,7 +3,7 @@ import { TrainingModel } from '../../shared/interfaces/training.type';
 import { TrainingService } from '../../shared/services/training.service';
 import { AuthService } from '../../shared/services/auth.service';
 
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserModel } from '../../shared/interfaces/user.model';
 import { SafeResourceUrl } from '@angular/platform-browser';
@@ -47,6 +47,11 @@ export class TrainingsComponent implements OnInit {
   myTeam$: Observable<UserModel[]>;
   myTeam: UserModel[] = [];
 
+  sub1: Subscription;
+  sub2: Subscription;
+  sub3: Subscription;
+  sub4: Subscription;
+
   constructor(
     private formBuilder: FormBuilder,
     private trainingService: TrainingService,
@@ -61,12 +66,12 @@ export class TrainingsComponent implements OnInit {
 
   ngOnInit() {
     this.selectItem(-1);
-    this.authenticatedUser$.subscribe((user) => {
+    this.sub1 = this.authenticatedUser$.subscribe((user) => {
       if (!user) {
         return;
       }
       this.authenticatedUser = user;
-      this.trainings$.subscribe(trainingList => {
+      this.sub2 = this.trainings$.subscribe(trainingList => {
         if (trainingList) {
           console.log('trainings component', trainingList);
           this.trainings = trainingList;
@@ -75,12 +80,12 @@ export class TrainingsComponent implements OnInit {
         }
       });
 
-      this.selectedItemIndex$.subscribe(index => {
+      this.sub3 = this.selectedItemIndex$.subscribe(index => {
         console.log('selectedItemIndex$', index);
         this.selectedItemIndex = index;
       })
 
-      this.myTeam$.subscribe(users => {
+      this.sub4 = this.myTeam$.subscribe(users => {
         if (users.length === 0) {
           return;
         }
@@ -95,6 +100,13 @@ export class TrainingsComponent implements OnInit {
       })
 
     });
+  }
+
+  ngOnDestroy() {
+    this.sub1.unsubscribe();
+    this.sub2.unsubscribe();
+    this.sub3.unsubscribe();
+    this.sub4.unsubscribe();
   }
 
   newTraining() {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EventService } from '../../shared/services/event.service';
 import { EventModel } from '../../shared/interfaces/event.type';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 
 interface Day {
   monthLabel: string,
@@ -35,6 +35,7 @@ export class CalendarComponent implements OnInit {
   currentDay: Day;
 
   events$: Observable<EventModel[]>;
+  sub1: Subscription;
 
   constructor(private eventService: EventService) {
     this.events$ = this.eventService.getEventStream();
@@ -42,7 +43,7 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.events$.subscribe(events => {
+    this.sub1 = this.events$.subscribe(events => {
       this.dayOfMonthOffset = this.currentDayOfMonth;
       this.dayOfWeekOffset = this.currentDayOfWeek;
       // If the current month is December then we just set nextMonth to January
@@ -96,6 +97,10 @@ export class CalendarComponent implements OnInit {
       this.daysBS$.next(this.days);
 
     })
+  }
+
+  ngOnDestroy() {
+    this.sub1.unsubscribe();
   }
 
 }

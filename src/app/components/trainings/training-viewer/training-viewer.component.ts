@@ -3,7 +3,7 @@ import { FileService } from '../../../shared/services/file.service';
 import { TrainingService } from '../../../shared/services/training.service';
 import { UserService } from '../../../shared/services/user.service';
 import { AuthService } from '../../../shared/services/auth.service';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { TrainingModel, Page, Portlet, Assessment } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -215,6 +215,12 @@ export class TrainingViewerComponent implements OnInit {
 
   passingGrade: number = 70;
 
+  sub1: Subscription;
+  sub2: Subscription;
+  sub3: Subscription;
+  sub4: Subscription;
+  sub5: Subscription;
+
   constructor(
     private trainingService: TrainingService,
     private fileService: FileService,
@@ -245,10 +251,10 @@ export class TrainingViewerComponent implements OnInit {
     }
     
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
-    this.selectedTrainingIndex$.subscribe(index => {
+    this.sub1 = this.selectedTrainingIndex$.subscribe(index => {
       this.selectedTrainingIndex = index;
     })
-    this.selectedTraining$.subscribe(training => {
+    this.sub2 = this.selectedTraining$.subscribe(training => {
 
       this.selectedTraining = training;
       if (training) {
@@ -281,7 +287,7 @@ export class TrainingViewerComponent implements OnInit {
         this.mode = 'Edit';
       }
     });
-    this.fileUploaded$.subscribe(file => {
+    this.sub3 = this.fileUploaded$.subscribe(file => {
       let found = false;
       if (!file) {
         return;
@@ -299,16 +305,24 @@ export class TrainingViewerComponent implements OnInit {
       }
     })
 
-    this.newVersion$.subscribe(newVersion => {
+    this.sub4 = this.newVersion$.subscribe(newVersion => {
       if (!newVersion) {
         return;
       }
       this.pageFileHash[this.currentPageId].versions.unshift(newVersion);
     })
 
-    this.authenticatedUser$.subscribe(user => {
+    this.sub5 = this.authenticatedUser$.subscribe(user => {
       this.authenticatedUser = user;
     })
+  }
+
+  ngOnDestroy() {
+    this.sub1.unsubscribe();
+    this.sub2.unsubscribe();
+    this.sub3.unsubscribe();
+    this.sub4.unsubscribe();
+    this.sub5.unsubscribe();
   }
 
   onPlayerReady(api: VgAPI) {

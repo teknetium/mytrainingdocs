@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AuthService } from '../shared/services/auth.service';
 import { TrainingService } from '../shared/services/training.service';
 import { UserService } from '../shared/services/user.service';
-import { BehaviorSubject, Observable, from } from 'rxjs';
+import { BehaviorSubject, Observable, from, Subscription } from 'rxjs';
 import { UserModel } from '../shared/interfaces/user.model';
 import { TrainingModel } from '../shared/interfaces/training.type';
 import { Router } from '@angular/router';
@@ -136,6 +136,7 @@ export class NewAppComponent implements OnInit {
   searchVisible: boolean = false;
   quickViewVisible: boolean = false;
 
+  sub1: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -157,7 +158,7 @@ export class NewAppComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.authenticatedUser$.subscribe(user => {
+    this.sub1 = this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
       }
@@ -165,6 +166,10 @@ export class NewAppComponent implements OnInit {
     })
     this.currentYogaImageNumber = 0;
   };
+
+  ngOnDestroy() {
+    this.sub1.unsubscribe();
+  }
 
   newTheme(val) {
     if (val === 'dogs') {
