@@ -3,7 +3,7 @@ import { MessageModel } from '../interfaces/message.type';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';
-import { throwError as ObservableThrowError, Observable, BehaviorSubject } from 'rxjs';
+import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
 
@@ -14,11 +14,13 @@ import { ENV } from './env.config';
 export class SendmailService {
 
   msg: MessageModel;
+  sub1: Subscription = null;
 
   constructor(private http: HttpClient, private auth: AuthService) { }
 
   sendMessage(msg: MessageModel) {
-    this.postMessage$(msg).subscribe(item => {
+    this.sub1 = this.postMessage$(msg).subscribe(item => {
+      this.sub1.unsubscribe();
     })
 
   }

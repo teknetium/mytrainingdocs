@@ -16,6 +16,7 @@ const userTrainingSchema = new Schema({
   dueDate: { type: Number, required: false },
   timeToDate: { type: Number, required: false },
   dateCompleted: { type: Number, required: false },
+  notificationDates: { type: [Number], required: false},
   assessmentResponse: { type: [Number], required: false }
 })
 

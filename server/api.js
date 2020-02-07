@@ -58,7 +58,7 @@ module.exports = function(app, config) {
   const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponse trainingVersion";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId org supervisorId profilePicUrl";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
-  const eventListProjection = "_id name type creationDate actionDate teamId description";
+  const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const commentListProjection = "_id tid author avatar content date";
 
   // GET API root
@@ -427,6 +427,7 @@ module.exports = function(app, config) {
   //
   // FILE methods
   //
+
   app.get("/api/files/:teamId", (req, res) => {
 //    File.find({ teamId: req.params.teamId }, fileListProjection, (err, files) => {
       File.find({}, fileListProjection, (err, files) => {
@@ -442,6 +443,7 @@ module.exports = function(app, config) {
       res.send(files);
     });
   });
+
   app.post("/api/files/new", jwtCheck, (req, res) => {
     const file = new File({
       versions: req.body.versions,
@@ -512,7 +514,7 @@ module.exports = function(app, config) {
   // EVENT methods
   //
   app.get("/api/events/:teamId", (req, res) => {
-    Event.find({}, eventListProjection, (err, events) => {
+    Event.find({teamId: req.params.teamId}, eventListProjection, (err, events) => {
       let eventsArr = [];
       if (err) {
         return res.status(500).send({ message: err.message });
@@ -527,13 +529,15 @@ module.exports = function(app, config) {
   });
   app.post("/api/events/new", jwtCheck, (req, res) => {
     const event = new Event({
+      _id: req.body._id,
+      title: req.body.title,
       type: req.body.type,
+      userId: req.body.userId,
+      teamId: req.body.teamId,
+      desc: req.body.desc,
+      mark: req.body.mark,
       creationDate: req.body.creationDate,
       actionDate: req.body.actionDate,
-      teamId: req.body.teamId,
-      name: req.body.name,
-      description: req.body.description,
-      _id: req.body._id,
     });
     Event.create(event, function (err2, eventObj) {
       if (err2) {
@@ -542,6 +546,7 @@ module.exports = function(app, config) {
       res.send(eventObj);
     });
   });
+  /*
   app.put("/api/events/:id", jwtCheck, (req, res) => {
     Event.findById(req.params.id, (err, event) => {
       if (err) {
@@ -550,13 +555,15 @@ module.exports = function(app, config) {
       if (!event) {
         return res.status(400).send({ message: "Event not found." });
       }
-      event.teamId = req.body.teamId;
-      event.name = req.body.name;
-      event.actionDate = req.body.actionDate;
-      event.creationDate = req.body.creationDate;
-      event.type = req.body.type;
-      event.description = req.body.description;
       event._id = req.body._id;
+      event.title = req.body.title;
+      event.type = req.body.type;
+      event.userId = req.body.userId;
+      event.teamId = req.body.teamId;
+      event.desc = req.body.desc;
+      event.mark = req.body.mark;
+      event.creationDate = req.body.creationDate;
+      event.actionDate = req.body.actionDate;
 
       event.save(err2 => {
         if (err2) {
@@ -566,6 +573,7 @@ module.exports = function(app, config) {
       });
     });
   });
+
   app.delete("/api/events/:id", jwtCheck, (req, res) => {
     Event.findById(req.params.id, (err, event) => {
       if (err) {
@@ -582,9 +590,9 @@ module.exports = function(app, config) {
       });
     });
   });
-
+*/
   //
-  // EVENT methods
+  // Comment methods
   //
   app.get("/api/comments/:trainingId", (req, res) => {
     Comment.find({}, commentListProjection, (err, comments) => {

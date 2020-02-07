@@ -20,7 +20,6 @@ export class HomeComponent implements OnInit {
   authenticatedUser$: Observable<UserModel>;
   showNewUserModal = false;
   currentTab = 'myTrainings';
-  sub1: Subscription;
 
   constructor(private auth: AuthService,
     private userService: UserService,
@@ -30,7 +29,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sub1 = this.authenticatedUser$.subscribe(user => {
+    this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
       }
@@ -41,29 +40,9 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  ngOnDestroy() {
-    this.sub1.unsubscribe();
-  }
-
   saveName() {
     this.userService.updateUser(this.authenticatedUser);
     this.showNewUserModal = false;
-  }
-
-  addEvent() {
-    let now = new Date().getTime();
-    let event: EventModel = {
-      _id: String(now),
-      userId: this.authenticatedUser._id,
-      name: 'Fred',
-      type: 'trainingDue',
-      creationDate: now,
-      actionDate: now + (20 * 86400000),
-      teamId: 'foo',
-      description: 'fubar'
-    }
-
-    this.eventService.addEvent(event);
   }
 
   createNewTraining() {

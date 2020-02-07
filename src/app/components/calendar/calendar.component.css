@@ -1,81 +1,93 @@
 .weekend {
-    background-color: #bbbbbb;
-    color: white !important;
+	background-color: #bbbbbb;
+	color: white !important;
 }
 
 .month {
-    display:block;
-    font-size:20px;
-    color:blue;
-    position:absolute;
-    top:15%;
-    left:5%;
-    opacity:.3;
+	writing-mode: vertical-rl;
+	text-orientation: upright;
+	letter-spacing: -6px;
+	display: inline-block;
+    font-size: 10px;
+    vertical-align: top;
 }
 
 .day-of-month {
-    display:block;
-    font-size:28px;
-    opacity:.2;
+	display: block;
+	font-size: 28px;
+	opacity: .2;
 }
 
 .month-and-day {
-    width:3.57%;
-    height:43px;
-    border:1px solid black;
-    display:inline-block;
-    border-left-width: 0;
-    position:relative;
-    color: blue;
-    cursor: pointer;
-    opacity:.2;
+	width: 3.57%;
+	height: 43px;
+	border: 1px solid black;
+	display: inline-block;
+	border-left-width: 0;
+	position: relative;
+	color: blue;
+	cursor: pointer;
+	opacity: .2;
 }
 .day-only {
-    width:3.57%;
-    height:43px;
-    border:1px solid black;
-    display:inline-block;
-    border-left-width: 0;
-    position:relative;
-    line-height: 45px;
-    font-size: 32px;
-    cursor: pointer;
-    opacity:.2;
+	width: 46px;
+	height: 46px;
+	border: 1px solid black;
+	border-radius: 4px;
+	margin: 2px;
+	display: inline-block;
+	border-left-width: 0;
+	position: relative;
+	line-height: 45px;
+	font-size: 32px;
+	cursor: pointer;
+	opacity: .2;
 }
 
 .calendar-container {
-    text-align: center;
-    width:100%;
-    height:100%;
-    border-left:1px solid #bbbbbb;
+	text-align: left;
+	width: 100%;
+    height: fit-content;
+    white-space: nowrap;
+	overflow: scroll;
 }
 
 .trainings-due {
-    position:absolute;
-    top:-4px;
-    left:2px;
+	position: absolute;
+	top: -4px;
+	left: 2px;
 }
 
 .notifications-being-sent {
-    position:absolute;
-    top:-4px;
-    right:-6px;
+	position: absolute;
+	top: -4px;
+	right: -6px;
 }
 
 .footer-info {
-    width: 100%;
-    height: 20px;
+	width: 100%;
+	height: 20px;
 }
 
 .day-info {
-    display: inline-block;
+	display: inline-block;
+}
+
+.today {
+    background-color: #f1f5fe;
+    border: 1px solid #435edb !important;
+    color:#435edb !important;
 }
 
 .day-cell {
-
+	width: 32px;
+	height: 32px;
+	border: 1px solid #d6d6d6;
+	border-radius: 4px;
+	margin-right: 1px;
+	display: inline-block;
+	position: relative;
 }
 
 .day-cell:hover {
-    opacity: 1.0;
-    border-left: 1px solid black;
 }

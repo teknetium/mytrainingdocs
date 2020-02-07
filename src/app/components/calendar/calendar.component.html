@@ -1,58 +1,31 @@
-<div class="calendar-container">
-    <div *ngFor="let day of days$ | async; let i = index;" (mouseenter)="currentDay = day" (mouseleave)="currentDay = null" class="day-cell"
-        [ngClass]="{'weekend': day.dayOfWeek === 0 || day.dayOfWeek === 6, 'month-and-day': day.monthLabel !== '', 'day-only': day.monthLabel === '' }">
-        <div *ngIf="day.monthLabel !== ''">
-            <div style="font-size:20px;line-height: 18px;">
-                {{day.monthLabel}}
+<div #container class="calendar-container" [ngStyle]="{'height.px': calendarHeight}">
+    <div *ngFor="let month of year; index as monthIndex">
+        <div *ngIf="showMonth[month.name] === 'true'">
+            <div class="month">
+                {{month.name}}
             </div>
-            <div style="font-size:20px;line-height: 18px;">
+            <div *ngFor="let day of month.days; index as dayIndex;" class="day-cell"
+                [ngClass]="{'today': currentMonth === monthIndex && currentDayOfMonth === dayIndex + 1}">
+                <div style="position: absolute;top:0;left:1px;font-size: 8px;color: #d6d6d6;;">
+                    {{ dayIndex + 1}}
+                </div>
+
+                <!--
+            <div *ngIf="day.monthLabel !== ''" style="font-size:10px;position:absolute;top:0;left:0;color:#dddddd;">
+
+                {{day.monthLabel}}&nbsp;&nbsp;{{day.dayOfMonth}}
+
+            </div>
+            <div *ngIf="day.monthLabel === ''" style="font-size:10px;position: absolute;top:0;left:0;color:#dddddd;">
                 {{day.dayOfMonth}}
             </div>
-            <!--
-            <span style="display: block;font-size: 20px;color:blue;opacity: .3;">{{day.monthLabel}}</span>
-            <span style="display: block;font-size: 20px;color:blue;opacity: .3;">{{day.dayOfMonth}}</span>
-            -->
-        </div>
-        <div *ngIf="day.monthLabel === ''" style="">
-            {{day.dayOfMonth}}
-        </div>
-        <nz-badge *ngIf="day.trainingsDue.length > 0" [nzColor]="'purple'" class="trainings-due"></nz-badge>
-        <nz-badge *ngIf="day.notificationsToSend.length > 0" [nzColor]="'gold'" class="notifications-being-sent">
-        </nz-badge>
-        <!--
-        <nz-badge [nzColor]="'lime'" style="position:absolute;bottom:-4px;left:2px;"></nz-badge>
-        <nz-badge [nzColor]="'yellow'" style="position:absolute;bottom:-4px;right:-6px;"></nz-badge>
         -->
-        <ng-template #titleTemplate>
-            Events
-            <span *ngIf="day.trainingsDue.length > 0 || day.notificationsToSend.length > 0"
-                style="color:blue;cursor: pointer;float:right;" (click)="showDetails(day)">details</span>
-        </ng-template>
-        <ng-template #contentTemplate>
-            <div style="width:180px;">
-                <div style="display:block;">
-                    <nz-badge [nzColor]="'purple'" [nzText]="day.trainingsDue.length"></nz-badge>&nbsp;&nbsp;Trainings
-                    Due
-                </div>
-                <div style="display:block;">
-                    <nz-badge [nzColor]="'gold'" [nzText]="day.notificationsToSend.length">
-                    </nz-badge>&nbsp;&nbsp;Notifications To Send
-                </div>
+                <i *ngIf="day.trainingsDue.length > 0" [ngClass]="trainingIdHash[day.trainingsDue[0]].iconClass"
+                    style="font-size:16px;position: absolute;bottom:4px;left:5px;"
+                    [ngStyle]="{'color': trainingIdHash[day.trainingsDue[0]].iconColor}">
+                </i>
+
             </div>
-        </ng-template>
-    </div>
-</div>
-<div class="footer-info">
-    <div *ngIf="currentDay" class="day-info">
-        <div style="display:inline-block;margin-right:20px;">
-            <nz-badge [nzColor]="'purple'" [nzText]="currentDay.trainingsDue.length"></nz-badge>&nbsp;&nbsp;Trainings
-            Due
         </div>
-        <div style="display:inline-block;">
-            <nz-badge [nzColor]="'gold'" [nzText]="currentDay.notificationsToSend.length">
-            </nz-badge>&nbsp;&nbsp;Notifications To Send
-        </div>
-    </div>
-    <div class="month-info">
     </div>
 </div>

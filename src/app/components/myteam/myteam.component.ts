@@ -63,7 +63,7 @@ export class MyteamComponent implements OnInit {
     pastdue: 'red'
   }
   selectedUserBS$ = new BehaviorSubject<UserModel>(null);
-  selectedUser$: Observable<UserModel> = this.selectedUserBS$.asObservable();
+  selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
   trainings$: Observable<TrainingModel[]>;
   trainings: TrainingModel[] = [];
@@ -73,6 +73,7 @@ export class MyteamComponent implements OnInit {
   myTeam$: Observable<UserModel[]>;
   trainingCnt$: Observable<number>;
   userHash = {};
+  userIndexHash = {};
   trainingIdHash = {};
   showNewUserModal = false;
   supervisorSelected = true;
@@ -128,7 +129,7 @@ export class MyteamComponent implements OnInit {
     this.trainingCnt$ = this.trainingService.getAllTrainingCntObservable();
     this.trainings$ = this.trainingService.getAllTrainingsObservable();
     this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
-
+    this.selectedUser$ = this.userService.getSelectedUserStream();
   }
 
   ngOnInit() {
@@ -139,7 +140,7 @@ export class MyteamComponent implements OnInit {
       this.authenticatedUser = user;
       this.newTeamMember.teamId = this.authenticatedUser.uid;
       this.newTeamMember.supervisorId = this.authenticatedUser.uid;
-      this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@' + 1));
+      this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
       this.newTeamMember._id = String(new Date().getTime());
     })
     this.sub2 = this.myTeam$.subscribe(userList => {
@@ -148,8 +149,9 @@ export class MyteamComponent implements OnInit {
       }
       this.myTeam = userList;
 
-      for (const user of this.myTeam) {
-        this.userHash[user._id] = user;
+      for (let i = 0; i < this.myTeam.length; i++) {
+        this.userIndexHash[this.myTeam[i]._id] = i;
+        this.userHash[this.myTeam[i]._id] = this.myTeam[i];
       }
     });
 
@@ -217,7 +219,8 @@ export class MyteamComponent implements OnInit {
     } else {
       this.supervisorSelected = false;
       this.userIndexSelected = index;
-      this.selectedUserBS$.next(this.myTeam[index]);
+      this.userService.selectUser(index);
+//      this.selectedUserBS$.next(this.myTeam[index]);
     }
   }
   

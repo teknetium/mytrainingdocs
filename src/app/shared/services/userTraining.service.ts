@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, throwError as ObservableThrowError  } from 'rxjs';
+import { BehaviorSubject, Observable, throwError as ObservableThrowError, Subscription  } from 'rxjs';
 import { EventService } from '../services/event.service';
 import { EventModel } from '../interfaces/event.type';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
@@ -8,7 +8,6 @@ import { AuthService } from './auth.service';
 import { User } from '../interfaces/user.type';
 import { ENV } from './env.config';
 import { catchError } from 'rxjs/operators';
-import { DateTableComponent } from 'ng-zorro-antd';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,6 @@ import { DateTableComponent } from 'ng-zorro-antd';
 export class UserTrainingService {
 
   userTrainingBS$ = new BehaviorSubject<UserTrainingModel[]>([]);
-
 
   constructor(private eventService: EventService, private http: HttpClient, private auth: AuthService) {
   }
@@ -35,7 +33,7 @@ export class UserTrainingService {
       uid: uid,
       status: 'upToDate',
       trainingVersion: '',
-      dueDate: new Date().getTime() + 1209600000,
+      dueDate: new Date().getTime() + 2419200000,
       dateCompleted: 0,
       timeToDate: 0,
       assessmentResponse: []
@@ -54,7 +52,7 @@ export class UserTrainingService {
       })      
     })
   }
-
+  
   loadTrainingsForUser(userId) {
     this.getTrainingsForUser$(userId).subscribe(list => {
       this.userTrainingBS$.next(list);

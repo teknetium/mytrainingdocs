@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
-import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject } from 'rxjs';
+import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
 import { UserModel } from '../interfaces/user.model';
 import { Auth0ProfileModel } from '../interfaces/auth0Profile.type';
 import { Router } from '@angular/router';
+import { EventModel } from '../interfaces/event.type';
+import { EventService } from './event.service';
 
 
 @Injectable({
@@ -29,7 +31,12 @@ export class UserService {
   private selectedUserIndexBS$ = new BehaviorSubject<number>(null);
   private newUser$: Observable<UserModel>;
 
-
+  userTypeIconHash = {
+    supervisor: 'fad fa-user-tie',
+    individualContributor: 'fad fa-user',
+    volunteer: 'fad fa-user-cowboy',
+    customer: 'fad fa-user-crown'
+  }
 
   // Observables
   private newuser$: Observable<UserModel>;
@@ -44,18 +51,18 @@ export class UserService {
     private http: HttpClient,
     private auth: AuthService,
     private router: Router,
+    private eventService: EventService,
   ) {
     this.action = 'init';
 
     this.authenticatedUserProfile$ = this.auth.getAuthenticatedUserProfileStream();
     this.authenticatedUserProfile$.subscribe((profile) => {
-
-      console.log('UserService', profile);
       this.getUserByUid(profile.uid).subscribe(
         user => {
           this.authenticatedUser = user;
           this.authenticatedUserBS$.next(this.authenticatedUser);
-          this.loadData(); this.loadData();
+          this.logLoginEvent();
+          this.loadData();
         },
         err => {
           this.getUserByEmail(profile.email).subscribe(
@@ -65,7 +72,7 @@ export class UserService {
               this.updateUser(res);
               this.authenticatedUser = res;
               this.authenticatedUserBS$.next(this.authenticatedUser);
-              this.loadData(); this.loadData();
+              this.loadData();
             },
             err => {
               this.authenticatedUser = <UserModel>{
@@ -75,7 +82,7 @@ export class UserService {
                 firstName: '',
                 lastName: '',
                 email: profile.email,
-                teamId: profile.uid,
+                teamId: null,
                 org: profile.email.substring(profile.email.indexOf('@' + 1)),
                 adminUp: false,
                 userStatus: 'new-supervisor-without-team',
@@ -89,8 +96,9 @@ export class UserService {
               this.newUser$.subscribe((data) => {
                 this.authenticatedUser = data;
                 this.authenticatedUserBS$.next(this.authenticatedUser);
+                this.logLoginEvent();
                 //        this.authenticatedUser$.complete();
-                this.loadData();
+//                this.loadData();
                 //        this.router.navigate([`gettingstarted`]);
               });
 
@@ -100,12 +108,38 @@ export class UserService {
     });
   }
 
+  logLoginEvent() {
+    let now = new Date().getTime();
+    let loginEvent = <EventModel>{
+      _id: String(new Date().getTime()),
+      title: 'Login Event',
+      type: 'loginSession',
+      userId: this.authenticatedUser._id,
+      teamId: this.authenticatedUser.teamId,
+      desc: 'user login',
+      mark: {
+        iconClass: this.userTypeIconHash[this.authenticatedUser.userType],
+        iconColor: 'purple',
+        useBadge: false,
+        badgeColor: 'blue'
+      },
+      creationDate: now,
+      actionDate: now,
+    }
+
+    this.eventService.addEvent(loginEvent);
+
+  }
+
   checkUserId(uid: string): Observable<UserModel> {
     return this.getUser$(uid);
   }
 
   loadData() {
     this.getTeam$(this.authenticatedUser.uid).subscribe((userList) => {
+      if (!userList) {
+        return;
+      }
       this.myTeam = userList;
       this.myTeamBS$.next(this.myTeam);
       this.myTeamCntBS$.next(this.myTeam.length);
@@ -269,7 +303,7 @@ export class UserService {
         catchError((error) => this._handleError(error))
       );
   }
-
+/*
   getAllUsers$(teamId: string): Observable<UserModel[]> {
     return this.http
       .get<UserModel>(`${ENV.BASE_API}users/${teamId}`, {
@@ -279,6 +313,7 @@ export class UserService {
         catchError((error) => this._handleError(error))
       );
   }
+  */
 
   getTeam$(teamId: string): Observable<UserModel[]> {
     return this.http

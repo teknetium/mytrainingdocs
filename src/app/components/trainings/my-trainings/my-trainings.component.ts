@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { UserTrainingModel } from '../../../shared/interfaces/userTraining.type';
 import { TrainingModel } from '../../../shared/interfaces/training.type';
 import { UserModel } from '../../../shared/interfaces/user.model';
@@ -27,6 +27,8 @@ export class MyTrainingsComponent implements OnInit {
 
   subscriptions: Subscription[] = [];
 
+  @Input() mode = 'view';
+
   statusIconHash = {
     upToDate: {
       icon: 'smile',
@@ -46,9 +48,9 @@ export class MyTrainingsComponent implements OnInit {
     }
   };
 
-  sub1: Subscription;
-  sub2: Subscription;
-  sub3: Subscription;
+  sub1: Subscription = null;
+  sub2: Subscription = null;
+  sub3: Subscription = null;
 
   constructor(private userTrainingService: UserTrainingService,
     private trainingService: TrainingService,
@@ -82,14 +84,25 @@ export class MyTrainingsComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.sub1.unsubscribe();
-    this.sub2.unsubscribe();
-    this.sub3.unsubscribe();
+    if (this.sub1) {
+      this.sub1.unsubscribe();
+    }
+    if (this.sub2) {
+      this.sub2.unsubscribe();
+    }
+    if (this.sub3) {
+      this.sub3.unsubscribe();
+    }
   }
 
   viewTraining(tid) {
     this.trainingIsVisible = true;
     this.trainingService.selectItemForEditing(this.trainingIndexHash[tid]);
   }
+
+  confirmDeleteUserTraining(index) {
+    this.userTrainingService.deleteUserTraining(this.userTrainings[index]._id, this.userTrainings[index].uid)
+  }
+
 
 }

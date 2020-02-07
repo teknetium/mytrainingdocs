@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TrainingsComponent } from './trainings.component';
 import { TrainingViewerComponent } from './training-viewer/training-viewer.component';
 
-import { NzTableModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule, NzCommentModule, NzAvatarModule, NzListModule, NzDropDownModule, NzStepsModule } from 'ng-zorro-antd';
+import { NzTableModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule, NzCommentModule, NzAvatarModule, NzListModule, NzDropDownModule, NzStepsModule, NzCalendarModule } from 'ng-zorro-antd';
 import { NzButtonModule } from 'ng-zorro-antd';
 import { NzIconModule } from 'ng-zorro-antd';
 import { NzTagModule } from 'ng-zorro-antd';
@@ -27,6 +27,7 @@ import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
 import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
 import { MyTrainingsComponent } from './my-trainings/my-trainings.component';
+import { CalendarModule } from '../calendar/calendar.module';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,9 @@ import { MyTrainingsComponent } from './my-trainings/my-trainings.component';
     NzDropDownModule,
     VgCoreModule,
     VgControlsModule,
-    NzSwitchModule
+    NzSwitchModule,
+    NzCalendarModule,
+    CalendarModule
   ],
   exports: [
     TrainingsComponent,

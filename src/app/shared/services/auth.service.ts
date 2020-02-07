@@ -44,7 +44,7 @@ export class AuthService {
   uid: string;
 
   constructor(private router: Router, private location: Location) {
-//    this.isAuthenticated$.next(false);
+    //    this.isAuthenticated$.next(false);
     // If app auth token is not expired, request new token
     if (JSON.parse(localStorage.getItem('expires_at')) > Date.now()) {
       this.renewToken();
@@ -68,7 +68,7 @@ export class AuthService {
     this.authenticatedUserProfile$.complete();
   }
 
-  getIsAuthenticatedStream():Observable<boolean> {
+  getIsAuthenticatedStream(): Observable<boolean> {
     return this.isAuthenticated$.asObservable();
   }
 
@@ -77,19 +77,18 @@ export class AuthService {
   }
 
   signup() {
-    this._auth0.authorize({action: 'signup'});
+    this._auth0.authorize({ action: 'signup' });
   }
-/*
-  signupBeta() {
-    this._auth0.authorize({action: 'signup', beta: 'true'});
-  }
-*/
+  /*
+    signupBeta() {
+      this._auth0.authorize({action: 'signup', beta: 'true'});
+    }
+  */
   login() {
-    this._auth0.authorize({action: 'login'});
+    this._auth0.authorize({ action: 'login' });
   }
 
   handleAuth() {
-    console.log('handleAuth', this.location);
     // When Auth0 hash parsed, get profile
     this._auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken) {
@@ -108,19 +107,9 @@ export class AuthService {
     this._auth0.client.userInfo(authResult.accessToken, (err, profile) => {
       if (profile) {
         this._setSession(authResult, profile);
-        console.log('USER PROFILE', profile);
-        console.log('urlFrom', localStorage.getItem('urlFrom'));
-
-        if (localStorage.getItem('urlFrom') === '/callback') {
-          console.log('_getProfile : urlFrom = /callback' );
-
-          this._redirect();
-          localStorage.removeItem('urlFrom');
-        }
-      } else if (err) {
-        console.warn(`Error retrieving profile: ${err.error}`);
+        this.router.navigate(['/home']);
       }
-    }); 
+    });
   }
 
   private _setSession(authResult, profile?) {
@@ -130,12 +119,9 @@ export class AuthService {
     this.accessToken = authResult.accessToken;
     // If initial login, set profile and admin information
     if (profile) {
-//      this.userMetaData = profile['https://mytrainingdocs.com/user_metadata'];
       this.authenticatedUserProfile = <Auth0ProfileModel>{
         uid: profile.sub.substring(profile.sub.indexOf('|') + 1),
         email: profile.email,
-//        firstName: this.userMetaData.firstName,
-//        lastName: this.userMetaData.lastName
       };
       this.setAuthenticatedUserProfile(this.authenticatedUserProfile);
     }
@@ -154,7 +140,6 @@ export class AuthService {
   */
 
   private _redirect() {
-    this.router.navigate(['/home']);
   }
 
   private _clearExpiration() {

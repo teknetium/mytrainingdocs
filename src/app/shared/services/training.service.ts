@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { AuthService } from './auth.service';
 import { FileService } from './file.service';
 import { UserService } from './user.service';
-import { throwError as ObservableThrowError, Observable, BehaviorSubject } from 'rxjs';
+import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
 import { TrainingModel, Page, Portlet, TextBlock, Assessment } from '../interfaces/training.type';

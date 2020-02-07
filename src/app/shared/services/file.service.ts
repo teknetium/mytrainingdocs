@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as cms from 'filestack-js';
 import { PickerDisplayMode, PickerOptions, PickerResponse } from 'filestack-js/build/main/lib/picker';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { BehaviorSubject, Observable, throwError as ObservableThrowError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError as ObservableThrowError, Subscription } from 'rxjs';
 import { FileModel, Version } from '../interfaces/file.type';
 import { UserService } from './user.service';
 import { UserModel } from '../interfaces/user.model';
@@ -230,11 +230,18 @@ export class FileService {
   privateSelectedFileHash = {};
   privateSelectedFileIndexHash = {};
   fsHandleSafeUrlBS$Hash = {};
+  sub1: Subscription;
+  sub2: Subscription;
+  sub3: Subscription;
+  sub4: Subscription;
+  sub5: Subscription;
+  sub6: Subscription;
 
   constructor(private http: HttpClient, private userService: UserService, private auth: AuthService, private sanitizer: DomSanitizer) {
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
-    this.authenticatedUser$.subscribe((userObj) => {
+    this.sub1 = this.authenticatedUser$.subscribe((userObj) => {
       if (userObj) {
+        this.sub1.unsubscribe();
         let uid = '';
         this.authenticatedUser = userObj;
         this.action = 'init';
@@ -243,7 +250,7 @@ export class FileService {
         } else {
           uid = this.authenticatedUser.supervisorId;
         }
-        this.getAllFiles$(this.authenticatedUser.uid).subscribe(files => {
+        this.sub6 = this.getAllFiles$(this.authenticatedUser.uid).subscribe(files => {
           if (!files) {
             return;
           }
@@ -261,6 +268,7 @@ export class FileService {
           }
           this.loadData();
           this.setAction('init');
+          this.sub6.unsubscribe();
         })
       }
     });
@@ -461,8 +469,9 @@ export class FileService {
           tags: []
         };
 
-        this.postFile$(this.newFile).subscribe(data => {
+        this.sub2 = this.postFile$(this.newFile).subscribe(data => {
           this.newFile = data;
+          this.sub2.unsubscribe();
 
           let mediaItem: SafeResourceUrl;
           console.log('processResults', this.newFile);
@@ -502,8 +511,9 @@ export class FileService {
 
   saveFile(file: FileModel) {
     this.action = 'save';
-    this.putFile$(file).subscribe(data => {
+    this.sub3 = this.putFile$(file).subscribe(data => {
       this.loadData();
+      this.sub3.unsubscribe();
     },
       err => {
         console.log('saveFile', file);
@@ -659,8 +669,8 @@ export class FileService {
 
   deleteFile(id: string): void {
     this.action = 'delete';
-    this.deleteFile$(id).subscribe(val => {
-      this.getAllFiles$(this.authenticatedUser.uid).subscribe(files => {
+    this.sub4 = this.deleteFile$(id).subscribe(val => {
+      this.sub5 = this.getAllFiles$(this.authenticatedUser.uid).subscribe(files => {
         if (!files) {
           return;
         }
@@ -668,7 +678,9 @@ export class FileService {
         this.selectedFileBS$.next(null);
         this.loadData();
         //        this.selectItem(-1, '');
+        this.sub5.unsubscribe();
       })
+      this.sub4.unsubscribe();
     });
 
   }
