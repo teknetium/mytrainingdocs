@@ -14,13 +14,11 @@ import { ENV } from './env.config';
 export class SendmailService {
 
   msg: MessageModel;
-  sub1: Subscription = null;
 
   constructor(private http: HttpClient, private auth: AuthService) { }
 
   sendMessage(msg: MessageModel) {
-    this.sub1 = this.postMessage$(msg).subscribe(item => {
-      this.sub1.unsubscribe();
+    this.postMessage$(msg).subscribe(item => {
     })
 
   }

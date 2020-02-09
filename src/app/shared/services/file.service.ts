@@ -42,22 +42,22 @@ export class FileService {
     ppt: {
       iconClass: 'file-ppt',
       iconColor: '#fa541c',
-      iconType: 'ppt'
+      iconType: 'doc',
     },
     pptx: {
       iconClass: 'file-ppt',
       iconColor: '#fa541c',
-      iconType: 'ppt'
+      iconType: 'doc'
     },
     xls: {
       iconClass: 'file-excel',
       iconColor: '#52c41a',
-      iconType: 'xls'
+      iconType: 'doc'
     },
     xlsx: {
       iconClass: 'file-excel',
       iconColor: '#52c41a',
-      iconType: 'xls'
+      iconType: 'doc'
     },
     doc: {
       iconClass: 'file-word',
@@ -72,7 +72,7 @@ export class FileService {
     pdf: {
       iconClass: 'file-pdf',
       iconColor: '#de4436',
-      iconType: 'pdf'
+      iconType: 'doc'
     },
     gif: {
       iconClass: 'file-image',
@@ -163,21 +163,42 @@ export class FileService {
   client = cms.init(this.apikey);
   previewUrl = 'https://cdn.filestackcontent.com/Fl4SEyA3SNi6Xv0MuRRm';
 
-  options: PickerOptions = {
-    //    displayMode: PickerDisplayMode.inline,
+  picker = '';
 
-    //    container: '#inline',
+  docOptions: PickerOptions = {
     maxFiles: 20,
-
-    //    storeTo: {
-    //      container: 'devportal-customers-assets',
-    //      path: '/mytrainingdocs/',
-    //  },
     fromSources: [
       'local_file_system',
       'dropbox',
       'googledrive',
     ],
+    accept: 'application/*',
+    onUploadDone: (results: PickerResponse) => {
+      this.processResults(results);
+    },
+    uploadInBackground: false
+  };
+  videoOptions: PickerOptions = {
+    maxFiles: 20,
+    fromSources: [
+      'local_file_system',
+      'dropbox',
+      'googledrive',
+    ],
+    accept: 'video/*',
+    onUploadDone: (results: PickerResponse) => {
+      this.processResults(results);
+    },
+    uploadInBackground: false
+  };
+  audioOptions: PickerOptions = {
+    maxFiles: 20,
+    fromSources: [
+      'local_file_system',
+      'dropbox',
+      'googledrive',
+    ],
+    accept: 'audio/*',
     onUploadDone: (results: PickerResponse) => {
       this.processResults(results);
     },
@@ -230,18 +251,11 @@ export class FileService {
   privateSelectedFileHash = {};
   privateSelectedFileIndexHash = {};
   fsHandleSafeUrlBS$Hash = {};
-  sub1: Subscription;
-  sub2: Subscription;
-  sub3: Subscription;
-  sub4: Subscription;
-  sub5: Subscription;
-  sub6: Subscription;
 
   constructor(private http: HttpClient, private userService: UserService, private auth: AuthService, private sanitizer: DomSanitizer) {
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
-    this.sub1 = this.authenticatedUser$.subscribe((userObj) => {
+      this.authenticatedUser$.subscribe((userObj) => {
       if (userObj) {
-        this.sub1.unsubscribe();
         let uid = '';
         this.authenticatedUser = userObj;
         this.action = 'init';
@@ -250,7 +264,7 @@ export class FileService {
         } else {
           uid = this.authenticatedUser.supervisorId;
         }
-        this.sub6 = this.getAllFiles$(this.authenticatedUser.uid).subscribe(files => {
+        this.getAllFiles$(this.authenticatedUser.uid).subscribe(files => {
           if (!files) {
             return;
           }
@@ -268,7 +282,6 @@ export class FileService {
           }
           this.loadData();
           this.setAction('init');
-          this.sub6.unsubscribe();
         })
       }
     });
@@ -469,9 +482,8 @@ export class FileService {
           tags: []
         };
 
-        this.sub2 = this.postFile$(this.newFile).subscribe(data => {
+        this.postFile$(this.newFile).subscribe(data => {
           this.newFile = data;
-          this.sub2.unsubscribe();
 
           let mediaItem: SafeResourceUrl;
           console.log('processResults', this.newFile);
@@ -511,9 +523,8 @@ export class FileService {
 
   saveFile(file: FileModel) {
     this.action = 'save';
-    this.sub3 = this.putFile$(file).subscribe(data => {
+    this.putFile$(file).subscribe(data => {
       this.loadData();
-      this.sub3.unsubscribe();
     },
       err => {
         console.log('saveFile', file);
@@ -669,8 +680,8 @@ export class FileService {
 
   deleteFile(id: string): void {
     this.action = 'delete';
-    this.sub4 = this.deleteFile$(id).subscribe(val => {
-      this.sub5 = this.getAllFiles$(this.authenticatedUser.uid).subscribe(files => {
+    this.deleteFile$(id).subscribe(val => {
+      this.getAllFiles$(this.authenticatedUser.uid).subscribe(files => {
         if (!files) {
           return;
         }
@@ -678,30 +689,44 @@ export class FileService {
         this.selectedFileBS$.next(null);
         this.loadData();
         //        this.selectItem(-1, '');
-        this.sub5.unsubscribe();
       })
-      this.sub4.unsubscribe();
     });
 
   }
 
-  openPicker() {
-    this.client.picker(this.options).open();
+  openDocPicker() {
+    this.picker = 'doc';
+    this.client.picker(this.docOptions).open();
+  }
+  openVideoPicker() {
+    this.picker = 'video';
+    this.client.picker(this.videoOptions).open();
+  }
+  openAudioPicker() {
+    this.picker = 'audio';
+    this.client.picker(this.audioOptions).open();
   }
 
   closePicker() {
-    this.client.picker(this.options).close();
+    if (this.picker === 'doc') {
+      this.client.picker(this.docOptions).close();
+    } else if (this.picker === 'video') {
+      this.client.picker(this.videoOptions).close();
+    } else if (this.picker === 'audio') {
+      this.client.picker(this.audioOptions).close();
+    }
   }
 
   pickNewVersion(version: Version) {
     this.uploadType = 'newVersion';
     this.newVersion = version;
-    this.client.picker(this.options).open();
-  }
-
-  pickBannerImage() {
-    this.uploadType = 'newTrainingBanner';
-    this.client.picker(this.options).open();
+    if (this.picker === 'doc') {
+      this.client.picker(this.docOptions).open();
+    } else if (this.picker === 'video') {
+      this.client.picker(this.videoOptions).open();
+    } else if (this.picker === 'audio') {
+      this.client.picker(this.audioOptions).open();
+    }
   }
 
   getAllFiles$(uid): Observable<FileModel[]> {

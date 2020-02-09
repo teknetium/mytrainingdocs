@@ -18,6 +18,8 @@ const portletSchema = new Schema({
 
 const pageSchema = new Schema({
   _id: { type: String, required: true },
+  type: { type: String, required: true },
+  url: { type: String },
   title: { type: String },
   file: { type: String },
   intro: { type: String },

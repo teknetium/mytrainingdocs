@@ -39,12 +39,6 @@ import { UserTrainingModel } from '../../shared/interfaces/userTraining.type';
 })
 export class MyteamComponent implements OnInit {
 
-  sub1: Subscription;
-  sub2: Subscription;
-  sub3: Subscription;
-  sub4: Subscription;
-  sub5: Subscription;
-
   userTypeIconHash = {
     individualContributor: 'fas fa-fw fa-user',
     supervisor: 'fas fa-fw fa-user-tie',
@@ -133,7 +127,7 @@ export class MyteamComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sub1 = this.authenticatedUser$.subscribe(user => {
+    this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
       }
@@ -143,7 +137,7 @@ export class MyteamComponent implements OnInit {
       this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
       this.newTeamMember._id = String(new Date().getTime());
     })
-    this.sub2 = this.myTeam$.subscribe(userList => {
+    this.myTeam$.subscribe(userList => {
       if (!userList) {
         return;
       }
@@ -155,14 +149,14 @@ export class MyteamComponent implements OnInit {
       }
     });
 
-    this.sub3 = this.trainings$.subscribe(trainings => {
+    this.trainings$.subscribe(trainings => {
       this.trainings = trainings;
       for (const training of this.trainings) {
         this.trainingIdHash[training._id] = training;
       }
     });
 
-    this.sub4 = this.selectedUser$.subscribe(user => {
+    this.selectedUser$.subscribe(user => {
       if (!user) {
         return;
       }
@@ -170,7 +164,7 @@ export class MyteamComponent implements OnInit {
       this.userTrainingService.loadTrainingsForUser(this.selectedUser._id);
     });
 
-    this.sub5 = this.userTrainings$.subscribe(userTrainingList => {
+    this.userTrainings$.subscribe(userTrainingList => {
       this.userTrainings = userTrainingList;
     })
 
@@ -260,11 +254,4 @@ export class MyteamComponent implements OnInit {
   deleteUserTraining(id) {
   }
 
-  ngOnDestroy() {
-    this.sub1.unsubscribe();
-    this.sub2.unsubscribe();
-    this.sub3.unsubscribe();
-    this.sub4.unsubscribe();
-    this.sub5.unsubscribe();
-  }
 }

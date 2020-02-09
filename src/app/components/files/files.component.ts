@@ -90,7 +90,7 @@ export class FilesComponent implements OnInit {
     this.document$ = this.fileService.getDocPreviewStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.isAuthenticated$ = this.auth.getIsAuthenticatedStream();
-    this.sub1 = this.isAuthenticated$.subscribe((value) => {
+    this.isAuthenticated$.subscribe((value) => {
       this.isAuthenticated = value;
     });
 
@@ -101,7 +101,7 @@ export class FilesComponent implements OnInit {
 
   ngOnInit() {
 
-    this.sub2 = this.authenticatedUser$.subscribe(user => {
+    this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
       }
@@ -116,7 +116,7 @@ export class FilesComponent implements OnInit {
 //    this.fileService.setupPrivateDocumentPreviewStream(this.streamId);
 //    this.fileService.setupPrivateVideoPreviewStream(this.streamId);
 
-    this.sub3 = this.selectedFile$.subscribe((file) => {
+    this.selectedFile$.subscribe((file) => {
       console.log('selectedFile.subscribe', file);
       this.headerOpen = true;
 
@@ -137,17 +137,11 @@ export class FilesComponent implements OnInit {
     //      this.fileService.selectFileById(this.showFile);
     //    }
 
-    this.sub4 = this.action$.subscribe(action => {
+    this.action$.subscribe(action => {
       this.action = action;
     });
   }
 
-  ngOnDestroy() {
-    this.sub1.unsubscribe();
-    this.sub2.unsubscribe();
-    this.sub3.unsubscribe();
-    this.sub4.unsubscribe();
-  }
 
   onPlayerReady(api: VgAPI) {
     this.vgApi = api;
@@ -201,7 +195,7 @@ export class FilesComponent implements OnInit {
   }
 
   uploadFile() {
-    this.fileService.openPicker();
+    this.fileService.openDocPicker();
   }
 
   dismissNewVersionModal() {

@@ -159,15 +159,16 @@ export class LandingpageComponent implements OnInit {
   }
 
   ngOnInit() {
+    /*
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
-    this.sub1 = this.authenticatedUser$.subscribe(user => {
+    this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
       }
       this.authenticatedUser = user;
-      this.router.navigate(['']);
+      this.router.navigate(['/home']);
     });
-
+*/
 
     /*
     setInterval(() => {
@@ -180,9 +181,6 @@ export class LandingpageComponent implements OnInit {
     this.setCurrentHowStep(0);
 
      */
-  }
-  ngOnDestroy() {
-    this.sub1.unsubscribe();
   }
 
   showLearnMore(index) {

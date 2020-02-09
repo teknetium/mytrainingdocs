@@ -62,7 +62,9 @@ export interface Comment {
 
 export interface Page {
   _id: string,
+  type: 'url' | 'file' | 'text',
   title: string,
+  url: string,
   file: string,
   portlets: Portlet[],
   intro: string

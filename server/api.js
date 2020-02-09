@@ -226,6 +226,22 @@ module.exports = function(app, config) {
       },
     );
   });
+  app.get("/api/usertraining/tid/:trainingId", (req, res) => {
+    UserTraining.find({ tid: req.params.trainingId },
+      userTrainingListProjection, (err, userTrainings) => {
+        let userTrainingsArr = [];
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        if (userTrainings) {
+          userTrainings.forEach(userTraining => {
+            userTrainingsArr.push(userTraining);
+          });
+        }
+        res.send(userTrainingsArr);
+      },
+    );
+  });
   app.post("/api/usertraining/new", jwtCheck, (req, res) => {
     const userTraining = new UserTraining({
       _id: req.body._id,

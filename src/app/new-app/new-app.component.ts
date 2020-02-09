@@ -136,8 +136,6 @@ export class NewAppComponent implements OnInit {
   searchVisible: boolean = false;
   quickViewVisible: boolean = false;
 
-  sub1: Subscription;
-
   constructor(
     private authService: AuthService,
     private userService: UserService,
@@ -158,7 +156,7 @@ export class NewAppComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.sub1 = this.authenticatedUser$.subscribe(user => {
+    this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
       }
@@ -167,9 +165,6 @@ export class NewAppComponent implements OnInit {
     this.currentYogaImageNumber = 0;
   };
 
-  ngOnDestroy() {
-    this.sub1.unsubscribe();
-  }
 
   newTheme(val) {
     if (val === 'dogs') {

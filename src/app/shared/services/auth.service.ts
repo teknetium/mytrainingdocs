@@ -107,6 +107,7 @@ export class AuthService {
     this._auth0.client.userInfo(authResult.accessToken, (err, profile) => {
       if (profile) {
         this._setSession(authResult, profile);
+        console.log('_getProfile: ', profile);
         this.router.navigate(['/home']);
       }
     });

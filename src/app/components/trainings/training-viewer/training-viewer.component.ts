@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FileService } from '../../../shared/services/file.service';
 import { TrainingService } from '../../../shared/services/training.service';
 import { UserService } from '../../../shared/services/user.service';
+import { UserTrainingService } from '../../../shared/services/userTraining.service';
 import { AuthService } from '../../../shared/services/auth.service';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { TrainingModel, Page, Portlet, Assessment } from 'src/app/shared/interfaces/training.type';
@@ -212,22 +213,17 @@ export class TrainingViewerComponent implements OnInit {
   score = 0;
   markCompletedModalIsVisible = false;
   emailAddr: string;
-
+  pageUrl: string;
+  safeUrlHash = {};
   passingGrade: number = 70;
-
-  sub1: Subscription;
-  sub2: Subscription;
-  sub3: Subscription;
-  sub4: Subscription;
-  sub5: Subscription;
 
   constructor(
     private trainingService: TrainingService,
     private fileService: FileService,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
-    private router: Router,
     private userService: UserService,
+    private userTrainingService: UserTrainingService,
     private mailService: SendmailService,
     private authService: AuthService) {
     this.isAuthenticated$ = authService.getIsAuthenticatedStream();
@@ -235,12 +231,15 @@ export class TrainingViewerComponent implements OnInit {
     this.training2$ = this.trainingService.getSelectedTrainingStream();
     this.selectedTrainingIndex$ = this.trainingService.getSelectedTrainingIndexStream();
     this.newVersion$ = this.fileService.getNewVersionStream();
+    this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
+    /*
     this.route.paramMap.subscribe(params => {
       this.production = true;
       this.trainingId = params.get('id');
       this.training1$ = this.trainingService.getTrainingById$(this.trainingId);
       this.selectedTraining$ = this.training1$.pipe(merge(this.training2$));
     });
+    */
   }
 
   ngOnInit() {
@@ -251,10 +250,10 @@ export class TrainingViewerComponent implements OnInit {
     }
     
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
-    this.sub1 = this.selectedTrainingIndex$.subscribe(index => {
+    this.selectedTrainingIndex$.subscribe(index => {
       this.selectedTrainingIndex = index;
     })
-    this.sub2 = this.selectedTraining$.subscribe(training => {
+    this.selectedTraining$.subscribe(training => {
 
       this.selectedTraining = training;
       if (training) {
@@ -268,8 +267,8 @@ export class TrainingViewerComponent implements OnInit {
         this.pageFileHash['assessment'] = null;
         for (const page of training.pages) {
 
-          if (!page.file) {
-            console.log('ERROR: TrainingViewerComponent:ngOnInit - no document set on training', training.title);
+          if (page.type === 'url') {
+            this.safeUrlHash[page.url] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(page.url));
           } else {
             let file: FileModel = this.fileService.getFile(page.file);
             this.pageFileHash[page._id] = file;
@@ -287,7 +286,7 @@ export class TrainingViewerComponent implements OnInit {
         this.mode = 'Edit';
       }
     });
-    this.sub3 = this.fileUploaded$.subscribe(file => {
+    this.fileUploaded$.subscribe(file => {
       let found = false;
       if (!file) {
         return;
@@ -301,28 +300,40 @@ export class TrainingViewerComponent implements OnInit {
       }
 
       if (!found) {
-        this.trainingService.addNewPage(this.selectedTraining._id, file._id, file.name);
+        this.trainingService.addNewPage(this.selectedTraining._id, 'file', '', file._id, file.name);
       }
     })
 
-    this.sub4 = this.newVersion$.subscribe(newVersion => {
+    this.newVersion$.subscribe(newVersion => {
       if (!newVersion) {
         return;
       }
       this.pageFileHash[this.currentPageId].versions.unshift(newVersion);
     })
 
-    this.sub5 = this.authenticatedUser$.subscribe(user => {
+    this.authenticatedUser$.subscribe(user => {
       this.authenticatedUser = user;
     })
   }
 
-  ngOnDestroy() {
-    this.sub1.unsubscribe();
-    this.sub2.unsubscribe();
-    this.sub3.unsubscribe();
-    this.sub4.unsubscribe();
-    this.sub5.unsubscribe();
+  openPicker(type: string): void {
+    if (type === 'doc') {
+      this.fileService.openDocPicker();
+    } else if (type === 'video') {
+      this.fileService.openVideoPicker();
+    } else if (type === 'audio') {
+      this.fileService.openAudioPicker();
+    }
+  }
+
+  pageUrlChanged(url) {
+    if (this.pageUrl === '') {
+      return;
+    }
+    let safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.pageUrl));
+    this.safeUrlHash[url] = safeUrl;
+    this.trainingService.addNewPage(this.selectedTraining._id, 'url', this.pageUrl, '', this.pageUrl);    
+    this.pageUrl = '';
   }
 
   onPlayerReady(api: VgAPI) {
@@ -372,6 +383,11 @@ export class TrainingViewerComponent implements OnInit {
     if (this.assessmentInProgress) {
       return;
     }
+//    console.log('setCurrentPage', pageId, this.mode, this.production);
+//    if (pageId === 'mainContent' && (this.mode === 'Preview' || this.production)) {
+//      return;
+//    }
+
     if (pageId === 'assessment') {
       this.resetAssessment();
     }
@@ -549,11 +565,14 @@ export class TrainingViewerComponent implements OnInit {
     this.setCurrentPage(this.currentPageId);
   }
 
-  openPicker() {
-    this.fileService.openPicker();
-  }
-
   confirmDelete() {
+    this.userTrainingService.getUTForTraining$(this.selectedTraining._id).subscribe(UserTrainings => {
+      for (let ut of UserTrainings) {
+        this.userTrainingService.deleteUserTraining$(ut._id).subscribe(item => {
+          
+        })
+      }
+    });
     this.trainingService.deleteTraining(this.selectedTraining._id);
     this.trainingService.selectItemForEditing(this.selectedTrainingIndex);
   }
@@ -569,7 +588,7 @@ export class TrainingViewerComponent implements OnInit {
     this.assessmentInProgress = false;
     this.currentAssessmentItemIndex = -1;
     this.mode = newMode;
-    if (newMode === 'Preview' && (this.currentPageId === 'config' || this.currentPageId === 'trainingWizardTour')) {
+    if (newMode === 'Preview' && (this.currentPageId === 'config' || this.currentPageId === 'trainingWizardTour' || this.currentPageId === 'mainContent')) {
       this.currentPageId = 'intro'
     }
     this.resetAssessment();

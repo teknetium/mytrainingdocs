@@ -8,6 +8,7 @@ import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
 import { TrainingModel, Page, Portlet, TextBlock, Assessment } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.model';
+import { SafeResourceUrl } from '@angular/platform-browser';
 
 
 @Injectable({
@@ -215,6 +216,8 @@ export class TrainingService {
 
     const mainContentPage = <Page>{
       _id: String(new Date().getTime()),
+      type: 'text',
+      url: '',
       title: 'Upload Your Content Here',
       intro: 'Introduction',
       file: null,
@@ -223,6 +226,8 @@ export class TrainingService {
     };
     const introPage = <Page>{
       _id: String(new Date().getTime()),
+      type: 'text',
+      url: '',
       title: 'Title Page',
       intro: 'Introduction',
       file: null,
@@ -231,6 +236,8 @@ export class TrainingService {
     };
     const assessmentPage = <Page>{
       _id: String(new Date().getTime()),
+      type: 'text',
+      url: '',
       title: 'Assessments',
       intro: 'Create a test to evaluate mastery of the content presented in this training. Questions are multiple choice and can have multiple correct choices. Each test must include at least 3 questions.',
       file: null,
@@ -239,6 +246,8 @@ export class TrainingService {
     };
     const rateCommentPage = <Page>{
       _id: String(new Date().getTime()),
+      type: 'text',
+      url: '',
       title: 'Ratings and Comments',
       intro: '',
       file: null,
@@ -300,9 +309,11 @@ export class TrainingService {
 
   }
 
-  addNewPage(trainingId, fileId, pageTitle) {
+  addNewPage(trainingId: string, type: string, url: string, fileId: string, pageTitle: string) {
     const newPage = <Page>{
       _id: String(new Date().getTime()),
+      type: type,
+      url: url,
       title: pageTitle,
       intro: 'Introduction to the document',
       file: fileId,
@@ -344,6 +355,7 @@ export class TrainingService {
   }
 
   saveTraining(training: TrainingModel, loadData: boolean) {
+    
     this.editTraining$(training).subscribe(data => {
 
       if (loadData) {

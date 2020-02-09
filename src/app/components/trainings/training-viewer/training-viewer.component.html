@@ -1,6 +1,7 @@
-<div *ngIf="selectedTraining$ | async as selectedTraining" style="margin-top:10px;"
+<div *ngIf="selectedTraining$ | async as selectedTraining"
     [ngClass]="{'training-viewer': !fullscreen, 'training-viewer-fullscreen': fullscreen}">
-    <div *ngIf="production === 'false'" style="display:block;padding-top:5px;text-align: center;background-color:#fcfcfc;">
+    <div *ngIf="production === 'false'"
+        style="display:block;padding-top:5px;text-align: center;background-color:#fcfcfc;">
         <i class="fad fa-hat-wizard"
             style="color:#951eca;font-size:20px;margin-right:10px;vertical-align: baseline;display:inline-block;"></i>
         <span style="display:inline-block;font-size:16px;">Training Wizard</span>
@@ -64,7 +65,8 @@
             <div *ngIf="mode === 'Edit' && production === 'false'">
                 <div style="margin-right:30px;display: inline-block;">
                     <input style="display:inline-block;color:black;width:350px;font-size:14px;" nz-input
-                        [(ngModel)]="selectedTraining.title" nzSize="small" (keydown.enter)="saveTraining(true)" (blur)="saveTraining(true)"/>
+                        [(ngModel)]="selectedTraining.title" nzSize="small" (keydown.enter)="saveTraining(true)"
+                        (blur)="saveTraining(true)" />
                 </div>
             </div>
             <div *ngIf="mode === 'Preview' || production === 'true'">
@@ -120,15 +122,15 @@
                         <i nz-icon nzType="menu-fold" [nzTheme]="'outline'" (click)="toggleTOC(false)"
                             style="float:right;cursor:pointer;font-size:24px;vertical-align: baseline;margin-left:10px;"></i>
                     </div>
-                    <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" class="toc-entry"
-                        (click)="setCurrentPage('trainingWizardTour')"
+                    <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
+                        class="toc-entry" (click)="setCurrentPage('trainingWizardTour')"
                         [ngClass]="{'active-toc':currentPageId === 'trainingWizardTour', 'disabled': assessmentInProgress}">
                         <i nz-icon nzType="car" [nzTheme]="'twotone'" [nzTwotoneColor]="'#d64594'"
                             style="vertical-align: middle;margin-right:10px;"></i>
                         Training Wizard Tour
                     </div>
-                    <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" class="toc-entry"
-                        (click)="setCurrentPage('config')"
+                    <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
+                        class="toc-entry" (click)="setCurrentPage('config')"
                         [ngClass]="{'active-toc':currentPageId === 'config', 'disabled': assessmentInProgress}">
                         <i nz-icon nzType="setting" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
                             style="vertical-align: middle;margin-right:10px;"></i>
@@ -138,16 +140,14 @@
                         [ngClass]="{'active-toc':currentPageId === 'intro', 'disabled': assessmentInProgress}">
                         {{selectedTraining.introductionLabel}}
                     </div>
-                    <div class="toc-entry" style="cursor: default;" [ngClass]="{'disabled': assessmentInProgress}">
-                        <div style="display:inline-block;line-height:18px;">
-                            Main Content
-                        </div>
-                        <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-icon
-                            nzType="file-add" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'" nz-tooltip
-                            nzTooltipTitle="Add New Document"
-                            style="cursor:pointer;line-height:18px;float:right;font-size:16px;margin-right:10px;"
-                            (click)="fileService.openPicker($event)"></i>
-
+                    <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
+                        class="toc-entry" style="cursor: default;" [ngClass]="{'disabled': assessmentInProgress}"
+                        (click)="setCurrentPage('mainContent')">
+                        Main Content
+                    </div>
+                    <div *ngIf="mode === 'Preview' || production === 'true'" class="toc-entry" style="cursor: default;"
+                        [ngClass]="{'disabled': assessmentInProgress}">
+                        Main Content
                     </div>
                     <div class="toc-main-content-entry" *ngFor="let page of selectedTraining.pages; index as pageIndex"
                         (click)="setCurrentPage(page._id)"
@@ -161,9 +161,8 @@
                         [ngClass]="{'active-toc':currentPageId === 'assessment'}">
                         Assessment
                     </div>
-                    <div *ngIf="selectedTraining.status === 'In Review' || production === 'true'"
-                        class="toc-entry" (click)="setCurrentPage('comments')"
-                        [ngClass]="{'active-toc':currentPageId === 'comments'}">
+                    <div *ngIf="selectedTraining.status === 'In Review' || production === 'true'" class="toc-entry"
+                        (click)="setCurrentPage('comments')" [ngClass]="{'active-toc':currentPageId === 'comments'}">
                         Comments
                     </div>
                 </div>
@@ -427,13 +426,63 @@
 
                     </div>
                 </div>
+                <div *ngIf="mode === 'Edit' && currentPageId === 'mainContent'" class="page">
+                    <h3 style="text-align: center;margin-bottom:20px;">Main Content</h3>
+
+                    <div>
+                        <div class="main-content-page-row">
+                            <div class="main-content-item" (click)="openPicker('doc')">
+                                <div
+                                    style="cursor: pointer;text-align: right;width:25%;margin-bottom: 0;display: inline-block;font-size:14px;color:#bbbbbb;">
+                                    <label>
+                                        Upload A Document
+                                    </label>
+                                </div>
+                                <i nz-icon nzType="file" [nzTheme]="'twotone'"
+                                    style="width:40%;text-align: left;margin-left:20px;line-height:28px;font-size:24px;display: inline-block;"></i>
+                            </div>
+                        </div>
+                        <div class="main-content-page-row">
+                            <div class="main-content-item" (click)="openPicker('video')">
+                                <label
+                                    style="cursor: pointer;text-align: right;width:25%;margin-bottom: 0;display: inline-block;font-size:14px;color:#bbbbbb;">
+                                    Upload A Video
+                                </label>
+                                <i nz-icon nzType="video-camera" [nzTheme]="'twotone'"
+                                    style="width:40%;text-align: left;margin-left:20px;line-height:28px;font-size:24px;display: inline-block;"></i>
+                            </div>
+                        </div>
+                        <div class="main-content-page-row">
+                            <div class="main-content-item" (click)="openPicker('audio')">
+                                <label
+                                    style="cursor: pointer;text-align: right;width:25%;margin-bottom: 0;display: inline-block;font-size:14px;color:#bbbbbb;">
+                                    Upload An Audio file
+                                </label>
+                                <i nz-icon nzType="audio" [nzTheme]="'twotone'"
+                                    style="width:40%;text-align: left;margin-left:20px;line-height:28px;font-size:24px;display: inline-block;"></i>
+                            </div>
+                        </div>
+                        <div class="main-content-page-row">
+                            <div class="main-content-item">
+                                <label
+                                    style="cursor: pointer;text-align: right;width:25%; margin-bottom: 0;display: inline-block;font-size:14px;color:#bbbbbb;">
+                                    Web Page URL
+                                </label>
+                                <input
+                                    style="width:40%;margin-left:20px;  display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;"
+                                    nz-input [(ngModel)]="pageUrl" nzSize="small" (keydown.enter)="pageUrlChanged()"
+                                    (blur)="pageUrlChanged()" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div *ngIf="currentPageId === 'intro'" class="page">
                     <h3 style="text-align: center;margin-bottom:20px;">{{selectedTraining.introductionLabel}}</h3>
 
                     <div>
                         <span style="font-size:14px;">
-                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-paragraph
-                                (nzContentChange)="contentChanged($event, 'introduction')" nzEditable
+                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
+                                nz-paragraph (nzContentChange)="contentChanged($event, 'introduction')" nzEditable
                                 [(nzContent)]="selectedTraining.introduction"></p>
                             <span
                                 *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || production === 'true'">
@@ -443,8 +492,8 @@
                     </div>
                     <div style="margin-top:30px;">
                         <h4>
-                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-paragraph
-                                (nzContentChange)="contentChanged($event, 'execSummaryLabel')" nzEditable
+                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
+                                nz-paragraph (nzContentChange)="contentChanged($event, 'execSummaryLabel')" nzEditable
                                 [(nzContent)]="selectedTraining.execSummaryLabel">
                             </p>
                         </h4>
@@ -456,8 +505,8 @@
 
                     <div style="padding:0 30px;">
                         <span style="font-size:14px;">
-                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-paragraph
-                                (nzContentChange)="contentChanged($event, 'execSummary')" nzEditable
+                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
+                                nz-paragraph (nzContentChange)="contentChanged($event, 'execSummary')" nzEditable
                                 [(nzContent)]="selectedTraining.execSummary"></p>
                             <span
                                 *ngIf="mode === 'Preview' || selectedTraining.status === 'In Review' || production === 'true'">
@@ -467,8 +516,8 @@
                     </div>
                     <div style="margin-top:30px;">
                         <h4>
-                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-paragraph
-                                (nzContentChange)="contentChanged($event, 'goalsLabel')" nzEditable
+                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
+                                nz-paragraph (nzContentChange)="contentChanged($event, 'goalsLabel')" nzEditable
                                 [(nzContent)]="selectedTraining.goalsLabel">
                             </p>
                         </h4>
@@ -480,8 +529,8 @@
 
                     <div style="padding:0 30px;">
                         <span style="font-size:14px;">
-                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-paragraph
-                                (nzContentChange)="contentChanged($event, 'goals')" nzEditable
+                            <p *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
+                                nz-paragraph (nzContentChange)="contentChanged($event, 'goals')" nzEditable
                                 [(nzContent)]="selectedTraining.goals">
                             </p>
                             <span
@@ -494,21 +543,22 @@
                 <div>
                     <div *ngFor="let page of selectedTraining.pages; index as pageIndex">
                         <!-- page actions -->
-                        <div *ngIf="currentPageId === page._id" class="page">
+                        <div *ngIf="currentPageId === page._id"
+                            [ngClass]="{'page': page.type === 'file', 'page-url': page.type === 'url'}">
                             <div style="position:absolute;top:20px;right:20px;width:fit-content;height:fit-content;">
-                                <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-icon
-                                    nzType="up-square" [ngClass]="{'disabled': pageIndex === 0}" [nzTheme]="'twotone'"
-                                    nz-tooltip nzTooltipTitle="Move document up in list"
+                                <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
+                                    nz-icon nzType="up-square" [ngClass]="{'disabled': pageIndex === 0}"
+                                    [nzTheme]="'twotone'" nz-tooltip nzTooltipTitle="Move document up in list"
                                     (click)="movePage(pageIndex, -1)" class="page-action">
                                 </i>
-                                <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-icon
-                                    nzType="down-square" [nzTheme]="'twotone'" nz-tooltip
+                                <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
+                                    nz-icon nzType="down-square" [nzTheme]="'twotone'" nz-tooltip
                                     [ngClass]="{'disabled': pageIndex === selectedTraining.pages.length - 1}"
                                     nzTooltipTitle="Move document down in list" (click)="movePage(pageIndex, 1)"
                                     class="page-action">
                                 </i>
-                                <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'" nz-icon
-                                    nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-tooltip
+                                <i *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
+                                    nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-tooltip
                                     nzTooltipTitle="Delete Page" nz-popconfirm nzPopconfirmTitle="Delete this Page?"
                                     [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'right'"
                                     (nzOnConfirm)="confirmDeletePage(pageIndex)" class="page-action">
@@ -539,8 +589,10 @@
                                     </span>
                                 </span>
                             </div>
-                            <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'">
-                                <button *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
+                            <div
+                                *ngIf="page.type === 'file' && (mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false')">
+                                <button
+                                    *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
                                     nz-button nzType="default" [nzSize]="'small'" (click)="uploadNewVersion()">
                                     <i nz-icon nzType="upload" [nzTheme]="'outline'"></i>
                                     <span style="font-size:12px;">Upload New Version</span>
@@ -622,7 +674,8 @@
                                 </nz-modal>
                             </div>
                             <vg-player (onPlayerReady)="onPlayerReady($event)"
-                                *ngIf="pageFileHash[page._id].iconType === 'video'" style="margin-top:20px;">
+                                *ngIf="page.type === 'file' && pageFileHash[page._id].iconType === 'video'"
+                                style="margin-top:20px;">
 
                                 <vg-controls>
                                     <vg-play-pause></vg-play-pause>
@@ -651,7 +704,7 @@
                                         type="video/mp4">
                                 </video>
                             </vg-player>
-                            <div *ngIf="pageFileHash[page._id].iconType !== 'video'"
+                            <div *ngIf="page.type === 'file' && pageFileHash[page._id].mimeType.substring(0, pageFileHash[page._id].mimeType.indexOf('/')) === 'application'"
                                 style="text-align: center;height:90%;margin-top:30px;">
                                 <div style="width:100%;height:900px;display:inline-block;">
                                     <iframe
@@ -660,12 +713,19 @@
                                     </iframe>
                                 </div>
                             </div>
+                            <div *ngIf="page.type === 'url'" style="text-align: center;height:90%;margin-top:30px;">
+                                <div style="width:100%;height:900px;display:inline-block;">
+                                    <iframe [src]="safeUrlHash[page.url]" allowfullscreen width="100%" height="100%">
+                                    </iframe>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div *ngIf="currentPageId === 'assessment'" class="page">
                     <h3 style="text-align: center;margin-bottom:30px;">Assessment</h3>
-                    <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'">
+                    <div
+                        *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'">
                         <div style="display:block;margin-bottom:10px;">
                             <div style="display:inline-block;">
                                 <nz-switch nzSize="small" [(ngModel)]="selectedTraining.useAssessment"
@@ -750,12 +810,12 @@
                                 nzTooltipTitle="Add new Question"></i>
                         </div>
                     </div>
-                    <div *ngIf="mode === 'Preview' || production === 'true'"
-                        style="position:relative;">
+                    <div *ngIf="mode === 'Preview' || production === 'true'" style="position:relative;">
                         <div *ngIf="currentAssessmentItemIndex === -1 && !assessmentComplete">
                             <button nz-button nzType="primary" (click)="beginAssessment()">Begin Assessment</button>
                         </div>
-                        <div *ngIf="assessmentComplete && selectedTraining.status === 'Under Development' && production === 'false'">
+                        <div
+                            *ngIf="assessmentComplete && selectedTraining.status === 'Under Development' && production === 'false'">
                             <button nz-button nzType="primary" (click)="resetAssessment()">Reset Assessment</button>
                         </div>
                         <div *ngIf="currentAssessmentItemIndex > -1" style="margin-bottom:20px;">

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, Router, PreloadingStrategy, PreloadAllModules } from '@angular/router';
 import { NewAppComponent } from './new-app/new-app.component';
 import { LandingpageComponent } from './components/landingpage/landingpage.component';
 import { CallbackComponent } from './components/callback/callback.component';
@@ -22,10 +22,6 @@ const appRoutes: Routes = [
         component: CallbackComponent,
     },
     {
-        path: 'training/:id',
-        component: TrainingViewerComponent
-    },
-    {
         path: 'signup/:id',
         component: SignupComponent
     },
@@ -41,15 +37,18 @@ const appRoutes: Routes = [
 
 @NgModule({
     imports: [
-        RouterModule.forRoot(appRoutes, { 
-//            preloadingStrategy: PreloadAllModules,
+        RouterModule.forRoot(appRoutes, {
+            preloadingStrategy: PreloadAllModules,
+            enableTracing: true,
             useHash: false,
-//            scrollPositionRestoration: 'enabled' 
+            scrollPositionRestoration: 'disabled',
+            anchorScrolling: 'disabled',
         })
     ],
+    //            scrollPositionRestoration: 'enabled' 
     exports: [
-        RouterModule
-    ]
+    RouterModule
+]
 })
 
 export class AppRoutingModule {

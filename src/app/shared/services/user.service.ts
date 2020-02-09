@@ -97,7 +97,7 @@ export class UserService {
                 this.authenticatedUser = data;
                 this.authenticatedUserBS$.next(this.authenticatedUser);
                 this.logLoginEvent();
-                //        this.authenticatedUser$.complete();
+                this.authenticatedUserBS$.complete();
 //                this.loadData();
                 //        this.router.navigate([`gettingstarted`]);
               });

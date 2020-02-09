@@ -21,12 +21,10 @@ export class SignupComponent implements OnInit {
     scope: AUTH_CONFIG.SCOPE
   });
   
-  sub1: Subscription;
-
   email: string;
 
   constructor(private route: ActivatedRoute ) { 
-    this.sub1 = this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe(params => {
       this.email = params.get('id');
       this._auth0.authorize({ action: 'signup', login_hint: this.email });
     });
@@ -36,10 +34,5 @@ export class SignupComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  ngOnDestroy() {
-    this.sub1.unsubscribe();
-  }
-
 
 }

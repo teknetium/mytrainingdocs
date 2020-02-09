@@ -69,21 +69,21 @@ export class FileManagerComponent {
         this.selectedFile$ = this.fileService.getSelectedFileStream();
         this.selectedFileIndex$ = this.fileService.getSelectedFileIndexStream();
         this.uploadedFile$ = this.fileService.getUploadedFileStream();
-        this.sub1 = this.files$.subscribe(files => {
+        this.files$.subscribe(files => {
             if (!files) {
                 return;
             }
             this.files = files;
 //            this.fileService.selectItem(0, this.streamId);
         });
-        this.sub2 = this.selectedFile$.subscribe(file => {
+        this.selectedFile$.subscribe(file => {
             if (!file) {
                 return;
             }
             this.selectedFile = file;
         });
 
-        this.sub3 = this.uploadedFile$.subscribe(file => {
+        this.uploadedFile$.subscribe(file => {
             if (file) {
                 this.fileService.selectItemById(file._id, this.streamId);
             }
@@ -98,12 +98,6 @@ export class FileManagerComponent {
             }
         })
         */
-    }
-
-    ngOnDestroy() {
-        this.sub1.unsubscribe();
-        this.sub2.unsubscribe();
-        this.sub3.unsubscribe();
     }
 
     changeView() {
@@ -139,7 +133,7 @@ export class FileManagerComponent {
     openPicker(e: any) {
         e.preventDefault();
         e.stopPropagation();
-        this.fileService.openPicker();
+        this.fileService.openDocPicker();
     }
 
     addNewVersion() {

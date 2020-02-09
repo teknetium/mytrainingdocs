@@ -49,10 +49,6 @@ export class CalendarComponent implements OnInit {
   dayVal: number;
   currentDay: Day;
 
-  sub1: Subscription;
-  sub2: Subscription;
-  sub3: Subscription;
-
   trainingIdHash = {};
   rangeEnd = 28;
   earliestMonth = 11;
@@ -90,7 +86,7 @@ export class CalendarComponent implements OnInit {
   } 
 
   ngOnInit() {
-    this.sub1 = this.selectedUser$.subscribe(user => {
+    this.selectedUser$.subscribe(user => {
       if (!user) {
         return;
       }
@@ -99,7 +95,7 @@ export class CalendarComponent implements OnInit {
     });
 
 
-    this.sub2 = this.userTrainings$.subscribe(userTrainings => {
+    this.userTrainings$.subscribe(userTrainings => {
 
       // reset earlistMonth and latestMonth
       this.earliestMonth = 11;
@@ -135,7 +131,7 @@ export class CalendarComponent implements OnInit {
         this.calendarHeight = this.visibleMonthCnt * 34;
 
 
-        this.sub3 = this.trainings$.subscribe(trainings => {
+        this.trainings$.subscribe(trainings => {
           this.trainings = trainings;
           for (let i = 0; i < this.trainings.length; i++) {
             this.trainingIdHash[this.trainings[i]._id] = this.trainings[i];
@@ -195,16 +191,5 @@ export class CalendarComponent implements OnInit {
     })
   }
 
-  ngOnDestroy() {
-    if (this.sub1) {
-      this.sub1.unsubscribe();
-    }
-    if (this.sub2) {
-      this.sub2.unsubscribe();
-    }
-    if (this.sub3) {
-      this.sub3.unsubscribe();
-    }
-  }
 
 }

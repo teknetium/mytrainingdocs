@@ -48,9 +48,6 @@ export class MyTrainingsComponent implements OnInit {
     }
   };
 
-  sub1: Subscription = null;
-  sub2: Subscription = null;
-  sub3: Subscription = null;
 
   constructor(private userTrainingService: UserTrainingService,
     private trainingService: TrainingService,
@@ -61,11 +58,12 @@ export class MyTrainingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sub1 = this.userTrainings$.subscribe(list => {
+    this.userTrainings$.subscribe(list => {
       this.userTrainings = list;
+      console.log('userTraining$', list);
     });
 
-    this.sub2 = this.trainings$.subscribe(list => {
+    this.trainings$.subscribe(list => {
       this.trainings = list;
       for (let i = 0; i < this.trainings.length; i++) {
         this.trainingIdHash[this.trainings[i]._id] = this.trainings[i];
@@ -73,7 +71,7 @@ export class MyTrainingsComponent implements OnInit {
       }
     });
 
-    this.sub3 = this.authenticatedUser$.subscribe(user => {
+    this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
       }
@@ -81,18 +79,6 @@ export class MyTrainingsComponent implements OnInit {
       this.userTrainingService.loadTrainingsForUser(this.authenticatedUser._id);
     });
 
-  }
-
-  ngOnDestroy() {
-    if (this.sub1) {
-      this.sub1.unsubscribe();
-    }
-    if (this.sub2) {
-      this.sub2.unsubscribe();
-    }
-    if (this.sub3) {
-      this.sub3.unsubscribe();
-    }
   }
 
   viewTraining(tid) {

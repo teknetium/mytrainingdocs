@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { User } from '../interfaces/user.type';
 import { ENV } from './env.config';
 import { catchError } from 'rxjs/operators';
+import { TrainingModel } from '../interfaces/training.type';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class UserTrainingService {
       assessmentResponse: []
     };
     this.postUsertraining$(userTraining).subscribe(userTraining => {
-      this.getTrainingsForUser$(userTraining.uid).subscribe(list => {
+      this.getUTForUser$(userTraining.uid).subscribe(list => {
         this.userTrainingBS$.next(list);
       })
     })
@@ -47,14 +48,14 @@ export class UserTrainingService {
 
   deleteUserTraining(id, uid) {
     this.deleteUserTraining$(id).subscribe(item => {
-      this.getTrainingsForUser$(uid).subscribe(list => {
+      this.getUTForUser$(uid).subscribe(list => {
         this.userTrainingBS$.next(list);
       })      
     })
   }
   
   loadTrainingsForUser(userId) {
-    this.getTrainingsForUser$(userId).subscribe(list => {
+    this.getUTForUser$(userId).subscribe(list => {
       this.userTrainingBS$.next(list);
     })
   }
@@ -84,9 +85,19 @@ export class UserTrainingService {
       );
   }
 
-  getTrainingsForUser$(uid): Observable<UserTrainingModel[]> {
+  getUTForUser$(uid): Observable<UserTrainingModel[]> {
     return this.http
       .get<UserTrainingModel[]>(`${ENV.BASE_API}usertraining/${uid}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+
+  }
+  getUTForTraining$(tid: string): Observable<UserTrainingModel[]> {
+    return this.http
+      .get<UserTrainingModel[]>(`${ENV.BASE_API}usertraining/tid/${tid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
       .pipe(
