@@ -141,7 +141,7 @@
                         {{selectedTraining.introductionLabel}}
                     </div>
                     <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
-                        class="toc-entry" style="cursor: default;" [ngClass]="{'disabled': assessmentInProgress}"
+                        class="toc-entry" style="cursor: default;" [ngClass]="{'active-toc':currentPageId === 'mainContent', 'disabled': assessmentInProgress}"
                         (click)="setCurrentPage('mainContent')">
                         Main Content
                     </div>
