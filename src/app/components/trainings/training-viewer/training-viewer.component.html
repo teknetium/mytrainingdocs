@@ -141,7 +141,8 @@
                         {{selectedTraining.introductionLabel}}
                     </div>
                     <div *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
-                        class="toc-entry" style="cursor: default;" [ngClass]="{'active-toc':currentPageId === 'mainContent', 'disabled': assessmentInProgress}"
+                        class="toc-entry" style="cursor: default;"
+                        [ngClass]="{'active-toc':currentPageId === 'mainContent', 'disabled': assessmentInProgress}"
                         (click)="setCurrentPage('mainContent')">
                         Main Content
                     </div>
@@ -428,37 +429,98 @@
                 </div>
                 <div *ngIf="mode === 'Edit' && currentPageId === 'mainContent'" class="page">
                     <h3 style="text-align: center;margin-bottom:20px;">Main Content</h3>
-
                     <div>
+                        <div style="padding-left:40px;">
+                            <p style="text-align: center;font-size:18px;">
+                                Welcome to the Content Wizard. This is where you setup the content for this training.
+                            </p>
+                            <div style="text-align: left;font-size:12px;">
+                                <div style="margin-top: 10px;height:90px;position:relative;">
+                                    Files may be uploaded from your Google Drive, DropBox or your local file system.
+                                    Select the icon below that corresponds to the type of file you want to upload.
+                                    <br>
+                                    <i [@itemFocus]="itemWithFocus === 'doc' ? 'in' : 'out'" nz-icon nzType="file"
+                                        (mouseenter)="itemWithFocus = 'doc'" (mouseleave)="itemWithFocus = ''"
+                                        [nzTheme]="'twotone'" (click)="openPicker('doc')"
+                                        style="cursor:pointer;position:absolute;bottom:10px;left:0;"
+                                        nz-tooltip nzTooltipTitle="Upload a Document"></i>
+                                    <i [@itemFocus]="itemWithFocus === 'video' ? 'in' : 'out'" nz-icon
+                                        (click)="openPicker('video')" nzType="video-camera" [nzTheme]="'twotone'"
+                                        (mouseenter)="itemWithFocus = 'video'" (mouseleave)="itemWithFocus = ''"
+                                        style="cursor:pointer;position:absolute;bottom:10px;left:60px;"
+                                        nz-tooltip nzTooltipTitle="Upload a Video"></i>
+                                    <i [@itemFocus]="itemWithFocus === 'audio' ? 'in' : 'out'" nz-icon nzType="audio"
+                                        [nzTheme]="'twotone'" (click)="openPicker('audio')"
+                                        (mouseenter)="itemWithFocus = 'audio'" (mouseleave)="itemWithFocus = ''"
+                                        style="cursor:pointer;position:absolute;bottom:10px;left:120px;"
+                                        nz-tooltip nzTooltipTitle="Upload an Audio File"></i>
+                                    <i [@itemFocus]="itemWithFocus === 'image' ? 'in' : 'out'" nz-icon nzType="file-image" [nzTheme]="'twotone'"
+                                        (click)="openPicker('image')" (mouseenter)="itemWithFocus = 'image'" (mouseleave)="itemWithFocus = ''"
+                                        style="cursor:pointer;position:absolute;bottom:10px;left:180px;" nz-tooltip
+                                        nzTooltipTitle="Upload an Image File"></i>
+                                </div>
+                                <div style="margin-top: 10px;height:60px;position:relative;">
+                                    Use an existing web page
+                                    <br>
+                                    <input
+                                        style="width:40%;margin-left:20px;  display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;"
+                                        nz-input [(ngModel)]="pageUrl" nzSize="small" (keydown.enter)="pageUrlChanged()"
+                                        (blur)="pageUrlChanged()" placeholder="Enter a website URL" />
+
+                                </div>
+                                <!--
+                                <li style="height:60px;position:relative;">
+                                    Create your own custom HTML page
+                                    <br>
+                                    <i [@itemFocus]="itemWithFocus === 'html' ? 'in' : 'out'" nz-icon nzType="code"
+                                        [nzTheme]="'twotone'" (click)="showHTMLEditor = !showHTMLEditor"
+                                        (mouseenter)="itemWithFocus = 'html'" (mouseleave)="itemWithFocus = ''"
+                                        style="cursor:pointer;position:absolute;bottom:10px;left:20px;"
+                                        nz-tooltip nzTooltipTitle="Open HTML Editor"></i>
+                                </li>
+                                -->
+                            </div>
+                        </div>
+                        <!--
                         <div class="main-content-page-row">
-                            <div class="main-content-item" (click)="openPicker('doc')">
+                            <div class="main-content-item">
                                 <div
-                                    style="cursor: pointer;text-align: right;width:25%;margin-bottom: 0;display: inline-block;font-size:14px;color:#bbbbbb;">
+                                    style="height:40px;cursor: pointer;text-align: right;width:25%;display: inline-block;margin-right: 10px;   font-size:14px;color:#bbbbbb;">
                                     <label>
                                         Upload A Document
                                     </label>
                                 </div>
-                                <i nz-icon nzType="file" [nzTheme]="'twotone'"
-                                    style="width:40%;text-align: left;margin-left:20px;line-height:28px;font-size:24px;display: inline-block;"></i>
+                                <i [@itemFocus]="itemWithFocus === 'doc' ? 'in' : 'out'" nz-icon nzType="file"
+                                    (mouseenter)="itemWithFocus = 'doc'" (mouseleave)="itemWithFocus = ''"
+                                    [nzTheme]="'twotone'" (click)="openPicker('doc')"
+                                    style="width:40%;text-align: left;vertical-align: baseline;display: inline-block;"></i>
                             </div>
                         </div>
                         <div class="main-content-page-row">
-                            <div class="main-content-item" (click)="openPicker('video')">
-                                <label
-                                    style="cursor: pointer;text-align: right;width:25%;margin-bottom: 0;display: inline-block;font-size:14px;color:#bbbbbb;">
-                                    Upload A Video
-                                </label>
-                                <i nz-icon nzType="video-camera" [nzTheme]="'twotone'"
-                                    style="width:40%;text-align: left;margin-left:20px;line-height:28px;font-size:24px;display: inline-block;"></i>
+                            <div class="main-content-item">
+                                <div
+                                    style="height:40px;cursor: pointer;text-align: right;width:25%;display: inline-block;margin-right: 10px;font-size:14px;color:#bbbbbb;">
+                                    <label>
+                                        Upload A Video
+                                    </label>
+                                </div>
+                                <i [@itemFocus]="itemWithFocus === 'video' ? 'in' : 'out'" nz-icon
+                                    (click)="openPicker('video')" nzType="video-camera" [nzTheme]="'twotone'"
+                                    (mouseenter)="itemWithFocus = 'video'" (mouseleave)="itemWithFocus = ''"
+                                    style="width:40%;text-align: left;display: inline-block;vertical-align: baseline;"></i>
                             </div>
                         </div>
                         <div class="main-content-page-row">
-                            <div class="main-content-item" (click)="openPicker('audio')">
-                                <label
-                                    style="cursor: pointer;text-align: right;width:25%;margin-bottom: 0;display: inline-block;font-size:14px;color:#bbbbbb;">
-                                    Upload An Audio file
-                                </label>
-                                <i nz-icon nzType="audio" [nzTheme]="'twotone'"
+                            <div class="main-content-item">
+                                <div
+                                    style="height:40px;cursor: pointer;text-align: right;width:25%;display: inline-block;margin-right: 10px;font-size:14px;color:#bbbbbb;">
+                                    <label>
+                                        Upload An Audio file
+                                    </label>
+                                </div>
+                                <i [@itemFocus]="itemWithFocus === 'audio' ? 'in' : 'out'" nz-icon nzType="audio"
+                                    [nzTheme]="'twotone'" (click)="openPicker('audio')"
+                                    (mouseenter)="itemWithFocus = 'audio'" (mouseleave)="itemWithFocus = ''"
                                     style="width:40%;text-align: left;margin-left:20px;line-height:28px;font-size:24px;display: inline-block;"></i>
                             </div>
                         </div>
@@ -474,6 +536,20 @@
                                     (blur)="pageUrlChanged()" />
                             </div>
                         </div>
+                        <div class="main-content-page-row">
+                            <div class="main-content-item" (click)="showHTMLEditor = !showHTMLEditor">
+                                <label
+                                    style="cursor: pointer;text-align: right;width:25%; margin-bottom: 0;display: inline-block;font-size:14px;color:#bbbbbb;">
+                                    Create an HTML Document
+                                </label>
+                                <i nz-icon nzType="code" [nzTheme]="'twotone'"
+                                    style="width:40%;text-align: left;margin-left:20px;line-height:28px;font-size:24px;display: inline-block;"></i>
+                            </div>
+                            <ckeditor *ngIf="showHTMLEditor" [(data)]="editorData">
+                            </ckeditor>
+
+                        </div>
+                        -->
                     </div>
                 </div>
                 <div *ngIf="currentPageId === 'intro'" class="page">

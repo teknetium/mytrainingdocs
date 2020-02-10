@@ -67,7 +67,7 @@
 }
 
 .selected-item {
-  border:2px solid purple !important;
+  border:2px solid blue !important;
   background-color: #e2eafb !important;
 }
 .cell-item-sm {

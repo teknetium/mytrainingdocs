@@ -33,11 +33,6 @@
 .main-content-item {
 	padding: 10px;
 	width: 100%;
-	cursor: pointer;
-}
-
-.main-content-item:hover {
-	background-color: #efefef;
 }
 
 .header-right {

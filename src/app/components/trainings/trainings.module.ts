@@ -29,6 +29,7 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
 import { MyTrainingsComponent } from './my-trainings/my-trainings.component';
 import { CalendarModule } from '../calendar/calendar.module';
 
+
 @NgModule({
   declarations: [
     TrainingsComponent,
@@ -79,7 +80,7 @@ import { CalendarModule } from '../calendar/calendar.module';
     VgControlsModule,
     NzSwitchModule,
     NzCalendarModule,
-    CalendarModule
+    CalendarModule,
   ],
   exports: [
     TrainingsComponent,

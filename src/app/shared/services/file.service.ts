@@ -204,6 +204,19 @@ export class FileService {
     },
     uploadInBackground: false
   };
+  imageOptions: PickerOptions = {
+    maxFiles: 20,
+    fromSources: [
+      'local_file_system',
+      'dropbox',
+      'googledrive',
+    ],
+    accept: 'image/*',
+    onUploadDone: (results: PickerResponse) => {
+      this.processResults(results);
+    },
+    uploadInBackground: false
+  };
   //  https://cdn.filestackcontent.com/preview=css:"https://cdn.filestackcontent.com/CSS_FILEHANDLE"/DOCUMENT_FILEHANDLE
 
   // https://cdn.filestackcontent.com/zWy9yljTOWm8maPCZsOe
@@ -705,6 +718,10 @@ export class FileService {
   openAudioPicker() {
     this.picker = 'audio';
     this.client.picker(this.audioOptions).open();
+  }
+  openImagePicker() {
+    this.picker = 'image';
+    this.client.picker(this.imageOptions).open();
   }
 
   closePicker() {

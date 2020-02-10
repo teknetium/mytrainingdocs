@@ -53,6 +53,24 @@ import { MessageModel } from '../../../shared/interfaces/message.type';
       transition('out => in', [
         animate('200ms')
       ])
+    ]),
+    trigger('itemFocus', [
+      // ...
+      state('in', style({
+        'font-size': '28px',
+        'margin-left': '16px'
+      })),
+      state('out', style({
+        'font-size': '16px',
+        'margin-left': '24px'
+
+      })),
+      transition('in => out', [
+        animate('200ms')
+      ]),
+      transition('out => in', [
+        animate('200ms')
+      ])
     ])
   ]
 
@@ -175,6 +193,7 @@ export class TrainingViewerComponent implements OnInit {
     assessment: false
   }
 
+  itemWithFocus = 'greg ';
   selectedTrainingIndex = -1;
   error1 = false;
   error2 = false;
@@ -217,6 +236,7 @@ export class TrainingViewerComponent implements OnInit {
   safeUrlHash = {};
   passingGrade: number = 70;
 
+  
   constructor(
     private trainingService: TrainingService,
     private fileService: FileService,
@@ -323,7 +343,10 @@ export class TrainingViewerComponent implements OnInit {
       this.fileService.openVideoPicker();
     } else if (type === 'audio') {
       this.fileService.openAudioPicker();
+    } else if (type === 'image') {
+      this.fileService.openImagePicker();
     }
+
   }
 
   pageUrlChanged(url) {
