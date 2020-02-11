@@ -7,5 +7,7 @@ export interface UserTrainingModel {
   dueDate: number,
   dateCompleted: number,
   timeToDate: number,
+  score: number,
+  passedAssessment: boolean,
   assessmentResponse: number[]
 }

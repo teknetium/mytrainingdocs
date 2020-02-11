@@ -4,9 +4,8 @@ import { UserService } from '../../shared/services/user.service';
 import { TrainingService } from '../../shared/services/training.service';
 import { EventService } from '../../shared/services/event.service';
 import { Observable, Subscription } from 'rxjs';
-import { UserModel } from '../../shared/interfaces/user.model';
+import { UserModel } from '../../shared/interfaces/user.type';
 import { EventModel } from '../../shared/interfaces/event.type';
-import { User } from 'src/app/shared/interfaces/user.type';
 import { TrainingViewerComponent } from '../trainings/training-viewer/training-viewer.component';
 
 @Component({
@@ -33,7 +32,9 @@ export class HomeComponent implements OnInit {
       if (!user) {
         return;
       }
+
       this.authenticatedUser = user;
+      this.userService.selectAuthenticatedUser();
       if (this.authenticatedUser.firstName === '') {
         this.showNewUserModal = true;
       }

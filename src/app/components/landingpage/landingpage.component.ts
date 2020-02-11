@@ -2,7 +2,7 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AuthService} from '../../shared/services/auth.service';
 import {UserService} from '../../shared/services/user.service';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {UserModel} from '../../shared/interfaces/user.model';
+import {UserModel} from '../../shared/interfaces/user.type';
 import {Router} from '@angular/router';
 import {ScrollToAnimationEasing, ScrollToOffsetMap} from '@nicky-lenaers/ngx-scroll-to';
 

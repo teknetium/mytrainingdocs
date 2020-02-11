@@ -12,3 +12,8 @@
     background-color: #e6e6e6;
     border-radius: 4px;
 }
+
+.disabled {
+    opacity: .2;
+    cursor: not-allowed;
+}

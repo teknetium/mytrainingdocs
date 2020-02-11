@@ -5,9 +5,8 @@ import { EventService } from '../../shared/services/event.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { TrainingService } from '../../shared/services/training.service';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { UserModel } from '../../shared/interfaces/user.model';
+import { UserModel } from '../../shared/interfaces/user.type';
 import { EventModel } from '../../shared/interfaces/event.type';
-import { User } from 'src/app/shared/interfaces/user.type';
 import { TrainingModel } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
@@ -216,6 +215,7 @@ export class MyteamComponent implements OnInit {
       this.userService.selectUser(index);
 //      this.selectedUserBS$.next(this.myTeam[index]);
     }
+    this.trainingService.selectItemForEditing(-1, '');
   }
   
   confirmDelete() {

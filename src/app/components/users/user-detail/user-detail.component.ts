@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {BehaviorSubject, Observable, Observer} from 'rxjs';
-import { UserModel } from '../../../shared/interfaces/user.model';
+import { UserModel } from '../../../shared/interfaces/user.type';
 import { UserService } from '../../../shared/services/user.service';
 import { TrainingService } from '../../../shared/services/training.service';
 

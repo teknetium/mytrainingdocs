@@ -3,7 +3,7 @@ import { UserService } from '../../shared/services/user.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { TrainingService } from '../../shared/services/training.service';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { UserModel } from 'src/app/shared/interfaces/user.model';
+import { UserModel } from 'src/app/shared/interfaces/user.type';
 import { UserTrainingModel } from 'src/app/shared/interfaces/userTraining.type';
 import { TrainingModel } from 'src/app/shared/interfaces/training.type';
 

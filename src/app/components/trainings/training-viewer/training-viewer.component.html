@@ -442,20 +442,21 @@
                                     <i [@itemFocus]="itemWithFocus === 'doc' ? 'in' : 'out'" nz-icon nzType="file"
                                         (mouseenter)="itemWithFocus = 'doc'" (mouseleave)="itemWithFocus = ''"
                                         [nzTheme]="'twotone'" (click)="openPicker('doc')"
-                                        style="cursor:pointer;position:absolute;bottom:10px;left:0;"
-                                        nz-tooltip nzTooltipTitle="Upload a Document"></i>
+                                        style="cursor:pointer;position:absolute;bottom:10px;left:0;" nz-tooltip
+                                        nzTooltipTitle="Upload a Document"></i>
                                     <i [@itemFocus]="itemWithFocus === 'video' ? 'in' : 'out'" nz-icon
                                         (click)="openPicker('video')" nzType="video-camera" [nzTheme]="'twotone'"
                                         (mouseenter)="itemWithFocus = 'video'" (mouseleave)="itemWithFocus = ''"
-                                        style="cursor:pointer;position:absolute;bottom:10px;left:60px;"
-                                        nz-tooltip nzTooltipTitle="Upload a Video"></i>
+                                        style="cursor:pointer;position:absolute;bottom:10px;left:60px;" nz-tooltip
+                                        nzTooltipTitle="Upload a Video"></i>
                                     <i [@itemFocus]="itemWithFocus === 'audio' ? 'in' : 'out'" nz-icon nzType="audio"
                                         [nzTheme]="'twotone'" (click)="openPicker('audio')"
                                         (mouseenter)="itemWithFocus = 'audio'" (mouseleave)="itemWithFocus = ''"
-                                        style="cursor:pointer;position:absolute;bottom:10px;left:120px;"
-                                        nz-tooltip nzTooltipTitle="Upload an Audio File"></i>
-                                    <i [@itemFocus]="itemWithFocus === 'image' ? 'in' : 'out'" nz-icon nzType="file-image" [nzTheme]="'twotone'"
-                                        (click)="openPicker('image')" (mouseenter)="itemWithFocus = 'image'" (mouseleave)="itemWithFocus = ''"
+                                        style="cursor:pointer;position:absolute;bottom:10px;left:120px;" nz-tooltip
+                                        nzTooltipTitle="Upload an Audio File"></i>
+                                    <i [@itemFocus]="itemWithFocus === 'image' ? 'in' : 'out'" nz-icon
+                                        nzType="file-image" [nzTheme]="'twotone'" (click)="openPicker('image')"
+                                        (mouseenter)="itemWithFocus = 'image'" (mouseleave)="itemWithFocus = ''"
                                         style="cursor:pointer;position:absolute;bottom:10px;left:180px;" nz-tooltip
                                         nzTooltipTitle="Upload an Image File"></i>
                                 </div>
@@ -913,10 +914,11 @@
                         </div>
                         <div>
                             <div *ngIf="assessmentComplete && passedAssessment" style="margin:20px 0;">
-                                <h3>Congratulations, you passed!</h3>
+                                <nz-alert nzType="success" nzMessage="Congratulations, you passed!" nzShowIcon>
+                                </nz-alert>
                             </div>
                             <div *ngIf="assessmentComplete && !passedAssessment" style="margin:20px 0;">
-                                <h3 style="display:block;">Sorry, you did not pass!</h3>
+                                <nz-alert nzType="error" nzMessage="Sorry, you did not pass!" nzShowIcon></nz-alert>
 
                                 <button nz-button nzType="primary" (click)="retake()"
                                     style="display:block;margin-top:20px;">Retake</button>

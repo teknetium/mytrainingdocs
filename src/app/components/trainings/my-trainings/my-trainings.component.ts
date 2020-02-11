@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { UserTrainingModel } from '../../../shared/interfaces/userTraining.type';
 import { TrainingModel } from '../../../shared/interfaces/training.type';
-import { UserModel } from '../../../shared/interfaces/user.model';
+import { UserModel } from '../../../shared/interfaces/user.type';
 import { UserTrainingService } from '../../../shared/services/userTraining.service';
 import { UserService } from '../../../shared/services/user.service';
 import { TrainingService } from '../../../shared/services/training.service';
@@ -18,12 +18,16 @@ export class MyTrainingsComponent implements OnInit {
   userTrainings$: Observable<UserTrainingModel[]>;
   userTrainings: UserTrainingModel[];
   trainings$: Observable<TrainingModel[]>;
+  selectedUser$: Observable<UserModel>;
+  selectedUser: UserModel;
   trainings: TrainingModel[] = [];
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
   trainingIdHash = {};
   trainingIndexHash = {};
   trainingIsVisible = false;
+  rating: number;
+  inputValue: string;
 
   subscriptions: Subscription[] = [];
 
@@ -49,12 +53,16 @@ export class MyTrainingsComponent implements OnInit {
   };
 
 
+  currentUserTraining = '';
+  markCompletedModalIsVisible = false;
+
   constructor(private userTrainingService: UserTrainingService,
     private trainingService: TrainingService,
     private userService: UserService) {
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
     this.trainings$ = this.trainingService.getAllTrainingsObservable();
+    this.selectedUser$ = this.userService.getSelectedUserStream();
   }
 
   ngOnInit() {
@@ -71,24 +79,42 @@ export class MyTrainingsComponent implements OnInit {
       }
     });
 
-    this.authenticatedUser$.subscribe(user => {
+    this.selectedUser$.subscribe(user => {
       if (!user) {
         return;
       }
-      this.authenticatedUser = user;
-      this.userTrainingService.loadTrainingsForUser(this.authenticatedUser._id);
+      this.selectedUser = user;
+      this.userTrainingService.loadTrainingsForUser(user._id);
     });
 
   }
 
-  viewTraining(tid) {
+  viewTraining(utid, tid) {
+
     this.trainingIsVisible = true;
-    this.trainingService.selectItemForEditing(this.trainingIndexHash[tid]);
+    this.trainingService.selectItemForEditing(this.trainingIndexHash[tid], utid);
   }
 
   confirmDeleteUserTraining(index) {
     this.userTrainingService.deleteUserTraining(this.userTrainings[index]._id, this.userTrainings[index].uid)
   }
 
+  handleMarkAsCompletedCancel() {
+    this.markCompletedModalIsVisible = false;
+  }
 
+  markAsComplete(utid: string) {
+    this.currentUserTraining = utid;
+    this.markCompletedModalIsVisible = true;
+
+  }
+
+  markTrainingAsComplete() {
+    this.markCompletedModalIsVisible = false;
+    this.userTrainingService.markUserTrainingAsComplete(this.currentUserTraining);
+  }
+
+  processAssessmentResult(event: {tid: string, score: number, pass: boolean}) {
+    this.userTrainingService.setAssessmentResult(this.selectedUser._id, event.tid, event.score, event.pass);
+  }
 }

@@ -21,7 +21,6 @@ import { CallbackModule } from './components/callback/callback.module';
 import { PricingModule } from './components/pricing/pricing.module';
 import { MembersModule } from './components/members/members.module';
 import { ProfileModule } from './components/profile/profile.module';
-import { ProjectsModule } from './components/projects/projects.module';
 import { SettingModule } from './components/setting/setting.module';
 import { FilesModule } from './components/files/files.module';
 import { TrainingsModule } from './components/trainings/trainings.module';
@@ -51,7 +50,6 @@ registerLocaleData(en);
         PricingModule,
         MembersModule,
         ProfileModule,
-        ProjectsModule,
         SettingModule,
         BrowserModule,
         BrowserAnimationsModule,

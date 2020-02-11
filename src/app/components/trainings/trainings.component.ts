@@ -5,7 +5,7 @@ import { AuthService } from '../../shared/services/auth.service';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserModel } from '../../shared/interfaces/user.model';
+import { UserModel } from '../../shared/interfaces/user.type';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { UserService } from '../../shared/services/user.service';
 import { Router } from '@angular/router';
@@ -111,14 +111,14 @@ export class TrainingsComponent implements OnInit {
     this.viewMode = 'Edit';
     this.trainingSelected = item;
     this.selectItem(index);
-    this.trainingService.selectItemForEditing(index);
+    this.trainingService.selectItemForEditing(index, '');
   }
 
   viewTraining(item: TrainingModel, index) {
     this.viewMode = 'view';
     this.trainingSelected = item;
     this.selectItem(index);
-    this.trainingService.selectItemForEditing(index);
+    this.trainingService.selectItemForEditing(index, '');
   }
 
   selectToolbarItem(item) {
@@ -128,11 +128,11 @@ export class TrainingsComponent implements OnInit {
   selectItem(index) {
     if (index === this.selectedItemIndex) {
       this.selectedItemIndex = -1;
-      this.trainingService.selectItemForEditing(-1);
+      this.trainingService.selectItemForEditing(-1, '');
       this.deleteDisabled = true;
     } else {
       this.selectedItemIndex = index;
-      this.trainingService.selectItemForEditing(index);
+      this.trainingService.selectItemForEditing(index, '');
       if (index === -1) {
         this.deleteDisabled = true;
       } else {
@@ -143,7 +143,7 @@ export class TrainingsComponent implements OnInit {
 
   closeTraining() {
     this.selectedItemIndex = -1;
-    this.trainingService.selectItemForEditing(-1);
+    this.trainingService.selectItemForEditing(-1, '');
     this.deleteDisabled = true;
   }
 

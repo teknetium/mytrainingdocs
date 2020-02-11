@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TrainingsComponent } from './trainings.component';
 import { TrainingViewerComponent } from './training-viewer/training-viewer.component';
 
-import { NzTableModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule, NzCommentModule, NzAvatarModule, NzListModule, NzDropDownModule, NzStepsModule, NzCalendarModule } from 'ng-zorro-antd';
+import { NzTableModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule, NzCommentModule, NzAvatarModule, NzListModule, NzDropDownModule, NzStepsModule, NzCalendarModule, NzDatePickerModule } from 'ng-zorro-antd';
 import { NzButtonModule } from 'ng-zorro-antd';
 import { NzIconModule } from 'ng-zorro-antd';
 import { NzTagModule } from 'ng-zorro-antd';
@@ -81,6 +81,7 @@ import { CalendarModule } from '../calendar/calendar.module';
     NzSwitchModule,
     NzCalendarModule,
     CalendarModule,
+    NzDatePickerModule
   ],
   exports: [
     TrainingsComponent,

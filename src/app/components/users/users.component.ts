@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { UserModel } from '../../shared/interfaces/user.model';
+import { UserModel } from '../../shared/interfaces/user.type';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { TrainingService } from '../../shared/services/training.service';

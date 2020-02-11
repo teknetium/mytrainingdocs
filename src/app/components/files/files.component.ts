@@ -5,7 +5,7 @@ import { FileService } from '../../shared/services/file.service';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
 import { SafeResourceUrl } from '@angular/platform-browser';
-import { UserModel } from '../../shared/interfaces/user.model';
+import { UserModel } from '../../shared/interfaces/user.type';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { VgAPI } from 'videogular2/compiled/core';
 

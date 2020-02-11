@@ -7,7 +7,7 @@ import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscr
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
 import { TrainingModel, Page, Portlet, TextBlock, Assessment } from '../interfaces/training.type';
-import { UserModel } from '../interfaces/user.model';
+import { UserModel } from '../interfaces/user.type';
 import { SafeResourceUrl } from '@angular/platform-browser';
 
 
@@ -82,7 +82,7 @@ export class TrainingService {
       this.allTrainingsBS$.next(this.allTrainings);
       //      this.myTrainingCntBS$.next(this.myTrainings.length);
       this.allTrainingCntBS$.next(this.allTrainings.length);
-      this.selectItemForEditing(this.currentTrainingIndex);
+      this.selectItemForEditing(this.currentTrainingIndex, '');
 
     });
   }
@@ -104,7 +104,7 @@ export class TrainingService {
     this.viewModeBS$.next(mode);
   }
 
-  selectItemForEditing(index) {
+  selectItemForEditing(index: number, utid: string) {
     if (index < 0 || index >= this.allTrainings.length) {
       //      this.showSelectedItemBS$.next(false);
       //      this.showSelectedIndexFeedbackBS$.next(false);
@@ -310,6 +310,9 @@ export class TrainingService {
   }
 
   addNewPage(trainingId: string, type: string, url: string, fileId: string, pageTitle: string) {
+    if (pageTitle === '') {
+      return;
+    }
     const newPage = <Page>{
       _id: String(new Date().getTime()),
       type: type,

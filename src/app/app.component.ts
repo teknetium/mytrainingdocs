@@ -3,7 +3,7 @@ import { AuthService } from './shared/services/auth.service';
 import { TrainingService } from './shared/services/training.service';
 import { UserService } from './shared/services/user.service';
 import { BehaviorSubject, Observable, from } from 'rxjs';
-import { UserModel } from './shared/interfaces/user.model';
+import { UserModel } from './shared/interfaces/user.type';
 import { TrainingModel } from './shared/interfaces/training.type';
 import { Router } from '@angular/router';
 import { FileModel } from './shared/interfaces/file.type';

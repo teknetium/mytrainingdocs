@@ -15,8 +15,9 @@ const userTrainingSchema = new Schema({
   status: { type: String, required: true },
   dueDate: { type: Number, required: false },
   timeToDate: { type: Number, required: false },
+  score: { type: Number, required: false },
   dateCompleted: { type: Number, required: false },
-  notificationDates: { type: [Number], required: false},
+  passedAssessment: { type: Boolean, required: false },
   assessmentResponse: { type: [Number], required: false }
 })
 

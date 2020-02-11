@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FileService } from '../../../shared/services/file.service';
 import { TrainingService } from '../../../shared/services/training.service';
 import { UserService } from '../../../shared/services/user.service';
@@ -9,7 +9,7 @@ import { TrainingModel, Page, Portlet, Assessment } from 'src/app/shared/interfa
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FileModel, Version } from 'src/app/shared/interfaces/file.type';
-import { UserModel } from 'src/app/shared/interfaces/user.model';
+import { UserModel } from 'src/app/shared/interfaces/user.type';
 import { VgAPI } from 'videogular2/compiled/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { merge } from 'rxjs/operators';
@@ -177,6 +177,7 @@ export class TrainingViewerComponent implements OnInit {
   @Input() trainingStatus = 'Under Development';
   @Input() trainingId = '';
   @Input() production = false;
+  @Output() assessmentResult = new EventEmitter<{ tid: string, score: number, pass: boolean }>();
 
   docStreamPageHash = {};
   pageDocUrlHash = {};
@@ -235,7 +236,7 @@ export class TrainingViewerComponent implements OnInit {
   pageUrl: string;
   safeUrlHash = {};
   passingGrade: number = 70;
-
+  
   
   constructor(
     private trainingService: TrainingService,
@@ -470,7 +471,7 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   closeViewer() {
-    this.trainingService.selectItemForEditing(-1);
+    this.trainingService.selectItemForEditing(-1, '');
     this.fullscreen = false;
   }
 
@@ -597,7 +598,7 @@ export class TrainingViewerComponent implements OnInit {
       }
     });
     this.trainingService.deleteTraining(this.selectedTraining._id);
-    this.trainingService.selectItemForEditing(this.selectedTrainingIndex);
+    this.trainingService.selectItemForEditing(this.selectedTrainingIndex, '');
   }
 
   showIconSelectModal() {
@@ -717,6 +718,7 @@ export class TrainingViewerComponent implements OnInit {
         this.passedAssessment = false;
       } else {
         this.passedAssessment = true;
+        this.assessmentResult.emit({ tid: this.selectedTraining._id,  score: this.score, pass: true });
       }
     } else {
       this.slideNewQuestionHash[this.currentAssessmentItemIndex] = true;

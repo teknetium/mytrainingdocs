@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ThemeConstantService } from '../../services/theme-constant.service';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
-import { UserModel } from '../../interfaces/user.model';
+import { UserModel } from '../../interfaces/user.type';
 import { Observable } from 'rxjs';
 import { NgZorroAntdModule, NZ_ICONS } from 'ng-zorro-antd';
 

@@ -5,10 +5,8 @@ import { EventModel } from '../interfaces/event.type';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { UserTrainingModel } from '../interfaces/userTraining.type';
 import { AuthService } from './auth.service';
-import { User } from '../interfaces/user.type';
 import { ENV } from './env.config';
 import { catchError } from 'rxjs/operators';
-import { TrainingModel } from '../interfaces/training.type';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +14,10 @@ import { TrainingModel } from '../interfaces/training.type';
 export class UserTrainingService {
 
   userTrainingBS$ = new BehaviorSubject<UserTrainingModel[]>([]);
+  utHash = {};
+  utIdHash = {};
 
   constructor(private eventService: EventService, private http: HttpClient, private auth: AuthService) {
-  }
-
-  markTrainingAsComplete(tid, uid) {
   }
 
   getUserTrainingStream(): Observable<UserTrainingModel[]>  {
@@ -37,9 +34,46 @@ export class UserTrainingService {
       dueDate: new Date().getTime() + 2419200000,
       dateCompleted: 0,
       timeToDate: 0,
+      score: 0,
+      passedAssessment: false,
       assessmentResponse: []
     };
-    this.postUsertraining$(userTraining).subscribe(userTraining => {
+    this.postUserTraining$(userTraining).subscribe(userTraining => {
+      this.getUTForUser$(userTraining.uid).subscribe(list => {
+        this.utHash[userTraining.uid] = list;
+        for (let userTraining of list) {
+          this.utIdHash[userTraining._id] = userTraining;
+        }
+        this.userTrainingBS$.next(list);
+      })
+    })
+  }
+
+  markUserTrainingAsComplete(utid: string): void {
+    let userTraining = this.utIdHash[utid];
+    userTraining.dateCompleted = new Date().getTime();
+    userTraining.status = 'completed';
+    this.updateUserTraining$(userTraining).subscribe(userTraining => {
+      this.getUTForUser$(userTraining.uid).subscribe(list => {
+        this.userTrainingBS$.next(list);
+      })
+    })
+  }
+
+  setAssessmentResult(uid: string, tid: string, score: number, pass: boolean) {
+    console.log('setAssessmentResult', this.utHash);
+    let userTraining: UserTrainingModel;
+    let utList = this.utHash[uid];
+    for (let ut of utList) {
+      if (ut.uid === uid && ut.tid === tid) {
+        userTraining = ut;
+      }
+    }
+    userTraining.score = score;
+    userTraining.passedAssessment = pass;
+    userTraining.dateCompleted = new Date().getTime();
+    userTraining.status = 'completed';
+    this.updateUserTraining$(userTraining).subscribe(userTraining => {
       this.getUTForUser$(userTraining.uid).subscribe(list => {
         this.userTrainingBS$.next(list);
       })
@@ -56,6 +90,10 @@ export class UserTrainingService {
   
   loadTrainingsForUser(userId) {
     this.getUTForUser$(userId).subscribe(list => {
+      this.utHash[userId] = list;
+      for (let userTraining of list) {
+        this.utIdHash[userTraining._id] = userTraining;
+      }
       this.userTrainingBS$.next(list);
     })
   }
@@ -64,9 +102,19 @@ export class UserTrainingService {
     return `Bearer ${this.auth.accessToken}`;
   }
 
-  postUsertraining$(userTraining: UserTrainingModel): Observable<UserTrainingModel> {
+  postUserTraining$(userTraining: UserTrainingModel): Observable<UserTrainingModel> {
     return this.http
       .post<UserTrainingModel>(`${ENV.BASE_API}usertraining/new/`, userTraining, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+
+  }
+  updateUserTraining$(userTraining: UserTrainingModel): Observable<UserTrainingModel> {
+    return this.http
+      .put<UserTrainingModel>(`${ENV.BASE_API}usertraining/${userTraining._id}`, userTraining, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
       .pipe(
@@ -85,7 +133,7 @@ export class UserTrainingService {
       );
   }
 
-  getUTForUser$(uid): Observable<UserTrainingModel[]> {
+  getUTForUser$(uid: string): Observable<UserTrainingModel[]> {
     return this.http
       .get<UserTrainingModel[]>(`${ENV.BASE_API}usertraining/${uid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),

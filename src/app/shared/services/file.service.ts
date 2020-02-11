@@ -5,7 +5,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BehaviorSubject, Observable, throwError as ObservableThrowError, Subscription } from 'rxjs';
 import { FileModel, Version } from '../interfaces/file.type';
 import { UserService } from './user.service';
-import { UserModel } from '../interfaces/user.model';
+import { UserModel } from '../interfaces/user.type';
 import { ENV } from './env.config';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';

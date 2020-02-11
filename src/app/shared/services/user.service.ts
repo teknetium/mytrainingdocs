@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { UserModel } from '../interfaces/user.model';
+import { UserModel } from '../interfaces/user.type';
 import { Auth0ProfileModel } from '../interfaces/auth0Profile.type';
 import { Router } from '@angular/router';
 import { EventModel } from '../interfaces/event.type';
@@ -218,6 +218,11 @@ export class UserService {
     const completedDate = 0;
     const userTraining = { tid, status, dueDate, completedDate };
     //    user.myTrainings.push(userTraining);
+  }
+
+  selectAuthenticatedUser() {
+    this.selectedUserBS$.next(this.authenticatedUser);
+    this.selectedUserIndexBS$.next(-1);
   }
 
   selectUser(index: number) {

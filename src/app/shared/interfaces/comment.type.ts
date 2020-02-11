@@ -1,8 +1,7 @@
 export interface CommentModel {
   _id: string,
   tid: string,
-  author: string,
-  avatar: string,
-  content: number,
+  uid: string,
+  content: string,
   date: number
 }

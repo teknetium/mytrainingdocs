@@ -55,7 +55,7 @@ module.exports = function(app, config) {
  */
 
   const trainingListProjection = "_id title version type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status interestList shared";
-  const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponse trainingVersion";
+  const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponse passedAssessment score trainingVersion";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId org supervisorId profilePicUrl";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
@@ -251,6 +251,8 @@ module.exports = function(app, config) {
       dueDate: req.body.dueDate,
       dateCompleted: req.body.dateCompleted,
       timeToDate: req.body.timeToDate,
+      passedAssessment: req.body.passedAssessment,
+      score: req.body.score,
       assessmentResponse: req.body.assessmentResponse,
       trainingVersion: req.body.trainingVersion
     });
@@ -276,6 +278,8 @@ module.exports = function(app, config) {
       userTraining.dueDate = req.body.dueDate;
       userTraining.dateCompleted = req.body.dateCompleted;
       userTraining.assessmentResponse = req.body.assessmentResponse;
+      userTraining.score = req.body.score;
+      userTraining.passedAssessment = req.body.passedAssessment;
       userTraining.trainingVersion = req.body.trainingVersion;
       userTraining.timeToDate = req.body.timeToDate;
 
