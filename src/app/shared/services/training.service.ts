@@ -310,7 +310,7 @@ export class TrainingService {
   }
 
   addNewPage(trainingId: string, type: string, url: string, fileId: string, pageTitle: string) {
-    if (pageTitle === '') {
+    if (!pageTitle || pageTitle === '') {
       return;
     }
     const newPage = <Page>{

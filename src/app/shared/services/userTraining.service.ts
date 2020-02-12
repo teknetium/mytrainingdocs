@@ -59,6 +59,14 @@ export class UserTrainingService {
       })
     })
   }
+  
+  saveUserTraining(ut: UserTrainingModel): void {
+    this.updateUserTraining$(ut).subscribe(userTraining => {
+      this.getUTForUser$(userTraining.uid).subscribe(list => {
+        this.userTrainingBS$.next(list);
+      })
+    })
+  }
 
   setAssessmentResult(uid: string, tid: string, score: number, pass: boolean) {
     console.log('setAssessmentResult', this.utHash);

@@ -18,6 +18,21 @@
                     <i nz-icon nzType="home" theme="outline" style="font-size:20px;"></i>Home
                 </a>
             </li>
+            <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter>
+                <a routerLink="/myteam">
+                    <i nz-icon nzType="user" theme="outline" style="font-size:20px;"></i>My Team
+                </a>
+            </li>
+            <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor' || (authenticatedUser$ | async)?.adminUp"nz-menu-item nzMatchRouter>
+                <a routerLink="/trainings">
+                    <i nz-icon nzType="solution" theme="outline" style="font-size:20px;"></i>My Team's Trainings
+                </a>
+            </li>
+            <li *ngIf="(authenticatedUser$ | async)?.userType !== 'supervisor'" nz-menu-item nzMatchRouter>
+                <a routerLink="/mytrainings">
+                    <i nz-icon nzType="solution" theme="outline" style="font-size:20px;"></i>My Trainings
+                </a>
+            </li>
             <!--
             <li nz-menu-item nzMatchRouter>
                 <a routerLink="/pricing">

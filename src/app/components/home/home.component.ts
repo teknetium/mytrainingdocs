@@ -17,14 +17,16 @@ export class HomeComponent implements OnInit {
 
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
+  myTeamCnt$: Observable<number>;
   showNewUserModal = false;
-  currentTab = 'myTrainings';
+  currentTab = 'gettingStarted';
 
   constructor(private auth: AuthService,
     private userService: UserService,
     private trainingService: TrainingService,
     private eventService: EventService) {
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
+    this.myTeamCnt$ = this.userService.getMyTeamCntStream();
   }
 
   ngOnInit() {
@@ -34,7 +36,9 @@ export class HomeComponent implements OnInit {
       }
 
       this.authenticatedUser = user;
-      this.userService.selectAuthenticatedUser();
+      if (this.authenticatedUser.userType !== 'supervisor') {
+        this.userService.selectAuthenticatedUser(this.authenticatedUser);
+      }
       if (this.authenticatedUser.firstName === '') {
         this.showNewUserModal = true;
       }
@@ -46,9 +50,6 @@ export class HomeComponent implements OnInit {
     this.showNewUserModal = false;
   }
 
-  createNewTraining() {
-    this.trainingService.addNewTraining();
-  }
 
   setCurrentTab(tabName) {
     this.currentTab = tabName;

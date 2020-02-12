@@ -78,6 +78,70 @@ module.exports = function(app, config) {
     sgMail.send(msg);
   });
 
+  app.get("/api/daily/usertrainingstatuscheck", (req, res) => {
+    UserTraining.find({}, userTrainingListProjection, (err, userTrainings) => {
+      let now = new Date().getTime();
+      let response = {
+        now: now,
+        noChange: [],
+        pastDue: [],
+        errors: []
+      }
+      let pastDue = [];
+      let errors = [];
+      if (userTrainings) {
+        userTrainings.forEach(userTraining => {
+          if (userTraining.dueDate < now) {
+            response.pastDue.push(userTraining._id);
+            userTraining.status = 'pastDue';
+            userTraining.save(err2 => {
+              if (err2) {
+                response.errors.push(userTraining._id);
+              }
+            });
+          } else {
+            response.noChange.push(userTraining._id);
+          }
+        });
+        return res.send(response);
+      }
+      return res.status(500).send({ message: "no userTraining records found" });
+    });
+  });
+  app.get("/api/daily/notifications", (req, res) => {
+    UserTraining.find({}, userTrainingListProjection, (err, userTrainings) => {
+      let now = new Date().getTime();
+      let response = {
+        now: now,
+        noChange: [],
+        pastDue: [],
+        errors: []
+      }
+      let pastDue = [];
+      let errors = [];
+      if (userTrainings) {
+        userTrainings.forEach(userTraining => {
+          if (userTraining.dueDate < now) {
+            response.pastDue.push(userTraining._id);
+            userTraining.status = 'pastDue';
+            userTraining.save(err2 => {
+              if (err2) {
+                response.errors.push(userTraining._id);
+              }
+            });
+          } else {
+            response.noChange.push(userTraining._id);
+          }
+        });
+        return res.send(response);
+      }
+      return res.status(500).send({ message: "no userTraining records found" });
+    });
+  });
+
+  //
+  // Training API
+  //
   app.get("/api/training/:id", (req, res) => {
     Training.findOne({ _id: req.params.id },
       trainingListProjection, (err, training) => {
@@ -88,9 +152,6 @@ module.exports = function(app, config) {
       },
     );
   });
-  //
-  // Training API
-  //
   app.get("/api/trainings/:teamId", (req, res) => {
     Training.find({teamId: req.params.teamId},
       trainingListProjection, (err, trainings) => {
@@ -183,7 +244,7 @@ module.exports = function(app, config) {
       training.shared = req.body.shared;
 
       training.save(err2 => {
-        if (err) {
+        if (err2) {
           return res.status(500).send({ message: err2.message });
         }
         res.send(training);

@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
-import { PricingComponent } from './components/pricing/pricing.component';
+import { MyteamComponent } from './components/myteam/myteam.component';
 import { HomeComponent } from './components/home/home.component';
+import { TrainingsComponent } from './components/trainings/trainings.component';
+import { MyTrainingsComponent } from './components/trainings/my-trainings/my-trainings.component';
 
 
 export const AuthenticatedROUTES: Routes = [
@@ -12,10 +14,24 @@ export const AuthenticatedROUTES: Routes = [
         }
     },
     {
-        path: 'pricing',
-        component: PricingComponent,
+        path: 'myteam',
+        component: MyteamComponent,
         data: {
-            title: 'Pricing'
+            title: 'My Team'
+        }
+    },
+    {
+        path: 'trainings',
+        component: TrainingsComponent,
+        data: {
+            title: 'Trainings'
+        }
+    },
+    {
+        path: 'mytrainings',
+        component: MyTrainingsComponent,
+        data: {
+            title: 'My Trainings'
         }
     }
 ];

@@ -147,6 +147,8 @@ export class TrainingsComponent implements OnInit {
     this.deleteDisabled = true;
   }
 
-
+  createNewTraining() {
+    this.trainingService.addNewTraining();
+  }
 
 }

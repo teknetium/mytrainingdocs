@@ -1,7 +1,8 @@
 
 export interface NotificationModel {
-    name: string,
-    uid: string,
+    _id: string,
+    type: 'pastDue',
+    
     tid: string,
     status: string,
     dueDate: number,

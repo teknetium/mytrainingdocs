@@ -1,20 +1,26 @@
 .my-team {
-    display: inline-block;
-    width: 22%;
+    width: 100%;
     height: 100%;
-    padding-left:10px;
-    border-right: 1px solid #e0e0e0;
+    padding:20px;
+}
+
+.my-team-header {
+    border-bottom: 1px solid #f6f6f6;
+    margin-bottom: 20px;
 }
 
 .my-team-rightside {
-    width: 78%;
+    width: 70%;
     height:100%;    
     float:right;
 }
 
 .team-container {
+    width: 22%;
     padding-right: 10px;
-    height:fit-content;
+    height:100%;
+    border-right: 1px solid #e0e0e0;
+    display:inline-block;
 }
 
 .mm-header {
@@ -26,19 +32,15 @@
 
 .direct-report-container {
     margin-left: 20px;
-    border-left: 1px solid #bbbbbb;
 }
 
 .direct-report-cell {
-    border-bottom: 1px solid #bbbbbb;
     margin-bottom: 10px;
     width: fit-content;
 }
 
 .direct-report {
     position: relative;
-    top: 10px;
-    left: 10px;
 }
 
 .supervisor {

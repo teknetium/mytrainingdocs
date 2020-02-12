@@ -24,7 +24,6 @@ export class UserService {
   private authenticatedUserBS$ = new BehaviorSubject<UserModel>(null);
   private myTeamBS$ = new BehaviorSubject<UserModel[]>([]);
   private myTeamCntBS$ = new BehaviorSubject<number>(0);
-  private myTeamCnt$ = new BehaviorSubject<number>(0);
   private actionBS$ = new BehaviorSubject<string>('');
   private titleBS$ = new BehaviorSubject<string>('');
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
@@ -220,12 +219,15 @@ export class UserService {
     //    user.myTrainings.push(userTraining);
   }
 
-  selectAuthenticatedUser() {
-    this.selectedUserBS$.next(this.authenticatedUser);
+  selectAuthenticatedUser(user) {
+    this.selectedUserBS$.next(user);
     this.selectedUserIndexBS$.next(-1);
   }
 
   selectUser(index: number) {
+    if (this.authenticatedUser.userType !== 'supervisor') {
+      return;
+    }
     this.selectedUserBS$.next(this.myTeam[index]);
     this.selectedUserIndexBS$.next(index);
     this.titleBS$.next('BLAH');

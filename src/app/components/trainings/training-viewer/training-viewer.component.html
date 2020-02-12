@@ -157,9 +157,9 @@
                             {{page.title}}
                         </div>
                     </div>
-                    <div *ngIf="mode === 'Edit' || (mode === 'Preview' && selectedTraining.useAssessment)"
+                    <div *ngIf="(production === 'false' && mode === 'Edit') || (production === 'false' && (mode === 'Preview' && selectedTraining.useAssessment)) || (production === 'true' && selectedTraining.useAssessment)"
                         class="toc-entry" (click)="setCurrentPage('assessment')"
-                        [ngClass]="{'active-toc':currentPageId === 'assessment'}">
+                        [ngClass]="{'active-toc':currentPageId === 'assessment', 'disabled': currentUser}">
                         Assessment
                     </div>
                     <div *ngIf="selectedTraining.status === 'In Review' || production === 'true'" class="toc-entry"
@@ -369,11 +369,8 @@
                                 <span style="font-weight:600;">Training Introduction</span> - This page needs no
                                 explanation.
                                 <br><br>
-                                <span style="font-weight:600;">Main Content</span> - This section is where your
-                                content lives.
-                                Clicking the green "add file" icon lets you upload your training documents. Each
-                                document's name is
-                                added to this section.
+                                <span style="font-weight:600;">Main Content</span> - This page is the home of the Content Wizard.
+                                The Content Wizard helps you quickly add your content to the training.
                                 <br><br>
                                 <span style="font-weight:600;">Assessment</span> - This is where you create the exam
                                 to verify mastery of the training content.

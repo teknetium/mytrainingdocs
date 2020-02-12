@@ -69,7 +69,7 @@ export class MyteamComponent implements OnInit {
   userIndexHash = {};
   trainingIdHash = {};
   showNewUserModal = false;
-  supervisorSelected = true;
+  supervisorSelected = false;
   newTeamMember: UserModel = {
     _id: '',
     teamId: '',
@@ -87,7 +87,7 @@ export class MyteamComponent implements OnInit {
     jobTitle: ''
   }
   message: MessageModel;
-  userIndexSelected = -1;
+  userIndexSelected = 0;
   myTeamHelpPanelIsVisible = true;
   myTeamTrainingsHelpPanelIsVisible = true;
   currentTab = 'myTeamTrainings';
@@ -146,6 +146,7 @@ export class MyteamComponent implements OnInit {
         this.userIndexHash[this.myTeam[i]._id] = i;
         this.userHash[this.myTeam[i]._id] = this.myTeam[i];
       }
+      this.userService.selectUser(0);
     });
 
     this.trainings$.subscribe(trainings => {
@@ -207,10 +208,8 @@ export class MyteamComponent implements OnInit {
 
   selectUser(index) {
     if (index === -1) {
-      this.supervisorSelected = true;
       this.userIndexSelected = index;
     } else {
-      this.supervisorSelected = false;
       this.userIndexSelected = index;
       this.userService.selectUser(index);
 //      this.selectedUserBS$.next(this.myTeam[index]);

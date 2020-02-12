@@ -88,7 +88,7 @@ export class TrainingViewerComponent implements OnInit {
   selectedTrainingIndex$: Observable<number>;
   fileUploaded$: Observable<FileModel>;
   safeUrl$: Observable<SafeResourceUrl>;
-  currentPageId = 'intro';
+  currentPageId = 'trainingWizardTour';
   isOpen = true;
   pageContainerMarginLeft = '270';
   selectedTraining: TrainingModel;
@@ -176,7 +176,7 @@ export class TrainingViewerComponent implements OnInit {
   @Input() mode = 'Edit';
   @Input() trainingStatus = 'Under Development';
   @Input() trainingId = '';
-  @Input() production = false;
+  @Input() production = 'false';
   @Output() assessmentResult = new EventEmitter<{ tid: string, score: number, pass: boolean }>();
 
   docStreamPageHash = {};
@@ -264,7 +264,9 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.production) {
+    this.mode = 'Edit';
+
+    if (this.production === 'true') {
       this.currentPageId = 'intro';
     } else {
       this.currentPageId = 'trainingWizardTour';
@@ -278,11 +280,13 @@ export class TrainingViewerComponent implements OnInit {
 
       this.selectedTraining = training;
       if (training) {
-        if (this.production) {
+        if (this.production === 'true') {
           this.currentPageId = 'intro';
         } else {
           this.currentPageId = 'trainingWizardTour';
         }
+        this.setCurrentPage(this.currentPageId);
+
         this.pageFileHash['intro'] = null;
         this.pageFileHash['config'] = null;
         this.pageFileHash['assessment'] = null;
@@ -304,7 +308,6 @@ export class TrainingViewerComponent implements OnInit {
         this.tempIconColor = this.selectedTraining.iconColor;
         this.tempIcon = this.selectedTraining.iconClass;
 
-        this.mode = 'Edit';
       }
     });
     this.fileUploaded$.subscribe(file => {
@@ -644,12 +647,7 @@ export class TrainingViewerComponent implements OnInit {
   markTrainingAsComplete(training) {
     training.rating.push(this.rating);
   }
-
-  setStatus(status) {
-    this.selectedTraining.status = status;
-    this.currentPageId = 'intro';
-  }
-
+  
   addEmailToInterestList() {
     if (this.emailAddr === '') {
       return;

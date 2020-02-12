@@ -1,4 +1,10 @@
 <div class="training-container">
+  <div class="my-teams-trainings">
+    <span style="display:inline-block;font-size:24px;font-weight: 300;margin-bottom:20px;">My Team's Trainings</span>
+  </div>
+  <i *ngIf="trainings.length > 0" nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+    style="cursor:pointer;font-size:20px;margin:10px;float:left;" nz-tooltip nzTooltipTitle="Create New Training"
+    (click)="createNewTraining()"></i>
   <div style="display:inline-block;">
     <div *ngFor="let item of trainings index as i" style="display:inline-block;">
       <div class="cell-item-sm" [ngClass]="{'selected-item': selectedItemIndex === i}" (click)="selectItem(i)">
@@ -14,7 +20,7 @@
     <button nz-button nzType="primary" (click)="newTraining()" style="margin-top: 20px;">Create a training!</button>
 
   </div>
-  <div style="padding:10px;height:95%;">
-    <app-training-viewer production="false"></app-training-viewer>
+  <div style="padding:10px;height:90%;">
+    <app-training-viewer></app-training-viewer>
   </div>
 </div>

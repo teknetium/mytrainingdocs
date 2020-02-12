@@ -32,22 +32,23 @@ export class MyTrainingsComponent implements OnInit {
   subscriptions: Subscription[] = [];
 
   @Input() mode = 'view';
+  @Input() useBanner = 'yes';
 
   statusIconHash = {
     upToDate: {
       icon: 'smile',
-      color: '#3f87f5',
+      color: '#52c41a',
       desc: 'Up To Date'
     },
     pastDue: {
-      icon: 'close-circle',
+      icon: 'exclamation-circle',
       color: 'red',
       desc: 'Past Due'
 
     },
     completed: {
       icon: 'check-circle',
-      color: 'blue',
+      color: '#4891f7',
       desc: 'Completed'
     }
   };
@@ -90,7 +91,7 @@ export class MyTrainingsComponent implements OnInit {
   }
 
   viewTraining(utid, tid) {
-
+    this.currentUserTraining = utid;
     this.trainingIsVisible = true;
     this.trainingService.selectItemForEditing(this.trainingIndexHash[tid], utid);
   }
@@ -107,6 +108,12 @@ export class MyTrainingsComponent implements OnInit {
     this.currentUserTraining = utid;
     this.markCompletedModalIsVisible = true;
 
+  }
+
+  updateDueDate(event, ut) {
+    let newDueDate = new Date(event).getTime();
+    ut.dueDate = newDueDate;
+    this.userTrainingService.saveUserTraining(ut);
   }
 
   markTrainingAsComplete() {

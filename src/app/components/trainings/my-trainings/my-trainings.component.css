@@ -17,3 +17,11 @@
     opacity: .2;
     cursor: not-allowed;
 }
+
+.no-padding {
+    padding:0;
+}
+
+.with-padding {
+    padding: 20px;
+}

@@ -19,6 +19,11 @@
   color:blue;
 }
 
+.my-teams-trainings {
+  border-bottom: 1px solid #f6f6f6;
+  margin-bottom: 20px;
+}
+
 .ant-table-body {
   border: 0 !important;
 }
@@ -49,7 +54,7 @@
   width: 100%;
   height: 97%;
   overflow:hidden;
-  padding: 10px 10px 0 0; 
+  padding:20px; 
 }
 
 .training-list-container {
