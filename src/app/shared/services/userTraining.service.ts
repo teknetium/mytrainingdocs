@@ -13,7 +13,10 @@ import { catchError } from 'rxjs/operators';
 })
 export class UserTrainingService {
 
-  userTrainingBS$ = new BehaviorSubject<UserTrainingModel[]>([]);
+  userTrainingsBS$ = new BehaviorSubject<UserTrainingModel[]>([]);
+  userTrainingCntBS$ = new BehaviorSubject<number>(0);
+  uidUserTrainingStreamHash = {};
+  uidUserTrainingCntStreamHash = {};
   utHash = {};
   utIdHash = {};
 
@@ -21,7 +24,11 @@ export class UserTrainingService {
   }
 
   getUserTrainingStream(): Observable<UserTrainingModel[]>  {
-    return this.userTrainingBS$.asObservable();
+    return this.userTrainingsBS$.asObservable();
+  }
+
+  getUserTrainingCntStream(): Observable<number> {
+    return this.userTrainingCntBS$.asObservable();
   }
 
   assignTraining(uid, tid) {
@@ -31,7 +38,7 @@ export class UserTrainingService {
       uid: uid,
       status: 'upToDate',
       trainingVersion: '',
-      dueDate: new Date().getTime() + 2419200000,
+      dueDate: new Date().getTime() + 1209600000,
       dateCompleted: 0,
       timeToDate: 0,
       score: 0,
@@ -39,12 +46,14 @@ export class UserTrainingService {
       assessmentResponse: []
     };
     this.postUserTraining$(userTraining).subscribe(userTraining => {
-      this.getUTForUser$(userTraining.uid).subscribe(list => {
-        this.utHash[userTraining.uid] = list;
-        for (let userTraining of list) {
-          this.utIdHash[userTraining._id] = userTraining;
+      this.getUTForUser$(uid).subscribe(list => { 
+        console.log('userTrainingService', list);
+        this.utHash[uid] = list;
+        for (let ut of list) {
+          this.utIdHash[ut._id] = ut;
         }
-        this.userTrainingBS$.next(list);
+        this.userTrainingsBS$.next(list);
+        this.userTrainingCntBS$.next(list.length);
       })
     })
   }
@@ -53,9 +62,10 @@ export class UserTrainingService {
     let userTraining = this.utIdHash[utid];
     userTraining.dateCompleted = new Date().getTime();
     userTraining.status = 'completed';
-    this.updateUserTraining$(userTraining).subscribe(userTraining => {
-      this.getUTForUser$(userTraining.uid).subscribe(list => {
-        this.userTrainingBS$.next(list);
+    this.updateUserTraining$(userTraining).subscribe(ut => {
+      this.getUTForUser$(ut.uid).subscribe(list => {
+        this.userTrainingsBS$.next(list);
+        this.userTrainingCntBS$.next(list.length);
       })
     })
   }
@@ -63,7 +73,7 @@ export class UserTrainingService {
   saveUserTraining(ut: UserTrainingModel): void {
     this.updateUserTraining$(ut).subscribe(userTraining => {
       this.getUTForUser$(userTraining.uid).subscribe(list => {
-        this.userTrainingBS$.next(list);
+        this.userTrainingsBS$.next(list);
       })
     })
   }
@@ -81,9 +91,9 @@ export class UserTrainingService {
     userTraining.passedAssessment = pass;
     userTraining.dateCompleted = new Date().getTime();
     userTraining.status = 'completed';
-    this.updateUserTraining$(userTraining).subscribe(userTraining => {
-      this.getUTForUser$(userTraining.uid).subscribe(list => {
-        this.userTrainingBS$.next(list);
+    this.updateUserTraining$(userTraining).subscribe(ut => {
+      this.getUTForUser$(ut.uid).subscribe(list => {
+        this.userTrainingsBS$.next(list);
       })
     })
   }
@@ -91,19 +101,24 @@ export class UserTrainingService {
   deleteUserTraining(id, uid) {
     this.deleteUserTraining$(id).subscribe(item => {
       this.getUTForUser$(uid).subscribe(list => {
-        this.userTrainingBS$.next(list);
+        this.userTrainingsBS$.next(list);
+        this.userTrainingCntBS$.next(list.length);
       })      
     })
   }
   
   loadTrainingsForUser(userId) {
+    console.log('loadTrainingsForUser...userId', userId);
     this.getUTForUser$(userId).subscribe(list => {
+      console.log('loadTrainingsForUser...ut list', list);
       this.utHash[userId] = list;
       for (let userTraining of list) {
         this.utIdHash[userTraining._id] = userTraining;
       }
-      this.userTrainingBS$.next(list);
-    })
+      this.userTrainingsBS$.next(list);
+
+      this.userTrainingCntBS$.next(list.length);
+      })
   }
 
   private get _authHeader(): string {

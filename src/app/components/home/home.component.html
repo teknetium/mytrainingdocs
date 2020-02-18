@@ -13,7 +13,7 @@
             </span>
         </div>
     </div>
-    <div *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" style="display:block;font-size:18px;">
+    <div *ngIf="user.userType === 'supervisor'" style="display:block;font-size:18px;">
         <div style="display:block;margin-top:80px;">
             <div style="display: inline-block;width:70%;padding-top:40px;padding-left:50px;">
                 As a <span style="font-size:20px;color:blue;">Supervisor</span>, it is your responsibility to add
@@ -41,7 +41,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="(authenticatedUser$ | async)?.userType === 'individualContributor' && (authenticatedUser$ | async)?.adminUp"
+    <div *ngIf="user.userType === 'individualContributor' && (authenticatedUser$ | async)?.adminUp"
         style="margin-top: 20px;font-size:18px;padding:40px;">
         As an <span style="font-size:20px;color:blue;">Individual Contributor</span>, it is your responsibility to
         complete your trainings
@@ -52,7 +52,7 @@
         <br><br>
 
     </div>
-    <div *ngIf="(authenticatedUser$ | async)?.userType === 'individualContributor' && !(authenticatedUser$ | async)?.adminUp"
+    <div *ngIf="user.userType === 'individualContributor' && !user.adminUp"
         style="margin-top: 20px;font-size:18px;padding:40px;">
 
     </div>
@@ -72,46 +72,4 @@
 
         </div>
     </nz-modal>
-    <!--
-    <div class="mytrainings" *ngIf="user.userType === 'individualContributor'"
-        style="width:100%;height:100%;display:inline-block;padding:20px;">
-        <div style="margin-bottom:30px;">
-        </div>
-        <div style="width:100%;height:100%;display:inline-block;">
-            <div style="width:100%;height:40px;border-bottom:1px solid #cccccc;display:block;">
-                <div class="tab-titles" [ngClass]="{'selected-tab': currentTab === 'gettingStarted'}"
-                    (click)="setCurrentTab('gettingStarted')">
-                    Getting Started
-                </div>
-                <div class="tab-titles" [ngClass]="{'selected-tab': currentTab === 'myTrainings'}"
-                    (click)="setCurrentTab('myTrainings')">
-                    My Trainings
-                </div>
-                <div *ngIf="user.adminUp" class="tab-titles"
-                    [ngClass]="{'selected-tab': currentTab === 'myTeamTrainings'}"
-                    (click)="setCurrentTab('myTeamTrainings')">
-                    My Team's Trainings
-                </div>
-            </div>
-            <div *ngIf="currentTab === 'gettingStarted'" style="width:100%;height:95%;padding-top:10px;">
-                <div style="width:100%;height:100%;">
-
-                </div>
-            </div>
-            <div *ngIf="currentTab === 'myTrainings'" style="width:100%;height:95%;padding-top:10px;">
-                <div style="width:100%;height:100%;">
-                    <app-my-trainings></app-my-trainings>
-                </div>
-            </div>
-            <div *ngIf="currentTab === 'myTeamTrainings'" style="width:100%;height:95%;">
-                <div style="width:100%;height:100%;">
-                    <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-                        style="float:left;cursor:pointer;font-size:20px;margin:5px 0 0 0;" nz-tooltip
-                        nzTooltipTitle="Create New Training" (click)="createNewTraining()"></i>
-                    <app-trainings></app-trainings>
-                </div>
-            </div>
-        </div>
-    </div>
--->
 </div>

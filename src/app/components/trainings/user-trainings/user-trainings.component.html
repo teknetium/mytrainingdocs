@@ -1,0 +1,68 @@
+<div style="width:100%;height:fit-content;font-size:12px;">
+    <nz-table nzSize="small" nzBordered="false" nzShowPagination="false" [nzData]="userTrainings"
+        style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
+        <thead>
+            <tr style="font-size:12px;">
+                <th>Status</th>
+                <th style="padding-left:40px;">Title</th>
+                <th style="padding-left:10px;">Due Date</th>
+                <th style="padding-left:10px;">Date Completed</th>
+                <th style="padding-left:30px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let userTraining of myTrainingsHash[userObj._id] | async; index as userTrainingIndex;"
+                style="cursor: pointer;font-size:12px;background-color: white;line-height:10px;">
+                {{userTraining}}
+                <td style="font-size:12px;width:7%;" nz-tooltip
+                    [nzTooltipTitle]="statusIconHash[userTraining.status].desc">
+                    <i nz-icon [nzType]="statusIconHash[userTraining.status].icon" [nzTheme]="'twotone'"
+                        [nzTwotoneColor]="statusIconHash[userTraining.status].color" style="font-size:18px;"></i>
+                </td>
+                <td style="font-size:12px;width:40%;">
+                    <i [ngClass]="trainingIdHash[userTraining.tid].iconClass"
+                        style="font-size:22px;margin-right:10px;vertical-align: middle;"
+                        [ngStyle]="{'color': trainingIdHash[userTraining.tid].iconColor}">
+                    </i>
+                    {{ trainingIdHash[userTraining.tid].title }}
+                </td>
+                <td *ngIf="mode === 'admin'" style="font-size:12px;width:16%;">
+                    <nz-date-picker nzFormat="MM-dd-yyyy" nzSize="small" [ngModel]="userTraining.dueDate"
+                        (ngModelChange)="updateDueDate($event, userTraining)">
+                    </nz-date-picker>
+                </td>
+                <td *ngIf="mode !== 'admin'" style="font-size:12px;width:16%;">
+                    {{ userTraining.dueDate | date:'mediumDate'}}
+                </td>
+                <td *ngIf="userTraining.dateCompleted > 0" style="font-size:12px;width:16%;">
+                    {{ userTraining.dateCompleted | date:'mediumDate'}}
+                </td>
+                <td *ngIf="userTraining.dateCompleted === 0" style="font-size:12px;width:16%;">
+                    &nbsp;&nbsp;
+                </td>
+                <td style="font-size:12px;width:20%;">
+                    <div class="action" (click)="viewTraining(userTraining._id, userTraining.tid)" nz-tooltip
+                        nzTooltipTitle="Play Training">
+                        <i nz-icon [nzType]="'play-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+                            style="font-size:18px;"></i>
+                    </div>
+                    <div *ngIf="!trainingIdHash[userTraining.tid].useAssessment && userTraining.status !== 'completed'"
+                        class="action" (click)="markAsComplete(userTraining._id)" nz-tooltip
+                        nzTooltipTitle="Mark as Complete">
+                        <i nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#4891f7'"
+                            style="font-size:18px;"></i>
+                    </div>
+                    <div *ngIf="mode === 'admin'" class="action" nz-popconfirm
+                        nzPopconfirmTitle="Delete this assigned training?" nz-tooltip
+                        nzTooltipTitle="Delete this assigned training"
+                        (nzOnConfirm)="confirmDeleteUserTraining(userTraining)">
+                        <i nz-icon [nzType]="'delete'" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
+                            style="font-size:18px;"></i>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>
+<app-training-viewer style="width:100%;height:100%;" production="true"
+    (assessmentResult)="processAssessmentResult($event)"></app-training-viewer>

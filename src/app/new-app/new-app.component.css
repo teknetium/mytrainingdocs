@@ -12,8 +12,27 @@
 	line-height: 64px;
 }
 
-nz-breadcrumb {
-	margin: 16px 0;
+.nav-badge-cell {
+  width:18px;
+  height: 18px;
+  border: 1px solid white;
+  border-radius: 50%;
+  background-color: #3e9c1c;
+  position: absolute;
+  top:10px;
+  right:4px;
+  font-size:10px;
+  color: white;
+  text-align: center;
+}
+
+.nav-badge {
+  color: cyan !important;
+  margin: 0 10px;
+}
+
+.nav-badge:hover {
+  color: cyan !important;
 }
 
 nz-content {
@@ -23,6 +42,9 @@ nz-content {
 nz-footer {
 	text-align: center;
 }
+.active-link {
+  color: cyan !important;
+}
 
 .inner-content {
 	background: #fff;
@@ -31,8 +53,11 @@ nz-footer {
 
 .ant-menu.ant-menu-dark .ant-menu-item-selected {
   background-color: #1a60a0 !important;
+  color: cyan !important;
 }
-
+.ant-menu.ant-menu-dark:hover .ant-menu-item-selected {
+    color: cyan !important;
+}
 .footer {
   position: fixed;
   bottom: 0;

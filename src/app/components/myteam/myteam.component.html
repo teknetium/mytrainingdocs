@@ -34,8 +34,10 @@
                         </div>
                     </div>
                 </div>
+                <!--
                 <app-theme-image width="150" height="150" popover="true" style="position:fixed;left:50px;bottom:50px;">
                 </app-theme-image>
+                -->
             </div>
             <div class="my-team-rightside" style="width:77%;">
                 <div *ngIf="selectedUser$ | async as selectedUser">
@@ -50,7 +52,7 @@
                         <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
                             style="cursor:pointer;font-size:16px;vertical-align: text-top;" nz-tooltip
                             nzTooltipTitle="Delete User" nz-popconfirm nzPopconfirmTitle="Delete this user?"
-                            (nzOnConfirm)="confirmDelete()"></i>
+                            (nzOnConfirm)="confirmDelete(selectedUser)"></i>
                     </div>
                     <nz-tabset nzTabPosition="top">
                         <nz-tab nzTitle="Trainings">
@@ -82,7 +84,7 @@
                                         nz-tooltip nzTooltipTitle="Assign a training to the user"
                                         (click)="showUserTrainingModal = true"></i>
                                     <div style="clear:both;margin-bottom:10px;"></div>
-                                    <app-my-trainings mode="admin" useBanner="no"></app-my-trainings>
+                                    <app-user-trainings mode="admin" type="team" [user]="selectedUser._id"></app-user-trainings>
                                 </div>
                             </div>
                         </nz-tab>

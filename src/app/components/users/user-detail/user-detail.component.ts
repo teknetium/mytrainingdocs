@@ -189,7 +189,7 @@ export class UserDetailComponent implements OnInit {
 
     console.log('submit user form', this.selectedUser);
     if (this.action && this.action === 'edit') {
-      this.userService.updateUser(this.selectedUser);
+      this.userService.updateUser(this.selectedUser, false);
     } else {
       this.userService.createNewUser(this.selectedUser);
     }

@@ -12,7 +12,7 @@ import { FileModel, Version } from 'src/app/shared/interfaces/file.type';
 import { UserModel } from 'src/app/shared/interfaces/user.type';
 import { VgAPI } from 'videogular2/compiled/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { merge } from 'rxjs/operators';
+import { merge, take } from 'rxjs/operators';
 import { SendmailService } from '../../../shared/services/sendmail.service';
 import { MessageModel } from '../../../shared/interfaces/message.type';
 
@@ -335,7 +335,7 @@ export class TrainingViewerComponent implements OnInit {
       this.pageFileHash[this.currentPageId].versions.unshift(newVersion);
     })
 
-    this.authenticatedUser$.subscribe(user => {
+    this.authenticatedUser$.pipe(take(2)).subscribe(user => {
       this.authenticatedUser = user;
     })
   }
@@ -433,13 +433,15 @@ export class TrainingViewerComponent implements OnInit {
 
   contentChanged(newVal: string, propName: string) {
     this.selectedTraining[propName] = newVal;
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
     this.setCurrentPage(this.currentPageId);
   }
 
   pageContentChanged(newVal: string, index: number, propName: string) {
     this.selectedTraining.pages[index][propName] = newVal;
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
     this.setCurrentPage(this.currentPageId);
   }
 
@@ -448,7 +450,8 @@ export class TrainingViewerComponent implements OnInit {
     page = this.selectedTraining.pages[index];
     page[propName] = newVal;
 
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
     this.setCurrentPage(this.currentPageId);
   }
 
@@ -466,7 +469,8 @@ export class TrainingViewerComponent implements OnInit {
   handleIconSelectConfirm() {
     this.selectedTraining.iconClass = this.tempIcon;
     this.selectedTraining.iconColor = this.tempIconColor;
-    this.trainingService.saveTraining(this.selectedTraining, true);
+//    this.trainingService.saveTraining(this.selectedTraining, true);
+    this.saveTraining(true);
     this.setCurrentPage(this.currentPageId);
 
     this.isIconSelectModalVisible = false;
@@ -552,14 +556,16 @@ export class TrainingViewerComponent implements OnInit {
 
     this.selectedTraining.assessment.items.push(newItem);
 
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
     this.setCurrentPage(this.currentPageId);
   }
 
   addNewChoice(itemIndex) {
     const newChoice = 'New Choice';
     this.selectedTraining.assessment.items[itemIndex].choices.push(newChoice);
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
 
     this.setCurrentPage(this.currentPageId);
   }
@@ -568,25 +574,29 @@ export class TrainingViewerComponent implements OnInit {
 
     console.log('questionChanged', item, itemIndex);
     this.selectedTraining.assessment.items[itemIndex] = item;
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
     this.setCurrentPage(this.currentPageId);
   }
 
   choiceContentChanged(choice: string, itemIndex: number, choiceIndex: number) {
     this.selectedTraining.assessment.items[itemIndex].choices[choiceIndex] = choice;
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
     this.setCurrentPage(this.currentPageId);
   }
 
   correctChoiceChanged(item, itemIndex) {
     this.selectedTraining.assessment.items[itemIndex] = item;
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
     console.log('correctChoiceChanged', item, itemIndex);
   }
 
   saveTraining(reload: boolean) {
-    //    console.log('saveTraining', model, event);
-    //    object[property] = model;
+    if (this.selectedTraining.teamId === 'mytrainingdocs') {
+      return;
+    }
     this.trainingService.saveTraining(this.selectedTraining, reload);
 
     this.setCurrentPage(this.currentPageId);
@@ -623,12 +633,14 @@ export class TrainingViewerComponent implements OnInit {
 
   confirmDeleteQuestion(questionIndex) {
     this.selectedTraining.assessment.items.splice(questionIndex, 1);
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
   }
 
   confirmDeletePage(pageIndex) {
     this.selectedTraining.pages.splice(pageIndex, 1);
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
     this.currentPageId = 'intro';
   }
 
@@ -654,12 +666,14 @@ export class TrainingViewerComponent implements OnInit {
     }
     this.selectedTraining.interestList.push(this.emailAddr);
     this.emailAddr = '';
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
   }
 
   deleteInterestListItem(index) {
     this.selectedTraining.interestList.splice(index, 1);
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
   }
 
   answeredQuestion(itemIndex) {
@@ -754,7 +768,8 @@ export class TrainingViewerComponent implements OnInit {
 
   assessmentChanged(event) {
     this.selectedTraining.assessment.passingGrade = event;
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
   }
 
   setCurrentHelpPanel(panelName: string): void {
@@ -794,6 +809,7 @@ export class TrainingViewerComponent implements OnInit {
     let pageToMove = this.selectedTraining.pages.splice(currentIndex, 1);
     this.selectedTraining.pages.splice(currentIndex + positions, 0, pageToMove[0]);
 
-    this.trainingService.saveTraining(this.selectedTraining, false);
+//    this.trainingService.saveTraining(this.selectedTraining, false);
+    this.saveTraining(false);
   }
 }

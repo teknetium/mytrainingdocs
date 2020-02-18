@@ -11,7 +11,6 @@ import { FooterComponent } from "./footer/footer.component";
 
 import { SideNavDirective } from "../directives/side-nav.directive";
 import { ThemeConstantService } from '../services/theme-constant.service';
-import { ThemeImageModule } from 'src/app/components/theme-image/theme-image.module';
 
 @NgModule({
     exports: [
@@ -25,7 +24,6 @@ import { ThemeImageModule } from 'src/app/components/theme-image/theme-image.mod
     imports: [
         RouterModule,
         SharedModule,
-        ThemeImageModule
     ],
     declarations: [
         HeaderComponent,

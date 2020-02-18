@@ -119,8 +119,6 @@ export class AppComponent implements OnInit {
   list = new Array<any>([]);
   isLoggedIn = false;
 
-  image$: Observable<string>;
-  imageBS$ = new BehaviorSubject<string>('');
   isIn = true;
   pauseYoga = false;
   helpIsClosed = true;
@@ -145,7 +143,6 @@ export class AppComponent implements OnInit {
     private zorroNotificationService: NzNotificationService,
     private fileService: FileService,
   ) {
-    this.image$ = this.imageBS$.asObservable();
   }
 
   ngOnInit(): void {

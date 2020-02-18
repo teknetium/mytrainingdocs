@@ -7,6 +7,7 @@ import { Observable, Subscription } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.type';
 import { EventModel } from '../../shared/interfaces/event.type';
 import { TrainingViewerComponent } from '../trainings/training-viewer/training-viewer.component';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -30,8 +31,9 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authenticatedUser$.subscribe(user => {
+    this.authenticatedUser$.pipe(take(2)).subscribe(user => {
       if (!user) {
+        console.log('home:init:authenticatedUser$.subscribe', user);
         return;
       }
 
@@ -46,7 +48,8 @@ export class HomeComponent implements OnInit {
   }
 
   saveName() {
-    this.userService.updateUser(this.authenticatedUser);
+    console.log('saveName', this.authenticatedUser);
+    this.userService.updateUser(this.authenticatedUser, true);
     this.showNewUserModal = false;
   }
 

@@ -28,6 +28,7 @@ import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
 import { MyTrainingsComponent } from './my-trainings/my-trainings.component';
 import { CalendarModule } from '../calendar/calendar.module';
+import { UserTrainingsComponent } from './user-trainings/user-trainings.component';
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import { CalendarModule } from '../calendar/calendar.module';
     TrainingsComponent,
     TrainingViewerComponent,
     MyTrainingsComponent,
+    UserTrainingsComponent,
   ],
   imports: [
     RouterModule,

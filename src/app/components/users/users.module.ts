@@ -16,7 +16,6 @@ import { NzAlertModule } from 'ng-zorro-antd';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { IconPickerModule } from 'ngx-icon-picker';
 import { NzDividerModule } from 'ng-zorro-antd';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzTypographyModule } from 'ng-zorro-antd';
@@ -55,7 +54,6 @@ import { UserDetailComponent } from './user-detail/user-detail.component';
     NzAvatarModule,
     NzRadioModule,
     NzCheckboxModule,
-    IconPickerModule,
     NzEmptyModule,
     NzModalModule
   ],

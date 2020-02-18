@@ -243,7 +243,7 @@ export class UsersComponent implements OnInit {
     this.selectedUser.firstName = nameArray[0];
     this.selectedUser.lastName = nameArray[1];
     if (user.userStatus !== 'new-user') {
-      this.userService.updateUser(user);
+      this.userService.updateUser(user, false);
     }
   }
 
@@ -262,7 +262,7 @@ export class UsersComponent implements OnInit {
 
   handleAddUser() {
     console.log('handleAddUser', this.newTeamMember);
-    this.userService.updateUser(this.authenticatedUser);
+    this.userService.updateUser(this.authenticatedUser, true);
     this.userService.createNewUser(this.newTeamMember);
     this.showNewUserModal = false;
   }

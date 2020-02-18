@@ -24,7 +24,6 @@ import { NzDropDownModule } from 'ng-zorro-antd';
 import { NzRadioModule } from 'ng-zorro-antd';
 
 import { FilesComponent } from './files.component';
-import { ThemeImageModule } from '../theme-image/theme-image.module';
 import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
 
@@ -43,7 +42,6 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
     NzCollapseModule,
     NzTableModule,
     NzRadioModule,
-    ThemeImageModule,
     NzButtonModule,
     NzIconModule,
     NzTabsModule,

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
+import { UserTrainingService } from './userTraining.service';
 import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
@@ -49,6 +50,7 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private auth: AuthService,
+    private userTrainingService: UserTrainingService,
     private router: Router,
     private eventService: EventService,
   ) {
@@ -60,18 +62,22 @@ export class UserService {
         user => {
           this.authenticatedUser = user;
           this.authenticatedUserBS$.next(this.authenticatedUser);
+          //this.authenticatedUserBS$.complete();
           this.logLoginEvent();
-          this.loadData();
+          if (user.userType === 'supervisor') {
+            this.loadData();
+          }
         },
         err => {
           this.getUserByEmail(profile.email).subscribe(
             res => {
               res.uid = profile.uid;
               res.userStatus = 'active';
-              this.updateUser(res);
+              this.updateUser(res, true);
               this.authenticatedUser = res;
               this.authenticatedUserBS$.next(this.authenticatedUser);
-              this.loadData();
+//              this.authenticatedUserBS$.complete();
+//              this.loadData();
             },
             err => {
               this.authenticatedUser = <UserModel>{
@@ -91,12 +97,12 @@ export class UserService {
                 supervisorId: null  
               }
 
-              this.newUser$ = this.postUser$(this.authenticatedUser);
-              this.newUser$.subscribe((data) => {
+              this.postUser$(this.authenticatedUser).subscribe((data) => {
                 this.authenticatedUser = data;
                 this.authenticatedUserBS$.next(this.authenticatedUser);
-                this.logLoginEvent();
-                this.authenticatedUserBS$.complete();
+//                this.authenticatedUserBS$.complete();
+//                this.logLoginEvent();
+                this.userTrainingService.assignTraining(this.authenticatedUser._id, this.authenticatedUser.userType);
 //                this.loadData();
                 //        this.router.navigate([`gettingstarted`]);
               });
@@ -139,9 +145,11 @@ export class UserService {
       if (!userList) {
         return;
       }
+
       this.myTeam = userList;
       this.myTeamBS$.next(this.myTeam);
       this.myTeamCntBS$.next(this.myTeam.length);
+/*
       let i;
       if (this.action === 'save') {
         i = this.selectedUserIndexBS$.value;
@@ -158,10 +166,11 @@ export class UserService {
       }
       this.selectUser(i);
       this.action = '';
+      */
     });
 
   }
-
+/*
   addNewUser() {
     const newUser = <UserModel>{
       _id: String(new Date().getTime()),
@@ -182,9 +191,11 @@ export class UserService {
     this.selectedUserBS$.next(newUser);
     this.selectedUserIndexBS$.next(-1);
   }
+  */
 
   createNewUser(user: UserModel) {
     this.postUser$(user).subscribe(data => {
+      this.userTrainingService.assignTraining(data._id, data.userType);
       this.loadData();
     })
   }
@@ -225,19 +236,22 @@ export class UserService {
   }
 
   selectUser(index: number) {
-    if (this.authenticatedUser.userType !== 'supervisor') {
-      return;
-    }
+//    if (this.authenticatedUser.userType !== 'supervisor') {
+//      return;
+//    }
     this.selectedUserBS$.next(this.myTeam[index]);
     this.selectedUserIndexBS$.next(index);
-    this.titleBS$.next('BLAH');
+//    this.titleBS$.next('BLAH');
     this.actionBS$.next('edit');
   }
 
-  updateUser(user: UserModel) {
+  updateUser(user: UserModel, isAuthenticatedUser: boolean) {
     this.action = 'save';
     this.putUser$(user).subscribe((updatedUser) => {
       this.loadData();
+      if (isAuthenticatedUser) {
+        this.authenticatedUserBS$.next(updatedUser);
+      }
     });
   }
 
@@ -251,6 +265,7 @@ export class UserService {
   getMyTeamCntStream(): Observable<number> {
     return this.myTeamCntBS$.asObservable();
   }
+
 
   getAuthenticatedUserStream(): Observable<UserModel> {
     return this.authenticatedUserBS$.asObservable();

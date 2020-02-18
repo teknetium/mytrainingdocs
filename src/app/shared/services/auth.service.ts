@@ -43,7 +43,7 @@ export class AuthService {
   };
   uid: string;
 
-  constructor(private router: Router, private location: Location) {
+  constructor(private router: Router) {
     //    this.isAuthenticated$.next(false);
     // If app auth token is not expired, request new token
     if (JSON.parse(localStorage.getItem('expires_at')) > Date.now()) {

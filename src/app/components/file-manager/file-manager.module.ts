@@ -18,7 +18,6 @@ import {
   NzEmptyModule
 } from 'ng-zorro-antd';
 import { FilesModule } from '../files/files.module';
-import { ThemeImageModule } from '../theme-image/theme-image.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 
@@ -40,7 +39,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     NzModalModule,
     FilesModule,
     NzIconModule,
-    ThemeImageModule,
     NzRadioModule,
     ReactiveFormsModule,
     FormsModule,

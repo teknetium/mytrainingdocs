@@ -38,7 +38,9 @@ export class TrainingService {
   trainingOptions: [{ label: string, value: string }] = [null];
   showEditor$ = new BehaviorSubject<boolean>(false);
   trainingIdHash = {};
+  systemTrainings: TrainingModel[] = [];
   teamId;
+  sysCnt = 0;
 
   // Using Angular DI we use the HTTP service
   constructor(private http: HttpClient, private auth: AuthService, private userService: UserService, private fileService: FileService) {
@@ -46,6 +48,13 @@ export class TrainingService {
     this.allTrainingCntBS$ = new BehaviorSubject<number>(this.allTrainings.length);
     this.myTrainingsBS$ = new BehaviorSubject<TrainingModel[]>(this.myTrainings);
     this.myTrainingCntBS$ = new BehaviorSubject<number>(this.myTrainings.length);
+    this.getTrainings$('mytrainingdocs').subscribe(systemTrainings => {
+      this.systemTrainings = systemTrainings;
+      for (const sysTraining of this.systemTrainings) {
+        this.sysCnt++;
+        this.trainingIdHash[sysTraining._id] = sysTraining;
+      }
+    });
     this.userService.getAuthenticatedUserStream().subscribe(user => {
       if (user) {
         this.authenticatedUser = user;
@@ -79,9 +88,14 @@ export class TrainingService {
       for (const training of this.allTrainings) {
         this.trainingIdHash[training._id] = training;
       }
+      
+      for (const sysTraining of this.systemTrainings) {
+        this.allTrainings.push(sysTraining);
+      }
+
       this.allTrainingsBS$.next(this.allTrainings);
       //      this.myTrainingCntBS$.next(this.myTrainings.length);
-      this.allTrainingCntBS$.next(this.allTrainings.length);
+      this.allTrainingCntBS$.next(this.allTrainings.length - this.sysCnt);
       this.selectItemForEditing(this.currentTrainingIndex, '');
 
     });
@@ -147,6 +161,10 @@ export class TrainingService {
   */
   setAction(action: string) {
     this.actionBS$.next(action);
+  }
+
+  getTrainingFromId(tid: string): TrainingModel {
+    return this.trainingIdHash[tid];;
   }
 
   getViewModeStream(): Observable<string> {
@@ -297,9 +315,8 @@ export class TrainingService {
     //    this.allTrainingsBS$.next(this.allTrainings);
     //    this.selectedTrainingIndexBS$.next(this.allTrainings.length - 1);
     this.postTraining$(newTraining).subscribe(trainingObj => {
-      this.loadData();
-      this.selectedTrainingIndexBS$.next(-1);
-      this.showEditor$.next(false);
+      this.allTrainings.push(trainingObj);
+      this.allTrainingsBS$.next(this.allTrainings);
     });
     this.actionBS$.next('newTraining');
     //    this.showSelectedIndexFeedbackBS$.next(true);
@@ -330,17 +347,15 @@ export class TrainingService {
 
   createTraining(training: TrainingModel) {
     this.postTraining$(training).subscribe(trainingObj => {
-      this.loadData();
-      this.showEditor$.next(false);
-      this.selectedTrainingIndexBS$.next(-1);
+      this.allTrainings.push(trainingObj);
+      this.allTrainingsBS$.next(this.allTrainings);
     });
   }
 
   deleteTraining(id: string) {
     this.deleteTraining$(id).subscribe(item => {
       this.allTrainings.splice(this.selectedTrainingIndexBS$.value, 1);
-      this.loadData();
-      this.showEditor$.next(false);
+      this.allTrainingsBS$.next(this.allTrainings);
       this.selectedTrainingIndexBS$.next(-1);
     })
   }
@@ -358,13 +373,12 @@ export class TrainingService {
   }
 
   saveTraining(training: TrainingModel, loadData: boolean) {
-    
+
     this.editTraining$(training).subscribe(data => {
 
       if (loadData) {
         this.loadData();
       }
-      //      this.selectItemForEditing(this.currentTrainingIndex);
     });
   }
 

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-callback',
@@ -9,7 +8,7 @@ import { Location } from '@angular/common';
 })
 export class CallbackComponent implements OnInit {
 
-  constructor(private auth: AuthService, private location: Location) {
+  constructor(private auth: AuthService) {
     // Check for authentication and handle if hash present
   }
 

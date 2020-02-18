@@ -2,6 +2,7 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AuthService } from '../shared/services/auth.service';
 import { TrainingService } from '../shared/services/training.service';
 import { UserService } from '../shared/services/user.service';
+import { UserTrainingService } from '../shared/services/userTraining.service';
 import { BehaviorSubject, Observable, from, Subscription } from 'rxjs';
 import { UserModel } from '../shared/interfaces/user.type';
 import { TrainingModel } from '../shared/interfaces/training.type';
@@ -90,6 +91,10 @@ export class NewAppComponent implements OnInit {
   isConfirmDeleteModalVisible = false;
   editId: string | null;
 
+  userTrainingCnt$: Observable<number>;
+  userTrainingCnt = 0;
+  myTeamCnt = 0;
+  trainingCnt = 0;
 
   userTypes = [
     {
@@ -140,6 +145,7 @@ export class NewAppComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private trainingService: TrainingService,
+    private userTrainingService: UserTrainingService,
     private router: Router,
     private notificationService: NotificationService,
     private zorroNotificationService: NzNotificationService,
@@ -161,6 +167,17 @@ export class NewAppComponent implements OnInit {
         return;
       }
       this.authenticatedUser = user;
+      this.userTrainingCnt$ = this.userTrainingService.getUserTrainingCntStream();
+//      this.userTrainingService.loadTrainingsForUser(this.authenticatedUser._id);
+      this.userTrainingCnt$.subscribe(cnt => {
+        this.userTrainingCnt = cnt;
+      })
+      this.myTeam$.subscribe(team => {
+        this.myTeamCnt = team.length;
+      })
+      this.allTrainings$.subscribe(trainings => {
+        this.trainingCnt = trainings.length;
+      })
     })
     this.currentYogaImageNumber = 0;
   };

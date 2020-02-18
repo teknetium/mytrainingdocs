@@ -35,8 +35,6 @@ export class CalendarComponent implements OnInit {
   userTrainings$: Observable<UserTrainingModel[]>;
   selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
-  daysBS$ = new BehaviorSubject<Day[]>([]);
-  days$: Observable<Day[]> = this.daysBS$.asObservable();
   days: Day[];
   today = new Date();
   currentDayOfWeek: number = this.today.getDay();
@@ -60,7 +58,6 @@ export class CalendarComponent implements OnInit {
   constructor(private userService: UserService,
     private userTrainingService: UserTrainingService,
     private trainingService: TrainingService) {
-    this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
     this.trainings$ = this.trainingService.getAllTrainingsObservable();
     this.selectedUser$ = this.userService.getSelectedUserStream();
 
@@ -91,6 +88,8 @@ export class CalendarComponent implements OnInit {
         return;
       }
       this.selectedUser = user;
+      this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
+
       this.userTrainingService.loadTrainingsForUser(this.selectedUser._id);
     });
 
@@ -131,12 +130,14 @@ export class CalendarComponent implements OnInit {
         this.calendarHeight = this.visibleMonthCnt * 34;
 
 
-        this.trainings$.subscribe(trainings => {
+        let sub: Subscription;
+        sub = this.trainings$.subscribe(trainings => {
           this.trainings = trainings;
           for (let i = 0; i < this.trainings.length; i++) {
             this.trainingIdHash[this.trainings[i]._id] = this.trainings[i];
           }
         })
+        sub.unsubscribe();
       }
 
 

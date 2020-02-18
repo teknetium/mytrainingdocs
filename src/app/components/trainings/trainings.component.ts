@@ -9,6 +9,7 @@ import { UserModel } from '../../shared/interfaces/user.type';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { UserService } from '../../shared/services/user.service';
 import { Router } from '@angular/router';
+import { take } from 'rxjs/operators';
 
 
 @Component({
@@ -28,6 +29,8 @@ export class TrainingsComponent implements OnInit {
   cursor = '';
   edit = false;
   toolbarItem = '';
+  showSystemTrainingsStateBS$ = new BehaviorSubject<boolean>(false);
+  showSystemTrainingsState$ = this.showSystemTrainingsStateBS$.asObservable();
   
   listOfOption: Array<{ label: string; value: string }> = [];
   listOfSelectedValue = [];
@@ -61,7 +64,7 @@ export class TrainingsComponent implements OnInit {
 
   ngOnInit() {
     this.selectItem(-1);
-    this.authenticatedUser$.subscribe((user) => {
+    this.authenticatedUser$.pipe(take(2)).subscribe((user) => {
       if (!user) {
         return;
       }
@@ -95,6 +98,12 @@ export class TrainingsComponent implements OnInit {
       })
 
     });
+  }
+
+  showSystemTrainingStateChanged(event) {
+    console.log('showSystemTrainingsStateChanged', event);
+    this.showSystemTrainingsStateBS$.next(event);
+    this.selectItem(-1);
   }
 
   newTraining() {
