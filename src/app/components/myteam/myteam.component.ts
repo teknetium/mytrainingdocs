@@ -11,8 +11,7 @@ import { TrainingModel } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
 import { MessageModel } from '../../shared/interfaces/message.type';
-import { UserTrainingModel } from '../../shared/interfaces/userTraining.type';
-import { take } from 'rxjs/operators';
+import { take, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-myteam',
@@ -54,8 +53,11 @@ export class MyteamComponent implements OnInit {
     pastdue: 'red'
   }
   trainings$: Observable<TrainingModel[]>;
+  assignableTrainings: TrainingModel[] = [];
   trainings: TrainingModel[] = [];
+  selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
+  selectedUserIndex$: Observable<number>;
   selectedUserIndex: number;
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
@@ -102,9 +104,18 @@ export class MyteamComponent implements OnInit {
     this.myTeam$ = this.userService.getMyTeamStream();
     this.trainings$ = this.trainingService.getAllTrainingsObservable();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
+    this.selectedUser$ = this.userService.getSelectedUserStream();
+    this.selectedUserIndex$ = this.userService.getSelectedUserIndexStream();
   }
 
   ngOnInit() {
+    this.trainings$.subscribe(trainings => {
+      for (let training of trainings) {
+        if (training.owner !== 'mytrainingdocs') {
+          this.assignableTrainings.push(training);
+        }
+      }
+    })
     this.authenticatedUser$.pipe(take(2)).subscribe(user => {
       if (!user) {
         return;
@@ -125,8 +136,22 @@ export class MyteamComponent implements OnInit {
         this.userIndexHash[this.myTeam[i]._id] = i;
         this.userHash[this.myTeam[i]._id] = this.myTeam[i];
       }
+
+      this.userService.selectUser(0);
+    });
+    this.selectedUserIndex$.subscribe(index => {
+      this.userIndexSelected = index;
+    })
+
+    this.selectedUser$.subscribe(user => {
+      if (!user) {
+        return;
+      }
+      this.trainingService.selectItemForEditing(-1, '');
+      this.selectedUser = user;
     });
 
+    /*
     this.trainings$.subscribe(trainings => {
       this.trainings = trainings;
 
@@ -135,19 +160,7 @@ export class MyteamComponent implements OnInit {
       //        }
     });
 
-    /*
-    this.selectedUser$.subscribe(user => {
-      if (!user) {
-        return;
-      }
-      this.selectedUser = user;
-      this.userTrainingService.loadTrainingsForUser(this.selectedUser._id);
-    });
-
-    this.selectedUserIndex$.subscribe(index => {
-      this.userIndexSelected = index;
-    })
-    */
+*/
   }
 
   addUser() {
@@ -182,13 +195,17 @@ export class MyteamComponent implements OnInit {
   }
 
   handleAssignUserTraining() {
-    this.userTrainingService.assignTraining(this.selectedUser._id, this.trainings[this.selectedTrainingIndex]._id);
+    if (this.selectedTrainingIndex === -1) {
+      this.showUserTrainingModal = false;
+      return;
+    }
+    console.log('handleAssignUserTraining', this.assignableTrainings, this.selectedUser);
+    this.userTrainingService.assignTraining(this.selectedUser._id, this.assignableTrainings[this.selectedTrainingIndex]._id);
     this.showUserTrainingModal = false;
   }
 
   selectUser(index) {
-    this.userIndexSelected = index;
-
+    this.userService.selectUser(index);
     //      this.selectedUserBS$.next(this.myTeam[index]);
   }
   //    this.trainingService.selectItemForEditing(index, );

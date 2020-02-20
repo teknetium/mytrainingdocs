@@ -108,7 +108,6 @@ export class TrainingsComponent implements OnInit {
 
   newTraining() {
     this.trainingService.addNewTraining();
-    // this.trainingService.changeEditorVisualState(false);
   }
   confirmDelete() {
     this.trainingService.deleteTraining(this.trainings[this.selectedItemIndex]._id);

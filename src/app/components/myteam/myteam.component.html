@@ -57,15 +57,18 @@
                     <nz-tabset nzTabPosition="top">
                         <nz-tab nzTitle="Trainings">
                             <div style="width:100%;">
-                                <nz-modal [(nzVisible)]="showUserTrainingModal" nzTitle="Assign Training To User"
+                                <nz-modal [(nzVisible)]="showUserTrainingModal" nzTitle="Assign Training To User" [nzCancelDisabled]="assignableTrainings.length === 0"
                                     (nzOnCancel)="handleCancelUserTraining()" (nzOnOk)="handleAssignUserTraining()"
                                     style="width:500px;padding:10px;float:left;">
                                     <div>
                                         <div style="background-color:white;display:inline-block;width:100%;">
-                                            <div *ngFor="let training of trainings$ | async; index as allTrainingIndex;"
+                                            <div *ngIf="assignableTrainings.length === 0">
+                                                You have not created any trainings yet!<br>  Head over to the <span style="color:blue;">All Trainings</span> page to create your trainings.
+                                            </div>
+                                            <div *ngFor="let training of assignableTrainings; index as assignableTrainingIndex;"
                                                 class="all-training-list-entry" style="padding:10px 0;width:100%;"
-                                                [ngClass]="{'selected-training': selectedTrainingIndex === allTrainingIndex}"
-                                                (click)="selectedTrainingIndex = allTrainingIndex">
+                                                [ngClass]="{'selected-training': selectedTrainingIndex === assignableTrainingIndex}"
+                                                (click)="selectedTrainingIndex = assignableTrainingIndex">
                                                 <i [ngClass]="training.iconClass"
                                                     style="display:inline-block;font-size:20px;margin-right:10px;vertical-align: middle;"
                                                     [ngStyle]="{'color': training.iconColor}">
@@ -84,7 +87,7 @@
                                         nz-tooltip nzTooltipTitle="Assign a training to the user"
                                         (click)="showUserTrainingModal = true"></i>
                                     <div style="clear:both;margin-bottom:10px;"></div>
-                                    <app-user-trainings mode="admin" type="team" [user]="selectedUser._id"></app-user-trainings>
+                                    <app-user-trainings></app-user-trainings>
                                 </div>
                             </div>
                         </nz-tab>

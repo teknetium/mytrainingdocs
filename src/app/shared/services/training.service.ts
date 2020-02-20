@@ -36,7 +36,6 @@ export class TrainingService {
   actionBS$ = new BehaviorSubject<string>('');
   trainingsForSelectBS$ = new BehaviorSubject<{ label: string, value: string }[]>([]);
   trainingOptions: [{ label: string, value: string }] = [null];
-  showEditor$ = new BehaviorSubject<boolean>(false);
   trainingIdHash = {};
   systemTrainings: TrainingModel[] = [];
   teamId;
@@ -101,14 +100,6 @@ export class TrainingService {
     });
   }
 
-  getShowEditorStream() {
-    return this.showEditor$.asObservable();
-  }
-
-  changeEditorVisualState(newState) {
-    this.showEditor$.next(newState);
-    this.selectedTrainingIndexBS$.next(-1);
-  }
 
   getTrainingOptionsStream(): Observable<{ label: string, value: string }[]> {
     return this.trainingsForSelectBS$.asObservable();
@@ -122,17 +113,14 @@ export class TrainingService {
     if (index < 0 || index >= this.allTrainings.length) {
       //      this.showSelectedItemBS$.next(false);
       //      this.showSelectedIndexFeedbackBS$.next(false);
-      this.showEditor$.next(false);
       this.selectedTrainingIndexBS$.next(-1);
       this.currentTrainingIndex = -1;
       this.setAction('');
       this.selectedTrainingBS$.next(null);
-      return;
     }
 
     this.currentTrainingIndex = index;
 
-    this.showEditor$.next(true);
     this.selectedTrainingBS$.next(this.allTrainings[index]);
     this.selectedTrainingIndexBS$.next(index);
     this.actionBS$.next('editTraining');
@@ -311,19 +299,11 @@ export class TrainingService {
       interestList: [],
       shared: false
     };
-    //    this.allTrainings.push(newTraining);
-    //    this.allTrainingsBS$.next(this.allTrainings);
-    //    this.selectedTrainingIndexBS$.next(this.allTrainings.length - 1);
     this.postTraining$(newTraining).subscribe(trainingObj => {
       this.allTrainings.push(trainingObj);
       this.allTrainingsBS$.next(this.allTrainings);
     });
     this.actionBS$.next('newTraining');
-    //    this.showSelectedIndexFeedbackBS$.next(true);
-    //    this.showSelectedItemBS$.next(true);
-    //    this.selectedTrainingBS$.next(newTraining);
-    //    this.showEditor$.next(true);
-
   }
 
   addNewPage(trainingId: string, type: string, url: string, fileId: string, pageTitle: string) {

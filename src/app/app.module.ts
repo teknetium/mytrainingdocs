@@ -10,7 +10,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { TemplateModule } from './shared/template/template.module';
 import { SharedModule } from './shared/shared.module';
 import { DashboardModule } from './dashboard/dashboard.module';
-import { FileManagerModule } from './components/file-manager/file-manager.module';
 
 import { AppComponent } from './app.component';
 
@@ -55,7 +54,6 @@ registerLocaleData(en);
         SharedModule,
         NgChartjsModule,
         DashboardModule,
-        FileManagerModule,
         LandingpageModule,
         CallbackModule,
         FilesModule,

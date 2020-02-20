@@ -168,7 +168,7 @@ export class NewAppComponent implements OnInit {
       }
       this.authenticatedUser = user;
       this.userTrainingCnt$ = this.userTrainingService.getUserTrainingCntStream();
-//      this.userTrainingService.loadTrainingsForUser(this.authenticatedUser._id);
+      this.userTrainingService.loadTrainingsForUser(this.authenticatedUser._id);
       this.userTrainingCnt$.subscribe(cnt => {
         this.userTrainingCnt = cnt;
       })

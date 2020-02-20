@@ -17,6 +17,8 @@
     <div *ngIf="useBanner === 'yes'" class="my-team-header">
         <span style="display:inline-block;font-size:24px;font-weight: 300;margin-bottom:20px;">My Trainings</span>
     </div>
+    <app-user-trainings></app-user-trainings>
+    <!--
     <div style="text-align:center;display:block;width:100%;margin-bottom:5px;font-size:12px;">
         <nz-table nzSize="small" nzBordered="false" nzShowPagination="false" [nzData]="userTrainings"
             style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
@@ -91,6 +93,7 @@
             <textarea style="display:block;" rows="4" nz-input [(ngModel)]="inputValue"></textarea>
         </nz-modal>
     </div>
+    -->
     <app-training-viewer style="width:100%;height:100%;" production="true"
         (assessmentResult)="processAssessmentResult($event)"></app-training-viewer>
 </div>

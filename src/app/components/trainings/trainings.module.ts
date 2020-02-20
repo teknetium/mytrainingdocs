@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TrainingsComponent } from './trainings.component';
 import { TrainingViewerComponent } from './training-viewer/training-viewer.component';
 
-import { NzTableModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule, NzCommentModule, NzAvatarModule, NzListModule, NzDropDownModule, NzStepsModule, NzCalendarModule, NzDatePickerModule } from 'ng-zorro-antd';
+import { NzTableModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule, NzCommentModule, NzAvatarModule, NzListModule, NzDropDownModule, NzStepsModule, NzCalendarModule, NzDatePickerModule, NzCollapseModule } from 'ng-zorro-antd';
 import { NzButtonModule } from 'ng-zorro-antd';
 import { NzIconModule } from 'ng-zorro-antd';
 import { NzTagModule } from 'ng-zorro-antd';
@@ -21,7 +21,6 @@ import { NzAlertModule } from 'ng-zorro-antd';
 import { RouterModule } from '@angular/router';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { FilesModule } from '../files/files.module';
-import { FileManagerModule } from '../file-manager/file-manager.module';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
 import { VgCoreModule } from 'videogular2/compiled/core';
@@ -60,7 +59,6 @@ import { UserTrainingsComponent } from './user-trainings/user-trainings.componen
     NzIconModule,
     NzStepsModule,
     FilesModule,
-    FileManagerModule,
     NzButtonModule,
     NzTypographyModule,
     NzTabsModule,
@@ -83,12 +81,14 @@ import { UserTrainingsComponent } from './user-trainings/user-trainings.componen
     NzSwitchModule,
     NzCalendarModule,
     CalendarModule,
-    NzDatePickerModule
+    NzDatePickerModule,
+    NzCollapseModule
   ],
   exports: [
     TrainingsComponent,
     TrainingViewerComponent,
-    MyTrainingsComponent
+    MyTrainingsComponent,
+    UserTrainingsComponent
   ]
 })
 export class TrainingsModule { }

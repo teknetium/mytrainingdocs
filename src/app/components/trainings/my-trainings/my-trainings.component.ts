@@ -40,8 +40,6 @@ export class MyTrainingsComponent implements OnInit {
   @Input() mode = '';
   @Input() useBanner = 'yes';
 
-
-
   currentUserTraining = '';
   markCompletedModalIsVisible = false;
 
@@ -49,31 +47,22 @@ export class MyTrainingsComponent implements OnInit {
     private trainingService: TrainingService,
     private userService: UserService) {
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
-    this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
-    this.trainings$ = this.trainingService.getAllTrainingsObservable();
-    this.selectedUser$ = this.userService.getSelectedUserStream();
+//    this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
+//    this.trainings$ = this.trainingService.getAllTrainingsObservable();
+//    this.selectedUser$ = this.userService.getSelectedUserStream();
   }
 
   ngOnInit() {
-
-
-    /*
-        this.userTrainings$.subscribe(list => {
-          this.userTrainings = list;
-          console.log('userTraining$', list);
-        });
-    */
-    /*
-    this.trainings$.pipe(take(1)).subscribe(list => {
-      this.trainings = list;
-      console.log('mytraining', this.trainings);
-      for (let i = 0; i < this.trainings.length; i++) {
-        console.log('mytraining', list[i]._id);
-        this.trainingIdHash[list[i]._id] = this.trainings[i];
-        this.trainingIndexHash[list[i]._id] = i;
+    this.trainingService.selectItemForEditing(-1, '');
+    this.authenticatedUser$.pipe(take(2)).subscribe(user => {
+      if (!user) {
+        console.log('mt-training:authenticatedUser$.subscribe...null user');
+        return;
       }
+
+      this.userService.selectAuthenticatedUser(user);
     });
-    */
+/*
     this.selectedUser$.subscribe(data => {
       if (!data) {
         console.log('mt-training:selectedUser$.subscribe...null user');
@@ -83,12 +72,6 @@ export class MyTrainingsComponent implements OnInit {
       this.userTrainingService.loadTrainingsForUser(this.userObj._id);
       console.log('myTrainings:selectedUser$.subscribe...', data);
     })
-    /*
-    this.authenticatedUser$.pipe(take(2)).subscribe(user => {
-      if (!user) {
-        console.log('mt-training:authenticatedUser$.subscribe...null user');
-        return;
-      }
       this.authenticatedUser = user;
       if (this.type === 'authenticatedUser') {
         this.selectedUser = user;
@@ -103,7 +86,6 @@ export class MyTrainingsComponent implements OnInit {
         console.log('my-trainings...foo', list);
       })
     })
-    */
 
 
     /*
@@ -119,38 +101,4 @@ export class MyTrainingsComponent implements OnInit {
         */
   }
 
-  viewTraining(utid, tid) {
-    this.currentUserTraining = utid;
-    this.trainingIsVisible = true;
-    this.trainingService.selectItemForEditing(this.trainingIndexHash[tid], utid);
-  }
-
-  confirmDeleteUserTraining(ut) {
-    this.userTrainingService.deleteUserTraining(ut._id, ut.uid)
-  }
-
-  handleMarkAsCompletedCancel() {
-    this.markCompletedModalIsVisible = false;
-  }
-
-  markAsComplete(utid: string) {
-    this.currentUserTraining = utid;
-    this.markCompletedModalIsVisible = true;
-
-  }
-
-  updateDueDate(event, ut) {
-    let newDueDate = new Date(event).getTime();
-    ut.dueDate = newDueDate;
-    this.userTrainingService.saveUserTraining(ut);
-  }
-
-  markTrainingAsComplete() {
-    this.markCompletedModalIsVisible = false;
-    this.userTrainingService.markUserTrainingAsComplete(this.currentUserTraining);
-  }
-
-  processAssessmentResult(event: { tid: string, score: number, pass: boolean }) {
-    this.userTrainingService.setAssessmentResult(this.selectedUser._id, event.tid, event.score, event.pass);
-  }
 }

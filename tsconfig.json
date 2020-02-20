@@ -1,5 +1,6 @@
 {
   "compileOnSave": false,
+  "importHelpers": true,
   "compilerOptions": {
     "baseUrl": "./",
     "downlevelIteration": true,
@@ -20,6 +21,8 @@
     ],
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "importHelpers": true,
+  },
+    "enableIvy": false
   }
-}

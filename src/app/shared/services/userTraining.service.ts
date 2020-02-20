@@ -46,15 +46,20 @@ export class UserTrainingService {
       assessmentResponse: []
     };
     this.postUserTraining$(userTraining).subscribe(userTraining => {
+      if (!this.utHash[uid]) {
+        this.utHash[uid] = [];
+      }
+      this.utHash[uid].push(userTraining);
+/*
       this.getUTForUser$(uid).subscribe(list => { 
         console.log('userTrainingService', list);
         this.utHash[uid] = list;
         for (let ut of list) {
           this.utIdHash[ut._id] = ut;
         }
-        this.userTrainingsBS$.next(list);
-        this.userTrainingCntBS$.next(list.length);
-      })
+        */
+      this.userTrainingsBS$.next(this.utHash[uid]);
+      this.userTrainingCntBS$.next(this.utHash[uid].length);
     })
   }
 
@@ -108,17 +113,22 @@ export class UserTrainingService {
   }
   
   loadTrainingsForUser(userId) {
-    console.log('loadTrainingsForUser...userId', userId);
-    this.getUTForUser$(userId).subscribe(list => {
-      console.log('loadTrainingsForUser...ut list', list);
-      this.utHash[userId] = list;
-      for (let userTraining of list) {
-        this.utIdHash[userTraining._id] = userTraining;
-      }
-      this.userTrainingsBS$.next(list);
-
-      this.userTrainingCntBS$.next(list.length);
+//    console.log('loadTrainingsForUser...userId', userId);
+    if (!this.utHash[userId]) {
+//      console.log('loadTrainingsForUser...no hash entry', this.utHash[userId]);
+      this.getUTForUser$(userId).subscribe(list => {
+        this.utHash[userId] = Object.assign([], list);
+        for (let userTraining of list) {
+          this.utIdHash[userTraining._id] = userTraining;
+        }
+        this.userTrainingsBS$.next(this.utHash[userId]);
+        this.userTrainingCntBS$.next(this.utHash[userId].length);
       })
+    } else {
+//      console.log('loadTrainingsForUser...ut list', this.utHash[userId]);
+      this.userTrainingsBS$.next(this.utHash[userId]);
+      this.userTrainingCntBS$.next(this.utHash[userId].length);
+    }
   }
 
   private get _authHeader(): string {

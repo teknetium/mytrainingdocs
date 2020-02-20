@@ -11,9 +11,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let userTraining of myTrainingsHash[userObj._id] | async; index as userTrainingIndex;"
+            <tr *ngFor="let userTraining of userTrainings$ | async; index as userTrainingIndex;"
                 style="cursor: pointer;font-size:12px;background-color: white;line-height:10px;">
-                {{userTraining}}
                 <td style="font-size:12px;width:7%;" nz-tooltip
                     [nzTooltipTitle]="statusIconHash[userTraining.status].desc">
                     <i nz-icon [nzType]="statusIconHash[userTraining.status].icon" [nzTheme]="'twotone'"

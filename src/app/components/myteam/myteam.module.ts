@@ -27,7 +27,7 @@ import { TrainingsModule } from '../trainings/trainings.module';
     NzPopconfirmModule,
     NzButtonModule,
     NzCollapseModule,
-    NzTableModule
+    NzTableModule,
   ],
   exports: [
     MyteamComponent
