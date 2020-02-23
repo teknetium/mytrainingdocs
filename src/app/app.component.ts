@@ -110,26 +110,10 @@ export class AppComponent implements OnInit {
 
   fileIdToDelete: string;
 
-  myTrainings$: Observable<TrainingModel[]>;
-  allTrainings$: Observable<TrainingModel[]>;
-  myTeam$: Observable<UserModel[]>;
-  files$: Observable<FileModel[]>;
-  isAuthenticated$: Observable<boolean>;
 
   list = new Array<any>([]);
   isLoggedIn = false;
 
-  isIn = true;
-  pauseYoga = false;
-  helpIsClosed = true;
-  imageBase = '../assets/yoga';
-  dogImageBase = '../assets/dog';
-  yogaImage = '';
-  useYogaImages = false;
-  currentYogaImageNumber = 1;
-  currentDogImageNumber = 1;
-  numYogaImages = 28;
-  themeValue = 'dogs';
   searchVisible: boolean = false;
   quickViewVisible: boolean = false;
 
@@ -146,22 +130,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.myTeam$ = this.userService.getMyTeamStream();
-    this.allTrainings$ = this.trainingService.getAllTrainingsObservable();
-    this.myTrainings$ = this.trainingService.getMyTrainingsObservable();
-    this.files$ = this.fileService.getFilesStream();
-    this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
 
-    this.currentYogaImageNumber = 0;
   };
-
-  newTheme(val) {
-    if (val === 'dogs') {
-      this.useYogaImages = false;
-    } else if (val === 'yoga') {
-      this.useYogaImages = true;
-    }
-  }
 
 
   toString(file) {
@@ -169,47 +139,6 @@ export class AppComponent implements OnInit {
     return '';
   }
 
-  pauseYogaSequence() {
-    this.pauseYoga = true;
-  }
-
-  toggleHelp() {
-    this.helpIsClosed = !this.helpIsClosed;
-  }
-
-  save(i: number, event: MouseEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.editId = '';
-    this.fileService.saveFile(this.localFiles[i]);
-  }
-
-  handleCancel(): void {
-    this.isConfirmDeleteModalVisible = false;
-  }
-
-  handleOk(): void {
-    /*
-    this.fileService.deleteFile(this.fileIdToDelete).subscribe(data => {
-      this.fileService.loadData();
-      this.zorroNotificationService.create('success', 'Delete Successful.', '');
-    });
-    this.isConfirmDeleteModalVisible = false;
-
-     */
-  }
-
-  signup() {
-    this.authService.signup();
-  }
-
-  login() {
-    this.authService.login();
-  }
-
-  logout() {
-    this.authService.logout();
-  }
   searchToggle(): void {
     this.searchVisible = !this.searchVisible;
   }
@@ -217,32 +146,5 @@ export class AppComponent implements OnInit {
   quickViewToggle(): void {
     this.quickViewVisible = !this.quickViewVisible;
   }
-
-  notificationList = [
-    {
-      title: 'You received a new message',
-      time: '8 min',
-      icon: 'mail',
-      color: 'ant-avatar-' + 'blue'
-    },
-    {
-      title: 'New user registered',
-      time: '7 hours',
-      icon: 'user-add',
-      color: 'ant-avatar-' + 'cyan'
-    },
-    {
-      title: 'System Alert',
-      time: '8 hours',
-      icon: 'warning',
-      color: 'ant-avatar-' + 'red'
-    },
-    {
-      title: 'You have a new update',
-      time: '2 days',
-      icon: 'sync',
-      color: 'ant-avatar-' + 'gold'
-    }
-  ];
 
 }

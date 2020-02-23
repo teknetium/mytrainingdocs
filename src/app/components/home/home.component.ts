@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
 
       this.authenticatedUser = user;
       if (this.authenticatedUser.userType !== 'supervisor') {
-        this.userService.selectAuthenticatedUser(this.authenticatedUser);
+        this.userService.selectAuthenticatedUser();
       }
       if (this.authenticatedUser.firstName === '') {
         this.showNewUserModal = true;

@@ -4,7 +4,7 @@ import { UserTrainingService } from '../../shared/services/userTraining.service'
 import { TrainingService } from '../../shared/services/training.service';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { UserModel } from 'src/app/shared/interfaces/user.type';
-import { UserTrainingModel } from 'src/app/shared/interfaces/userTraining.type';
+import { UserTrainingModel, UserTrainingHash } from 'src/app/shared/interfaces/userTraining.type';
 import { TrainingModel } from 'src/app/shared/interfaces/training.type';
 
 interface Day {
@@ -32,7 +32,7 @@ export class CalendarComponent implements OnInit {
 
   trainings$: Observable<TrainingModel[]>;
   trainings: TrainingModel[];
-  userTrainings$: Observable<UserTrainingModel[]>;
+  userTrainingHash$: Observable<UserTrainingHash>;
   selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
   days: Day[];
@@ -58,7 +58,6 @@ export class CalendarComponent implements OnInit {
   constructor(private userService: UserService,
     private userTrainingService: UserTrainingService,
     private trainingService: TrainingService) {
-    this.trainings$ = this.trainingService.getAllTrainingsObservable();
     this.selectedUser$ = this.userService.getSelectedUserStream();
 
     for (let i = 0; i < 12; i++) {
@@ -88,14 +87,14 @@ export class CalendarComponent implements OnInit {
         return;
       }
       this.selectedUser = user;
-      this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
+      this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
 
       this.userTrainingService.loadTrainingsForUser(this.selectedUser._id);
     });
 
 
-    this.userTrainings$.subscribe(userTrainings => {
-
+    this.userTrainingHash$.subscribe(utHash => {
+      let userTrainings = Object.values(utHash);
       // reset earlistMonth and latestMonth
       this.earliestMonth = 11;
       this.latestMonth = 0;

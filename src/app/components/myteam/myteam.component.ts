@@ -5,9 +5,9 @@ import { EventService } from '../../shared/services/event.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { TrainingService } from '../../shared/services/training.service';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { UserModel } from '../../shared/interfaces/user.type';
+import { UserModel, UserIdHash } from '../../shared/interfaces/user.type';
 import { EventModel } from '../../shared/interfaces/event.type';
-import { TrainingModel } from 'src/app/shared/interfaces/training.type';
+import { TrainingModel, TrainingIdHash } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
 import { MessageModel } from '../../shared/interfaces/message.type';
@@ -52,19 +52,18 @@ export class MyteamComponent implements OnInit {
     uptodate: '#52c41a',
     pastdue: 'red'
   }
-  trainings$: Observable<TrainingModel[]>;
+  allTrainingIdHash$: Observable<TrainingIdHash>;
+  allTrainingIdHash: TrainingIdHash = {};
   assignableTrainings: TrainingModel[] = [];
   trainings: TrainingModel[] = [];
   selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
-  selectedUserIndex$: Observable<number>;
-  selectedUserIndex: number;
+  selectedUserId: string;
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
-  myTeam: UserModel[];
-  myTeam$: Observable<UserModel[]>;
-  userHash = {};
-  userIndexHash = {};
+  myTeamIdHash: UserIdHash;
+  myTeam: UserModel[] = [];
+  myTeamIdHash$: Observable<UserIdHash>;
   showNewUserModal = false;
   supervisorSelected = false;
   newTeamMember: UserModel = {
@@ -84,14 +83,9 @@ export class MyteamComponent implements OnInit {
     jobTitle: ''
   }
   message: MessageModel;
-  userIndexSelected = 0;
-  myTeamHelpPanelIsVisible = true;
-  myTeamTrainingsHelpPanelIsVisible = true;
-  currentTab = 'myTeamTrainings';
-  assignmentList: string[] = [];
   showUserTrainingModal = false;
-  selectedTrainingIndex = -1;
-
+  userIdSelected = '';
+  selectedTrainingId = null;
 
   constructor(
     private authService: AuthService,
@@ -101,21 +95,13 @@ export class MyteamComponent implements OnInit {
     private userTrainingService: UserTrainingService,
     private trainingService: TrainingService
   ) {
-    this.myTeam$ = this.userService.getMyTeamStream();
-    this.trainings$ = this.trainingService.getAllTrainingsObservable();
+    this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
+    this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
-    this.selectedUserIndex$ = this.userService.getSelectedUserIndexStream();
   }
 
   ngOnInit() {
-    this.trainings$.subscribe(trainings => {
-      for (let training of trainings) {
-        if (training.owner !== 'mytrainingdocs') {
-          this.assignableTrainings.push(training);
-        }
-      }
-    })
     this.authenticatedUser$.pipe(take(2)).subscribe(user => {
       if (!user) {
         return;
@@ -125,30 +111,36 @@ export class MyteamComponent implements OnInit {
       this.newTeamMember.supervisorId = this.authenticatedUser.uid;
       this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
       this.newTeamMember._id = String(new Date().getTime());
+      this.allTrainingIdHash$.subscribe(allTrainingIdHash => {
+        this.allTrainingIdHash = allTrainingIdHash;
+        let trainings = Object.values(this.allTrainingIdHash);
+        this.assignableTrainings = [];
+        for (let training of trainings) {
+          if (training.teamId === this.authenticatedUser.uid) {
+            this.assignableTrainings.push(training);
+          }
+        }
+      })
     })
-    this.myTeam$.subscribe(userList => {
-      if (!userList) {
+    this.myTeamIdHash$.subscribe(myTeamIdHash => {
+      if (!myTeamIdHash) {
         return;
       }
-      this.myTeam = userList;
+      this.myTeamIdHash = myTeamIdHash;
+      this.myTeam = Object.values(this.myTeamIdHash);
 
-      for (let i = 0; i < this.myTeam.length; i++) {
-        this.userIndexHash[this.myTeam[i]._id] = i;
-        this.userHash[this.myTeam[i]._id] = this.myTeam[i];
+      if (!this.myTeam && this.myTeam.length > 0) {
+        this.userService.selectUser(this.myTeam[0]._id);
       }
-
-      this.userService.selectUser(0);
     });
-    this.selectedUserIndex$.subscribe(index => {
-      this.userIndexSelected = index;
-    })
 
     this.selectedUser$.subscribe(user => {
       if (!user) {
         return;
       }
-      this.trainingService.selectItemForEditing(-1, '');
-      this.selectedUser = user;
+      this.userIdSelected = user._id;
+      this.trainingService.selectTraining(null);
+      this.selectUser(user);
     });
 
     /*
@@ -195,24 +187,24 @@ export class MyteamComponent implements OnInit {
   }
 
   handleAssignUserTraining() {
-    if (this.selectedTrainingIndex === -1) {
+    if (!this.selectedTrainingId) {
       this.showUserTrainingModal = false;
       return;
     }
     console.log('handleAssignUserTraining', this.assignableTrainings, this.selectedUser);
-    this.userTrainingService.assignTraining(this.selectedUser._id, this.assignableTrainings[this.selectedTrainingIndex]._id);
+    this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId);
     this.showUserTrainingModal = false;
   }
 
-  selectUser(index) {
-    this.userService.selectUser(index);
-    //      this.selectedUserBS$.next(this.myTeam[index]);
+  selectUser(userId) {
+    console.log('selectUser ', userId);
+    this.selectUser
+    this.userService.selectUser(userId);
   }
-  //    this.trainingService.selectItemForEditing(index, );
 
   confirmDelete(user: UserModel) {
     this.userService.deleteUser(user._id);
-    this.userService.selectUser(-1);
+    this.userService.selectUser(user._id);
   }
 
   newSupervisorSelected(open: boolean) {

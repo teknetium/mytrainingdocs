@@ -22,7 +22,6 @@ import { SettingModule } from './components/setting/setting.module';
 import { FilesModule } from './components/files/files.module';
 import { TrainingsModule } from './components/trainings/trainings.module';
 import { MyIconPickerModule } from './components/my-icon-picker/my-icon-picker.module';
-import { UsersModule } from './components/users/users.module';
 import { SignupModule } from './components/signup/signup.module';
 import { HomeModule } from './components/home/home.module';
 import { ConfigModule } from './components/config/config.module';
@@ -34,6 +33,8 @@ import { UserTrainingService } from './shared/services/userTraining.service';
 import { AuthService } from './shared/services/auth.service';
 import { UserService } from './shared/services/user.service';
 import { LoginModule } from './components/login/login.module';
+import { NzNotificationService, NzNotificationServiceModule } from 'ng-zorro-antd/notification';
+
 
 
 registerLocaleData(en);
@@ -59,7 +60,6 @@ registerLocaleData(en);
         FilesModule,
         TrainingsModule,
         MyIconPickerModule,
-        UsersModule,
         SignupModule,
         TrainingsModule,
         HomeModule,
@@ -80,6 +80,7 @@ registerLocaleData(en);
         UserService,
         UserTrainingService,
         FileService,
+        NzNotificationService
     ],
     bootstrap: [AppComponent]
 })

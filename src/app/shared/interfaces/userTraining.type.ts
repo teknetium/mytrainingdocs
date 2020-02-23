@@ -11,3 +11,12 @@ export interface UserTrainingModel {
   passedAssessment: boolean,
   assessmentResponse: number[]
 }
+
+export interface UserTrainingHash {
+  [indexer: string]: UserTrainingModel;
+}
+
+export interface UidUserTrainingHash {
+  [indexer: string]: UserTrainingHash;
+
+}

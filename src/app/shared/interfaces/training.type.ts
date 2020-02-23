@@ -2,7 +2,7 @@ import { CalendarModule } from "src/app/components/calendar/calendar.module";
 
 export interface TrainingModel {
   _id: string,
-  type: 'online',
+  type: 'online' | 'system' ,
   version: string,
   status: 'Under Development' | 'In Review' | 'In Production',
   title: string,
@@ -30,6 +30,9 @@ export interface TrainingModel {
   interestList: string[],
   shared: boolean
 }
+export interface TrainingIdHash {
+  [indexer: string]: TrainingModel;
+} 
 
 export interface AssessmentItem {
   question: string,

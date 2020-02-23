@@ -31,7 +31,7 @@
                     My Trainings
                 </a>
                 <div class="nav-badge-cell">
-                    <span style="position:absolute;top:-23px;right:6px;">{{userTrainingCnt}}</span>
+                    <span style="position:absolute;top:-23px;right:6px;">{{myTrainingCnt}}</span>
                 </div>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter

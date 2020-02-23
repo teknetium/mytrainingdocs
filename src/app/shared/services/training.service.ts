@@ -6,9 +6,10 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Page, Portlet, TextBlock, Assessment } from '../interfaces/training.type';
+import { TrainingModel, Page, Portlet, TextBlock, Assessment, TrainingIdHash } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.type';
 import { SafeResourceUrl } from '@angular/platform-browser';
+import { TrainingsModule } from 'src/app/components/trainings/trainings.module';
 
 
 @Injectable({
@@ -16,174 +17,158 @@ import { SafeResourceUrl } from '@angular/platform-browser';
 })
 export class TrainingService {
 
+  // The training service maintains a set of hashmaps.
+  // These hashmaps map an object id to the object itself.
+  // Hashmaps are used because there is no poportunity for duplicate objects in the system
+  // and there is no dependency on ones position in an array.
+  // This service streams arrays of object ids to the components, these arrays are generated from
+  // the hashmap themself and not by pushing id's onto an array.
+
   private authenticatedUser: UserModel;
-  private allTrainings: TrainingModel[] = [];
-  private myTrainings: TrainingModel[] = [];
 
-  private allTrainingsBS$: BehaviorSubject<TrainingModel[]>;
-  private myTrainingsBS$: BehaviorSubject<TrainingModel[]>;
-  private allTrainingCntBS$: BehaviorSubject<number>;
-  private myTrainingCntBS$: BehaviorSubject<number>;
-  private viewModeBS$ = new BehaviorSubject<string>('edit');
+  private allTrainingHashBS$ = new BehaviorSubject<TrainingIdHash>({});
 
-  statusMessageBS$ = new BehaviorSubject<{ color: string, msg: string }>(null);
-  titleBS$ = new BehaviorSubject<string>('');
+  // teamTrainings is an array of training id's created by the team
+  private teamTrainingHashBS$ = new BehaviorSubject<TrainingIdHash>({});
+  private teamTrainingCntBS$ = new BehaviorSubject<number>(0);
+
+  private teamTrainingHash = {};
+  private systemTrainingHash = {};
+  private sharedTrainingHash = {};
+  private allTrainingHash = {};
+  private teamTrainingIds: string[];
+  private systemTrainingIds: string[];
+  private sharedTrainingIds: string[];
+  private allTrainingIds: string[];
+
+  teamId: string;
+
   selectedTrainingBS$ = new BehaviorSubject<TrainingModel>(null);
-  selectedTrainingIndexBS$ = new BehaviorSubject<number>(null);
-  currentTrainingIndex = -1;
-
-  action = '';
-  actionBS$ = new BehaviorSubject<string>('');
-  trainingsForSelectBS$ = new BehaviorSubject<{ label: string, value: string }[]>([]);
-  trainingOptions: [{ label: string, value: string }] = [null];
-  trainingIdHash = {};
-  systemTrainings: TrainingModel[] = [];
-  teamId;
-  sysCnt = 0;
 
   // Using Angular DI we use the HTTP service
   constructor(private http: HttpClient, private auth: AuthService, private userService: UserService, private fileService: FileService) {
-    this.allTrainingsBS$ = new BehaviorSubject<TrainingModel[]>(this.allTrainings);
-    this.allTrainingCntBS$ = new BehaviorSubject<number>(this.allTrainings.length);
-    this.myTrainingsBS$ = new BehaviorSubject<TrainingModel[]>(this.myTrainings);
-    this.myTrainingCntBS$ = new BehaviorSubject<number>(this.myTrainings.length);
-    this.getTrainings$('mytrainingdocs').subscribe(systemTrainings => {
-      this.systemTrainings = systemTrainings;
-      for (const sysTraining of this.systemTrainings) {
-        this.sysCnt++;
-        this.trainingIdHash[sysTraining._id] = sysTraining;
-      }
-    });
+
     this.userService.getAuthenticatedUserStream().subscribe(user => {
       if (user) {
+        this.teamId;
         this.authenticatedUser = user;
-        this.action = 'init';
-        if (this.authenticatedUser.userType === 'supervisor') {
-          this.teamId = this.authenticatedUser.uid;
-        } else if (this.authenticatedUser.userType === 'individualContributor') {
+        // non-null teamId indicates an individual contributor
+        if (this.authenticatedUser.userType === 'individualContributor') {
           this.teamId = this.authenticatedUser.teamId;
+        } else if (this.authenticatedUser.userType === 'supervisor') {
+          this.teamId = this.authenticatedUser.uid;
         }
-        this.loadData();
-        /*
-        this.getTrainings$(this.authenticatedUser.uid).subscribe(trainingList => {
-          if (!trainingList) {
-            return;
-          }
 
-          this.allTrainings = trainingList;
-
-          for (const training of this.allTrainings) {
-            this.trainingIdHash[training._id] = training;
+        // load team trainings
+        this.getTrainings$(this.teamId).subscribe(teamTrainings => {
+          if (!teamTrainings) {
+            teamTrainings = [];
           }
+          for (let training of teamTrainings) {
+            this.teamTrainingHash[training._id] = training;
+            this.allTrainingHash[training._id] = training;
+          }
+          let teamTrainingIds = Object.keys(this.teamTrainingHash);
+          this.teamTrainingHashBS$.next(this.teamTrainingHash);
+          this.teamTrainingCntBS$.next(teamTrainingIds.length);
+
+          // Load system trainings
+          this.getTrainings$('mytrainingdocs').subscribe(systemTrainings => {
+            if (!systemTrainings) {
+              systemTrainings = [];
+            }
+            for (let training of systemTrainings) {
+              this.systemTrainingHash[training._id] = training;
+              this.allTrainingHash[training._id] = training;
+            }
+
+            // load shared trainings
+            this.getTrainings$(this.authenticatedUser.org).subscribe(sharedTrainings => {
+              if (!sharedTrainings) {
+                sharedTrainings = [];
+              }
+              for (let training of sharedTrainings) {
+                this.sharedTrainingHash[training._id] = training;
+                this.allTrainingHash[training._id] = training;
+              }
+              this.allTrainingIds = Object.keys(this.allTrainingHash);
+
+              console.log('trainingService init', this.allTrainingHash);
+              this.allTrainingHashBS$.next(this.allTrainingHash);
+            });
+          });
         });
-        */
       }
     });
   }
 
-  loadData() {
-    this.getTrainings$(this.teamId).subscribe(trainingList => {
-      this.allTrainings = trainingList;
-      for (const training of this.allTrainings) {
-        this.trainingIdHash[training._id] = training;
+  reloadTeamTrainings() {
+    console.log('trainingService reloadTeamTrainings', this.teamId);
+    this.teamTrainingHash = {};
+    this.getTrainings$(this.teamId).subscribe(teamTrainings => {
+      if (!teamTrainings) {
+        teamTrainings = [];
       }
-      
-      for (const sysTraining of this.systemTrainings) {
-        this.allTrainings.push(sysTraining);
+      for (let training of teamTrainings) {
+        this.teamTrainingHash[training._id] = training;
+        this.allTrainingHash[training._id] = training;
       }
-
-      this.allTrainingsBS$.next(this.allTrainings);
-      //      this.myTrainingCntBS$.next(this.myTrainings.length);
-      this.allTrainingCntBS$.next(this.allTrainings.length - this.sysCnt);
-      this.selectItemForEditing(this.currentTrainingIndex, '');
-
+      this.teamTrainingHashBS$.next(this.teamTrainingHash);
+      this.allTrainingHashBS$.next(this.allTrainingHash);
     });
   }
 
-
-  getTrainingOptionsStream(): Observable<{ label: string, value: string }[]> {
-    return this.trainingsForSelectBS$.asObservable();
-  }
-
-  setViewMode(mode) {
-    this.viewModeBS$.next(mode);
-  }
-
-  selectItemForEditing(index: number, utid: string) {
-    if (index < 0 || index >= this.allTrainings.length) {
-      //      this.showSelectedItemBS$.next(false);
-      //      this.showSelectedIndexFeedbackBS$.next(false);
-      this.selectedTrainingIndexBS$.next(-1);
-      this.currentTrainingIndex = -1;
-      this.setAction('');
-      this.selectedTrainingBS$.next(null);
-    }
-
-    this.currentTrainingIndex = index;
-
-    this.selectedTrainingBS$.next(this.allTrainings[index]);
-    this.selectedTrainingIndexBS$.next(index);
-    this.actionBS$.next('editTraining');
-
-  }
-  /*
-    selectItem(index) {
-      if (index < 0 || index >= this.allTrainings.length) {
-        //      this.showSelectedItemBS$.next(false);
-        //      this.showSelectedIndexFeedbackBS$.next(false);
-        this.showEditor$.next(false);
-        this.selectedTrainingIndexBS$.next(-1);
-        this.setAction('');
-        return;
+  reloadAllTrainings() {
+    this.getTrainings$(this.teamId).subscribe(teamTrainings => {
+      if (!teamTrainings) {
+        teamTrainings = [];
       }
-  
-      this.showEditor$.next(true);
-      this.selectedTrainingBS$.next(this.allTrainings[index]);
-      this.selectedTrainingIndexBS$.next(index);
-      this.actionBS$.next('editTraining');
-  
-      //    this.showSelectedItemBS$.next(true);
-      //    this.showStatusBS$.next(false);
-      //    this.showSelectedIndexFeedbackBS$.next(true);
-    }
-  */
-  setAction(action: string) {
-    this.actionBS$.next(action);
+      for (let training of teamTrainings) {
+        this.teamTrainingHash[training._id] = training;
+        this.allTrainingHash[training._id] = training;
+      }
+      let teamTrainingIds = Object.keys(this.teamTrainingHash);
+      this.teamTrainingHashBS$.next(this.teamTrainingHash);
+      this.teamTrainingCntBS$.next(teamTrainingIds.length);
+
+      // Load system trainings
+      this.getTrainings$('mytrainingdocs').subscribe(systemTrainings => {
+        if (!systemTrainings) {
+          systemTrainings = [];
+        }
+        for (let training of systemTrainings) {
+          this.systemTrainingHash[training._id] = training;
+          this.allTrainingHash[training._id] = training;
+        }
+
+        // load shared trainings
+        this.getTrainings$(this.authenticatedUser.org).subscribe(sharedTrainings => {
+          if (!sharedTrainings) {
+            sharedTrainings = [];
+          }
+          for (let training of sharedTrainings) {
+            this.sharedTrainingHash[training._id] = training;
+            this.allTrainingHash[training._id] = training;
+          }
+          this.allTrainingIds = Object.keys(this.allTrainingHash);
+
+          console.log('trainingService init', this.allTrainingHash);
+          this.allTrainingHashBS$.next(this.allTrainingHash);
+        });
+      });
+    });
   }
 
-  getTrainingFromId(tid: string): TrainingModel {
-    return this.trainingIdHash[tid];;
+  selectTraining(tid: string): void {
+    this.selectedTrainingBS$.next(this.allTrainingHash[tid]);
   }
 
-  getViewModeStream(): Observable<string> {
-    return this.viewModeBS$.asObservable();
+  getAllTrainingHashStream(): Observable<TrainingIdHash> {
+    return this.allTrainingHashBS$.asObservable();
   }
 
-  getActionStream(): Observable<string> {
-    return this.actionBS$.asObservable();
-  }
-
-  getSelectedTrainingIndexStream(): Observable<number> {
-    return this.selectedTrainingIndexBS$.asObservable();
-  }
-
-  getStatusStream(): Observable<{ color: string, msg: string }> {
-    return this.statusMessageBS$.asObservable();
-  }
-
-  getMyTrainingsObservable(): Observable<TrainingModel[]> {
-    return this.myTrainingsBS$.asObservable();
-  }
-
-  getAllTrainingsObservable(): Observable<TrainingModel[]> {
-    return this.allTrainingsBS$.asObservable();
-  }
-  getMyTrainingCntObservable(): Observable<number> {
-    return this.myTrainingCntBS$.asObservable();
-  }
-
-  getAllTrainingCntObservable(): Observable<number> {
-    return this.allTrainingCntBS$.asObservable();
+  getTeamTrainingHashStream(): Observable<TrainingIdHash> {
+    return this.teamTrainingHashBS$.asObservable();
   }
 
   getSelectedTrainingStream(): Observable<TrainingModel> {
@@ -219,7 +204,6 @@ export class TrainingService {
       xLoc: 0,
       yLoc: 0
     };
-
     const mainContentPage = <Page>{
       _id: String(new Date().getTime()),
       type: 'text',
@@ -300,13 +284,11 @@ export class TrainingService {
       shared: false
     };
     this.postTraining$(newTraining).subscribe(trainingObj => {
-      this.allTrainings.push(trainingObj);
-      this.allTrainingsBS$.next(this.allTrainings);
+      this.reloadTeamTrainings();
     });
-    this.actionBS$.next('newTraining');
   }
 
-  addNewPage(trainingId: string, type: string, url: string, fileId: string, pageTitle: string) {
+  addNewPage(trainingId: string, type: string, url: string, fileId: string, pageTitle: string): Page {
     if (!pageTitle || pageTitle === '') {
       return;
     }
@@ -320,23 +302,25 @@ export class TrainingService {
       portlets: [],
     };
 
-    this.trainingIdHash[trainingId].pages.push(newPage);
-    this.saveTraining(this.trainingIdHash[trainingId], true);
-    this.selectedTrainingBS$.next(this.trainingIdHash[trainingId]);
+    if (!this.teamTrainingHash[trainingId]) {
+      console.log('TrainingService:addNewPage : ERROR : trainingId not found in teamTrainingHash', trainingId, this.teamTrainingHash);
+      return;
+    }
+    this.teamTrainingHash[trainingId].pages.push(newPage);
+    this.saveTraining(this.teamTrainingHash[trainingId], false);
+//      this.selectedTrainingBS$.next(this.teamTrainingHash[trainingId]);
+    return newPage;
   }
 
   createTraining(training: TrainingModel) {
     this.postTraining$(training).subscribe(trainingObj => {
-      this.allTrainings.push(trainingObj);
-      this.allTrainingsBS$.next(this.allTrainings);
+      this.reloadTeamTrainings();
     });
   }
 
   deleteTraining(id: string) {
     this.deleteTraining$(id).subscribe(item => {
-      this.allTrainings.splice(this.selectedTrainingIndexBS$.value, 1);
-      this.allTrainingsBS$.next(this.allTrainings);
-      this.selectedTrainingIndexBS$.next(-1);
+      this.reloadAllTrainings();
     })
   }
 
@@ -352,12 +336,11 @@ export class TrainingService {
       );
   }
 
-  saveTraining(training: TrainingModel, loadData: boolean) {
+  saveTraining(training: TrainingModel, reload: boolean) {
 
     this.editTraining$(training).subscribe(data => {
-
-      if (loadData) {
-        this.loadData();
+      if (reload) {
+        this.reloadTeamTrainings();
       }
     });
   }

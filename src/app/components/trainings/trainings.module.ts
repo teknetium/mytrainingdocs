@@ -82,7 +82,7 @@ import { UserTrainingsComponent } from './user-trainings/user-trainings.componen
     NzCalendarModule,
     CalendarModule,
     NzDatePickerModule,
-    NzCollapseModule
+    NzCollapseModule,
   ],
   exports: [
     TrainingsComponent,

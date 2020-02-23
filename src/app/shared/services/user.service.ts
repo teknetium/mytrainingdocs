@@ -5,7 +5,7 @@ import { UserTrainingService } from './userTraining.service';
 import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { UserModel } from '../interfaces/user.type';
+import { UserModel, UserIdHash } from '../interfaces/user.type';
 import { Auth0ProfileModel } from '../interfaces/auth0Profile.type';
 import { Router } from '@angular/router';
 import { EventModel } from '../interfaces/event.type';
@@ -17,18 +17,17 @@ import { EventService } from './event.service';
 })
 export class UserService {
 
-  private myTeam: UserModel[] = [];
+  private myTeamIdHash: UserIdHash = {};
   private authenticatedUser: UserModel;
 
   // Writable streams
   //  private authenticatedUser$ = new AsyncSubject<UserModel>();
   private authenticatedUserBS$ = new BehaviorSubject<UserModel>(null);
-  private myTeamBS$ = new BehaviorSubject<UserModel[]>([]);
+  private myTeamIdHashBS$ = new BehaviorSubject<UserIdHash>(null);
   private myTeamCntBS$ = new BehaviorSubject<number>(0);
-  private actionBS$ = new BehaviorSubject<string>('');
-  private titleBS$ = new BehaviorSubject<string>('');
+//  private actionBS$ = new BehaviorSubject<string>('');
+//  private titleBS$ = new BehaviorSubject<string>('');
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
-  private selectedUserIndexBS$ = new BehaviorSubject<number>(null);
   private newUser$: Observable<UserModel>;
 
   userTypeIconHash = {
@@ -62,6 +61,7 @@ export class UserService {
         user => {
           this.authenticatedUser = user;
           this.authenticatedUserBS$.next(this.authenticatedUser);
+          this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
           //this.authenticatedUserBS$.complete();
           this.logLoginEvent();
           if (user.userType === 'supervisor') {
@@ -76,6 +76,7 @@ export class UserService {
               this.updateUser(res, true);
               this.authenticatedUser = res;
               this.authenticatedUserBS$.next(this.authenticatedUser);
+              this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
 //              this.authenticatedUserBS$.complete();
 //              this.loadData();
             },
@@ -103,6 +104,7 @@ export class UserService {
 //                this.authenticatedUserBS$.complete();
 //                this.logLoginEvent();
                 this.userTrainingService.assignTraining(this.authenticatedUser._id, this.authenticatedUser.userType);
+                this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
 //                this.loadData();
                 //        this.router.navigate([`gettingstarted`]);
               });
@@ -146,27 +148,13 @@ export class UserService {
         return;
       }
 
-      this.myTeam = userList;
-      this.myTeamBS$.next(this.myTeam);
-      this.myTeamCntBS$.next(this.myTeam.length);
-/*
-      let i;
-      if (this.action === 'save') {
-        i = this.selectedUserIndexBS$.value;
-      } else if (this.action === 'init') {
-        i = 0;
-      } else if (this.action === 'add') {
-        i = this.myTeam.length - 1;
-      } else {
-        if (this.selectedUserIndexBS$.value > this.myTeam.length - 1) {
-          i = this.myTeam.length - 1;
-        } else {
-          i = this.selectedUserIndexBS$.value;
-        }
+      for (let user of userList) {
+        this.myTeamIdHash[user._id] = user;
+        this.userTrainingService.initUserTrainingsForUser(user._id);
       }
-      this.selectUser(i);
-      this.action = '';
-      */
+
+      this.myTeamIdHashBS$.next(this.myTeamIdHash);
+      this.myTeamCntBS$.next(Object.keys(this.myTeamIdHash).length);
     });
 
   }
@@ -205,19 +193,19 @@ export class UserService {
       this.loadData();
     });
   }
-
+/*
   getActionStream(): Observable<string> {
     return this.actionBS$.asObservable();
   }
-
+*/
   getSelectedUserStream(): Observable<UserModel> {
     return this.selectedUserBS$.asObservable();
   }
 
+  /*
   getSelectedUserIndexStream(): Observable<number> {
     return this.selectedUserIndexBS$.asObservable();
   }
-  /*
     getMyTrainingsStream(user: UserModel): Observable<{tid: string, status: string, dueDate: number, completedDate: number}> {
       return user
     }
@@ -230,19 +218,16 @@ export class UserService {
     //    user.myTrainings.push(userTraining);
   }
 
-  selectAuthenticatedUser(user) {
-    this.selectedUserBS$.next(user);
-    this.selectedUserIndexBS$.next(-1);
+  selectAuthenticatedUser() {
+    this.selectedUserBS$.next(this.authenticatedUser);
   }
 
-  selectUser(index: number) {
-//    if (this.authenticatedUser.userType !== 'supervisor') {
-//      return;
-//    }
-    this.selectedUserBS$.next(this.myTeam[index]);
-    this.selectedUserIndexBS$.next(index);
-//    this.titleBS$.next('BLAH');
-    this.actionBS$.next('edit');
+  selectUser(uid: string) {
+    if (!uid) {
+      this.selectedUserBS$.next(null);
+    } else {
+      this.selectedUserBS$.next(this.myTeamIdHash[uid]);
+    }
   }
 
   updateUser(user: UserModel, isAuthenticatedUser: boolean) {
@@ -255,17 +240,13 @@ export class UserService {
     });
   }
 
-  getTitleStream(): Observable<string> {
-    return this.titleBS$.asObservable();
+  getMyTeamIdHashStream(): Observable<UserIdHash> {
+    return this.myTeamIdHashBS$.asObservable();
   }
 
-  getMyTeamStream(): Observable<UserModel[]> {
-    return this.myTeamBS$.asObservable();
-  }
   getMyTeamCntStream(): Observable<number> {
     return this.myTeamCntBS$.asObservable();
   }
-
 
   getAuthenticatedUserStream(): Observable<UserModel> {
     return this.authenticatedUserBS$.asObservable();

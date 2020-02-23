@@ -30,6 +30,7 @@ export class FileService {
   private fileUploaded$ = new BehaviorSubject<FileModel>(null);
   private newVersion$ = new BehaviorSubject<Version>(null);
   private filesUploadedCnt$ = new BehaviorSubject<number>(0);
+  private safeFileUrlBS$ = new BehaviorSubject<SafeResourceUrl>(null);
 
   processResultCnt = 0;
   newFile: FileModel;
@@ -263,11 +264,10 @@ export class FileService {
   privateDocumentHash = {};
   privateSelectedFileHash = {};
   privateSelectedFileIndexHash = {};
-  fsHandleSafeUrlBS$Hash = {};
 
   constructor(private http: HttpClient, private userService: UserService, private auth: AuthService, private sanitizer: DomSanitizer) {
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
-      this.authenticatedUser$.subscribe((userObj) => {
+    this.authenticatedUser$.subscribe((userObj) => {
       if (userObj) {
         let uid = '';
         this.authenticatedUser = userObj;
@@ -284,10 +284,6 @@ export class FileService {
           this.files = files;
           for (const file of files) {
             this.fileIdHash[file._id] = file;
-            for (const version of file.versions) {
-              this.fsHandleSafeUrlBS$Hash[version.fsHandle] = new BehaviorSubject<SafeResourceUrl>(null);
-              this.fileHandleHash[version.fsHandle] = file;
-            }
           }
 
           for (const index in files) {
@@ -305,10 +301,6 @@ export class FileService {
   }
   private get _authHeader(): string {
     return `Bearer ${this.auth.accessToken}`;
-  }
-
-  getSafeUrl$ForFsHandle(fsHandle) {
-    return this.fsHandleSafeUrlBS$Hash[fsHandle].asObservable();
   }
 
   loadData() {
@@ -341,11 +333,10 @@ export class FileService {
     this.filesForSelect$.next(fileOptions);
     */
   }
-  /*
-    getSafeUrlStream(fsHandle) {
-      return this.safeUrlBS$.asObservable();
-    }
-  */
+  getSafeFileUrlStream(): Observable<SafeResourceUrl> {
+    return this.safeFileUrlBS$.asObservable();
+  }
+
   getFileOptionsStream(): Observable<{ label: string, value: string }[]> {
     return this.filesForSelect$.asObservable();
   }
@@ -515,8 +506,6 @@ export class FileService {
           this.fileIdIndexHash[this.newFile._id] = this.files.length - 1;
           this.fileUploaded$.next((this.newFile));
           this.loadData();
-          this.fsHandleSafeUrlBS$Hash[this.newFile.versions[0].fsHandle] = new BehaviorSubject<SafeResourceUrl>(mediaItem);
-
         });
       }
     }
@@ -544,25 +533,15 @@ export class FileService {
       });
   }
 
-  getFsHandleStream(fsHandle): Observable<SafeResourceUrl> {
-    if (!this.fsHandleSafeUrlBS$Hash[fsHandle]) {
-      this.fsHandleSafeUrlBS$Hash[fsHandle] = new BehaviorSubject<SafeResourceUrl>(null);
-    }
-    return this.fsHandleSafeUrlBS$Hash[fsHandle].asObservable();
-  }
-
-  selectFsHandle(fsHandle: string) {
+  selectFsHandle(file: FileModel, versionIndex: number) {
     let mediaItem: SafeResourceUrl;
-    let file = this.fileHandleHash[fsHandle];
-    if (!file) {
-      return;
-    }
+
     if (file.iconType === 'video') {
-      mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.versions[0].url));
+      mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.versions[versionIndex].url));
     } else {
-      mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI((this.previewUrlBase) + fsHandle));
+      mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI((this.previewUrlBase) + file.versions[versionIndex].fsHandle));
     }
-    this.fsHandleSafeUrlBS$Hash[fsHandle].next(mediaItem);
+    this.safeFileUrlBS$.next(mediaItem);
   }
 
   viewFile(file: FileModel, versionIndex: number, streamId: string) {
@@ -608,7 +587,7 @@ export class FileService {
     this.privateDocumentHash[streamId].next(this.fileIdHash[id]);
   }
 */
-  
+
   selectItem(index, streamId) {
     if (streamId === null) {
       this.selectedFile = this.files[index];

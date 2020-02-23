@@ -29,7 +29,6 @@ export class MyTrainingsComponent implements OnInit {
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
   trainingIdHash = {};
-  trainingIndexHash = {};
   trainingIsVisible = false;
   rating: number;
   inputValue: string;
@@ -53,14 +52,14 @@ export class MyTrainingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.trainingService.selectItemForEditing(-1, '');
+    this.trainingService.selectTraining(null);
     this.authenticatedUser$.pipe(take(2)).subscribe(user => {
       if (!user) {
         console.log('mt-training:authenticatedUser$.subscribe...null user');
         return;
       }
 
-      this.userService.selectAuthenticatedUser(user);
+      this.userService.selectAuthenticatedUser();
     });
 /*
     this.selectedUser$.subscribe(data => {

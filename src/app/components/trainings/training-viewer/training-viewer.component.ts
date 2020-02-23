@@ -15,7 +15,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { merge, take } from 'rxjs/operators';
 import { SendmailService } from '../../../shared/services/sendmail.service';
 import { MessageModel } from '../../../shared/interfaces/message.type';
-
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-training-viewer',
@@ -83,17 +83,16 @@ export class TrainingViewerComponent implements OnInit {
   isAuthenticated$: Observable<boolean>;
   isIconSelectModalVisible = false;
   selectedTraining$: Observable<TrainingModel>;
-  training1$: Observable<TrainingModel>;
-  training2$: Observable<TrainingModel>;
-  selectedTrainingIndex$: Observable<number>;
+//  selectedTrainingIndex$: Observable<number>;
   fileUploaded$: Observable<FileModel>;
-  safeUrl$: Observable<SafeResourceUrl>;
+  safeFileUrl$: Observable<SafeResourceUrl>;
   currentPageId = 'trainingWizardTour';
   isOpen = true;
   pageContainerMarginLeft = '270';
   selectedTraining: TrainingModel;
   fullscreen = false;
   helpPanelIsVisible = true;
+  badUrl = false;
 
   okDisabled = true;
   cancelDisabled = false;
@@ -183,7 +182,7 @@ export class TrainingViewerComponent implements OnInit {
   pageDocUrlHash = {};
   pageFileHash = {};
   mainContentContainerHeight = 51;
-  pageIdBSHash = {};
+  pageIdHash = {};
   isNewVersionModalVisible = false;
   commentsVisible = false;
   questionEditorVisible = false;
@@ -212,7 +211,7 @@ export class TrainingViewerComponent implements OnInit {
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
   selectedFile: FileModel;
-  fsHandleSafeUrl$Hash = {};
+  safeFileUrlHash = {};
   newVersion$: Observable<Version>;
 
   data: any[] = [];
@@ -235,7 +234,8 @@ export class TrainingViewerComponent implements OnInit {
   score = 0;
   markCompletedModalIsVisible = false;
   emailAddr: string;
-  pageUrl: string;
+  pageUrl: string = '';
+  urlError = false;
   safeUrlHash = {};
   passingGrade: number = 70;
   currentQuestion: AssessmentItem = {
@@ -254,21 +254,13 @@ export class TrainingViewerComponent implements OnInit {
     private userService: UserService,
     private userTrainingService: UserTrainingService,
     private mailService: SendmailService,
+    private notification: NzNotificationService,
     private authService: AuthService) {
     this.isAuthenticated$ = authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
-    this.training2$ = this.trainingService.getSelectedTrainingStream();
-    this.selectedTrainingIndex$ = this.trainingService.getSelectedTrainingIndexStream();
     this.newVersion$ = this.fileService.getNewVersionStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
-    /*
-    this.route.paramMap.subscribe(params => {
-      this.production = true;
-      this.trainingId = params.get('id');
-      this.training1$ = this.trainingService.getTrainingById$(this.trainingId);
-      this.selectedTraining$ = this.training1$.pipe(merge(this.training2$));
-    });
-    */
+    this.safeFileUrl$ = this.fileService.getSafeFileUrlStream();
   }
 
   ngOnInit() {
@@ -281,9 +273,6 @@ export class TrainingViewerComponent implements OnInit {
     }
 
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
-    this.selectedTrainingIndex$.subscribe(index => {
-      this.selectedTrainingIndex = index;
-    })
     this.selectedTraining$.subscribe(training => {
 
       this.selectedTraining = training;
@@ -306,9 +295,6 @@ export class TrainingViewerComponent implements OnInit {
             let file: FileModel = this.fileService.getFile(page.file);
             this.pageFileHash[page._id] = file;
 
-            for (const version of file.versions) {
-              this.fsHandleSafeUrl$Hash[version.fsHandle] = this.fileService.getFsHandleStream(version.fsHandle);
-            }
           }
 
         }
@@ -320,19 +306,24 @@ export class TrainingViewerComponent implements OnInit {
     });
     this.fileUploaded$.subscribe(file => {
       let found = false;
+      let newPage: Page;
       if (!file) {
+        return;
+      }
+
+      if (!this.selectedTraining) {
         return;
       }
 
       for (const page of this.selectedTraining.pages) {
         if (page.file === file._id) {
-          console.log('TrainingViewer:ngOnInit - fileUploaded$.subscribe - duplicate file', this.selectedTraining);
           found = true;
         }
       }
 
       if (!found) {
-        this.trainingService.addNewPage(this.selectedTraining._id, 'file', '', file._id, file.name);
+        newPage = this.trainingService.addNewPage(this.selectedTraining._id, 'file', '', file._id, file.name);
+        this.pageFileHash[newPage._id] = file;
       }
     })
 
@@ -361,13 +352,22 @@ export class TrainingViewerComponent implements OnInit {
 
   }
 
-  pageUrlChanged(url) {
+  pageUrlChanged() {
     if (this.pageUrl === '') {
       return;
     }
+
+    if (!this.pageUrl.startsWith('https://')) {
+      this.badUrl = true;
+      this.pageUrl = '';
+      return;
+    }
+
+    let newPage: Page;
     let safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.pageUrl));
-    this.safeUrlHash[url] = safeUrl;
-    this.trainingService.addNewPage(this.selectedTraining._id, 'url', this.pageUrl, '', this.pageUrl);
+    this.safeUrlHash[this.pageUrl] = safeUrl;
+    newPage = this.trainingService.addNewPage(this.selectedTraining._id, 'url', this.pageUrl, '', this.pageUrl);
+    this.setCurrentPage(newPage._id);
     this.pageUrl = '';
   }
 
@@ -428,7 +428,7 @@ export class TrainingViewerComponent implements OnInit {
     }
     this.currentPageId = pageId;
     if (this.pageFileHash[pageId]) {
-      this.fileService.selectFsHandle(this.pageFileHash[pageId].versions[0].fsHandle);
+      this.fileService.selectFsHandle(this.pageFileHash[pageId], 0);
     }
     this.currentHelpPanel = '';
   }
@@ -486,7 +486,7 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   closeViewer() {
-    this.trainingService.selectItemForEditing(-1, '');
+    this.trainingService.selectTraining(null);
     this.fullscreen = false;
   }
 
@@ -551,14 +551,10 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   addNewQuestion() {
+    let newQuestionIndex = this.selectedTraining.assessment.items.length;
     let newItem = {
       question: 'This is sample text.',
-      choices: [
-        'first choice',
-        'second choice',
-        'third choice',
-        'forth choice',
-      ],
+      choices: [],
       correctChoice: -1
     };
 
@@ -567,6 +563,7 @@ export class TrainingViewerComponent implements OnInit {
     //    this.trainingService.saveTraining(this.selectedTraining, false);
     this.saveTraining(false);
     this.setCurrentPage(this.currentPageId);
+    this.editQuestion(newQuestionIndex);
   }
 
   addNewChoice(event, itemIndex) {
@@ -611,6 +608,10 @@ export class TrainingViewerComponent implements OnInit {
     this.setCurrentPage(this.currentPageId);
   }
 
+  /*
+   *   INCOMPLETE...need to delete all of the UserTrainings that were connected to
+   *   the training we are deleting
+   */
   confirmDelete() {
     this.userTrainingService.getUTForTraining$(this.selectedTraining._id).subscribe(UserTrainings => {
       for (let ut of UserTrainings) {
@@ -620,7 +621,7 @@ export class TrainingViewerComponent implements OnInit {
       }
     });
     this.trainingService.deleteTraining(this.selectedTraining._id);
-    this.trainingService.selectItemForEditing(this.selectedTrainingIndex, '');
+    this.trainingService.selectTraining(null);
   }
 
   showIconSelectModal() {
@@ -650,7 +651,12 @@ export class TrainingViewerComponent implements OnInit {
     this.selectedTraining.pages.splice(pageIndex, 1);
     //    this.trainingService.saveTraining(this.selectedTraining, false);
     this.saveTraining(false);
-    this.currentPageId = 'intro';
+    if (this.selectedTraining.pages.length > 0 && pageIndex < this.selectedTraining.pages.length) {
+      this.setCurrentPage(this.selectedTraining.pages[pageIndex]._id);
+    } else {
+      this.setCurrentPage(this.selectedTraining.pages[pageIndex - 1]._id);
+    }
+   
   }
 
   showComments() {

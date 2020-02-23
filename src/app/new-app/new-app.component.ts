@@ -4,8 +4,8 @@ import { TrainingService } from '../shared/services/training.service';
 import { UserService } from '../shared/services/user.service';
 import { UserTrainingService } from '../shared/services/userTraining.service';
 import { BehaviorSubject, Observable, from, Subscription } from 'rxjs';
-import { UserModel } from '../shared/interfaces/user.type';
-import { TrainingModel } from '../shared/interfaces/training.type';
+import { UserModel, UserIdHash } from '../shared/interfaces/user.type';
+import { TrainingModel, TrainingIdHash } from '../shared/interfaces/training.type';
 import { Router } from '@angular/router';
 import { FileModel } from '../shared/interfaces/file.type';
 import { FileService } from '../shared/services/file.service';
@@ -14,6 +14,7 @@ import { NotificationService } from '../shared/services/notification.service';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { UserTrainingHash } from '../shared/interfaces/userTraining.type';
 
 @Component({
   selector: 'new-app-root',
@@ -91,8 +92,8 @@ export class NewAppComponent implements OnInit {
   isConfirmDeleteModalVisible = false;
   editId: string | null;
 
-  userTrainingCnt$: Observable<number>;
-  userTrainingCnt = 0;
+
+
   myTeamCnt = 0;
   trainingCnt = 0;
 
@@ -114,19 +115,20 @@ export class NewAppComponent implements OnInit {
 
   fileIdToDelete: string;
 
-  myTrainings$: Observable<TrainingModel[]>;
-  allTrainings$: Observable<TrainingModel[]>;
-  myTeam$: Observable<UserModel[]>;
-  files$: Observable<FileModel[]>;
+  userTrainingHash$: Observable<UserTrainingHash>;
+  myTrainingIdHash$: Observable<TrainingIdHash>;
+  allTrainingIdHash$: Observable<TrainingIdHash>;
+  myTeamIdHash$: Observable<UserIdHash>;
   isAuthenticated$: Observable<boolean>;
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
+  myTrainingCnt = 0;
 
-  list = new Array<any>([]);
+//  list = new Array<any>([]);
   isLoggedIn = false;
 
-  image$: Observable<string>;
-  imageBS$ = new BehaviorSubject<string>('');
+//  image$: Observable<string>;
+//  imageBS$ = new BehaviorSubject<string>('');
   isIn = true;
   pauseYoga = false;
   helpIsClosed = true;
@@ -149,15 +151,12 @@ export class NewAppComponent implements OnInit {
     private router: Router,
     private notificationService: NotificationService,
     private zorroNotificationService: NzNotificationService,
-    private fileService: FileService,
   ) {
-    this.myTeam$ = this.userService.getMyTeamStream();
-    this.allTrainings$ = this.trainingService.getAllTrainingsObservable();
-    this.myTrainings$ = this.trainingService.getMyTrainingsObservable();
-    this.files$ = this.fileService.getFilesStream();
+    this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
+    this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
+    this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
-    this.image$ = this.imageBS$.asObservable();
   }
 
   ngOnInit(): void {
@@ -167,18 +166,42 @@ export class NewAppComponent implements OnInit {
         return;
       }
       this.authenticatedUser = user;
-      this.userTrainingCnt$ = this.userTrainingService.getUserTrainingCntStream();
-      this.userTrainingService.loadTrainingsForUser(this.authenticatedUser._id);
-      this.userTrainingCnt$.subscribe(cnt => {
-        this.userTrainingCnt = cnt;
+      this.userTrainingService.loadTrainingsForUser(user._id);
+      this.myTeamIdHash$.subscribe(teamIdHash => {
+        if (!teamIdHash) {
+          return;
+        }
+        let myTeamIds = Object.keys(teamIdHash);
+        if (myTeamIds) {
+          this.myTeamCnt = myTeamIds.length;
+        }
       })
-      this.myTeam$.subscribe(team => {
-        this.myTeamCnt = team.length;
+      this.allTrainingIdHash$.subscribe(trainingIdHash => {
+        if (!trainingIdHash) {
+          return;
+        }
+        let trainings = Object.values(trainingIdHash);
+        for (let training of trainings) {
+          if (training.owner !== 'mytrainingdocs') {
+            this.trainingCnt++;
+          }
+        }
       })
-      this.allTrainings$.subscribe(trainings => {
-        this.trainingCnt = trainings.length;
+      this.userTrainingHash$.subscribe(utHash => {
+        if (!utHash) {
+          return;
+        }
+        let uts = Object.values(utHash);
+        for (let ut of uts) {
+          if (ut.uid === this.authenticatedUser._id) {
+            this.myTrainingCnt = uts.length;
+          } else {
+
+          }
+        }
       })
     })
+
     this.currentYogaImageNumber = 0;
   };
 
@@ -205,26 +228,9 @@ export class NewAppComponent implements OnInit {
     this.helpIsClosed = !this.helpIsClosed;
   }
 
-  save(i: number, event: MouseEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.editId = '';
-    this.fileService.saveFile(this.localFiles[i]);
-  }
 
   handleCancel(): void {
     this.isConfirmDeleteModalVisible = false;
-  }
-
-  handleOk(): void {
-    /*
-    this.fileService.deleteFile(this.fileIdToDelete).subscribe(data => {
-      this.fileService.loadData();
-      this.zorroNotificationService.create('success', 'Delete Successful.', '');
-    });
-    this.isConfirmDeleteModalVisible = false;
-
-     */
   }
 
   signup() {

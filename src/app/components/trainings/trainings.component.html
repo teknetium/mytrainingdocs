@@ -3,17 +3,16 @@
     <span style="display:inline-block;font-size:24px;font-weight: 300;margin-bottom:20px;">All Trainings</span>
   </div>
   <div style="margin-bottom:10px;">
-    <i *ngIf="(trainings$ | async)?.length > 0" nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+    <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
       style="cursor:pointer;font-size:20px;float:left;margin-right:10px;" nz-tooltip nzTooltipTitle="Create New Training"
       (click)="createNewTraining()"></i>
-    <label nz-checkbox [(ngModel)]="showSystemTrainings" (ngModelChange)="showSystemTrainingStateChanged($event)">Show System Trainings</label>
   </div>
   <div style="display:block;">
-    <div *ngFor="let item of trainings$ | async index as i" style="display:inline-block;">
-      <div *ngIf="(!(showSystemTrainingsState$ | async)  &&  item.teamId !== 'mytrainingdocs') || (showSystemTrainingsState$ | async)" class="cell-item-sm" [ngClass]="{'selected-item': selectedItemIndex === i}" (click)="selectItem(i)">
-        <i [ngStyle]="{'color': item.iconColor, 'font-size.px': cellFontSize}" [ngClass]="item.iconClass"></i>
+    <div *ngFor="let training of trainings " style="display:inline-block;">
+      <div class="cell-item-sm" [ngClass]="{'selected-item': selectedTrainingId === training._id}" (click)="selectTraining(training._id)">
+        <i [ngStyle]="{'color': training.iconColor, 'font-size.px': cellFontSize}" [ngClass]="training.iconClass"></i>
         <div class="item-sm">
-          {{ item.title }}
+          {{ training.title }}
         </div>
       </div>
     </div>

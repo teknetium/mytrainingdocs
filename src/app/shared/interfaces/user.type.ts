@@ -15,6 +15,11 @@ export interface UserModel {
   supervisorId: string,
 }
 
+export interface UserIdHash {
+  [indexer: string]: UserModel;
+} 
+
+
 export class UserSessionModel {
   constructor(
     public _id: string,

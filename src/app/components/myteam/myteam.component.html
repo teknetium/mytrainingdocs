@@ -9,15 +9,15 @@
             <button nz-button nzType="primary" (click)="addUser()" style="margin-top: 20px;">Add a team
                 member</button>
         </div>
-        <div *ngIf="myTeam.length > 0" style="height:95%;">
+        <div *ngIf="myTeam && myTeam.length > 0" style="height:95%;">
             <div class="team-container">
                 <div class="direct-report-container">
                     <i nz-icon nzType="user-add" [nzTheme]="'outline'"
                         style="text-align:left;display:block;cursor:pointer;font-size:20px;margin-bottom:10px;color:#52c41a;"
                         (click)="addUser()" nz-tooltip nzTooltipTitle="Add New User"></i>
-                    <div *ngFor="let user of myTeam$ | async; let i = index;" class="direct-report-cell">
-                        <div class="user-button direct-report" (click)="selectUser(i)"
-                            [ngClass]="{'user-selected': userIndexSelected === i}">
+                    <div *ngFor="let user of myTeam" class="direct-report-cell">
+                        <div class="user-button direct-report" (click)="selectUser(user._id)"
+                            [ngClass]="{'user-selected': userIdSelected === user._id}">
                             <i [ngClass]="userTypeIconHash[user.userType]"
                                 [ngStyle]="{'color': trainingStatusColorHash[user.trainingStatus]}" nz-tooltip
                                 [nzTooltipTitle]=""></i>&nbsp;
@@ -65,13 +65,13 @@
                                             <div *ngIf="assignableTrainings.length === 0">
                                                 You have not created any trainings yet!<br>  Head over to the <span style="color:blue;">All Trainings</span> page to create your trainings.
                                             </div>
-                                            <div *ngFor="let training of assignableTrainings; index as assignableTrainingIndex;"
+                                            <div *ngFor="let training of assignableTrainings"
                                                 class="all-training-list-entry" style="padding:10px 0;width:100%;"
-                                                [ngClass]="{'selected-training': selectedTrainingIndex === assignableTrainingIndex}"
-                                                (click)="selectedTrainingIndex = assignableTrainingIndex">
-                                                <i [ngClass]="training.iconClass"
+                                                [ngClass]="{'selected-training': selectedTrainingId === training._id}"
+                                                (click)="selectedTrainingId = training._id">
+                                                <i [ngClass]="allTrainingIdHash[training._id].iconClass"
                                                     style="display:inline-block;font-size:20px;margin-right:10px;vertical-align: middle;"
-                                                    [ngStyle]="{'color': training.iconColor}">
+                                                    [ngStyle]="{'color': allTrainingIdHash[training._id].iconColor}">
                                                 </i>
                                                 <div style="display:inline-block;font-size:14px;">
                                                     {{ training.title }}

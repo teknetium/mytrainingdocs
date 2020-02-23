@@ -271,7 +271,7 @@ module.exports = function(app, config) {
   //
   // UserTraining API
   //
-  app.get("/api/usertraining/:userId", (req, res) => {
+  app.get("/api/usertraining/uid/:userId", (req, res) => {
     UserTraining.find({ uid: req.params.userId },
       userTrainingListProjection, (err, userTrainings) => {
         let userTrainingsArr = [];

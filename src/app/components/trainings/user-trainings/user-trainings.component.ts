@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { UserModel } from '../../../shared/interfaces/user.type';
-import { TrainingModel } from '../../../shared/interfaces/training.type';
+import { TrainingModel, TrainingIdHash } from '../../../shared/interfaces/training.type';
 import { TrainingService } from '../../../shared/services/training.service';
 import { UserService } from '../../../shared/services/user.service';
 import { UserTrainingService } from '../../../shared/services/userTraining.service';
-import { UserTrainingModel } from 'src/app/shared/interfaces/userTraining.type';
+import { UserTrainingModel, UserTrainingHash } from 'src/app/shared/interfaces/userTraining.type';
 
 
 @Component({
@@ -34,50 +34,51 @@ export class UserTrainingsComponent implements OnInit {
     }
   };
 
-  @Input() userId: string;
-
-  userTrainings$: Observable<UserTrainingModel[]>;
+  userTrainingHash$: Observable<UserTrainingHash>;
   userTrainings: UserTrainingModel[];
-  trainings$: Observable<TrainingModel[]>;
-  trainings: TrainingModel[] = [];
+  trainingIdHash$: Observable<TrainingIdHash>;
+  trainingIdHash: TrainingIdHash;
   selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
 
   currentUserTraining: string;
   markCompletedModalIsVisible: boolean;
   trainingIsVisible: boolean;
-  trainingIdHash = {};
-  trainingIndexHash = {};
 
   constructor(private userService: UserService, private userTrainingService: UserTrainingService, private trainingService: TrainingService) {
-    this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
-    this.trainings$ = this.trainingService.getAllTrainingsObservable();
+    this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
+    this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
   }
 
   ngOnInit() {
-    this.trainings$.subscribe(trainingList => {
-
-      for (let i = 0; i < trainingList.length; i++) {
-        this.trainingIdHash[trainingList[i]._id] = trainingList[i];
-        this.trainingIndexHash[trainingList[i]._id] = i;
+    this.trainingIdHash$.subscribe(trainingIdHash => {
+      if (!trainingIdHash) {
+        return;
       }
+
+      this.trainingIdHash = trainingIdHash;
     })
 
     this.selectedUser$.subscribe(user => {
-      this.userId = user._id;
-      this.userTrainingService.loadTrainingsForUser(this.userId);
+      if (!user) {
+        return;        
+      }
+      this.userTrainingService.loadTrainingsForUser(user._id);
     });
 
-    this.userTrainings$.subscribe(userTrainings => {
-      this.userTrainings = userTrainings;
+    this.userTrainingHash$.subscribe(userTrainingHash => {
+      if (!userTrainingHash) {
+        return;
+      }
+      this.userTrainings = Object.values(userTrainingHash);
     })
   }
 
   viewTraining(utid, tid) {
     this.currentUserTraining = utid;
     this.trainingIsVisible = true;
-    this.trainingService.selectItemForEditing(this.trainingIndexHash[tid], utid);
+    this.trainingService.selectTraining(tid);
   }
 
   confirmDeleteUserTraining(ut) {
