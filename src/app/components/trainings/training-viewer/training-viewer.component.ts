@@ -9,7 +9,7 @@ import { TrainingModel, Page, Portlet, Assessment, AssessmentItem } from 'src/ap
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FileModel, Version } from 'src/app/shared/interfaces/file.type';
-import { UserModel } from 'src/app/shared/interfaces/user.type';
+import { UserModel, UserIdHash } from 'src/app/shared/interfaces/user.type';
 import { VgAPI } from 'videogular2/compiled/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { merge, take } from 'rxjs/operators';
@@ -83,9 +83,12 @@ export class TrainingViewerComponent implements OnInit {
   isAuthenticated$: Observable<boolean>;
   isIconSelectModalVisible = false;
   selectedTraining$: Observable<TrainingModel>;
-//  selectedTrainingIndex$: Observable<number>;
+  //  selectedTrainingIndex$: Observable<number>;
   fileUploaded$: Observable<FileModel>;
   safeFileUrl$: Observable<SafeResourceUrl>;
+  myTeamHash$: Observable<UserIdHash>;
+  myTeamHash: UserIdHash;
+  usersAffected: UserModel[] = [];
   currentPageId = 'trainingWizardTour';
   isOpen = true;
   pageContainerMarginLeft = '270';
@@ -101,13 +104,15 @@ export class TrainingViewerComponent implements OnInit {
   toAddresses: string[];
   subject: string = 'Feedback Requested'
   messageBody: string = 'Please'
-
+  usersToDelete
   currentStep = -1;
 
   rating = 0;
 
   tempIcon = '';
   tempIconColor = '';
+  showConfirmDeleteTrainingWithAffectedUsers = false;
+  showConfirmDeleteTrainingWithoutAffectedUsers = false;
 
   private items = [
     {
@@ -256,8 +261,9 @@ export class TrainingViewerComponent implements OnInit {
     private mailService: SendmailService,
     private notification: NzNotificationService,
     private authService: AuthService) {
-    this.isAuthenticated$ = authService.getIsAuthenticatedStream();
-    this.authenticatedUser$ = userService.getAuthenticatedUserStream();
+    this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
+    this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
+    this.myTeamHash$ = this.userService.getMyTeamIdHashStream();
     this.newVersion$ = this.fileService.getNewVersionStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
     this.safeFileUrl$ = this.fileService.getSafeFileUrlStream();
@@ -321,11 +327,18 @@ export class TrainingViewerComponent implements OnInit {
         }
       }
 
+      console.log('fileUploaded', file);
       if (!found) {
         newPage = this.trainingService.addNewPage(this.selectedTraining._id, 'file', '', file._id, file.name);
         this.pageFileHash[newPage._id] = file;
+        this.setCurrentPage(newPage._id);
       }
+    });
+
+    this.myTeamHash$.subscribe(myTeamHash => {
+      this.myTeamHash = myTeamHash;
     })
+
 
     this.newVersion$.subscribe(newVersion => {
       if (!newVersion) {
@@ -357,7 +370,8 @@ export class TrainingViewerComponent implements OnInit {
       return;
     }
 
-    if (!this.pageUrl.startsWith('https://')) {
+    this.badUrl = false;
+    if (this.pageUrl !== '' && !this.pageUrl.startsWith('https://')) {
       this.badUrl = true;
       this.pageUrl = '';
       return;
@@ -553,7 +567,7 @@ export class TrainingViewerComponent implements OnInit {
   addNewQuestion() {
     let newQuestionIndex = this.selectedTraining.assessment.items.length;
     let newItem = {
-      question: 'This is sample text.',
+      question: '',
       choices: [],
       correctChoice: -1
     };
@@ -608,20 +622,37 @@ export class TrainingViewerComponent implements OnInit {
     this.setCurrentPage(this.currentPageId);
   }
 
-  /*
-   *   INCOMPLETE...need to delete all of the UserTrainings that were connected to
-   *   the training we are deleting
-   */
-  confirmDelete() {
-    this.userTrainingService.getUTForTraining$(this.selectedTraining._id).subscribe(UserTrainings => {
-      for (let ut of UserTrainings) {
-        this.userTrainingService.deleteUserTraining$(ut._id).subscribe(item => {
+  showConfirmDelete() {
+    this.usersAffected = [];
+    this.userTrainingService.getUTForTraining$(this.selectedTraining._id).subscribe(userTrainings => {
+      for (let ut of userTrainings) {
+        this.usersAffected.push(this.myTeamHash[ut.uid]);
+      }
+      if (this.usersAffected.length > 0) {
+        this.showConfirmDeleteTrainingWithAffectedUsers = true;
+      } else {
+        this.showConfirmDeleteTrainingWithoutAffectedUsers = true;
+      }
+    });
+  }
 
+  cancelDelete() {
+    this.showConfirmDeleteTrainingWithoutAffectedUsers = false;
+    this.showConfirmDeleteTrainingWithAffectedUsers = false;
+    this.usersAffected = [];
+  }
+
+  confirmDelete() {
+    this.userTrainingService.getUTForTraining$(this.selectedTraining._id).subscribe(userTrainings => {
+      for (let ut of userTrainings) {
+        this.userTrainingService.deleteUserTraining$(ut._id).subscribe(item => {
+          this.userTrainingService.initUserTrainingsForUser(ut.uid);
         })
       }
     });
     this.trainingService.deleteTraining(this.selectedTraining._id);
     this.trainingService.selectTraining(null);
+    this.usersAffected = [];
   }
 
   showIconSelectModal() {
@@ -649,14 +680,13 @@ export class TrainingViewerComponent implements OnInit {
 
   confirmDeletePage(pageIndex) {
     this.selectedTraining.pages.splice(pageIndex, 1);
-    //    this.trainingService.saveTraining(this.selectedTraining, false);
     this.saveTraining(false);
     if (this.selectedTraining.pages.length > 0 && pageIndex < this.selectedTraining.pages.length) {
       this.setCurrentPage(this.selectedTraining.pages[pageIndex]._id);
     } else {
-      this.setCurrentPage(this.selectedTraining.pages[pageIndex - 1]._id);
+      this.setCurrentPage('intro');
     }
-   
+
   }
 
   showComments() {

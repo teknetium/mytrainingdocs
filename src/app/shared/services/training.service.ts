@@ -119,6 +119,10 @@ export class TrainingService {
   }
 
   reloadAllTrainings() {
+    this.allTrainingHash = {};
+    this.teamTrainingHash = {};
+    this.sharedTrainingHash = {};
+    this.systemTrainingHash = {};
     this.getTrainings$(this.teamId).subscribe(teamTrainings => {
       if (!teamTrainings) {
         teamTrainings = [];
@@ -131,6 +135,8 @@ export class TrainingService {
       this.teamTrainingHashBS$.next(this.teamTrainingHash);
       this.teamTrainingCntBS$.next(teamTrainingIds.length);
 
+    
+      console.log('reloadAllTrainings - teamTrainingHash, teamTrainingCnt', this.teamTrainingHash, teamTrainingIds);
       // Load system trainings
       this.getTrainings$('mytrainingdocs').subscribe(systemTrainings => {
         if (!systemTrainings) {
@@ -169,6 +175,10 @@ export class TrainingService {
 
   getTeamTrainingHashStream(): Observable<TrainingIdHash> {
     return this.teamTrainingHashBS$.asObservable();
+  }
+
+  getTeamTrainingCntStream(): Observable<number> {
+    return this.teamTrainingCntBS$.asObservable();
   }
 
   getSelectedTrainingStream(): Observable<TrainingModel> {
@@ -284,7 +294,7 @@ export class TrainingService {
       shared: false
     };
     this.postTraining$(newTraining).subscribe(trainingObj => {
-      this.reloadTeamTrainings();
+      this.reloadAllTrainings();
     });
   }
 
@@ -314,7 +324,7 @@ export class TrainingService {
 
   createTraining(training: TrainingModel) {
     this.postTraining$(training).subscribe(trainingObj => {
-      this.reloadTeamTrainings();
+      this.reloadAllTrainings();
     });
   }
 
@@ -340,7 +350,7 @@ export class TrainingService {
 
     this.editTraining$(training).subscribe(data => {
       if (reload) {
-        this.reloadTeamTrainings();
+        this.reloadAllTrainings();
       }
     });
   }

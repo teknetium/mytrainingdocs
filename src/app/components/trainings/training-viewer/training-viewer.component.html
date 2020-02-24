@@ -43,11 +43,29 @@
                     nzTooltipTitle="Email Interest List" class="header-icon" (click)="postMessageDialog()">
                 </i>
                 <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-tooltip
-                    nzTooltipTitle="Delete Training" nz-popconfirm nzPopconfirmTitle="Delete this Training?"
-                    [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'bottom'"
-                    (nzOnConfirm)="confirmDelete(item)" class="header-icon">
+                    nzTooltipTitle="Delete Training" class="header-icon" (click)="showConfirmDelete()">
                 </i>
             </div>
+
+            <nz-modal [(nzVisible)]="showConfirmDeleteTrainingWithAffectedUsers" nzTitle="Delete Training Confirmation"
+                (nzOnCancel)="cancelDelete()" (nzOnOk)="confirmDelete()" nzOkText="Delete Training">
+                <div style="display:block;font-weight: 300;">
+                    This training will be removed from the assigned trainings of the following users:
+                </div>
+                <div style="display:block;padding:20px;font-weight: 500;">
+                    <div *ngFor="let user of usersAffected; index as i">
+                        {{user.firstName}} {{user.lastName}}
+                    </div>
+                </div>
+            </nz-modal>
+            <nz-modal [(nzVisible)]="showConfirmDeleteTrainingWithoutAffectedUsers" nzTitle="Delete Training Confirmation"
+                (nzOnCancel)="cancelDelete()" (nzOnOk)="confirmDelete()" nzOkText="Delete Training">
+                <div style="display:block;font-weight: 300;">
+                    Are you sure you want to delete this Training?
+                </div>
+                </nz-modal>
+
+
         </div>
 
         <div class="header-left">
@@ -685,7 +703,7 @@
                                 </nz-modal>
                             </div>
                             <vg-player (onPlayerReady)="onPlayerReady($event)"
-                                *ngIf="page.type === 'file' && pageFileHash && pageFileHash[page._id].iconType === 'video'"
+                                *ngIf="page.type === 'file' && pageFileHash[page._id] && pageFileHash[page._id].iconType === 'video'"
                                 style="margin-top:20px;">
 
                                 <vg-controls>
@@ -721,6 +739,9 @@
                                 </div>
                             </div>
                             <div *ngIf="page.type === 'url'" style="text-align: center;height:90%;margin-top:30px;">
+                                <div style="display: block;color:#bbbbbb;">
+                                    {{ page.url }}
+                                </div>
                                 <div style="width:100%;height:900px;display:inline-block;">
                                     <iframe [src]="safeUrlHash[page.url]" allowfullscreen width="100%" height="100%">
                                     </iframe>
@@ -734,6 +755,21 @@
                     <div
                         *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'">
                         <div style="display:block;margin-bottom:10px;">
+                            <div style="padding-left:40px;">
+                                <p style="text-align: center;font-size:18px;">
+                                    Welcome to the Assessment Wizard. This is where you setup the assessment for this
+                                    training.
+                                </p>
+                                <div style="text-align: left;font-size:12px;">
+                                    <div style="margin-top: 10px;height:90px;position:relative;">
+                                        Files may be uploaded from your Google Drive, DropBox or your local file
+                                        system.
+                                        Select the icon below that corresponds to the type of file you want to
+                                        upload.
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
                             <div style="display:inline-block;">
                                 <nz-switch nzSize="small" [(ngModel)]="selectedTraining.useAssessment"
                                     (ngModelChange)="saveTraining(false)"></nz-switch>
@@ -816,11 +852,16 @@
                                         <label style="display:inline-block;margin-right: 10px;font-size:18px;">Correct
                                             Choice</label>
                                         <nz-radio-group [(ngModel)]="currentCorrectChoice">
-                                            <label nz-radio nzValue="0">A</label>
-                                            <label nz-radio nzValue="1">B</label>
-                                            <label nz-radio nzValue="2">C</label>
-                                            <label nz-radio nzValue="3">D</label>
-                                            <label nz-radio nzValue="4">E</label>
+                                            <label nz-radio [nzDisabled]="currentQuestion.choices[0] === undefined"
+                                                nzValue="0">A</label>
+                                            <label nz-radio [nzDisabled]="currentQuestion.choices[1] === undefined"
+                                                nzValue="1">B</label>
+                                            <label nz-radio [nzDisabled]="currentQuestion.choices[2] === undefined"
+                                                nzValue="2">C</label>
+                                            <label nz-radio [nzDisabled]="currentQuestion.choices[3] === undefined"
+                                                nzValue="3">D</label>
+                                            <label nz-radio [nzDisabled]="currentQuestion.choices[4] === undefined"
+                                                nzValue="4">E</label>
                                         </nz-radio-group>
                                     </div>
                                 </div>
@@ -831,13 +872,17 @@
                                 style="margin-bottom:10px;cursor: pointer;" nz-tooltip
                                 nzTooltipTitle="Add new Question"></i>
                             <nz-collapse nzAccordion="true">
-                                <nz-collapse-panel [nzHeader]="headerTemplate" [nzActive]="itemIndex === currentQuestionIndex"
+                                <nz-collapse-panel [nzHeader]="headerTemplate"
+                                    [nzActive]="itemIndex === currentQuestionIndex"
                                     *ngFor="let item of selectedTraining.assessment.items; index as itemIndex">
                                     <ng-template #headerTemplate>
-                                        <span style="width:15%;display:inline-block;color:blue;">Question
-                                            {{ itemIndex + 1 }}</span>
-                                        <span
-                                            style="vertical-align:middle;display:inline-block;width:80%;overflow: hidden;white-space: nowrap;">{{item.question}}</span>
+                                        <div style="width:15%;display:inline-block;color:blue;">Question
+                                            {{ itemIndex + 1 }}
+                                        </div>
+                                        <div
+                                            style="vertical-align:middle;display:inline-block;width:80%;overflow: hidden;white-space: nowrap;">
+                                            {{item.question}}
+                                        </div>
                                     </ng-template>
                                     <!--
                                     <div style="float:right;width:84%;font-size:16px;margin-bottom:10px;">
@@ -915,7 +960,7 @@
                             *ngIf="assessmentComplete && selectedTraining.status === 'Under Development' && production === 'false'">
                             <button nz-button nzType="primary" (click)="resetAssessment()">Reset Assessment</button>
                         </div>
-                        <div *ngIf="currentAssessmentItemIndex > -1" style="margin-bottom:20px;">
+                        <div *ngIf="currentAssessmentItemIndex > -1" style="margin-bottom:4px;">
                             <div>
                                 <div style="display: inline-block;">
                                     <i nz-icon nzType="check-circle" theme="twotone" [nzTwotoneColor]="'#52c41a'"
@@ -932,7 +977,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <div style="display:block;margin:20px ;">
                             <div *ngIf="assessmentComplete && passedAssessment" style="margin:20px 0;">
                                 <nz-alert nzType="success" nzMessage="Congratulations, you passed!" nzShowIcon>
                                 </nz-alert>
@@ -948,9 +993,9 @@
                         <div *ngIf="assessmentInProgress && !assessmentComplete">
                             <div *ngFor="let item of selectedTraining.assessment.items; index as itemIndex"
                                 [@questionSlide]="slideNewQuestionHash[itemIndex] ? 'in' : 'out'"
-                                style="position:absolute;top:40px;left:600px;width:80%;height:200px;background-color: white;"
+                                style="position:absolute;top:40px;left:600px;width:100%;height:200px;background-color: white;"
                                 [ngStyle]="{'z-index': 10000 - itemIndex}">
-                                <div style="width:90%;position:relative;padding:10px">
+                                <div style="width:100%;position:relative;padding:0">
                                     <div
                                         style="color:#bbbbbb;font-size:16px;font-weight:300;margin-right:20px;float:left;">
                                         Question

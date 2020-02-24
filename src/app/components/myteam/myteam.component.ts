@@ -102,7 +102,39 @@ export class MyteamComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authenticatedUser$.pipe(take(2)).subscribe(user => {
+    this.myTeamIdHash$.pipe(take(1)).subscribe(myTeamIdHash => {
+      if (!myTeamIdHash) {
+        return;
+      }
+      this.myTeamIdHash = myTeamIdHash;
+
+      this.myTeam = Object.values(this.myTeamIdHash);
+
+      if (this.myTeam.length > 0) {
+        this.userIdSelected = this.myTeam[0]._id;
+        this.userService.selectUser(this.myTeam[0]._id);
+      }
+    });
+    this.myTeamIdHash$.subscribe(myTeamIdHash => {
+      if (!myTeamIdHash) {
+        return;
+      }
+      this.myTeamIdHash = myTeamIdHash;
+
+      this.myTeam = Object.values(this.myTeamIdHash);
+
+    });
+
+    this.selectedUser$.subscribe(user => {
+      if (!user) {
+        return;
+      }
+      this.userIdSelected = user._id;
+      this.trainingService.selectTraining(null);
+//      this.selectUser(user);
+    });
+    
+    this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
       }
@@ -121,38 +153,10 @@ export class MyteamComponent implements OnInit {
           }
         }
       })
+
     })
-    this.myTeamIdHash$.subscribe(myTeamIdHash => {
-      if (!myTeamIdHash) {
-        return;
-      }
-      this.myTeamIdHash = myTeamIdHash;
-      this.myTeam = Object.values(this.myTeamIdHash);
 
-      if (!this.myTeam && this.myTeam.length > 0) {
-        this.userService.selectUser(this.myTeam[0]._id);
-      }
-    });
 
-    this.selectedUser$.subscribe(user => {
-      if (!user) {
-        return;
-      }
-      this.userIdSelected = user._id;
-      this.trainingService.selectTraining(null);
-      this.selectUser(user);
-    });
-
-    /*
-    this.trainings$.subscribe(trainings => {
-      this.trainings = trainings;
-
-      //      for (const training of this.trainings) {
-      //        this.trainingIdHash[training._id] = training;
-      //        }
-    });
-
-*/
   }
 
   addUser() {
@@ -197,8 +201,6 @@ export class MyteamComponent implements OnInit {
   }
 
   selectUser(userId) {
-    console.log('selectUser ', userId);
-    this.selectUser
     this.userService.selectUser(userId);
   }
 

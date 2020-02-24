@@ -41,6 +41,8 @@ export class UserTrainingsComponent implements OnInit {
   selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
 
+  @Input() mode = '';
+
   currentUserTraining: string;
   markCompletedModalIsVisible: boolean;
   trainingIsVisible: boolean;
@@ -64,6 +66,7 @@ export class UserTrainingsComponent implements OnInit {
       if (!user) {
         return;        
       }
+      this.selectedUser = user;
       this.userTrainingService.loadTrainingsForUser(user._id);
     });
 
@@ -71,6 +74,7 @@ export class UserTrainingsComponent implements OnInit {
       if (!userTrainingHash) {
         return;
       }
+      console.log('userTrainingHash$.subscribe', userTrainingHash);
       this.userTrainings = Object.values(userTrainingHash);
     })
   }

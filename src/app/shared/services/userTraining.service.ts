@@ -31,7 +31,7 @@ export class UserTrainingService {
         utHash[userTraining._id] = userTraining;
         this.allUserTrainingHash[userTraining._id] = userTraining;
       }
-
+      this.userTrainingHashBS$.next(utHash);
       this.uidUserTrainingHash[uid] = utHash;
     });
 

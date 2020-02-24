@@ -35,6 +35,8 @@ export class TrainingsComponent implements OnInit {
   selectedTraining$: Observable<TrainingModel>;
   isOpen = false;
   trainingIdHash$: Observable<TrainingIdHash>;
+  teamTrainingHash$: Observable<TrainingIdHash>;
+  teamTrainingHash = {};
   trainingIdHash: TrainingIdHash;
   trainingSelected: TrainingModel;
   trainings: TrainingModel[] = [];
@@ -47,6 +49,7 @@ export class TrainingsComponent implements OnInit {
     private trainingService: TrainingService,
     private userService: UserService) {
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
+    this.teamTrainingHash$ = this.trainingService.getTeamTrainingHashStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
@@ -79,16 +82,21 @@ export class TrainingsComponent implements OnInit {
         this.trainings = [];
       }
     });
+    this.teamTrainingHash$.subscribe(teamTrainingHash => {
+      this.teamTrainingHash = teamTrainingHash;
+      this.trainings = Object.values(this.teamTrainingHash);
+    })
   }
 
   newTraining() {
     this.trainingService.addNewTraining();
   }
+  /*
   confirmDelete() {
     this.trainingService.deleteTraining(this.trainingIdHash[this.selectedTrainingId]._id);
     this.selectedTrainingId = null;
   }
-
+*/
   selectTraining(tid: string): void {
     this.trainingService.selectTraining(tid);
     this.selectedTrainingId = tid;

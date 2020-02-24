@@ -117,18 +117,19 @@ export class NewAppComponent implements OnInit {
 
   userTrainingHash$: Observable<UserTrainingHash>;
   myTrainingIdHash$: Observable<TrainingIdHash>;
-  allTrainingIdHash$: Observable<TrainingIdHash>;
+  teamTrainingCnt$: Observable<number>;
   myTeamIdHash$: Observable<UserIdHash>;
   isAuthenticated$: Observable<boolean>;
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
   myTrainingCnt = 0;
+  teamTrainingCnt = 0;
 
-//  list = new Array<any>([]);
+  //  list = new Array<any>([]);
   isLoggedIn = false;
 
-//  image$: Observable<string>;
-//  imageBS$ = new BehaviorSubject<string>('');
+  //  image$: Observable<string>;
+  //  imageBS$ = new BehaviorSubject<string>('');
   isIn = true;
   pauseYoga = false;
   helpIsClosed = true;
@@ -154,7 +155,7 @@ export class NewAppComponent implements OnInit {
   ) {
     this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
-    this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
+    this.teamTrainingCnt$ = this.trainingService.getTeamTrainingCntStream();
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
   }
@@ -175,18 +176,10 @@ export class NewAppComponent implements OnInit {
         if (myTeamIds) {
           this.myTeamCnt = myTeamIds.length;
         }
-      })
-      this.allTrainingIdHash$.subscribe(trainingIdHash => {
-        if (!trainingIdHash) {
-          return;
-        }
-        let trainings = Object.values(trainingIdHash);
-        for (let training of trainings) {
-          if (training.owner !== 'mytrainingdocs') {
-            this.trainingCnt++;
-          }
-        }
-      })
+      });
+      this.teamTrainingCnt$.subscribe(cnt => {
+        this.teamTrainingCnt = cnt;
+      });
       this.userTrainingHash$.subscribe(utHash => {
         if (!utHash) {
           return;
@@ -195,8 +188,6 @@ export class NewAppComponent implements OnInit {
         for (let ut of uts) {
           if (ut.uid === this.authenticatedUser._id) {
             this.myTrainingCnt = uts.length;
-          } else {
-
           }
         }
       })
