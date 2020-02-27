@@ -784,7 +784,7 @@
                                     <source [src]="(safeFileUrl$ | async)" type="video/mp4">
                                 </video>
                             </vg-player>
-                            <div *ngIf="page.type === 'file' && pageFileHash[page._id].mimeType.substring(0, pageFileHash[page._id].mimeType.indexOf('/')) === 'application'"
+                            <div *ngIf="page.type === 'file'"
                                 style="text-align: center;height:90%;margin-top:30px;">
                                 <div style="width:100%;height:900px;display:inline-block;">
                                     <iframe [src]="(safeFileUrl$ | async)" allowfullscreen width="100%" height="100%">

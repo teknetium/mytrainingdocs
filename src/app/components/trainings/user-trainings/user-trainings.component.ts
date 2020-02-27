@@ -40,6 +40,7 @@ export class UserTrainingsComponent implements OnInit {
   trainingIdHash: TrainingIdHash;
   selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
+  selectedTraining$: Observable<TrainingModel>;
 
   @Input() mode = '';
 
@@ -51,9 +52,15 @@ export class UserTrainingsComponent implements OnInit {
     this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
+    this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
   }
 
   ngOnInit() {
+    this.selectedTraining$.subscribe(selectedTraining => {
+      if (!selectedTraining) {
+        this.currentUserTraining = '';
+      }
+    })
     this.trainingIdHash$.subscribe(trainingIdHash => {
       if (!trainingIdHash) {
         return;
