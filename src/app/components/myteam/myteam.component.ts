@@ -5,6 +5,7 @@ import { EventService } from '../../shared/services/event.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { TrainingService } from '../../shared/services/training.service';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { UserTrainingHash } from '../../shared/interfaces/userTraining.type';
 import { UserModel, UserIdHash } from '../../shared/interfaces/user.type';
 import { EventModel } from '../../shared/interfaces/event.type';
 import { TrainingModel, TrainingIdHash } from 'src/app/shared/interfaces/training.type';
@@ -55,7 +56,9 @@ export class MyteamComponent implements OnInit {
   allTrainingIdHash$: Observable<TrainingIdHash>;
   allTrainingIdHash: TrainingIdHash = {};
   assignableTrainings: TrainingModel[] = [];
+  teamTrainings: TrainingModel[] = [];
   trainings: TrainingModel[] = [];
+  userTrainingHash$: Observable<UserTrainingHash>;
   selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
   selectedUserId: string;
@@ -86,6 +89,7 @@ export class MyteamComponent implements OnInit {
   showUserTrainingModal = false;
   userIdSelected = '';
   selectedTrainingId = null;
+  assignToDisabled = false;
 
   constructor(
     private authService: AuthService,
@@ -99,6 +103,7 @@ export class MyteamComponent implements OnInit {
     this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
+    this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
   }
 
   ngOnInit() {
@@ -115,15 +120,23 @@ export class MyteamComponent implements OnInit {
         this.userService.selectUser(this.myTeam[0]._id);
       }
     });
-    this.myTeamIdHash$.subscribe(myTeamIdHash => {
-      if (!myTeamIdHash) {
-        return;
+
+    this.userTrainingHash$.subscribe(utHash => {
+      this.assignableTrainings = [];
+      let utList = Object.values(utHash);
+      let tids = [];
+      for (let ut of utList) {
+        tids.push(ut.tid);
       }
-      this.myTeamIdHash = myTeamIdHash;
+      for (let training of this.teamTrainings) {
+        if (tids.includes(training._id)) {
+          continue;
+        } else {
+          this.assignableTrainings.push(training);
+        }
+      }
 
-      this.myTeam = Object.values(this.myTeamIdHash);
-
-    });
+    })
 
     this.selectedUser$.subscribe(user => {
       if (!user) {
@@ -131,13 +144,14 @@ export class MyteamComponent implements OnInit {
       }
       this.userIdSelected = user._id;
       this.trainingService.selectTraining(null);
-//      this.selectUser(user);
+
     });
-    
+
     this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
       }
+      this.assignableTrainings = [];
       this.authenticatedUser = user;
       this.newTeamMember.teamId = this.authenticatedUser.uid;
       this.newTeamMember.supervisorId = this.authenticatedUser.uid;
@@ -146,10 +160,10 @@ export class MyteamComponent implements OnInit {
       this.allTrainingIdHash$.subscribe(allTrainingIdHash => {
         this.allTrainingIdHash = allTrainingIdHash;
         let trainings = Object.values(this.allTrainingIdHash);
-        this.assignableTrainings = [];
+        this.teamTrainings = [];
         for (let training of trainings) {
           if (training.teamId === this.authenticatedUser.uid) {
-            this.assignableTrainings.push(training);
+            this.teamTrainings.push(training);
           }
         }
       })
@@ -191,13 +205,18 @@ export class MyteamComponent implements OnInit {
   }
 
   handleAssignUserTraining() {
-    if (!this.selectedTrainingId) {
+    if (!this.selectedTrainingId || this.assignableTrainings.length === 0) {
       this.showUserTrainingModal = false;
       return;
     }
-    console.log('handleAssignUserTraining', this.assignableTrainings, this.selectedUser);
     this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId);
     this.showUserTrainingModal = false;
+    this.assignableTrainings.splice(this.assignableTrainings.indexOf(this.selectedTrainingId), 1);
+    /*
+    if (this.assignableTrainings.length === 0) {
+      this.assignToDisabled = true;
+    }
+    */
   }
 
   selectUser(userId) {

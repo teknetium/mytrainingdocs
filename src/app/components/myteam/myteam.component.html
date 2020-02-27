@@ -1,12 +1,14 @@
 <div style="height:100%;">
     <div class="my-team" style="height:100%;">
         <div class="my-team-header">
-            <nz-alert style="width:100%;height:fit-content;" nzType="info"
-                nzMessage="About This Page"
+            <nz-alert style="width:100%;height:fit-content;" nzType="info" nzMessage="About This Page"
                 nzDescription="This is where you manage your team members and the trainings that they are responsible for."
-                nzShowIcon nzCloseable>
+                [nzCloseText]="pageCloseTemplate" nzShowIcon nzCloseable>
             </nz-alert>
-
+            <ng-template #pageCloseTemplate>
+                <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
+                    style="font-size: 24px;"></i>
+            </ng-template>
         </div>
         <div *ngIf="myTeam.length === 0" style="text-align:center;margin-top:20px;">
             <span style="font-size:20px;font-weight:200;margin-top: 20px;"> You haven't added any team
@@ -66,10 +68,16 @@
                                     style="width:500px;padding:10px;float:left;">
                                     <div>
                                         <div style="background-color:white;display:inline-block;width:100%;">
-                                            <div *ngIf="assignableTrainings.length === 0">
+                                            <div *ngIf="teamTrainings.length === 0">
                                                 You have not created any trainings yet!<br> Head over to the <span
                                                     style="color:blue;">All Trainings</span> page to create your
                                                 trainings.
+                                            </div>
+                                            <div *ngIf="teamTrainings.length > 0 && assignableTrainings.length === 0">
+                                                You have already assigned all trainings to this user!
+                                            </div>
+                                            <div *ngIf="assignableTrainings.length > 0">
+                                                Select the training you would like to assign to this user.
                                             </div>
                                             <div *ngFor="let training of assignableTrainings"
                                                 class="all-training-list-entry" style="padding:10px 20px;width:100%;"
@@ -152,8 +160,7 @@
             <div [@supervisorSignupToggle]="isNewSupervisorPanelOpen ? 'open' : 'closed'"
                 style="z-index: -1;height:50px;overflow: hidden;padding-left:30px;">
                 <label nz-checkbox ngDefaultControl [(ngModel)]="includeNewSupervisorsTeam">Have this supervisor
-                    register
-                    their team</label>
+                    register their team</label>
             </div>
             <label nz-checkbox ngDefaultControl [(ngModel)]="newTeamMember.adminUp" nz-tooltip
                 nzTooltipTitle="Give this person the ability to create, update, delete trainings.">Training Admin

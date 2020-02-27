@@ -1,11 +1,15 @@
 <div class="training-container">
   <div>
     <nz-alert style="width:100%;height:fit-content;" nzType="info" nzMessage="About This Page"
-      [nzDescription]="descriptionTemplate" nzShowIcon nzCloseable>
+      [nzDescription]="descriptionTemplate" [nzCloseText]="pageCloseTemplate" nzShowIcon nzCloseable>
     </nz-alert>
+    <ng-template #pageCloseTemplate>
+      <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" style="font-size: 24px;"></i>
+    </ng-template>
     <ng-template #descriptionTemplate>
       This is where you manage your team's trainings.<br>
-      Selecting the <span style="color:blue;">Create a New Training</span> button adds a new training to your team's set of trainings.<br>
+      Selecting the <span style="color:blue;">Create a New Training</span> button adds a new training to your team's set
+      of trainings.<br>
       Clicking on a training brings up the Training Wizard for that training.
     </ng-template>
   </div>

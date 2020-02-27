@@ -91,6 +91,7 @@ export class TrainingViewerComponent implements OnInit {
   usersAffected: UserModel[] = [];
   teamMembers: UserModel[] = [];
   users$: Observable<string[]>;
+  assignableUsers: string[] = [];
   assignedToUsers: string[] = [];
   assignToUser: UserModel;
   currentSelectedUserToAssign = '';
@@ -115,8 +116,6 @@ export class TrainingViewerComponent implements OnInit {
     uptodate: '#52c41a',
     pastdue: 'red'
   }
-
-
 
   okDisabled = true;
   cancelDisabled = false;
@@ -272,6 +271,7 @@ export class TrainingViewerComponent implements OnInit {
   }
   currentQuestionIndex = -1;
   currentCorrectChoice: string;
+  assignToDisabled = false;
 
   constructor(
     private trainingService: TrainingService,
@@ -293,6 +293,28 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.users$.subscribe(userList => {
+      if (!userList) {
+        return;
+      }
+      this.assignableUsers = [];
+      if (this.myTeamHash) {
+        this.assignedToUsers = userList;
+        let teamMemberIds = Object.keys(this.myTeamHash);
+        for (let userId of teamMemberIds) {
+          if (this.assignedToUsers.includes(userId)) {
+            continue;
+          } else {
+            this.assignableUsers.push(userId);
+          }
+        }
+      }
+      if (this.assignableUsers.length > 0) {
+        this.assignToDisabled = false;
+      } else {
+        this.assignToDisabled = true;
+      }
+    })
     this.mode = 'Edit';
 
     if (this.production === 'true') {
@@ -300,10 +322,6 @@ export class TrainingViewerComponent implements OnInit {
     } else {
       this.currentPageId = 'trainingWizardTour';
     }
-
-    this.users$.subscribe(uids => {
-      console.log('training-viewer: users$', uids);
-    })
 
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     this.selectedTraining$.subscribe(training => {
@@ -533,6 +551,7 @@ export class TrainingViewerComponent implements OnInit {
   closeViewer() {
     this.trainingService.selectTraining(null);
     this.fullscreen = false;
+    this.assessmentInProgress = false;
   }
 
   toggleTOC(state: boolean) {

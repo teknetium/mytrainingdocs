@@ -6,8 +6,12 @@
         -->
         <nz-alert style="width:100%;padding-bottom:40px;" nzType="info" nzMessage="About This Page"
             nzDescription="The following is a list of trainings that you are responsible for completing.  Start a training by selecting the green play button."
-            nzShowIcon nzCloseable>
+            [nzCloseText]="pageCloseTemplate" nzShowIcon nzCloseable>
         </nz-alert>
+        <ng-template #pageCloseTemplate>
+            <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
+                style="font-size: 24px;"></i>
+        </ng-template>
     </div>
     <app-user-trainings></app-user-trainings>
     <app-training-viewer style="width:100%;height:100%;" production="true"

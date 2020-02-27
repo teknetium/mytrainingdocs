@@ -11,35 +11,35 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let userTraining of userTrainings"
+            <tr *ngFor="let userTraining of userTrainings" 
                 style="cursor: pointer;font-size:12px;background-color: white;line-height:10px;">
-                <td style="font-size:12px;width:7%;" nz-tooltip
+                <td style="font-size:12px;width:7%;" nz-tooltip [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}"
                     [nzTooltipTitle]="statusIconHash[userTraining.status].desc">
                     <i nz-icon [nzType]="statusIconHash[userTraining.status].icon" [nzTheme]="'twotone'"
                         [nzTwotoneColor]="statusIconHash[userTraining.status].color" style="font-size:18px;"></i>
                 </td>
-                <td style="font-size:12px;width:40%;">
+                <td style="font-size:12px;width:40%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     <i [ngClass]="(trainingIdHash$ | async)[userTraining.tid].iconClass"
                         style="font-size:22px;margin-right:10px;vertical-align: middle;"
                         [ngStyle]="{'color': trainingIdHash[userTraining.tid].iconColor}">
                     </i>
                     {{ trainingIdHash[userTraining.tid].title }}
                 </td>
-                <td *ngIf="mode === 'admin'" style="font-size:12px;width:16%;">
+                <td *ngIf="mode === 'admin'" style="font-size:12px;width:16%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     <nz-date-picker nzFormat="MM-dd-yyyy" nzSize="small" [ngModel]="userTraining.dueDate"
                         (ngModelChange)="updateDueDate($event, userTraining)">
                     </nz-date-picker>
                 </td>
-                <td *ngIf="mode !== 'admin'" style="font-size:12px;width:16%;">
+                <td *ngIf="mode !== 'admin'" style="font-size:12px;width:16%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     {{ userTraining.dueDate | date:'mediumDate'}}
                 </td>
-                <td *ngIf="userTraining.dateCompleted > 0" style="font-size:12px;width:16%;">
+                <td *ngIf="userTraining.dateCompleted > 0" style="font-size:12px;width:16%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     {{ userTraining.dateCompleted | date:'mediumDate'}}
                 </td>
-                <td *ngIf="userTraining.dateCompleted === 0" style="font-size:12px;width:16%;">
+                <td *ngIf="userTraining.dateCompleted === 0" style="font-size:12px;width:16%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     &nbsp;&nbsp;
                 </td>
-                <td style="font-size:12px;width:20%;">
+                <td style="font-size:12px;width:20%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     <div class="action" (click)="viewTraining(userTraining._id, userTraining.tid)" nz-tooltip
                         nzTooltipTitle="Play Training">
                         <i nz-icon [nzType]="'play-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"

@@ -38,9 +38,10 @@ export class UserService {
   private authenticatedUserProfile$: Observable<Auth0ProfileModel>;
 
   private action: string;
+  private teamId;
 
   authProfile: Auth0ProfileModel;
-  
+
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -59,9 +60,13 @@ export class UserService {
           this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
           //this.authenticatedUserBS$.complete();
           this.logLoginEvent();
-          if (user.userType === 'supervisor') {
-            this.loadData();
+          if (this.authenticatedUser.userType === 'supervisor') {
+            this.teamId = this.authenticatedUser.uid;
+          } else {
+            this.teamId = this.authenticatedUser.teamId;
           }
+          this.loadData(this.teamId);
+
         },
         err => {
           this.getUserByEmail(profile.email).subscribe(
@@ -72,8 +77,8 @@ export class UserService {
               this.authenticatedUser = res;
               this.authenticatedUserBS$.next(this.authenticatedUser);
               this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
-//              this.authenticatedUserBS$.complete();
-//              this.loadData();
+              //              this.authenticatedUserBS$.complete();
+              //              this.loadData();
             },
             err => {
               this.authenticatedUser = <UserModel>{
@@ -90,17 +95,17 @@ export class UserService {
                 trainingStatus: 'uptodate',
                 jobTitle: '',
                 profilePicUrl: '',
-                supervisorId: null  
+                supervisorId: null
               }
 
               this.postUser$(this.authenticatedUser).subscribe((data) => {
                 this.authenticatedUser = data;
                 this.authenticatedUserBS$.next(this.authenticatedUser);
-//                this.authenticatedUserBS$.complete();
-//                this.logLoginEvent();
+                //                this.authenticatedUserBS$.complete();
+                //                this.logLoginEvent();
                 this.userTrainingService.assignTraining(this.authenticatedUser._id, this.authenticatedUser.userType);
                 this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
-//                this.loadData();
+                //                this.loadData();
                 //        this.router.navigate([`gettingstarted`]);
               });
 
@@ -137,8 +142,8 @@ export class UserService {
     return this.getUser$(uid);
   }
 
-  loadData() {
-    this.getTeam$(this.authenticatedUser.uid).subscribe((userList) => {
+  loadData(teamId) {
+    this.getTeam$(teamId).subscribe((userList) => {
       if (!userList) {
         return;
       }
@@ -153,46 +158,46 @@ export class UserService {
     });
 
   }
-/*
-  addNewUser() {
-    const newUser = <UserModel>{
-      _id: String(new Date().getTime()),
-      uid: '',
-      userType: 'individualContributor',
-      firstName: 'New',
-      lastName: 'User',
-      email: '',
-      teamId: this.authenticatedUser.uid,
-      userStatus: 'new-user',
-      trainingStatus: 'uptodate',
-      profilePicUrl: '',
-      supervisorId: this.authenticatedUser._id
+  /*
+    addNewUser() {
+      const newUser = <UserModel>{
+        _id: String(new Date().getTime()),
+        uid: '',
+        userType: 'individualContributor',
+        firstName: 'New',
+        lastName: 'User',
+        email: '',
+        teamId: this.authenticatedUser.uid,
+        userStatus: 'new-user',
+        trainingStatus: 'uptodate',
+        profilePicUrl: '',
+        supervisorId: this.authenticatedUser._id
+      }
+  
+      this.action = 'new';
+      this.actionBS$.next(this.action);
+      this.selectedUserBS$.next(newUser);
+      this.selectedUserIndexBS$.next(-1);
     }
-
-    this.action = 'new';
-    this.actionBS$.next(this.action);
-    this.selectedUserBS$.next(newUser);
-    this.selectedUserIndexBS$.next(-1);
-  }
-  */
+    */
 
   createNewUser(user: UserModel) {
     this.postUser$(user).subscribe(data => {
       this.userTrainingService.assignTraining(data._id, data.userType);
-      this.loadData();
+      this.loadData(this.teamId);
     })
   }
 
   deleteUser(id: string) {
     this.deleteUser$(id).subscribe(data => {
-      this.loadData();
+      this.loadData(this.teamId);
     });
   }
-/*
-  getActionStream(): Observable<string> {
-    return this.actionBS$.asObservable();
-  }
-*/
+  /*
+    getActionStream(): Observable<string> {
+      return this.actionBS$.asObservable();
+    }
+  */
   getSelectedUserStream(): Observable<UserModel> {
     return this.selectedUserBS$.asObservable();
   }
@@ -230,7 +235,7 @@ export class UserService {
   updateUser(user: UserModel, isAuthenticatedUser: boolean) {
     this.action = 'save';
     this.putUser$(user).subscribe((updatedUser) => {
-      this.loadData();
+      this.loadData(this.teamId);
       if (isAuthenticatedUser) {
         this.authenticatedUserBS$.next(updatedUser);
       }
@@ -303,17 +308,17 @@ export class UserService {
         catchError((error) => this._handleError(error))
       );
   }
-/*
-  getAllUsers$(teamId: string): Observable<UserModel[]> {
-    return this.http
-      .get<UserModel>(`${ENV.BASE_API}users/${teamId}`, {
-        headers: new HttpHeaders().set('Authorization', this._authHeader)
-      })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-  }
-  */
+  /*
+    getAllUsers$(teamId: string): Observable<UserModel[]> {
+      return this.http
+        .get<UserModel>(`${ENV.BASE_API}users/${teamId}`, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .pipe(
+          catchError((error) => this._handleError(error))
+        );
+    }
+    */
 
   getTeam$(teamId: string): Observable<UserModel[]> {
     return this.http
