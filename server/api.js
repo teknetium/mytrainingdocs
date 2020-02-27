@@ -99,6 +99,19 @@ module.exports = function(app, config) {
                 response.errors.push(userTraining._id);
               }
             });
+            User.findById(userTraining._id, userListProjection, (err, user) => {
+              if (err) {
+                response.errors.push(userTraining._id);
+              }
+              if (!user) {
+                response.errors.push(userTraining._id);
+              }
+              user.trainingStatus = 'pastdue';
+              user.save(err3 => {
+                
+              });
+            });
+
           } else {
             response.noChange.push(userTraining._id);
           }
@@ -388,7 +401,7 @@ module.exports = function(app, config) {
       });
   });
   app.get("/api/user/:id", jwtCheck, (req, res) => {
-    User.findById(req.params.id, userListProjection, (err, user) => {
+   User.findById(req.params.id, userListProjection, (err, user) => {
       if (err) {
         return res.status(500).send({message: err.message});
       }

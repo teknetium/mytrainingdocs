@@ -17,7 +17,10 @@ export class EventService {
 
   constructor(private http: HttpClient, private auth: AuthService) {
     this.eventsBS$.next([]);
+
   }
+
+  
 
   getEventStream(): Observable<EventModel[]> {
     return this.eventsBS$.asObservable();

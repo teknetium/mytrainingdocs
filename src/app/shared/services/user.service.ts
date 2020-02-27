@@ -21,12 +21,9 @@ export class UserService {
   private authenticatedUser: UserModel;
 
   // Writable streams
-  //  private authenticatedUser$ = new AsyncSubject<UserModel>();
   private authenticatedUserBS$ = new BehaviorSubject<UserModel>(null);
   private myTeamIdHashBS$ = new BehaviorSubject<UserIdHash>(null);
   private myTeamCntBS$ = new BehaviorSubject<number>(0);
-//  private actionBS$ = new BehaviorSubject<string>('');
-//  private titleBS$ = new BehaviorSubject<string>('');
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
   private newUser$: Observable<UserModel>;
 
@@ -38,14 +35,12 @@ export class UserService {
   }
 
   // Observables
-  private newuser$: Observable<UserModel>;
   private authenticatedUserProfile$: Observable<Auth0ProfileModel>;
 
   private action: string;
 
   authProfile: Auth0ProfileModel;
-  view = 'card';
-
+  
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -210,6 +205,7 @@ export class UserService {
       return user
     }
   */
+  /*
   assignTraining(user: UserModel, tid: string) {
     const status = 'uptodate';
     const dueDate = 0;
@@ -217,6 +213,7 @@ export class UserService {
     const userTraining = { tid, status, dueDate, completedDate };
     //    user.myTrainings.push(userTraining);
   }
+  */
 
   selectAuthenticatedUser() {
     this.selectedUserBS$.next(this.authenticatedUser);

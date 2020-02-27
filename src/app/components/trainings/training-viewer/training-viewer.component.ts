@@ -89,6 +89,11 @@ export class TrainingViewerComponent implements OnInit {
   myTeamHash$: Observable<UserIdHash>;
   myTeamHash: UserIdHash;
   usersAffected: UserModel[] = [];
+  teamMembers: UserModel[] = [];
+  users$: Observable<string[]>;
+  assignedToUsers: string[] = [];
+  assignToUser: UserModel;
+  currentSelectedUserToAssign = '';
   currentPageId = 'trainingWizardTour';
   isOpen = true;
   pageContainerMarginLeft = '270';
@@ -96,6 +101,22 @@ export class TrainingViewerComponent implements OnInit {
   fullscreen = false;
   helpPanelIsVisible = true;
   badUrl = false;
+  more = '...';
+
+  userTypeIconHash = {
+    individualContributor: 'fad fa-fw fa-user',
+    supervisor: 'fad fa-fw fa-user-tie',
+    volunteer: 'fad fa-fw fa-user-cowboy',
+    customer: 'fad fa-fw fa-user-crown',
+    candidate: 'fad fa-fw fa-user-graduate'
+  };
+
+  trainingStatusColorHash = {
+    uptodate: '#52c41a',
+    pastdue: 'red'
+  }
+
+
 
   okDisabled = true;
   cancelDisabled = false;
@@ -113,6 +134,7 @@ export class TrainingViewerComponent implements OnInit {
   tempIconColor = '';
   showConfirmDeleteTrainingWithAffectedUsers = false;
   showConfirmDeleteTrainingWithoutAffectedUsers = false;
+  showAssignToUserDialog = false;
 
   private items = [
     {
@@ -267,6 +289,7 @@ export class TrainingViewerComponent implements OnInit {
     this.newVersion$ = this.fileService.getNewVersionStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
     this.safeFileUrl$ = this.fileService.getSafeFileUrlStream();
+    this.users$ = this.userTrainingService.getUsersForTrainingStream();
   }
 
   ngOnInit() {
@@ -278,11 +301,17 @@ export class TrainingViewerComponent implements OnInit {
       this.currentPageId = 'trainingWizardTour';
     }
 
+    this.users$.subscribe(uids => {
+      console.log('training-viewer: users$', uids);
+    })
+
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     this.selectedTraining$.subscribe(training => {
 
       this.selectedTraining = training;
+
       if (training) {
+        this.userTrainingService.getUTforTraining(this.selectedTraining._id);
         if (this.production === 'true') {
           this.currentPageId = 'intro';
         } else {
@@ -323,6 +352,7 @@ export class TrainingViewerComponent implements OnInit {
 
       for (const page of this.selectedTraining.pages) {
         if (page.file === file._id) {
+          console.log('TrainingViewer:fileUploaded stream - page already exists', file);
           found = true;
         }
       }
@@ -430,6 +460,7 @@ export class TrainingViewerComponent implements OnInit {
 
   setCurrentPage(pageId) {
     if (this.assessmentInProgress) {
+      console.log('setCurrentPage : assessmentInProgress');
       return;
     }
     //    console.log('setCurrentPage', pageId, this.mode, this.production);
@@ -620,6 +651,27 @@ export class TrainingViewerComponent implements OnInit {
     this.trainingService.saveTraining(this.selectedTraining, reload);
 
     this.setCurrentPage(this.currentPageId);
+  }
+
+  cancelAssignToUser() {
+    this.currentSelectedUserToAssign = '';
+    this.showAssignToUserDialog = false;
+  }
+
+  confirmAssignmentToUser() {
+    this.showAssignToUserDialog = false;
+    this.userTrainingService.assignTraining(this.assignToUser._id, this.selectedTraining._id);
+    this.userTrainingService.getUTforTraining(this.selectedTraining._id);
+  }
+
+  selectTeamMemberToAssign(uid: string) {
+    this.assignToUser = this.myTeamHash[uid];
+    this.currentSelectedUserToAssign = uid;
+  }
+
+  showAssignmentDialog() {
+    this.showAssignToUserDialog = true;
+    this.teamMembers = Object.values(this.myTeamHash);
   }
 
   showConfirmDelete() {

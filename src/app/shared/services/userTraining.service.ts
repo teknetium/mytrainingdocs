@@ -16,6 +16,7 @@ export class UserTrainingService {
   private uidUserTrainingHash: UidUserTrainingHash = {};
   private allUserTrainingHash: UserTrainingHash = {};
   private userTrainingHashBS$ = new BehaviorSubject<UserTrainingHash>({});
+  private usersBS$ = new BehaviorSubject<string[]>([]);
 
   
   constructor(private eventService: EventService,
@@ -25,6 +26,7 @@ export class UserTrainingService {
   }
 
   initUserTrainingsForUser(uid) {
+    let now = new Date().getTime();
     let utHash = {};
     this.getUTForUser$(uid).subscribe(utList => {
       for (let userTraining of utList) {
@@ -41,11 +43,41 @@ export class UserTrainingService {
     this.userTrainingHashBS$.next(this.uidUserTrainingHash[userId]);
   }
 
+  getUsersForTrainingStream(): Observable<string[]> {
+    return this.usersBS$.asObservable();
+  }
+
+  getStatusForUser(uid: string): string {
+   let utHash = this.uidUserTrainingHash[uid];
+    let userTrainings = Object.values(utHash);
+    for (let ut of userTrainings) {
+      if (ut.status === 'pastDue') {
+        return 'pastdue';
+      }
+    }
+    return 'uptodate';
+  }
+  
   getUserTrainingHashStream(): Observable<UserTrainingHash> {
     return this.userTrainingHashBS$.asObservable();
   }
 
-  assignTraining(uid, tid) {
+  getUTforTraining(tid: string) {
+    let uids: string[] = [];
+    this.getUTForTraining$(tid).subscribe(uts => {
+      if (uts.length > 0) {
+        for (let ut of uts) {
+          uids.push(ut.uid);
+        }
+        this.usersBS$.next(uids);
+      } else {
+        this.usersBS$.next(uids);
+      }
+    })
+    
+  }
+
+  assignTraining(uid: string, tid: string) {
     const userTraining = <UserTrainingModel>{
       _id: String(new Date().getTime()),
       tid: tid,
@@ -67,6 +99,7 @@ export class UserTrainingService {
       utHash[userTraining._id] = userTraining;
 
       this.userTrainingHashBS$.next(utHash);
+      this.getUTforTraining(tid);
     })
   }
 

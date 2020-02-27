@@ -318,7 +318,7 @@ export class TrainingService {
     }
     this.teamTrainingHash[trainingId].pages.push(newPage);
     this.saveTraining(this.teamTrainingHash[trainingId], false);
-//      this.selectedTrainingBS$.next(this.teamTrainingHash[trainingId]);
+    this.selectedTrainingBS$.next(this.teamTrainingHash[trainingId]);
     return newPage;
   }
 

@@ -1,15 +1,28 @@
 <div class="training-container">
-  <div class="my-teams-trainings">
-    <span style="display:inline-block;font-size:24px;font-weight: 300;margin-bottom:20px;">All Trainings</span>
+  <div>
+    <nz-alert style="width:100%;height:fit-content;" nzType="info" nzMessage="About This Page"
+      [nzDescription]="descriptionTemplate" nzShowIcon nzCloseable>
+    </nz-alert>
+    <ng-template #descriptionTemplate>
+      This is where you manage your team's trainings.<br>
+      Selecting the <span style="color:blue;">Create a New Training</span> button adds a new training to your team's set of trainings.<br>
+      Clicking on a training brings up the Training Wizard for that training.
+    </ng-template>
   </div>
-  <div style="margin-bottom:10px;">
+  <div *ngIf="trainings && trainings.length > 0" style="margin-bottom:10px;">
+    <button nz-button nzType="primary" (click)="createNewTraining()" style="margin: 20px 0;">
+      Create a New Training
+    </button>
+    <!--
     <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-      style="cursor:pointer;font-size:20px;float:left;margin-right:10px;" nz-tooltip nzTooltipTitle="Create New Training"
-      (click)="createNewTraining()"></i>
+      style="cursor:pointer;font-size:20px;float:left;margin-right:10px;" nz-tooltip
+      nzTooltipTitle="Create New Training" (click)="createNewTraining()"></i>
+      -->
   </div>
   <div style="display:block;">
     <div *ngFor="let training of trainings " style="display:inline-block;">
-      <div class="cell-item-sm" [ngClass]="{'selected-item': selectedTrainingId === training._id}" (click)="selectTraining(training._id)">
+      <div class="cell-item-sm" [ngClass]="{'selected-item': selectedTrainingId === training._id}"
+        (click)="selectTraining(training._id)">
         <i [ngStyle]="{'color': training.iconColor, 'font-size.px': cellFontSize}" [ngClass]="training.iconClass"></i>
         <div class="item-sm">
           {{ training.title }}
@@ -17,7 +30,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf="trainings && trainings.length === 0" style="text-align: center;">
+  <div *ngIf="trainings && trainings.length === 0" style="text-align: center;margin-top:40px;">
     <span style="font-size:20px;font-weight: 200;display:block;">You haven't created any trainings yet!</span>
     <button nz-button nzType="primary" (click)="newTraining()" style="margin-top: 20px;">Create a training!</button>
 
