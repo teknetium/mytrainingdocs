@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { UserModel } from '../../../shared/interfaces/user.type';
 import { TrainingModel, TrainingIdHash } from '../../../shared/interfaces/training.type';
@@ -11,7 +11,8 @@ import { UserTrainingModel, UserTrainingHash } from 'src/app/shared/interfaces/u
 @Component({
   selector: 'app-user-trainings',
   templateUrl: './user-trainings.component.html',
-  styleUrls: ['./user-trainings.component.css']
+  styleUrls: ['./user-trainings.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTrainingsComponent implements OnInit {
 
@@ -48,7 +49,12 @@ export class UserTrainingsComponent implements OnInit {
   markCompletedModalIsVisible: boolean;
   trainingIsVisible: boolean;
 
-  constructor(private userService: UserService, private userTrainingService: UserTrainingService, private trainingService: TrainingService) {
+  constructor(
+    private userService: UserService,
+    private userTrainingService: UserTrainingService,
+    private trainingService: TrainingService,
+    private cd: ChangeDetectorRef,
+  ) {
     this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
@@ -83,7 +89,9 @@ export class UserTrainingsComponent implements OnInit {
       }
       console.log('userTrainingHash$.subscribe', userTrainingHash);
       this.userTrainings = Object.values(userTrainingHash);
+      this.cd.detectChanges();
     })
+
   }
 
   viewTraining(utid, tid) {

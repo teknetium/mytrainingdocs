@@ -168,6 +168,7 @@ export class UserTrainingService {
 
   deleteUserTraining(id, uid) {
     this.deleteUserTraining$(id).subscribe(item => {
+      this.allUserTrainingHash = {};
       this.getUTForUser$(uid).subscribe(utList => {
         let utHash = {};
         for (let userTraining of utList) {
@@ -175,8 +176,10 @@ export class UserTrainingService {
           this.allUserTrainingHash[userTraining._id] = userTraining;
         }
 
+        console.log('UserTrainingService:deleteUserTraining   ',utHash);
+
         this.uidUserTrainingHash[uid] = utHash;
-        this.userTrainingHashBS$.next(this.uidUserTrainingHash[uid]);
+        this.userTrainingHashBS$.next(utHash);
       });
     })
   }

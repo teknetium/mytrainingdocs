@@ -1,7 +1,7 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LandingpageComponent } from './landingpage.component';
-import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
+import { ScrollToModule, ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzAddOnModule, NzDrawerModule, NzRadioModule, NzCardModule, NzIconModule, NzAvatarModule } from 'ng-zorro-antd';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
@@ -35,6 +35,9 @@ import { FormsModule } from '@angular/forms';
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
+  ],
+  providers: [
+    ScrollToService
   ]
 
 })
