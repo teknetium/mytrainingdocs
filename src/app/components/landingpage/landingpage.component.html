@@ -210,7 +210,7 @@
                 </div>
               </div>
             </div>
-
+<!--
             <div class="text-center">
               <div>
                 <a class="btn btn-custom text-white" [ngx-scroll-to]="destinations['contact'].ngxScrollToDestination"
@@ -218,6 +218,7 @@
                   Plan</a>
               </div>
             </div>
+            -->
           </nz-card>
         </div>
         <div class="col-md-4">
@@ -236,7 +237,7 @@
               </div>
             </div>
 
-
+<!--
             <div class="text-center">
               <div>
                 <a class="btn btn-custom text-white" [ngx-scroll-to]="destinations['contact'].ngxScrollToDestination"
@@ -244,6 +245,7 @@
                   Plan</a>
               </div>
             </div>
+            -->
           </nz-card>
         </div>
         <div class="col-md-4">
@@ -258,6 +260,7 @@
                 </div>
               </div>
             </div>
+            <!--
             <div class="text-center">
               <div>
                 <a class="btn btn-custom text-white" [ngx-scroll-to]="destinations['contact'].ngxScrollToDestination"
@@ -265,6 +268,7 @@
                   Plan</a>
               </div>
             </div>
+            -->
           </nz-card>
         </div>
       </div>
@@ -295,8 +299,13 @@
         </div>
       </div>
       <nz-collapse nzAccordion>
-        <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="panel.question" [nzActive]="panel.active">
-          <div [innerHTML]="panel.answer" style="padding-left:20px;"></div>
+        <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="headerTemplate" [nzActive]="panel.active">
+          <div style="padding-left:20px;font-size: 18px;color:black;font-weight: 300;">{{ panel.answer }}</div>
+          <ng-template #headerTemplate>
+            <div style="color:#aaaaaa;font-size: 18px;">
+            {{ panel.question }}
+            </div>
+          </ng-template>
         </nz-collapse-panel>
       </nz-collapse>
     </div>

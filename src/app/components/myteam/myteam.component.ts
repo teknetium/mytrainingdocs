@@ -114,6 +114,7 @@ export class MyteamComponent implements OnInit {
       if (this.myTeam.length > 0) {
         this.selectUser(this.myTeam[0]._id);
       }
+      this.cd.detectChanges();
 /*
       if (this.myTeam.length > 0) {
         this.userIdSelected = this.myTeam[0]._id;
@@ -178,6 +179,7 @@ export class MyteamComponent implements OnInit {
     this.newTeamMember.lastName = '';
     this.newTeamMember.email = '';
     this.newTeamMember.adminUp = false;
+    this.cd.detectChanges();
   }
 
 

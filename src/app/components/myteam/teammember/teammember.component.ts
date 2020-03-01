@@ -76,6 +76,9 @@ export class TeammemberComponent implements OnInit {
 
     this.userTrainingHash$.subscribe(utHash => {
       this.assignableTrainings = [];
+      if (!utHash) {
+        return;
+      }
       let utList = Object.values(utHash);
       let tids = [];
       for (let ut of utList) {

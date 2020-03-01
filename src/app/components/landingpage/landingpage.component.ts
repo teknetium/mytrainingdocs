@@ -1,10 +1,10 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {AuthService} from '../../shared/services/auth.service';
-import {UserService} from '../../shared/services/user.service';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {UserModel} from '../../shared/interfaces/user.type';
-import {Router} from '@angular/router';
-import {ScrollToAnimationEasing, ScrollToOffsetMap} from '@nicky-lenaers/ngx-scroll-to';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { AuthService } from '../../shared/services/auth.service';
+import { UserService } from '../../shared/services/user.service';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { UserModel } from '../../shared/interfaces/user.type';
+import { Router } from '@angular/router';
+import { ScrollToAnimationEasing, ScrollToOffsetMap } from '@nicky-lenaers/ngx-scroll-to';
 
 
 @Component({
@@ -75,43 +75,44 @@ export class LandingpageComponent implements OnInit {
       learnMore: ''
     },
      */
-    ];
+  ];
 
   panels = [
     {
       active: false,
-      question: 'What type of content does myTrainingdocs come with?',
-      answer: 'myTrainingdocs does not come with any content preloaded.  You are responsible for uploading all the content your team uses.'
+      question: 'What types of content does myTrainingdocs support?',
+      answer: `myTrainingdocs supports all common document, image, video, and audio formats.  It also supports
+      the embedding of extenal websites.`
     },
     {
       active: false,
-      question: 'How does myTrainingdocs handle document versioning?',
-      answer: `<p>myTrainingdocs allows you to easily manage any number of versions of a given file.
-      When uploading a new version, you choose the level of impact on the users
-      <ul>
-      <li>minor - No impact</li>
-      <li>medium - Users are notified of the new content, but no action is required.</li>
-      <li>major - Changes to the content are significant.  Training status is reset and all users must retake training. </li>
-      </ul></p>`
+      question: 'Where does myTrainingdocs store my content?',
+      answer: `myTrainingdocs stores all uploaded documents, video, audio, and images in our private, secure
+      cloud based repository.`
     },
     {
       active: false,
-      question: 'How is job information used by myTrainingdocs? ',
-      answer: `We use Jobs to define, prioritize and set due dates for a set of trainings required for a given role in your team.  
-      Changes made to job information are automatically propogated to all users associated with that job.`
-    }
+      question: 'Do I have to manage my training content locally after I have started using myTrainingdocs?',
+      answer: `No.  Once your content has been uploaded, mytrainingdocs becomes the place of record for that content.`
+    },
+    {
+      active: false,
+      question: 'How do I update the content of a document I have uploaded into myTrainingdocs?',
+      answer: `You simply download the document, modify it, and re-upload it.  myTrainingdocs saves
+      all old versions.`
+    } 
   ];
 
-  plans:string = "monthly"
+  plans: string = "monthly"
 
-  duration:string = "month";
+  duration: string = "month";
 
   feesBasic: number = 18;
   feesStandard: number = 15;
 
 
   destinations = {
-    home:{
+    home: {
       ngxScrollToDestination: 'home'
     },
     benefits: {
@@ -135,8 +136,8 @@ export class LandingpageComponent implements OnInit {
   public ngxScrollToOffset: number;
 
   authenticatedUser$: Observable<UserModel>;
-  benefitBS$ = new BehaviorSubject<{focus: boolean, title: string, class: string, blurb: string, learnMore: string}>(null);
-  benefit$: Observable<{focus: boolean, title: string, class: string, blurb: string, learnMore: string}>;
+  benefitBS$ = new BehaviorSubject<{ focus: boolean, title: string, class: string, blurb: string, learnMore: string }>(null);
+  benefit$: Observable<{ focus: boolean, title: string, class: string, blurb: string, learnMore: string }>;
   visible = false;
   authenticatedUser: UserModel;
   currentFocusIndex = -1;
@@ -150,7 +151,7 @@ export class LandingpageComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private userService: UserService,
-    private router: Router)  {
+    private router: Router) {
 
 
     this.ngxScrollToDuration = 2000;
@@ -187,12 +188,12 @@ export class LandingpageComponent implements OnInit {
     this.benefitBS$.next(this.benefits[index]);
     this.visible = true;
   }
-/*
-  setCurrentHowStep(index): void {
-    this.currentHowStep = index;
-    this.currentHowMsg = this.howItWorks[index].description;
-  }
-*/
+  /*
+    setCurrentHowStep(index): void {
+      this.currentHowStep = index;
+      this.currentHowMsg = this.howItWorks[index].description;
+    }
+  */
   start() {
     this.carouselDelay = 6000;
   }
@@ -225,15 +226,15 @@ export class LandingpageComponent implements OnInit {
 
   planChange() {
     if (this.plans == 'annually') {
-        this.feesBasic = 180;
-        this.feesStandard = 144;
-        this.duration = 'year';
-    } else  {
-        this.feesBasic = 18;
-        this.feesStandard = 15;
-        this.duration = 'month';
+      this.feesBasic = 180;
+      this.feesStandard = 144;
+      this.duration = 'year';
+    } else {
+      this.feesBasic = 18;
+      this.feesStandard = 15;
+      this.duration = 'month';
     }
-}
+  }
 
 
   hasFocus(index): boolean {
