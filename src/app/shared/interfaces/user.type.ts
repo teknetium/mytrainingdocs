@@ -13,6 +13,7 @@ export interface UserModel {
   jobTitle: string,
   profilePicUrl: string,
   supervisorId: string,
+  settings: object
 }
 
 export interface UserIdHash {

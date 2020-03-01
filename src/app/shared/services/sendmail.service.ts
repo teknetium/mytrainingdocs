@@ -19,6 +19,7 @@ export class SendmailService {
 
   sendMessage(msg: MessageModel) {
     this.postMessage$(msg).subscribe(item => {
+      console.log('sendmailService', msg);
     })
 
   }

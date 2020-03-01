@@ -90,10 +90,6 @@
     background-color: #f4f4f4;
 }
 
-.selected-training {
-    background-color: #e0eafd;
-    color:blue;
-}
 
 .selected-tab {
     border-bottom:2px solid blue;

@@ -51,13 +51,14 @@
                 <div *ngIf="assignableUsers.length > 0" style="display:block;font-weight: 300;">
                     Select the user you would like to assign this training to.
                 </div>
-                <div *ngIf="assignableUsers.length === 0 && teamMembers.length > 0" style="display:block;font-weight: 300;">
+                <div *ngIf="assignableUsers.length === 0 && teamMembers.length > 0"
+                    style="display:block;font-weight: 300;">
                     This training has already been assigned to all members of your team!
                 </div>
                 <div *ngIf="teamMembers.length === 0" style="display:block;font-weight: 300;">
                     You have not added any team members yet!
                 </div>
-                <div *ngFor="let userId of assignableUsers"  style="display:block;font-weight: 500;">
+                <div *ngFor="let userId of assignableUsers" style="display:block;font-weight: 500;">
                     <div (click)="selectTeamMemberToAssign(userId)"
                         style="display:block;padding:10px 20px;font-weight: 500;"
                         [ngClass]="{'selected-user-to-assign': userId === currentSelectedUserToAssign}"
@@ -110,14 +111,17 @@
                         style="display:inline-block;margin-left:40px;">
                         <span style="color:#bbbbbb;"> Assigned Users</span>
                         <span style="display:inline-block;margin-right:10px;"></span>
-                        <div *ngFor="let uid of users$ | async"
+                        <div *ngFor="let uid of users$ | async; index as i" 
                             style="display:inline-block;width:fit-content;text-align: center;margin:0 4px;vertical-align: middle;">
-                            <i [ngClass]="userTypeIconHash[myTeamHash[uid].userType]"
-                                [ngStyle]="{'color': trainingStatusColorHash[myTeamHash[uid].trainingStatus]}"
-                                nz-tooltip
-                                [nzTooltipTitle]="myTeamHash[uid].firstName + '  ' + myTeamHash[uid].lastName"
-                                style="display:inline;font-size:22px;"></i>
-                            <span style="display:block;font-size:10px;">{{myTeamHash[uid].firstName}}</span>
+                            <div *ngIf="myTeamHash[uid]">
+                                <i [ngClass]="userTypeIconHash[myTeamHash[uid].userType]"
+                                    [ngStyle]="{'color': trainingStatusColorHash[myTeamHash[uid].trainingStatus]}"
+                                    style="display:inline;font-size:22px;"></i>
+                                <span style="display:block;font-size:10px;">{{myTeamHash[uid].firstName}}</span>
+                            </div>
+                            <ng-container *ngTemplateOutlet="i">
+                                this is the templave for {{uid}}
+                            </ng-container>
                         </div>
                         <i nz-icon nzType="user-add" theme="outline" nz-tooltip nzTooltipTitle="Assign To User"
                             class="header-icon" (click)="showAssignmentDialog()" style="font-size:20px;color:#5972eb;">
@@ -784,7 +788,7 @@
                                     <source [src]="(safeFileUrl$ | async)" type="video/mp4">
                                 </video>
                             </vg-player>
-                            <div *ngIf="page.type === 'file'"
+                            <div *ngIf="page.type === 'file' && pageFileHash[page._id] && pageFileHash[page._id].iconType !== 'video'"
                                 style="text-align: center;height:90%;margin-top:30px;">
                                 <div style="width:100%;height:900px;display:inline-block;">
                                     <iframe [src]="(safeFileUrl$ | async)" allowfullscreen width="100%" height="100%">

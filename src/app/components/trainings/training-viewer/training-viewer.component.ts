@@ -134,6 +134,7 @@ export class TrainingViewerComponent implements OnInit {
   showConfirmDeleteTrainingWithAffectedUsers = false;
   showConfirmDeleteTrainingWithoutAffectedUsers = false;
   showAssignToUserDialog = false;
+  assignedUserIdSelected = '';
 
   private items = [
     {
@@ -293,28 +294,6 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.users$.subscribe(userList => {
-      if (!userList) {
-        return;
-      }
-      this.assignableUsers = [];
-      if (this.myTeamHash) {
-        this.assignedToUsers = userList;
-        let teamMemberIds = Object.keys(this.myTeamHash);
-        for (let userId of teamMemberIds) {
-          if (this.assignedToUsers.includes(userId)) {
-            continue;
-          } else {
-            this.assignableUsers.push(userId);
-          }
-        }
-      }
-      if (this.assignableUsers.length > 0) {
-        this.assignToDisabled = false;
-      } else {
-        this.assignToDisabled = true;
-      }
-    })
     this.mode = 'Edit';
 
     if (this.production === 'true') {
@@ -325,6 +304,7 @@ export class TrainingViewerComponent implements OnInit {
 
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     this.selectedTraining$.subscribe(training => {
+      this.mode = 'Edit';
 
       this.selectedTraining = training;
 
@@ -354,6 +334,7 @@ export class TrainingViewerComponent implements OnInit {
 
         this.tempIconColor = this.selectedTraining.iconColor;
         this.tempIcon = this.selectedTraining.iconClass;
+
 
       }
     });
@@ -385,6 +366,30 @@ export class TrainingViewerComponent implements OnInit {
 
     this.myTeamHash$.subscribe(myTeamHash => {
       this.myTeamHash = myTeamHash;
+    })
+
+    this.users$.subscribe(userList => {
+      console.log('TrainingViewer:users$.subscribe userList', userList);
+      if (!userList) {
+        return;
+      }
+      this.assignableUsers = [];
+      if (this.myTeamHash) {
+        this.assignedToUsers = userList;
+        let teamMemberIds = Object.keys(this.myTeamHash);
+        for (let userId of teamMemberIds) {
+          if (this.assignedToUsers.includes(userId)) {
+            continue;
+          } else {
+            this.assignableUsers.push(userId);
+          }
+        }
+      }
+      if (this.assignableUsers.length > 0) {
+        this.assignToDisabled = false;
+      } else {
+        this.assignToDisabled = true;
+      }
     })
 
 
@@ -500,6 +505,12 @@ export class TrainingViewerComponent implements OnInit {
     this.tempIcon = event.icon;
     this.tempIconColor = event.color;
     this.okDisabled = false;
+  }
+
+  deleteAssignedUser() {
+    this.userTrainingService.deleteUserTrainingByTidUid(this.selectedTraining._id, this.assignedUserIdSelected);
+    this.userTrainingService.getUTforTraining(this.selectedTraining._id);
+    this.trainingService.reloadAllTrainings();
   }
 
   contentChanged(newVal: string, propName: string) {

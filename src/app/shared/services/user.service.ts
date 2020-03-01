@@ -26,6 +26,9 @@ export class UserService {
   private myTeamCntBS$ = new BehaviorSubject<number>(0);
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
   private newUser$: Observable<UserModel>;
+  private jobTitlesBS$ = new BehaviorSubject<string[]>([]);
+  private jobTitles: string[] = [];
+  private allOrgUserHash: UserIdHash = {};
 
   userTypeIconHash = {
     supervisor: 'fad fa-user-tie',
@@ -51,11 +54,16 @@ export class UserService {
   ) {
     this.action = 'init';
 
+
     this.authenticatedUserProfile$ = this.auth.getAuthenticatedUserProfileStream();
     this.authenticatedUserProfile$.subscribe((profile) => {
       this.getUserByUid(profile.uid).subscribe(
         user => {
           this.authenticatedUser = user;
+          this.getAllOrgUsers();
+          if (this.authenticatedUser.jobTitle) {
+            this.jobTitles.push(this.authenticatedUser.jobTitle);
+          }
           this.authenticatedUserBS$.next(this.authenticatedUser);
           this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
           //this.authenticatedUserBS$.complete();
@@ -75,6 +83,10 @@ export class UserService {
               res.userStatus = 'active';
               this.updateUser(res, true);
               this.authenticatedUser = res;
+              this.getAllOrgUsers();
+              if (this.authenticatedUser.jobTitle) {
+                this.jobTitles.push(this.authenticatedUser.jobTitle);
+              }
               this.authenticatedUserBS$.next(this.authenticatedUser);
               this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
               //              this.authenticatedUserBS$.complete();
@@ -95,11 +107,16 @@ export class UserService {
                 trainingStatus: 'uptodate',
                 jobTitle: '',
                 profilePicUrl: '',
-                supervisorId: null
+                supervisorId: null,
+                settings: {foo: 'test'}
               }
 
               this.postUser$(this.authenticatedUser).subscribe((data) => {
                 this.authenticatedUser = data;
+                this.getAllOrgUsers();
+                if (this.authenticatedUser.jobTitle) {
+                  this.jobTitles.push(this.authenticatedUser.jobTitle);
+                }
                 this.authenticatedUserBS$.next(this.authenticatedUser);
                 //                this.authenticatedUserBS$.complete();
                 //                this.logLoginEvent();
@@ -142,12 +159,28 @@ export class UserService {
     return this.getUser$(uid);
   }
 
+  getAllOrgUsers() {
+    this.getOrg$(this.authenticatedUser.org).subscribe(userList => {
+      if (!userList) {
+        return;
+      }
+      for (let user of userList) {
+        this.allOrgUserHash[user._id] = user;
+        if (user.jobTitle) {
+          this.jobTitles.push(user.jobTitle);
+        }
+      }
+      this.jobTitlesBS$.next(this.jobTitles);
+    })
+  }
+
   loadData(teamId) {
     this.getTeam$(teamId).subscribe((userList) => {
       if (!userList) {
         return;
       }
-
+      console.log('UserService:loadData', userList);
+      this.myTeamIdHash = {};
       for (let user of userList) {
         this.myTeamIdHash[user._id] = user;
         this.userTrainingService.initUserTrainingsForUser(user._id);
@@ -200,6 +233,10 @@ export class UserService {
   */
   getSelectedUserStream(): Observable<UserModel> {
     return this.selectedUserBS$.asObservable();
+  }
+
+  getJobTitleStream(): Observable<string[]> {
+    return this.jobTitlesBS$.asObservable();
   }
 
   /*
@@ -323,6 +360,16 @@ export class UserService {
   getTeam$(teamId: string): Observable<UserModel[]> {
     return this.http
       .get<UserModel>(`${ENV.BASE_API}users/${teamId}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  } 
+
+  getOrg$(org: string): Observable<UserModel[]> {
+    return this.http
+      .get<UserModel>(`${ENV.BASE_API}users/org/${org}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

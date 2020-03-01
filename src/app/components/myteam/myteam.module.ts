@@ -1,15 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NzTagModule, NzToolTipModule, NzTabsModule, NzIconModule, NzModalModule, NzInputModule, NzRadioModule, NzCheckboxModule, NzPopconfirmModule, NzButtonModule, NzCollapseModule, NzTableModule, NzAlertModule } from 'ng-zorro-antd';
+import { NzTagModule, NzToolTipModule, NzTabsModule, NzIconModule, NzModalModule, NzInputModule, NzRadioModule, NzCheckboxModule, NzPopconfirmModule, NzButtonModule, NzCollapseModule, NzTableModule, NzAlertModule, NzAutocompleteModule } from 'ng-zorro-antd';
 import { MyteamComponent } from './myteam.component';
 import { TrainingsModule } from '../trainings/trainings.module';
+import { TeammemberComponent } from './teammember/teammember.component';
 
 
 
 @NgModule({
   declarations: [
-    MyteamComponent
+    MyteamComponent,
+    TeammemberComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +30,8 @@ import { TrainingsModule } from '../trainings/trainings.module';
     NzButtonModule,
     NzCollapseModule,
     NzTableModule,
-    NzAlertModule
+    NzAlertModule,
+    NzAutocompleteModule
   ],
   exports: [
     MyteamComponent

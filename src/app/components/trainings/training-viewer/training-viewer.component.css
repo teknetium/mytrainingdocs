@@ -77,6 +77,28 @@
 	overflow: scroll;
 }
 
+.assigned-user-selected {
+	border: 1px solid #bbbbbb !important;
+	background-color: #f6f6f6;
+	border-radius: 4px;
+}
+
+.assigned-user {
+	display:inline-block;
+	padding:5px;	
+	width:fit-content;
+	text-align: center;
+	margin:0 4px;
+	vertical-align: middle;
+	border:1px solid white;
+	border-radius: 4px;
+}
+
+.assigned-user:hover {
+	border: 1px solid #bbbbbb;
+	background-color: #f6f6f6;
+}
+
 .training-header {
 	width: 100%;
 	display: block;

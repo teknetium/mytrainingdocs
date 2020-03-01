@@ -67,13 +67,13 @@
                 </a>
             </li>
             -->
-            <li nz-menu-item style="float:right;">
+            <li  style="float:right;margin-right:20px;">
                 <a (click)="quickViewToggle()">
-                    <i nz-icon nzType="appstore" theme="outline" style="color:white;font-size:20px;"></i>
+                    <i nz-icon nzType="setting" theme="outline" style="color:white;font-size:20px;"></i>
                 </a>
-                <nz-drawer [nzWidth]="280" nzTitle="Quick View" [nzClosable]="false" [nzVisible]="quickViewVisible"
+                <nz-drawer [nzWidth]="280" nzTitle="App Settings" [nzClosable]="false" [nzVisible]="quickViewVisible"
                     nzPlacement="right" (nzOnClose)="quickViewToggle()">
-                    <app-quick-view></app-quick-view>
+                    <app-settings></app-settings>
                 </nz-drawer>
             </li>
             <li nz-menu-item style="float:right;">
@@ -104,17 +104,19 @@
                                                 -->
                             </a>
                         </li>
+                        <!--
                         <li nz-menu-item routerLink="/settings">
                             <a class="p-v-5 d-flex align-items-center justify-content-between">
                                 <div>
                                     <i class="opacity-04 font-size-16" nz-icon nzType="lock" theme="outline"></i>
                                     <span class="m-l-10">Account Setting</span>
                                 </div>
-                                <!--
+                                < !--
                                                 <i class="font-size-10" nz-icon nzType="right" theme="outline"></i>
-                                                -->
+                                                -- >
                             </a>
                         </li>
+                        -->
                         <li nz-menu-item (click)="logout()">
                             <a class="p-v-5 d-flex align-items-center justify-content-between">
                                 <div>
@@ -129,6 +131,7 @@
                     </ul>
                 </nz-dropdown-menu>
             </li>
+            <!--
             <li nz-menu-item style="float:right;">
                 <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="popNotification" [nzPlacement]="'bottomRight'">
                     <nz-badge nzDot>
@@ -167,6 +170,7 @@
                     </div>
                 </nz-dropdown-menu>
             </li>
+            -->
         </ul>
     </nz-header>
     <nz-content class="inner-content">

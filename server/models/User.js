@@ -22,7 +22,8 @@ const userSchema = new Schema({
   userStatus: { type: String, required: false },
   trainingStatus: { type: String, required: false },
   profilePicUrl: { type: String, required: false },
-  supervisorId: { type: String, required: false }
+  supervisorId: { type: String, required: false },
+  settings: { type: Object, required: false }
 });
 
 module.exports = mongoose.model("User", userSchema);

@@ -65,6 +65,7 @@ export class UserTrainingService {
   getUTforTraining(tid: string) {
     let uids: string[] = [];
     this.getUTForTraining$(tid).subscribe(uts => {
+      console.log('UserTrainingService:getUTforTraining', uts);
       if (uts.length > 0) {
         for (let ut of uts) {
           uids.push(ut.uid);
@@ -143,6 +144,26 @@ export class UserTrainingService {
       this.uidUserTrainingHash[ut.uid] = utHash;
       this.userTrainingHashBS$.next(this.uidUserTrainingHash[ut.uid]);
     })
+  }
+
+  deleteUTForUser(uid) {
+    let utHash = this.uidUserTrainingHash[uid];
+    let utIdList = Object.keys(utHash);
+    for (let utId of utIdList) {
+      this.deleteUserTraining$(utId).subscribe(item => {
+        console.log('UserTrainingService:deleteUTForUser   deleting...', utId);
+      })
+    }
+  }
+
+  deleteUserTrainingByTidUid(tid: string, uid: string) {
+    let utHash = this.uidUserTrainingHash[uid];
+    let utList = Object.values(utHash);
+    for (let ut of utList) {
+      if (ut.tid === tid) {
+        this.deleteUserTraining(ut._id, uid); 
+      }
+    }
   }
 
   deleteUserTraining(id, uid) {

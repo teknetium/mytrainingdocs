@@ -3,6 +3,7 @@ import { MyteamComponent } from './components/myteam/myteam.component';
 import { HomeComponent } from './components/home/home.component';
 import { TrainingsComponent } from './components/trainings/trainings.component';
 import { MyTrainingsComponent } from './components/trainings/my-trainings/my-trainings.component';
+import { TeammemberComponent } from './components/myteam/teammember/teammember.component';
 
 
 export const AuthenticatedROUTES: Routes = [

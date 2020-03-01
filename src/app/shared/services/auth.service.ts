@@ -112,6 +112,7 @@ export class AuthService {
       }
     });
   }
+  
 
   private _setSession(authResult, profile?) {
     this.expiresAt = (authResult.expiresIn * 1000) + Date.now();

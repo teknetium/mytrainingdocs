@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
 import { EventService } from '../../shared/services/event.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { TrainingService } from '../../shared/services/training.service';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { UserTrainingHash } from '../../shared/interfaces/userTraining.type';
 import { UserModel, UserIdHash } from '../../shared/interfaces/user.type';
 import { EventModel } from '../../shared/interfaces/event.type';
 import { TrainingModel, TrainingIdHash } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
+import { JobTitleService } from '../../shared/services/jobtitle.service';
 import { MessageModel } from '../../shared/interfaces/message.type';
 import { take, filter } from 'rxjs/operators';
 
@@ -18,6 +18,7 @@ import { take, filter } from 'rxjs/operators';
   selector: 'app-myteam',
   templateUrl: './myteam.component.html',
   styleUrls: ['./myteam.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('supervisorSignupToggle', [
       // ...
@@ -45,20 +46,13 @@ export class MyteamComponent implements OnInit {
     customer: 'fas fa-fw fa-user-crown',
     candidate: 'fas fa-fw fa-user-graduate'
   }
-  includeNewSupervisorsTeam = false;
-  isNewSupervisorPanelOpen = false;
-  showAssignTrainingDialog = false;
-
   trainingStatusColorHash = {
     uptodate: '#52c41a',
     pastdue: 'red'
   }
-  allTrainingIdHash$: Observable<TrainingIdHash>;
-  allTrainingIdHash: TrainingIdHash = {};
-  assignableTrainings: TrainingModel[] = [];
-  teamTrainings: TrainingModel[] = [];
-  trainings: TrainingModel[] = [];
-  userTrainingHash$: Observable<UserTrainingHash>;
+  includeNewSupervisorsTeam = false;
+  isNewSupervisorPanelOpen = false;
+  
   selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
   selectedUserId: string;
@@ -66,6 +60,9 @@ export class MyteamComponent implements OnInit {
   authenticatedUser$: Observable<UserModel>;
   myTeamIdHash: UserIdHash;
   myTeam: UserModel[] = [];
+  jobTitles$: Observable<string[]>;
+  jobTitles: string[] = [];
+  options: string[];
   myTeamIdHash$: Observable<UserIdHash>;
   showNewUserModal = false;
   supervisorSelected = false;
@@ -83,61 +80,47 @@ export class MyteamComponent implements OnInit {
     trainingStatus: 'uptodate',
     profilePicUrl: '',
     supervisorId: null,
+    settings: {},
     jobTitle: ''
   }
   message: MessageModel;
-  showUserTrainingModal = false;
   userIdSelected = '';
-  selectedTrainingId = null;
-  assignToDisabled = false;
+
 
   constructor(
+    private cd: ChangeDetectorRef,
     private authService: AuthService,
     private userService: UserService,
     private eventService: EventService,
     private mailService: SendmailService,
     private userTrainingService: UserTrainingService,
-    private trainingService: TrainingService
+    private trainingService: TrainingService,
+    private jobTitleService: JobTitleService
   ) {
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
-    this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
-    this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
+    this.jobTitles$ = this.jobTitleService.getJobTitleStream();
   }
 
   ngOnInit() {
-    this.myTeamIdHash$.pipe(take(1)).subscribe(myTeamIdHash => {
+    this.myTeamIdHash$.subscribe(myTeamIdHash => {
       if (!myTeamIdHash) {
         return;
       }
       this.myTeamIdHash = myTeamIdHash;
 
       this.myTeam = Object.values(this.myTeamIdHash);
-
+      if (this.myTeam.length > 0) {
+        this.selectUser(this.myTeam[0]._id);
+      }
+/*
       if (this.myTeam.length > 0) {
         this.userIdSelected = this.myTeam[0]._id;
         this.userService.selectUser(this.myTeam[0]._id);
       }
+      */
     });
-
-    this.userTrainingHash$.subscribe(utHash => {
-      this.assignableTrainings = [];
-      let utList = Object.values(utHash);
-      let tids = [];
-      for (let ut of utList) {
-        tids.push(ut.tid);
-      }
-      for (let training of this.teamTrainings) {
-        if (tids.includes(training._id)) {
-          continue;
-        } else {
-          this.assignableTrainings.push(training);
-        }
-      }
-
-    })
-
     this.selectedUser$.subscribe(user => {
       if (!user) {
         return;
@@ -151,23 +134,15 @@ export class MyteamComponent implements OnInit {
       if (!user) {
         return;
       }
-      this.assignableTrainings = [];
       this.authenticatedUser = user;
       this.newTeamMember.teamId = this.authenticatedUser.uid;
       this.newTeamMember.supervisorId = this.authenticatedUser.uid;
       this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
       this.newTeamMember._id = String(new Date().getTime());
-      this.allTrainingIdHash$.subscribe(allTrainingIdHash => {
-        this.allTrainingIdHash = allTrainingIdHash;
-        let trainings = Object.values(this.allTrainingIdHash);
-        this.teamTrainings = [];
-        for (let training of trainings) {
-          if (training.teamId === this.authenticatedUser.uid) {
-            this.teamTrainings.push(training);
-          }
-        }
-      })
+    })
 
+    this.jobTitles$.subscribe(jobTitles => {
+      this.jobTitles = jobTitles;
     })
 
 
@@ -175,6 +150,7 @@ export class MyteamComponent implements OnInit {
 
   addUser() {
     this.showNewUserModal = true;
+    this.options = [];
   }
 
   handleCancel(): void {
@@ -185,6 +161,10 @@ export class MyteamComponent implements OnInit {
     console.log('handleAddUser', this.newTeamMember);
     this.userService.updateUser(this.authenticatedUser, false);
     this.userService.createNewUser(this.newTeamMember);
+    if (this.newTeamMember.jobTitle) {
+      this.jobTitleService.addJobTitle(this.newTeamMember.jobTitle);
+    }
+    this.options = [];
     let url = 'https://mytrainingdocs.com/signup/' + this.newTeamMember.email;
     this.message = <MessageModel>{
       to: this.newTeamMember.email,
@@ -200,36 +180,23 @@ export class MyteamComponent implements OnInit {
     this.newTeamMember.adminUp = false;
   }
 
-  handleCancelUserTraining() {
-    this.showUserTrainingModal = false;
-  }
-
-  handleAssignUserTraining() {
-    if (!this.selectedTrainingId || this.assignableTrainings.length === 0) {
-      this.showUserTrainingModal = false;
-      return;
-    }
-    this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId);
-    this.showUserTrainingModal = false;
-    this.assignableTrainings.splice(this.assignableTrainings.indexOf(this.selectedTrainingId), 1);
-    /*
-    if (this.assignableTrainings.length === 0) {
-      this.assignToDisabled = true;
-    }
-    */
-  }
 
   selectUser(userId) {
     this.userService.selectUser(userId);
   }
 
-  confirmDelete(user: UserModel) {
-    this.userService.deleteUser(user._id);
-    this.userService.selectUser(user._id);
-  }
 
   newSupervisorSelected(open: boolean) {
     this.isNewSupervisorPanelOpen = open;
   }
 
+  onInput(value: string): void {
+    for (let jobTitle of this.jobTitles) {
+      if (jobTitle.startsWith(value)) {
+        if (!this.options.includes(jobTitle)) {
+          this.options.push(jobTitle);
+        }
+      }
+    }
+  }
 }

@@ -56,7 +56,7 @@ module.exports = function(app, config) {
 
   const trainingListProjection = "_id title version type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status interestList shared";
   const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponse passedAssessment score trainingVersion";
-  const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId org supervisorId profilePicUrl";
+  const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId org supervisorId profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const commentListProjection = "_id tid author avatar content date";
@@ -400,6 +400,21 @@ module.exports = function(app, config) {
         res.send(usersArr);
       });
   });
+  app.get("/api/users/org/:org", (req, res) => {
+    User.find({ org: req.params.org },
+      userProjection, (err, users) => {
+        let usersArr = [];
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        if (users) {
+          users.forEach(user => {
+            usersArr.push(user);
+          });
+        }
+        res.send(usersArr);
+      });
+  });
   app.get("/api/user/:id", jwtCheck, (req, res) => {
    User.findById(req.params.id, userListProjection, (err, user) => {
       if (err) {
@@ -460,6 +475,7 @@ module.exports = function(app, config) {
         jobTitle: req.body.jobTitle,
         profilePicUrl: req.body.profilePicUrl,
         supervisorId: req.body.supervisorId,
+        settings: req.body.settings,
       });
 //      user.save((err2) => {
       User.create(user, function(err2, userObj) {
@@ -491,6 +507,7 @@ module.exports = function(app, config) {
       user.jobTitle = req.body.jobTitle;
       user.profilePicUrl = req.body.profilePicUrl;
       user.supervisorId = req.body.supervisorId;
+      user.settings = req.body.settings;
       user._id = req.body._id;
 
       user.save(err2 => {

@@ -46,8 +46,8 @@ const appRoutes: Routes = [
 //              preloadingStrategy: PreloadAllModules,
             enableTracing: true,
             useHash: false,
-            scrollPositionRestoration: 'disabled',
-            anchorScrolling: 'disabled',
+//            scrollPositionRestoration: 'disabled',
+//            anchorScrolling: 'disabled',
         })
     ],
     //            scrollPositionRestoration: 'enabled' 

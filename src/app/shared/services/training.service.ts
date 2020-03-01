@@ -27,6 +27,7 @@ export class TrainingService {
   private authenticatedUser: UserModel;
 
   private allTrainingHashBS$ = new BehaviorSubject<TrainingIdHash>({});
+  private jobTitlesBS$ = new BehaviorSubject<string[]>([]);
 
   // teamTrainings is an array of training id's created by the team
   private teamTrainingHashBS$ = new BehaviorSubject<TrainingIdHash>({});
@@ -36,6 +37,7 @@ export class TrainingService {
   private systemTrainingHash = {};
   private sharedTrainingHash = {};
   private allTrainingHash = {};
+  private jobTitles: string[] = [];
   private teamTrainingIds: string[];
   private systemTrainingIds: string[];
   private sharedTrainingIds: string[];
@@ -67,6 +69,9 @@ export class TrainingService {
           for (let training of teamTrainings) {
             this.teamTrainingHash[training._id] = training;
             this.allTrainingHash[training._id] = training;
+            if (training.jobTitle) {
+              this.jobTitles.push(training.jobTitle);
+            }
           }
           let teamTrainingIds = Object.keys(this.teamTrainingHash);
           this.teamTrainingHashBS$.next(this.teamTrainingHash);
@@ -80,6 +85,9 @@ export class TrainingService {
             for (let training of systemTrainings) {
               this.systemTrainingHash[training._id] = training;
               this.allTrainingHash[training._id] = training;
+              if (training.jobTitle) {
+                this.jobTitles.push(training.jobTitle);
+              }
             }
 
             // load shared trainings
@@ -90,10 +98,13 @@ export class TrainingService {
               for (let training of sharedTrainings) {
                 this.sharedTrainingHash[training._id] = training;
                 this.allTrainingHash[training._id] = training;
+                if (training.jobTitle) {
+                  this.jobTitles.push(training.jobTitle);
+                }
               }
               this.allTrainingIds = Object.keys(this.allTrainingHash);
 
-              console.log('trainingService init', this.allTrainingHash);
+              this.jobTitlesBS$.next(this.jobTitles);
               this.allTrainingHashBS$.next(this.allTrainingHash);
             });
           });
@@ -167,6 +178,10 @@ export class TrainingService {
 
   selectTraining(tid: string): void {
     this.selectedTrainingBS$.next(this.allTrainingHash[tid]);
+  }
+
+  getJobTitleStream(): Observable<string[]> {
+    return this.jobTitlesBS$.asObservable();
   }
 
   getAllTrainingHashStream(): Observable<TrainingIdHash> {
