@@ -84,13 +84,13 @@
 }
 
 .assigned-user {
-	display:inline-block;
-	padding:5px;	
-	width:fit-content;
+	display: inline-block;
+	padding: 5px;
+	width: fit-content;
 	text-align: center;
-	margin:0 4px;
+	margin: 0 4px;
 	vertical-align: middle;
-	border:1px solid white;
+	border: 1px solid white;
 	border-radius: 4px;
 }
 
@@ -193,6 +193,13 @@
 	background-color: #eaf7fe;
 }
 
+.current-version {
+	font-size: 18px;
+	font-weight: 500;
+	color: blue;
+	background-color: #edf7fe !important;
+}
+
 .toc-entry {
 	padding: 5px 10px;
 	cursor: pointer;
@@ -247,21 +254,21 @@
 }
 
 .choice-container {
-	display:block;
-	width:70%;
+	display: block;
+	width: 70%;
 }
 
 .choice-label {
-	float:left;
+	float: left;
 	margin-right: 10px;
-	font-size:18px;
-	margin-top:6px;
+	font-size: 18px;
+	margin-top: 6px;
 }
 
 .choice-input {
-	float:right;
-	margin-bottom:10px;
-	width:94%;
+	float: right;
+	margin-bottom: 10px;
+	width: 94%;
 }
 
 .header-icon {

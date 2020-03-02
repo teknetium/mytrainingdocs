@@ -430,7 +430,7 @@ export class FileService {
         this.fileIdHash[this.selectedFile._id] = this.selectedFile;
         this.uploadType = 'newFile';
         this.newVersion$.next(this.newVersion);
-        console.log('fileService.processResults new version ', this.selectedFile);
+        console.log('fileService.processResults new version  ', this.selectedFile);
 
         return;
       }
@@ -526,7 +526,7 @@ export class FileService {
   saveFile(file: FileModel) {
     this.action = 'save';
     this.putFile$(file).subscribe(data => {
-      this.loadData();
+      console.log('fileservice: saveFile', data);
     },
       err => {
         console.log('saveFile', file);
@@ -535,6 +535,8 @@ export class FileService {
 
   selectFsHandle(file: FileModel, versionIndex: number) {
     let mediaItem: SafeResourceUrl;
+
+    this.selectedFile = file;
 
     if (file.iconType === 'video') {
       mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.versions[versionIndex].url));
@@ -713,15 +715,19 @@ export class FileService {
     }
   }
 
-  pickNewVersion(version: Version) {
+  pickNewVersion(version: Version, mimeType: string) {
+    console.log('pickNewVersion', mimeType);
     this.uploadType = 'newVersion';
     this.newVersion = version;
+    this.picker = mimeType;
     if (this.picker === 'doc') {
       this.client.picker(this.docOptions).open();
     } else if (this.picker === 'video') {
       this.client.picker(this.videoOptions).open();
     } else if (this.picker === 'audio') {
       this.client.picker(this.audioOptions).open();
+    } else if (this.picker === 'image') {
+      this.client.picker(this.imageOptions).open();
     }
   }
 

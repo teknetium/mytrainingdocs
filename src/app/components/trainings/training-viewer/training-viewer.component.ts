@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FileService } from '../../../shared/services/file.service';
 import { TrainingService } from '../../../shared/services/training.service';
 import { UserService } from '../../../shared/services/user.service';
@@ -16,6 +16,8 @@ import { merge, take } from 'rxjs/operators';
 import { SendmailService } from '../../../shared/services/sendmail.service';
 import { MessageModel } from '../../../shared/interfaces/message.type';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { ThrowStmt } from '@angular/compiler';
+
 
 @Component({
   selector: 'app-training-viewer',
@@ -273,6 +275,7 @@ export class TrainingViewerComponent implements OnInit {
   currentQuestionIndex = -1;
   currentCorrectChoice: string;
   assignToDisabled = false;
+  currentVersionIndex = 0;
 
   constructor(
     private trainingService: TrainingService,
@@ -297,6 +300,7 @@ export class TrainingViewerComponent implements OnInit {
     this.mode = 'Edit';
 
     if (this.production === 'true') {
+      this.fullscreen = true;
       this.currentPageId = 'intro';
     } else {
       this.currentPageId = 'trainingWizardTour';
@@ -393,11 +397,13 @@ export class TrainingViewerComponent implements OnInit {
     })
 
 
-    this.newVersion$.subscribe(newVersion => {
-      if (!newVersion) {
+    this.newVersion$.subscribe(version => {
+      if (!version) {
         return;
       }
-      this.pageFileHash[this.currentPageId].versions.unshift(newVersion);
+
+      console.log('newVersion$.subscribe', this.currentPageId, this.pageFileHash);
+      this.fileService.selectFsHandle(this.pageFileHash[this.currentPageId], 0);
     })
 
     this.authenticatedUser$.pipe(take(2)).subscribe(user => {
@@ -415,7 +421,6 @@ export class TrainingViewerComponent implements OnInit {
     } else if (type === 'image') {
       this.fileService.openImagePicker();
     }
-
   }
 
   pageUrlChanged() {
@@ -481,6 +486,11 @@ export class TrainingViewerComponent implements OnInit {
     this.runningTour = true;
   }
 
+  viewVersion(index) {
+    this.currentVersionIndex = index;
+    this.fileService.selectFsHandle(this.pageFileHash[this.currentPageId], index);
+  }
+
   setCurrentPage(pageId) {
     if (this.assessmentInProgress) {
       console.log('setCurrentPage : assessmentInProgress');
@@ -491,9 +501,11 @@ export class TrainingViewerComponent implements OnInit {
     //      return;
     //    }
 
+    this.currentVersionIndex = 0;
     if (pageId === 'assessment') {
       this.resetAssessment();
     }
+
     this.currentPageId = pageId;
     if (this.pageFileHash[pageId]) {
       this.fileService.selectFsHandle(this.pageFileHash[pageId], 0);
@@ -560,6 +572,7 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   closeViewer() {
+    this.userTrainingService.stopSession(this.selectedTraining._id);
     this.trainingService.selectTraining(null);
     this.fullscreen = false;
     this.assessmentInProgress = false;
@@ -590,25 +603,37 @@ export class TrainingViewerComponent implements OnInit {
       return;
     }
 
-    const versionArray = this.fileService.getFile(this.pageFileHash[this.currentPageId]).versions[0].version.split('.', 3);
+    let currentFile: FileModel = this.pageFileHash[this.currentPageId];
+
+    const versionArray = currentFile.versions[0].version.split('.', 3);
     let majorNum = parseInt(versionArray[0], 10);
-    let middleNum = parseInt(versionArray[1], 10);
-    let minorNum = parseInt(versionArray[2], 10);
+    let minorNum = parseInt(versionArray[1], 10);
+    let patchNum = parseInt(versionArray[2], 10);
     if (this.changeLevel === 'major') {
       majorNum++;
-      middleNum = 0;
       minorNum = 0;
-    } else if (this.changeLevel === 'middle') {
-      middleNum++;
-      minorNum = 0;
+      patchNum = 0;
     } else if (this.changeLevel === 'minor') {
       minorNum++;
+      patchNum = 0;
+    } else if (this.changeLevel === 'patch') {
+      patchNum++;
     }
-    this.newVersion.version = majorNum + '.' + middleNum + '.' + minorNum;
+    this.newVersion.version = majorNum + '.' + minorNum + '.' + patchNum;
+    
     this.newVersion.owner = this.authenticatedUser._id;
     this.newVersion.dateUploaded = new Date().getTime();
 
-    this.fileService.pickNewVersion(this.newVersion);
+    let mimeType = currentFile.mimeType.substring(0, currentFile.mimeType.indexOf('/'));
+    let pickerType;
+    console.log('mimetype', mimeType);
+    if (mimeType === 'application') {
+      pickerType = 'doc';
+    } else {
+      pickerType = mimeType;
+    }
+
+    this.fileService.pickNewVersion(this.newVersion, pickerType);
     this.isNewVersionModalVisible = false;
   }
 

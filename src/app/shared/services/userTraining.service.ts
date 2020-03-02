@@ -3,10 +3,11 @@ import { BehaviorSubject, Observable, throwError as ObservableThrowError, Subscr
 import { EventService } from '../services/event.service';
 import { EventModel } from '../interfaces/event.type';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { UserTrainingModel, UserTrainingHash, UidUserTrainingHash } from '../interfaces/userTraining.type';
+import { UserTrainingModel, UserTrainingHash, UidUserTrainingHash, UTSession, UTSessionHash } from '../interfaces/userTraining.type';
 import { AuthService } from './auth.service';
 import { ENV } from './env.config';
 import { catchError } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,13 +18,14 @@ export class UserTrainingService {
   private allUserTrainingHash: UserTrainingHash = {};
   private userTrainingHashBS$ = new BehaviorSubject<UserTrainingHash>({});
   private usersBS$ = new BehaviorSubject<string[]>([]);
-
+  private utSessionHash: UTSessionHash = {};
+  private currentUT: string;
   
   constructor(private eventService: EventService,
     private http: HttpClient,
     private auth: AuthService) {
     
-  }
+    }
 
   initUserTrainingsForUser(uid) {
     let now = new Date().getTime();
@@ -37,6 +39,27 @@ export class UserTrainingService {
       this.uidUserTrainingHash[uid] = utHash;
     });
 
+  }
+
+  startSession(utId, tid) {
+    this.currentUT = utId;
+    let session = <UTSession>{
+      utId: utId,
+      startTime: new Date().getTime(),
+      stopTime: 0
+    };
+    this.utSessionHash[tid] = session;
+  }
+
+  stopSession(tid) {
+    let session = this.utSessionHash[tid];
+    session.stopTime = new Date().getTime();
+    let ut = this.allUserTrainingHash[this.currentUT];
+    let uid = ut.uid;
+    this.uidUserTrainingHash[uid][ut._id] = ut;
+    ut.timeToDate += session.stopTime - session.startTime;
+    console.log('stopSession', ut);
+    this.saveUserTraining(ut);
   }
 
   loadTrainingsForUser(userId) {

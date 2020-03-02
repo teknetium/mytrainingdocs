@@ -13,14 +13,14 @@
         <div *ngIf="myTeam.length === 0" style="text-align:center;margin-top:20px;">
             <span style="font-size:20px;font-weight:200;margin-top: 20px;"> You haven't added any team
                 members yet!</span><br>
-            <button nz-button nzType="primary" (click)="addUser()" style="margin-top: 20px;">Add a team
+            <button nz-button nzType="primary" nzSize="small" (click)="addUser()" style="margin-top: 20px;">Add a team
                 member</button>
         </div>
         <div *ngIf="myTeam && myTeam.length > 0" style="height:95%;">
             <div class="team-container">
                 <div class="direct-report-container">
                     <div>
-                        <button nz-button nzType="primary" (click)="addUser()" style="margin: 20px 0;">
+                        <button nz-button nzType="primary" (click)="addUser()" nzSize="small" style="margin: 20px 0;">
                             Add a team member
                         </button>
                     </div>

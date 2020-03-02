@@ -5,26 +5,36 @@
         <span style="display:inline-block;font-size:24px;font-weight: 300;margin-bottom:20px;">My Trainings</span>
         -->
         <nz-alert style="width:100%;padding-bottom:40px;" nzType="info" nzMessage="About This Page"
-            [nzDescription]="myTeamPageDescriptionTemplate" [nzCloseText]="myTeamPageCloseTemplate" nzShowIcon nzCloseable>
+            [nzDescription]="myTeamPageDescriptionTemplate" [nzCloseText]="myTeamPageCloseTemplate" nzShowIcon
+            nzCloseable>
         </nz-alert>
         <ng-template #myTeamPageCloseTemplate>
             <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
                 style="font-size: 24px;"></i>
         </ng-template>
         <ng-template #myTeamPageDescriptionTemplate>
+            <div style="margin-top:20px;color:blue;">
+                Tasks
+            </div>
+            <div style="padding-left:40px;">
+                <ul>
+                    <li>
+                        The single task on this page is the execution of your assigned trainings.
+                        <br>
+                        The table below contains the trainings that you are responsible for completing.
+                        <br>
+                        Start a training by selecting the green play button.
+                    </li>
+                </ul>
+            </div>
             <p>
-                The following is a list of trainings that you are responsible for completing. Start a training by
-                selecting
-                the green play button.
+                The following is a description of the columns in the training table below.
             </p>
-            <p>
-                The following is a description of the various columns in the training table below.
-            </p>
-            <div style="padding-left:40px;width:100%;">
+            <div style="width:100%;">
                 <div style="display:block;width:100%;margin-top:10px;">
                     <div style="float:left;color:blue;width:15%;">Status</div>
                     <div style="display:inline-block;width:85%;">
-                        The status of the training
+                        The status of the training.  Possible values are :
                         <div style="display:block;padding-left:40px;">
                             <i nz-icon nzType="smile" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
                                 style="font-size: 16px;vertical-align: middle;margin-left:5px;"></i> - Up To
@@ -72,14 +82,14 @@
                         <div style="display:block;padding-left:40px;">
                             <i nz-icon nzType="check-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#4891f7'"
                                 style="font-size: 16px;vertical-align: middle;margin-left:5px;"></i>
-                                - Mark this training as Completed
+                            - Mark this training as Completed
                         </div>
                     </div>
                 </div>
             </div>
         </ng-template>
     </div>
-    <app-user-trainings></app-user-trainings>
+    <app-user-trainings logSession="on"></app-user-trainings>
     <app-training-viewer style="width:100%;height:100%;" production="true"
         (assessmentResult)="processAssessmentResult($event)"></app-training-viewer>
 </div>

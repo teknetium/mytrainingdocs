@@ -9,13 +9,14 @@
     <div class="training-header" [ngClass]="{'activeStep': currentStep === 0}">
         <div>
             <i *ngIf="!fullscreen" nz-icon nzType="fullscreen" [nzTheme]="'outline'" (click)="fullscreen = true"
-                style="position:absolute;top:10px;right:10px;cursor:pointer;font-size:20px;vertical-align: baseline;"
+                style="position:absolute;top:10px;right:40px;cursor:pointer;font-size:20px;vertical-align: baseline;"
                 nz-tooltip nzTooltipTitle="Expand"></i>
-            <i *ngIf="fullscreen" nz-icon nzType="fullscreen-exit" [nzTheme]="'outline'" (click)="fullscreen = false"
-                style="position:absolute;top:10px;right:10px;cursor:pointer;font-size:20px;vertical-align: baseline;"
+            <i *ngIf="fullscreen && production === 'false'" nz-icon nzType="fullscreen-exit" [nzTheme]="'outline'"
+                (click)="fullscreen = false"
+                style="position:absolute;top:10px;right:40px;cursor:pointer;font-size:20px;vertical-align: baseline;"
                 nz-tooltip nzTooltipTitle="Shrink"></i>
             <i nz-icon nzType="close-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" (click)="closeViewer()"
-                style="position:absolute;top:10px;right:40px;cursor:pointer;font-size:20px;vertical-align: baseline;"
+                style="position:absolute;top:10px;right:10px;cursor:pointer;font-size:20px;vertical-align: baseline;"
                 nz-tooltip nzTooltipTitle="Close Training">
             </i>
         </div>
@@ -111,7 +112,7 @@
                         style="display:inline-block;margin-left:40px;">
                         <span style="color:#bbbbbb;"> Assigned Users</span>
                         <span style="display:inline-block;margin-right:10px;"></span>
-                        <div *ngFor="let uid of users$ | async; index as i" 
+                        <div *ngFor="let uid of users$ | async; index as i"
                             style="display:inline-block;width:fit-content;text-align: center;margin:0 4px;vertical-align: middle;">
                             <div *ngIf="myTeamHash[uid]">
                                 <i [ngClass]="userTypeIconHash[myTeamHash[uid].userType]"
@@ -676,12 +677,12 @@
                                 *ngIf="page.type === 'file' && (mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false')">
                                 <button
                                     *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
-                                    nz-button nzType="default" [nzSize]="'small'" (click)="uploadNewVersion()">
+                                    nz-button nzType="primary" nzSize="small" (click)="uploadNewVersion()">
                                     <i nz-icon nzType="upload" [nzTheme]="'outline'"></i>
                                     <span style="font-size:12px;">Upload New Version</span>
                                 </button>
                                 <div
-                                    style="text-align:center;display:block;width:100%;margin-top:2px;margin-bottom:5px;font-size:12px;">
+                                    style="text-align:center;display:block;width:100%;margin-top:10px;margin-bottom:5px;font-size:12px;">
                                     <nz-table nzSize="small" nzBordered="false" nzShowPagination="false"
                                         [nzData]="fileService.getFile(page.file).versions"
                                         style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
@@ -736,12 +737,12 @@
                                                 status for all responsible users. </label>
                                             <label nz-radio
                                                 [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}"
-                                                nzValue="middle">Notify
+                                                nzValue="minor">Notify
                                                 all
                                                 responsible users.</label>
                                             <label nz-radio
                                                 [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}"
-                                                nzValue="minor">No action
+                                                nzValue="patch">No action
                                                 needed.</label>
                                         </nz-radio-group>
                                         <p *ngIf="error1" style="color:red;">Please select one of the 3 options.</p>
@@ -756,49 +757,59 @@
                                     </div>
                                 </nz-modal>
                             </div>
-                            <vg-player (onPlayerReady)="onPlayerReady($event)"
-                                *ngIf="page.type === 'file' && pageFileHash[page._id] && pageFileHash[page._id].iconType === 'video'"
-                                style="margin-top:20px;">
-
-                                <vg-controls>
-                                    <vg-play-pause></vg-play-pause>
-                                    <vg-playback-button></vg-playback-button>
-
-                                    <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-
-                                    <vg-scrub-bar>
-                                        <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                                        <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-                                    </vg-scrub-bar>
-
-                                    <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
-                                    <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-
-                                    <vg-track-selector></vg-track-selector>
-                                    <vg-mute></vg-mute>
-                                    <vg-volume></vg-volume>
-
-                                    <vg-fullscreen></vg-fullscreen>
-                                </vg-controls>
-
-                                <video [vgMedia]="media" #media id="singleVideo" preload="auto" crossorigin>
-                                    <source [src]="(safeFileUrl$ | async)" type="video/mp4">
-                                </video>
-                            </vg-player>
-                            <div *ngIf="page.type === 'file' && pageFileHash[page._id] && pageFileHash[page._id].iconType !== 'video'"
-                                style="text-align: center;height:90%;margin-top:30px;">
-                                <div style="width:100%;height:900px;display:inline-block;">
-                                    <iframe [src]="(safeFileUrl$ | async)" allowfullscreen width="100%" height="100%">
-                                    </iframe>
+                            <div style="margin-top:20px;">
+                                <div style="margin-top:20px;text-align: center;">
+                                    <span style="display:inline-block;color:#aaaaaa;">
+                                        Version {{ pageFileHash[page._id].versions[currentVersionIndex].version }}
+                                    </span>
                                 </div>
-                            </div>
-                            <div *ngIf="page.type === 'url'" style="text-align: center;height:90%;margin-top:30px;">
-                                <div style="display: block;color:#bbbbbb;">
-                                    {{ page.url }}
+                                <div style="text-align: center;margin-top:5px;">
+                                    <vg-player (onPlayerReady)="onPlayerReady($event)"
+                                        *ngIf="page.type === 'file' && pageFileHash[page._id] && pageFileHash[page._id].iconType === 'video'">
+
+                                        <vg-controls>
+                                            <vg-play-pause></vg-play-pause>
+                                            <vg-playback-button></vg-playback-button>
+
+                                            <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+
+                                            <vg-scrub-bar>
+                                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                                <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                                            </vg-scrub-bar>
+
+                                            <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                                            <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+
+                                            <vg-track-selector></vg-track-selector>
+                                            <vg-mute></vg-mute>
+                                            <vg-volume></vg-volume>
+
+                                            <vg-fullscreen></vg-fullscreen>
+                                        </vg-controls>
+
+                                        <video [vgMedia]="media" #media id="singleVideo" preload="auto" crossorigin>
+                                            <source [src]="(safeFileUrl$ | async)" type="video/mp4">
+                                        </video>
+                                    </vg-player>
                                 </div>
-                                <div style="width:100%;height:900px;display:inline-block;">
-                                    <iframe [src]="safeUrlHash[page.url]" allowfullscreen width="100%" height="100%">
-                                    </iframe>
+                                <div *ngIf="page.type === 'file' && pageFileHash[page._id] && pageFileHash[page._id].iconType !== 'video'"
+                                    style="text-align: center;height:90%;margin-top:5px;">
+                                    <div style="width:100%;height:900px;display:inline-block;">
+                                        <iframe [src]="(safeFileUrl$ | async)" allowfullscreen width="100%"
+                                            height="100%">
+                                        </iframe>
+                                    </div>
+                                </div>
+                                <div *ngIf="page.type === 'url'" style="text-align: center;height:90%;margin-top:5px;">
+                                    <div style="display: block;color:#bbbbbb;">
+                                        {{ page.url }}
+                                    </div>
+                                    <div style="width:100%;height:900px;display:inline-block;">
+                                        <iframe [src]="safeUrlHash[page.url]" allowfullscreen width="100%"
+                                            height="100%">
+                                        </iframe>
+                                    </div>
                                 </div>
                             </div>
                         </div>

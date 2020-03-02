@@ -5,7 +5,8 @@
             <tr style="font-size:12px;">
                 <th>Status</th>
                 <th style="padding-left:40px;">Title</th>
-                <th style="padding-left:10px;">Due Date</th>
+                <th style="padding-left:10px;">Elapsed Time</th>
+                <th style="padding-left:10px;">Due Date</th>    
                 <th style="padding-left:10px;">Date Completed</th>
                 <th style="padding-left:30px;">Actions</th>
             </tr>
@@ -24,6 +25,9 @@
                         [ngStyle]="{'color': trainingIdHash[userTraining.tid].iconColor}">
                     </i>
                     {{ trainingIdHash[userTraining.tid].title }}
+                </td>
+                <td style="font-size:12px;width:5%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
+                    {{ timeFormat(userTraining.timeToDate) }}
                 </td>
                 <td *ngIf="mode === 'admin'" style="font-size:12px;width:16%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     <nz-date-picker nzFormat="MM-dd-yyyy" nzSize="small" [ngModel]="userTraining.dueDate"

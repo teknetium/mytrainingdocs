@@ -45,11 +45,11 @@
             </nz-modal>
 
             <div style="width:100%;padding:0 10px 10px 10px;float:right;">
-                <button nz-button nzType="primary" (click)="showUserTrainingModal = true" style="margin: 20px 0;">
+                <button nz-button nzType="primary" nzSize="small" (click)="showUserTrainingModal = true" style="margin: 20px 0;">
                     Assign a Training
                 </button>
                     <div style="clear:both;margin-bottom:10px;"></div>
-                    <app-user-trainings mode="admin"></app-user-trainings>
+                    <app-user-trainings mode="admin" logSession="off"></app-user-trainings>
             </div>
         </div>
     </div>

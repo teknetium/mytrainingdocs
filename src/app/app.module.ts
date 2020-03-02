@@ -15,7 +15,6 @@ import { NgChartjsModule } from 'ng-chartjs';
 import { LandingpageModule } from './components/landingpage/landingpage.module';
 import { CallbackModule } from './components/callback/callback.module';
 import { PricingModule } from './components/pricing/pricing.module';
-import { FilesModule } from './components/files/files.module';
 import { TrainingsModule } from './components/trainings/trainings.module';
 import { MyIconPickerModule } from './components/my-icon-picker/my-icon-picker.module';
 import { SignupModule } from './components/signup/signup.module';
@@ -50,7 +49,6 @@ registerLocaleData(en);
         NgChartjsModule,
         LandingpageModule,
         CallbackModule,
-        FilesModule,
         TrainingsModule,
         MyIconPickerModule,
         SignupModule,

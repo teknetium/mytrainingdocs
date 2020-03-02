@@ -12,6 +12,16 @@ export interface UserTrainingModel {
   assessmentResponse: number[]
 }
 
+export interface UTSession {
+  utId: string,
+  startTime: number,
+  stopTime: number,
+}
+
+export interface UTSessionHash {
+  [indexer: string]: UTSession;
+}
+
 export interface UserTrainingHash {
   [indexer: string]: UserTrainingModel;
 }

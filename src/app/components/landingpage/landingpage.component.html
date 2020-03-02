@@ -300,9 +300,9 @@
       </div>
       <nz-collapse nzAccordion>
         <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="headerTemplate" [nzActive]="panel.active">
-          <div style="padding-left:20px;font-size: 18px;color:black;font-weight: 300;">{{ panel.answer }}</div>
+          <div style="padding-left:20px;font-size: 20px;color:black;font-weight: 200;">{{ panel.answer }}</div>
           <ng-template #headerTemplate>
-            <div style="color:#aaaaaa;font-size: 18px;">
+            <div style="color:#888888;font-size: 18px;font-weight: 200;">
             {{ panel.question }}
             </div>
           </ng-template>

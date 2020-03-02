@@ -44,6 +44,7 @@ export class UserTrainingsComponent implements OnInit {
   selectedTraining$: Observable<TrainingModel>;
 
   @Input() mode = '';
+  @Input() logSession = 'off';
 
   currentUserTraining: string;
   markCompletedModalIsVisible: boolean;
@@ -91,10 +92,19 @@ export class UserTrainingsComponent implements OnInit {
       this.userTrainings = Object.values(userTrainingHash);
       this.cd.detectChanges();
     })
+  }
 
+  timeFormat(ms): string {
+    let h = Math.floor(ms / 3600000);
+    let m = Math.floor((ms % 3600000) / 60000);
+    let s = Math.floor(((ms % 3600000) % 60000) / 1000);
+    return String(h) + ':' + String(m) + ':' + String(s);
   }
 
   viewTraining(utid, tid) {
+    if (this.logSession === 'on') {
+      this.userTrainingService.startSession(utid, tid);
+    }
     this.currentUserTraining = utid;
     this.trainingIsVisible = true;
     this.trainingService.selectTraining(tid);

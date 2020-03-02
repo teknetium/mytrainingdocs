@@ -20,7 +20,6 @@ import { NzInputModule } from 'ng-zorro-antd';
 import { NzAlertModule } from 'ng-zorro-antd';
 import { RouterModule } from '@angular/router';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
-import { FilesModule } from '../files/files.module';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
 import { VgCoreModule } from 'videogular2/compiled/core';
@@ -58,7 +57,6 @@ import { UserTrainingsComponent } from './user-trainings/user-trainings.componen
     NzModalModule,
     NzIconModule,
     NzStepsModule,
-    FilesModule,
     NzButtonModule,
     NzTypographyModule,
     NzTabsModule,
