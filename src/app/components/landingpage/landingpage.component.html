@@ -52,7 +52,40 @@
       </div>
     </div>
   </div>
+  <!--
+  <nz-modal [(nzVisible)]="showTaskVideoModal" nzWidth="700" nzTitle="Task Video" nzCancelDisabled="true"
+    (nzOnOk)="closeTaskVideoModal()" style="background-color: black;">
+    <div style="text-align: center;margin-top:5px;background-color: black;">
+      <vg-player (onPlayerReady)="onPlayerReady($event)">
 
+        <vg-controls>
+          <vg-play-pause></vg-play-pause>
+          <vg-playback-button></vg-playback-button>
+
+          <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+
+          <vg-scrub-bar>
+            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+            <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+          </vg-scrub-bar>
+
+          <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+          <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+
+          <vg-track-selector></vg-track-selector>
+          <vg-mute></vg-mute>
+          <vg-volume></vg-volume>
+
+          <vg-fullscreen></vg-fullscreen>
+        </vg-controls>
+
+        <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
+          <source [src]="(taskVideo$ | async)" type="video/mp4">
+        </video>
+      </vg-player>
+    </div>
+  </nz-modal>
+-->
   <!-- START HOME -->
   <section class="section  home-half" id="home" style="position: relative;overflow: hidden;padding:150px 0;">
     <img src="assets/images/others/bb6.jpg" style="position: absolute;left: 0;top: 0;width: 100%;height: 100%;">
@@ -66,7 +99,8 @@
                 <h5 class="header_small_title"><span>New</span></h5>
                 -->
                 <div style="font-size:34px;font-weight: 300;color:white;">Finally, a Training
-                  Management System designed for <span style="font-size:40px;font-weight: 500;color:white;">YOUR TEAM!</span>
+                  Management System designed for <span style="font-size:40px;font-weight: 500;color:white;">YOUR
+                    TEAM!</span>
                 </div>
                 <p class="header_subtitle pt-4 mx-auto"
                   style="color:#bbbbbb !important;font-size:22px !important;font-weight: 300;"><b>SIMPLE</b> to setup,
@@ -74,9 +108,14 @@
                   <b>SCALES</b> to large organizations.</p>
               </div>
             </div>
+            <!--
+            <div style="width:100%;padding:100px;height:200px;background-color: antiquewhite;">
+              <img height="120" src="assets/images/landingpage.png">
+            </div>
+            -->
           </div>
 
-<!--
+          <!--
           <div class="">
             <div class="row" style="width:100%;">
               <div class="col-lg-12 text-center">
@@ -210,7 +249,7 @@
                 </div>
               </div>
             </div>
-<!--
+            <!--
             <div class="text-center">
               <div>
                 <a class="btn btn-custom text-white" [ngx-scroll-to]="destinations['contact'].ngxScrollToDestination"
@@ -237,7 +276,7 @@
               </div>
             </div>
 
-<!--
+            <!--
             <div class="text-center">
               <div>
                 <a class="btn btn-custom text-white" [ngx-scroll-to]="destinations['contact'].ngxScrollToDestination"
@@ -303,7 +342,7 @@
           <div style="padding-left:20px;font-size: 20px;color:black;font-weight: 200;">{{ panel.answer }}</div>
           <ng-template #headerTemplate>
             <div style="color:#888888;font-size: 18px;font-weight: 200;">
-            {{ panel.question }}
+              {{ panel.question }}
             </div>
           </ng-template>
         </nz-collapse-panel>

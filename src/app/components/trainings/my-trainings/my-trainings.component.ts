@@ -61,43 +61,9 @@ export class MyTrainingsComponent implements OnInit {
 
       this.userService.selectAuthenticatedUser();
     });
-/*
-    this.selectedUser$.subscribe(data => {
-      if (!data) {
-        console.log('mt-training:selectedUser$.subscribe...null user');
-        return;
-      }
-      this.userObj = data;
-      this.userTrainingService.loadTrainingsForUser(this.userObj._id);
-      console.log('myTrainings:selectedUser$.subscribe...', data);
-    })
-      this.authenticatedUser = user;
-      if (this.type === 'authenticatedUser') {
-        this.selectedUser = user;
-        this.userTrainingService.loadTrainingsForUser(user._id);
-        this.foo$ = this.userTrainings$.pipe(take(2), filter(uts => uts.length > 0 && uts[0].uid === this.authenticatedUser._id));
-      } else if (this.type === 'team') {
-        this.foo$ = this.userTrainings$.pipe(take(2), filter(uts => uts.length > 0 && uts[0].uid !== this.authenticatedUser._id));
-      } else {
-      }
-
-      this.foo$.subscribe(list => {
-        console.log('my-trainings...foo', list);
-      })
-    })
-
-
-    /*
-        this.selectedUser$.subscribe(user => {
-          if (!user) {
-            return;
-          }
-          if (this.type === 'team') {
-            this.selectedUser = user;
-            this.userTrainingService.loadTrainingsForUser(user._id);
-          }
-        });
-        */
   }
 
+  playTaskVideo(task) {
+    this.trainingService.playTaskVideo(task);
+  }
 }

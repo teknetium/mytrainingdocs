@@ -4,85 +4,99 @@
         <!--
         <span style="display:inline-block;font-size:24px;font-weight: 300;margin-bottom:20px;">My Trainings</span>
         -->
-        <nz-alert style="width:100%;padding-bottom:40px;" nzType="info" nzMessage="About This Page"
-            [nzDescription]="myTeamPageDescriptionTemplate" [nzCloseText]="myTeamPageCloseTemplate" nzShowIcon
+        <nz-alert style="width:100%;padding-bottom:40px;" nzType="info" [nzMessage]="myTrainingsMessage"
+            [nzDescription]="myTrainingsPageDescriptionTemplate" [nzCloseText]="myTrainingsPageCloseTemplate" nzShowIcon
             nzCloseable>
         </nz-alert>
-        <ng-template #myTeamPageCloseTemplate>
+        <ng-template #myTrainingsMessage>
+            <div style="margin:20px 0;color:blue;font-size:20px;text-align: center;">
+                About This Page
+            </div>
+        </ng-template>
+        <ng-template #myTrainingsPageCloseTemplate>
             <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
                 style="font-size: 24px;"></i>
         </ng-template>
-        <ng-template #myTeamPageDescriptionTemplate>
-            <div style="margin-top:20px;color:blue;">
-                Tasks
+        <ng-template #myTrainingsPageDescriptionTemplate>
+            <div>
+                <div style="margin:20px 0;color:blue;font-size:16px;">
+                    Tasks
+                </div>
+                <div style="border-bottom: 1px solid #dddddd;margin-bottom:20px;padding-bottom:20px;padding-left:20px;">
+                    <ol>
+                        <li>
+                            &nbsp;&nbsp;Execute on your assigned trainings
+                                <i nz-icon nzType="play-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+                                    nz-tooltip nzTooltipTitle="Play the task How-To video" (click)="playTaskVideo('executeTraining')"
+                                    style="font-size:24px;vertical-align: baseline;margin-left:20px;"></i>  
+                        </li>
+                    </ol>
+                </div>
             </div>
-            <div style="padding-left:40px;">
-                <ul>
-                    <li>
-                        The single task on this page is the execution of your assigned trainings.
-                        <br>
-                        The table below contains the trainings that you are responsible for completing.
-                        <br>
-                        Start a training by selecting the green play button.
-                    </li>
-                </ul>
-            </div>
-            <p>
-                The following is a description of the columns in the training table below.
-            </p>
-            <div style="width:100%;">
-                <div style="display:block;width:100%;margin-top:10px;">
-                    <div style="float:left;color:blue;width:15%;">Status</div>
-                    <div style="display:inline-block;width:85%;">
-                        The status of the training.  Possible values are :
-                        <div style="display:block;padding-left:40px;">
-                            <i nz-icon nzType="smile" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-                                style="font-size: 16px;vertical-align: middle;margin-left:5px;"></i> - Up To
-                            Date
-                        </div>
-                        <div style="display:block;padding-left:40px;">
-                            <i nz-icon nzType="check-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#4891f7'"
-                                style="font-size: 16px;vertical-align: middle;margin-left:5px;"></i> -
-                            Completed
-                        </div>
-                        <div style="display:block;padding-left:40px;">
-                            <i nz-icon nzType="exclamation-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
-                                style="font-size: 16px;vertical-align: middle;margin-left:5px;"></i> -
-                            Past Due
-                        </div>
-                    </div>
+            <div>
+                <div style="margin:20px 0;color:blue;font-size:16px;">
+                    General Info
                 </div>
-                <div style="display:block;width:100%;margin-top:10px;">
-                    <div style="float:left;color:blue;width:15%;">Title</div>
-                    <div style="display:inline-block;width:85%;">
-                        The title of the training
-                    </div>
-                </div>
-                <div style="display:block;width:100%;margin-top:10px;">
-                    <div style="float:left;color:blue;width:15%;">Due Date</div>
-                    <div style="display:inline-block;width:85%;">
-                        The date on which the training must be complete.
-                    </div>
-                </div>
-                <div style="display:block;width:100%;margin-top:10px;">
-                    <div style="float:left;color:blue;width:15%;">Date Completed</div>
-                    <div style="display:inline-block;width:85%;">
-                        The actual date the training was completed.
-                    </div>
-                </div>
-                <div style="display:block;width:100%;margin-top:10px;">
-                    <div style="float:left;color:blue;width:15%;">Actions</div>
-                    <div style="display:inline-block;width:85%;">
-                        A list of the actions for the particular training
-                        <div style="display:block;padding-left:40px;">
-                            <i nz-icon nzType="play-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-                                style="font-size: 16px;vertical-align: middle;margin-left:5px;"></i>
-                            - Run the Training
+                <div style="margin-bottom:20px;padding-left:40px;">
+                    <p>
+                        The following is a description of the columns in the training table below.
+                    </p>
+                    <div style="width:100%;">
+                        <div style="display:block;width:100%;margin-top:10px;">
+                            <div style="float:left;color:blue;width:15%;">Status</div>
+                            <div style="display:inline-block;width:85%;">
+                                The status of the training. Possible values are :
+                                <div style="display:block;padding-left:40px;">
+                                    <i nz-icon nzType="smile" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+                                        style="font-size: 16px;vertical-align: middle;margin-left:5px;"></i> - Up To
+                                    Date
+                                </div>
+                                <div style="display:block;padding-left:40px;">
+                                    <i nz-icon nzType="check-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#4891f7'"
+                                        style="font-size: 16px;vertical-align: middle;margin-left:5px;"></i> -
+                                    Completed
+                                </div>
+                                <div style="display:block;padding-left:40px;">
+                                    <i nz-icon nzType="exclamation-circle" [nzTheme]="'twotone'"
+                                        [nzTwotoneColor]="'red'"
+                                        style="font-size: 16px;vertical-align: middle;margin-left:5px;"></i> -
+                                    Past Due
+                                </div>
+                            </div>
                         </div>
-                        <div style="display:block;padding-left:40px;">
-                            <i nz-icon nzType="check-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#4891f7'"
-                                style="font-size: 16px;vertical-align: middle;margin-left:5px;"></i>
-                            - Mark this training as Completed
+                        <div style="display:block;width:100%;margin-top:10px;">
+                            <div style="float:left;color:blue;width:15%;">Title</div>
+                            <div style="display:inline-block;width:85%;">
+                                The title of the training
+                            </div>
+                        </div>
+                        <div style="display:block;width:100%;margin-top:10px;">
+                            <div style="float:left;color:blue;width:15%;">Due Date</div>
+                            <div style="display:inline-block;width:85%;">
+                                The date on which the training must be complete.
+                            </div>
+                        </div>
+                        <div style="display:block;width:100%;margin-top:10px;">
+                            <div style="float:left;color:blue;width:15%;">Date Completed</div>
+                            <div style="display:inline-block;width:85%;">
+                                The actual date the training was completed.
+                            </div>
+                        </div>
+                        <div style="display:block;width:100%;margin-top:10px;">
+                            <div style="float:left;color:blue;width:15%;">Actions</div>
+                            <div style="display:inline-block;width:85%;">
+                                A list of the actions for the particular training
+                                <div style="display:block;padding-left:40px;">
+                                    <i nz-icon nzType="play-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+                                        style="font-size: 16px;vertical-align: middle;margin-left:5px;"></i>
+                                    - Run the Training
+                                </div>
+                                <div style="display:block;padding-left:40px;">
+                                    <i nz-icon nzType="check-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#4891f7'"
+                                        style="font-size: 16px;vertical-align: middle;margin-left:5px;"></i>
+                                    - Mark this training as Completed
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -67,7 +67,7 @@
                 </a>
             </li>
             -->
-            <li  style="float:right;margin-right:20px;">
+            <li style="float:right;margin-right:20px;">
                 <a (click)="quickViewToggle()">
                     <i nz-icon nzType="setting" theme="outline" style="color:white;font-size:20px;"></i>
                 </a>
@@ -175,6 +175,38 @@
     </nz-header>
     <nz-content class="inner-content">
         <router-outlet></router-outlet>
+        <nz-modal [(nzVisible)]="showTaskVideoModal" nzWidth="700" nzTitle="Task Video" nzCancelDisabled="true"
+             (nzOnOk)="closeTaskVideoModal()" style="background-color: black;">
+            <div style="text-align: center;margin-top:5px;background-color: black;">
+                <vg-player (onPlayerReady)="onPlayerReady($event)">
+
+                    <vg-controls>
+                        <vg-play-pause></vg-play-pause>
+                        <vg-playback-button></vg-playback-button>
+
+                        <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+
+                        <vg-scrub-bar>
+                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                            <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                        </vg-scrub-bar>
+
+                        <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                        <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+
+                        <vg-track-selector></vg-track-selector>
+                        <vg-mute></vg-mute>
+                        <vg-volume></vg-volume>
+
+                        <vg-fullscreen></vg-fullscreen>
+                    </vg-controls>
+
+                    <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
+                        <source [src]="(taskVideo$ | async)" type="video/mp4">
+                    </video>
+                </vg-player>
+            </div>
+        </nz-modal>
     </nz-content>
     <!--
     <nz-footer class="footer">Copyright ©2020 Teknetium, LLC</nz-footer>

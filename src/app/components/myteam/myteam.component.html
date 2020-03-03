@@ -1,13 +1,105 @@
 <div style="height:100%;">
     <div class="my-team" style="height:100%;">
         <div class="my-team-header">
-            <nz-alert style="width:100%;height:fit-content;" nzType="info" nzMessage="About This Page"
-                nzDescription="This is where you manage your team members and the trainings that they are responsible for."
-                [nzCloseText]="pageCloseTemplate" nzShowIcon nzCloseable>
+            <nz-alert style="width:100%;height:fit-content;" nzType="info" [nzMessage]="myTeamMessage"
+                [nzDescription]="myTeamDescriptionTemplate" [nzCloseText]="myTeamPageCloseTemplate" nzShowIcon
+                nzCloseable>
             </nz-alert>
-            <ng-template #pageCloseTemplate>
+            <ng-template #myTeamMessage>
+                <div style="margin:20px 0;color:blue;font-size:20px;text-align: center;">
+                    About This Page
+                </div>
+            </ng-template>
+            <ng-template #myTeamPageCloseTemplate>
                 <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
                     style="font-size: 24px;"></i>
+            </ng-template>
+            <ng-template #myTeamDescriptionTemplate>
+                <div>
+                    <div style="margin:20px 0;color:blue;font-size:16px;">
+                        Tasks
+                    </div>
+                    <div
+                        style="border-bottom: 1px solid #dddddd;margin-bottom:20px;padding-bottom:20px;padding-left:20px;">
+                        <ol>
+                            <li>
+                                &nbsp;&nbsp;Add/Remove team members
+                                <div style="padding:10px;">
+                                    To add a new team member, click the <span style="color:blue;">Add a team
+                                        member</span> button.
+                                    This brings up the <span style="color:blue;">Team Member Registration</span> dialog.
+                                    <br>
+                                    The following information is collected in this dialog:
+                                    <div style="width:100%;">
+                                        <div style="display:block;width:100%;margin-top:10px;">
+                                            <div style="float:left;color:blue;width:15%;">First & Last Name</div>
+                                            <div style="display:inline-block;width:85%;">
+                                                enough said...
+                                            </div>
+                                        </div>
+                                        <div style="display:block;width:100%;margin-top:10px;">
+                                            <div style="float:left;color:blue;width:15%;">Email</div>
+                                            <div style="display:inline-block;width:85%;">
+                                                The email address where a Registration Completion Request will be sent.
+                                            </div>
+                                        </div>
+                                        <div style="display:block;width:100%;margin-top:10px;">
+                                            <div style="float:left;color:blue;width:15%;">Job Title</div>
+                                            <div style="display:inline-block;width:85%;">
+                                                The job title for this team member.
+                                                <br>
+                                                <p>
+                                                    This job title will be matched against the job titles specified in
+                                                    the trainings to automatically assign trainings to matching users.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div style="display:block;width:100%;margin-top:10px;">
+                                            <div style="float:left;color:blue;width:15%;">User Type</div>
+                                            <div style="display:inline-block;width:85%;">
+                                                This is the type of user. Used to more efficiently manage team
+                                                members.<br><br>
+                                                <label style="display:block;font-size:18px;">
+                                                    <i class="fad fa-user" style="vertical-align: baseline;"></i>
+                                                    <span style="margin-left:10px;font-size:14px;">Individual
+                                                        Contributor</span>
+                                                </label>
+                                                <label style="display:block;font-size:18px;">
+                                                    <i class="fad fa-user-tie" style="vertical-align: baseline;"></i>
+                                                    <span style="margin-left:10px;font-size:14px;">Supervisor</span>
+
+                                                </label>
+                                                <label style="display:block;font-size:18px;">
+                                                    <i class="fad fa-user-cowboy" style="vertical-align: baseline;"></i>
+                                                    <span style="margin-left:10px;font-size:14px;">Volunteer</span>
+
+                                                </label>
+                                                <label style="display:block;font-size:18px;">
+                                                    <i class="fad fa-user-crown" style="vertical-align: baseline;"></i>
+                                                    <span style="margin-left:10px;  font-size:14px;">Customer</span>
+
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                &nbsp;&nbsp;Add/Remove trainings for each team member
+                            </li>
+                            <li>
+                                &nbsp;&nbsp;Update team member's profile information
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div>
+                    <div style="margin:20px 0;color:blue;font-size:16px;">
+                        General Info
+                    </div>
+                    <div style="margin-bottom:20px;padding-left:40px;">
+                    </div>
+                </div>
             </ng-template>
         </div>
         <div *ngIf="myTeam.length === 0" style="text-align:center;margin-top:20px;">
@@ -46,74 +138,8 @@
             </div>
             <div class="my-team-rightside" style="width:77%;">
                 <app-teammember></app-teammember>
-                <!--
-                <div *ngIf="selectedUser$ | async as selectedUser">
-                    <div class="" style="width:100%;height:44px;margin-bottom:20px;">
-                        <i [ngClass]="userTypeIconHash[selectedUser.userType]" style="font-size:20px;"
-                            [ngStyle]="{'color': trainingStatusColorHash[selectedUser.trainingStatus]}" nz-tooltip
-                            [nzTooltipTitle]=""></i>&nbsp;
-                        <span
-                            style="display:inline-block;margin-left:10px;font-size:24px;font-weight: 300;">{{selectedUser.firstName}}
-                            {{selectedUser.lastName}}</span>
-                        &nbsp;&nbsp;&nbsp;
-                        <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
-                            style="cursor:pointer;font-size:16px;vertical-align: text-top;" nz-tooltip
-                            nzTooltipTitle="Delete User" nz-popconfirm nzPopconfirmTitle="Delete this user?"
-                            (nzOnConfirm)="confirmDelete(selectedUser)"></i>
-                    </div>
-                    <div style="width:100%;">
-                        <nz-modal [nzVisible]="showUserTrainingModal" nzTitle="Assign Training To User"
-                            [nzCancelDisabled]="assignableTrainings.length === 0"
-                            (nzOnCancel)="handleCancelUserTraining()" (nzOnOk)="handleAssignUserTraining()"
-                            style="width:500px;padding:10px;float:left;">
-                            <div>
-                                <div style="background-color:white;display:inline-block;width:100%;">
-                                    <div *ngIf="teamTrainings.length === 0">
-                                        You have not created any trainings yet!<br> Head over to the <span
-                                            style="color:blue;">All Trainings</span> page to create your
-                                        trainings.
-                                    </div>
-                                    <div *ngIf="teamTrainings.length > 0 && assignableTrainings.length === 0">
-                                        You have already assigned all trainings to this user!
-                                    </div>
-                                    <div *ngIf="assignableTrainings.length > 0">
-                                        Select the training you would like to assign to this user.
-                                    </div>
-                                    <div *ngFor="let training of assignableTrainings" class="all-training-list-entry"
-                                        style="padding:10px 20px;width:100%;"
-                                        [ngClass]="{'selected-training': selectedTrainingId === training._id}"
-                                        (click)="selectedTrainingId = training._id">
-                                        <i [ngClass]="allTrainingIdHash[training._id].iconClass"
-                                            style="display:inline-block;font-size:20px;margin-right:10px;vertical-align: middle;"
-                                            [ngStyle]="{'color': allTrainingIdHash[training._id].iconColor}">
-                                        </i>
-                                        <div style="display:inline-block;font-size:14px;">
-                                            {{ training.title }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </nz-modal>
-
-                        <div style="width:100%;padding:0 10px 10px 10px;float:right;">
-                            <button nz-button nzType="primary" (click)="showUserTrainingModal = true"
-                                style="margin: 20px 0;">
-                                Assign a Training
-                            </button>
-                            < !--
-                                    <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-                                        style="float:left;display:block;cursor:pointer;font-size:20px;margin:5px 0 0 0;"
-                                        nz-tooltip nzTooltipTitle="Assign a training to the user"
-                                        (click)="showUserTrainingModal = true"></i>
-                                        -- >
-                            <div style="clear:both;margin-bottom:10px;"></div>
-                            <app-user-trainings mode="admin"></app-user-trainings>
-                        </div>
-                    </div>
-                </div>
-            -->
             </div>
-            </div>
+        </div>
         <nz-modal [(nzVisible)]="showNewUserModal" nzTitle="Team Member Registration" (nzOnCancel)="handleCancel()"
             (nzOnOk)="handleAddUser()">
             <div style="padding:20px;color:black;">

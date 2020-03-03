@@ -1,16 +1,46 @@
 <div class="training-container">
   <div>
-    <nz-alert style="width:100%;height:fit-content;" nzType="info" nzMessage="About This Page"
+    <nz-alert style="width:100%;height:fit-content;" nzType="info" [nzMessage]="trainingsMessage"
       [nzDescription]="trainingsDescriptionTemplate" [nzCloseText]="trainingsPageCloseTemplate" nzShowIcon nzCloseable>
     </nz-alert>
     <ng-template #trainingsPageCloseTemplate>
       <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" style="font-size: 24px;"></i>
     </ng-template>
+    <ng-template #trainingsMessage>
+      <div style="margin:20px 0;color:blue;font-size:20px;text-align: center;">
+        About This Page
+      </div>
+    </ng-template>
     <ng-template #trainingsDescriptionTemplate>
-      This is where you manage your team's trainings.<br>
-      Selecting the <span style="color:blue;">Create a New Training</span> button adds a new training to your team's set
-      of trainings.<br>
-      Clicking on a training brings up the Training Wizard for that training.
+      <div>
+        <div style="margin:20px 0;color:blue;font-size:16px;">
+          Tasks
+        </div>
+        <div style="border-bottom: 1px solid #dddddd;margin-bottom:20px;padding-bottom:20px;padding-left:20px;">
+          <ol>
+            <li>
+              Take your assigned trainings
+              <div style="padding:10px;">
+                The table below contains the trainings that you are responsible for completing.
+                <br>
+                Start a training by selecting the green play button.
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div>
+        <div style="margin:20px 0;color:blue;font-size:16px;">
+          General Info
+        </div>
+        <div style="margin-bottom:20px;padding-left:40px;">
+          This is where you manage your team's trainings.<br>
+          Selecting the <span style="color:blue;">Create a New Training</span> button adds a new training to your team's
+          set
+          of trainings.<br>
+          Clicking on a training brings up the Training Wizard for that training.
+        </div>
+      </div>
     </ng-template>
   </div>
   <div *ngIf="trainings && trainings.length > 0" style="margin-bottom:10px;">

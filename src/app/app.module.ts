@@ -29,6 +29,8 @@ import { UserService } from './shared/services/user.service';
 import { LoginModule } from './components/login/login.module';
 import { NzNotificationService, NzNotificationServiceModule } from 'ng-zorro-antd/notification';
 import { SendmailService } from './shared/services/sendmail.service';
+import { VgCoreModule } from 'videogular2/compiled/core';
+import { VgControlsModule } from 'videogular2/compiled/controls';
 
 
 
@@ -41,6 +43,8 @@ registerLocaleData(en);
     ],
     imports: [
         PricingModule,
+        VgCoreModule,
+        VgControlsModule,
         BrowserModule,
         BrowserAnimationsModule,
         NgZorroAntdModule,

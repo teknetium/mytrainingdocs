@@ -52,7 +52,11 @@ export class UserTrainingService {
   }
 
   stopSession(tid) {
+    if (!this.utSessionHash[tid]) {
+      return;
+    }
     let session = this.utSessionHash[tid];
+
     session.stopTime = new Date().getTime();
     let ut = this.allUserTrainingHash[this.currentUT];
     let uid = ut.uid;
@@ -60,6 +64,7 @@ export class UserTrainingService {
     ut.timeToDate += session.stopTime - session.startTime;
     console.log('stopSession', ut);
     this.saveUserTraining(ut);
+    this.utSessionHash[tid] = null;
   }
 
   loadTrainingsForUser(userId) {

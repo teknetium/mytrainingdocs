@@ -8,8 +8,9 @@ import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
 import { TrainingModel, Page, Portlet, TextBlock, Assessment, TrainingIdHash } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.type';
-import { SafeResourceUrl } from '@angular/platform-browser';
 import { TrainingsModule } from 'src/app/components/trainings/trainings.module';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
 
 
 @Injectable({
@@ -29,6 +30,8 @@ export class TrainingService {
   private allTrainingHashBS$ = new BehaviorSubject<TrainingIdHash>({});
   private jobTitlesBS$ = new BehaviorSubject<string[]>([]);
 
+  private taskVideoBS$ = new BehaviorSubject<SafeResourceUrl>(null);
+
   // teamTrainings is an array of training id's created by the team
   private teamTrainingHashBS$ = new BehaviorSubject<TrainingIdHash>({});
   private teamTrainingCntBS$ = new BehaviorSubject<number>(0);
@@ -47,8 +50,18 @@ export class TrainingService {
 
   selectedTrainingBS$ = new BehaviorSubject<TrainingModel>(null);
 
+  taskVideoUrlHash = {
+    executeTraining: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
+    addTeamMember: 'https://cdn.filestackcontent.com/uWdq6BaMQXWcWBzSS8J3',
+  }
+
   // Using Angular DI we use the HTTP service
-  constructor(private http: HttpClient, private auth: AuthService, private userService: UserService, private fileService: FileService) {
+  constructor(
+    private http: HttpClient,
+    private auth: AuthService,
+    private userService: UserService,
+    private fileService: FileService,
+    private sanitizer: DomSanitizer) {
 
     this.userService.getAuthenticatedUserStream().subscribe(user => {
       if (user) {
@@ -174,6 +187,14 @@ export class TrainingService {
         });
       });
     });
+  }
+
+  playTaskVideo(task: string) {
+    this.taskVideoBS$.next(this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.taskVideoUrlHash[task])));
+  }
+
+  getTaskVideoStream(): Observable<SafeResourceUrl> {
+    return this.taskVideoBS$.asObservable();
   }
 
   selectTraining(tid: string): void {

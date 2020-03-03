@@ -5,7 +5,7 @@
             <tr style="font-size:12px;">
                 <th>Status</th>
                 <th style="padding-left:40px;">Title</th>
-                <th style="padding-left:10px;">Elapsed Time</th>
+                <th style="padding-left:10px;">Time (h:m:s)</th>
                 <th style="padding-left:10px;">Due Date</th>    
                 <th style="padding-left:10px;">Date Completed</th>
                 <th style="padding-left:30px;">Actions</th>
@@ -19,31 +19,31 @@
                     <i nz-icon [nzType]="statusIconHash[userTraining.status].icon" [nzTheme]="'twotone'"
                         [nzTwotoneColor]="statusIconHash[userTraining.status].color" style="font-size:18px;"></i>
                 </td>
-                <td style="font-size:12px;width:40%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
+                <td style="font-size:12px;width:35%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     <i [ngClass]="(trainingIdHash$ | async)[userTraining.tid].iconClass"
                         style="font-size:22px;margin-right:10px;vertical-align: middle;"
                         [ngStyle]="{'color': trainingIdHash[userTraining.tid].iconColor}">
                     </i>
                     {{ trainingIdHash[userTraining.tid].title }}
                 </td>
-                <td style="font-size:12px;width:5%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
+                <td style="font-size:12px;width:9%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     {{ timeFormat(userTraining.timeToDate) }}
                 </td>
-                <td *ngIf="mode === 'admin'" style="font-size:12px;width:16%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
+                <td *ngIf="mode === 'admin'" style="font-size:12px;width:15%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     <nz-date-picker nzFormat="MM-dd-yyyy" nzSize="small" [ngModel]="userTraining.dueDate"
                         (ngModelChange)="updateDueDate($event, userTraining)">
                     </nz-date-picker>
                 </td>
-                <td *ngIf="mode !== 'admin'" style="font-size:12px;width:16%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
+                <td *ngIf="mode !== 'admin'" style="font-size:12px;width:15%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     {{ userTraining.dueDate | date:'mediumDate'}}
                 </td>
-                <td *ngIf="userTraining.dateCompleted > 0" style="font-size:12px;width:16%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
+                <td *ngIf="userTraining.dateCompleted > 0" style="font-size:12px;width:15%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     {{ userTraining.dateCompleted | date:'mediumDate'}}
                 </td>
-                <td *ngIf="userTraining.dateCompleted === 0" style="font-size:12px;width:16%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
+                <td *ngIf="userTraining.dateCompleted === 0" style="font-size:12px;width:15%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     &nbsp;&nbsp;
                 </td>
-                <td style="font-size:12px;width:20%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
+                <td style="font-size:12px;width:13%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     <div class="action" (click)="viewTraining(userTraining._id, userTraining.tid)" nz-tooltip
                         nzTooltipTitle="Play Training">
                         <i nz-icon [nzType]="'play-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"

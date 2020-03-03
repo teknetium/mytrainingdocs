@@ -438,7 +438,7 @@
                         </div>
                     </div>
                     <div style="width:100%;float:left;margin-top:40px;">
-                        <button *ngIf="runningTour" nz-button nzType="primary" (click)="endTour()">
+                        <button *ngIf="runningTour" nz-button nzType="primary" nzSize="small" (click)="endTour()">
                             End Tour
                         </button>
                     </div>
@@ -466,7 +466,7 @@
                                     <textarea [(ngModel)]="inputValue" nz-input rows="4"></textarea>
                                 </nz-form-item>
                                 <nz-form-item>
-                                    <button nz-button nzType="primary" [nzLoading]="submitting" [disabled]="!inputValue"
+                                    <button nz-button nzType="primary" [nzLoading]="submitting" nzSize="small" [disabled]="!inputValue"
                                         (click)="handleSubmit()">
                                         Add Comment
                                     </button>
@@ -758,7 +758,7 @@
                                 </nz-modal>
                             </div>
                             <div style="margin-top:20px;">
-                                <div style="margin-top:20px;text-align: center;">
+                                <div *ngIf="page.type !== 'url'" style="margin-top:20px;text-align: center;">
                                     <span style="display:inline-block;color:#aaaaaa;">
                                         Version {{ pageFileHash[page._id].versions[currentVersionIndex].version }}
                                     </span>
@@ -788,8 +788,7 @@
                                             <vg-fullscreen></vg-fullscreen>
                                         </vg-controls>
 
-                                        <video [vgMedia]="media" #media id="singleVideo" preload="auto" crossorigin>
-                                            <source [src]="(safeFileUrl$ | async)" type="video/mp4">
+                                        <video  [vgMedia]="media" #media id="singleVideo" preload="'auto'" [src]="safeFileUrl$ | async" crossorigin>
                                         </video>
                                     </vg-player>
                                 </div>
@@ -965,7 +964,7 @@
                             </nz-modal>
                             <button
                                 *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
-                                nz-button nzType="primary" style="margin-bottom:10px;" (click)="addNewQuestion()">Add
+                                nz-button nzType="primary" nzSize="small" style="margin-bottom:10px;" (click)="addNewQuestion()">Add
                                 New Question</button>
                             <nz-collapse nzAccordion="true">
                                 <nz-collapse-panel [nzHeader]="headerTemplate"
@@ -1050,11 +1049,11 @@
                     </div>
                     <div *ngIf="mode === 'Preview' || production === 'true'" style="position:relative;">
                         <div *ngIf="currentAssessmentItemIndex === -1 && !assessmentComplete">
-                            <button nz-button nzType="primary" (click)="beginAssessment()">Begin Assessment</button>
+                            <button nz-button nzType="primary" nzSize="small" (click)="beginAssessment()">Begin Assessment</button>
                         </div>
                         <div
                             *ngIf="assessmentComplete && selectedTraining.status === 'Under Development' && production === 'false'">
-                            <button nz-button nzType="primary" (click)="resetAssessment()">Reset Assessment</button>
+                            <button nz-button nzType="primary" nzSize="small" (click)="resetAssessment()">Reset Assessment</button>
                         </div>
                         <div *ngIf="currentAssessmentItemIndex > -1" style="margin-bottom:4px;">
                             <div>
@@ -1081,7 +1080,7 @@
                             <div *ngIf="assessmentComplete && !passedAssessment" style="margin:20px 0;">
                                 <nz-alert nzType="error" nzMessage="Sorry, you did not pass!" nzShowIcon></nz-alert>
 
-                                <button nz-button nzType="primary" (click)="retake()"
+                                <button nz-button nzType="primary" nzSize="small" (click)="retake()"
                                     style="display:block;margin-top:20px;">Retake</button>
 
                             </div>
@@ -1136,7 +1135,7 @@
                             </div>
                         </div>
                         <div *ngIf="showNext" style="position:absolute;top:330px;left:0;">
-                            <button nz-button nzType="primary" (click)="nextQuestion()">Next Question</button>
+                            <button nz-button nzType="primary" nzSize="small" (click)="nextQuestion()">Next Question</button>
                         </div>
                     </div>
                 </div>

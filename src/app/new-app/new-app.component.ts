@@ -15,6 +15,8 @@ import { SafeResourceUrl } from '@angular/platform-browser';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { UserTrainingHash } from '../shared/interfaces/userTraining.type';
+import { VgAPI } from 'videogular2/compiled/core';
+
 
 @Component({
   selector: 'new-app-root',
@@ -81,6 +83,7 @@ import { UserTrainingHash } from '../shared/interfaces/userTraining.type';
 })
 export class NewAppComponent implements OnInit {
 
+  vgApi: VgAPI;
   isCollapsed = false;
   triggerTemplate: TemplateRef<void> | null = null;
 
@@ -91,7 +94,7 @@ export class NewAppComponent implements OnInit {
   docUrl$: Observable<SafeResourceUrl>;
   isConfirmDeleteModalVisible = false;
   editId: string | null;
-
+  taskVideo$: Observable<SafeResourceUrl>;
 
 
   myTeamCnt = 0;
@@ -131,18 +134,10 @@ export class NewAppComponent implements OnInit {
   //  image$: Observable<string>;
   //  imageBS$ = new BehaviorSubject<string>('');
   isIn = true;
-  pauseYoga = false;
   helpIsClosed = true;
-  imageBase = '../assets/yoga';
-  dogImageBase = '../assets/dog';
-  yogaImage = '';
-  useYogaImages = false;
-  currentYogaImageNumber = 1;
-  currentDogImageNumber = 1;
-  numYogaImages = 28;
-  themeValue = 'dogs';
   searchVisible: boolean = false;
   quickViewVisible: boolean = false;
+  showTaskVideoModal = false;
 
   constructor(
     private authService: AuthService,
@@ -158,6 +153,7 @@ export class NewAppComponent implements OnInit {
     this.teamTrainingCnt$ = this.trainingService.getTeamTrainingCntStream();
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
+    this.taskVideo$ = this.trainingService.getTaskVideoStream();
   }
 
   ngOnInit(): void {
@@ -193,16 +189,16 @@ export class NewAppComponent implements OnInit {
       })
     })
 
-    this.currentYogaImageNumber = 0;
+    this.taskVideo$.subscribe(safeUrl => {
+      if (!safeUrl) {
+        return;
+      }
+      this.showTaskVideoModal = true;
+    })
   };
 
-
-  newTheme(val) {
-    if (val === 'dogs') {
-      this.useYogaImages = false;
-    } else if (val === 'yoga') {
-      this.useYogaImages = true;
-    }
+  closeTaskVideoModal() {
+    this.showTaskVideoModal = false;
   }
 
 
@@ -211,14 +207,22 @@ export class NewAppComponent implements OnInit {
     return '';
   }
 
-  pauseYogaSequence() {
-    this.pauseYoga = true;
-  }
-
   toggleHelp() {
     this.helpIsClosed = !this.helpIsClosed;
   }
 
+  onPlayerReady(api: VgAPI) {
+    this.vgApi = api;
+    /*
+        this.vgApi.getDefaultMedia().subscriptions.loadedMetadata.subscribe(
+          this.playVideo.bind(this)
+        );
+        */
+  }
+
+  playVideo() {
+    this.vgApi.play();
+  }
 
   handleCancel(): void {
     this.isConfirmDeleteModalVisible = false;
@@ -242,32 +246,5 @@ export class NewAppComponent implements OnInit {
   quickViewToggle(): void {
     this.quickViewVisible = !this.quickViewVisible;
   }
-
-  notificationList = [
-    {
-      title: 'You received a new message',
-      time: '8 min',
-      icon: 'mail',
-      color: 'ant-avatar-' + 'blue'
-    },
-    {
-      title: 'New user registered',
-      time: '7 hours',
-      icon: 'user-add',
-      color: 'ant-avatar-' + 'cyan'
-    },
-    {
-      title: 'System Alert',
-      time: '8 hours',
-      icon: 'warning',
-      color: 'ant-avatar-' + 'red'
-    },
-    {
-      title: 'You have a new update',
-      time: '2 days',
-      icon: 'sync',
-      color: 'ant-avatar-' + 'gold'
-    }
-  ];
 
 }

@@ -10,6 +10,7 @@ import { ENV } from './env.config';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { SafeMethodCall } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -538,6 +539,7 @@ export class FileService {
 
     this.selectedFile = file;
 
+    let mediaItems: SafeResourceUrl[] = [];
     if (file.iconType === 'video') {
       mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.versions[versionIndex].url));
     } else {

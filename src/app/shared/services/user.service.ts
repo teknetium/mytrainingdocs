@@ -120,7 +120,6 @@ export class UserService {
                 this.authenticatedUserBS$.next(this.authenticatedUser);
                 //                this.authenticatedUserBS$.complete();
                 //                this.logLoginEvent();
-                this.userTrainingService.assignTraining(this.authenticatedUser._id, this.authenticatedUser.userType);
                 this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
                 //                this.loadData();
                 //        this.router.navigate([`gettingstarted`]);
@@ -191,32 +190,9 @@ export class UserService {
     });
 
   }
-  /*
-    addNewUser() {
-      const newUser = <UserModel>{
-        _id: String(new Date().getTime()),
-        uid: '',
-        userType: 'individualContributor',
-        firstName: 'New',
-        lastName: 'User',
-        email: '',
-        teamId: this.authenticatedUser.uid,
-        userStatus: 'new-user',
-        trainingStatus: 'uptodate',
-        profilePicUrl: '',
-        supervisorId: this.authenticatedUser._id
-      }
-  
-      this.action = 'new';
-      this.actionBS$.next(this.action);
-      this.selectedUserBS$.next(newUser);
-      this.selectedUserIndexBS$.next(-1);
-    }
-    */
 
   createNewUser(user: UserModel) {
     this.postUser$(user).subscribe(data => {
-      this.userTrainingService.assignTraining(data._id, data.userType);
       this.loadData(this.teamId);
     })
   }
@@ -226,11 +202,7 @@ export class UserService {
       this.loadData(this.teamId);
     });
   }
-  /*
-    getActionStream(): Observable<string> {
-      return this.actionBS$.asObservable();
-    }
-  */
+
   getSelectedUserStream(): Observable<UserModel> {
     return this.selectedUserBS$.asObservable();
   }
@@ -238,24 +210,6 @@ export class UserService {
   getJobTitleStream(): Observable<string[]> {
     return this.jobTitlesBS$.asObservable();
   }
-
-  /*
-  getSelectedUserIndexStream(): Observable<number> {
-    return this.selectedUserIndexBS$.asObservable();
-  }
-    getMyTrainingsStream(user: UserModel): Observable<{tid: string, status: string, dueDate: number, completedDate: number}> {
-      return user
-    }
-  */
-  /*
-  assignTraining(user: UserModel, tid: string) {
-    const status = 'uptodate';
-    const dueDate = 0;
-    const completedDate = 0;
-    const userTraining = { tid, status, dueDate, completedDate };
-    //    user.myTrainings.push(userTraining);
-  }
-  */
 
   selectAuthenticatedUser() {
     this.selectedUserBS$.next(this.authenticatedUser);

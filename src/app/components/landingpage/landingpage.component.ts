@@ -5,6 +5,9 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.type';
 import { Router } from '@angular/router';
 import { ScrollToAnimationEasing, ScrollToOffsetMap } from '@nicky-lenaers/ngx-scroll-to';
+import { VgAPI } from 'videogular2/compiled/core';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { TrainingService } from '../../shared/services/training.service';
 
 
 @Component({
@@ -14,6 +17,10 @@ import { ScrollToAnimationEasing, ScrollToOffsetMap } from '@nicky-lenaers/ngx-s
   encapsulation: ViewEncapsulation.Emulated
 })
 export class LandingpageComponent implements OnInit {
+
+  vgApi: VgAPI;
+  taskVideo$: Observable<SafeResourceUrl>;
+  showTaskVideoModal = false;
 
   benefits = [
     {
@@ -151,8 +158,10 @@ export class LandingpageComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private userService: UserService,
+    private trainingService: TrainingService,
     private router: Router) {
 
+    this.taskVideo$ = this.trainingService.getTaskVideoStream();
 
     this.ngxScrollToDuration = 2000;
     this.ngxScrollToEasing = 'easeOutCubic';
@@ -160,6 +169,12 @@ export class LandingpageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.taskVideo$.subscribe(safeUrl => {
+      if (!safeUrl) {
+        return;
+      }
+      this.showTaskVideoModal = true;
+    });
     /*
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.authenticatedUser$.subscribe(user => {
@@ -236,6 +251,21 @@ export class LandingpageComponent implements OnInit {
     }
   }
 
+  closeTaskVideoModal() {
+    this.showTaskVideoModal = false;
+  }
+  onPlayerReady(api: VgAPI) {
+    this.vgApi = api;
+    /*
+        this.vgApi.getDefaultMedia().subscriptions.loadedMetadata.subscribe(
+          this.playVideo.bind(this)
+        );
+        */
+  }
+
+  playVideo() {
+    this.vgApi.play();
+  }
 
   hasFocus(index): boolean {
     return this.benefits[index].focus;
