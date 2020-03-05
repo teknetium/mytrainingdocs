@@ -1,8 +1,5 @@
-<div *ngIf="authenticatedUser$ | async as user" style="height:100%;width:100%;padding:120px;">
+<div *ngIf="authenticatedUser$ | async as user" style="height:100%;width:100%;padding:30px 60px;">
     <div style="display:block;margin-left:20px;">
-        <div style="display: inline-block;">
-            <img src="../../../assets/images/yoga1.png" alt="lotus pose" height="150">
-        </div>
         <div style="display: inline-block;margin-left:20px;">
             <span style="font-weight: 200;font-size:28px;">
                 Welcome,
@@ -13,6 +10,8 @@
             </span>
         </div>
     </div>
+    <div id="chartdiv" style="width: 100%; height: 500px"></div>
+    <!--
     <div *ngIf="user.userType === 'supervisor'" style="display:block;font-size:18px;">
         <div style="display:block;margin-top:80px;">
             <div style="display: inline-block;width:70%;padding-top:40px;padding-left:50px;">
@@ -56,20 +55,5 @@
         style="margin-top: 20px;font-size:18px;padding:40px;">
 
     </div>
-    <nz-modal [(nzVisible)]="showNewUserModal" nzCancelDisabled="true" nzClosable="false" nzTitle="New User Info"
-        (nzOnOk)="saveName()">
-        <div style="padding:20px;color:black;">
-            <p style="font-size:16px;">
-                Please give us a bit more info about you...
-            </p>
-
-        </div>
-        <div style="background-color: white;">
-            <input nz-input type="text" placeholder="First Name" ngDefaultControl
-                [(ngModel)]="authenticatedUser.firstName" style="margin-bottom:10px;">
-            <input nz-input type="text" placeholder="Last Name" ngDefaultControl
-                [(ngModel)]="authenticatedUser.lastName" style="margin-bottom:10px;">
-
-        </div>
-    </nz-modal>
+    -->
 </div>

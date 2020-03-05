@@ -6,17 +6,25 @@ import { UserTrainingService } from '../shared/services/userTraining.service';
 import { BehaviorSubject, Observable, from, Subscription } from 'rxjs';
 import { UserModel, UserIdHash } from '../shared/interfaces/user.type';
 import { TrainingModel, TrainingIdHash } from '../shared/interfaces/training.type';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { FileModel } from '../shared/interfaces/file.type';
 import { FileService } from '../shared/services/file.service';
 // import { Auth0ProfileModel } from './shared/models/auth0Profile.model';
 import { NotificationService } from '../shared/services/notification.service';
-import { SafeResourceUrl } from '@angular/platform-browser';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { UserTrainingHash } from '../shared/interfaces/userTraining.type';
 import { VgAPI } from 'videogular2/compiled/core';
+import { filter } from 'rxjs/operators';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
+export interface Task {
+  desc: string,
+  url: string,
+  safeUrl: SafeResourceUrl,
+  mimeType: string,
+  poster: string
+}
 
 @Component({
   selector: 'new-app-root',
@@ -45,43 +53,124 @@ import { VgAPI } from 'videogular2/compiled/core';
         animate('750ms')
       ])
     ]),
-    trigger('getHelp', [
+    trigger('showInfo', [
       // ...
       state('closed', style({
-        height: '0',
+        'height': '-100px'
       })),
       state('open', style({
-        height: '150px',
+        'height': 'fit-content'
       })),
       transition('open => closed', [
-        animate('1s')
+        animate('500ms')
       ]),
       transition('closed => open', [
-        animate('1s')
-      ]),
-    ]),
-    trigger('viewHelpText', [
-      // ...
-      state('hidden', style({
-        opacity: '.0',
-        top: '5px',
-        left: '200px'
-      })),
-      state('open', style({
-        height: '200px',
-        top: '40px',
-        left: '-20px'
-      })),
-      transition('open => closed', [
-        animate('.4s')
-      ]),
-      transition('closed => open', [
-        animate('.4s')
+        animate('500ms')
       ]),
     ]),
   ]
 })
 export class NewAppComponent implements OnInit {
+
+  aboutThisPageHash = {
+    home: {
+      visible: true,
+      intro: 'Introduction to the page.',
+      taskHash: {
+        gettingStarted: {
+          desc: 'Getting Started',
+          url: 'https://www.youtube.com/watch?v=N_DktBxPDow&t=2s',
+          mimeType: 'video/mpeg',
+          poster: './assets/images/logo/logo.png'
+        },
+        executeTraining: {
+          desc: 'Take your training',
+          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
+          mimeType: 'video/quicktime',
+          poster: './assets/images/logo/logo.png'
+        },
+        addTeamMember: {
+          desc: 'Add a new team member',
+          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
+          mimeType: 'video/quicktime',
+          poster: './assets/images/logo/logo.png'
+        },
+        manageUserTrainings: {
+          desc: 'Add / Remove trainings from team members',
+          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
+          mimeType: 'video/quicktime',
+          poster: './assets/images/logo/logo.png'
+        },
+        manageTrainings: {
+          desc: 'Create/Edit Trainings',
+          url: 'https://cdn.filestackcontent.com/oNn7wEGNS1Kxj7c1Mgpf',
+          mimeType: 'video/quicktime',
+          poster: './assets/images/logo/logo.png'
+        },
+        assignToUsers: {
+          desc: 'Assign trainings to team members',
+          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
+          mimeType: 'video/quicktime',
+          poster: './assets/images/logo/logo.png'
+        }
+      },
+    },
+    mytrainings: {
+      visible: true,
+      intro: 'Introduction to the page.',
+      taskHash: {
+        executeTraining: {
+          desc: 'Execute your trainings',
+          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
+          mimeType: 'video/quicktime',
+          poster: './assets/images/logo/logo.png'
+        }
+      },
+    },
+    myteam: {
+      visible: true,
+      intro: 'Introduction to the page.',
+      taskHash: {
+        addTeamMember: {
+          desc: 'Add a new team member',
+          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
+          mimeType: 'video/quicktime',
+          poster: './assets/images/logo/logo.png'
+        },
+        manageUserTrainings: {
+          desc: 'Add / Remove trainings from team members',
+          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
+          mimeType: 'video/quicktime',
+          poster: './assets/images/logo/logo.png'
+        }
+      },
+    },
+    trainings: {
+      visible: true,
+      intro: 'Introduction to the page.',
+      taskHash: {
+        manageTrainings: {
+          desc: 'Create/Edit Trainings',
+          url: 'https://cdn.filestackcontent.com/oNn7wEGNS1Kxj7c1Mgpf',
+          mimeType: 'video/quicktime',
+          poster: './assets/images/logo/logo.png'
+        },
+        usingAssessments: {
+          desc: 'How to Create and Use Assessments',
+          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
+          mimeType: 'video/quicktime',
+          poster: './assets/images/logo/logo.png'
+        },
+        assignToUsers: {
+          desc: 'Assign trainings to team members',
+          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
+          mimeType: 'video/quicktime',
+          poster: './assets/images/logo/logo.png'
+        }
+      }
+    }
+  }
+
 
   vgApi: VgAPI;
   isCollapsed = false;
@@ -94,7 +183,9 @@ export class NewAppComponent implements OnInit {
   docUrl$: Observable<SafeResourceUrl>;
   isConfirmDeleteModalVisible = false;
   editId: string | null;
-  taskVideo$: Observable<SafeResourceUrl>;
+  taskVideo$ = new BehaviorSubject<SafeResourceUrl>(null);
+  taskBS$ = new BehaviorSubject<Task>(null);
+  task: Task = null;
 
 
   myTeamCnt = 0;
@@ -138,6 +229,12 @@ export class NewAppComponent implements OnInit {
   searchVisible: boolean = false;
   quickViewVisible: boolean = false;
   showTaskVideoModal = false;
+  currentPage = 'home';
+  isPageInfoOpen = true;
+  showNewUserModal = false;
+  firstTimer = false;
+  currentTask = 1;
+  taskNames = [];
 
   constructor(
     private authService: AuthService,
@@ -147,20 +244,32 @@ export class NewAppComponent implements OnInit {
     private router: Router,
     private notificationService: NotificationService,
     private zorroNotificationService: NzNotificationService,
+    private sanitizer: DomSanitizer
   ) {
     this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
     this.teamTrainingCnt$ = this.trainingService.getTeamTrainingCntStream();
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
-    this.taskVideo$ = this.trainingService.getTaskVideoStream();
   }
 
   ngOnInit(): void {
-
+    this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
+    this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+      this.currentPage = event.url.substring(1);
+      if (this.aboutThisPageHash[this.currentPage]) {
+        this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
+      }
+    });
     this.authenticatedUser$.subscribe(user => {
       if (!user) {
         return;
+      }
+
+      this.authenticatedUser = user;
+      if (this.authenticatedUser.firstName === '') {
+        this.firstTimer = true;
+        this.playTaskVideo('gettingStarted');
       }
       this.authenticatedUser = user;
       this.userTrainingService.loadTrainingsForUser(user._id);
@@ -189,16 +298,20 @@ export class NewAppComponent implements OnInit {
       })
     })
 
-    this.taskVideo$.subscribe(safeUrl => {
-      if (!safeUrl) {
+    this.taskBS$.subscribe(task => {
+      if (!task) {
         return;
       }
+      
       this.showTaskVideoModal = true;
     })
   };
 
   closeTaskVideoModal() {
     this.showTaskVideoModal = false;
+    if (this.firstTimer) {
+      this.showNewUserModal = true;
+    }
   }
 
 
@@ -239,6 +352,7 @@ export class NewAppComponent implements OnInit {
   logout() {
     this.authService.logout();
   }
+
   searchToggle(): void {
     this.searchVisible = !this.searchVisible;
   }
@@ -247,4 +361,17 @@ export class NewAppComponent implements OnInit {
     this.quickViewVisible = !this.quickViewVisible;
   }
 
+  saveName() {
+    console.log('saveName', this.authenticatedUser);
+    this.userService.updateUser(this.authenticatedUser, true);
+    this.showNewUserModal = false;
+  }
+
+  playTaskVideo(taskName) {
+    this.currentTask = taskName;
+    this.task = this.aboutThisPageHash[this.currentPage].taskHash[taskName];
+    this.task.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.aboutThisPageHash[this.currentPage].taskHash[taskName].url));
+    console.log('playTaskVideo', this.task);
+    this.taskBS$.next(this.task);
+  }
 }

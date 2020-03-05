@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable ,SecurityContext} from '@angular/core';
 import * as cms from 'filestack-js';
 import { PickerDisplayMode, PickerOptions, PickerResponse } from 'filestack-js/build/main/lib/picker';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -22,6 +22,7 @@ export class FileService {
   fileUploadResult: PickerResponse;
 
   private files: FileModel[] = [];
+  private file$ = new BehaviorSubject<FileModel>(null);
   private files$ = new BehaviorSubject<FileModel[]>(null);
   private fileCnt$ = new BehaviorSubject<number>(0);
 
@@ -334,6 +335,11 @@ export class FileService {
     this.filesForSelect$.next(fileOptions);
     */
   }
+
+  getFileStream(): Observable<FileModel> {
+    return this.file$.asObservable();
+  }
+
   getSafeFileUrlStream(): Observable<SafeResourceUrl> {
     return this.safeFileUrlBS$.asObservable();
   }
@@ -470,38 +476,43 @@ export class FileService {
           iconType = this.fileTypeHash[fileExt].iconType;
           iconColor = this.fileTypeHash[fileExt].iconColor;
         }
-
+        let mediaItem: any;
+        let safeUrl: string;
 
         this.newFile = <FileModel>{
           _id: file.handle,
-          name: file.filename,
-          size: sizeStr,
-          mimeType: file.mimetype,
           teamId: this.authenticatedUser.uid,
           description: '',
-          versions: [{ version: '1.0.0', changeLog: 'New Upload', owner: this.authenticatedUser._id, fsHandle: file.handle, url: file.url, dateUploaded: new Date().getTime() }],
           iconClass: iconClass,
           iconType: iconType,
           iconColor: iconColor,
           iconSource: 'ngZorro',
-          tags: []
+          versions: [
+            {
+              _id: String(new Date().getTime()),
+              version: '1.0.0',
+              fileName: file.filename,
+              size: sizeStr,
+              changeLog: '',
+              mimeType: file.mimetype,
+              owner: this.authenticatedUser._id,
+              fsHandle: file.handle,
+              url: file.url,
+              safeUrl: null,
+              dateUploaded: new Date().getTime(),
+            }
+          ],
         };
 
         this.postFile$(this.newFile).subscribe(data => {
           this.newFile = data;
-
-          let mediaItem: SafeResourceUrl;
-          console.log('processResults', this.newFile);
           if (this.newFile.iconType === 'video') {
-            console.log('postFile$ video', this.newFile);
+            safeUrl = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.url)));
             mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.downloadUrlBase) + this.newFile.versions[0].fsHandle);
           } else {
-            console.log('postFile$ document', this.newFile);
+            safeUrl = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + file.handle));
             mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + this.newFile.versions[0].fsHandle);
           }
-
-          console.log('fileService:postFile$', this.newFile);
-
           this.files.push(this.newFile);
           this.fileIdHash[this.newFile._id] = this.newFile;
           this.fileIdIndexHash[this.newFile._id] = this.files.length - 1;
@@ -535,16 +546,20 @@ export class FileService {
   }
 
   selectFsHandle(file: FileModel, versionIndex: number) {
+    
     let mediaItem: SafeResourceUrl;
 
     this.selectedFile = file;
 
     let mediaItems: SafeResourceUrl[] = [];
     if (file.iconType === 'video') {
+      file.versions[versionIndex].safeUrl = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.versions[versionIndex].url)));
       mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.versions[versionIndex].url));
     } else {
       mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI((this.previewUrlBase) + file.versions[versionIndex].fsHandle));
     }
+//    this.safeFileUrlBS$.next(mediaItem);
+    this.file$.next(file);
     this.safeFileUrlBS$.next(mediaItem);
   }
 

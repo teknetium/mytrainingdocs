@@ -15,19 +15,11 @@
         <ul nz-menu nzTheme="dark" nzMode="horizontal">
             <li nz-menu-item nzMatchRouter>
                 <a routerLink="/home" routerLinkActive="active-link">
-                    <!--
-                    <i nz-icon nzType="home" theme="outline" style="font-size:20px;"></i>Home
-                    <i class="fad fa-home" style="font-size:20px;"></i> Home
-                    -->
                     Home
                 </a>
             </li>
             <li nz-menu-item nzMatchRouter class="nav-badge">
                 <a routerLink="/mytrainings" routerLinkActive="active-link">
-                    <!--
-                    <i nz-icon nzType="solution" theme="outline" style="font-size:20px;"></i>My Trainings
-                    <i class="fad fa-file-certificate" style="font-size:20px;"></i> My Trainings
-                    -->
                     My Trainings
                 </a>
                 <div class="nav-badge-cell">
@@ -37,10 +29,6 @@
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
                 class="nav-badge">
                 <a routerLink="/myteam" routerLinkActive="active-link">
-                    <!--
-                    <i nz-icon nzType="user" theme="outline" style="font-size:20px;"></i>My Team
-                    <i class="fad fa-users" style="font-size:20px;"></i> My Team
-                    -->
                     My Team
                 </a>
                 <div class="nav-badge-cell">
@@ -50,10 +38,6 @@
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor' || (authenticatedUser$ | async)?.adminUp"
                 nz-menu-item nzMatchRouter>
                 <a routerLink="/trainings" routerLinkActive="active-link">
-                    <!--
-                    <i nz-icon nzType="solution" theme="outline" style="font-size:20px;"></i>All Trainings
-                    <i class="fad fa-file-certificate" style="font-size:20px;"></i> All Trainings
-                    -->
                     All Trainings
                 </a>
                 <div class="nav-badge-cell">
@@ -174,37 +158,102 @@
         </ul>
     </nz-header>
     <nz-content class="inner-content">
+        <div *ngIf="aboutThisPageHash[currentPage]" style="padding:20px;">
+            <i *ngIf="!aboutThisPageHash[currentPage].visible" nz-icon nzType="info-circle" [nzTheme]="'twotone'"
+                (click)="aboutThisPageHash[currentPage].visible = true"
+                style="font-size:24px;font-weight: 500;cursor:pointer;"></i>
+            <div *ngIf="aboutThisPageHash[currentPage].visible" style="padding:20px;position:relative;"
+                class="about-this-page">
+                <div>
+                    <i nz-icon nzType="info-circle" [nzTheme]="'twotone'"
+                        style="position:absolute;font-size:24px;font-weight: 500;"></i>
+                    <div style="text-align: center;font-size:20px;font-weight: 400;color: blue;">
+                        About This Page
+                    </div>
+                    <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#f74848'"
+                        (click)="aboutThisPageHash[currentPage].visible = false"
+                        style="position:absolute;top:20px;right:20px;font-size:24px;font-weight: 500;cursor:pointer;"></i>
+                </div>
+                <div style="font-size:16px;font-weight: 300;padding:20px 40px">
+                    <div>
+                        {{aboutThisPageHash[currentPage].intro}}
+                    </div>
+                    <div style="margin:20px 0;color:blue;font-size:16px;">
+                        Tasks
+                    </div>
+                    <div style="margin-bottom:20px;padding-left:20px;">
+                        <ul style="list-style-type: none;">
+                            <li *ngFor="let taskName of taskNames" style="margin-bottom: 10px;">
+                                <i nz-icon nzType="play-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+                                    nz-tooltip nzTooltipTitle="Play the task How-To video"
+                                    (click)="playTaskVideo(taskName)"
+                                    style="cursor:pointer;font-size:20px;vertical-align: baseline;margin-left:20px;"></i>
+                                &nbsp;&nbsp;{{aboutThisPageHash[currentPage].taskHash[taskName].desc}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <nz-modal [(nzVisible)]="showTaskVideoModal" nzWidth="700" nzHeight="800" [nzTitle]="taskVideoTemplate"
+                nzCancelDisabled="true" (nzOnOk)="closeTaskVideoModal()" style="text-align: center;">
+                <div *ngIf="aboutThisPageHash[currentPage] && aboutThisPageHash[currentPage].taskHash[currentTask]"
+                    style="display:inline-block;margin-top:5px;background-color: black;padding:5px;width:600px;height:700px;">
+                    <vg-player (onPlayerReady)="onPlayerReady($event)">
+<!--
+                        <vg-overlay-play style="color:red;background-color:#bbbbbb;"></vg-overlay-play>
+                        -->
+
+                        <vg-controls>
+                            <vg-play-pause></vg-play-pause>
+                            <vg-playback-button></vg-playback-button>
+                            <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+
+                            <vg-scrub-bar>
+                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                            </vg-scrub-bar>
+
+                            <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                            <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+
+                            <vg-mute></vg-mute>
+                            <vg-volume></vg-volume>
+
+                            <vg-fullscreen></vg-fullscreen>
+                        </vg-controls>
+
+                        <video style="background-color: #dddddd;" [vgMedia]="media" #media id="singleVideo" preload="none" [src]="(taskBS$ | async)?.safeUrl"
+                            crossorigin [poster]="(taskBS$ | async)?.poster">
+                            <!--
+                            <source [src]="(taskBS$ | async)?.safeUrl" type="video/mp4">
+                                -->
+                        </video>
+                    </vg-player>
+                </div>
+            </nz-modal>
+            <ng-template #taskVideoTemplate>
+                <div style="font-size:24px;text-align: center;">
+                    <span
+                        style="font-size:24px;text-align: center;">{{aboutThisPageHash[currentPage].taskHash[currentTask].desc}}</span>
+                </div>
+            </ng-template>
+        </div>
         <router-outlet></router-outlet>
-        <nz-modal [(nzVisible)]="showTaskVideoModal" nzWidth="700" nzTitle="Task Video" nzCancelDisabled="true"
-             (nzOnOk)="closeTaskVideoModal()" style="background-color: black;">
-            <div style="text-align: center;margin-top:5px;background-color: black;">
-                <vg-player (onPlayerReady)="onPlayerReady($event)">
+        <nz-modal [(nzVisible)]="showNewUserModal" nzCancelDisabled="true" nzClosable="false" nzTitle="New User Info"
+            (nzOnOk)="saveName()">
+            <div style="padding:20px;color:black;">
+                <p style="font-size:16px;">
+                    Please give us a bit more info about you...
+                </p>
 
-                    <vg-controls>
-                        <vg-play-pause></vg-play-pause>
-                        <vg-playback-button></vg-playback-button>
+            </div>
+            <div *ngIf="authenticatedUser$ | async as user" style="background-color: white;">
+                <input nz-input type="text" placeholder="First Name" ngDefaultControl [(ngModel)]="user.firstName"
+                    style="margin-bottom:10px;">
+                <input nz-input type="text" placeholder="Last Name" ngDefaultControl [(ngModel)]="user.lastName"
+                    style="margin-bottom:10px;">
 
-                        <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-
-                        <vg-scrub-bar>
-                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                            <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-                        </vg-scrub-bar>
-
-                        <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
-                        <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-
-                        <vg-track-selector></vg-track-selector>
-                        <vg-mute></vg-mute>
-                        <vg-volume></vg-volume>
-
-                        <vg-fullscreen></vg-fullscreen>
-                    </vg-controls>
-
-                    <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
-                        <source [src]="(taskVideo$ | async)" type="video/mp4">
-                    </video>
-                </vg-player>
             </div>
         </nz-modal>
     </nz-content>

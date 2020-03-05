@@ -103,7 +103,7 @@ export class UserTrainingsComponent implements OnInit {
 
   viewTraining(utid, tid) {
     if (this.logSession === 'on') {
-      this.userTrainingService.startSession(utid, tid);
+      this.userTrainingService.startSession(utid, this.selectedUser._id, tid);
     }
     this.currentUserTraining = utid;
     this.trainingIsVisible = true;

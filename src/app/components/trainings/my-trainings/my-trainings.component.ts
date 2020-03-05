@@ -63,7 +63,4 @@ export class MyTrainingsComponent implements OnInit {
     });
   }
 
-  playTaskVideo(task) {
-    this.trainingService.playTaskVideo(task);
-  }
 }

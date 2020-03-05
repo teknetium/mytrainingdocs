@@ -13,7 +13,10 @@ export interface UserTrainingModel {
 }
 
 export interface UTSession {
+  _id: string,
   utId: string,
+  uid: string,
+  tid: string,
   startTime: number,
   stopTime: number,
 }

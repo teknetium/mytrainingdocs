@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 import { FileService } from '../../../shared/services/file.service';
 import { TrainingService } from '../../../shared/services/training.service';
 import { UserService } from '../../../shared/services/user.service';
@@ -16,7 +16,6 @@ import { merge, take } from 'rxjs/operators';
 import { SendmailService } from '../../../shared/services/sendmail.service';
 import { MessageModel } from '../../../shared/interfaces/message.type';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { ThrowStmt } from '@angular/compiler';
 
 
 @Component({
@@ -101,7 +100,7 @@ export class TrainingViewerComponent implements OnInit {
   isOpen = true;
   pageContainerMarginLeft = '270';
   selectedTraining: TrainingModel;
-  fullscreen = false;
+  fullscreen = true;
   helpPanelIsVisible = true;
   badUrl = false;
   more = '...';
@@ -277,6 +276,8 @@ export class TrainingViewerComponent implements OnInit {
   assignToDisabled = false;
   currentVersionIndex = 0;
 
+  @ViewChild("myDiv") divView: ElementRef;
+
   constructor(
     private trainingService: TrainingService,
     private fileService: FileService,
@@ -328,10 +329,9 @@ export class TrainingViewerComponent implements OnInit {
 
           if (page.type === 'url') {
             this.safeUrlHash[page.url] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(page.url));
-          } else {
+          } else if (page.type === 'file') {
             let file: FileModel = this.fileService.getFile(page.file);
             this.pageFileHash[page._id] = file;
-
           }
 
         }
@@ -362,7 +362,7 @@ export class TrainingViewerComponent implements OnInit {
 
       console.log('fileUploaded', file);
       if (!found) {
-        newPage = this.trainingService.addNewPage(this.selectedTraining._id, 'file', '', file._id, file.name);
+        newPage = this.trainingService.addNewPage(this.selectedTraining._id, 'file', '', file._id, file.versions[0].fileName);
         this.pageFileHash[newPage._id] = file;
         this.setCurrentPage(newPage._id);
       }
@@ -402,7 +402,13 @@ export class TrainingViewerComponent implements OnInit {
         return;
       }
 
-      console.log('newVersion$.subscribe', this.currentPageId, this.pageFileHash);
+      if (!this.pageFileHash[this.currentPageId]) {
+        console.log('newVersion$ pageFileHash[this.currentPageId] is null', this.currentPageId);
+        return;
+      }
+
+
+      console.log('newVersion$.subscribe', version, this.currentPageId, this.pageFileHash);
       this.fileService.selectFsHandle(this.pageFileHash[this.currentPageId], 0);
     })
 
@@ -508,7 +514,7 @@ export class TrainingViewerComponent implements OnInit {
 
     this.currentPageId = pageId;
     if (this.pageFileHash[pageId]) {
-      this.fileService.selectFsHandle(this.pageFileHash[pageId], 0);
+      this.fileService.selectFsHandle(this.pageFileHash[pageId], this.currentVersionIndex);
     }
     this.currentHelpPanel = '';
   }
@@ -574,7 +580,6 @@ export class TrainingViewerComponent implements OnInit {
   closeViewer() {
     this.userTrainingService.stopSession(this.selectedTraining._id);
     this.trainingService.selectTraining(null);
-    this.fullscreen = false;
     this.assessmentInProgress = false;
   }
 
@@ -624,7 +629,7 @@ export class TrainingViewerComponent implements OnInit {
     this.newVersion.owner = this.authenticatedUser._id;
     this.newVersion.dateUploaded = new Date().getTime();
 
-    let mimeType = currentFile.mimeType.substring(0, currentFile.mimeType.indexOf('/'));
+    let mimeType = currentFile.versions[0].mimeType.substring(0, currentFile.versions[0].mimeType.indexOf('/'));
     let pickerType;
     console.log('mimetype', mimeType);
     if (mimeType === 'application') {

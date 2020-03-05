@@ -17,6 +17,7 @@ export class UserTrainingService {
   private uidUserTrainingHash: UidUserTrainingHash = {};
   private allUserTrainingHash: UserTrainingHash = {};
   private userTrainingHashBS$ = new BehaviorSubject<UserTrainingHash>({});
+  private utSessionsForUidBS$ = new BehaviorSubject<UTSession[]>(null);
   private usersBS$ = new BehaviorSubject<string[]>([]);
   private utSessionHash: UTSessionHash = {};
   private currentUT: string;
@@ -38,13 +39,25 @@ export class UserTrainingService {
       this.userTrainingHashBS$.next(utHash);
       this.uidUserTrainingHash[uid] = utHash;
     });
-
   }
 
-  startSession(utId, tid) {
+  getUTSessionsForUidStream(uid: string): Observable<UTSession[]> {
+    return this.utSessionsForUidBS$.asObservable();
+  }
+
+  getUTSessionsForUid(uid: string) {
+    this.getUTSessionsForUser$(uid).subscribe(utSessions => {
+      this.utSessionsForUidBS$.next(utSessions);
+    })
+  }
+
+  startSession(utId: string, uid: string, tid: string) {
     this.currentUT = utId;
     let session = <UTSession>{
+      _id: String(new Date().getTime()),
       utId: utId,
+      uid: uid,
+      tid: tid,
       startTime: new Date().getTime(),
       stopTime: 0
     };
@@ -219,12 +232,20 @@ export class UserTrainingService {
   postUserTraining$(userTraining: UserTrainingModel): Observable<UserTrainingModel> {
     return this.http
       .post<UserTrainingModel>(`${ENV.BASE_API}usertraining/new/`, userTraining, {
+         headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  postUTSession$(utSession: UTSession): Observable<UTSession> {
+    return this.http
+      .post<UTSession>(`${ENV.BASE_API}utsession/new/`, utSession, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
       .pipe(
         catchError((error) => this._handleError(error))
       );
-
   }
   updateUserTraining$(userTraining: UserTrainingModel): Observable<UserTrainingModel> {
     return this.http
@@ -234,7 +255,6 @@ export class UserTrainingService {
       .pipe(
         catchError((error) => this._handleError(error))
       );
-
   }
 
   deleteUserTraining$(id: string): Observable<any> {
@@ -255,7 +275,24 @@ export class UserTrainingService {
       .pipe(
         catchError((error) => this._handleError(error))
       );
-
+  }
+  getUTSessionsForUser$(uid: string): Observable<UTSession[]> {
+    return this.http
+      .get<UTSession[]>(`${ENV.BASE_API}utsession/uid/${uid}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  getUTSeessionForTraining$(tid: string): Observable<UTSession[]> {
+    return this.http
+      .get<UTSession[]>(`${ENV.BASE_API}utsession/tid/${tid}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
   }
   getUserTraining$(id: string): Observable<UserTrainingModel[]> {
     return this.http
@@ -265,7 +302,6 @@ export class UserTrainingService {
       .pipe(
         catchError((error) => this._handleError(error))
       );
-
   }
   getUTForTraining$(tid: string): Observable<UserTrainingModel[]> {
     return this.http
@@ -275,7 +311,6 @@ export class UserTrainingService {
       .pipe(
         catchError((error) => this._handleError(error))
       );
-
   }
 
   private _handleError(err: HttpErrorResponse | any): Observable<any> {

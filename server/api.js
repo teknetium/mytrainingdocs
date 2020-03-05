@@ -12,6 +12,7 @@ const User = require("./models/User");
 const File = require("./models/File");
 const Event = require("./models/Event");
 const Comment = require("./models/Comment");
+const UTSession = require("./models/UTSession");
 const sgMail = require('@sendgrid/mail');
 
 /*
@@ -60,6 +61,7 @@ module.exports = function(app, config) {
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const commentListProjection = "_id tid author avatar content date";
+  const utSessionProjection = "_id utId uid tid startTime stopTime";
 
   // GET API root
   app.get("/api/", (req, res) => {
@@ -383,6 +385,58 @@ module.exports = function(app, config) {
   });
 
   //
+  // UTSession API
+  //
+  app.post("/api/utsession/new", jwtCheck, (req, res) => {
+    const utSession = new UTSession({
+      _id: req.body._id,
+      utId: req.body.utId,
+      uid: req.body.uid,
+      tid: req.body.tid,
+      startTime: req.body.startTime,
+      stopTime: req.body.stopTime,
+    });
+    UTSession.create(utSession, function (err, utSessionObj) {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      res.send(utSessionObj);
+    });
+  });
+  app.get("/api/utsession/tid/:tid", (req, res) => {
+    UTSession.find({ tid: req.params.tid },
+      utSessionProjection, (err, utSessions) => {
+        let utSessionArr = [];
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        if (utSessions) {
+          utSessions.forEach(utSession => {
+            utSessionArr.push(utSession);
+          });
+        }
+        res.send(utSessionArr);
+      },
+    );
+  });
+  app.get("/api/utsession/uid/:uid", (req, res) => {
+    UTSession.find({ uid: req.params.uid },
+      utSessionProjection, (err, utSessions) => {
+        let utSessionArr = [];
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        if (utSessions) {
+          utSessions.forEach(utSession => {
+            utSessionArr.push(utSession);
+          });
+        }
+        res.send(utSessionArr);
+      },
+    );
+  });
+
+  //
   // User API
   //
   app.get("/api/users/:teamId", (req, res) => {
@@ -559,9 +613,6 @@ module.exports = function(app, config) {
     const file = new File({
       versions: req.body.versions,
       teamId: req.body.teamId,
-      name: req.body.name,
-      size: req.body.size,
-      mimeType: req.body.mimeType,
       iconClass: req.body.iconClass,
       iconType: req.body.iconType,
       iconColor: req.body.iconColor,
@@ -585,9 +636,6 @@ module.exports = function(app, config) {
         return res.status(400).send({message: "File not found."});
       }
       file.teamId = req.body.teamId;
-      file.name = req.body.name;
-      file.size = req.body.size,
-      file.mimeType = req.body.mimeType,
       file.iconClass = req.body.iconClass;
       file.iconType = req.body.iconType;
       file.iconColor = req.body.iconColor;

@@ -182,7 +182,6 @@ export class MyteamComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-
   selectUser(userId) {
     this.userService.selectUser(userId);
   }

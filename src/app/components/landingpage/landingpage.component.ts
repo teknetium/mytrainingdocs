@@ -161,7 +161,6 @@ export class LandingpageComponent implements OnInit {
     private trainingService: TrainingService,
     private router: Router) {
 
-    this.taskVideo$ = this.trainingService.getTaskVideoStream();
 
     this.ngxScrollToDuration = 2000;
     this.ngxScrollToEasing = 'easeOutCubic';
@@ -169,12 +168,14 @@ export class LandingpageComponent implements OnInit {
   }
 
   ngOnInit() {
+    /*
     this.taskVideo$.subscribe(safeUrl => {
       if (!safeUrl) {
         return;
       }
       this.showTaskVideoModal = true;
     });
+    */
     /*
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.authenticatedUser$.subscribe(user => {

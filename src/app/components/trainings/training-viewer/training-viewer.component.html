@@ -8,6 +8,7 @@
     </div>
     <div class="training-header" [ngClass]="{'activeStep': currentStep === 0}">
         <div>
+            <!--
             <i *ngIf="!fullscreen" nz-icon nzType="fullscreen" [nzTheme]="'outline'" (click)="fullscreen = true"
                 style="position:absolute;top:10px;right:40px;cursor:pointer;font-size:20px;vertical-align: baseline;"
                 nz-tooltip nzTooltipTitle="Expand"></i>
@@ -15,6 +16,7 @@
                 (click)="fullscreen = false"
                 style="position:absolute;top:10px;right:40px;cursor:pointer;font-size:20px;vertical-align: baseline;"
                 nz-tooltip nzTooltipTitle="Shrink"></i>
+                -->
             <i nz-icon nzType="close-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" (click)="closeViewer()"
                 style="position:absolute;top:10px;right:10px;cursor:pointer;font-size:20px;vertical-align: baseline;"
                 nz-tooltip nzTooltipTitle="Close Training">
@@ -320,7 +322,7 @@
                             <div style="padding:0 30px;margin-bottom:20px;">
                                 This component gives you access to the following features and functions:
                             </div>
-                            <div style="display:block;">
+                            <div style="display:block;margin-top:20px;">
                                 <div
                                     style="width:20%;text-align: center;float:left;padding-right:10px;font-size:14px;font-weight:300;color:#999999;">
                                     <i [ngClass]="selectedTraining.iconClass"
@@ -330,6 +332,24 @@
                                 <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
                                     This is the icon that will be used to identify your training. Clicking the icon
                                     brings up the customization dialog.
+                                </div>
+                            </div>
+                            <div style="display:block;margin-top:20px;">
+                                <div
+                                    style="width:20%;text-align: center;float:left;padding-right:10px;font-size:14px;font-weight:300;color:#999999;">
+                                        <input nz-input nzSize="small" style="font-size:12px;width:80%;" [(ngModel)]="foo" placeholder="Training Title"/>
+                                </div>
+                                <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
+                                    This is where you enter the Title of the training.
+                                </div>
+                            </div>
+                            <div style="display:block;margin-top:20px;">
+                                <div style="width:20%;text-align: center;float:left;padding-right:10px;font-size:18px;font-weight:400">
+                                    <i nz-icon nzType="user-add" [nzTheme]="'outline'"
+                                        style="font-size:18px;vertical-align: top;color:#5972eb;"></i>
+                                </div>
+                                <div style="width:80%;text-align:left;display:inline-block;padding-left:10px;">
+                                    Selecting this icon brings up the assignment dialog where you can select users to be assigned to this training.
                                 </div>
                             </div>
                             <nz-divider></nz-divider>
@@ -369,6 +389,7 @@
                                 </div>
                             </div>
                             <nz-divider></nz-divider>
+                            <!--
                             <div style="display:block;margin-top:20px;">
                                 <div
                                     style="width:20%;text-align: center;float:left;padding-right:10px;font-size:18px;font-weight:400">
@@ -379,6 +400,7 @@
                                     Clicking on this icon switches to fullscreen mode.
                                 </div>
                             </div>
+                            -->
                             <div style="display:block;margin-top:20px;">
                                 <div
                                     style="width:20%;text-align: center;float:left;padding-right:10px;font-size:18px;font-weight:400">
@@ -466,8 +488,8 @@
                                     <textarea [(ngModel)]="inputValue" nz-input rows="4"></textarea>
                                 </nz-form-item>
                                 <nz-form-item>
-                                    <button nz-button nzType="primary" [nzLoading]="submitting" nzSize="small" [disabled]="!inputValue"
-                                        (click)="handleSubmit()">
+                                    <button nz-button nzType="primary" [nzLoading]="submitting" nzSize="small"
+                                        [disabled]="!inputValue" (click)="handleSubmit()">
                                         Add Comment
                                     </button>
                                 </nz-form-item>
@@ -545,6 +567,17 @@
                                         placeholder="Enter a website URL   https://example.com" />
 
                                 </div>
+                                <!--
+                                <div style="margin-top:60px;height:60px;position:relative;">
+                                    <div style="">
+                                        Use embeddable HTML
+                                    </div>
+                                    <input style="margin-left:20px;  display:inline-block;color:black;font-size:14px;width:50%;" nz-input
+                                        [(ngModel)]="pageHtml" nzSize="small" (keydown.enter)="pageHtmlChanged()" (blur)="pageHtmlChanged()"
+                                        placeholder="Enter embeddable HTML <iframe width='560' height='315' src='https://www.youtube.com/embed..." />
+                                
+                                </div>
+                                -->
                                 <!--
                                 <li style="height:60px;position:relative;">
                                     Create your own custom HTML page
@@ -758,7 +791,8 @@
                                 </nz-modal>
                             </div>
                             <div style="margin-top:20px;">
-                                <div *ngIf="page.type !== 'url'" style="margin-top:20px;text-align: center;">
+                                <div *ngIf="page.type !== 'url' && page.type !== 'html'"
+                                    style="margin-top:20px;text-align: center;">
                                     <span style="display:inline-block;color:#aaaaaa;">
                                         Version {{ pageFileHash[page._id].versions[currentVersionIndex].version }}
                                     </span>
@@ -787,9 +821,11 @@
 
                                             <vg-fullscreen></vg-fullscreen>
                                         </vg-controls>
-
-                                        <video  [vgMedia]="media" #media id="singleVideo" preload="'auto'" [src]="safeFileUrl$ | async" crossorigin>
-                                        </video>
+                                        <video [vgMedia]="media" #media id="singleVideo" preload="'auto'"
+                                            [src]="safeFileUrl$ | async" crossorigin></video>
+                                        <!--
+                                        <video [vgMedia]="media" #media id="singleVideo" preload="'auto'" [src]="(file$ | async)?.versions[currentVersionIndex].safeUrl" crossorigin></video>
+                                            -->
                                     </vg-player>
                                 </div>
                                 <div *ngIf="page.type === 'file' && pageFileHash[page._id] && pageFileHash[page._id].iconType !== 'video'"
@@ -964,7 +1000,8 @@
                             </nz-modal>
                             <button
                                 *ngIf="mode === 'Edit' && selectedTraining.status === 'Under Development' && production === 'false'"
-                                nz-button nzType="primary" nzSize="small" style="margin-bottom:10px;" (click)="addNewQuestion()">Add
+                                nz-button nzType="primary" nzSize="small" style="margin-bottom:10px;"
+                                (click)="addNewQuestion()">Add
                                 New Question</button>
                             <nz-collapse nzAccordion="true">
                                 <nz-collapse-panel [nzHeader]="headerTemplate"
@@ -1049,11 +1086,13 @@
                     </div>
                     <div *ngIf="mode === 'Preview' || production === 'true'" style="position:relative;">
                         <div *ngIf="currentAssessmentItemIndex === -1 && !assessmentComplete">
-                            <button nz-button nzType="primary" nzSize="small" (click)="beginAssessment()">Begin Assessment</button>
+                            <button nz-button nzType="primary" nzSize="small" (click)="beginAssessment()">Begin
+                                Assessment</button>
                         </div>
                         <div
                             *ngIf="assessmentComplete && selectedTraining.status === 'Under Development' && production === 'false'">
-                            <button nz-button nzType="primary" nzSize="small" (click)="resetAssessment()">Reset Assessment</button>
+                            <button nz-button nzType="primary" nzSize="small" (click)="resetAssessment()">Reset
+                                Assessment</button>
                         </div>
                         <div *ngIf="currentAssessmentItemIndex > -1" style="margin-bottom:4px;">
                             <div>
@@ -1135,7 +1174,8 @@
                             </div>
                         </div>
                         <div *ngIf="showNext" style="position:absolute;top:330px;left:0;">
-                            <button nz-button nzType="primary" nzSize="small" (click)="nextQuestion()">Next Question</button>
+                            <button nz-button nzType="primary" nzSize="small" (click)="nextQuestion()">Next
+                                Question</button>
                         </div>
                     </div>
                 </div>

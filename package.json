@@ -9,12 +9,13 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-prod": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng build --prod --base-href ./",
+    "build-prod": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng build --prod --base-href ./ --build-optimizer=false",
     "build-prod-state": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng build --prod --stats-json",
     "bundle-report": "webpack-bundle-analyzer dist/stats.json"
   },
   "private": true,
   "dependencies": {
+    "@amcharts/amcharts4": "^4.9.5",
     "@angular/animations": "^9.0.1",
     "@angular/common": "^9.0.1",
     "@angular/compiler": "^9.0.1",

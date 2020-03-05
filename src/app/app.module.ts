@@ -31,6 +31,7 @@ import { NzNotificationService, NzNotificationServiceModule } from 'ng-zorro-ant
 import { SendmailService } from './shared/services/sendmail.service';
 import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
+import { VgOverlayPlayModule } from 'videogular2/compiled/overlay-play';
 
 
 
@@ -60,7 +61,8 @@ registerLocaleData(en);
         HomeModule,
         CalendarModule,
         LoginModule,
-        NzBadgeModule
+        NzBadgeModule,
+        VgOverlayPlayModule,
     ],
     providers: [
         { 

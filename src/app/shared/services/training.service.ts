@@ -30,8 +30,6 @@ export class TrainingService {
   private allTrainingHashBS$ = new BehaviorSubject<TrainingIdHash>({});
   private jobTitlesBS$ = new BehaviorSubject<string[]>([]);
 
-  private taskVideoBS$ = new BehaviorSubject<SafeResourceUrl>(null);
-
   // teamTrainings is an array of training id's created by the team
   private teamTrainingHashBS$ = new BehaviorSubject<TrainingIdHash>({});
   private teamTrainingCntBS$ = new BehaviorSubject<number>(0);
@@ -49,11 +47,6 @@ export class TrainingService {
   teamId: string;
 
   selectedTrainingBS$ = new BehaviorSubject<TrainingModel>(null);
-
-  taskVideoUrlHash = {
-    executeTraining: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
-    addTeamMember: 'https://cdn.filestackcontent.com/uWdq6BaMQXWcWBzSS8J3',
-  }
 
   // Using Angular DI we use the HTTP service
   constructor(
@@ -187,14 +180,6 @@ export class TrainingService {
         });
       });
     });
-  }
-
-  playTaskVideo(task: string) {
-    this.taskVideoBS$.next(this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.taskVideoUrlHash[task])));
-  }
-
-  getTaskVideoStream(): Observable<SafeResourceUrl> {
-    return this.taskVideoBS$.asObservable();
   }
 
   selectTraining(tid: string): void {

@@ -66,3 +66,10 @@ nz-footer {
   height: 40px;
   padding: 10px;
 }
+
+.about-this-page {
+  padding:20px;
+  background-color: #eaf7fe;
+  border: 1px solid #a2d4fb;
+  border-radius: 5px;
+}

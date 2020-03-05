@@ -9,6 +9,8 @@ import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { FormsModule } from '@angular/forms';
+import { VgCoreModule } from 'videogular2/compiled/core';
+import { VgControlsModule } from 'videogular2/compiled/controls';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { FormsModule } from '@angular/forms';
     NzRadioModule,
     NzCardModule,
     NzIconModule,
-    NzAvatarModule
+    NzAvatarModule,
+    VgControlsModule,
+    VgCoreModule
   ],
   exports: [
     LandingpageComponent
