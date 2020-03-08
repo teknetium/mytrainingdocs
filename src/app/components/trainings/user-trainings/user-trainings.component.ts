@@ -95,10 +95,9 @@ export class UserTrainingsComponent implements OnInit {
   }
 
   timeFormat(ms): string {
-    let h = Math.floor(ms / 3600000);
-    let m = Math.floor((ms % 3600000) / 60000);
-    let s = Math.floor(((ms % 3600000) % 60000) / 1000);
-    return String(h) + ':' + String(m) + ':' + String(s);
+        let m = String(Math.floor(ms / 60000)).padStart(2, '0');
+    let s = String(Math.floor(((ms % 3600000) % 60000) / 1000)).padStart(2, '0');
+    return m + ':' + s;
   }
 
   viewTraining(utid, tid) {

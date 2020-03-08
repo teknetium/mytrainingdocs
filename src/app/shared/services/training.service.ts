@@ -6,7 +6,7 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Page, Portlet, TextBlock, Assessment, TrainingIdHash } from '../interfaces/training.type';
+import { TrainingModel, Page, Portlet, TextBlock, Assessment, TrainingIdHash, TrainingArchive } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.type';
 import { TrainingsModule } from 'src/app/components/trainings/trainings.module';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -287,7 +287,7 @@ export class TrainingService {
     const newTraining = <TrainingModel>{
       _id: String(new Date().getTime()),
       type: 'online',
-      version: '1.0.0',
+      versions: ['1.0.0'],
       title: 'New Training',
       status: 'Under Development',
       rating: [],
@@ -338,7 +338,7 @@ export class TrainingService {
       return;
     }
     this.teamTrainingHash[trainingId].pages.push(newPage);
-    this.saveTraining(this.teamTrainingHash[trainingId], false);
+    this.saveTraining(this.teamTrainingHash[trainingId], true);
     this.selectedTrainingBS$.next(this.teamTrainingHash[trainingId]);
     return newPage;
   }
@@ -346,6 +346,12 @@ export class TrainingService {
   createTraining(training: TrainingModel) {
     this.postTraining$(training).subscribe(trainingObj => {
       this.reloadAllTrainings();
+    });
+  }
+
+  createTrainingArchive(trainingArchive: TrainingArchive) {
+    this.postTrainingArchive$(trainingArchive).subscribe(trainingObj => {
+      console.log('training archive', trainingArchive);
     });
   }
 
@@ -393,6 +399,16 @@ export class TrainingService {
   postTraining$(training: TrainingModel): Observable<TrainingModel> {
     return this.http
       .post<TrainingModel>(`${ENV.BASE_API}training/new`, training, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+
+  postTrainingArchive$(trainingArchive: TrainingArchive): Observable<TrainingArchive> {
+    return this.http
+      .post<TrainingArchive>(`${ENV.BASE_API}trainingarchive/new`, trainingArchive, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

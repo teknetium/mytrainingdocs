@@ -34,8 +34,10 @@
 }
 
 .direct-report-cell {
-    margin-bottom: 10px;
     width: fit-content;
+    position: relative;
+    margin-bottom: 10px;
+    border-bottom:1px solid #bbbbbb;
 }
 
 .direct-report {

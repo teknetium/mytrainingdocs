@@ -185,8 +185,12 @@ export class UserService {
         this.userTrainingService.initUserTrainingsForUser(user._id);
       }
 
-      this.myTeamIdHashBS$.next(this.myTeamIdHash);
+
+      this.myTeamIdHash[this.authenticatedUser._id] = this.authenticatedUser;
+      
       this.myTeamCntBS$.next(Object.keys(this.myTeamIdHash).length);
+
+      this.myTeamIdHashBS$.next(this.myTeamIdHash);
     });
 
   }

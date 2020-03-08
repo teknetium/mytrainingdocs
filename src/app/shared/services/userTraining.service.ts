@@ -21,12 +21,12 @@ export class UserTrainingService {
   private usersBS$ = new BehaviorSubject<string[]>([]);
   private utSessionHash: UTSessionHash = {};
   private currentUT: string;
-  
+
   constructor(private eventService: EventService,
     private http: HttpClient,
     private auth: AuthService) {
-    
-    }
+
+  }
 
   initUserTrainingsForUser(uid) {
     let now = new Date().getTime();
@@ -78,6 +78,8 @@ export class UserTrainingService {
     console.log('stopSession', ut);
     this.saveUserTraining(ut);
     this.utSessionHash[tid] = null;
+    this.postUTSession$(session).subscribe(utSession => {
+    });
   }
 
   loadTrainingsForUser(userId) {
@@ -89,7 +91,7 @@ export class UserTrainingService {
   }
 
   getStatusForUser(uid: string): string {
-   let utHash = this.uidUserTrainingHash[uid];
+    let utHash = this.uidUserTrainingHash[uid];
     let userTrainings = Object.values(utHash);
     for (let ut of userTrainings) {
       if (ut.status === 'pastDue') {
@@ -98,15 +100,26 @@ export class UserTrainingService {
     }
     return 'uptodate';
   }
-  
+
+  resetUserTrainingStatus(tid) {
+    this.getUTForTraining$(tid).subscribe(utList => {
+      for (let ut of utList) {
+        if (ut.status === 'completed') {
+          ut.status = 'upToDate';
+          this.saveUserTraining(ut);
+        }
+      }
+    })
+  }
+
   getUserTrainingHashStream(): Observable<UserTrainingHash> {
     return this.userTrainingHashBS$.asObservable();
   }
 
-  getUTforTraining(tid: string) {
+  getUTForTraining(tid: string) {
     let uids: string[] = [];
     this.getUTForTraining$(tid).subscribe(uts => {
-      console.log('UserTrainingService:getUTforTraining', uts);
+      console.log('UserTrainingService:getUTForTraining', uts);
       if (uts.length > 0) {
         for (let ut of uts) {
           uids.push(ut.uid);
@@ -116,7 +129,7 @@ export class UserTrainingService {
         this.usersBS$.next(uids);
       }
     })
-    
+
   }
 
   assignTraining(uid: string, tid: string) {
@@ -141,7 +154,7 @@ export class UserTrainingService {
       utHash[userTraining._id] = userTraining;
 
       this.userTrainingHashBS$.next(utHash);
-      this.getUTforTraining(tid);
+      this.getUTForTraining(tid);
     })
   }
 
@@ -173,12 +186,14 @@ export class UserTrainingService {
     for (let ut of utList) {
       if (ut.tid === tid) {
         userTraining = ut;
+        break;
       }
     }
     userTraining.score = score;
     userTraining.passedAssessment = pass;
     userTraining.dateCompleted = new Date().getTime();
     userTraining.status = 'completed';
+    console.log('setAssessmentResult', userTraining);
     this.updateUserTraining$(userTraining).subscribe(ut => {
       let utHash = this.uidUserTrainingHash[ut.uid];
       utHash[ut._id] = ut;
@@ -202,7 +217,7 @@ export class UserTrainingService {
     let utList = Object.values(utHash);
     for (let ut of utList) {
       if (ut.tid === tid) {
-        this.deleteUserTraining(ut._id, uid); 
+        this.deleteUserTraining(ut._id, uid);
       }
     }
   }
@@ -217,7 +232,7 @@ export class UserTrainingService {
           this.allUserTrainingHash[userTraining._id] = userTraining;
         }
 
-        console.log('UserTrainingService:deleteUserTraining   ',utHash);
+        console.log('UserTrainingService:deleteUserTraining   ', utHash);
 
         this.uidUserTrainingHash[uid] = utHash;
         this.userTrainingHashBS$.next(utHash);
@@ -232,7 +247,7 @@ export class UserTrainingService {
   postUserTraining$(userTraining: UserTrainingModel): Observable<UserTrainingModel> {
     return this.http
       .post<UserTrainingModel>(`${ENV.BASE_API}usertraining/new/`, userTraining, {
-         headers: new HttpHeaders().set('Authorization', this._authHeader),
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
       .pipe(
         catchError((error) => this._handleError(error))

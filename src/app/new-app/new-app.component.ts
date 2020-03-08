@@ -77,38 +77,44 @@ export class NewAppComponent implements OnInit {
       visible: true,
       intro: 'Introduction to the page.',
       taskHash: {
-        gettingStarted: {
+        gettingStartedSupervisor: {
+          userType: ['supervisor'],
           desc: 'Getting Started',
           url: 'https://www.youtube.com/watch?v=N_DktBxPDow&t=2s',
           mimeType: 'video/mpeg',
           poster: './assets/images/logo/logo.png'
         },
         executeTraining: {
-          desc: 'Take your training',
+          userType: ['supervisor', 'individualContributor'],
+          desc: 'Take Your Training',
           url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
         },
         addTeamMember: {
-          desc: 'Add a new team member',
+          userType: ['supervisor'],
+          desc: 'Add a New Team Member',
           url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
         },
         manageUserTrainings: {
-          desc: 'Add / Remove trainings from team members',
+          userType: ['supervisor'],
+          desc: 'Add / Remove Trainings from Team Members',
           url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
         },
         manageTrainings: {
+          userType: ['supervisor'],
           desc: 'Create/Edit Trainings',
           url: 'https://cdn.filestackcontent.com/oNn7wEGNS1Kxj7c1Mgpf',
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
         },
         assignToUsers: {
-          desc: 'Assign trainings to team members',
+          userType: ['supervisor'],
+          desc: 'Assign Trainings to Team Members',
           url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
@@ -120,7 +126,8 @@ export class NewAppComponent implements OnInit {
       intro: 'Introduction to the page.',
       taskHash: {
         executeTraining: {
-          desc: 'Execute your trainings',
+          userType: ['supervisor', 'individualContributor'],
+          desc: 'Execute Your Trainings',
           url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
@@ -132,13 +139,15 @@ export class NewAppComponent implements OnInit {
       intro: 'Introduction to the page.',
       taskHash: {
         addTeamMember: {
-          desc: 'Add a new team member',
+          userType: ['supervisor'],
+          desc: 'Add a New Team Member',
           url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
         },
         manageUserTrainings: {
-          desc: 'Add / Remove trainings from team members',
+          userType: ['supervisor'],
+          desc: 'Add / Remove Trainings from Team Members',
           url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
@@ -150,19 +159,22 @@ export class NewAppComponent implements OnInit {
       intro: 'Introduction to the page.',
       taskHash: {
         manageTrainings: {
+          userType: ['supervisor'],
           desc: 'Create/Edit Trainings',
           url: 'https://cdn.filestackcontent.com/oNn7wEGNS1Kxj7c1Mgpf',
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
         },
         usingAssessments: {
+          userType: ['supervisor'],
           desc: 'How to Create and Use Assessments',
           url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
         },
         assignToUsers: {
-          desc: 'Assign trainings to team members',
+          userType: ['supervisor'],
+          desc: 'Assign Trainings to Team Members',
           url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
@@ -279,7 +291,8 @@ export class NewAppComponent implements OnInit {
         }
         let myTeamIds = Object.keys(teamIdHash);
         if (myTeamIds) {
-          this.myTeamCnt = myTeamIds.length;
+          // Subtract 1 for the supervisor
+          this.myTeamCnt = myTeamIds.length - 1;
         }
       });
       this.teamTrainingCnt$.subscribe(cnt => {

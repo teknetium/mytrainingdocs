@@ -111,9 +111,6 @@ export class MyteamComponent implements OnInit {
       this.myTeamIdHash = myTeamIdHash;
 
       this.myTeam = Object.values(this.myTeamIdHash);
-      if (this.myTeam.length > 0) {
-        this.selectUser(this.myTeam[0]._id);
-      }
       this.cd.detectChanges();
 /*
       if (this.myTeam.length > 0) {
@@ -124,6 +121,7 @@ export class MyteamComponent implements OnInit {
     });
     this.selectedUser$.subscribe(user => {
       if (!user) {
+        this.userIdSelected = null;
         return;
       }
       this.userIdSelected = user._id;
@@ -136,6 +134,7 @@ export class MyteamComponent implements OnInit {
         return;
       }
       this.authenticatedUser = user;
+      this.selectUser(this.authenticatedUser._id);
       this.newTeamMember.teamId = this.authenticatedUser.uid;
       this.newTeamMember.supervisorId = this.authenticatedUser.uid;
       this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
@@ -186,6 +185,10 @@ export class MyteamComponent implements OnInit {
     this.userService.selectUser(userId);
   }
 
+  selectSupervisor() {
+    this.selectUser(null);
+    this.supervisorSelected = true;
+  }
 
   newSupervisorSelected(open: boolean) {
     this.isNewSupervisorPanelOpen = open;

@@ -16,22 +16,31 @@
                             Add a team member
                         </button>
                     </div>
-                    <div *ngFor="let user of myTeam" class="direct-report-cell">
-                        <div class="user-button direct-report" (click)="selectUser(user._id)"
-                            [ngClass]="{'user-selected': userIdSelected === user._id}">
-                            <i [ngClass]="userTypeIconHash[user.userType]"
-                                [ngStyle]="{'color': trainingStatusColorHash[user.trainingStatus]}" nz-tooltip
-                                [nzTooltipTitle]=""></i>&nbsp;
-                            <span style="display:inline-block">{{ user.firstName }} {{ user.lastName }} </span>&nbsp;
-                            <i *ngIf="user.adminUp === true" nz-icon nzType="crown" [nzTheme]="'twotone'"
-                                [nzTwotoneColor]="'#6939c9'"
-                                style="display:inline-block;font-size:18px;vertical-align:baseline;" nz-tooltip
-                                nzTooltipTitle="Admin User"></i>
-                            &nbsp;
-                            <i *ngIf="user.userStatus === 'pending'" nz-icon nzType="warning" [nzTheme]="'twotone'"
-                                [nzTwotoneColor]="'#efb753'"
-                                style="display:inline-block;font-size:18px;vertical-align:baseline;" nz-tooltip
-                                nzTooltipTitle="User Account Pending"></i>
+                    <div *ngIf="authenticatedUser$ | async as user" class="user-button" (click)="selectUser(user._id)"
+                        [ngClass]="{'user-selected': userIdSelected === user._id }">
+                        <i [ngClass]="userTypeIconHash[user.userType]"
+                            [ngStyle]="{'color': trainingStatusColorHash[user.trainingStatus]}" nz-tooltip
+                            [nzTooltipTitle]=""></i>&nbsp;
+                        <span style="display:inline-block;">{{ user.firstName }} {{ user.lastName }} </span>&nbsp;
+                    </div>
+                    <div style="display:block;margin-left:10px;width:fit-content;border-left:1px solid #bbbbbb;">
+                        <div *ngFor="let user of myTeam" class="direct-report-cell">
+                            <div *ngIf="user._id !== (authenticatedUser$ | async)?._id" class="user-button" (click)="selectUser(user._id)" style="position:relative;top:10px;left:10px;"
+                                [ngClass]="{'user-selected': userIdSelected === user._id}">
+                                <i [ngClass]="userTypeIconHash[user.userType]"
+                                    [ngStyle]="{'color': trainingStatusColorHash[user.trainingStatus]}"></i>&nbsp;
+                                <span style="display:inline-block">{{ user.firstName }} {{ user.lastName }}
+                                </span>&nbsp;
+                                <i *ngIf="user.adminUp === true" nz-icon nzType="crown" [nzTheme]="'twotone'"
+                                    [nzTwotoneColor]="'#6939c9'"
+                                    style="display:inline-block;font-size:18px;vertical-align:baseline;" nz-tooltip
+                                    nzTooltipTitle="Admin User"></i>
+                                &nbsp;
+                                <i *ngIf="user.userStatus === 'pending'" nz-icon nzType="warning" [nzTheme]="'twotone'"
+                                    [nzTwotoneColor]="'#efb753'"
+                                    style="display:inline-block;font-size:18px;vertical-align:baseline;" nz-tooltip
+                                    nzTooltipTitle="User Account Pending"></i>
+                            </div>
                         </div>
                     </div>
                 </div>

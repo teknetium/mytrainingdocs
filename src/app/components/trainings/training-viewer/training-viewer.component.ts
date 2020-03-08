@@ -5,7 +5,7 @@ import { UserService } from '../../../shared/services/user.service';
 import { UserTrainingService } from '../../../shared/services/userTraining.service';
 import { AuthService } from '../../../shared/services/auth.service';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { TrainingModel, Page, Portlet, Assessment, AssessmentItem } from 'src/app/shared/interfaces/training.type';
+import { TrainingModel, Page, Portlet, Assessment, AssessmentItem, TrainingArchive } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FileModel, Version } from 'src/app/shared/interfaces/file.type';
@@ -104,6 +104,7 @@ export class TrainingViewerComponent implements OnInit {
   helpPanelIsVisible = true;
   badUrl = false;
   more = '...';
+  lockTrainingModalIsVisible = false;
 
   userTypeIconHash = {
     individualContributor: 'fad fa-fw fa-user',
@@ -275,6 +276,7 @@ export class TrainingViewerComponent implements OnInit {
   currentCorrectChoice: string;
   assignToDisabled = false;
   currentVersionIndex = 0;
+  trainingArchive: TrainingModel;
 
   @ViewChild("myDiv") divView: ElementRef;
 
@@ -314,7 +316,7 @@ export class TrainingViewerComponent implements OnInit {
       this.selectedTraining = training;
 
       if (training) {
-        this.userTrainingService.getUTforTraining(this.selectedTraining._id);
+        this.userTrainingService.getUTForTraining(this.selectedTraining._id);
         if (this.production === 'true') {
           this.currentPageId = 'intro';
         } else {
@@ -415,6 +417,83 @@ export class TrainingViewerComponent implements OnInit {
     this.authenticatedUser$.pipe(take(2)).subscribe(user => {
       this.authenticatedUser = user;
     })
+  }
+
+  handleLockTraining() {
+    this.error1 = false;
+    this.error2 = false;
+
+    if (!this.changeLevel) {
+      this.error1 = true;
+      this.lockTrainingModalIsVisible = true;
+      return;
+    }
+
+    const versionArray = this.selectedTraining.versions[0].split('.', 3);
+    let majorNum = parseInt(versionArray[0], 10);
+    let minorNum = parseInt(versionArray[1], 10);
+    let patchNum = parseInt(versionArray[2], 10);
+    if (this.changeLevel === 'major') {
+      majorNum++;
+      minorNum = 0;
+      patchNum = 0;
+      this.resetTrainingStatus();
+    } else if (this.changeLevel === 'minor') {
+      minorNum++;
+      patchNum = 0;
+      this.sendNotifications();
+    } else if (this.changeLevel === 'patch') {
+      patchNum++;
+    }
+    this.selectedTraining.versions[0] = majorNum + '.' + minorNum + '.' + patchNum;
+    this.selectedTraining.status = 'In Production';
+    this.trainingService.saveTraining(this.selectedTraining, true);
+  }
+
+  resetTrainingStatus() {
+    this.userTrainingService.resetUserTrainingStatus(this.selectedTraining._id);
+  }
+
+  sendNotifications() {
+      this.subject = 'The Content of a Training has changed!'
+    this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated.  Please review the training."
+    console.log('sending notification message');
+    for (let user of this.assignedToUsers) {
+      let msg = <MessageModel>{
+        to: this.myTeamHash[user].email,
+        from: this.authenticatedUser.email,
+        subject: this.subject,
+        text: this.messageBody
+      }
+      this.mailService.sendMessage(msg);
+    }
+  }
+
+  lockTraining(training) {
+    // post show new training version impact dialog
+    if (this.selectedTraining.versions[0] === '1.0.0') {
+      this.lockTrainingModalIsVisible = false;
+      this.selectedTraining.status = 'In Production';
+      this.trainingService.saveTraining(this.selectedTraining, true);
+    } else {
+      this.lockTrainingModalIsVisible = true;
+    }
+  }
+
+  unlockTraining() {
+    this.selectedTraining.status = 'Under Development';
+    // clone training
+    this.trainingArchive = Object.assign(this.trainingArchive, this.selectedTraining);
+    this.trainingArchive.status = 'Archived';
+    this.trainingArchive._id = this.trainingArchive._id + '_' + this.selectedTraining.versions[0];
+    this.trainingService.createTraining(this.trainingArchive);
+    let archiveRecord = <TrainingArchive>{
+      _id: String(new Date().getTime()),
+      tid: this.selectedTraining._id,
+      archiveId: this.trainingArchive._id + '_' + this.trainingArchive.versions[0],
+      version: this.trainingArchive.versions[0],
+    };
+    this.trainingService.createTrainingArchive(archiveRecord);
   }
 
   openPicker(type: string): void {
@@ -527,7 +606,7 @@ export class TrainingViewerComponent implements OnInit {
 
   deleteAssignedUser() {
     this.userTrainingService.deleteUserTrainingByTidUid(this.selectedTraining._id, this.assignedUserIdSelected);
-    this.userTrainingService.getUTforTraining(this.selectedTraining._id);
+    this.userTrainingService.getUTForTraining(this.selectedTraining._id);
     this.trainingService.reloadAllTrainings();
   }
 
@@ -625,7 +704,7 @@ export class TrainingViewerComponent implements OnInit {
       patchNum++;
     }
     this.newVersion.version = majorNum + '.' + minorNum + '.' + patchNum;
-    
+
     this.newVersion.owner = this.authenticatedUser._id;
     this.newVersion.dateUploaded = new Date().getTime();
 
@@ -721,7 +800,7 @@ export class TrainingViewerComponent implements OnInit {
   confirmAssignmentToUser() {
     this.showAssignToUserDialog = false;
     this.userTrainingService.assignTraining(this.assignToUser._id, this.selectedTraining._id);
-    this.userTrainingService.getUTforTraining(this.selectedTraining._id);
+    this.userTrainingService.getUTForTraining(this.selectedTraining._id);
   }
 
   selectTeamMemberToAssign(uid: string) {

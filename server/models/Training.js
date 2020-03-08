@@ -44,7 +44,7 @@ const assessmentSchema = new Schema({
 const trainingSchema = new Schema({
   _id: { type: String, required: true },
   type: { type: String, required: true },
-  version: { type: String, required: true },
+  versions: { type: [String], required: true },
   status: { type: String, required: true },
   title: { type: String, required: true },
   teamId: { type: String, required: true },

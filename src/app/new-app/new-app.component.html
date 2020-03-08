@@ -181,24 +181,30 @@
                     <div style="margin:20px 0;color:blue;font-size:16px;">
                         Tasks
                     </div>
-                    <div style="margin-bottom:20px;padding-left:20px;">
+                    <div *ngIf="authenticatedUser$ | async as user" style="margin-bottom:20px;padding-left:20px;">
                         <ul style="list-style-type: none;">
                             <li *ngFor="let taskName of taskNames" style="margin-bottom: 10px;">
+                                <div *ngIf="aboutThisPageHash[currentPage].taskHash[taskName].userType.includes(user.userType)">
                                 <i nz-icon nzType="play-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
                                     nz-tooltip nzTooltipTitle="Play the task How-To video"
                                     (click)="playTaskVideo(taskName)"
                                     style="cursor:pointer;font-size:20px;vertical-align: baseline;margin-left:20px;"></i>
                                 &nbsp;&nbsp;{{aboutThisPageHash[currentPage].taskHash[taskName].desc}}
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <nz-modal [(nzVisible)]="showTaskVideoModal" nzWidth="700" nzHeight="800" [nzTitle]="taskVideoTemplate"
+            <nz-modal [(nzVisible)]="showTaskVideoModal" nzWidth="700" nzHeight="800" nzTitle="Task Viewer" nzOkText="Close"
                 nzCancelDisabled="true" (nzOnOk)="closeTaskVideoModal()" style="text-align: center;">
+                <div *ngIf="aboutThisPageHash[currentPage] && aboutThisPageHash[currentPage].taskHash[currentTask]" style="font-size:24px;text-align: center;margin-bottom:40px;">
+                    <span
+                        style="font-size:24px;text-align: center;color:blue;">{{aboutThisPageHash[currentPage].taskHash[currentTask].desc}}</span>
+                </div>
                 <div *ngIf="aboutThisPageHash[currentPage] && aboutThisPageHash[currentPage].taskHash[currentTask]"
-                    style="display:inline-block;margin-top:5px;background-color: black;padding:5px;width:600px;height:700px;">
+                    style="display:inline-block;margin-top:5px;background-color: black;padding:5px;width:600px;height:600px;">
                     <vg-player (onPlayerReady)="onPlayerReady($event)">
 <!--
                         <vg-overlay-play style="color:red;background-color:#bbbbbb;"></vg-overlay-play>
@@ -233,10 +239,6 @@
                 </div>
             </nz-modal>
             <ng-template #taskVideoTemplate>
-                <div style="font-size:24px;text-align: center;">
-                    <span
-                        style="font-size:24px;text-align: center;">{{aboutThisPageHash[currentPage].taskHash[currentTask].desc}}</span>
-                </div>
             </ng-template>
         </div>
         <router-outlet></router-outlet>

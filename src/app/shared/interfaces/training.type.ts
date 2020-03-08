@@ -3,8 +3,8 @@ import { CalendarModule } from "src/app/components/calendar/calendar.module";
 export interface TrainingModel {
   _id: string,
   type: 'online' | 'system' ,
-  version: string,
-  status: 'Under Development' | 'In Review' | 'In Production',
+  versions: string[],
+  status: 'Under Development' | 'In Review' | 'In Production' | 'Archived',
   title: string,
   teamId: string,
   owner: string,
@@ -42,10 +42,13 @@ export interface AssessmentItem {
   
 export interface TrainingArchive {
   _id: string,
-  archiveDate: number,
+  tid: string,
+  archiveId: string,
+  impact: 'major' | 'minor' | 'patch',
   version: string,
-  training: TrainingModel
+  comment: string
 }
+
 
 export interface Assessment {
   _id: string,
@@ -95,3 +98,4 @@ export interface Comment {
   commentText: string,
   rating: number
 }
+

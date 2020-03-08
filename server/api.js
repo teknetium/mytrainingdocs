@@ -55,7 +55,7 @@ module.exports = function(app, config) {
  |--------------------------------------
  */
 
-  const trainingListProjection = "_id title version type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status interestList shared";
+  const trainingListProjection = "_id title versions type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status interestList shared";
   const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponse passedAssessment score trainingVersion";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId org supervisorId profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
@@ -188,7 +188,45 @@ module.exports = function(app, config) {
       _id: req.body._id,
       title: req.body.title,
       type: req.body.type,
-      version: req.body.version,
+      versions: req.body.versions,
+      teamId: req.body.teamId,
+      owner: req.body.owner,
+      dateCreated: req.body.dateCreated,
+      estimatedTimeToComplete: req.body.estimatedTimeToComplete,
+      jobTitle: req.body.jobTitle,
+      description: req.body.description,
+      execSummary: req.body.execSummary,
+      execSummaryLabel: req.body.execSummaryLabel,
+      introduction: req.body.introduction,
+      introductionLabel: req.body.introductionLabel,
+      goals: req.body.goals,
+      goalsLabel: req.body.goalsLabel,
+      image: req.body.image,
+      iconClass: req.body.iconClass,
+      iconColor: req.body.iconColor,
+      iconSource: req.body.iconSource,
+      files: req.body.files,
+      pages: req.body.pages,
+      assessment: req.body.assessment,
+      useAssessment: req.body.useAssessment,
+      rating: req.body.rating,
+      status: req.body.status,
+      interestList: req.body.interestList,
+      shared: req.body.shared
+    });
+    Training.create(training, function (err, trainingObj) {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      res.send(trainingObj);
+    });
+  });
+  app.post("/api/trainingarchive/new", jwtCheck, (req, res) => {
+    const training = new Training({
+      _id: req.body._id,
+      title: req.body.title,
+      type: req.body.type,
+      versions: req.body.versions,
       teamId: req.body.teamId,
       owner: req.body.owner,
       dateCreated: req.body.dateCreated,
@@ -231,7 +269,7 @@ module.exports = function(app, config) {
       }
       training._id = req.body._id;
       training.type = req.body.type;
-      training.version = req.body.version;
+      training.versions = req.body.versions;
       training.title = req.body.title;
       training.teamId = req.body.teamId;
       training.owner = req.body.owner;

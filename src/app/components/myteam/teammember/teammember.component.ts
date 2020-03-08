@@ -104,6 +104,9 @@ export class TeammemberComponent implements OnInit {
   }
 
   confirmDelete(user: UserModel) {
+    if (user._id === this.authenticatedUser._id) {
+      
+    }
     this.userService.deleteUser(user._id);
     this.userTrainingService.deleteUTForUser(user._id);
   }
