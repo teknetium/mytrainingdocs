@@ -13,10 +13,13 @@
     <div *ngFor="let training of trainings " style="display:inline-block;">
       <div class="cell-item-sm" (click)="selectTraining(training._id)">
         <div style="display:block;font-size:12px;">
-          <i *ngIf="training.status === 'Under Development'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
-            style="display:block;font-size:14px;text-align: left;" [nzTwotoneColor]="'#52c41a'"></i>
-          <i *ngIf="training.status === 'In Production'" nz-icon nzType="lock" [nzTheme]="'twotone'"
-            style="display:block;font-size:14px;text-align: left;" [nzTwotoneColor]="'red'"></i>
+          <i *ngIf="training.status === 'unlocked'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
+            style="display:inline-block;font-size:14px;float: left;" [nzTwotoneColor]="'#52c41a'"></i>
+          <i *ngIf="training.status === 'locked'" nz-icon nzType="lock" [nzTheme]="'twotone'"
+            style="display:inline-block;font-size:14px;float: left;" [nzTwotoneColor]="'red'"></i>
+            <span *ngIf="training.status === 'locked'" style="display:inline-block;float:right;">{{training.versions[0]}}</span>
+            <span *ngIf="training.status === 'unlocked'" style="display:inline-block;float:right;">{{training.versionPending}}</span>
+            <div style="clear:both;"> </div>
         </div>
         <div style="display:block;text-align: center;">
           <i [ngStyle]="{'color': training.iconColor}" [ngClass]="training.iconClass" style="font-size:40px;padding-top:5px;"></i>

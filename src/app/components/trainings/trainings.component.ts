@@ -56,7 +56,7 @@ export class TrainingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectTraining(null);
+
     this.authenticatedUser$.pipe(take(2)).subscribe((user) => {
       if (!user) {
         return;

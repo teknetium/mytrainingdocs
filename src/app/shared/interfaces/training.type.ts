@@ -4,7 +4,8 @@ export interface TrainingModel {
   _id: string,
   type: 'online' | 'system' ,
   versions: string[],
-  status: 'Under Development' | 'In Review' | 'In Production' | 'Archived',
+  versionPending: string,
+  status: 'locked' | 'unlocked' | 'archived',
   title: string,
   teamId: string,
   owner: string,
@@ -28,7 +29,9 @@ export interface TrainingModel {
   assessment: Assessment,
   useAssessment: boolean,
   interestList: string[],
-  shared: boolean
+  shared: boolean,
+  isValid: {},
+  isDirty: boolean
 }
 export interface TrainingIdHash {
   [indexer: string]: TrainingModel;
@@ -40,19 +43,10 @@ export interface AssessmentItem {
   correctChoice: number
 }
   
-export interface TrainingArchive {
-  _id: string,
-  tid: string,
-  archiveId: string,
-  impact: 'major' | 'minor' | 'patch',
-  version: string,
-  comment: string
-}
-
 
 export interface Assessment {
   _id: string,
-  type: 'choiceFeedback' | 'questionFeedback' | 'assessmentFeedback',
+  type: string,
   timeLimit: number,
   passingGrade: number,
   items: AssessmentItem[]

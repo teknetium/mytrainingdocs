@@ -185,10 +185,10 @@
                         <ul style="list-style-type: none;">
                             <li *ngFor="let taskName of taskNames" style="margin-bottom: 10px;">
                                 <div *ngIf="aboutThisPageHash[currentPage].taskHash[taskName].userType.includes(user.userType)">
-                                <i nz-icon nzType="play-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+                                <i nz-icon nzType="youtube" [nzTheme]="'outline'"
                                     nz-tooltip nzTooltipTitle="Play the task How-To video"
                                     (click)="playTaskVideo(taskName)"
-                                    style="cursor:pointer;font-size:20px;vertical-align: baseline;margin-left:20px;"></i>
+                                    style="cursor:pointer;font-size:20px;vertical-align: baseline;margin-left:20px;color:#52c41a;"></i>
                                 &nbsp;&nbsp;{{aboutThisPageHash[currentPage].taskHash[taskName].desc}}
                                 </div>
                             </li>

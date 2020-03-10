@@ -7,6 +7,7 @@
 const jwt = require("express-jwt");
 const jwks = require("jwks-rsa");
 const Training = require("./models/Training");
+const TrainingWC = require("./models/TrainingWC");
 const UserTraining = require("./models/UserTraining");
 const User = require("./models/User");
 const File = require("./models/File");
@@ -55,7 +56,7 @@ module.exports = function(app, config) {
  |--------------------------------------
  */
 
-  const trainingListProjection = "_id title versions type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status interestList shared";
+  const trainingListProjection = "_id title versions versionPending type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status interestList shared isValid isDirty";
   const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponse passedAssessment score trainingVersion";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId org supervisorId profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
@@ -167,6 +168,16 @@ module.exports = function(app, config) {
       },
     );
   });
+  app.get("/api/trainingsworkingcopy/:id", (req, res) => {
+    TrainingWC.findOne({ _id: req.params.id },
+      trainingListProjection, (err, training) => {
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        res.send(training);
+      },
+    );
+  });
   app.get("/api/trainings/:teamId", (req, res) => {
     Training.find({teamId: req.params.teamId},
       trainingListProjection, (err, trainings) => {
@@ -189,6 +200,7 @@ module.exports = function(app, config) {
       title: req.body.title,
       type: req.body.type,
       versions: req.body.versions,
+      versionPending: req.body.versionPending,
       teamId: req.body.teamId,
       owner: req.body.owner,
       dateCreated: req.body.dateCreated,
@@ -212,7 +224,9 @@ module.exports = function(app, config) {
       rating: req.body.rating,
       status: req.body.status,
       interestList: req.body.interestList,
-      shared: req.body.shared
+      shared: req.body.shared,
+      isValid: req.body.isValid,
+      isDirty: req.body.isDirty,
     });
     Training.create(training, function (err, trainingObj) {
       if (err) {
@@ -221,12 +235,13 @@ module.exports = function(app, config) {
       res.send(trainingObj);
     });
   });
-  app.post("/api/trainingarchive/new", jwtCheck, (req, res) => {
-    const training = new Training({
+  app.post("/api/trainingworkingcopy/new", jwtCheck, (req, res) => {
+    const training = new TrainingWC({
       _id: req.body._id,
       title: req.body.title,
       type: req.body.type,
       versions: req.body.versions,
+      versionPending: req.body.versionPending,
       teamId: req.body.teamId,
       owner: req.body.owner,
       dateCreated: req.body.dateCreated,
@@ -250,9 +265,11 @@ module.exports = function(app, config) {
       rating: req.body.rating,
       status: req.body.status,
       interestList: req.body.interestList,
-      shared: req.body.shared
+      shared: req.body.shared,
+      isValid: req.body.isValid,
+      isDirty: req.body.isDirty,
     });
-    Training.create(training, function (err, trainingObj) {
+    TrainingWC.create(training, function (err, trainingObj) {
       if (err) {
         return res.status(500).send({ message: err.message });
       }
@@ -270,6 +287,7 @@ module.exports = function(app, config) {
       training._id = req.body._id;
       training.type = req.body.type;
       training.versions = req.body.versions;
+      training.versionPending = req.body.versionPending;
       training.title = req.body.title;
       training.teamId = req.body.teamId;
       training.owner = req.body.owner;
@@ -295,6 +313,56 @@ module.exports = function(app, config) {
       training.useAssessment = req.body.useAssessment;
       training.interestList = req.body.interestList;
       training.shared = req.body.shared;
+      training.isValid = req.body.isValid;
+      training.isDirty = req.body.isDirty;
+
+      training.save(err2 => {
+        if (err2) {
+          return res.status(500).send({ message: err2.message });
+        }
+        res.send(training);
+      });
+    });
+  });
+  app.put("/api/trainingsworkingcopy/:id", jwtCheck, (req, res) => {
+    TrainingWC.findById(req.params.id, (err, training) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (!training) {
+        return res.status(400).send({ message: "Training not found." });
+      }
+      training._id = req.body._id;
+      training.type = req.body.type;
+      training.versions = req.body.versions;
+      training.versionPending = req.body.versionPending;
+      training.title = req.body.title;
+      training.teamId = req.body.teamId;
+      training.owner = req.body.owner;
+      training.dateCreated = req.body.dateCreated;
+      training.estimatedTimeToComplete = req.body.estimatedTimeToComplete;
+      training.jobTitle = req.body.jobTitle;
+      training.description = req.body.description;
+      training.introduction = req.body.introduction;
+      training.introductionLabel = req.body.introductionLabel;
+      training.goals = req.body.goals;
+      training.goalsLabel = req.body.goalsLabel;
+      training.execSummary = req.body.execSummary;
+      training.execSummaryLabel = req.body.execSummaryLabel;
+      training.image = req.body.image;
+      training.iconClass = req.body.iconClass;
+      training.iconColor = req.body.iconColor;
+      training.iconSource = req.body.iconSource;
+      training.files = req.body.files;
+      training.pages = req.body.pages;
+      training.rating = req.body.rating;
+      training.status = req.body.status;
+      training.assessment = req.body.assessment;
+      training.useAssessment = req.body.useAssessment;
+      training.interestList = req.body.interestList;
+      training.shared = req.body.shared;
+      training.isValid = req.body.isValid;
+      training.isDirty = req.body.isDirty;
 
       training.save(err2 => {
         if (err2) {
@@ -306,6 +374,22 @@ module.exports = function(app, config) {
   });
   app.delete("/api/trainings/:id", jwtCheck, (req, res) => {
     Training.findById(req.params.id, (err, foo) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (!foo) {
+        return res.status(400).send({ message: "Training not found." });
+      }
+      foo.remove(err2 => {
+        if (err2) {
+          return res.status(500).send({ message: err2.message });
+        }
+        res.status(200).send({ message: "training successfully deleted." });
+      });
+    });
+  });
+  app.delete("/api/trainingsworkingcopy/:id", jwtCheck, (req, res) => {
+    TrainingWC.findById(req.params.id, (err, foo) => {
       if (err) {
         return res.status(500).send({ message: err.message });
       }
@@ -494,7 +578,7 @@ module.exports = function(app, config) {
   });
   app.get("/api/users/org/:org", (req, res) => {
     User.find({ org: req.params.org },
-      userProjection, (err, users) => {
+      userListProjection, (err, users) => {
         let usersArr = [];
         if (err) {
           return res.status(500).send({ message: err.message });

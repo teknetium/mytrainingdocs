@@ -25,8 +25,6 @@
                         [ngStyle]="{'color': trainingIdHash[userTraining.tid].iconColor}">
                     </i>
                     {{ trainingIdHash[userTraining.tid].title }}
-                    <i *ngIf="(trainingIdHash$ | async)[userTraining.tid].status === 'In Production'" nz-icon [nzType]="'lock'" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" style="margin-left:5px;display:inlin-block;font-size:14px;vertical-align:baseline;"></i>
-                    <i *ngIf="(trainingIdHash$ | async)[userTraining.tid].status === 'Under Development'" nz-icon [nzType]="'unlock'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'" style="margin-left:5px;display:inlin-block;font-size:14px;vertical-align:baseline;"></i>
                 </td>
                 <td style="font-size:12px;width:9%;" [ngClass]="{'selected-userTraining': currentUserTraining === userTraining._id}">
                     {{ timeFormat(userTraining.timeToDate) }}

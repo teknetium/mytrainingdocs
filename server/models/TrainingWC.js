@@ -8,12 +8,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const portletSchema = new Schema({
-    _id: { type: String, required: true },
-    file: { type: String },
-    width: { type: Number },
-    height: { type: Number },
-    xLoc: { type: Number },
-    yLoc: { type: Number }
+  _id: { type: String, required: true },
+  file: { type: String },
+  width: { type: Number },
+  height: { type: Number },
+  xLoc: { type: Number },
+  yLoc: { type: Number }
 })
 
 const pageSchema = new Schema({
@@ -41,7 +41,7 @@ const assessmentSchema = new Schema({
 })
 
 
-const trainingSchema = new Schema({
+const trainingWCSchema = new Schema({
   _id: { type: String, required: true },
   type: { type: String, required: true },
   versions: { type: [String], required: true },
@@ -75,4 +75,4 @@ const trainingSchema = new Schema({
   isDirty: { type: Boolean },
 });
 
-module.exports = mongoose.model("Training", trainingSchema);
+module.exports = mongoose.model("TrainingWC", trainingWCSchema);

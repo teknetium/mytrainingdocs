@@ -6,7 +6,7 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Page, Portlet, TextBlock, Assessment, TrainingIdHash, TrainingArchive } from '../interfaces/training.type';
+import { TrainingModel, Page, Portlet, TextBlock, Assessment, TrainingIdHash } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.type';
 import { TrainingsModule } from 'src/app/components/trainings/trainings.module';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -73,11 +73,18 @@ export class TrainingService {
             teamTrainings = [];
           }
           for (let training of teamTrainings) {
+            if (training.status === 'unlocked') {
+              this.getTrainingWCById$(training._id).subscribe(trainingObj => {
+                this.allTrainingHash[trainingObj._id] = trainingObj;
+                this.teamTrainingHash[trainingObj._id] = trainingObj;
+              });
+            }
             this.teamTrainingHash[training._id] = training;
             this.allTrainingHash[training._id] = training;
             if (training.jobTitle) {
               this.jobTitles.push(training.jobTitle);
             }
+
           }
           let teamTrainingIds = Object.keys(this.teamTrainingHash);
           this.teamTrainingHashBS$.next(this.teamTrainingHash);
@@ -127,6 +134,12 @@ export class TrainingService {
         teamTrainings = [];
       }
       for (let training of teamTrainings) {
+        if (training.status === 'unlocked') {
+          this.getTrainingWCById$(training._id).subscribe(trainingObj => {
+            this.allTrainingHash[trainingObj._id] = trainingObj;
+            this.teamTrainingHash[trainingObj._id] = trainingObj;
+          });
+        }
         this.teamTrainingHash[training._id] = training;
         this.allTrainingHash[training._id] = training;
       }
@@ -145,6 +158,12 @@ export class TrainingService {
         teamTrainings = [];
       }
       for (let training of teamTrainings) {
+        if (training.status === 'unlocked') {
+          this.getTrainingWCById$(training._id).subscribe(trainingObj => {
+            this.allTrainingHash[trainingObj._id] = trainingObj;
+            this.teamTrainingHash[trainingObj._id] = trainingObj;
+          });
+        }
         this.teamTrainingHash[training._id] = training;
         this.allTrainingHash[training._id] = training;
       }
@@ -152,7 +171,7 @@ export class TrainingService {
       this.teamTrainingHashBS$.next(this.teamTrainingHash);
       this.teamTrainingCntBS$.next(teamTrainingIds.length);
 
-    
+
       console.log('reloadAllTrainings - teamTrainingHash, teamTrainingCnt', this.teamTrainingHash, teamTrainingIds);
       // Load system trainings
       this.getTrainings$('mytrainingdocs').subscribe(systemTrainings => {
@@ -183,7 +202,19 @@ export class TrainingService {
   }
 
   selectTraining(tid: string): void {
-    this.selectedTrainingBS$.next(this.allTrainingHash[tid]);
+    // if the status of the selected training is 'unlocked' then fetch the
+    // training from the working copy collection
+    if (!tid) {
+      this.selectedTrainingBS$.next(null);
+      return;
+    }
+    if (this.allTrainingHash[tid].status === 'unlocked') {
+      this.getTrainingWCById$(tid).subscribe(training => {
+        this.selectedTrainingBS$.next(training);
+      })
+    } else {
+      this.selectedTrainingBS$.next(this.allTrainingHash[tid]);
+    }
   }
 
   getJobTitleStream(): Observable<string[]> {
@@ -208,77 +239,10 @@ export class TrainingService {
 
   addNewTraining() {
     const baseId = new Date().getTime();
-    const portlet1 = <Portlet>{
-      _id: String(baseId + '-01'),
-      file: null,
-      width: 300,
-      height: 200,
-      xLoc: 0,
-      yLoc: 0
-    };
-    const textBlock1 = <TextBlock>{
-      _id: String(baseId + '-01'),
-      label: '1  This is the LABEL of this text block.',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
-      width: 300,
-      height: 200,
-      xLoc: 0,
-      yLoc: 0
-    };
-
-    const textBlock2 = <TextBlock>{
-      _id: String(baseId + '-01'),
-      label: '2  This is the LABEL of this text block.',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
-      width: 40,
-      height: 20,
-      xLoc: 0,
-      yLoc: 0
-    };
-    const mainContentPage = <Page>{
-      _id: String(new Date().getTime()),
-      type: 'text',
-      url: '',
-      title: 'Upload Your Content Here',
-      intro: 'Introduction',
-      file: null,
-      portlets: [portlet1],
-      textBlocks: [textBlock1, textBlock2]
-    };
-    const introPage = <Page>{
-      _id: String(new Date().getTime()),
-      type: 'text',
-      url: '',
-      title: 'Title Page',
-      intro: 'Introduction',
-      file: null,
-      portlets: [portlet1],
-      textBlocks: [textBlock1, textBlock2]
-    };
-    const assessmentPage = <Page>{
-      _id: String(new Date().getTime()),
-      type: 'text',
-      url: '',
-      title: 'Assessments',
-      intro: 'Create a test to evaluate mastery of the content presented in this training. Questions are multiple choice and can have multiple correct choices. Each test must include at least 3 questions.',
-      file: null,
-      portlets: [],
-      textBlocks: []
-    };
-    const rateCommentPage = <Page>{
-      _id: String(new Date().getTime()),
-      type: 'text',
-      url: '',
-      title: 'Ratings and Comments',
-      intro: '',
-      file: null,
-      portlets: [portlet1],
-      textBlocks: [textBlock1, textBlock2]
-    };
 
     const assessment = <Assessment>{
       _id: String(new Date().getTime()),
-      type: 'choiceFeedback',
+      type: '',
       timeLimit: 0,
       passingGrade: 70,
       items: []
@@ -287,34 +251,47 @@ export class TrainingService {
     const newTraining = <TrainingModel>{
       _id: String(new Date().getTime()),
       type: 'online',
-      versions: ['1.0.0'],
+      versions: [],
+      versionPending: '1.0.0',
       title: 'New Training',
-      status: 'Under Development',
+      status: 'unlocked',
       rating: [],
       teamId: this.teamId,
       owner: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),
-      estimatedTimeToComplete: 30,
+      estimatedTimeToComplete: 0,
       jobTitle: '',
       description: 'This is a useless description',
       image: 'assets/images/others/bb.jpg',
       introductionLabel: 'Training Introduction',
-      introduction: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ',
-      execSummaryLabel: 'Executive Summary Label',
-      execSummary: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      goalsLabel: 'Goals Label',
-      goals: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      introduction: 'Replace this text.',
+      execSummaryLabel: 'Replace this text.',
+      execSummary: 'Replace this text.',
+      goalsLabel: 'Replace this text.',
+      goals: 'Replace this text.',
       iconClass: 'fad fa-graduation-cap',
       iconColor: 'black',
       iconSource: 'fontawesome',
       files: [],
       pages: [],
       assessment: assessment,
-      useAssessment: false,
+      useAssessment: true,
       interestList: [],
-      shared: false
+      shared: false,
+      isValid: {
+        trainingWizardTour: false,
+        config: false,
+        intro: false,
+        mainContent: false,
+        assessment: false
+      },
+      isDirty: false
     };
+
     this.postTraining$(newTraining).subscribe(trainingObj => {
+      console.log('addNewTraining', newTraining);
+      this.postTrainingWC$(trainingObj).subscribe(training => {
+      })
       this.reloadAllTrainings();
     });
   }
@@ -337,10 +314,25 @@ export class TrainingService {
       console.log('TrainingService:addNewPage : ERROR : trainingId not found in teamTrainingHash', trainingId, this.teamTrainingHash);
       return;
     }
+    this.teamTrainingHash[trainingId].isValid['mainContent'] = true;
     this.teamTrainingHash[trainingId].pages.push(newPage);
     this.saveTraining(this.teamTrainingHash[trainingId], true);
     this.selectedTrainingBS$.next(this.teamTrainingHash[trainingId]);
     return newPage;
+  }
+
+  unlockTraining(training) {
+    training.status = 'unlocked';
+    let versionArray = training.versions[0].split('.', 3);
+    let majorNum = parseInt(versionArray[0], 10);
+    let minorNum = parseInt(versionArray[1], 10);
+    let patchNum = parseInt(versionArray[2], 10);
+    patchNum++;
+    training.versionPending = majorNum + '.' + minorNum + '.' + patchNum;
+    this.editTraining$(training).subscribe(trainingObj => {
+      this.createTrainingWC(trainingObj);
+      this.reloadAllTrainings();
+    })
   }
 
   createTraining(training: TrainingModel) {
@@ -349,9 +341,9 @@ export class TrainingService {
     });
   }
 
-  createTrainingArchive(trainingArchive: TrainingArchive) {
-    this.postTrainingArchive$(trainingArchive).subscribe(trainingObj => {
-      console.log('training archive', trainingArchive);
+  createTrainingWC(training: TrainingModel) {
+    this.postTrainingWC$(training).subscribe(trainingObj => {
+      console.log('create training WC', training);
     });
   }
 
@@ -374,80 +366,117 @@ export class TrainingService {
   }
 
   saveTraining(training: TrainingModel, reload: boolean) {
-
-    this.editTraining$(training).subscribe(data => {
-      if (reload) {
-        this.reloadAllTrainings();
-      }
+    training.isDirty = true;
+    this.editTrainingWC$(training).subscribe(data => {
+      this.reloadAllTrainings();
     });
   }
 
-
-  // GET a training by ID (login required)
-  getTrainingById$(id: string): Observable<TrainingModel> {
-    return this.http
-      .get<TrainingModel>(`${ENV.BASE_API}training/${id}`, {
-        headers: new HttpHeaders().set('Authorization', this._authHeader)
-      })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
+  saveNewVersionTraining(training: TrainingModel) {
+    this.editTraining$(training).subscribe(data => {
+    this.reloadAllTrainings();
+  });
   }
 
+deleteTrainingWC(tid) {
+  this.deleteTrainingWC$(tid).subscribe(item => {
 
-  // POST new training (admin only)
-  postTraining$(training: TrainingModel): Observable<TrainingModel> {
-    return this.http
-      .post<TrainingModel>(`${ENV.BASE_API}training/new`, training, {
-        headers: new HttpHeaders().set('Authorization', this._authHeader)
-      })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-  }
+  })
+}
 
-  postTrainingArchive$(trainingArchive: TrainingArchive): Observable<TrainingArchive> {
-    return this.http
-      .post<TrainingArchive>(`${ENV.BASE_API}trainingarchive/new`, trainingArchive, {
-        headers: new HttpHeaders().set('Authorization', this._authHeader)
-      })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-  }
 
-  // PUT existing training (admin only)
-  editTraining$(training: TrainingModel): Observable<TrainingModel> {
-    return this.http
-      .put<TrainingModel>(`${ENV.BASE_API}trainings/${training._id}`, training, {
-        headers: new HttpHeaders().set('Authorization', this._authHeader)
-      })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-  }
+// GET a training by ID (login required)
+getTrainingById$(id: string): Observable < TrainingModel > {
+  return this.http
+    .get<TrainingModel>(`${ENV.BASE_API}training/${id}`, {
+      headers: new HttpHeaders().set('Authorization', this._authHeader)
+    })
+    .pipe(
+      catchError((error) => this._handleError(error))
+    );
+}
+getTrainingWCById$(id: string): Observable < TrainingModel > {
+  return this.http
+    .get<TrainingModel>(`${ENV.BASE_API}trainingsworkingcopy/${id}`, {
+      headers: new HttpHeaders().set('Authorization', this._authHeader)
+    })
+    .pipe(
+      catchError((error) => this._handleError(error))
+    );
+}
 
-  // DELETE existing training and all associated Users (admin only)
-  deleteTraining$(id: string): Observable<any> {
-    return this.http
-      .delete(`${ENV.BASE_API}trainings/${id}`, {
-        headers: new HttpHeaders().set('Authorization', this._authHeader)
-      })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-  }
 
-  // GET all trainings for a specific user
-  getUserTrainings$(userId: string): Observable<TrainingModel[]> {
-    return this.http
-      .get<TrainingModel[]>(`${ENV.BASE_API}trainings/${userId}`, {
-        headers: new HttpHeaders().set('Authorization', this._authHeader)
-      })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-  }
+// POST new training (admin only)
+postTraining$(training: TrainingModel): Observable < TrainingModel > {
+  return this.http
+    .post<TrainingModel>(`${ENV.BASE_API}training/new`, training, {
+      headers: new HttpHeaders().set('Authorization', this._authHeader)
+    })
+    .pipe(
+      catchError((error) => this._handleError(error))
+    );
+}
+
+postTrainingWC$(training: TrainingModel): Observable < TrainingModel > {
+  return this.http
+    .post<TrainingModel>(`${ENV.BASE_API}trainingworkingcopy/new`, training, {
+      headers: new HttpHeaders().set('Authorization', this._authHeader)
+    })
+    .pipe(
+      catchError((error) => this._handleError(error))
+    );
+}
+
+// PUT existing training (admin only)
+editTraining$(training: TrainingModel): Observable < TrainingModel > {
+  return this.http
+    .put<TrainingModel>(`${ENV.BASE_API}trainings/${training._id}`, training, {
+      headers: new HttpHeaders().set('Authorization', this._authHeader)
+    })
+    .pipe(
+      catchError((error) => this._handleError(error))
+    );
+}
+editTrainingWC$(training: TrainingModel): Observable < TrainingModel > {
+  return this.http
+    .put<TrainingModel>(`${ENV.BASE_API}trainingsworkingcopy/${training._id}`, training, {
+      headers: new HttpHeaders().set('Authorization', this._authHeader)
+    })
+    .pipe(
+      catchError((error) => this._handleError(error))
+    );
+}
+
+// DELETE existing training and all associated Users (admin only)
+deleteTraining$(id: string): Observable < TrainingModel > {
+  return this.http
+    .delete(`${ENV.BASE_API}trainings/${id}`, {
+      headers: new HttpHeaders().set('Authorization', this._authHeader)
+    })
+    .pipe(
+      catchError((error) => this._handleError(error))
+    );
+}
+deleteTrainingWC$(id: string): Observable < TrainingModel > {
+  return this.http
+    .delete(`${ENV.BASE_API}trainingsworkingcopy/${id}`, {
+      headers: new HttpHeaders().set('Authorization', this._authHeader)
+    })
+    .pipe(
+      catchError((error) => this._handleError(error))
+    );
+}
+
+// GET all trainings for a specific user
+getUserTrainings$(userId: string): Observable < TrainingModel[] > {
+  return this.http
+    .get<TrainingModel[]>(`${ENV.BASE_API}trainings/${userId}`, {
+      headers: new HttpHeaders().set('Authorization', this._authHeader)
+    })
+    .pipe(
+      catchError((error) => this._handleError(error))
+    );
+}
   // GET Users by training ID (login required)
   /*
   getUsersBytrainingId$(trainingId: string): Observable<UserModel[]> {
@@ -461,11 +490,11 @@ export class TrainingService {
   }
   */
 
-  private _handleError(err: HttpErrorResponse | any): Observable<any> {
-    const errorMsg = err.message || 'Error: Unable to complete request.';
-    if (err.message && err.message.indexOf('No JWT present') > -1) {
-      this.auth.login();
-    }
-    return ObservableThrowError(errorMsg);
+  private _handleError(err: HttpErrorResponse | any): Observable < any > {
+  const errorMsg = err.message || 'Error: Unable to complete request.';
+  if(err.message && err.message.indexOf('No JWT present') > -1) {
+  this.auth.login();
+}
+return ObservableThrowError(errorMsg);
   }
 }

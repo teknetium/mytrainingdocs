@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgZorroAntdModule, NZ_I18N, en_US, NzBadgeModule } from 'ng-zorro-antd';
+import { NgZorroAntdModule, NZ_I18N, en_US, NzBadgeModule, NzConfig, NZ_CONFIG } from 'ng-zorro-antd';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 
@@ -27,13 +27,16 @@ import { UserTrainingService } from './shared/services/userTraining.service';
 import { AuthService } from './shared/services/auth.service';
 import { UserService } from './shared/services/user.service';
 import { LoginModule } from './components/login/login.module';
-import { NzNotificationService, NzNotificationServiceModule } from 'ng-zorro-antd/notification';
 import { SendmailService } from './shared/services/sendmail.service';
 import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
 import { VgOverlayPlayModule } from 'videogular2/compiled/overlay-play';
 
 
+const ngZorroConfig: NzConfig = {
+    message: { nzTop: 300 },
+    notification: { nzTop: 240 }
+};
 
 registerLocaleData(en);
 
@@ -69,6 +72,7 @@ registerLocaleData(en);
             provide: NZ_I18N,
             useValue: en_US, 
         },
+        { provide: NZ_CONFIG, useValue: ngZorroConfig },
         AuthGuard,
         TrainingService,
         AuthService,
@@ -76,7 +80,6 @@ registerLocaleData(en);
         UserTrainingService,
         FileService,
         SendmailService,
-        NzNotificationService
     ],
     bootstrap: [AppComponent]
 })
