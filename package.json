@@ -38,6 +38,7 @@
     "filestack-js": "^3.12.3",
     "jquery": "^3.3.1",
     "jwks-rsa": "^1.6.2",
+    "lodash": "^4.17.15",
     "method-override": "^3.0.0",
     "mongoose": "^5.9.1",
     "ng-chartist": "^1.1.1",

@@ -88,6 +88,13 @@ export class TrainingsComponent implements OnInit {
     })
   }
 
+  versionFormatter(version) {
+    let re = /_/g;
+    return version.replace(re, '.');
+    version
+  }
+
+
   newTraining() {
     this.trainingService.addNewTraining();
   }

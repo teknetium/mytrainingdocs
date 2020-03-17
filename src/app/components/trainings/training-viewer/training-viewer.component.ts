@@ -5,7 +5,7 @@ import { UserService } from '../../../shared/services/user.service';
 import { UserTrainingService } from '../../../shared/services/userTraining.service';
 import { AuthService } from '../../../shared/services/auth.service';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { TrainingModel, Page, Portlet, Assessment, AssessmentItem } from 'src/app/shared/interfaces/training.type';
+import { TrainingModel, Page, Portlet, Assessment, AssessmentItem, TrainingVersion } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FileModel, Version } from 'src/app/shared/interfaces/file.type';
@@ -16,6 +16,9 @@ import { merge, take } from 'rxjs/operators';
 import { SendmailService } from '../../../shared/services/sendmail.service';
 import { MessageModel } from '../../../shared/interfaces/message.type';
 import { NzMessageService } from 'ng-zorro-antd';
+import * as cloneDeep from 'lodash/cloneDeep';
+import { NzModalService } from 'ng-zorro-antd/modal';
+
 
 
 @Component({
@@ -84,6 +87,7 @@ export class TrainingViewerComponent implements OnInit {
   isAuthenticated$: Observable<boolean>;
   isIconSelectModalVisible = false;
   selectedTraining$: Observable<TrainingModel>;
+  selectedTrainingVersions$: Observable<TrainingVersion[]>;
   //  selectedTrainingIndex$: Observable<number>;
   fileUploaded$: Observable<FileModel>;
   safeFileUrl$: Observable<SafeResourceUrl>;
@@ -96,7 +100,7 @@ export class TrainingViewerComponent implements OnInit {
   assignedToUsers: string[] = [];
   assignToUser: UserModel;
   currentSelectedUserToAssign = '';
-  currentPageId = 'trainingWizardTour';
+  currentPageId = 'intro';
   isOpen = true;
   pageContainerMarginLeft = '270';
   selectedTraining: TrainingModel;
@@ -135,6 +139,7 @@ export class TrainingViewerComponent implements OnInit {
   tempIconColor = '';
   showConfirmDeleteTrainingWithAffectedUsers = false;
   showConfirmDeleteTrainingWithoutAffectedUsers = false;
+  showRollbackModalFlag = false;
   showAssignToUserDialog = false;
   assignedUserIdSelected = '';
 
@@ -160,7 +165,7 @@ export class TrainingViewerComponent implements OnInit {
   alpha = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
   assessment: Assessment;
-
+/*
   newAssessment: Assessment = {
     _id: String(new Date().getTime()),
     type: 'choiceFeedback',
@@ -195,12 +200,13 @@ export class TrainingViewerComponent implements OnInit {
       },
     ]
   };
+  */
 
 
   assessmentResponseHash = {};
   assessmentResponse = [];
   showNext = false;
-  runningTour = false;
+  //  runningTour = false;
 
   @Input() mode = 'Edit';
   @Input() trainingStatus = 'unlocked';
@@ -239,11 +245,23 @@ export class TrainingViewerComponent implements OnInit {
     url: '',
     dateUploaded: 0
   };
+  /*
+  newTrainingVersion = <TrainingVersion>{
+    version: '',
+    changeLog: '',
+    ownerId: '',
+    dateCreated: 0,
+    title: '',
+    iconClass: '',
+    iconColor: '',
+  };
+  */
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
   selectedFile: FileModel;
   safeFileUrlHash = {};
   newVersion$: Observable<Version>;
+//  versionsHash = {};
 
   data: any[] = [];
   submitting = false;
@@ -287,9 +305,9 @@ export class TrainingViewerComponent implements OnInit {
     //    goalsLabel: 3,
     //    goals: 4
   };
-  validationItems = ['trainingWizardTour', 'config', 'intro', 'mainContent', 'assessment'];
+  validationItems = ['config', 'intro', 'mainContent', 'assessment'];
   itemNameHash = {
-    trainingWizardTour: 'Training Wizard Tour',
+    //    trainingWizardTour: 'Training Wizard Tour',
     config: 'Training Configuration',
     intro: 'Training Introduction',
     mainContent: 'Main Content',
@@ -299,15 +317,20 @@ export class TrainingViewerComponent implements OnInit {
   trainingIsValid$: Observable<boolean> = this.trainingIsValidBS$.asObservable();
   introFieldMask = 0;
   trainingValidMask = 0;
-  rollback = false;
   rollbackVersion = '';
   currentTrainingState = 'invalid';
   //  previousSelectedTraining: TrainingModel = null;
   justLocked = false;
-
+  versionCnt = 0;
+  selectedTrainingVersionHash = {};
+  selectedTrainingVersions = [];
+  newTraining = true;
+  changeLog = '';
+  currentVersion: TrainingVersion = null;
 
   constructor(
     private trainingService: TrainingService,
+    private modalService: NzModalService,
     private fileService: FileService,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
@@ -321,6 +344,7 @@ export class TrainingViewerComponent implements OnInit {
     this.myTeamHash$ = this.userService.getMyTeamIdHashStream();
     this.newVersion$ = this.fileService.getNewVersionStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
+    this.selectedTrainingVersions$ = this.trainingService.getSelectedTrainingVersionsStream();
     this.safeFileUrl$ = this.fileService.getSafeFileUrlStream();
     this.users$ = this.userTrainingService.getUsersForTrainingStream();
   }
@@ -330,46 +354,22 @@ export class TrainingViewerComponent implements OnInit {
 
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     this.selectedTraining$.subscribe(training => {
+      console.log('selectedTraining$', training);
       if (!training) {
         return;
       }
-      
-      if (this.justLocked || training.status === 'locked') {
+
+      if (training.status === 'locked') {
         this.currentPageId = 'intro';
+      } else {
+        this.currentPageId = 'config';
       }
 
       this.selectedTraining = training;
-      if (this.selectedTraining.versions.length === 0) {
-        this.rollback = false;
-      } else {
-        this.rollback = true;
-        this.rollbackVersion = this.selectedTraining.versions[0];
-      }
+
+      this.currentVersion = this.selectedTraining.versions[0];
       this.userTrainingService.getUTForTraining(this.selectedTraining._id);
       this.setCurrentPage(this.currentPageId);
-
-
-      let introFields = Object.keys(this.trainingIntroShiftHash);
-      for (let field of introFields) {
-        if (this.selectedTraining[field] !== 'Replace this text.') {
-          this.introFieldMask = 1 << this.trainingIntroShiftHash[field];
-        }
-      }
-      if (this.introFieldMask === 7) {
-        this.setValidation('intro', true);
-      }
-
-      if (this.selectedTraining.pages.length > 0) {
-        this.setValidation('mainContent', true);
-      } else {
-        this.setValidation('mainContent', false);
-      }
-      if ((this.selectedTraining.useAssessment && this.selectedTraining.assessment.items.length > 0) || !this.selectedTraining.useAssessment) {
-        this.setValidation('assessment', true);
-      } else {
-        this.setValidation('assessment', false);
-      }
-
       this.pageFileHash['intro'] = null;
       this.pageFileHash['config'] = null;
       this.pageFileHash['assessment'] = null;
@@ -404,10 +404,19 @@ export class TrainingViewerComponent implements OnInit {
         }
       }
 
-      console.log('fileUploaded', file);
       if (!found) {
-        newPage = this.trainingService.addNewPage(this.selectedTraining._id, 'file', '', file._id, file.versions[0].fileName);
+        const newPage = <Page>{
+          _id: String(new Date().getTime()),
+          type: 'file',
+          url: '',
+          title: file.versions[0].fileName,
+          intro: 'Introduction to the document',
+          file: file._id,
+          portlets: [],
+        };
+        this.selectedTraining.pages.push(newPage);
         this.setValidation('mainContent', true);
+        this.saveTraining(false);
         this.pageFileHash[newPage._id] = file;
         this.setCurrentPage(newPage._id);
       }
@@ -462,38 +471,134 @@ export class TrainingViewerComponent implements OnInit {
     })
   }
 
+  bumpPatchLevel(): string {
+    const versionArray = this.selectedTraining.versions[0].version.split('_', 3);
+    let majorNum = parseInt(versionArray[0], 10);
+    let minorNum = parseInt(versionArray[1], 10);
+    let patchNum = parseInt(versionArray[2], 10);
+
+    patchNum++;
+    return majorNum + '_' + minorNum + '_' + patchNum;
+  }
+
+
   unlockTraining() {
-    this.trainingService.unlockTraining(this.selectedTraining);
+    this.selectedTraining.status = 'unlocked';
+    this.saveTraining(false);
   }
 
-  createNewVersion() {
-    if (this.trainingIsValidBS$.value)
-    if (this.selectedTraining.versions.length === 0) {
-      this.selectedTraining.versions.push('1.0.0');
-    } else {
-      this.selectedTraining.versions.unshift(this.selectedTraining.versionPending);
+  loadVersion(version) {
+    this.currentVersion = version;
+    this.trainingService.selectTrainingVersion(this.selectedTraining._id, version.version);
+  }
+
+  showVersionModal() {
+    this.isNewVersionModalVisible = true;
+  }
+
+  cancelLockTraining() {
+
+  }
+
+  handleLockTraining() {
+    this.error1 = false;
+    this.error2 = false;
+
+    if (!this.changeLevel) {
+      this.error1 = true;
+      this.lockTrainingModalIsVisible = true;
+      return;
     }
+
+    const versionArray = this.selectedTraining.versions[0].version.split('_', 3);
+    let majorNum = parseInt(versionArray[0], 10);
+    let minorNum = parseInt(versionArray[1], 10);
+    let patchNum = parseInt(versionArray[2], 10);
+    if (this.changeLevel === 'major') {
+      majorNum++;
+      minorNum = 0;
+      patchNum = 0;
+      this.resetTrainingStatus();
+    } else if (this.changeLevel === 'minor') {
+      minorNum++;
+      patchNum = 0;
+      this.sendNotifications();
+    } else if (this.changeLevel === 'patch') {
+      patchNum++;
+    }
+    let newTrainingVersion = <TrainingVersion>{
+      version: '',
+      changeLog: '',
+      ownerId: '',
+      dateCreated: 0,
+      title: '',
+      iconClass: '',
+      iconColor: '',
+    };
+    newTrainingVersion._id = String(new Date().getTime());
+    newTrainingVersion.version = majorNum + '_' + minorNum + '_' + patchNum;
+    newTrainingVersion.ownerId = this.authenticatedUser._id;
+    newTrainingVersion.dateCreated = new Date().getTime();
+    newTrainingVersion.changeLog = this.changeLog;
+    newTrainingVersion.iconClass = this.selectedTraining.iconClass;
+    newTrainingVersion.iconColor = this.selectedTraining.iconColor;
+    newTrainingVersion.title = this.selectedTraining.title;
+    this.selectedTraining.versions.unshift(newTrainingVersion);
+
     this.selectedTraining.status = 'locked';
-    this.justLocked = true;
-    this.saveNewVersionTraining();
-    this.deleteTrainingWC();
+    this.selectedTraining.versionsHash[newTrainingVersion.version] = cloneDeep(this.selectedTraining);
+
+    this.trainingService.saveNewVersion(this.selectedTraining);
+//    this.trainingService.selectTrainingVersion(this.selectedTraining._id, this.selectedTraining.versions[0].version);
+//    this.setCurrentPage(this.currentPageId);
+
+    this.lockTrainingModalIsVisible = false;
   }
 
-  deleteTrainingWC() {
-    this.trainingService.deleteTrainingWC(this.selectedTraining._id);
-  }
+  saveNewVersion() {
+    let newTrainingVersion = <TrainingVersion>{
+      version: '',
+      changeLog: '',
+      ownerId: '',
+      dateCreated: 0,
+      title: '',
+      iconClass: '',
+      iconColor: '',
+    };
+    if (this.selectedTraining.versions.length === 1) {
+      newTrainingVersion._id = String(new Date().getTime());
+      newTrainingVersion.version = '1_0_0';
+      newTrainingVersion.ownerId = this.authenticatedUser._id;
+      newTrainingVersion.dateCreated = new Date().getTime();
+      newTrainingVersion.changeLog = "Initial Training Creation";
+      newTrainingVersion.title = this.selectedTraining.title;
+      newTrainingVersion.iconClass = this.selectedTraining.iconClass;
+      newTrainingVersion.iconColor = this.selectedTraining.iconColor;
 
-  saveNewVersionTraining() {
-    this.trainingService.saveNewVersionTraining(this.selectedTraining);
+      this.selectedTraining.versions.unshift(newTrainingVersion);
+      this.selectedTraining.status = 'locked';
+      this.selectedTraining.versionsHash['1_0_0'] = cloneDeep(this.selectedTraining);
+      this.trainingService.saveNewVersion(this.selectedTraining);
+//      this.trainingService.selectTrainingVersion(this.selectedTraining._id, '1_0_0');
+//      this.setCurrentPage(this.currentPageId);
+    } else {
+      this.lockTrainingModalIsVisible = true;
+    }
   }
 
   createMessage(type: string, msg: string): void {
     this.message.create(type, msg);
   }
 
+  versionFormatter(version) {
+    let re = /_/g;
+    return version.replace(re, '.');
+    version
+  }
+
   setValidation(item: string, value: boolean) {
     this.selectedTraining.isValid[item] = value;
-    this.saveTraining(true);
+    this.saveTraining(false);
     /*
     let type: string;
     let validityStr: string;
@@ -513,40 +618,13 @@ export class TrainingViewerComponent implements OnInit {
       }
     }
     this.trainingIsValidBS$.next(trainingIsValid);
-
-
   }
 
-  handleLockTraining() {
-    this.error1 = false;
-    this.error2 = false;
-
-    if (!this.changeLevel) {
-      this.error1 = true;
-      this.lockTrainingModalIsVisible = true;
-      return;
-    }
-
-    const versionArray = this.selectedTraining.versions[0].split('.', 3);
-    let majorNum = parseInt(versionArray[0], 10);
-    let minorNum = parseInt(versionArray[1], 10);
-    let patchNum = parseInt(versionArray[2], 10);
-    if (this.changeLevel === 'major') {
-      majorNum++;
-      minorNum = 0;
-      patchNum = 0;
-      this.resetTrainingStatus();
-    } else if (this.changeLevel === 'minor') {
-      minorNum++;
-      patchNum = 0;
-      this.sendNotifications();
-    } else if (this.changeLevel === 'patch') {
-      patchNum++;
-    }
-    this.selectedTraining.versions[0] = majorNum + '.' + minorNum + '.' + patchNum;
-    this.selectedTraining.status = 'locked';
-    this.saveTraining(true);
+  useAssessmentChanged(event) {
+    console.log('useAssessmentChanged', event);
+    this.setValidation('assessment', true);
   }
+
 
   resetTrainingStatus() {
     this.userTrainingService.resetUserTrainingStatus(this.selectedTraining._id);
@@ -591,12 +669,25 @@ export class TrainingViewerComponent implements OnInit {
       return;
     }
 
-    let newPage: Page;
     let safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.pageUrl));
     this.safeUrlHash[this.pageUrl] = safeUrl;
-    newPage = this.trainingService.addNewPage(this.selectedTraining._id, 'url', this.pageUrl, '', this.pageUrl);
+    const newPage = <Page>{
+      _id: String(new Date().getTime()),
+      type: 'url',
+      url: this.pageUrl,
+      title: this.pageUrl,
+      intro: 'Introduction to the document',
+      file: '',
+      portlets: [],
+    };
+    this.selectedTraining.pages.push(newPage);
     this.setValidation('mainContent', true);
-    this.saveTraining(true);
+    this.saveTraining(false);
+    this.setCurrentPage(newPage._id);
+
+//    newPage = this.trainingService.addNewPage(this.selectedTraining._id, 'url', this.pageUrl, '', this.pageUrl);
+    this.setValidation('mainContent', true);
+    this.saveTraining(false);
     this.setCurrentPage(newPage._id);
     this.pageUrl = '';
   }
@@ -641,7 +732,7 @@ export class TrainingViewerComponent implements OnInit {
 
   setCurrentStepPanel(newIndex) {
     this.currentStep = newIndex;
-    this.runningTour = true;
+    //    this.runningTour = true;
   }
 
   viewVersion(index) {
@@ -685,7 +776,8 @@ export class TrainingViewerComponent implements OnInit {
 
   configChanged(event) {
     this.setValidation('config', true);
-    this.saveTraining(true);
+    this.saveTraining(false);
+    this.setCurrentPage(this.currentPageId);
   }
 
   contentChanged(newVal: string, propName: string) {
@@ -694,24 +786,24 @@ export class TrainingViewerComponent implements OnInit {
     if (this.introFieldMask === 7) {
       this.setValidation('intro', true);
     }
-    this.saveTraining(true);
+    this.saveTraining(false);
     this.setCurrentPage(this.currentPageId);
   }
 
   pageContentChanged(newVal: string, index: number, propName: string) {
     this.selectedTraining.pages[index][propName] = newVal;
-    this.saveTraining(true);
+    this.saveTraining(false);
     this.setCurrentPage(this.currentPageId);
   }
-
+/*
   pageChanged(newVal: string, index: number, propName: string) {
     let page: Page;
     page = this.selectedTraining.pages[index];
     page[propName] = newVal;
-    this.saveTraining(true);
+    this.saveTraining(false);
     this.setCurrentPage(this.currentPageId);
   }
-
+*/
   handleIconSelectCancel() {
     this.tempIconColor = '';
     this.tempIcon = '';
@@ -726,7 +818,7 @@ export class TrainingViewerComponent implements OnInit {
   handleIconSelectConfirm() {
     this.selectedTraining.iconClass = this.tempIcon;
     this.selectedTraining.iconColor = this.tempIconColor;
-    this.saveTraining(true);
+    this.saveTraining(false);
     this.setCurrentPage(this.currentPageId);
 
     this.isIconSelectModalVisible = false;
@@ -766,7 +858,7 @@ export class TrainingViewerComponent implements OnInit {
 
     let currentFile: FileModel = this.pageFileHash[this.currentPageId];
 
-    const versionArray = currentFile.versions[0].version.split('.', 3);
+    const versionArray = currentFile.versions[0].version.split('_', 3);
     let majorNum = parseInt(versionArray[0], 10);
     let minorNum = parseInt(versionArray[1], 10);
     let patchNum = parseInt(versionArray[2], 10);
@@ -780,7 +872,7 @@ export class TrainingViewerComponent implements OnInit {
     } else if (this.changeLevel === 'patch') {
       patchNum++;
     }
-    this.newVersion.version = majorNum + '.' + minorNum + '.' + patchNum;
+    this.newVersion.version = majorNum + '_' + minorNum + '_' + patchNum;
 
     this.newVersion.owner = this.authenticatedUser._id;
     this.newVersion.dateUploaded = new Date().getTime();
@@ -860,7 +952,6 @@ export class TrainingViewerComponent implements OnInit {
       return;
     }
     this.trainingService.saveTraining(this.selectedTraining, reload);
-
     this.setCurrentPage(this.currentPageId);
   }
 
@@ -883,6 +974,28 @@ export class TrainingViewerComponent implements OnInit {
   showAssignmentDialog() {
     this.showAssignToUserDialog = true;
     this.teamMembers = Object.values(this.myTeamHash);
+  }
+
+  showRollbackConfirm(): void {
+    this.modalService.confirm({
+      nzTitle: 'Are you sure you want to discard the latest changes?',
+      nzContent: '<b style="color: red;">The most recent version will be reloaded.</b>',
+      nzOkText: 'Yes',
+      nzOkType: 'danger',
+      nzOnOk: () => this.rollback(),
+      nzCancelText: 'No',
+      nzOnCancel: () => console.log('Cancel')
+    });
+  }
+  showChangeLog(): void {
+    this.modalService.info({
+      nzTitle: 'Change Log',
+      nzContent: this.currentVersion.changeLog,
+      nzOnOk: () => console.log('Info OK')
+    });
+  }
+  showRollbackModal() {
+    this.showRollbackModalFlag = true;
   }
 
   showConfirmDelete() {
@@ -929,7 +1042,7 @@ export class TrainingViewerComponent implements OnInit {
     this.assessmentInProgress = false;
     this.currentAssessmentItemIndex = -1;
     this.mode = newMode;
-    if (newMode === 'Preview' && (this.currentPageId === 'config' || this.currentPageId === 'trainingWizardTour' || this.currentPageId === 'mainContent' || (this.currentPageId === 'assessment' && !this.selectedTraining.useAssessment))) {
+    if (newMode === 'Preview' && (this.currentPageId === 'config' || this.currentPageId === 'mainContent' || (this.currentPageId === 'assessment' && !this.selectedTraining.useAssessment))) {
       this.currentPageId = 'intro'
     }
     this.resetAssessment();
@@ -1007,7 +1120,7 @@ export class TrainingViewerComponent implements OnInit {
     this.currentAssessmentItemIndex = -1;
     this.nextQuestion();
   }
-
+  /*
   beginTour() {
     this.runningTour = true;
   }
@@ -1018,6 +1131,7 @@ export class TrainingViewerComponent implements OnInit {
     this.setValidation('trainingWizardTour', true);
     this.saveTraining(false);
   }
+  */
 
   resetAssessment() {
     this.showNext = false;
@@ -1065,7 +1179,7 @@ export class TrainingViewerComponent implements OnInit {
     }
     this.slideNewQuestionHash[this.currentAssessmentItemIndex] = true;
   }
-
+/*
   setAssessmentType(type) {
     if (type === 'choiceFeedback') {
       this.assessmentType.choice = true;
@@ -1081,6 +1195,7 @@ export class TrainingViewerComponent implements OnInit {
       this.assessmentType.assessment = true;
     }
   }
+  */
 
   assessmentChanged(event) {
     this.selectedTraining.assessment.passingGrade = event;
@@ -1146,6 +1261,11 @@ export class TrainingViewerComponent implements OnInit {
     let pageToMove = this.selectedTraining.pages.splice(currentIndex, 1);
     this.selectedTraining.pages.splice(currentIndex + positions, 0, pageToMove[0]);
 
+    this.saveTraining(false);
+  }
+
+  rollback() {
+    this.trainingService.selectTrainingVersion(this.selectedTraining._id, this.selectedTraining.versions[0].version);
     this.saveTraining(false);
   }
 }

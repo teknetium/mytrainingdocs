@@ -17,8 +17,7 @@
             style="display:inline-block;font-size:14px;float: left;" [nzTwotoneColor]="'#52c41a'"></i>
           <i *ngIf="training.status === 'locked'" nz-icon nzType="lock" [nzTheme]="'twotone'"
             style="display:inline-block;font-size:14px;float: left;" [nzTwotoneColor]="'red'"></i>
-            <span *ngIf="training.status === 'locked'" style="display:inline-block;float:right;">{{training.versions[0]}}</span>
-            <span *ngIf="training.status === 'unlocked'" style="display:inline-block;float:right;">{{training.versionPending}}</span>
+            <span style="display:inline-block;float:right;">{{ versionFormatter(training.versions[0].version) }}</span>
             <div style="clear:both;"> </div>
         </div>
         <div style="display:block;text-align: center;">

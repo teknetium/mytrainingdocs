@@ -31,6 +31,7 @@ import { SendmailService } from './shared/services/sendmail.service';
 import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
 import { VgOverlayPlayModule } from 'videogular2/compiled/overlay-play';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 
 const ngZorroConfig: NzConfig = {
@@ -80,6 +81,7 @@ registerLocaleData(en);
         UserTrainingService,
         FileService,
         SendmailService,
+        NzModalService
     ],
     bootstrap: [AppComponent]
 })

@@ -6,11 +6,11 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Page, Portlet, TextBlock, Assessment, TrainingIdHash } from '../interfaces/training.type';
+import { TrainingModel, Page, Portlet, TextBlock, Assessment, TrainingIdHash, TrainingVersion } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.type';
 import { TrainingsModule } from 'src/app/components/trainings/trainings.module';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-
+import * as cloneDeep from 'lodash/cloneDeep';
 
 
 @Injectable({
@@ -44,9 +44,14 @@ export class TrainingService {
   private sharedTrainingIds: string[];
   private allTrainingIds: string[];
 
+  trainingCollectionHash = {};
+  trainingWCCollectionHash = {};
+
   teamId: string;
+  archivedTrainingCnt = 0;
 
   selectedTrainingBS$ = new BehaviorSubject<TrainingModel>(null);
+  selectedTrainingVersionsBS$ = new BehaviorSubject<TrainingVersion[]>(null);
 
   // Using Angular DI we use the HTTP service
   constructor(
@@ -73,12 +78,18 @@ export class TrainingService {
             teamTrainings = [];
           }
           for (let training of teamTrainings) {
+            this.trainingCollectionHash[training._id] = training;
+            /*
             if (training.status === 'unlocked') {
               this.getTrainingWCById$(training._id).subscribe(trainingObj => {
-                this.allTrainingHash[trainingObj._id] = trainingObj;
-                this.teamTrainingHash[trainingObj._id] = trainingObj;
+                if (trainingObj) {
+                  this.trainingWCCollectionHash[trainingObj._id] = trainingObj;
+                  this.allTrainingHash[trainingObj._id] = trainingObj;
+                  this.teamTrainingHash[trainingObj._id] = trainingObj;
+                }
               });
             }
+            */
             this.teamTrainingHash[training._id] = training;
             this.allTrainingHash[training._id] = training;
             if (training.jobTitle) {
@@ -125,21 +136,78 @@ export class TrainingService {
       }
     });
   }
-
+  /*
+    getTrainingVersions(tid: string) {
+      if (this.trainingWCCollectionHash[tid]) {
+        this.selectedTrainingVersionsHash[this.trainingWCCollectionHash[tid].versionPending] = this.trainingWCCollectionHash[tid];
+      }
+  
+      let versions = this.trainingCollectionHash[tid].versions;
+      this.archivedTrainingCnt = versions.length - 1;
+      let index;
+  
+      for (index in versions) {
+        if (index === 0) {
+          this.selectedTrainingVersionsHash[versions[index]] = this.trainingCollectionHash[tid];
+        } else {
+          this.trainingArchiveService.getArchivedTraining(tid, versions[index]).subscribe(training => {
+            if (training) {
+              this.selectedTrainingVersionsHash[training.versions[0]] = training;
+            }
+          })
+        }
+      }
+  
+  
+  
+      if (this.trainingWCCollectionHash[tid] && this.trainingWCCollectionHash[tid].versionPending === version) {
+        this.selectedTrainingVersionsHash[]
+        this.selectedTrainingBS$.next(this.trainingWCCollectionHash[tid]);
+      } else if (this.trainingCollectionHash[tid] && this.trainingCollectionHash[tid].versions[0] === version) {
+        this.selectedTrainingBS$.next(this.trainingCollectionHash[tid]);
+      } else {
+        let archivedTid = tid + '_' + version;
+        this.trainingArchiveService.getArchivedTraining(tid, version).subscribe(training => {
+          if (training) {
+            this.selectedTrainingBS$.next(training);
+          }
+        })
+      }
+    }
+    */
+  /*
+    getVersionsForTrainingId(tid): string[] {
+      return this.trainingCollectionHash[tid].versions;
+    }
+  
+    getMainCollectionObject(tid: string): TrainingModel {
+      return this.trainingCollectionHash[tid];
+    }
+  
+    getWCCollectionObject(tid: string): TrainingModel {
+      return this.trainingWCCollectionHash[tid];
+    }
+  */
   reloadTeamTrainings() {
     console.log('trainingService reloadTeamTrainings', this.teamId);
     this.teamTrainingHash = {};
+    //    this.trainingCollectionHash = {};
+    //    this.trainingWCCollectionHash = {};
     this.getTrainings$(this.teamId).subscribe(teamTrainings => {
       if (!teamTrainings) {
         teamTrainings = [];
       }
       for (let training of teamTrainings) {
+        this.trainingCollectionHash[training._id] = training;
+        /*
         if (training.status === 'unlocked') {
           this.getTrainingWCById$(training._id).subscribe(trainingObj => {
+            this.trainingWCCollectionHash[trainingObj._id] = trainingObj;
             this.allTrainingHash[trainingObj._id] = trainingObj;
             this.teamTrainingHash[trainingObj._id] = trainingObj;
           });
         }
+        */
         this.teamTrainingHash[training._id] = training;
         this.allTrainingHash[training._id] = training;
       }
@@ -151,19 +219,13 @@ export class TrainingService {
   reloadAllTrainings() {
     this.allTrainingHash = {};
     this.teamTrainingHash = {};
-    this.sharedTrainingHash = {};
-    this.systemTrainingHash = {};
+    //    this.sharedTrainingHash = {};
+    //    this.systemTrainingHash = {};
     this.getTrainings$(this.teamId).subscribe(teamTrainings => {
       if (!teamTrainings) {
         teamTrainings = [];
       }
       for (let training of teamTrainings) {
-        if (training.status === 'unlocked') {
-          this.getTrainingWCById$(training._id).subscribe(trainingObj => {
-            this.allTrainingHash[trainingObj._id] = trainingObj;
-            this.teamTrainingHash[trainingObj._id] = trainingObj;
-          });
-        }
         this.teamTrainingHash[training._id] = training;
         this.allTrainingHash[training._id] = training;
       }
@@ -174,47 +236,43 @@ export class TrainingService {
 
       console.log('reloadAllTrainings - teamTrainingHash, teamTrainingCnt', this.teamTrainingHash, teamTrainingIds);
       // Load system trainings
-      this.getTrainings$('mytrainingdocs').subscribe(systemTrainings => {
-        if (!systemTrainings) {
-          systemTrainings = [];
-        }
-        for (let training of systemTrainings) {
-          this.systemTrainingHash[training._id] = training;
-          this.allTrainingHash[training._id] = training;
-        }
-
-        // load shared trainings
-        this.getTrainings$(this.authenticatedUser.org).subscribe(sharedTrainings => {
-          if (!sharedTrainings) {
-            sharedTrainings = [];
+      /*
+        this.getTrainings$('mytrainingdocs').subscribe(systemTrainings => {
+          if (!systemTrainings) {
+            systemTrainings = [];
           }
-          for (let training of sharedTrainings) {
-            this.sharedTrainingHash[training._id] = training;
+          for (let training of systemTrainings) {
+            this.systemTrainingHash[training._id] = training;
             this.allTrainingHash[training._id] = training;
           }
-          this.allTrainingIds = Object.keys(this.allTrainingHash);
-
-          console.log('trainingService init', this.allTrainingHash);
-          this.allTrainingHashBS$.next(this.allTrainingHash);
+  
+          // load shared trainings
+          this.getTrainings$(this.authenticatedUser.org).subscribe(sharedTrainings => {
+            if (!sharedTrainings) {
+              sharedTrainings = [];
+            }
+            for (let training of sharedTrainings) {
+              this.sharedTrainingHash[training._id] = training;
+              this.allTrainingHash[training._id] = training;
+            }
+            this.allTrainingIds = Object.keys(this.allTrainingHash);
+  
+            console.log('trainingService init', this.allTrainingHash);
+            this.allTrainingHashBS$.next(this.allTrainingHash);
+          });
         });
-      });
+        */
     });
   }
 
   selectTraining(tid: string): void {
-    // if the status of the selected training is 'unlocked' then fetch the
-    // training from the working copy collection
     if (!tid) {
       this.selectedTrainingBS$.next(null);
       return;
     }
-    if (this.allTrainingHash[tid].status === 'unlocked') {
-      this.getTrainingWCById$(tid).subscribe(training => {
-        this.selectedTrainingBS$.next(training);
-      })
-    } else {
-      this.selectedTrainingBS$.next(this.allTrainingHash[tid]);
-    }
+
+    this.selectedTrainingBS$.next(this.allTrainingHash[tid]);
+    this.selectedTrainingVersionsBS$.next(this.allTrainingHash[tid].versions);
   }
 
   getJobTitleStream(): Observable<string[]> {
@@ -236,25 +294,40 @@ export class TrainingService {
   getSelectedTrainingStream(): Observable<TrainingModel> {
     return this.selectedTrainingBS$.asObservable();
   }
+  getSelectedTrainingVersionsStream(): Observable<TrainingVersion[]> {
+    return this.selectedTrainingVersionsBS$.asObservable();
+  }
 
   addNewTraining() {
     const baseId = new Date().getTime();
 
     const assessment = <Assessment>{
-      _id: String(new Date().getTime()),
+      _id: String(baseId + 'assessment'),
       type: '',
       timeLimit: 0,
       passingGrade: 70,
       items: []
     }
 
-    const newTraining = <TrainingModel>{
-      _id: String(new Date().getTime()),
-      type: 'online',
-      versions: [],
-      versionPending: '1.0.0',
+    const version = <TrainingVersion>{
+      _id: String(baseId + 'version'),
+      version: '0_0_1',
+      ownerId: this.authenticatedUser._id,
+      dateCreated: new Date().getTime(),
+      changeLog: '',
       title: 'New Training',
-      status: 'unlocked',
+      iconClass: 'fad fa-graduation-cap',
+      iconColor: 'black',
+    }
+
+    const newTraining = <TrainingModel>{
+      _id: String(baseId),
+      type: 'online',
+      versions: [version],
+      versionsHash: {},
+      versionPending: '',
+      title: 'New Training',
+      status: 'locked',
       rating: [],
       teamId: this.teamId,
       owner: this.authenticatedUser._id,
@@ -279,7 +352,6 @@ export class TrainingService {
       interestList: [],
       shared: false,
       isValid: {
-        trainingWizardTour: false,
         config: false,
         intro: false,
         mainContent: false,
@@ -288,12 +360,22 @@ export class TrainingService {
       isDirty: false
     };
 
+    newTraining.versionsHash[version.version] = cloneDeep(newTraining);
+    newTraining.status = 'unlocked';
     this.postTraining$(newTraining).subscribe(trainingObj => {
-      console.log('addNewTraining', newTraining);
-      this.postTrainingWC$(trainingObj).subscribe(training => {
-      })
+      this.selectedTrainingBS$.next(newTraining)  
       this.reloadAllTrainings();
     });
+  }
+
+  selectVersion(training: TrainingModel) {
+    this.selectedTrainingBS$.next(training);
+
+  }
+
+  selectTrainingVersion(tid: string, version: string) {
+
+    this.selectedTrainingBS$.next(this.teamTrainingHash[tid].versionsHash[version]);
   }
 
   addNewPage(trainingId: string, type: string, url: string, fileId: string, pageTitle: string): Page {
@@ -314,23 +396,21 @@ export class TrainingService {
       console.log('TrainingService:addNewPage : ERROR : trainingId not found in teamTrainingHash', trainingId, this.teamTrainingHash);
       return;
     }
+
+    let trainingObj = this.teamTrainingHash[trainingId];
+
     this.teamTrainingHash[trainingId].isValid['mainContent'] = true;
     this.teamTrainingHash[trainingId].pages.push(newPage);
-    this.saveTraining(this.teamTrainingHash[trainingId], true);
+    this.saveTraining(this.teamTrainingHash[trainingId], false);
     this.selectedTrainingBS$.next(this.teamTrainingHash[trainingId]);
     return newPage;
   }
 
   unlockTraining(training) {
     training.status = 'unlocked';
-    let versionArray = training.versions[0].split('.', 3);
-    let majorNum = parseInt(versionArray[0], 10);
-    let minorNum = parseInt(versionArray[1], 10);
-    let patchNum = parseInt(versionArray[2], 10);
-    patchNum++;
-    training.versionPending = majorNum + '.' + minorNum + '.' + patchNum;
     this.editTraining$(training).subscribe(trainingObj => {
-      this.createTrainingWC(trainingObj);
+
+      //      this.createTrainingWC(trainingObj);
       this.reloadAllTrainings();
     })
   }
@@ -340,12 +420,13 @@ export class TrainingService {
       this.reloadAllTrainings();
     });
   }
-
-  createTrainingWC(training: TrainingModel) {
-    this.postTrainingWC$(training).subscribe(trainingObj => {
-      console.log('create training WC', training);
-    });
-  }
+  /*
+    createTrainingWC(training: TrainingModel) {
+      this.postTrainingWC$(training).subscribe(trainingObj => {
+        console.log('create training WC', training);
+      });
+    }
+    */
 
   deleteTraining(id: string) {
     this.deleteTraining$(id).subscribe(item => {
@@ -365,118 +446,127 @@ export class TrainingService {
       );
   }
 
-  saveTraining(training: TrainingModel, reload: boolean) {
-    training.isDirty = true;
-    this.editTrainingWC$(training).subscribe(data => {
+  saveNewVersion(training: TrainingModel, ) {
+    console.log('saveNewVersion', training);
+    this.editTraining$(training).subscribe(data => {
+      console.log('TrainingService:saveNewVersion', training, data);
+      this.selectedTrainingVersionsBS$.next(training.versions);
+//      this.selectedTrainingBS$.next(data);
       this.reloadAllTrainings();
     });
+
   }
 
-  saveNewVersionTraining(training: TrainingModel) {
+  saveTraining(training: TrainingModel, reload: boolean) {
     this.editTraining$(training).subscribe(data => {
-    this.reloadAllTrainings();
-  });
+      if (reload) {
+//        this.selectedTrainingBS$.next(data);
+        this.reloadAllTrainings();
+      }
+    });
+    //    this.editTrainingWC$(training).subscribe(data => {
+    //      this.reloadAllTrainings();
+    //    });
   }
 
-deleteTrainingWC(tid) {
-  this.deleteTrainingWC$(tid).subscribe(item => {
+  // GET a training by ID (login required)
+  getTrainingById$(id: string): Observable<TrainingModel> {
+    return this.http
+      .get<TrainingModel>(`${ENV.BASE_API}training/${id}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  /*
+  getTrainingWCById$(id: string): Observable<TrainingModel> {
+    return this.http
+      .get<TrainingModel>(`${ENV.BASE_API}trainingsworkingcopy/${id}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+*/
 
-  })
-}
+  // POST new training (admin only)
+  postTraining$(training: TrainingModel): Observable<TrainingModel> {
+    return this.http
+      .post<TrainingModel>(`${ENV.BASE_API}training/new`, training, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  /*
+    postTrainingWC$(training: TrainingModel): Observable<TrainingModel> {
+      return this.http
+        .post<TrainingModel>(`${ENV.BASE_API}trainingworkingcopy/new`, training, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .pipe(
+          catchError((error) => this._handleError(error))
+        );
+    }
+    */
 
+  // PUT existing training (admin only)
+  editTraining$(training: TrainingModel): Observable<TrainingModel> {
+    return this.http
+      .put<TrainingModel>(`${ENV.BASE_API}trainings/${training._id}`, training, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  /*
+  editTrainingWC$(training: TrainingModel): Observable<TrainingModel> {
+    return this.http
+      .put<TrainingModel>(`${ENV.BASE_API}trainingsworkingcopy/${training._id}`, training, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  */
 
-// GET a training by ID (login required)
-getTrainingById$(id: string): Observable < TrainingModel > {
-  return this.http
-    .get<TrainingModel>(`${ENV.BASE_API}training/${id}`, {
-      headers: new HttpHeaders().set('Authorization', this._authHeader)
-    })
-    .pipe(
-      catchError((error) => this._handleError(error))
-    );
-}
-getTrainingWCById$(id: string): Observable < TrainingModel > {
-  return this.http
-    .get<TrainingModel>(`${ENV.BASE_API}trainingsworkingcopy/${id}`, {
-      headers: new HttpHeaders().set('Authorization', this._authHeader)
-    })
-    .pipe(
-      catchError((error) => this._handleError(error))
-    );
-}
+  // DELETE existing training and all associated Users (admin only)
+  deleteTraining$(id: string): Observable<TrainingModel> {
+    return this.http
+      .delete(`${ENV.BASE_API}trainings/${id}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  /*
+  deleteTrainingWC$(id: string): Observable<TrainingModel> {
+    return this.http
+      .delete(`${ENV.BASE_API}trainingsworkingcopy/${id}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  */
 
-
-// POST new training (admin only)
-postTraining$(training: TrainingModel): Observable < TrainingModel > {
-  return this.http
-    .post<TrainingModel>(`${ENV.BASE_API}training/new`, training, {
-      headers: new HttpHeaders().set('Authorization', this._authHeader)
-    })
-    .pipe(
-      catchError((error) => this._handleError(error))
-    );
-}
-
-postTrainingWC$(training: TrainingModel): Observable < TrainingModel > {
-  return this.http
-    .post<TrainingModel>(`${ENV.BASE_API}trainingworkingcopy/new`, training, {
-      headers: new HttpHeaders().set('Authorization', this._authHeader)
-    })
-    .pipe(
-      catchError((error) => this._handleError(error))
-    );
-}
-
-// PUT existing training (admin only)
-editTraining$(training: TrainingModel): Observable < TrainingModel > {
-  return this.http
-    .put<TrainingModel>(`${ENV.BASE_API}trainings/${training._id}`, training, {
-      headers: new HttpHeaders().set('Authorization', this._authHeader)
-    })
-    .pipe(
-      catchError((error) => this._handleError(error))
-    );
-}
-editTrainingWC$(training: TrainingModel): Observable < TrainingModel > {
-  return this.http
-    .put<TrainingModel>(`${ENV.BASE_API}trainingsworkingcopy/${training._id}`, training, {
-      headers: new HttpHeaders().set('Authorization', this._authHeader)
-    })
-    .pipe(
-      catchError((error) => this._handleError(error))
-    );
-}
-
-// DELETE existing training and all associated Users (admin only)
-deleteTraining$(id: string): Observable < TrainingModel > {
-  return this.http
-    .delete(`${ENV.BASE_API}trainings/${id}`, {
-      headers: new HttpHeaders().set('Authorization', this._authHeader)
-    })
-    .pipe(
-      catchError((error) => this._handleError(error))
-    );
-}
-deleteTrainingWC$(id: string): Observable < TrainingModel > {
-  return this.http
-    .delete(`${ENV.BASE_API}trainingsworkingcopy/${id}`, {
-      headers: new HttpHeaders().set('Authorization', this._authHeader)
-    })
-    .pipe(
-      catchError((error) => this._handleError(error))
-    );
-}
-
-// GET all trainings for a specific user
-getUserTrainings$(userId: string): Observable < TrainingModel[] > {
-  return this.http
-    .get<TrainingModel[]>(`${ENV.BASE_API}trainings/${userId}`, {
-      headers: new HttpHeaders().set('Authorization', this._authHeader)
-    })
-    .pipe(
-      catchError((error) => this._handleError(error))
-    );
-}
+  // GET all trainings for a specific user
+  getUserTrainings$(userId: string): Observable<TrainingModel[]> {
+    return this.http
+      .get<TrainingModel[]>(`${ENV.BASE_API}trainings/${userId}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
   // GET Users by training ID (login required)
   /*
   getUsersBytrainingId$(trainingId: string): Observable<UserModel[]> {
@@ -490,11 +580,11 @@ getUserTrainings$(userId: string): Observable < TrainingModel[] > {
   }
   */
 
-  private _handleError(err: HttpErrorResponse | any): Observable < any > {
-  const errorMsg = err.message || 'Error: Unable to complete request.';
-  if(err.message && err.message.indexOf('No JWT present') > -1) {
-  this.auth.login();
-}
-return ObservableThrowError(errorMsg);
+  private _handleError(err: HttpErrorResponse | any): Observable<any> {
+    const errorMsg = err.message || 'Error: Unable to complete request.';
+    if (err.message && err.message.indexOf('No JWT present') > -1) {
+      this.auth.login();
+    }
+    return ObservableThrowError(errorMsg);
   }
 }

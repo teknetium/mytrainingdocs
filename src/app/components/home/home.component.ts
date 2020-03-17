@@ -54,6 +54,7 @@ export class HomeComponent implements AfterViewInit {
         this.userService.selectAuthenticatedUser();
       }
       if (this.authenticatedUser.userType === 'supervisor') {
+        /*
         this.zone.runOutsideAngular(() => {
 
           let chart = am4core.create('chartElement', am4charts.XYChart);
@@ -89,16 +90,19 @@ export class HomeComponent implements AfterViewInit {
 
           this.chart = chart;
         })
+        */
       }
     })
   }
 
   ngOnDestroy() {
+    /*
     this.zone.runOutsideAngular(() => {
       if (this.chart) {
         this.chart.dispose();
       }
     });
+    */
   }
 
   setCurrentTab(tabName) {

@@ -28,7 +28,6 @@ import { MyTrainingsComponent } from './my-trainings/my-trainings.component';
 import { CalendarModule } from '../calendar/calendar.module';
 import { UserTrainingsComponent } from './user-trainings/user-trainings.component';
 
-
 @NgModule({
   declarations: [
     TrainingsComponent,

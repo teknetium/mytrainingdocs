@@ -69,14 +69,13 @@ export class UserTrainingService {
       return;
     }
     let session = this.utSessionHash[tid];
+    console.log('stopSession', this.allUserTrainingHash);
 
     session.stopTime = new Date().getTime();
     let ut = this.allUserTrainingHash[this.currentUT];
-
     let uid = ut.uid;
     this.uidUserTrainingHash[uid][ut._id] = ut;
     ut.timeToDate += session.stopTime - session.startTime;
-    console.log('stopSession', ut);
     this.saveUserTraining(ut);
     this.utSessionHash[tid] = null;
     this.postUTSession$(session).subscribe(utSession => {
@@ -153,13 +152,11 @@ export class UserTrainingService {
         utHash = {};
       }
       utHash[userTraining._id] = userTraining;
+      this.allUserTrainingHash[userTraining._id] = userTraining;
+      this.uidUserTrainingHash[uid] = utHash;
 
       this.userTrainingHashBS$.next(utHash);
       this.getUTForTraining(tid);
-      if (!this.uidUserTrainingHash[uid]) {
-        this.initUserTrainingsForUser(uid);
-      }
-
     })
   }
 
