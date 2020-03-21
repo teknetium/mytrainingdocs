@@ -2,9 +2,8 @@ import { CalendarModule } from "src/app/components/calendar/calendar.module";
 
 export interface TrainingModel {
   _id: string,
-  type: 'online' | 'system' ,
+  type: 'online' | 'system',
   versions: TrainingVersion[],
-  versionsHash: {},
   versionPending: string,
   status: 'locked' | 'unlocked' | 'archived',
   title: string,
@@ -36,14 +35,14 @@ export interface TrainingModel {
 }
 export interface TrainingIdHash {
   [indexer: string]: TrainingModel;
-} 
+}
 
 export interface AssessmentItem {
   question: string,
   choices: string[],
   correctChoice: number
 }
-  
+
 
 export interface Assessment {
   _id: string,
@@ -61,14 +60,16 @@ export interface Comment {
   children: Comment[]
 }
 export interface TrainingVersion {
-  _id: string,
+  readonly _id: string,
   version: string,
+  pending: boolean,
   title: string,
   iconClass: string,
   iconColor: string,
   ownerId: string,
   dateCreated: number,
   changeLog: string,
+  trainingObj: {}
 }
 
 export interface Page {

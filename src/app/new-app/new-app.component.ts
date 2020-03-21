@@ -68,6 +68,21 @@ export interface Task {
         animate('500ms')
       ]),
     ]),
+    trigger('showVideo', [
+      // ...
+      state('closed', style({
+        'top': '-800px'
+      })),
+      state('open', style({
+        'top': '0'
+      })),
+      transition('open => closed', [
+        animate('300ms')
+      ]),
+      transition('closed => open', [
+        animate('300ms')
+      ]),
+    ]),
   ]
 })
 export class NewAppComponent implements OnInit {
@@ -247,6 +262,7 @@ export class NewAppComponent implements OnInit {
   firstTimer = false;
   currentTask = 1;
   taskNames = [];
+  isVideoOpen = false;
 
   constructor(
     private authService: AuthService,
@@ -281,7 +297,8 @@ export class NewAppComponent implements OnInit {
       this.authenticatedUser = user;
       if (this.authenticatedUser.firstName === '') {
         this.firstTimer = true;
-        this.playTaskVideo('gettingStarted');
+        this.showNewUserModal = true;
+//        this.playTaskVideo('gettingStarted');
       }
       this.authenticatedUser = user;
       this.userTrainingService.loadTrainingsForUser(user._id);
@@ -310,6 +327,7 @@ export class NewAppComponent implements OnInit {
         }
       })
     })
+
 
     this.taskBS$.subscribe(task => {
       if (!task) {
@@ -382,7 +400,12 @@ export class NewAppComponent implements OnInit {
 
   playTaskVideo(taskName) {
     this.currentTask = taskName;
+    this.isVideoOpen = true;
+    console.log('new-app: playTaskVideo', taskName, this.currentPage, this.aboutThisPageHash);
     this.task = this.aboutThisPageHash[this.currentPage].taskHash[taskName];
+    if (!this.task) {
+      return;
+    }
     this.task.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.aboutThisPageHash[this.currentPage].taskHash[taskName].url));
     console.log('playTaskVideo', this.task);
     this.taskBS$.next(this.task);

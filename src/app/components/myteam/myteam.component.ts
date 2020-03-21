@@ -34,6 +34,23 @@ import { take, filter } from 'rxjs/operators';
       transition('* => open', [
         animate('300ms')
       ]),
+    ]),
+    trigger('userAddToggle', [
+      // ...
+      state('closed', style({
+        'visibility': 'hidden',
+        'height': '0'
+      })),
+      state('open', style({
+        'visibility': 'visible',
+        'height': 'fit-content',
+      })),
+      transition('open => closed', [
+        animate('700ms')
+      ]),
+      transition('* => open', [
+        animate('1000ms')
+      ]),
     ])
   ]
 })
@@ -50,8 +67,9 @@ export class MyteamComponent implements OnInit {
     uptodate: '#52c41a',
     pastdue: 'red'
   }
-  includeNewSupervisorsTeam = false;
+  includeNewSupervisorsTeam = true;
   isNewSupervisorPanelOpen = false;
+  isUserAddPanelOpen = false;
   
   selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
@@ -149,12 +167,12 @@ export class MyteamComponent implements OnInit {
   }
 
   addUser() {
-    this.showNewUserModal = true;
+    this.isUserAddPanelOpen = true;
     this.options = [];
   }
 
   handleCancel(): void {
-    this.showNewUserModal = false;
+    this.isUserAddPanelOpen = false;
   }
 
   handleAddUser() {
@@ -173,7 +191,7 @@ export class MyteamComponent implements OnInit {
       html: 'Please <a href="' + url + '">register</a>'
     }
     this.mailService.sendMessage(this.message);
-    this.showNewUserModal = false;
+    this.isUserAddPanelOpen = false;
     this.newTeamMember.firstName = '';
     this.newTeamMember.lastName = '';
     this.newTeamMember.email = '';

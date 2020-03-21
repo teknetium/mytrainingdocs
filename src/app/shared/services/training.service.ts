@@ -309,25 +309,15 @@ export class TrainingService {
       items: []
     }
 
-    const version = <TrainingVersion>{
-      _id: String(baseId + 'version'),
-      version: '0_0_1',
-      ownerId: this.authenticatedUser._id,
-      dateCreated: new Date().getTime(),
-      changeLog: '',
-      title: 'New Training',
-      iconClass: 'fad fa-graduation-cap',
-      iconColor: 'black',
-    }
+    let readOnlyTraining: TrainingModel;
 
     const newTraining = <TrainingModel>{
       _id: String(baseId),
       type: 'online',
-      versions: [version],
-      versionsHash: {},
+      versions: [],
       versionPending: '',
       title: 'New Training',
-      status: 'locked',
+      status: 'unlocked',
       rating: [],
       teamId: this.teamId,
       owner: this.authenticatedUser._id,
@@ -360,10 +350,42 @@ export class TrainingService {
       isDirty: false
     };
 
-    newTraining.versionsHash[version.version] = cloneDeep(newTraining);
+    let newTrainingVersionObj: TrainingVersion = {
+      _id: String(new Date().getTime()),
+      version: '1_0_0',
+      pending: true,
+      changeLog: '(being edited)',
+      ownerId: this.authenticatedUser._id,
+      dateCreated: new Date().getTime(),
+      title: 'New Training',
+      iconClass: 'fad fa-graduation-cap',
+      iconColor: 'black',
+      trainingObj: null
+    };
+    newTraining.versions.unshift(newTrainingVersionObj);
+    /*
+    readOnlyTraining = cloneDeep(newTraining);
+    readOnlyTraining._id = 'cloned';
+    newTraining.versions[0].trainingObj = readOnlyTraining;
+    
+    newTrainingVersionObj = {
+      _id: String(new Date().getTime()),
+      version: '0_0_1',
+      pending: true,
+      changeLog: '',
+      ownerId: this.authenticatedUser._id,
+      dateCreated: new Date().getTime(),
+      title: 'New Training',
+      iconClass: 'fad fa-graduation-cap',
+      iconColor: 'black',
+      trainingObj: readOnlyTraining
+    };
+
+    newTraining.versions.unshift(newTrainingVersionObj);
     newTraining.status = 'unlocked';
+    */
     this.postTraining$(newTraining).subscribe(trainingObj => {
-      this.selectedTrainingBS$.next(newTraining)  
+      this.selectedTrainingBS$.next(trainingObj)  
       this.reloadAllTrainings();
     });
   }
@@ -373,9 +395,9 @@ export class TrainingService {
 
   }
 
-  selectTrainingVersion(tid: string, version: string) {
+  selectTrainingVersion(training: any) {
 
-    this.selectedTrainingBS$.next(this.teamTrainingHash[tid].versionsHash[version]);
+    this.selectedTrainingBS$.next(training);
   }
 
   addNewPage(trainingId: string, type: string, url: string, fileId: string, pageTitle: string): Page {
@@ -446,7 +468,7 @@ export class TrainingService {
       );
   }
 
-  saveNewVersion(training: TrainingModel, ) {
+  saveNewVersion(training: TrainingModel) {
     console.log('saveNewVersion', training);
     this.editTraining$(training).subscribe(data => {
       console.log('TrainingService:saveNewVersion', training, data);
@@ -462,6 +484,7 @@ export class TrainingService {
       if (reload) {
 //        this.selectedTrainingBS$.next(data);
         this.reloadAllTrainings();
+        this.selectTrainingVersion(training)
       }
     });
     //    this.editTrainingWC$(training).subscribe(data => {

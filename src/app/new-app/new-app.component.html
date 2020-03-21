@@ -158,7 +158,7 @@
         </ul>
     </nz-header>
     <nz-content class="inner-content">
-        <div *ngIf="aboutThisPageHash[currentPage]" style="padding:20px;">
+        <div *ngIf="aboutThisPageHash[currentPage]" style="padding:20px 20px 0 20px;">
             <i *ngIf="!aboutThisPageHash[currentPage].visible" nz-icon nzType="info-circle" [nzTheme]="'twotone'"
                 (click)="aboutThisPageHash[currentPage].visible = true"
                 style="font-size:24px;font-weight: 500;cursor:pointer;"></i>
@@ -184,60 +184,62 @@
                     <div *ngIf="authenticatedUser$ | async as user" style="margin-bottom:20px;padding-left:20px;">
                         <ul style="list-style-type: none;">
                             <li *ngFor="let taskName of taskNames" style="margin-bottom: 10px;">
-                                <div *ngIf="aboutThisPageHash[currentPage].taskHash[taskName].userType.includes(user.userType)">
-                                <i nz-icon nzType="youtube" [nzTheme]="'outline'"
-                                    nz-tooltip nzTooltipTitle="Play the task How-To video"
-                                    (click)="playTaskVideo(taskName)"
-                                    style="cursor:pointer;font-size:24px;vertical-align: baseline;margin-left:20px;color:#52c41a;"></i>
-                                &nbsp;&nbsp;{{aboutThisPageHash[currentPage].taskHash[taskName].desc}}
+                                <div
+                                    *ngIf="aboutThisPageHash[currentPage].taskHash[taskName].userType.includes(user.userType)">
+                                    <i nz-icon nzType="youtube" [nzTheme]="'outline'" nz-tooltip
+                                        nzTooltipTitle="Play the task How-To video" (click)="playTaskVideo(taskName)"
+                                        style="cursor:pointer;font-size:24px;vertical-align: baseline;margin-left:20px;color:#52c41a;"></i>
+                                    &nbsp;&nbsp;{{aboutThisPageHash[currentPage].taskHash[taskName].desc}}
                                 </div>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-
+            <!--
             <nz-modal [(nzVisible)]="showTaskVideoModal" nzWidth="700" nzHeight="800" nzTitle="Task Viewer" nzOkText="Close"
                 nzCancelDisabled="true" (nzOnOk)="closeTaskVideoModal()" style="text-align: center;">
-                <div *ngIf="aboutThisPageHash[currentPage] && aboutThisPageHash[currentPage].taskHash[currentTask]" style="font-size:24px;text-align: center;margin-bottom:40px;">
-                    <span
-                        style="font-size:24px;text-align: center;color:blue;">{{aboutThisPageHash[currentPage].taskHash[currentTask].desc}}</span>
+                -->
+            <div [@showVideo]="isVideoOpen ? 'open' : 'closed'" style="position: absolute;top:-500px; left: 0;right:0;height:800px;z-index:10;background-color:rgba(0,0,0,0.8);;text-align: center;">
+                    <i nz-icon nzType="close-circle" [nzTheme]="'outline'"  (click)="isVideoOpen = false"
+                        style="position:absolute;top:20px;right:20px;font-size:30px;color:red;font-weight: 200;cursor:pointer;"></i>
+                <div *ngIf="aboutThisPageHash[currentPage] && aboutThisPageHash[currentPage].taskHash[currentTask]">
+                    <div style="font-size:24px;text-align: center;margin:40px 0;">
+                        <span
+                            style="font-size:24px;text-align: center;color:cyan;">{{aboutThisPageHash[currentPage].taskHash[currentTask].desc}}</span>
+                    </div>
+                    <div
+                        style="display:inline-block;margin-top:5px;background-color: black;padding:5px;width:600px;height:600px;">
+                        <vg-player (onPlayerReady)="onPlayerReady($event)">
+                            <vg-controls>
+                                <vg-play-pause></vg-play-pause>
+                                <vg-playback-button></vg-playback-button>
+                                <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+
+                                <vg-scrub-bar>
+                                    <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                    <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                                </vg-scrub-bar>
+
+                                <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                                <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+
+                                <vg-mute></vg-mute>
+                                <vg-volume></vg-volume>
+
+                                <vg-fullscreen></vg-fullscreen>
+                            </vg-controls>
+                            <video style="background-color: #dddddd;" [vgMedia]="media" #media id="singleVideo"
+                                preload="none" [src]="(taskBS$ | async)?.safeUrl" crossorigin
+                                [poster]="(taskBS$ | async)?.poster">
+                            </video>
+                        </vg-player>
+                    </div>
                 </div>
-                <div *ngIf="aboutThisPageHash[currentPage] && aboutThisPageHash[currentPage].taskHash[currentTask]"
-                    style="display:inline-block;margin-top:5px;background-color: black;padding:5px;width:600px;height:600px;">
-                    <vg-player (onPlayerReady)="onPlayerReady($event)">
-<!--
-                        <vg-overlay-play style="color:red;background-color:#bbbbbb;"></vg-overlay-play>
-                        -->
-
-                        <vg-controls>
-                            <vg-play-pause></vg-play-pause>
-                            <vg-playback-button></vg-playback-button>
-                            <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-
-                            <vg-scrub-bar>
-                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                                <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-                            </vg-scrub-bar>
-
-                            <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
-                            <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-
-                            <vg-mute></vg-mute>
-                            <vg-volume></vg-volume>
-
-                            <vg-fullscreen></vg-fullscreen>
-                        </vg-controls>
-
-                        <video style="background-color: #dddddd;" [vgMedia]="media" #media id="singleVideo" preload="none" [src]="(taskBS$ | async)?.safeUrl"
-                            crossorigin [poster]="(taskBS$ | async)?.poster">
-                            <!--
-                            <source [src]="(taskBS$ | async)?.safeUrl" type="video/mp4">
-                                -->
-                        </video>
-                    </vg-player>
-                </div>
+            </div>
+            <!--
             </nz-modal>
+            -->
             <ng-template #taskVideoTemplate>
             </ng-template>
         </div>

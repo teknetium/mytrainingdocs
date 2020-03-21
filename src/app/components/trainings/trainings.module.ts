@@ -27,6 +27,8 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
 import { MyTrainingsComponent } from './my-trainings/my-trainings.component';
 import { CalendarModule } from '../calendar/calendar.module';
 import { UserTrainingsComponent } from './user-trainings/user-trainings.component';
+import { PrettyJsonModule } from 'angular2-prettyjson';
+
 
 @NgModule({
   declarations: [
@@ -80,6 +82,7 @@ import { UserTrainingsComponent } from './user-trainings/user-trainings.componen
     CalendarModule,
     NzDatePickerModule,
     NzCollapseModule,
+    PrettyJsonModule
   ],
   exports: [
     TrainingsComponent,

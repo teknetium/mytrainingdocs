@@ -48,15 +48,17 @@ const trainingSchema = new Schema({
     {
       _id: String,
       version: String,
+      pending: Boolean,
       changeLog: String,
       ownerId: String,
       dateCreated: Number,
       title: String,
       iconClass: String,
-      iconColor: String
+      iconColor: String,
+      trainingObj: Object
     }],
 
-  versionsHash: { type: Object },
+  versionsHash: { type: Object, required: false },
   versionPending: { type: String, required: false },
   status: { type: String, required: true },
   title: { type: String, required: true },
