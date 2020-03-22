@@ -17,6 +17,9 @@ import { UserTrainingHash } from '../shared/interfaces/userTraining.type';
 import { VgAPI } from 'videogular2/compiled/core';
 import { filter } from 'rxjs/operators';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { takeUntil } from 'rxjs/operators';
+import { BaseComponent } from '../components/base.component';
+
 
 export interface Task {
   desc: string,
@@ -85,7 +88,7 @@ export interface Task {
     ]),
   ]
 })
-export class NewAppComponent implements OnInit {
+export class NewAppComponent extends BaseComponent implements OnInit {
 
   aboutThisPageHash = {
     home: {
@@ -274,6 +277,7 @@ export class NewAppComponent implements OnInit {
     private zorroNotificationService: NzNotificationService,
     private sanitizer: DomSanitizer
   ) {
+    super();
     this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
     this.teamTrainingCnt$ = this.trainingService.getTeamTrainingCntStream();
@@ -289,7 +293,7 @@ export class NewAppComponent implements OnInit {
         this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
       }
     });
-    this.authenticatedUser$.subscribe(user => {
+    this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         return;
       }
@@ -302,7 +306,7 @@ export class NewAppComponent implements OnInit {
       }
       this.authenticatedUser = user;
       this.userTrainingService.loadTrainingsForUser(user._id);
-      this.myTeamIdHash$.subscribe(teamIdHash => {
+      this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(teamIdHash => {
         if (!teamIdHash) {
           return;
         }
@@ -312,10 +316,10 @@ export class NewAppComponent implements OnInit {
           this.myTeamCnt = myTeamIds.length - 1;
         }
       });
-      this.teamTrainingCnt$.subscribe(cnt => {
+      this.teamTrainingCnt$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(cnt => {
         this.teamTrainingCnt = cnt;
       });
-      this.userTrainingHash$.subscribe(utHash => {
+      this.userTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(utHash => {
         if (!utHash) {
           return;
         }
@@ -329,7 +333,7 @@ export class NewAppComponent implements OnInit {
     })
 
 
-    this.taskBS$.subscribe(task => {
+    this.taskBS$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(task => {
       if (!task) {
         return;
       }

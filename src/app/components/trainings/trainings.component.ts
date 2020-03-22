@@ -9,7 +9,8 @@ import { UserModel, UserIdHash } from '../../shared/interfaces/user.type';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { UserService } from '../../shared/services/user.service';
 import { Router } from '@angular/router';
-import { take } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
+import { BaseComponent } from '../base.component';
 
 
 @Component({
@@ -18,7 +19,7 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./trainings.component.css'],
 })
 
-export class TrainingsComponent implements OnInit {
+export class TrainingsComponent extends BaseComponent implements OnInit {
 
   isAuthenticated$: Observable<boolean>;
   cellFontSize = '28';
@@ -48,6 +49,7 @@ export class TrainingsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private trainingService: TrainingService,
     private userService: UserService) {
+    super();
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.teamTrainingHash$ = this.trainingService.getTeamTrainingHashStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
@@ -57,14 +59,14 @@ export class TrainingsComponent implements OnInit {
 
   ngOnInit() {
 
-    this.authenticatedUser$.pipe(take(2)).subscribe((user) => {
+    this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((user) => {
       if (!user) {
         return;
       }
       this.authenticatedUser = user;
 
     });
-    this.trainingIdHash$.subscribe(trainingIdHash => {
+    this.trainingIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(trainingIdHash => {
       let allTrainings;
       if (trainingIdHash) {
         this.trainingIdHash = trainingIdHash;
@@ -82,7 +84,7 @@ export class TrainingsComponent implements OnInit {
         this.trainings = [];
       }
     });
-    this.teamTrainingHash$.subscribe(teamTrainingHash => {
+    this.teamTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(teamTrainingHash => {
       this.teamTrainingHash = teamTrainingHash;
       this.trainings = Object.values(this.teamTrainingHash);
     })

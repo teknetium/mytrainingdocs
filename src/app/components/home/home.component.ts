@@ -11,6 +11,9 @@ import { filter } from 'rxjs/operators';
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import { takeUntil } from 'rxjs/operators';
+import { BaseComponent } from '../base.component';
+
 
 am4core.useTheme(am4themes_animated);
 
@@ -20,7 +23,7 @@ am4core.useTheme(am4themes_animated);
   styleUrls: ['./home.component.css'],
   //  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent extends BaseComponent implements AfterViewInit {
 
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
@@ -37,13 +40,14 @@ export class HomeComponent implements AfterViewInit {
     //    private cd: ChangeDetectorRef,
     private trainingService: TrainingService,
     private eventService: EventService) {
+    super();
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
     this.myTeamCnt$ = this.userService.getMyTeamCntStream();
   }
 
 
   ngAfterViewInit() {
-    this.authenticatedUser$.pipe(filter(user => user !== null)).subscribe(user => {
+    this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         console.log('home:init:authenticatedUser$.subscribe', user);
         return;

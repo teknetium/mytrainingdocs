@@ -1,40 +1,85 @@
-<div class="training-container">
-  <div *ngIf="trainings && trainings.length > 0" style="margin-bottom:10px;">
-    <button nz-button nzType="primary" nzShape="round" (click)="createNewTraining()" style="margin: 20px 0;">
-      Create a New Training
-    </button>
-    <!--
+<div style="padding-left:20px;">
+  <nz-tabset>
+    <nz-tab [nzTitle]="template1">
+      <ng-template #template1>
+        <i class="fad fa-hat-wizard" style="color:#951eca;font-size:20px;margin-right:10px;"></i>Create/Update Trainings
+      </ng-template>
+
+      <div class="training-container">
+        <div *ngIf="trainings && trainings.length > 0" style="margin-bottom:10px;">
+          <button nz-button nzType="primary" nzShape="round" (click)="createNewTraining()" style="margin:0 0 20px 0;">
+            Create a New Training
+          </button>
+          <!--
     <i nz-icon nzType="plus-square" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
       style="cursor:pointer;font-size:20px;float:left;margin-right:10px;" nz-tooltip
       nzTooltipTitle="Create New Training" (click)="createNewTraining()"></i>
       -->
-  </div>
-  <div style="display:block;">
-    <div *ngFor="let training of trainings " style="display:inline-block;">
-      <div class="cell-item-sm" (click)="selectTraining(training._id)">
-        <div style="display:block;font-size:12px;">
-          <i *ngIf="training.status === 'unlocked'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
-            style="display:inline-block;font-size:14px;float: left;" [nzTwotoneColor]="'#52c41a'"></i>
-          <i *ngIf="training.status === 'locked'" nz-icon nzType="lock" [nzTheme]="'twotone'"
-            style="display:inline-block;font-size:14px;float: left;" [nzTwotoneColor]="'red'"></i>
-            <span style="display:inline-block;float:right;">{{ versionFormatter(training.versions[0].version) }}</span>
-            <div style="clear:both;"> </div>
         </div>
-        <div style="display:block;text-align: center;">
-          <i [ngStyle]="{'color': training.iconColor}" [ngClass]="training.iconClass" style="font-size:40px;padding-top:5px;"></i>
+        <div style="display:block;">
+          <div *ngFor="let training of trainings " style="display:inline-block;">
+            <div class="cell-item-sm" (click)="selectTraining(training._id)">
+              <div style="display:block;font-size:12px;">
+                <i *ngIf="training.status === 'unlocked'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
+                  style="display:inline-block;font-size:14px;float: left;" [nzTwotoneColor]="'#52c41a'"></i>
+                <i *ngIf="training.status === 'locked'" nz-icon nzType="lock" [nzTheme]="'twotone'"
+                  style="display:inline-block;font-size:14px;float: left;" [nzTwotoneColor]="'red'"></i>
+                <span
+                  style="display:inline-block;float:right;">{{ versionFormatter(training.versions[0].version) }}</span>
+                <div style="clear:both;"> </div>
+              </div>
+              <div style="display:block;text-align: center;">
+                <i [ngStyle]="{'color': training.iconColor}" [ngClass]="training.iconClass"
+                  style="font-size:40px;padding-top:5px;"></i>
+              </div>
+              <div class="item-sm" style="display:block;padding-top:5px;">
+                {{ training.title }}
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="item-sm" style="display:block;padding-top:5px;">
-          {{ training.title }}
+        <div *ngIf="trainings && trainings.length === 0" style="text-align: center;margin-top:40px;">
+          <span style="font-size:20px;font-weight: 200;display:block;">You haven't created any trainings yet!</span>
+          <button nz-button nzType="primary" nzShape="round" (click)="newTraining()" style="margin-top: 20px;">Create a
+            New
+            Training</button>
+
+        </div>
+        <div style="padding:10px;height:90%;">
+          <app-training-viewer></app-training-viewer>
         </div>
       </div>
-    </div>
-  </div>
-  <div *ngIf="trainings && trainings.length === 0" style="text-align: center;margin-top:40px;">
-    <span style="font-size:20px;font-weight: 200;display:block;">You haven't created any trainings yet!</span>
-    <button nz-button nzType="primary"  nzShape="round" (click)="newTraining()" style="margin-top: 20px;">Create a New Training</button>
-
-  </div>
+    </nz-tab>
+    <nz-tab [nzTitle]="template2">
+      <ng-template #template2>
+        <i class="fad fa-chart-bar" style="color:#951eca;font-size:20px;margin-right:10px;"></i>
+        Analytics
+      </ng-template>
+      Content of Tab Pane 2
+    </nz-tab>
+  </nz-tabset>
+</div>
+<!--
+  <nz-tabset>
+    <nz-tab [nzTitle]="template1">
+      <ng-template #template1>
+        <i class="fad fa-hat-wizard"
+          style="color:#951eca;font-size:20px;"></i>Create/Update Trainings
+        <span style="display:inline-block;font-size:16px;color:#bbbbbb;">Training
+          Wizard</span>
+      </ng-template>
+      Content of Tab Pane 1
+    </nz-tab>
+    <nz-tab [nzTitle]="template2">
+      <ng-template #template2>
+        <i class="fad fa-chart-bar"
+          style="color:#951eca;font-size:20px;"></i>
+          Analytics
+      </ng-template>
+      Content of Tab Pane 2
+    </nz-tab>
+  </nz-tabset>
   <div style="padding:10px;height:90%;">
     <app-training-viewer></app-training-viewer>
   </div>
-</div>
+  -->

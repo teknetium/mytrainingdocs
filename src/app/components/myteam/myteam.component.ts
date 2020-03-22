@@ -6,13 +6,12 @@ import { UserTrainingService } from '../../shared/services/userTraining.service'
 import { TrainingService } from '../../shared/services/training.service';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { UserModel, UserIdHash } from '../../shared/interfaces/user.type';
-import { EventModel } from '../../shared/interfaces/event.type';
-import { TrainingModel, TrainingIdHash } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
 import { JobTitleService } from '../../shared/services/jobtitle.service';
 import { MessageModel } from '../../shared/interfaces/message.type';
-import { take, filter } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
+import { BaseComponent } from '../base.component';
 
 @Component({
   selector: 'app-myteam',
@@ -54,7 +53,7 @@ import { take, filter } from 'rxjs/operators';
     ])
   ]
 })
-export class MyteamComponent implements OnInit {
+export class MyteamComponent extends BaseComponent implements OnInit {
 
   userTypeIconHash = {
     individualContributor: 'fas fa-fw fa-user',
@@ -109,12 +108,11 @@ export class MyteamComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private authService: AuthService,
     private userService: UserService,
-    private eventService: EventService,
     private mailService: SendmailService,
-    private userTrainingService: UserTrainingService,
     private trainingService: TrainingService,
     private jobTitleService: JobTitleService
   ) {
+    super();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
@@ -122,7 +120,7 @@ export class MyteamComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.myTeamIdHash$.subscribe(myTeamIdHash => {
+    this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamIdHash => {
       if (!myTeamIdHash) {
         return;
       }
@@ -137,7 +135,7 @@ export class MyteamComponent implements OnInit {
       }
       */
     });
-    this.selectedUser$.subscribe(user => {
+    this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         this.userIdSelected = null;
         return;
@@ -147,7 +145,7 @@ export class MyteamComponent implements OnInit {
 
     });
 
-    this.authenticatedUser$.subscribe(user => {
+    this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         return;
       }
@@ -159,7 +157,7 @@ export class MyteamComponent implements OnInit {
       this.newTeamMember._id = String(new Date().getTime());
     })
 
-    this.jobTitles$.subscribe(jobTitles => {
+    this.jobTitles$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(jobTitles => {
       this.jobTitles = jobTitles;
     })
 

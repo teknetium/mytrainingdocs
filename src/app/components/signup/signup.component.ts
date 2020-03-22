@@ -3,6 +3,8 @@ import { AUTH_CONFIG } from '../../shared/services/auth.config';
 import * as auth0 from 'auth0-js';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { BaseComponent } from '../base.component';
 
 
 @Component({
@@ -10,7 +12,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent extends BaseComponent implements OnInit {
 
   private _auth0 = new auth0.WebAuth({
     clientID: AUTH_CONFIG.CLIENT_ID,
@@ -24,7 +26,8 @@ export class SignupComponent implements OnInit {
   email: string;
 
   constructor(private route: ActivatedRoute ) { 
-    this.route.paramMap.subscribe(params => {
+    super();
+    this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
       this.email = params.get('id');
       this._auth0.authorize({ action: 'signup', login_hint: this.email });
     });

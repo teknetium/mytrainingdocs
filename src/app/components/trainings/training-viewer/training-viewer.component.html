@@ -2,17 +2,16 @@
     <div style="background-color: black;">
     </div>
 </ng-template>
-<div *ngIf="selectedTraining$ | async; as selectedTraining" class="training-viewer-fullscreen">
+<div *ngIf="selectedTraining$ | async as selectedTraining" class="training-viewer-fullscreen">
     <div style="position:relative;width:100%;padding-top:5px;background-color: #fcfcfc;">
         <div *ngIf="production === 'false'"
             style="position:absolute;left:5px;top:5px;margin-right:20px;display:inline-block;">
             <i *ngIf="selectedTraining.status === 'unlocked'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
-                [nzTwotoneColor]="'#52c41a'" (click)="lockTraining(trainingWC)"
-                style="font-size:20px;vertical-align: baseline;" nz-tooltip
+                [nzTwotoneColor]="'#52c41a'" style="font-size:20px;vertical-align: baseline;" nz-tooltip
                 nzTooltipTitle="This training is unlocked"></i>
             <i *ngIf="selectedTraining.status === 'locked'" nz-icon nzType="lock" [nzTheme]="'twotone'"
-                [nzTwotoneColor]="'red'" (click)="unlockTraining(trainingWC)"
-                style="font-size:20px;vertical-align: baseline;" nz-tooltip nzTooltipTitle="This training is locked">
+                [nzTwotoneColor]="'red'" style="font-size:20px;vertical-align: baseline;"
+                 nz-tooltip nzTooltipTitle="This training is locked">
             </i>
         </div>
         <div>
@@ -28,34 +27,37 @@
                 <div *ngIf="production === 'false'">
                     <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click"
                         style="display:inline-block;font-size:12px;">
-                        <i [ngClass]="currentSelectedTrainingVersionObj.iconClass"
+                        <i [ngClass]="currentSelectedTrainingVersions[currentVersionIndex].iconClass"
                             style="display: inlne-block;font-size:18px;vertical-align: baseline;margin-right:10px;"
-                            [ngStyle]="{'color': currentSelectedTrainingVersionObj.iconColor}">
+                            [ngStyle]="{'color': currentSelectedTrainingVersions[currentVersionIndex].iconColor}">
                         </i>
                         <span
-                            style="display:inline-block;font-size:16px;">{{currentSelectedTrainingVersionObj.title}}</span>
+                            style="display:inline-block;font-size:16px;">{{currentSelectedTrainingVersions[currentVersionIndex].title}}</span>
                         &nbsp;&nbsp;
                         <span style="font-size:14px;color:#bbbbbb;">version</span>
                         <span style="font-size:16px;">
-                            {{ versionFormatter(currentSelectedTrainingVersionObj.version) }}</span>
-                            &nbsp;&nbsp;<span *ngIf="currentSelectedTrainingVersionObj.pending === true" style="font-size:14px;color:#bbbbbb;">(being edited)</span>
+                            {{ versionFormatter(currentSelectedTrainingVersions[currentVersionIndex].version) }}</span>
+                        &nbsp;&nbsp;<span *ngIf="currentSelectedTrainingVersions[currentVersionIndex].pending === true"
+                            style="font-size:14px;color:#bbbbbb;">(being edited)</span>
                         <i nz-icon nzType="down" style="margin-left:5px;font-size:16px;vertical-align: middle;"></i>
                     </a>
                     <nz-dropdown-menu #menu="nzDropdownMenu" style="z-index:100010;display:inline-block;">
                         <ul *ngIf="selectedTraining" nz-menu nzSelectable>
-                            <li *ngFor="let version of selectedTrainingVersions$ | async; index as i"
-                                style="font-size:12px;" nz-menu-item (click)="loadVersion(version)">
+                            <li *ngFor="let version of currentSelectedTrainingVersions; index as i"
+                                style="font-size:12px;" nz-menu-item (click)="loadVersion(i)">
                                 <i [ngClass]="version.iconClass"
                                     style="display: inlne-block;font-size:16px;margin:0 5px;vertical-align: baseline;margin-right:10px;"
                                     [ngStyle]="{'color': version.iconColor}">
                                 </i>
-                                <span style="display:inline-block;font-size:12px;margin-right:20px;">{{version.title}}</span>
+                                <span
+                                    style="display:inline-block;font-size:12px;margin-right:20px;">{{version.title}}</span>
                                 &nbsp;&nbsp;
                                 <span
                                     style="display:inline-block;font-size:12px;margin-right:20px;">v&nbsp;{{versionFormatter(version.version)}}</span>
-                                    &nbsp;&nbsp;<span *ngIf="version.pending"
-                                        style="font-size:14px;color:#bbbbbb;">(being edited)</span>
-                                <span style="display:inline-block;font-size:12px;">{{versionFormatter(version.changeLog)}}</span>
+                                &nbsp;&nbsp;<span *ngIf="version.pending" style="font-size:14px;color:#bbbbbb;">(being
+                                    edited)</span>
+                                <span
+                                    style="display:inline-block;font-size:12px;">{{versionFormatter(version.changeLog)}}</span>
                             </li>
                         </ul>
                     </nz-dropdown-menu>
@@ -70,8 +72,6 @@
                     <nz-modal [(nzVisible)]="lockTrainingModalIsVisible" [nzTitle]="selectedTraining.title"
                         nzWidth="60%" nzOkDisabled="false" nzCancelDisabled="false" (nzOnCancel)="cancelLockTraining()"
                         (nzOnOk)="handleLockTraining()">
-                        <div style="display: inline-block;width:20%;padding-bottom:30px;z-index:auto;">
-                        </div>
                         <div style="display:inline-block;width:80%;">
                             <h3 nz-title>
                                 What actions should be taken as a result of the changes that were made?
@@ -131,34 +131,14 @@
             <div class="header-right">
                 <div>
                     <div style="margin-right:30px;display: inline-block;">
-                        <input *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
+                        <input
+                            *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                             style="display:inline-block;color:black;width:350px;font-size:14px;" nz-input
                             [(ngModel)]="trainingWC.title" nzSize="small" (keydown.enter)="saveTraining(true)"
                             (blur)="saveTraining(true)" />
                         <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
-                        style="display:inline-block;width:350px;">
-                            <span
-                                style="font-size:26px;vertical-align: middle;">&nbsp;{{selectedTraining.title}}</span>
-                        </div>
-                        <div *ngIf="production === 'false' && authenticatedUser.userType === 'supervisor'"
-                            style="display:inline-block;margin-left:40px;">
-                            <span style="color:#bbbbbb;"> Assigned Users</span>
-                            <span style="display:inline-block;margin-right:10px;"></span>
-                            <div *ngFor="let uid of users$ | async; index as i"
-                                style="display:inline-block;width:fit-content;text-align: center;margin:0 4px;vertical-align: middle;">
-                                <div *ngIf="myTeamHash[uid]">
-                                    <i [ngClass]="userTypeIconHash[myTeamHash[uid].userType]"
-                                        [ngStyle]="{'color': trainingStatusColorHash[myTeamHash[uid].trainingStatus]}"
-                                        style="display:inline;font-size:22px;"></i>
-                                    <span style="display:block;font-size:10px;">{{myTeamHash[uid].firstName}}</span>
-                                </div>
-                            </div>
-                            <button nz-button nzType="default" nzShape="circle" nz-tooltip
-                                nzTooltipTitle="Assign To User" class="header-icon" (click)="showAssignmentDialog()"
-                                style="color:#5972eb;">
-                                <i nz-icon nzType="user-add" theme="outline" style="vertical-align: top;"></i>
-                            </button>
-
+                            style="display:inline-block;width:350px;">
+                            <span style="font-size:26px;vertical-align: middle;">&nbsp;{{selectedTraining.title}}</span>
                         </div>
                     </div>
                 </div>
@@ -190,14 +170,16 @@
         <div style="display:block;width:100%;height:fit-content;margin-top:10px;">
             <div style="font-size:12px;width:fit-content;display:inline-block;margin-right:30px;">
                 <span style="color:#bbbbbb;">Version : </span>
-                {{versionFormatter(currentSelectedTrainingVersionObj.version)}}
+                {{versionFormatter(currentSelectedTrainingVersions[currentVersionIndex].version)}}
                 <span style="color:#bbbbbb;margin-left:30px;">Change Log : </span>
-                <span *ngIf="currentSelectedTrainingVersionObj.changeLog">{{currentSelectedTrainingVersionObj.changeLog}}</span>
-                <span *ngIf="!currentSelectedTrainingVersionObj.changeLog">(being edited)</span>
+                <span
+                    *ngIf="currentSelectedTrainingVersions[currentVersionIndex].changeLog">{{currentSelectedTrainingVersions[currentVersionIndex].changeLog}}</span>
+                <span *ngIf="!currentSelectedTrainingVersions[currentVersionIndex].changeLog">(being edited)</span>
             </div>
 
+
             <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked'"
-                style="width:fit-content;display:inline-block;">
+                style="width:fit-content;display:inline-block;margin-right:20px;">
                 <span style="display:inline-block;font-size:12px;color:#bbbbbb;">Mode&nbsp;&nbsp;:&nbsp;&nbsp;</span>
                 <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click"
                     style="display:inline-block;font-size:12px;color: #3958e3;margin-right:20px;">{{ mode }}
@@ -213,16 +195,34 @@
                     </ul>
                 </nz-dropdown-menu>
             </div>
+            <div *ngIf="production === 'false' && authenticatedUser.userType === 'supervisor'"
+                style="display:inline-block;">
+                <span style="color:#bbbbbb;font-size:12px;"> Assigned Users</span>
+                <span style="display:inline-block;margin-right:10px;"></span>
+                <div *ngFor="let uid of users$ | async; index as i"
+                    style="display:inline-block;width:fit-content;text-align: center;margin:0 4px;vertical-align: middle;">
+                    <div *ngIf="myTeamHash[uid]">
+                        <i [ngClass]="userTypeIconHash[myTeamHash[uid].userType]"
+                            [ngStyle]="{'color': trainingStatusColorHash[myTeamHash[uid].trainingStatus]}"
+                            style="display:inline;font-size:20px;"></i>
+                        <span style="display:block;font-size:10px;">{{myTeamHash[uid].firstName}}</span>
+                    </div>
+                </div>
+                <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Assign To User" class="header-icon"
+                    (click)="showAssignmentDialog()" style="color:#5972eb;">
+                    <i nz-icon nzType="user-add" theme="outline" style="vertical-align: top;"></i>
+                </button>
+            </div>
             <div style="display:inline-block;float:right;">
                 <button
-                    *ngIf="production === 'false' && selectedTraining.status === 'locked' && currentSelectedTrainingVersionObj.version === trainingWC.versions[0].version"
+                    *ngIf="production === 'false' && selectedTraining.status === 'locked' && currentSelectedTrainingVersions[currentVersionIndex].version === trainingWC.versions[0].version"
                     (click)="unlockTraining()" class="header-icon" nz-button nzType="default" nzShape="circle"
                     nz-tooltip nzTooltipTitle="Edit Training">
                     <i nz-icon nzType="unlock" theme="twotone" style="vertical-align: top;"></i>
                 </button>
                 <button *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                     nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Save As New Version"
-                    class="header-icon" (click)="saveNewVersion()" [disabled]="!(trainingIsValid$ | async)">
+                    class="header-icon" (click)="saveNewVersion()" [disabled]="!(trainingIsValid$ | async) || ((trainingIsValid$ | async) && (!trainingIsDirty$ | async))">
                     <i nz-icon nzType="lock" theme="twotone" [nzTwotoneColor]="'blue'" style="vertical-align: top;">
                     </i>
                 </button>
@@ -269,10 +269,10 @@
                 </div>
                 <div style="width:33%;display: inline-block;">
                     <div style="display: block;">
-                        Current Selected Training Version Object
+                        Current Selected Training Versions
                     </div>
                     <div style="height:600px;overflow: scroll;display: block;">
-                        <prettyjson style="font-size:8px;" [obj]="currentSelectedTrainingVersionObj"></prettyjson>
+                        <prettyjson style="font-size:8px;" [obj]="currentSelectedTrainingVersions"></prettyjson>
                     </div>
                 </div>
             </div>
@@ -1165,7 +1165,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div style="display:block;margin-top: 10px;font-size:18px;">
+                                    <div style="display:bun;margin-top: 10px;font-size:18px;">
                                         <label style="display:inline-block;margin-right: 10px;font-size:18px;">Correct
                                             Choice</label>
                                         <nz-radio-group [(ngModel)]="currentCorrectChoice">

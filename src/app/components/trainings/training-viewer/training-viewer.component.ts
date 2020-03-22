@@ -19,6 +19,8 @@ import { NzMessageService } from 'ng-zorro-antd';
 import * as cloneDeep from 'lodash/cloneDeep';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { read } from 'fs';
+import { takeUntil } from 'rxjs/operators';
+import { BaseComponent } from '../../base.component';
 
 
 
@@ -81,10 +83,11 @@ import { read } from 'fs';
 
 
 })
-export class TrainingViewerComponent implements OnInit {
+export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   vgApi: VgAPI;
 
+  trainingIsDirty$: Observable<boolean>;
   isAuthenticated$: Observable<boolean>;
   isIconSelectModalVisible = false;
   selectedTraining$: Observable<TrainingModel>;
@@ -166,43 +169,6 @@ export class TrainingViewerComponent implements OnInit {
   alpha = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
   assessment: Assessment;
-  /*
-    newAssessment: Assessment = {
-      _id: String(new Date().getTime()),
-      type: 'choiceFeedback',
-      timeLimit: 0,
-      passingGrade: 70,
-      items: [
-        {
-          question: 'This is question 1',
-          choices: [
-            'This is the first choice',
-            'This is the second choice',
-          ],
-          correctChoice: -1
-        },
-        {
-          question: 'This is question 2',
-          choices: [
-            'This is the first choice',
-            'This is the second choice',
-          ],
-          correctChoice: -1
-  
-        },
-        {
-          question: 'This is question 3',
-          choices: [
-            'This is the first choice',
-            'This is the second choice',
-          ],
-          correctChoice: -1
-  
-        },
-      ]
-    };
-    */
-
 
   assessmentResponseHash = {};
   assessmentResponse = [];
@@ -313,13 +279,14 @@ export class TrainingViewerComponent implements OnInit {
   justLocked = false;
   versionCnt = 0;
   selectedTrainingVersionHash = {};
-  selectedTrainingVersions = [];
+  selectedTrainingVersions: TrainingVersion[] = [];
   newTraining = true;
   changeLog = '';
   currentSelectedTrainingVersions: TrainingVersion[] = [];
   currentSelectedTrainingVersionObj: TrainingVersion;
   trainingWC: TrainingModel;
   debug = false;
+  
 
   constructor(
     private trainingService: TrainingService,
@@ -332,6 +299,7 @@ export class TrainingViewerComponent implements OnInit {
     private mailService: SendmailService,
     private message: NzMessageService,
     private authService: AuthService) {
+    super();
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.myTeamHash$ = this.userService.getMyTeamIdHashStream();
@@ -340,6 +308,8 @@ export class TrainingViewerComponent implements OnInit {
     this.selectedTrainingVersions$ = this.trainingService.getSelectedTrainingVersionsStream();
     this.safeFileUrl$ = this.fileService.getSafeFileUrlStream();
     this.users$ = this.userTrainingService.getUsersForTrainingStream();
+    this.fileUploaded$ = this.fileService.getUploadedFileStream();
+    this.trainingIsDirty$ = this.trainingService.getTrainingIsDirtyStream();
   }
 
   ngOnInit() {
@@ -349,10 +319,10 @@ export class TrainingViewerComponent implements OnInit {
       this.debug = false;
     }
 
-    this.fileUploaded$ = this.fileService.getUploadedFileStream();
-    this.selectedTraining$.subscribe(training => {
+    this.selectedTraining$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(training => {
 
       if (!training || !training.versions) {
+        console.log('selectedTraining$: ERROR!!!!!!!!!!!!!!!', training);
         return;
       }
 
@@ -392,7 +362,17 @@ export class TrainingViewerComponent implements OnInit {
       this.tempIcon = this.trainingWC.iconClass;
     });
 
-    this.fileUploaded$.subscribe(file => {
+    this.selectedTrainingVersions$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(versions => {
+      if (!versions) {
+        console.log('selectedTrainingVersions$ : ERROR', versions);
+        return;
+      }
+
+      this.selectedTrainingVersions = versions;
+
+    })
+
+    this.fileUploaded$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(file => {
       let found = false;
       let newPage: Page;
       if (!file) {
@@ -428,11 +408,11 @@ export class TrainingViewerComponent implements OnInit {
       }
     });
 
-    this.myTeamHash$.subscribe(myTeamHash => {
+    this.myTeamHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamHash => {
       this.myTeamHash = myTeamHash;
     })
 
-    this.users$.subscribe(userList => {
+    this.users$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
       console.log('TrainingViewer:users$.subscribe userList', userList);
       if (!userList) {
         return;
@@ -457,7 +437,7 @@ export class TrainingViewerComponent implements OnInit {
     })
 
 
-    this.newVersion$.subscribe(version => {
+    this.newVersion$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(version => {
       if (!version) {
         return;
       }
@@ -472,7 +452,7 @@ export class TrainingViewerComponent implements OnInit {
       this.fileService.selectFsHandle(this.pageFileHash[this.currentPageId], 0);
     })
 
-    this.authenticatedUser$.pipe(take(2)).subscribe(user => {
+    this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       this.authenticatedUser = user;
     })
   }
@@ -489,6 +469,8 @@ export class TrainingViewerComponent implements OnInit {
 
 
   unlockTraining() {
+    let readOnlyTraining = cloneDeep(this.trainingWC);
+
     let newTrainingVersionObj: TrainingVersion = {
       _id: String(new Date().getTime()),
       version: this.trainingWC.versions[0].version,
@@ -499,7 +481,7 @@ export class TrainingViewerComponent implements OnInit {
       title: this.trainingWC.title,
       iconClass: this.trainingWC.iconClass,
       iconColor: this.trainingWC.iconColor,
-      trainingObj: null
+      trainingObj: readOnlyTraining
     };
     this.currentSelectedTrainingVersions.unshift(newTrainingVersionObj);
     this.trainingWC.status = 'unlocked';
@@ -507,9 +489,10 @@ export class TrainingViewerComponent implements OnInit {
 
   }
 
-  loadVersion(version) {
-    this.currentSelectedTrainingVersionObj = version;
-    this.trainingService.selectTrainingVersion(version.trainingObj);
+  loadVersion(index) {
+    this.currentVersionIndex = index;
+    this.currentSelectedTrainingVersionObj = this.currentSelectedTrainingVersions[index];
+    this.trainingService.selectTrainingVersion(this.currentSelectedTrainingVersions[index].trainingObj);
   }
 
   showVersionModal() {
@@ -517,7 +500,9 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   cancelLockTraining() {
-
+    this.lockTrainingModalIsVisible = false;
+    this.changeLevel = '';
+    this.changeLog = '';
   }
 
   handleLockTraining() {
@@ -564,7 +549,7 @@ export class TrainingViewerComponent implements OnInit {
     this.trainingWC.versions[0].trainingObj = readOnlyTraining;
 
     this.trainingService.saveNewVersion(this.trainingWC);
-    this.trainingService.selectTrainingVersion(this.trainingWC.versions[0]);
+    this.trainingService.selectTrainingVersion(this.trainingWC);
 
     this.lockTrainingModalIsVisible = false;
   }
@@ -589,7 +574,7 @@ export class TrainingViewerComponent implements OnInit {
       this.trainingWC.versions[0].trainingObj = readOnlyTraining;
 
       this.trainingService.saveNewVersion(this.trainingWC);
-      this.trainingService.selectTrainingVersion(this.trainingWC.versions[0]);
+      this.trainingService.selectTrainingVersion(this.trainingWC);
     } else {
       this.lockTrainingModalIsVisible = true;
     }
@@ -1013,7 +998,7 @@ export class TrainingViewerComponent implements OnInit {
 
   showConfirmDelete() {
     this.usersAffected = [];
-    this.userTrainingService.getUTForTraining$(this.trainingWC._id).subscribe(userTrainings => {
+    this.userTrainingService.getUTForTraining$(this.trainingWC._id).pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
       for (let ut of userTrainings) {
         this.usersAffected.push(this.myTeamHash[ut.uid]);
       }
@@ -1032,9 +1017,9 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   confirmDelete() {
-    this.userTrainingService.getUTForTraining$(this.trainingWC._id).subscribe(userTrainings => {
+    this.userTrainingService.getUTForTraining$(this.trainingWC._id).pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
       for (let ut of userTrainings) {
-        this.userTrainingService.deleteUserTraining$(ut._id).subscribe(item => {
+        this.userTrainingService.deleteUserTraining$(ut._id).pipe(takeUntil(this.ngUnsubscribe)).subscribe(item => {
           this.userTrainingService.initUserTrainingsForUser(ut.uid);
         })
       }
@@ -1278,7 +1263,13 @@ export class TrainingViewerComponent implements OnInit {
   }
 
   rollback() {
-    this.trainingService.selectTrainingVersion(this.currentSelectedTrainingVersions[0].trainingObj);
+    this.trainingWC = cloneDeep(this.currentSelectedTrainingVersions[0].trainingObj);
+    this.trainingWC.status = 'locked';
+    if (this.trainingWC.versions.length > 0) {
+      this.trainingWC.versions[0].pending = false;
+    }
+    this.trainingWC.versions.splice(0, 1);
     this.saveTraining(false);
+    this.trainingService.selectTrainingVersion(this.trainingWC);
   }
 }

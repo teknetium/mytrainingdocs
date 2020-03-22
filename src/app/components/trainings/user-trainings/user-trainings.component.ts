@@ -6,6 +6,8 @@ import { TrainingService } from '../../../shared/services/training.service';
 import { UserService } from '../../../shared/services/user.service';
 import { UserTrainingService } from '../../../shared/services/userTraining.service';
 import { UserTrainingModel, UserTrainingHash } from 'src/app/shared/interfaces/userTraining.type';
+import { takeUntil } from 'rxjs/operators';
+import { BaseComponent } from '../../base.component';
 
 
 @Component({
@@ -14,7 +16,7 @@ import { UserTrainingModel, UserTrainingHash } from 'src/app/shared/interfaces/u
   styleUrls: ['./user-trainings.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserTrainingsComponent implements OnInit {
+export class UserTrainingsComponent extends BaseComponent implements OnInit {
 
   statusIconHash = {
     upToDate: {
@@ -49,6 +51,9 @@ export class UserTrainingsComponent implements OnInit {
   currentUserTraining: string;
   markCompletedModalIsVisible: boolean;
   trainingIsVisible: boolean;
+  comment = '';
+  rating = 0;
+
 
   constructor(
     private userService: UserService,
@@ -56,6 +61,7 @@ export class UserTrainingsComponent implements OnInit {
     private trainingService: TrainingService,
     private cd: ChangeDetectorRef,
   ) {
+    super();
     this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
@@ -63,12 +69,12 @@ export class UserTrainingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectedTraining$.subscribe(selectedTraining => {
+    this.selectedTraining$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(selectedTraining => {
       if (!selectedTraining) {
         this.currentUserTraining = '';
       }
     })
-    this.trainingIdHash$.subscribe(trainingIdHash => {
+    this.trainingIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(trainingIdHash => {
       if (!trainingIdHash) {
         return;
       }
@@ -76,15 +82,15 @@ export class UserTrainingsComponent implements OnInit {
       this.trainingIdHash = trainingIdHash;
     })
 
-    this.selectedUser$.subscribe(user => {
+    this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
-        return;        
+        return;
       }
       this.selectedUser = user;
       this.userTrainingService.loadTrainingsForUser(user._id);
     });
 
-    this.userTrainingHash$.subscribe(userTrainingHash => {
+    this.userTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainingHash => {
       if (!userTrainingHash) {
         return;
       }
@@ -95,7 +101,7 @@ export class UserTrainingsComponent implements OnInit {
   }
 
   timeFormat(ms): string {
-        let m = String(Math.floor(ms / 60000)).padStart(2, '0');
+    let m = String(Math.floor(ms / 60000)).padStart(2, '0');
     let s = String(Math.floor(((ms % 3600000) % 60000) / 1000)).padStart(2, '0');
     return m + ':' + s;
   }

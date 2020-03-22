@@ -6,7 +6,8 @@ import { UserTrainingService } from '../../../shared/services/userTraining.servi
 import { UserService } from '../../../shared/services/user.service';
 import { TrainingService } from '../../../shared/services/training.service';
 import { Observable, Subscription } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
+import { BaseComponent } from '../../base.component';
 
 
 
@@ -15,7 +16,7 @@ import { filter, take } from 'rxjs/operators';
   templateUrl: './my-trainings.component.html',
   styleUrls: ['./my-trainings.component.css']
 })
-export class MyTrainingsComponent implements OnInit {
+export class MyTrainingsComponent extends BaseComponent implements OnInit {
 
   myTrainings$: Observable<UserTrainingModel[]>;
   myTrainingsHash = {};
@@ -45,6 +46,7 @@ export class MyTrainingsComponent implements OnInit {
   constructor(private userTrainingService: UserTrainingService,
     private trainingService: TrainingService,
     private userService: UserService) {
+    super();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
 //    this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
 //    this.trainings$ = this.trainingService.getAllTrainingsObservable();
@@ -53,7 +55,7 @@ export class MyTrainingsComponent implements OnInit {
 
   ngOnInit() {
     this.trainingService.selectTraining(null);
-    this.authenticatedUser$.pipe(take(2)).subscribe(user => {
+    this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         console.log('mt-training:authenticatedUser$.subscribe...null user');
         return;

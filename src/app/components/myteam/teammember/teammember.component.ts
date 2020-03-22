@@ -6,6 +6,8 @@ import { UserTrainingService } from '../../../shared/services/userTraining.servi
 import { TrainingService } from '../../../shared/services/training.service';
 import { UserModel, UserIdHash } from '../../../shared/interfaces/user.type';
 import { UserService } from '../../../shared/services/user.service';
+import { takeUntil } from 'rxjs/operators';
+import { BaseComponent } from '../../base.component';
 
 
 @Component({
@@ -13,7 +15,7 @@ import { UserService } from '../../../shared/services/user.service';
   templateUrl: './teammember.component.html',
   styleUrls: ['./teammember.component.css']
 })
-export class TeammemberComponent implements OnInit {
+export class TeammemberComponent extends BaseComponent implements OnInit {
 
   userTypeIconHash = {
     individualContributor: 'fas fa-fw fa-user',
@@ -47,6 +49,7 @@ export class TeammemberComponent implements OnInit {
     private trainingService: TrainingService,
     private userService: UserService,
   ) {
+    super();
     this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
@@ -55,14 +58,14 @@ export class TeammemberComponent implements OnInit {
 
   ngOnInit(): void {
     this.assignableTrainings = [];
-    this.authenticatedUser$.subscribe(user => {
+    this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         return;
       }
       this.authenticatedUser = user;
       this.assignableTrainings = [];
 
-      this.allTrainingIdHash$.subscribe(allTrainingIdHash => {
+      this.allTrainingIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(allTrainingIdHash => {
         this.allTrainingIdHash = allTrainingIdHash;
         let trainings = Object.values(this.allTrainingIdHash);
         this.teamTrainings = [];
@@ -74,7 +77,7 @@ export class TeammemberComponent implements OnInit {
       })
     })
 
-    this.userTrainingHash$.subscribe(utHash => {
+    this.userTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(utHash => {
       this.assignableTrainings = [];
       if (!utHash) {
         return;
@@ -96,7 +99,7 @@ export class TeammemberComponent implements OnInit {
       }
 
     })
-    this.selectedUser$.subscribe(user => {
+    this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         return;
       }

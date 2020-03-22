@@ -69,7 +69,7 @@ export interface TrainingVersion {
   ownerId: string,
   dateCreated: number,
   changeLog: string,
-  trainingObj: {}
+  trainingObj: TrainingModel
 }
 
 export interface Page {

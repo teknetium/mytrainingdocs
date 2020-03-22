@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../shared/services/user.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { TrainingService } from '../../shared/services/training.service';
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UserModel } from 'src/app/shared/interfaces/user.type';
-import { UserTrainingModel, UserTrainingHash } from 'src/app/shared/interfaces/userTraining.type';
+import { UserTrainingHash } from 'src/app/shared/interfaces/userTraining.type';
 import { TrainingModel } from 'src/app/shared/interfaces/training.type';
+import { takeUntil } from 'rxjs/operators';
+import { BaseComponent } from '../base.component';
 
 interface Day {
   dayOfMonth: number,
@@ -24,7 +26,7 @@ interface Month {
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent extends BaseComponent implements OnInit {
 
   monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   monthDays = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -58,6 +60,7 @@ export class CalendarComponent implements OnInit {
   constructor(private userService: UserService,
     private userTrainingService: UserTrainingService,
     private trainingService: TrainingService) {
+    super();
     this.selectedUser$ = this.userService.getSelectedUserStream();
 
     for (let i = 0; i < 12; i++) {
@@ -82,7 +85,7 @@ export class CalendarComponent implements OnInit {
   } 
 
   ngOnInit() {
-    this.selectedUser$.subscribe(user => {
+    this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         return;
       }
@@ -93,7 +96,7 @@ export class CalendarComponent implements OnInit {
     });
 
 
-    this.userTrainingHash$.subscribe(utHash => {
+    this.userTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(utHash => {
       let userTrainings = Object.values(utHash);
       // reset earlistMonth and latestMonth
       this.earliestMonth = 11;
@@ -130,13 +133,12 @@ export class CalendarComponent implements OnInit {
 
 
         let sub: Subscription;
-        sub = this.trainings$.subscribe(trainings => {
+        this.trainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(trainings => {
           this.trainings = trainings;
           for (let i = 0; i < this.trainings.length; i++) {
             this.trainingIdHash[this.trainings[i]._id] = this.trainings[i];
           }
         })
-        sub.unsubscribe();
       }
 
 

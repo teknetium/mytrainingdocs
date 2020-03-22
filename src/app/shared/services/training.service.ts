@@ -53,6 +53,8 @@ export class TrainingService {
   selectedTrainingBS$ = new BehaviorSubject<TrainingModel>(null);
   selectedTrainingVersionsBS$ = new BehaviorSubject<TrainingVersion[]>(null);
 
+  trainingIsDirtyBS$ = new BehaviorSubject<boolean>(false);
+
   // Using Angular DI we use the HTTP service
   constructor(
     private http: HttpClient,
@@ -279,6 +281,10 @@ export class TrainingService {
     return this.jobTitlesBS$.asObservable();
   }
 
+  getTrainingIsDirtyStream(): Observable<boolean> {
+    return this.trainingIsDirtyBS$.asObservable();
+  }
+
   getAllTrainingHashStream(): Observable<TrainingIdHash> {
     return this.allTrainingHashBS$.asObservable();
   }
@@ -350,11 +356,12 @@ export class TrainingService {
       isDirty: false
     };
 
+
     let newTrainingVersionObj: TrainingVersion = {
       _id: String(new Date().getTime()),
       version: '1_0_0',
       pending: true,
-      changeLog: '(being edited)',
+      changeLog: '',
       ownerId: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),
       title: 'New Training',
@@ -363,27 +370,11 @@ export class TrainingService {
       trainingObj: null
     };
     newTraining.versions.unshift(newTrainingVersionObj);
-    /*
     readOnlyTraining = cloneDeep(newTraining);
-    readOnlyTraining._id = 'cloned';
-    newTraining.versions[0].trainingObj = readOnlyTraining;
-    
-    newTrainingVersionObj = {
-      _id: String(new Date().getTime()),
-      version: '0_0_1',
-      pending: true,
-      changeLog: '',
-      ownerId: this.authenticatedUser._id,
-      dateCreated: new Date().getTime(),
-      title: 'New Training',
-      iconClass: 'fad fa-graduation-cap',
-      iconColor: 'black',
-      trainingObj: readOnlyTraining
-    };
+    readOnlyTraining._id = 'readOnly';
 
-    newTraining.versions.unshift(newTrainingVersionObj);
-    newTraining.status = 'unlocked';
-    */
+    newTraining.versions[0].trainingObj = readOnlyTraining;
+
     this.postTraining$(newTraining).subscribe(trainingObj => {
       this.selectedTrainingBS$.next(trainingObj)  
       this.reloadAllTrainings();
@@ -395,7 +386,7 @@ export class TrainingService {
 
   }
 
-  selectTrainingVersion(training: any) {
+  selectTrainingVersion(training: TrainingModel) {
 
     this.selectedTrainingBS$.next(training);
   }
