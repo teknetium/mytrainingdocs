@@ -4,11 +4,16 @@
                 [ngStyle]="{'color': trainingStatusColorHash[selectedUser.trainingStatus]}" nz-tooltip
                 [nzTooltipTitle]=""></i>&nbsp;
             <span
-                style="display:inline-block;margin-left:10px;font-size:24px;font-weight: 300;">{{selectedUser.firstName}}
+                style="display:inline-block;margin-left:10px;font-size:18px;font-weight: 300;">{{selectedUser.firstName}}
                 {{selectedUser.lastName}}</span>
             &nbsp;&nbsp;&nbsp;
+            <!--
             <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
                 style="cursor:pointer;font-size:16px;vertical-align: text-top;" nz-tooltip nzTooltipTitle="Delete User"
+                nz-popconfirm nzPopconfirmTitle="Delete this user?" (nzOnConfirm)="confirmDelete(selectedUser)"></i>
+                -->
+            <i nz-icon nzType="edit" [nzTheme]="'twotone'"
+                style="cursor:pointer;font-size:16px;vertical-align: text-top;" nz-tooltip nzTooltipTitle="Edit User"
                 nz-popconfirm nzPopconfirmTitle="Delete this user?" (nzOnConfirm)="confirmDelete(selectedUser)"></i>
         </div>
         <div style="width:100%;">

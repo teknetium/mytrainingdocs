@@ -77,3 +77,13 @@ nz-footer {
 .video-frame {
 
 }
+
+.settings-item-left {
+  display: inline-block;
+  width: 70%;
+}
+.settings-item-right {
+  display: inline-block;
+  width: 30%;
+  text-align: right;
+}

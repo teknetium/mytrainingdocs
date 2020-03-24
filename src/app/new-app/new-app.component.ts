@@ -402,6 +402,11 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.showNewUserModal = false;
   }
 
+  updateUserSettings(event, property) {
+    this.authenticatedUser.settings[property] = event;
+    this.userService.updateUser(this.authenticatedUser, false);
+  }
+
   playTaskVideo(taskName) {
     this.currentTask = taskName;
     this.isVideoOpen = true;

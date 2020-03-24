@@ -91,6 +91,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   isAuthenticated$: Observable<boolean>;
   isIconSelectModalVisible = false;
   selectedTraining$: Observable<TrainingModel>;
+  selectedTrainingWC$: Observable<TrainingModel>;
   selectedTrainingVersions$: Observable<TrainingVersion[]>;
   //  selectedTrainingIndex$: Observable<number>;
   fileUploaded$: Observable<FileModel>;
@@ -177,7 +178,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   @Input() mode = 'Edit';
   @Input() trainingStatus = 'unlocked';
-  @Input() trainingId = '';
+  @Input() trainingId = null;
   @Input() production = 'false';
   @Output() assessmentResult = new EventEmitter<{ tid: string, score: number, pass: boolean }>();
 
@@ -286,7 +287,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   currentSelectedTrainingVersionObj: TrainingVersion;
   trainingWC: TrainingModel;
   debug = false;
-  
+
 
   constructor(
     private trainingService: TrainingService,
@@ -305,6 +306,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.myTeamHash$ = this.userService.getMyTeamIdHashStream();
     this.newVersion$ = this.fileService.getNewVersionStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
+    this.selectedTrainingWC$ = this.trainingService.getSelectedTrainingWCStream();
     this.selectedTrainingVersions$ = this.trainingService.getSelectedTrainingVersionsStream();
     this.safeFileUrl$ = this.fileService.getSafeFileUrlStream();
     this.users$ = this.userTrainingService.getUsersForTrainingStream();
@@ -333,7 +335,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       }
 
 
-      if (training._id !== 'readOnly') {
+      if (this.currentVersionIndex === 0) {
         this.selectedTraining = training;
         this.trainingWC = training;
 
@@ -469,30 +471,30 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
 
   unlockTraining() {
-    let readOnlyTraining = cloneDeep(this.trainingWC);
-
-    let newTrainingVersionObj: TrainingVersion = {
-      _id: String(new Date().getTime()),
-      version: this.trainingWC.versions[0].version,
-      pending: true,
-      changeLog: null,
-      ownerId: this.authenticatedUser._id,
-      dateCreated: 0,
-      title: this.trainingWC.title,
-      iconClass: this.trainingWC.iconClass,
-      iconColor: this.trainingWC.iconColor,
-      trainingObj: readOnlyTraining
-    };
-    this.currentSelectedTrainingVersions.unshift(newTrainingVersionObj);
     this.trainingWC.status = 'unlocked';
-    this.saveTraining(true);
+    this.saveTraining(false);
 
   }
 
   loadVersion(index) {
+    console.log('loadVersion', index);
+    if (index === 0) {
+      this.trainingService.selectTrainingWC(this.trainingWC.versions[index].trainingObj)      
+    }
     this.currentVersionIndex = index;
     this.currentSelectedTrainingVersionObj = this.currentSelectedTrainingVersions[index];
-    this.trainingService.selectTrainingVersion(this.currentSelectedTrainingVersions[index].trainingObj);
+    this.trainingService.selectTrainingVersion(this.trainingWC.versions[index].trainingObj);
+  }
+
+  rollback() {
+    this.trainingWC = cloneDeep(this.currentSelectedTrainingVersions[0].trainingObj);
+    this.trainingWC.status = 'locked';
+    if (this.trainingWC.versions.length > 0) {
+      this.trainingWC.versions[0].pending = false;
+    }
+    this.trainingWC.versions.splice(0, 1);
+    this.saveTraining(false);
+    this.trainingService.selectTrainingVersion(this.trainingWC);
   }
 
   showVersionModal() {
@@ -536,18 +538,21 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     let newVersion = majorNum + '_' + minorNum + '_' + patchNum;
 
     this.trainingWC.status = 'locked';
-
-    this.trainingWC.versions[0].version = newVersion;
-    this.trainingWC.versions[0].changeLog = this.changeLog;
-    this.trainingWC.versions[0].pending = false;
-    this.trainingWC.versions[0].title = this.trainingWC.title;
-    this.trainingWC.versions[0].iconClass = this.trainingWC.iconClass;
-    this.trainingWC.versions[0].iconColor = this.trainingWC.iconColor;
-
-    readOnlyTraining = cloneDeep(this.trainingWC);
-    readOnlyTraining._id = 'readOnly';
-    this.trainingWC.versions[0].trainingObj = readOnlyTraining;
-
+    let newTrainingVersionObj: TrainingVersion = {
+      _id: String(new Date().getTime()),
+      version: newVersion,
+      pending: false,
+      changeLog: this.changeLog,
+      ownerId: this.authenticatedUser._id,
+      dateCreated: new Date().getTime(),
+      title: this.trainingWC.title,
+      iconClass: this.trainingWC.iconClass,
+      iconColor: this.trainingWC.iconColor,
+      trainingObj: null
+    };
+    this.trainingWC.versions.unshift(newTrainingVersionObj);
+    this.trainingWC.versions[0].trainingObj = cloneDeep(this.trainingWC);
+    this.trainingWC.status = 'locked';
     this.trainingService.saveNewVersion(this.trainingWC);
     this.trainingService.selectTrainingVersion(this.trainingWC);
 
@@ -558,21 +563,23 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
     let readOnlyTraining: TrainingModel;
 
-    if (this.currentSelectedTrainingVersions.length === 1) {
+    if (this.trainingWC.versions.length === 1) {
+
+      let newTrainingVersionObj: TrainingVersion = {
+        _id: String(new Date().getTime()),
+        version: '1_0_0',
+        pending: false,
+        changeLog: 'Create Training',
+        ownerId: this.authenticatedUser._id,
+        dateCreated: new Date().getTime(),
+        title: this.trainingWC.title,
+        iconClass: this.trainingWC.iconClass,
+        iconColor: this.trainingWC.iconColor,
+        trainingObj: null
+      };
+      this.trainingWC.versions.unshift(newTrainingVersionObj);
+      this.trainingWC.versions[0].trainingObj = cloneDeep(this.trainingWC)
       this.trainingWC.status = 'locked';
-
-      this.trainingWC.versions[0].changeLog = 'Initial Training Creation';
-      this.trainingWC.versions[0].pending = false;
-      this.trainingWC.versions[0].title = this.trainingWC.title;
-      this.trainingWC.versions[0].iconClass = this.trainingWC.iconClass;
-      this.trainingWC.versions[0].iconColor = this.trainingWC.iconColor;
-
-
-      readOnlyTraining = cloneDeep(this.trainingWC);
-      readOnlyTraining._id = 'readOnly';
-
-      this.trainingWC.versions[0].trainingObj = readOnlyTraining;
-
       this.trainingService.saveNewVersion(this.trainingWC);
       this.trainingService.selectTrainingVersion(this.trainingWC);
     } else {
@@ -825,6 +832,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   closeViewer() {
     console.log('closeVIewer');
     this.userTrainingService.stopSession(this.trainingWC._id);
+    this.trainingService.reloadAllTrainings();
     this.trainingService.selectTraining(null);
     this.assessmentInProgress = false;
   }
@@ -1262,14 +1270,4 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.saveTraining(false);
   }
 
-  rollback() {
-    this.trainingWC = cloneDeep(this.currentSelectedTrainingVersions[0].trainingObj);
-    this.trainingWC.status = 'locked';
-    if (this.trainingWC.versions.length > 0) {
-      this.trainingWC.versions[0].pending = false;
-    }
-    this.trainingWC.versions.splice(0, 1);
-    this.saveTraining(false);
-    this.trainingService.selectTrainingVersion(this.trainingWC);
-  }
 }

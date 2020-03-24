@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
+import { Comment } from '../../shared/interfaces/comment.type';
 import { TrainingService } from '../../shared/services/training.service';
+import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { AuthService } from '../../shared/services/auth.service';
 
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -48,6 +50,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private trainingService: TrainingService,
+    private userTrainingService: UserTrainingService,
     private userService: UserService) {
     super();
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
@@ -90,12 +93,27 @@ export class TrainingsComponent extends BaseComponent implements OnInit {
     })
   }
 
+  deleteTraining(tid: string) {
+    this.userTrainingService.getUTForTraining$(tid).pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
+      for (let ut of userTrainings) {
+        this.userTrainingService.deleteUserTraining$(ut._id).pipe(takeUntil(this.ngUnsubscribe)).subscribe(item => {
+          this.userTrainingService.initUserTrainingsForUser(ut.uid);
+        })
+      }
+    });
+    this.trainingService.deleteTraining(tid);
+    this.trainingService.selectTraining(null);
+  }
+
+
   versionFormatter(version) {
+    if (!version) {
+      return;
+    }
     let re = /_/g;
     return version.replace(re, '.');
     version
   }
-
 
   newTraining() {
     this.trainingService.addNewTraining();
@@ -113,6 +131,10 @@ export class TrainingsComponent extends BaseComponent implements OnInit {
 
   createNewTraining() {
     this.trainingService.addNewTraining();
+  }
+
+  editTraining(training) {
+
   }
 
 }

@@ -1,12 +1,14 @@
 <nz-layout style="height:100%;">
     <nz-header style="padding:0 !important;">
-        <div style="float:left;">
+        <div style="float:left;margin-right:20px;">
             <div class="logo">
                 <img height="35" src="assets/images/logo/logo.png" style="margin:0 0 20px 15px;">
             </div>
+            <!--
             <a (click)="searchToggle()">
                 <i nz-icon nzType="search" theme="outline" style="font-size:20px;margin: 0 20px;color:white;"></i>
             </a>
+            -->
             <nz-drawer [nzWidth]="380" nzTitle="Search" [nzVisible]="searchVisible" nzPlacement="left"
                 (nzOnClose)="searchToggle()">
                 <app-search></app-search>
@@ -55,9 +57,20 @@
                 <a (click)="quickViewToggle()">
                     <i nz-icon nzType="setting" theme="outline" style="color:white;font-size:20px;"></i>
                 </a>
-                <nz-drawer [nzWidth]="280" nzTitle="App Settings" [nzClosable]="false" [nzVisible]="quickViewVisible"
+                <nz-drawer *ngIf="authenticatedUser$ | async as user" [nzWidth]="300" nzTitle="App Settings" [nzClosable]="false" [nzVisible]="quickViewVisible"
                     nzPlacement="right" (nzOnClose)="quickViewToggle()">
-                    <app-settings></app-settings>
+                    <div>
+                        <div class="settings-item-left">
+                            <i nz-icon nzType="info-circle" [nzTheme]="'twotone'" style="font-size:24px;"></i>
+                            Show Page Info
+                        </div>
+                        <div class="settings-item-right">
+                            <nz-switch nzSize="small" [(ngModel)]="user.settings.showPageInfo" (ngModelChange)="updateUserSettings($event, 'showPageInfo')"></nz-switch>
+                        </div>
+                    </div>
+                    <!--
+                    <prettyjson style="font-size:10px;" [obj]="user.settings"></prettyjson>
+                    -->
                 </nz-drawer>
             </li>
             <li nz-menu-item style="float:right;">
@@ -154,7 +167,7 @@
                     </div>
                 </nz-dropdown-menu>
             </li>
-            -->
+            --> 
         </ul>
     </nz-header>
     <nz-content class="inner-content">
@@ -162,7 +175,7 @@
             <i *ngIf="!aboutThisPageHash[currentPage].visible" nz-icon nzType="info-circle" [nzTheme]="'twotone'"
                 (click)="aboutThisPageHash[currentPage].visible = true"
                 style="font-size:24px;font-weight: 500;cursor:pointer;"></i>
-            <div *ngIf="aboutThisPageHash[currentPage].visible" style="padding:20px;position:relative;"
+            <div *ngIf="((authenticatedUser$ | async)?.settings.showPageInfo && aboutThisPageHash[currentPage].visible)" style="padding:20px;position:relative;"
                 class="about-this-page">
                 <div>
                     <i nz-icon nzType="info-circle" [nzTheme]="'twotone'"
@@ -200,15 +213,16 @@
             <nz-modal [(nzVisible)]="showTaskVideoModal" nzWidth="700" nzHeight="800" nzTitle="Task Viewer" nzOkText="Close"
                 nzCancelDisabled="true" (nzOnOk)="closeTaskVideoModal()" style="text-align: center;">
                 -->
-            <div [@showVideo]="isVideoOpen ? 'open' : 'closed'" style="position: absolute;top:-500px; left: 0;right:0;height:800px;z-index:10;background-color:rgba(0,0,0,0.8);;text-align: center;">
-                    <i nz-icon nzType="close-circle" [nzTheme]="'outline'"  (click)="isVideoOpen = false"
-                        style="position:absolute;top:20px;right:20px;font-size:30px;color:red;font-weight: 200;cursor:pointer;"></i>
+            <div [@showVideo]="isVideoOpen ? 'open' : 'closed'"
+                style="position: absolute;top:-500px; left: 0;right:0;height:800px;z-index:10;background-color:rgba(0,0,0,0.8);;text-align: center;">
+                <i nz-icon nzType="close-circle" [nzTheme]="'outline'" (click)="isVideoOpen = false"
+                    style="position:absolute;top:20px;right:20px;font-size:30px;color:red;font-weight: 200;cursor:pointer;"></i>
                 <div *ngIf="aboutThisPageHash[currentPage] && aboutThisPageHash[currentPage].taskHash[currentTask]">
                     <div style="font-size:24px;text-align: center;margin:40px 0;">
                         <span
                             style="font-size:24px;text-align: center;color:cyan;">{{aboutThisPageHash[currentPage].taskHash[currentTask].desc}}</span>
                     </div>
-                    <div  class="video-frame"
+                    <div class="video-frame"
                         style="display:inline-block;margin-top:5px;background-color: black;padding:5px;width:600px;height:600px;">
                         <vg-player (onPlayerReady)="onPlayerReady($event)">
                             <vg-controls>

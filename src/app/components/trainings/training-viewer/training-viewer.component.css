@@ -49,6 +49,8 @@
 .header-right {
 	display: inline-block;
 	margin-left: 30px;
+	text-align: center;
+	width:100%;
 }
 
 .header-middle {

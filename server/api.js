@@ -60,7 +60,7 @@ module.exports = function(app, config) {
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId org supervisorId profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
-  const commentListProjection = "_id tid author avatar content date";
+  const commentListProjection = "_id tid version author text date";
   const utSessionProjection = "_id utId uid tid startTime stopTime";
 
   // GET API root
@@ -1020,9 +1020,9 @@ app.put("/api/trainingsworkingcopy/:id", jwtCheck, (req, res) => {
     const comment = new Comment({
       tid: req.body.tid,
       date: req.body.date,
-      content: req.body.content,
+      text: req.body.text,
       author: req.body.author,
-      avatar: req.body.avatar,
+      version: req.body.version,
       _id: req.body._id,
     });
     Comment.create(comment, function (err2, commentObj) {

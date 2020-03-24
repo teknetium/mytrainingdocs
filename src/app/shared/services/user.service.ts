@@ -227,11 +227,11 @@ export class UserService {
     }
   }
 
-  updateUser(user: UserModel, isAuthenticatedUser: boolean) {
+  updateUser(user: UserModel, reload: boolean) {
     this.action = 'save';
     this.putUser$(user).subscribe((updatedUser) => {
       this.loadData(this.teamId);
-      if (isAuthenticatedUser) {
+      if (reload) {
         this.authenticatedUserBS$.next(updatedUser);
       }
     });

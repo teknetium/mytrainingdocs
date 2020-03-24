@@ -51,6 +51,7 @@ export class TrainingService {
   archivedTrainingCnt = 0;
 
   selectedTrainingBS$ = new BehaviorSubject<TrainingModel>(null);
+  selectedTrainingWCBS$ = new BehaviorSubject<TrainingModel>(null);
   selectedTrainingVersionsBS$ = new BehaviorSubject<TrainingVersion[]>(null);
 
   trainingIsDirtyBS$ = new BehaviorSubject<boolean>(false);
@@ -270,9 +271,11 @@ export class TrainingService {
   selectTraining(tid: string): void {
     if (!tid) {
       this.selectedTrainingBS$.next(null);
+      this.selectedTrainingWCBS$.next(null);
       return;
     }
 
+    this.selectedTrainingWCBS$.next(this.allTrainingHash[tid]);
     this.selectedTrainingBS$.next(this.allTrainingHash[tid]);
     this.selectedTrainingVersionsBS$.next(this.allTrainingHash[tid].versions);
   }
@@ -300,6 +303,9 @@ export class TrainingService {
   getSelectedTrainingStream(): Observable<TrainingModel> {
     return this.selectedTrainingBS$.asObservable();
   }
+  getSelectedTrainingWCStream(): Observable<TrainingModel> {
+    return this.selectedTrainingWCBS$.asObservable();
+  }
   getSelectedTrainingVersionsStream(): Observable<TrainingVersion[]> {
     return this.selectedTrainingVersionsBS$.asObservable();
   }
@@ -322,8 +328,8 @@ export class TrainingService {
       type: 'online',
       versions: [],
       versionPending: '',
-      title: 'New Training',
-      status: 'unlocked',
+      title: 'New Training Template',
+      status: 'locked',
       rating: [],
       teamId: this.teamId,
       owner: this.authenticatedUser._id,
@@ -339,7 +345,7 @@ export class TrainingService {
       goalsLabel: 'Replace this text.',
       goals: 'Replace this text.',
       iconClass: 'fad fa-graduation-cap',
-      iconColor: 'black',
+      iconColor: 'orange',
       iconSource: 'fontawesome',
       files: [],
       pages: [],
@@ -356,27 +362,28 @@ export class TrainingService {
       isDirty: false
     };
 
-
     let newTrainingVersionObj: TrainingVersion = {
       _id: String(new Date().getTime()),
-      version: '1_0_0',
+      version: '1_0_0T',
       pending: true,
-      changeLog: '',
+      changeLog: 'This is the new training template.',
       ownerId: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),
       title: 'New Training',
       iconClass: 'fad fa-graduation-cap',
-      iconColor: 'black',
+      iconColor: 'orange',
       trainingObj: null
     };
     newTraining.versions.unshift(newTrainingVersionObj);
     readOnlyTraining = cloneDeep(newTraining);
-    readOnlyTraining._id = 'readOnly';
 
     newTraining.versions[0].trainingObj = readOnlyTraining;
 
+    newTraining.status = 'unlocked';
+
     this.postTraining$(newTraining).subscribe(trainingObj => {
       this.selectedTrainingBS$.next(trainingObj)  
+      this.selectedTrainingWCBS$.next(trainingObj)  
       this.reloadAllTrainings();
     });
   }
@@ -387,8 +394,10 @@ export class TrainingService {
   }
 
   selectTrainingVersion(training: TrainingModel) {
-
     this.selectedTrainingBS$.next(training);
+  }
+  selectTrainingWC(training: TrainingModel) {
+    this.selectedTrainingWCBS$.next(training);
   }
 
   addNewPage(trainingId: string, type: string, url: string, fileId: string, pageTitle: string): Page {
@@ -415,7 +424,7 @@ export class TrainingService {
     this.teamTrainingHash[trainingId].isValid['mainContent'] = true;
     this.teamTrainingHash[trainingId].pages.push(newPage);
     this.saveTraining(this.teamTrainingHash[trainingId], false);
-    this.selectedTrainingBS$.next(this.teamTrainingHash[trainingId]);
+    this.selectedTrainingWCBS$.next(this.teamTrainingHash[trainingId]);
     return newPage;
   }
 
@@ -471,6 +480,7 @@ export class TrainingService {
   }
 
   saveTraining(training: TrainingModel, reload: boolean) {
+    this.trainingIsDirtyBS$.next(true);
     this.editTraining$(training).subscribe(data => {
       if (reload) {
 //        this.selectedTrainingBS$.next(data);
