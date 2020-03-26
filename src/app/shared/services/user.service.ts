@@ -178,7 +178,6 @@ export class UserService {
       if (!userList) {
         return;
       }
-      console.log('UserService:loadData', userList);
       this.myTeamIdHash = {};
       for (let user of userList) {
         this.myTeamIdHash[user._id] = user;
@@ -190,6 +189,7 @@ export class UserService {
       
       this.myTeamCntBS$.next(Object.keys(this.myTeamIdHash).length);
 
+      console.log('UserService:loadData', userList, this.authenticatedUser._id, this.myTeamIdHash);
       this.myTeamIdHashBS$.next(this.myTeamIdHash);
     });
 
@@ -230,6 +230,7 @@ export class UserService {
   updateUser(user: UserModel, reload: boolean) {
     this.action = 'save';
     this.putUser$(user).subscribe((updatedUser) => {
+      console.log('updateUser', updatedUser);
       this.loadData(this.teamId);
       if (reload) {
         this.authenticatedUserBS$.next(updatedUser);

@@ -15,8 +15,9 @@ import { catchError } from 'rxjs/operators';
 export class UserTrainingService {
 
   private uidUserTrainingHash: UidUserTrainingHash = {};
+  private uidUserTrainingHashBS$ = new BehaviorSubject<UidUserTrainingHash>({});
   private allUserTrainingHash: UserTrainingHash = {};
-  private userTrainingHashBS$ = new BehaviorSubject<UserTrainingHash>({});
+//  private userTrainingHashBS$ = new BehaviorSubject<UserTrainingHash>({});
   private utSessionsForUidBS$ = new BehaviorSubject<UTSession[]>(null);
   private usersBS$ = new BehaviorSubject<string[]>([]);
   private utSessionHash: UTSessionHash = {};
@@ -36,9 +37,14 @@ export class UserTrainingService {
         utHash[userTraining._id] = userTraining;
         this.allUserTrainingHash[userTraining._id] = userTraining;
       }
-      this.userTrainingHashBS$.next(utHash);
+//      this.userTrainingHashBS$.next(utHash);
       this.uidUserTrainingHash[uid] = utHash;
+      this.uidUserTrainingHashBS$.next(this.uidUserTrainingHash);
     });
+  }
+
+  getUidUserTrainingHashStream() {
+    return this.uidUserTrainingHashBS$.asObservable();
   }
 
   getUTSessionsForUidStream(uid: string): Observable<UTSession[]> {
@@ -83,7 +89,8 @@ export class UserTrainingService {
   }
 
   loadTrainingsForUser(userId) {
-    this.userTrainingHashBS$.next(this.uidUserTrainingHash[userId]);
+    console.log('loadTrainingsForUser', this.uidUserTrainingHash, userId);
+    this.uidUserTrainingHashBS$.next(this.uidUserTrainingHash);
   }
 
   getUsersForTrainingStream(): Observable<string[]> {
@@ -112,9 +119,9 @@ export class UserTrainingService {
     })
   }
 
-  getUserTrainingHashStream(): Observable<UserTrainingHash> {
-    return this.userTrainingHashBS$.asObservable();
-  }
+//  getUserTrainingHashStream(): Observable<UserTrainingHash> {
+//    return this.userTrainingHashBS$.asObservable();
+//  }
 
   getUTForTraining(tid: string) {
     let uids: string[] = [];
@@ -155,11 +162,14 @@ export class UserTrainingService {
       this.allUserTrainingHash[userTraining._id] = userTraining;
       this.uidUserTrainingHash[uid] = utHash;
 
-      this.userTrainingHashBS$.next(utHash);
-      this.getUTForTraining(tid);
+      this.uidUserTrainingHashBS$.next(this.uidUserTrainingHash);
     })
   }
 
+//  markAsReadyToClose(tid: string, uid: string): void {
+//    this.readyToCloseBS$.next
+//  }
+/*
   markUserTrainingAsComplete(utid: string): void {
     let userTraining = this.allUserTrainingHash[utid];
     userTraining.dateCompleted = new Date().getTime();
@@ -171,13 +181,13 @@ export class UserTrainingService {
       this.userTrainingHashBS$.next(this.uidUserTrainingHash[ut.uid]);
     })
   }
-
+*/
   saveUserTraining(ut: UserTrainingModel): void {
     this.updateUserTraining$(ut).subscribe(userTraining => {
       let utHash = this.uidUserTrainingHash[userTraining.uid];
       utHash[userTraining._id] = userTraining;
       this.uidUserTrainingHash[userTraining.uid] = utHash;
-      this.userTrainingHashBS$.next(this.uidUserTrainingHash[userTraining.uid]);
+      this.uidUserTrainingHashBS$.next(this.uidUserTrainingHash);
     })
   }
 
@@ -200,7 +210,7 @@ export class UserTrainingService {
       let utHash = this.uidUserTrainingHash[ut.uid];
       utHash[ut._id] = ut;
       this.uidUserTrainingHash[ut.uid] = utHash;
-      this.userTrainingHashBS$.next(this.uidUserTrainingHash[ut.uid]);
+      this.uidUserTrainingHashBS$.next(this.uidUserTrainingHash);
     })
   }
 
@@ -237,7 +247,7 @@ export class UserTrainingService {
         console.log('UserTrainingService:deleteUserTraining   ', utHash);
 
         this.uidUserTrainingHash[uid] = utHash;
-        this.userTrainingHashBS$.next(utHash);
+        this.uidUserTrainingHashBS$.next(this.uidUserTrainingHash);
       });
     })
   }

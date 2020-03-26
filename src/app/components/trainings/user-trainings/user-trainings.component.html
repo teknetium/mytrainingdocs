@@ -70,10 +70,10 @@
         (nzOnCancel)="handleMarkAsCompletedCancel()" (nzOnOk)="markTrainingAsComplete(selectedTraining)"
         style="width:800px;">
         <span style="display:block;">Rate this Training</span>
-        <nz-rate style="display:block;margin-bottom:20px;" [ngModel]="rating" nzAllowHalf class="small"></nz-rate>
+        <nz-rate style="display:block;margin-bottom:20px;" [(ngModel)]="rating" (ngModelChange)="ratingChanged($event)" nzAllowHalf class="small"></nz-rate>
         <span style="display:block;">Comments/Feedback</span>
-        <textarea style="display:block;" rows="4" nz-input [(ngModel)]="inputValue"></textarea>
+        <textarea style="display:block;" rows="4" nz-input [(ngModel)]="comment"></textarea>
     </nz-modal>
 </div>
 <app-training-viewer style="width:100%;height:100%;" production="true"
-    (assessmentResult)="processAssessmentResult($event)"></app-training-viewer>
+    (assessmentResult)="processAssessmentResult($event)"></app-training-viewer> 

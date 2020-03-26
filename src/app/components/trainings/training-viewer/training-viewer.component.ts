@@ -1185,23 +1185,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
     this.slideNewQuestionHash[this.currentAssessmentItemIndex] = true;
   }
-  /*
-    setAssessmentType(type) {
-      if (type === 'choiceFeedback') {
-        this.assessmentType.choice = true;
-        this.assessmentType.question = false;
-        this.assessmentType.assessment = false;
-      } else if (type === 'questionFeedback') {
-        this.assessmentType.choice = false;
-        this.assessmentType.question = true;
-        this.assessmentType.assessment = false;
-      } else if (type === 'assessmentFeedback') {
-        this.assessmentType.choice = false;
-        this.assessmentType.question = false;
-        this.assessmentType.assessment = true;
-      }
-    }
-    */
 
   assessmentChanged(event) {
     this.trainingWC.assessment.passingGrade = event;

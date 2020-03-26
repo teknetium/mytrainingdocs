@@ -152,3 +152,7 @@
 nz-select {
 	width: 100%;
 }
+
+.small ::ng-deep .ant-rate-star {
+    font-size: 12px;
+}

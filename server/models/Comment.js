@@ -13,6 +13,7 @@ const trainingCommentSchema = new Schema({
   version: { type: String, required: true },
   author: { type: String, required: true },
   text: { type: String, required: true },
+  rating: { type: Number, required: true },
   date: { type: Number, required: true }
 })
 

@@ -3,9 +3,10 @@ import { Observable, Subscription } from 'rxjs';
 import { UserModel } from '../../../shared/interfaces/user.type';
 import { TrainingModel, TrainingIdHash } from '../../../shared/interfaces/training.type';
 import { TrainingService } from '../../../shared/services/training.service';
+import { CommentService } from '../../../shared/services/comment.service';
 import { UserService } from '../../../shared/services/user.service';
 import { UserTrainingService } from '../../../shared/services/userTraining.service';
-import { UserTrainingModel, UserTrainingHash } from 'src/app/shared/interfaces/userTraining.type';
+import { UserTrainingModel, UserTrainingHash, UidUserTrainingHash } from 'src/app/shared/interfaces/userTraining.type';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../../base.component';
 
@@ -37,20 +38,22 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     }
   };
 
-  userTrainingHash$: Observable<UserTrainingHash>;
+//  userTrainingHash$: Observable<UserTrainingHash>;
+  uidUserTrainingHash$: Observable<UidUserTrainingHash>;
   userTrainings: UserTrainingModel[];
   trainingIdHash$: Observable<TrainingIdHash>;
   trainingIdHash: TrainingIdHash;
   selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
   selectedTraining$: Observable<TrainingModel>;
-
+  
   @Input() mode = '';
   @Input() logSession = 'off';
 
   currentUserTraining: string;
   markCompletedModalIsVisible: boolean;
   trainingIsVisible: boolean;
+  utIdHash = {};
   comment = '';
   rating = 0;
 
@@ -59,10 +62,11 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     private userService: UserService,
     private userTrainingService: UserTrainingService,
     private trainingService: TrainingService,
+    private commentService: CommentService,
     private cd: ChangeDetectorRef,
   ) {
     super();
-    this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
+    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
@@ -83,21 +87,27 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     })
 
     this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
+      console.log('selectedUser$', user);
       if (!user) {
         return;
       }
+      this.userTrainings = [];
       this.selectedUser = user;
       this.userTrainingService.loadTrainingsForUser(user._id);
+      this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
+        console.log('uidUserTrainingHash$', uidUserTrainingHash);
+        let userTrainingHash = uidUserTrainingHash[this.selectedUser._id];
+        if (Object.keys(userTrainingHash).length === 0) {
+          return;
+        }
+        this.userTrainings = Object.values(userTrainingHash);
+        for (let ut of this.userTrainings) {
+          this.utIdHash[ut._id] = ut;
+        }
+        this.cd.detectChanges();
+      })
     });
 
-    this.userTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainingHash => {
-      if (!userTrainingHash) {
-        return;
-      }
-      console.log('userTrainingHash$.subscribe', userTrainingHash);
-      this.userTrainings = Object.values(userTrainingHash);
-      this.cd.detectChanges();
-    })
   }
 
   timeFormat(ms): string {
@@ -136,11 +146,36 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   }
 
   markTrainingAsComplete() {
+    let comment = {
+      _id: String(new Date().getTime()),
+      tid: this.utIdHash[this.currentUserTraining].tid,
+      version: this.trainingIdHash[this.utIdHash[this.currentUserTraining].tid].versions[0].version,
+      author: this.selectedUser._id,
+      text: this.comment,
+      rating: this.rating,
+      date: new Date().getTime()
+    }
     this.markCompletedModalIsVisible = false;
-    this.userTrainingService.markUserTrainingAsComplete(this.currentUserTraining);
+    this.utIdHash[this.currentUserTraining].dateCompleted = new Date().getTime();
+    this.utIdHash[this.currentUserTraining].status = 'completed';
+    this.userTrainingService.saveUserTraining(this.utIdHash[this.currentUserTraining]);
+    this.commentService.saveTrainingComment(comment);
+    console.log('markTrainingAsComplete', comment);
+  }
+
+  ratingChanged(event) {
+    this.rating = event;
   }
 
   processAssessmentResult(event: { tid: string, score: number, pass: boolean }) {
+    if (event.pass) {
+      this.utIdHash[this.currentUserTraining].passedAssessment = true;
+      this.utIdHash[this.currentUserTraining].score = event.score;
+//      this.utIdHash[this.currentUserTraining].dateCompleted = new Date().getTime();
+//      this.utIdHash[this.currentUserTraining].status = 'completed';
+      this.userTrainingService.saveUserTraining(this.utIdHash[this.currentUserTraining]);
+      this.markAsComplete(this.currentUserTraining);
+    }
     this.userTrainingService.setAssessmentResult(this.selectedUser._id, event.tid, event.score, event.pass);
   }
 

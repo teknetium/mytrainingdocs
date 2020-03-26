@@ -25,7 +25,7 @@ export interface TrainingModel {
   iconSource: string,
   files: string[],
   pages: Page[],
-  rating: number[],
+  rating: Rating[],
   assessment: Assessment,
   useAssessment: boolean,
   interestList: string[],
@@ -41,6 +41,12 @@ export interface AssessmentItem {
   question: string,
   choices: string[],
   correctChoice: number
+}
+
+export interface Rating {
+  rating: number,
+  comment: string,
+  version: string
 }
 
 

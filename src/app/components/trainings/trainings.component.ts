@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
-import { Comment } from '../../shared/interfaces/comment.type';
+import { CommentModel } from '../../shared/interfaces/comment.type';
 import { TrainingService } from '../../shared/services/training.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { AuthService } from '../../shared/services/auth.service';
@@ -13,6 +13,7 @@ import { UserService } from '../../shared/services/user.service';
 import { Router } from '@angular/router';
 import { take, takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
+import { CommentService } from 'src/app/shared/services/comment.service';
 
 
 @Component({
@@ -30,6 +31,9 @@ export class TrainingsComponent extends BaseComponent implements OnInit {
   cursor = '';
   edit = false;
   
+  commentHash = {};
+  ratingHash = {};
+  showCommentsPanel = false;
 
   iconColor = 'red';
   iconClass = 'far fa-fw fa-file';
@@ -46,10 +50,12 @@ export class TrainingsComponent extends BaseComponent implements OnInit {
   myTeamIdHash$: Observable<UserIdHash>;
   myTeamIdHash: UserIdHash;
   selectedTrainingId = null;
+  currentTrainingId = '';
   
   constructor(
     private formBuilder: FormBuilder,
     private trainingService: TrainingService,
+    private commentService: CommentService,
     private userTrainingService: UserTrainingService,
     private userService: UserService) {
     super();
@@ -81,6 +87,15 @@ export class TrainingsComponent extends BaseComponent implements OnInit {
             continue;
           } else {
             this.trainings.push(training);
+            this.commentService.getComments$(training._id).subscribe(comments => {
+              this.commentHash[training._id] = comments;
+              let ratingTotal = 0;
+              for (let index in comments) {
+                ratingTotal = ratingTotal + comments[index].rating;
+              }
+              this.ratingHash[training._id] = ratingTotal / comments.length;
+              console.log('ratings', ratingTotal, comments);
+            })
           }
         }
       } else {
@@ -137,4 +152,8 @@ export class TrainingsComponent extends BaseComponent implements OnInit {
 
   }
 
+  showComments(tid) {
+    this.currentTrainingId = tid;
+    this.showCommentsPanel = true;
+  }
 }

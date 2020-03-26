@@ -4,7 +4,7 @@ import { UserTrainingService } from '../../shared/services/userTraining.service'
 import { TrainingService } from '../../shared/services/training.service';
 import { Observable, Subscription } from 'rxjs';
 import { UserModel } from 'src/app/shared/interfaces/user.type';
-import { UserTrainingHash } from 'src/app/shared/interfaces/userTraining.type';
+import { UidUserTrainingHash } from 'src/app/shared/interfaces/userTraining.type';
 import { TrainingModel } from 'src/app/shared/interfaces/training.type';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
@@ -34,7 +34,7 @@ export class CalendarComponent extends BaseComponent implements OnInit {
 
   trainings$: Observable<TrainingModel[]>;
   trainings: TrainingModel[];
-  userTrainingHash$: Observable<UserTrainingHash>;
+  uidUserTrainingHash$: Observable<UidUserTrainingHash>;
   selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
   days: Day[];
@@ -62,6 +62,7 @@ export class CalendarComponent extends BaseComponent implements OnInit {
     private trainingService: TrainingService) {
     super();
     this.selectedUser$ = this.userService.getSelectedUserStream();
+    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
 
     for (let i = 0; i < 12; i++) {
       let days = new Array<Day>(this.monthDays[i]);
@@ -90,56 +91,55 @@ export class CalendarComponent extends BaseComponent implements OnInit {
         return;
       }
       this.selectedUser = user;
-      this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
-
       this.userTrainingService.loadTrainingsForUser(this.selectedUser._id);
+      this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
+        let utHash = uidUserTrainingHash[this.selectedUser._id];
+        let userTrainings = Object.values(utHash);
+        // reset earlistMonth and latestMonth
+        this.earliestMonth = 11;
+        this.latestMonth = 0;
+        let today = new Date().getTime();
+        if (userTrainings.length > 0) {
+          for (let userTraining of userTrainings) {
+            if (userTraining.dueDate === 0) {
+              continue;
+            }
+            let dueDateDOM = new Date(userTraining.dueDate).getDate();
+            let dueDateMOY = new Date(userTraining.dueDate).getMonth();
+            let dueDateYear = new Date(userTraining.dueDate).getFullYear();
+            if (dueDateYear === this.currentYear) {
+              if (dueDateMOY < this.earliestMonth) {
+                this.earliestMonth = dueDateMOY;
+              }
+              if (dueDateMOY > this.latestMonth) {
+                this.latestMonth = dueDateMOY;
+              }
+            }
+            this.year[dueDateMOY].days[dueDateDOM].trainingsDue.push(userTraining.tid);
+          }
+
+          for (let i = 0; i < 12; i++) {
+            if (i < this.earliestMonth || i > this.latestMonth) {
+              this.showMonth[this.monthNames[i]] = 'false';
+            } else {
+              this.visibleMonthCnt++;
+              this.showMonth[this.monthNames[i]] = 'true';
+            }
+          }
+          this.calendarHeight = this.visibleMonthCnt * 34;
+
+
+          let sub: Subscription;
+          this.trainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(trainings => {
+            this.trainings = trainings;
+            for (let i = 0; i < this.trainings.length; i++) {
+              this.trainingIdHash[this.trainings[i]._id] = this.trainings[i];
+            }
+          })
+        }
     });
 
 
-    this.userTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(utHash => {
-      let userTrainings = Object.values(utHash);
-      // reset earlistMonth and latestMonth
-      this.earliestMonth = 11;
-      this.latestMonth = 0;
-      let today = new Date().getTime();
-      if (userTrainings.length > 0) {
-        for (let userTraining of userTrainings) {
-          if (userTraining.dueDate === 0) {
-            continue;
-          }
-          let dueDateDOM = new Date(userTraining.dueDate).getDate();
-          let dueDateMOY = new Date(userTraining.dueDate).getMonth();
-          let dueDateYear = new Date(userTraining.dueDate).getFullYear();
-          if (dueDateYear === this.currentYear) {
-            if (dueDateMOY < this.earliestMonth) {
-              this.earliestMonth = dueDateMOY;
-            }
-            if (dueDateMOY > this.latestMonth) {
-              this.latestMonth = dueDateMOY;
-            }
-          }
-          this.year[dueDateMOY].days[dueDateDOM].trainingsDue.push(userTraining.tid);
-        }
-
-        for (let i = 0; i < 12; i++) {
-          if (i < this.earliestMonth || i > this.latestMonth) {
-            this.showMonth[this.monthNames[i]] = 'false';
-          } else {
-            this.visibleMonthCnt++;
-            this.showMonth[this.monthNames[i]] = 'true';
-          }
-        }
-        this.calendarHeight = this.visibleMonthCnt * 34;
-
-
-        let sub: Subscription;
-        this.trainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(trainings => {
-          this.trainings = trainings;
-          for (let i = 0; i < this.trainings.length; i++) {
-            this.trainingIdHash[this.trainings[i]._id] = this.trainings[i];
-          }
-        })
-      }
 
 
       // If the current month is December then we just set nextMonth to January

@@ -33,6 +33,7 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
 import { VgOverlayPlayModule } from 'videogular2/compiled/overlay-play';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { PrettyJsonModule } from 'angular2-prettyjson';
+import { CommentService } from './shared/services/comment.service';
 
 const ngZorroConfig: NzConfig = {
     message: { nzTop: 300 },
@@ -82,6 +83,7 @@ registerLocaleData(en);
         UserTrainingService,
         FileService,
         SendmailService,
+        CommentService,
         NzModalService
     ],
     bootstrap: [AppComponent]

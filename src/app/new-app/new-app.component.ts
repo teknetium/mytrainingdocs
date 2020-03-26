@@ -13,7 +13,7 @@ import { FileService } from '../shared/services/file.service';
 import { NotificationService } from '../shared/services/notification.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { UserTrainingHash } from '../shared/interfaces/userTraining.type';
+import { UidUserTrainingHash } from '../shared/interfaces/userTraining.type';
 import { VgAPI } from 'videogular2/compiled/core';
 import { filter } from 'rxjs/operators';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -88,6 +88,7 @@ export interface Task {
     ]),
   ]
 })
+  
 export class NewAppComponent extends BaseComponent implements OnInit {
 
   aboutThisPageHash = {
@@ -239,7 +240,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
   fileIdToDelete: string;
 
-  userTrainingHash$: Observable<UserTrainingHash>;
+  uidUserTrainingHash$: Observable<UidUserTrainingHash>;
   myTrainingIdHash$: Observable<TrainingIdHash>;
   teamTrainingCnt$: Observable<number>;
   myTeamIdHash$: Observable<UserIdHash>;
@@ -278,7 +279,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {
     super();
-    this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
+    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
     this.teamTrainingCnt$ = this.trainingService.getTeamTrainingCntStream();
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
@@ -305,7 +306,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 //        this.playTaskVideo('gettingStarted');
       }
       this.authenticatedUser = user;
-      this.userTrainingService.loadTrainingsForUser(user._id);
+      this.userTrainingService.initUserTrainingsForUser(user._id);
       this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(teamIdHash => {
         if (!teamIdHash) {
           return;
@@ -319,15 +320,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       this.teamTrainingCnt$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(cnt => {
         this.teamTrainingCnt = cnt;
       });
-      this.userTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(utHash => {
-        if (!utHash) {
-          return;
-        }
-        let uts = Object.values(utHash);
-        for (let ut of uts) {
-          if (ut.uid === this.authenticatedUser._id) {
-            this.myTrainingCnt = uts.length;
-          }
+      this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
+        if (uidUserTrainingHash[this.authenticatedUser._id]) {
+          let uts = Object.values(uidUserTrainingHash[this.authenticatedUser._id]);
+          this.myTrainingCnt = uts.length;
         }
       })
     })
@@ -405,6 +401,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   updateUserSettings(event, property) {
     this.authenticatedUser.settings[property] = event;
     this.userService.updateUser(this.authenticatedUser, false);
+    this.userService.selectAuthenticatedUser();
   }
 
   playTaskVideo(taskName) {

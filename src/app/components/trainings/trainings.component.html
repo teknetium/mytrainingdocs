@@ -41,6 +41,7 @@
                 <th nzShowExpand></th>
                 <th nzShowSort>State</th>
                 <th nzShowSort>Title</th>
+                <th nzShowSort>Rating</th>
                 <th>Version</th>
                 <th nzShowSort>Date Created</th>
                 <th>Actions</th>
@@ -52,11 +53,11 @@
                   <td nzShowExpand [(nzExpand)]="data.expand" nz-tooltip nzTooltipTitle="Show Version History"></td>
                   <td style="vertical-align: middle;">
                     <i *ngIf="data.status === 'unlocked'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
-                      style="display:inline-block;font-size:20px;vertical-align: middle;" nz-tooltip nzTooltipTitle="This training is being edited."
-                      [nzTwotoneColor]="'#52c41a'"></i>
+                      style="display:inline-block;font-size:20px;vertical-align: middle;" nz-tooltip
+                      nzTooltipTitle="This training is being edited." [nzTwotoneColor]="'#52c41a'"></i>
                     <i *ngIf="data.status === 'locked'" nz-icon nzType="lock" [nzTheme]="'twotone'"
                       style="display:inline-block;font-size:20px;vertical-align: middle;" [nzTwotoneColor]="'red'"
-                       nz-tooltip nzTooltipTitle="This training is locked."></i>
+                      nz-tooltip nzTooltipTitle="This training is locked."></i>
                   </td>
                   <td>
                     <i [ngClass]="data.iconClass" style="font-size:22px;margin-right:10px;vertical-align: middle;"
@@ -64,22 +65,25 @@
                     </i>
                     {{ data.title }}
                   </td>
+                  <td>
+                    <nz-rate nzDisabled [(ngModel)]="ratingHash[data._id]" class="small"></nz-rate>
+                  </td>
                   <td>{{ versionFormatter(data.versions[0].version) }}</td>
                   <td>{{ data.dateCreated | date:'mediumDate' }}</td>
                   <td>
                     <i nz-icon nzType="edit" [nzTheme]="'twotone'"
-                      style="cursor:pointer;font-size:16px;vertical-align: middle;margin-right:15px;" (click)="selectTraining(data._id)"
-                      nz-tooltip nzTooltipTitle="Edit Training">
+                      style="cursor:pointer;font-size:16px;vertical-align: middle;margin-right:15px;"
+                      (click)="selectTraining(data._id)" nz-tooltip nzTooltipTitle="Edit Training">
                     </i>
                     <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
-                      style="cursor:pointer;font-size:16px;vertical-align: middle;margin-right:15px;" (click)="showComments(data._id)"
-                      nz-tooltip nzTooltipTitle="View Comments">
+                      style="cursor:pointer;font-size:16px;vertical-align: middle;margin-right:15px;"
+                      (click)="showComments(data._id)" nz-tooltip nzTooltipTitle="View Comments">
                     </i>
                     <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
                       style="cursor:pointer;font-size:18px;vertical-align: middle;" nz-popconfirm
                       nzPopconfirmTitle="Delete this Training?" [nzPopconfirmTrigger]="'click'"
-                      [nzPopconfirmPlacement]="'top'" (nzOnConfirm)="deleteTraining(data._id)"
-                      nz-tooltip nzTooltipTitle="Delete Training">
+                      [nzPopconfirmPlacement]="'top'" (nzOnConfirm)="deleteTraining(data._id)" nz-tooltip
+                      nzTooltipTitle="Delete Training">
                     </i>
                   </td>
                 </tr>
@@ -121,15 +125,25 @@
           <ng-template #versionTableTitle>
             <div style="font-size:14px;text-align: center;color: blue;font-weight:500;">
               <span style="font-size:14px;text-align: center;color: blue;">Version History</span>
-            </div>  
+            </div>
           </ng-template>
+        </div>
+        <div *ngIf="showComments">
+          <div *ngIf="currentTrainingId">
+            <i [ngClass]="trainingIdHash[currentTrainingId].iconClass"
+              style="font-size:22px;margin-right:10px;vertical-align: middle;" [ngStyle]="{'color': data.iconColor}">
+            </i>
+            {{ trainingIdHash[currentTrainingId].title }}
+          </div>
+          <div *ngFor="let comment of commentHash[currentTrainingId]">
+            {{ comment.text }}
+          </div>
         </div>
         <div *ngIf="trainings && trainings.length === 0" style="text-align: center;margin-top:40px;">
           <span style="font-size:20px;font-weight: 200;display:block;">You haven't created any trainings yet!</span>
-          <button nz-button nzType="primary" nzShape="round" (click)="newTraining()" style="margin-top: 20px;">Create a
-            New
-            Training</button>
-
+          <button nz-button nzType="primary" nzShape="round" (click)="newTraining()" style="margin-top: 20px;">
+            Create a New Training
+          </button>
         </div>
         <div style="padding:10px;height:90%;">
           <app-training-viewer></app-training-viewer>

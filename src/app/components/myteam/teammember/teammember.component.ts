@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { UserTrainingHash } from '../../../shared/interfaces/userTraining.type';
+import { UidUserTrainingHash } from '../../../shared/interfaces/userTraining.type';
 import { TrainingModel, TrainingIdHash } from 'src/app/shared/interfaces/training.type';
 import { UserTrainingService } from '../../../shared/services/userTraining.service';
 import { TrainingService } from '../../../shared/services/training.service';
@@ -34,7 +34,7 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
   assignableTrainings: TrainingModel[] = [];
   teamTrainings: TrainingModel[] = [];
   trainings: TrainingModel[] = [];
-  userTrainingHash$: Observable<UserTrainingHash>;
+  uidUserTrainingHash$: Observable<UidUserTrainingHash>;
   showUserTrainingModal = false;
   selectedUser$: Observable<UserModel>;
   authenticatedUser$: Observable<UserModel>;
@@ -51,7 +51,7 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
   ) {
     super();
     this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
-    this.userTrainingHash$ = this.userTrainingService.getUserTrainingHashStream();
+    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
   }
@@ -76,29 +76,6 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
         }
       })
     })
-
-    this.userTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(utHash => {
-      this.assignableTrainings = [];
-      if (!utHash) {
-        return;
-      }
-      let utList = Object.values(utHash);
-      let tids = [];
-      for (let ut of utList) {
-        tids.push(ut.tid);
-      }
-      for (let training of this.teamTrainings) {
-        if (tids.includes(training._id)) {
-          continue;
-        } else {
-          if (training.versions.length === 0) {
-            continue;
-          }
-          this.assignableTrainings.push(training);
-        }
-      }
-
-    })
     this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         return;
@@ -106,6 +83,26 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
       this.userIdSelected = user._id;
       this.trainingService.selectTraining(null);
 
+      this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
+        this.assignableTrainings = [];
+        let utHash = uidUserTrainingHash[this.userIdSelected];
+        let utList = Object.values(utHash);
+        let tids = [];
+        for (let ut of utList) {
+          tids.push(ut.tid);
+        }
+        for (let training of this.teamTrainings) {
+          if (tids.includes(training._id)) {
+            continue;
+          } else {
+            if (training.versions.length === 0) {
+              continue;
+            }
+            this.assignableTrainings.push(training);
+          }
+        }
+
+      })
     });
   }
 

@@ -60,7 +60,7 @@ module.exports = function(app, config) {
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId org supervisorId profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
-  const commentListProjection = "_id tid version author text date";
+  const commentListProjection = "_id tid version author text rating date";
   const utSessionProjection = "_id utId uid tid startTime stopTime";
 
   // GET API root
@@ -1003,7 +1003,7 @@ app.put("/api/trainingsworkingcopy/:id", jwtCheck, (req, res) => {
   // Comment methods
   //
   app.get("/api/comments/:trainingId", (req, res) => {
-    Comment.find({}, commentListProjection, (err, comments) => {
+    Comment.find({ tid: req.params.trainingId}, commentListProjection, (err, comments) => {
       let commentsArr = [];
       if (err) {
         return res.status(500).send({ message: err.message });
@@ -1013,7 +1013,7 @@ app.put("/api/trainingsworkingcopy/:id", jwtCheck, (req, res) => {
           commentsArr.push(comment);
         });
       }
-      res.send(eventsArr);
+      res.send(commentsArr);
     });
   });
   app.post("/api/comments/new", jwtCheck, (req, res) => {
@@ -1021,6 +1021,8 @@ app.put("/api/trainingsworkingcopy/:id", jwtCheck, (req, res) => {
       tid: req.body.tid,
       date: req.body.date,
       text: req.body.text,
+      rating: req.body.rating,
+      rating: req.body.rating,
       author: req.body.author,
       version: req.body.version,
       _id: req.body._id,
@@ -1032,4 +1034,21 @@ app.put("/api/trainingsworkingcopy/:id", jwtCheck, (req, res) => {
       res.send(commentObj);
     });
   });
+  app.delete("/api/comments/:id", jwtCheck, (req, res) => {
+    Comment.findById(req.params.id, (err, comment) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (!event) {
+        return res.status(400).send({ message: "Event not found." });
+      }
+      comment.remove(err2 => {
+        if (err2) {
+          return res.status(500).send({ message: err2.message });
+        }
+        res.status(200).send({ message: "Comment successfully deleted." });
+      });
+    });
+  });
+
 };

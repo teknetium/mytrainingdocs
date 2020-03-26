@@ -31,5 +31,4 @@ export interface UserTrainingHash {
 
 export interface UidUserTrainingHash {
   [indexer: string]: UserTrainingHash;
-
 }
