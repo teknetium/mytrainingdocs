@@ -15,7 +15,6 @@ import { ENV } from './env.config';
 export class CommentService {
 
   private trainingCommentsBS$ = new BehaviorSubject<CommentModel[]>([]);
-  private trainingComments
 
   constructor(
     private auth: AuthService,

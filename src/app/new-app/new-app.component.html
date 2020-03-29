@@ -37,7 +37,7 @@
                     <span style="position:absolute;top:-23px;right:6px;">{{myTeamCnt}}</span>
                 </div>
             </li>
-            <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor' || (authenticatedUser$ | async)?.adminUp"
+            <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor' || (authenticatedUser$ | async)?.teamAdmin"
                 nz-menu-item nzMatchRouter>
                 <a routerLink="/trainings" routerLinkActive="active-link">
                     All Trainings
@@ -53,7 +53,7 @@
                 </a>
             </li>
             -->
-            <li style="float:right;margin-right:20px;">
+            <li style="float:right;margin-right:20px;" nz-tooltip nzTooltipTitle="Settings" nzTooltipPlacement="bottomLeft" >
                 <a (click)="quickViewToggle()">
                     <i nz-icon nzType="setting" theme="outline" style="color:white;font-size:20px;"></i>
                 </a>
@@ -62,10 +62,10 @@
                     <div>
                         <div class="settings-item-left">
                             <i nz-icon nzType="info-circle" [nzTheme]="'twotone'" style="font-size:24px;"></i>
-                            Show Page Info
+                            <span style="vertical-align: middle;margin-left:10px;font-size: 18px;">Show Page Info</span>
                         </div>
                         <div class="settings-item-right">
-                            <nz-switch nzSize="small" [(ngModel)]="user.settings.showPageInfo" (ngModelChange)="updateUserSettings($event, 'showPageInfo')"></nz-switch>
+                            <nz-switch  [(ngModel)]="user.settings.showPageInfo" (ngModelChange)="updateUserSettings($event, 'showPageInfo')"></nz-switch>
                         </div>
                     </div>
                     <!--
@@ -128,11 +128,10 @@
                     </ul>
                 </nz-dropdown-menu>
             </li>
-            <!--
-            <li nz-menu-item style="float:right;">
+            <li nz-menu-item style="float:right;" nz-tooltip nzTooltipTitle="Notifications" nzTooltipPlacement="bottomLeft">
                 <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="popNotification" [nzPlacement]="'bottomRight'">
                     <nz-badge nzDot>
-                        <i nz-icon nzType="bell" theme="outline" style="color:white;font-size:20px;"></i>
+                        <i nz-icon nzType="notification" theme="outline" style="color:white;font-size:20px;"></i>
                     </nz-badge>
                 </a>
                 <nz-dropdown-menu #popNotification="nzDropdownMenu">
@@ -167,7 +166,6 @@
                     </div>
                 </nz-dropdown-menu>
             </li>
-            --> 
         </ul>
     </nz-header>
     <nz-content class="inner-content">

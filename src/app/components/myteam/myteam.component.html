@@ -79,7 +79,7 @@
                                     register their team</label>
                             </div>
                             -->
-                            <label nz-checkbox ngDefaultControl [(ngModel)]="newTeamMember.adminUp" style="margin-top:5px;font-size:12px;" nz-tooltip
+                            <label nz-checkbox ngDefaultControl [(ngModel)]="newTeamMember.teamAdmin" style="margin-top:5px;font-size:12px;" nz-tooltip
                                 nzTooltipTitle="Give this person the ability to create, update, delete trainings.">Training
                                 Admin
                                 Access</label>
@@ -113,7 +113,7 @@
                                             [ngStyle]="{'color': trainingStatusColorHash[user.trainingStatus]}"></i>&nbsp;
                                         <span style="display:inline-block">{{ user.firstName }} {{ user.lastName }}
                                         </span>&nbsp;
-                                        <i *ngIf="user.adminUp === true" nz-icon nzType="crown" [nzTheme]="'twotone'"
+                                        <i *ngIf="user.teamAdmin === true" nz-icon nzType="crown" [nzTheme]="'twotone'"
                                             [nzTwotoneColor]="'#6939c9'"
                                             style="display:inline-block;font-size:18px;vertical-align:baseline;"
                                             nz-tooltip nzTooltipTitle="Admin User"></i>
@@ -193,7 +193,7 @@
                 <label nz-checkbox ngDefaultControl [(ngModel)]="includeNewSupervisorsTeam">Have this supervisor
                     register their team</label>
             </div>
-            <label nz-checkbox ngDefaultControl [(ngModel)]="newTeamMember.adminUp" nz-tooltip
+            <label nz-checkbox ngDefaultControl [(ngModel)]="newTeamMember.teamAdmin" nz-tooltip
                 nzTooltipTitle="Give this person the ability to create, update, delete trainings.">Training Admin
                 Access</label>
         </nz-modal>

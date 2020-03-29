@@ -7,6 +7,7 @@
 const jwt = require("express-jwt");
 const jwks = require("jwks-rsa");
 const Training = require("./models/Training");
+const TrainingArchive = require("./models/TrainingArchive");
 const UserTraining = require("./models/UserTraining");
 const User = require("./models/User");
 const File = require("./models/File");
@@ -35,6 +36,7 @@ module.exports = function(app, config) {
     algorithm: "RS256",
   });
 
+
   // Check for an authenticated admin user
   const adminCheck = (req, res, next) => {
     const roles = req.user[config.NAMESPACE] || [];
@@ -55,9 +57,10 @@ module.exports = function(app, config) {
  |--------------------------------------
  */
 
-  const trainingListProjection = "_id title versions versionsHash versionPending type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated files pages estimatedTimeToComplete jobTitle assessment useAssessment rating status interestList shared isValid isDirty";
+  const trainingArchiveProjection = "_id trainings";
+  const trainingListProjection = "_id title versions type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle assessment useAssessment status interestList shared isValid isDirty";
   const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponse passedAssessment score trainingVersion";
-  const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email adminUp teamId org supervisorId profilePicUrl settings";
+  const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email teamAdmin orgAdmin appAdmin teamId org supervisorId profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const commentListProjection = "_id tid version author text rating date";
@@ -189,8 +192,6 @@ module.exports = function(app, config) {
       title: req.body.title,
       type: req.body.type,
       versions: req.body.versions,
-      versionsHash: req.body.versionsHash,
-      versionPending: req.body.versionPending,
       teamId: req.body.teamId,
       owner: req.body.owner,
       dateCreated: req.body.dateCreated,
@@ -207,11 +208,9 @@ module.exports = function(app, config) {
       iconClass: req.body.iconClass,
       iconColor: req.body.iconColor,
       iconSource: req.body.iconSource,
-      files: req.body.files,
       pages: req.body.pages,
       assessment: req.body.assessment,
       useAssessment: req.body.useAssessment,
-      rating: req.body.rating,
       status: req.body.status,
       interestList: req.body.interestList,
       shared: req.body.shared,
@@ -236,8 +235,6 @@ module.exports = function(app, config) {
       training._id = req.body._id;
       training.type = req.body.type;
       training.versions = req.body.versions;
-      training.versionsHash = req.body.versionsHash;
-      training.versionPending = req.body.versionPending;
       training.title = req.body.title;
       training.teamId = req.body.teamId;
       training.owner = req.body.owner;
@@ -257,7 +254,6 @@ module.exports = function(app, config) {
       training.iconSource = req.body.iconSource;
       training.files = req.body.files;
       training.pages = req.body.pages;
-      training.rating = req.body.rating;
       training.status = req.body.status;
       training.assessment = req.body.assessment;
       training.useAssessment = req.body.useAssessment;
@@ -412,13 +408,13 @@ app.put("/api/trainingsworkingcopy/:id", jwtCheck, (req, res) => {
       });
     });
   });
-
+*/
   //
   // Training Archive API
   //
   app.get("/api/trainingarchive/:id", (req, res) => {
     TrainingArchive.findOne({ _id: req.params.id },
-      trainingListProjection, (err, training) => {
+      trainingArchiveProjection, (err, training) => {
         if (err) {
           return res.status(500).send({ message: err.message });
         }
@@ -427,91 +423,33 @@ app.put("/api/trainingsworkingcopy/:id", jwtCheck, (req, res) => {
     );
   });
   app.post("/api/trainingarchive/new", jwtCheck, (req, res) => {
-    const training = new TrainingArchive({
+    const trainingArchive = new TrainingArchive({
       _id: req.body._id,
-      title: req.body.title,
-      type: req.body.type,
-      versions: req.body.versions,
-      versionPending: req.body.versionPending,
-      teamId: req.body.teamId,
-      owner: req.body.owner,
-      dateCreated: req.body.dateCreated,
-      estimatedTimeToComplete: req.body.estimatedTimeToComplete,
-      jobTitle: req.body.jobTitle,
-      description: req.body.description,
-      execSummary: req.body.execSummary,
-      execSummaryLabel: req.body.execSummaryLabel,
-      introduction: req.body.introduction,
-      introductionLabel: req.body.introductionLabel,
-      goals: req.body.goals,
-      goalsLabel: req.body.goalsLabel,
-      image: req.body.image,
-      iconClass: req.body.iconClass,
-      iconColor: req.body.iconColor,
-      iconSource: req.body.iconSource,
-      files: req.body.files,
-      pages: req.body.pages,
-      assessment: req.body.assessment,
-      useAssessment: req.body.useAssessment,
-      rating: req.body.rating,
-      status: req.body.status,
-      interestList: req.body.interestList,
-      shared: req.body.shared,
-      isValid: req.body.isValid,
-      isDirty: req.body.isDirty,
+      trainings: req.body.trainings
     });
-    TrainingArchive.create(training, function (err, trainingObj) {
+    TrainingArchive.create(trainingArchive, function (err, trainingArchiveObj) {
       if (err) {
         return res.status(500).send({ message: err.message });
       }
-      res.send(trainingObj);
+      res.send(trainingArchiveObj);
     });
   });
   app.put("/api/trainingarchive/:id", jwtCheck, (req, res) => {
-    TrainingArchive.findById(req.params.id, (err, training) => {
+    TrainingArchive.findById(req.params.id, (err, trainingArchive) => {
       if (err) {
         return res.status(500).send({ message: err.message });
       }
-      if (!training) {
-        return res.status(400).send({ message: "Training not found." });
+      if (!trainingArchive) {
+        return res.status(400).send({ message: "Training archive not found." });
       }
-      training._id = req.body._id;
-      training.type = req.body.type;
-      training.versions = req.body.versions;
-      training.versionPending = req.body.versionPending;
-      training.title = req.body.title;
-      training.teamId = req.body.teamId;
-      training.owner = req.body.owner;
-      training.dateCreated = req.body.dateCreated;
-      training.estimatedTimeToComplete = req.body.estimatedTimeToComplete;
-      training.jobTitle = req.body.jobTitle;
-      training.description = req.body.description;
-      training.introduction = req.body.introduction;
-      training.introductionLabel = req.body.introductionLabel;
-      training.goals = req.body.goals;
-      training.goalsLabel = req.body.goalsLabel;
-      training.execSummary = req.body.execSummary;
-      training.execSummaryLabel = req.body.execSummaryLabel;
-      training.image = req.body.image;
-      training.iconClass = req.body.iconClass;
-      training.iconColor = req.body.iconColor;
-      training.iconSource = req.body.iconSource;
-      training.files = req.body.files;
-      training.pages = req.body.pages;
-      training.rating = req.body.rating;
-      training.status = req.body.status;
-      training.assessment = req.body.assessment;
-      training.useAssessment = req.body.useAssessment;
-      training.interestList = req.body.interestList;
-      training.shared = req.body.shared;
-      training.isValid = req.body.isValid;
-      training.isDirty = req.body.isDirty;
+      trainingArchive._id = req.body._id;
+      trainingArchive.trainings = req.body.trainings;
 
-      training.save(err2 => {
+      trainingArchive.save(err2 => {
         if (err2) {
           return res.status(500).send({ message: err2.message });
         }
-        res.send(training);
+        res.send(trainingArchive);
       });
     });
   });
@@ -521,17 +459,17 @@ app.put("/api/trainingsworkingcopy/:id", jwtCheck, (req, res) => {
         return res.status(500).send({ message: err.message });
       }
       if (!foo) {
-        return res.status(400).send({ message: "Training not found." });
+        return res.status(400).send({ message: "Training archive not found." });
       }
       foo.remove(err2 => {
         if (err2) {
           return res.status(500).send({ message: err2.message });
         }
-        res.status(200).send({ message: "training successfully deleted." });
+        res.status(200).send({ message: "Training archive successfully deleted." });
       });
     });
   });
-*/
+
   //
   // UserTraining API
   //
@@ -770,7 +708,9 @@ app.put("/api/trainingsworkingcopy/:id", jwtCheck, (req, res) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        adminUp: req.body.adminUp,
+        teamAdmin: req.body.teamAdmin,
+        orgAdmin: req.body.orgAdmin,
+        appAdmin: req.body.appAdmin,
         teamId: req.body.teamId,
         org: req.body.org,
         userStatus: req.body.userStatus,
@@ -804,7 +744,9 @@ app.put("/api/trainingsworkingcopy/:id", jwtCheck, (req, res) => {
       user.firstName = req.body.firstName;
       user.lastName = req.body.lastName;
       user.email = req.body.email;
-      user.adminUp = req.body.adminUp,
+      user.teamAdmin = req.body.teamAdmin,
+      user.orgAdmin = req.body.orgAdmin,
+      user.appAdmin = req.body.appAdmin,
       user.userStatus = req.body.userStatus;
       user.trainingStatus = req.body.trainingStatus;
       user.jobTitle = req.body.jobTitle;

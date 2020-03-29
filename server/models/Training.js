@@ -55,11 +55,8 @@ const trainingSchema = new Schema({
       title: String,
       iconClass: String,
       iconColor: String,
-      trainingObj: Object
     }],
 
-  versionsHash: { type: Object, required: false },
-  versionPending: { type: String, required: false },
   status: { type: String, required: true },
   title: { type: String, required: true },
   teamId: { type: String, required: true },
@@ -78,11 +75,9 @@ const trainingSchema = new Schema({
   iconClass: { type: String, required: true },
   iconColor: { type: String, required: true },
   iconSource: { type: String, required: true },
-  files: [String],
   pages: [pageSchema],
   useAssessment: { type: Boolean },
   assessment: assessmentSchema,
-  rating: [Number],
   interestList: [String],
   shared: { type: Boolean },
   isValid: { type: Object },

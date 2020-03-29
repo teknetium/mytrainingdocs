@@ -1,18 +1,13 @@
 
 export interface NotificationModel {
     _id: string,
-    type: 'pastDue',
-    
+    type: 'pastDue' | 'message' | 'newTraining' | 'trainingUpdated' | 'newUser' | 'trainingCompleted' | 'trainingAssignment',
     tid: string,
-    status: string,
-    dueDate: number,
-//    public schedule: ScheduleItem[],
-    iconClass: string,
-    iconColor: string
+    uid: string,
+    name: string,
+    icon: string,
+    iconSource: 'fontAwesome' | 'ngZorro',
+    fgColor: string,
+    bgColor: string
   }
 
-export interface ScheduleItem {
-    daysPrior: number,
-    recipients: Array<string>,
-    message: string,
-}

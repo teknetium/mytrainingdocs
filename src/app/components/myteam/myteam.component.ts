@@ -90,7 +90,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     firstName: '',
     lastName: '',
     email: '',
-    adminUp: false,
+    teamAdmin: false,
+    appAdmin: false,
+    orgAdmin: false,
     userType: 'individualContributor',
     uid: '',
     userStatus: 'pending',
@@ -193,7 +195,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.newTeamMember.firstName = '';
     this.newTeamMember.lastName = '';
     this.newTeamMember.email = '';
-    this.newTeamMember.adminUp = false;
+    this.newTeamMember.teamAdmin = false;
     this.cd.detectChanges();
   }
 

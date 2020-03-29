@@ -1,6 +1,13 @@
-import { Injectable } from '@angular/core';
 import { NotificationModel } from '../interfaces/notification.type';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable, throwError as ObservableThrowError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { TrainingService } from '../services/training.service';
+import { EventModel } from '../interfaces/event.type';
+import { CommentModel } from '../interfaces/comment.type';
+import { AuthService } from './auth.service';
+import { ENV } from './env.config';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +20,10 @@ export class NotificationService {
   selectedNotificationBS$ = new BehaviorSubject<NotificationModel>(null);
   selectedNotificationIndexBS$ = new BehaviorSubject<number>(null);
 
-  constructor() {
-
+  constructor(
+    private auth: AuthService,
+    private http: HttpClient,
+  ) {
   }
 
   getNotificationsStream(): Observable<NotificationModel[]> {
@@ -26,7 +35,6 @@ export class NotificationService {
   }
 
   cancelNotificationSelection() {
-
   }
 
   create() {}
@@ -45,5 +53,50 @@ export class NotificationService {
 
   getSelectedNotificationIndexStream(): Observable<number> {
     return this.selectedNotificationIndexBS$.asObservable();
+  }
+
+  private get _authHeader(): string {
+    return `Bearer ${this.auth.accessToken}`;
+  }
+
+  // GET the comments associated with a specific training
+  getNotificationsForUid$(uid: string): Observable<NotificationModel[]> {
+    return this.http
+      .get<NotificationModel[]>(`${ENV.BASE_API}notifications/${uid}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+
+  // POST new comment (admin only)
+  postNotification$(notification: NotificationModel): Observable<NotificationModel> {
+    return this.http
+      .post<NotificationModel>(`${ENV.BASE_API}notifications/new`, notification, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+
+  // DELETE existing comment
+  deleteNotification$(id: string): Observable<NotificationModel> {
+    return this.http
+      .delete(`${ENV.BASE_API}notifications/${id}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+
+  private _handleError(err: HttpErrorResponse | any): Observable<any> {
+    const errorMsg = err.message || 'Error: Unable to complete request.';
+    if (err.message && err.message.indexOf('No JWT present') > -1) {
+      this.auth.login();
+    }
+    return ObservableThrowError(errorMsg);
   }
 }

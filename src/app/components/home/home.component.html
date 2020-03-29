@@ -42,7 +42,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="user.userType === 'individualContributor' && (authenticatedUser$ | async)?.adminUp"
+    <div *ngIf="user.userType === 'individualContributor' && (authenticatedUser$ | async)?.teamAdmin"
         style="margin-top: 20px;font-size:18px;padding:40px;">
         As an <span style="font-size:20px;color:blue;">Individual Contributor</span>, it is your responsibility to
         complete your trainings
@@ -53,7 +53,7 @@
         <br><br>
 
     </div>
-    <div *ngIf="user.userType === 'individualContributor' && !user.adminUp"
+    <div *ngIf="user.userType === 'individualContributor' && !user.teamAdmin"
         style="margin-top: 20px;font-size:18px;padding:40px;">
 
     </div>

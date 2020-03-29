@@ -4,7 +4,6 @@ export interface TrainingModel {
   _id: string,
   type: 'online' | 'system',
   versions: TrainingVersion[],
-  versionPending: string,
   status: 'locked' | 'unlocked' | 'archived',
   title: string,
   teamId: string,
@@ -23,9 +22,7 @@ export interface TrainingModel {
   iconClass: string,
   iconColor: string,
   iconSource: string,
-  files: string[],
   pages: Page[],
-  rating: Rating[],
   assessment: Assessment,
   useAssessment: boolean,
   interestList: string[],
@@ -75,7 +72,6 @@ export interface TrainingVersion {
   ownerId: string,
   dateCreated: number,
   changeLog: string,
-  trainingObj: TrainingModel
 }
 
 export interface Page {
@@ -111,3 +107,7 @@ export interface Comment {
   rating: number
 }
 
+export interface TrainingArchive {
+  _id: string,
+  trainings: TrainingModel[]
+}

@@ -36,9 +36,6 @@
 
 .header-left {
 	display: inline-block;
-	width: 60px;
-	text-align: center;
-	margin: 0;
 }
 
 .main-content-item {
@@ -49,7 +46,6 @@
 .header-right {
 	display: inline-block;
 	margin-left: 30px;
-	text-align: center;
 	width:100%;
 }
 
@@ -106,8 +102,12 @@
 	display: block;
 	background-color: #fcfcfc;
 	border-bottom: 1px solid #dddddd;
-	padding: 10px 5px 5px 10px;
+	padding: 10px 5px 0 10px;
 	position: relative;
+}
+.separator {
+	margin: 0 10px;
+	color:#bbbbbb;
 }
 
 .page-container {
@@ -280,6 +280,18 @@
 .header-icon {
 	display: inline-block;
 	margin-left:5px;
+}
+
+.ant-btn:focus {
+	background-color: #fff;
+}
+
+.ant-btn:hover {
+	background-color: #eeeeee;
+}
+
+.ant-btn-primary:hover, .ant-btn-primary:focus {
+	background-color: #5796f6;
 }
 
 .header-icon-container {

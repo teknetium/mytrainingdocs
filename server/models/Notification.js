@@ -9,16 +9,14 @@ const Schema = mongoose.Schema;
 
 const notificationSchema = new Schema({
   _id: { type: String, required: true },
+  type: { type: String, required: true },
   tid: { type: String, required: true },
   uid: { type: String, required: true },
-  trainingVersion: { type: String, required: false },
-  status: { type: String, required: true },
-  dueDate: { type: Number, required: false },
-  timeToDate: { type: Number, required: false },
-  score: { type: Number, required: false },
-  dateCompleted: { type: Number, required: false },
-  passedAssessment: { type: Boolean, required: false },
-  assessmentResponse: { type: [Number], required: false }
+  name: { type: String, required: true },
+  icon: { type: String, required: true },
+  iconSource: { type: String, required: true },
+  fgColor: { type: String, required: true },
+  bgColor: { type: String, required: true },
 })
 
-module.exports = mongoose.model("UserTraining", userTrainingSchema);
+module.exports = mongoose.model("Notification", notificationSchema);

@@ -6,7 +6,7 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Page, Portlet, TextBlock, Assessment, TrainingIdHash, TrainingVersion } from '../interfaces/training.type';
+import { TrainingModel, Page, Portlet, TextBlock, Assessment, TrainingIdHash, TrainingVersion, TrainingArchive } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.type';
 import { TrainingsModule } from 'src/app/components/trainings/trainings.module';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -38,13 +38,14 @@ export class TrainingService {
   private systemTrainingHash = {};
   private sharedTrainingHash = {};
   private allTrainingHash = {};
+  private trainingArchiveHash = {};
   private jobTitles: string[] = [];
   private teamTrainingIds: string[];
   private systemTrainingIds: string[];
   private sharedTrainingIds: string[];
   private allTrainingIds: string[];
 
-  trainingCollectionHash = {};
+  //  trainingCollectionHash = {};
   trainingWCCollectionHash = {};
 
   teamId: string;
@@ -81,18 +82,9 @@ export class TrainingService {
             teamTrainings = [];
           }
           for (let training of teamTrainings) {
-            this.trainingCollectionHash[training._id] = training;
-            /*
-            if (training.status === 'unlocked') {
-              this.getTrainingWCById$(training._id).subscribe(trainingObj => {
-                if (trainingObj) {
-                  this.trainingWCCollectionHash[trainingObj._id] = trainingObj;
-                  this.allTrainingHash[trainingObj._id] = trainingObj;
-                  this.teamTrainingHash[trainingObj._id] = trainingObj;
-                }
-              });
-            }
-            */
+            this.getTrainingArchive$(training._id).subscribe(trainingArchive => {
+              this.trainingArchiveHash[training._id] = trainingArchive;
+            });
             this.teamTrainingHash[training._id] = training;
             this.allTrainingHash[training._id] = training;
             if (training.jobTitle) {
@@ -139,58 +131,7 @@ export class TrainingService {
       }
     });
   }
-  /*
-    getTrainingVersions(tid: string) {
-      if (this.trainingWCCollectionHash[tid]) {
-        this.selectedTrainingVersionsHash[this.trainingWCCollectionHash[tid].versionPending] = this.trainingWCCollectionHash[tid];
-      }
-  
-      let versions = this.trainingCollectionHash[tid].versions;
-      this.archivedTrainingCnt = versions.length - 1;
-      let index;
-  
-      for (index in versions) {
-        if (index === 0) {
-          this.selectedTrainingVersionsHash[versions[index]] = this.trainingCollectionHash[tid];
-        } else {
-          this.trainingArchiveService.getArchivedTraining(tid, versions[index]).subscribe(training => {
-            if (training) {
-              this.selectedTrainingVersionsHash[training.versions[0]] = training;
-            }
-          })
-        }
-      }
-  
-  
-  
-      if (this.trainingWCCollectionHash[tid] && this.trainingWCCollectionHash[tid].versionPending === version) {
-        this.selectedTrainingVersionsHash[]
-        this.selectedTrainingBS$.next(this.trainingWCCollectionHash[tid]);
-      } else if (this.trainingCollectionHash[tid] && this.trainingCollectionHash[tid].versions[0] === version) {
-        this.selectedTrainingBS$.next(this.trainingCollectionHash[tid]);
-      } else {
-        let archivedTid = tid + '_' + version;
-        this.trainingArchiveService.getArchivedTraining(tid, version).subscribe(training => {
-          if (training) {
-            this.selectedTrainingBS$.next(training);
-          }
-        })
-      }
-    }
-    */
-  /*
-    getVersionsForTrainingId(tid): string[] {
-      return this.trainingCollectionHash[tid].versions;
-    }
-  
-    getMainCollectionObject(tid: string): TrainingModel {
-      return this.trainingCollectionHash[tid];
-    }
-  
-    getWCCollectionObject(tid: string): TrainingModel {
-      return this.trainingWCCollectionHash[tid];
-    }
-  */
+
   reloadTeamTrainings() {
     console.log('trainingService reloadTeamTrainings', this.teamId);
     this.teamTrainingHash = {};
@@ -201,7 +142,7 @@ export class TrainingService {
         teamTrainings = [];
       }
       for (let training of teamTrainings) {
-        this.trainingCollectionHash[training._id] = training;
+        //        this.trainingCollectionHash[training._id] = training;
         /*
         if (training.status === 'unlocked') {
           this.getTrainingWCById$(training._id).subscribe(trainingObj => {
@@ -236,7 +177,7 @@ export class TrainingService {
       this.teamTrainingHashBS$.next(this.teamTrainingHash);
       this.teamTrainingCntBS$.next(teamTrainingIds.length);
 
-
+      this.allTrainingHashBS$.next(this.allTrainingHash);
       console.log('reloadAllTrainings - teamTrainingHash, teamTrainingCnt', this.teamTrainingHash, teamTrainingIds);
       // Load system trainings
       /*
@@ -321,8 +262,6 @@ export class TrainingService {
       items: []
     }
 
-    let readOnlyTraining: TrainingModel;
-
     const newTraining = <TrainingModel>{
       _id: String(baseId),
       type: 'online',
@@ -347,7 +286,6 @@ export class TrainingService {
       iconClass: 'fad fa-graduation-cap',
       iconColor: 'orange',
       iconSource: 'fontawesome',
-      files: [],
       pages: [],
       assessment: assessment,
       useAssessment: true,
@@ -364,7 +302,7 @@ export class TrainingService {
 
     let newTrainingVersionObj: TrainingVersion = {
       _id: String(new Date().getTime()),
-      version: '1_0_0T',
+      version: '0_0_1',
       pending: true,
       changeLog: 'This is the new training template.',
       ownerId: this.authenticatedUser._id,
@@ -372,28 +310,31 @@ export class TrainingService {
       title: 'New Training',
       iconClass: 'fad fa-graduation-cap',
       iconColor: 'orange',
-      trainingObj: null
     };
     newTraining.versions.unshift(newTrainingVersionObj);
-    readOnlyTraining = cloneDeep(newTraining);
 
-    newTraining.versions[0].trainingObj = readOnlyTraining;
-
+    this.saveNewVersion(cloneDeep(newTraining));
     newTraining.status = 'unlocked';
 
     this.postTraining$(newTraining).subscribe(trainingObj => {
-      this.selectedTrainingBS$.next(trainingObj)  
-      this.selectedTrainingWCBS$.next(trainingObj)  
+      this.allTrainingHash[trainingObj._id] = trainingObj;
+      this.selectedTrainingBS$.next(trainingObj)
+      this.selectedTrainingWCBS$.next(trainingObj)
       this.reloadAllTrainings();
     });
   }
 
+  rollback(tid: string): TrainingModel {
+    return this.trainingArchiveHash[tid].trainings[0];
+  }
+
   selectVersion(training: TrainingModel) {
     this.selectedTrainingBS$.next(training);
-
+    this.selectedTrainingWCBS$.next(training  )
   }
 
   selectTrainingVersion(training: TrainingModel) {
+    this.selectedTrainingWCBS$.next(training)
     this.selectedTrainingBS$.next(training);
   }
   selectTrainingWC(training: TrainingModel) {
@@ -437,6 +378,24 @@ export class TrainingService {
     })
   }
 
+  loadArchivedVersion(tid, version) { 
+    let trainingArchive = this.trainingArchiveHash[tid];
+    if (!trainingArchive) {
+      console.log('loadArchivedVersion ...ERROR no trainingArchive object', this.trainingArchiveHash[tid]);
+    } else {
+      for (let training of trainingArchive.trainings) {
+        if (training.versions[0].version === version) {
+          this.selectTrainingVersion(training);
+          break;
+        }
+      }
+    } 
+  }
+/*
+  createTrainingArchive(training: TrainingModel) {
+
+  }
+*/
   createTraining(training: TrainingModel) {
     this.postTraining$(training).subscribe(trainingObj => {
       this.reloadAllTrainings();
@@ -468,12 +427,33 @@ export class TrainingService {
       );
   }
 
+  getTrainingArchive$(trainingId: string): Observable<TrainingArchive> {
+    return this.http
+      .get<TrainingArchive>(`${ENV.BASE_API}trainingarchive/${trainingId}`)
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+
   saveNewVersion(training: TrainingModel) {
-    console.log('saveNewVersion', training);
+    let trainingArchive = this.trainingArchiveHash[training._id];
+    if (trainingArchive) {
+      trainingArchive.trainings.unshift(training);
+      this.putTrainingArchive$(trainingArchive).subscribe(tA => {
+        console.log('TrainingService:saveNewVersion...archive', tA);
+      })
+    } else {
+      trainingArchive = {
+        _id: training._id,
+        trainings: [training]
+      }
+      this.postTrainingArchive$(trainingArchive).subscribe(tA => {
+        this.trainingArchiveHash[training._id] = trainingArchive;
+      })
+    }
     this.editTraining$(training).subscribe(data => {
-      console.log('TrainingService:saveNewVersion', training, data);
       this.selectedTrainingVersionsBS$.next(training.versions);
-//      this.selectedTrainingBS$.next(data);
+      //      this.selectedTrainingBS$.next(data);
       this.reloadAllTrainings();
     });
 
@@ -481,9 +461,10 @@ export class TrainingService {
 
   saveTraining(training: TrainingModel, reload: boolean) {
     this.trainingIsDirtyBS$.next(true);
+    training.isDirty = true
     this.editTraining$(training).subscribe(data => {
       if (reload) {
-//        this.selectedTrainingBS$.next(data);
+        //        this.selectedTrainingBS$.next(data);
         this.reloadAllTrainings();
         this.selectTrainingVersion(training)
       }
@@ -525,6 +506,15 @@ export class TrainingService {
         catchError((error) => this._handleError(error))
       );
   }
+  postTrainingArchive$(trainingArchive: TrainingArchive): Observable<TrainingArchive> {
+    return this.http
+      .post<TrainingArchive>(`${ENV.BASE_API}trainingarchive/new`, trainingArchive, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
   /*
     postTrainingWC$(training: TrainingModel): Observable<TrainingModel> {
       return this.http
@@ -541,6 +531,15 @@ export class TrainingService {
   editTraining$(training: TrainingModel): Observable<TrainingModel> {
     return this.http
       .put<TrainingModel>(`${ENV.BASE_API}trainings/${training._id}`, training, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  putTrainingArchive$(trainingArchive: TrainingArchive): Observable<TrainingArchive> {
+    return this.http
+      .put<TrainingArchive>(`${ENV.BASE_API}trainingarchive/${trainingArchive._id}`, trainingArchive, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
