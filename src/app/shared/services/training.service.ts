@@ -218,7 +218,7 @@ export class TrainingService {
 
     this.selectedTrainingWCBS$.next(this.allTrainingHash[tid]);
     this.selectedTrainingBS$.next(this.allTrainingHash[tid]);
-    this.selectedTrainingVersionsBS$.next(this.allTrainingHash[tid].versions);
+    this.selectedTrainingVersionsBS$.next(cloneDeep(this.allTrainingHash[tid].versions));
   }
 
   getJobTitleStream(): Observable<string[]> {
@@ -345,6 +345,18 @@ export class TrainingService {
     if (!pageTitle || pageTitle === '') {
       return;
     }
+    let iconClass = '';
+    let color = '';
+    let fileObj
+
+    if (type === 'url') {
+      iconClass = 'fad fa-spider-web';
+      color = 'blue';
+    } else if (type === 'file') {
+      iconClass = this.fileService.getFile(fileId).iconClass;
+      color = this.fileService.getFile(fileId).iconColor;
+    }
+    
     const newPage = <Page>{
       _id: String(new Date().getTime()),
       type: type,
@@ -352,6 +364,8 @@ export class TrainingService {
       title: pageTitle,
       intro: 'Introduction to the document',
       file: fileId,
+      icon: iconClass,
+      color: color,
       portlets: [],
     };
 
@@ -452,7 +466,7 @@ export class TrainingService {
       })
     }
     this.editTraining$(training).subscribe(data => {
-      this.selectedTrainingVersionsBS$.next(training.versions);
+      this.selectedTrainingVersionsBS$.next(cloneDeep(training.versions));
       //      this.selectedTrainingBS$.next(data);
       this.reloadAllTrainings();
     });
@@ -461,7 +475,7 @@ export class TrainingService {
 
   saveTraining(training: TrainingModel, reload: boolean) {
     this.trainingIsDirtyBS$.next(true);
-    training.isDirty = true
+    training.isDirty = true;
     this.editTraining$(training).subscribe(data => {
       if (reload) {
         //        this.selectedTrainingBS$.next(data);

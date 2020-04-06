@@ -27,7 +27,6 @@
 }
 
 .nav-badge {
-  color: cyan !important;
   margin: 0 10px;
 }
 
@@ -43,7 +42,8 @@ nz-footer {
 	text-align: center;
 }
 .active-link {
-  color: cyan !important;
+  font-size: 14px;
+  color: red !important;
 }
 
 .inner-content {
@@ -52,12 +52,9 @@ nz-footer {
 }
 
 .ant-menu.ant-menu-dark .ant-menu-item-selected {
-  background-color: #1a60a0 !important;
-  color: cyan !important;
+  background-color: transparent;
 }
-.ant-menu.ant-menu-dark:hover .ant-menu-item-selected {
-    color: cyan !important;
-}
+
 .footer {
   position: fixed;
   bottom: 0;
@@ -74,16 +71,12 @@ nz-footer {
   border-radius: 5px;
 }
 
-.video-frame {
-
+.current-task {
+  color:white;
 }
 
-.settings-item-left {
-  display: inline-block;
-  width: 70%;
+.task {
 }
-.settings-item-right {
-  display: inline-block;
-  width: 30%;
-  text-align: right;
+.task:hover {
+  color:white;
 }

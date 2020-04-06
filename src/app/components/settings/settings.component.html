@@ -1,0 +1,19 @@
+<div *ngIf="authenticatedUser$ | async as user" style="display:block;margin-bottom:40px;">
+    <div class="settings-item-left">
+        <i nz-icon nzType="info-circle" [nzTheme]="'twotone'" style="font-size:24px;"></i>
+        <span style="vertical-align: middle;margin-left:10px;font-size: 18px;">Show Page Info</span>
+    </div>
+    <div class="settings-item-right">
+        <nz-switch [(ngModel)]="user.settings.showPageInfo"
+            (ngModelChange)="updateUserSettings($event, 'showPageInfo', $event)"></nz-switch>
+    </div>
+</div>
+<div style="display:block;margin-bottom:40px;">
+    <div *ngFor="let color of colors; index as i" style="display:inline-block;height: fit-content;width:fit-content;margin-right:5px;border-radius:6px;border: 2px solid white;padding:3px;"
+        (click)="updateUserSettings($event, 'themeColor', color)"
+        [ngClass]="{'current-theme': color.name === (authenticatedUser$ | async)?.settings.themeColor.name}">
+        <div [ngStyle]="{'background-color': color.bgColor, 'color': color.fgColor}"
+        style="height:30px;width:30px;border-radius:6px;"></div>
+
+    </div>
+</div>

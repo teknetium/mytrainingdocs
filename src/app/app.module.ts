@@ -34,6 +34,7 @@ import { VgOverlayPlayModule } from 'videogular2/compiled/overlay-play';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { PrettyJsonModule } from 'angular2-prettyjson';
 import { CommentService } from './shared/services/comment.service';
+import { SettingsModule } from './components/settings/settings.module';
 
 const ngZorroConfig: NzConfig = {
     message: { nzTop: 300 },
@@ -68,7 +69,8 @@ registerLocaleData(en);
         LoginModule,
         NzBadgeModule,
         VgOverlayPlayModule,
-        PrettyJsonModule
+        PrettyJsonModule,
+        SettingsModule
     ],
     providers: [
         { 

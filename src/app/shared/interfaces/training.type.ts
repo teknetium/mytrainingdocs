@@ -81,7 +81,9 @@ export interface Page {
   url: string,
   file: string,
   portlets: Portlet[],
-  intro: string
+  intro: string,
+  icon: string,
+  color: string,
 }
 
 export interface Portlet {

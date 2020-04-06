@@ -74,7 +74,7 @@ export interface Task {
     trigger('showVideo', [
       // ...
       state('closed', style({
-        'top': '-800px'
+        'top': '-100%'
       })),
       state('open', style({
         'top': '0'
@@ -267,6 +267,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   currentTask = 1;
   taskNames = [];
   isVideoOpen = false;
+  bannerColor = '#f1f1f1'
 
   constructor(
     private authService: AuthService,
@@ -398,13 +399,8 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.showNewUserModal = false;
   }
 
-  updateUserSettings(event, property) {
-    this.authenticatedUser.settings[property] = event;
-    this.userService.updateUser(this.authenticatedUser, false);
-    this.userService.selectAuthenticatedUser();
-  }
-
-  playTaskVideo(taskName) {
+  playTaskVideo(taskName, i) {
+    
     this.currentTask = taskName;
     this.isVideoOpen = true;
     console.log('new-app: playTaskVideo', taskName, this.currentPage, this.aboutThisPageHash);

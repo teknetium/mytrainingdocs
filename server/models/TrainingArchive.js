@@ -22,6 +22,8 @@ const pageSchema = new Schema({
   url: { type: String },
   title: { type: String },
   file: { type: String },
+  icon: { type: String },
+  color: { type: String },
   intro: { type: String },
   portlets: [portletSchema],
 })

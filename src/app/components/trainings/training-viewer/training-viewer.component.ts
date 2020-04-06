@@ -32,7 +32,7 @@ import { BaseComponent } from '../../base.component';
     trigger('tocToggle', [
       // ...
       state('closed', style({
-        'margin-left': '-250px'
+        'margin-left': '-300px'
       })),
       state('open', style({
         'margin-left': '0',
@@ -289,6 +289,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   debug = false;
   versionRequestError = false;
   trainingArchiveObj: TrainingArchive;
+  trainingClone: TrainingModel;
+  @ViewChild("toc") tocContainer: ElementRef;
 
   constructor(
     private trainingService: TrainingService,
@@ -401,6 +403,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
           title: file.versions[0].fileName,
           intro: 'Introduction to the document',
           file: file._id,
+          icon: file.iconClass,
+          color: file.iconColor,
           portlets: [],
         };
         this.trainingWC.pages.push(newPage);
@@ -478,6 +482,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   loadVersion(version, index) {
+    if (index === 0) {
+      this.trainingService.selectTrainingVersion(this.trainingWC);
+      return;
+    } else if (index !== 0 && this.trainingWC.status === 'unlocked') {
+      return;
+    }
     this.currentVersionIndex = index;
     console.log('loadVersion', version);
     this.trainingService.loadArchivedVersion(this.selectedTraining._id, version.version )
@@ -486,6 +496,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   rollback() {
     let lastSavedTrainingImage = this.trainingService.rollback(this.trainingWC._id);
     this.trainingWC = lastSavedTrainingImage;
+    this.trainingWC.isDirty = false;
     this.saveTraining(false);
     this.trainingService.selectTrainingVersion(this.trainingWC);
   }
@@ -529,6 +540,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     let newVersion = majorNum + '_' + minorNum + '_' + patchNum;
 
     this.trainingWC.status = 'locked';
+    this.trainingWC.isDirty = false;
     let newTrainingVersionObj: TrainingVersion = {
       _id: String(new Date().getTime()),
       version: newVersion,
@@ -541,9 +553,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       iconColor: this.trainingWC.iconColor,
     };
     this.trainingWC.versions.unshift(newTrainingVersionObj);
+    let trainingClone = cloneDeep(this.trainingWC);
 
-    this.trainingService.saveNewVersion(cloneDeep(this.trainingWC));
-    this.trainingService.selectTrainingVersion(this.trainingWC);
+    this.trainingService.saveNewVersion(trainingClone);
+    this.trainingService.selectTrainingVersion(trainingClone);
 
     this.lockTrainingModalIsVisible = false;
   }
@@ -565,8 +578,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         iconColor: this.trainingWC.iconColor,
       };
       this.trainingWC.versions.unshift(newTrainingVersionObj);
-      this.trainingService.saveNewVersion(cloneDeep(this.trainingWC));
-      this.trainingService.selectTrainingVersion(this.trainingWC);
+      this.trainingClone = cloneDeep(this.trainingWC);
+      this.trainingService.saveNewVersion(this.trainingClone);
+      this.trainingService.selectTrainingVersion(this.trainingClone);
     } else {
       this.lockTrainingModalIsVisible = true;
     }
@@ -657,8 +671,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       title: this.pageUrl,
       intro: 'Introduction to the document',
       file: '',
+      icon: 'html5',
+      color: 'red',
       portlets: [],
     };
+    console.log('URL Page', newPage);
     this.trainingWC.pages.push(newPage);
     this.setValidation('mainContent', true);
     this.saveTraining(false);
@@ -812,9 +829,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.assessmentInProgress = false;
   }
 
-  toggleTOC(state: boolean) {
-    this.isOpen = state;
-    if (state) {
+  toggleTOC() {
+    this.isOpen = !this.isOpen;
+    if (this.isOpen) {
       this.pageContainerMarginLeft = '270';
     } else {
       this.pageContainerMarginLeft = '20';
@@ -959,9 +976,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   showRollbackConfirm(): void {
     this.modalService.confirm({
-      nzTitle: 'Are you sure you want to discard the latest changes?',
-      nzContent: '<b style="color: red;">The most recent version will be reloaded.</b>',
-      nzOkText: 'Yes',
+      nzTitle: 'Revert back to the previous version?',
+      nzContent: 'All changes you have made since unlocking this training will be lost',
+      nzOkText: 'Yes, revert to previous version.',
       nzOkType: 'danger',
       nzOnOk: () => this.rollback(),
       nzCancelText: 'No',
