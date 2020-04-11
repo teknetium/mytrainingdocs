@@ -1,9 +1,6 @@
 import { Routes } from '@angular/router';
-import { MyteamComponent } from './components/myteam/myteam.component';
 import { HomeComponent } from './components/home/home.component';
-import { TrainingsComponent } from './components/trainings/trainings.component';
-import { MyTrainingsComponent } from './components/trainings/my-trainings/my-trainings.component';
-import { TeammemberComponent } from './components/myteam/teammember/teammember.component';
+import { MyteamComponent } from './components/myteam/myteam.component';
 
 
 export const AuthenticatedROUTES: Routes = [
@@ -20,19 +17,14 @@ export const AuthenticatedROUTES: Routes = [
         data: {
             title: 'My Team'
         }
+//        loadChildren: () => import('./components/myteam/myteam.module').then(m => m.MyteamModule)
     },
     {
         path: 'trainings',
-        component: TrainingsComponent,
-        data: {
-            title: 'Trainings'
-        }
+        loadChildren: () => import('./components/trainings/trainings.module').then(m => m.TrainingsModule)
     },
     {
         path: 'mytrainings',
-        component: MyTrainingsComponent,
-        data: {
-            title: 'My Trainings'
-        }
+        loadChildren: () => import('./components/my-trainings/my-trainings.module').then(m => m.MyTrainingsModule)
     }
 ];

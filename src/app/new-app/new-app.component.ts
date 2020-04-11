@@ -93,6 +93,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
   aboutThisPageHash = {
     home: {
+      title: 'Home',
       visible: true,
       intro: 'Introduction to the page.',
       taskHash: {
@@ -141,6 +142,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       },
     },
     mytrainings: {
+      title: 'My Trainings',
       visible: true,
       intro: 'Introduction to the page.',
       taskHash: {
@@ -154,6 +156,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       },
     },
     myteam: {
+      title: 'My Team',
       visible: true,
       intro: 'Introduction to the page.',
       taskHash: {
@@ -174,6 +177,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       },
     },
     trainings: {
+      title: 'Trainings',
       visible: true,
       intro: 'Introduction to the page.',
       taskHash: {
@@ -266,8 +270,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   firstTimer = false;
   currentTask = 1;
   taskNames = [];
+  pageNames = [];
   isVideoOpen = false;
-  bannerColor = '#f1f1f1'
+  bannerColor = '#f1f1f1';
+  pageTaskHash = {};
 
   constructor(
     private authService: AuthService,
@@ -280,7 +286,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {
     super();
-    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
+//    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
     this.teamTrainingCnt$ = this.trainingService.getTeamTrainingCntStream();
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
@@ -288,6 +294,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.pageNames = Object.keys(this.aboutThisPageHash);
+    for (let page of this.pageNames) {
+      this.pageTaskHash[page] = Object.keys(this.aboutThisPageHash[page].taskHash);
+    }
     this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
     this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       this.currentPage = event.url.substring(1);
@@ -299,6 +309,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       if (!user) {
         return;
       }
+      this.userService.selectUser(user._id);
 
       this.authenticatedUser = user;
       if (this.authenticatedUser.firstName === '') {
@@ -321,12 +332,14 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       this.teamTrainingCnt$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(cnt => {
         this.teamTrainingCnt = cnt;
       });
+      /*
       this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
         if (uidUserTrainingHash[this.authenticatedUser._id]) {
           let uts = Object.values(uidUserTrainingHash[this.authenticatedUser._id]);
           this.myTrainingCnt = uts.length;
         }
       })
+      */
     })
 
 
@@ -399,17 +412,17 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.showNewUserModal = false;
   }
 
-  playTaskVideo(taskName, i) {
-    
+  playTaskVideo(taskName) {
+    if (!taskName) {
+      taskName = this.taskNames[0];
+    }
     this.currentTask = taskName;
     this.isVideoOpen = true;
-    console.log('new-app: playTaskVideo', taskName, this.currentPage, this.aboutThisPageHash);
     this.task = this.aboutThisPageHash[this.currentPage].taskHash[taskName];
     if (!this.task) {
       return;
     }
     this.task.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.aboutThisPageHash[this.currentPage].taskHash[taskName].url));
-    console.log('playTaskVideo', this.task);
     this.taskBS$.next(this.task);
   }
 }

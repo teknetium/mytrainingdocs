@@ -110,7 +110,15 @@ export class UserService {
                 jobTitle: '',
                 profilePicUrl: '',
                 supervisorId: null,
-                settings: {foo: 'test'}
+                settings: {
+                  foo: 'test',
+                  themeColor: {
+                    name: 'grey',
+                    primary: 'white',
+                    secondary: '#999999',
+                    bgColor: '#e9e9e9',
+                  }
+                }
               }
 
               this.postUser$(this.authenticatedUser).subscribe((data) => {

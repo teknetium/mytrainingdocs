@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TrainingsComponent } from './trainings.component';
-import { TrainingViewerComponent } from '../training-viewer/training-viewer.component';
 
 import { NzTableModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule, NzCommentModule, NzAvatarModule, NzListModule, NzDropDownModule, NzStepsModule, NzCalendarModule, NzDatePickerModule, NzCollapseModule } from 'ng-zorro-antd';
 import { NzButtonModule } from 'ng-zorro-antd';
@@ -24,19 +22,15 @@ import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
 import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
 import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
-import { MyTrainingsComponent } from '../my-trainings/my-trainings.component';
+import { MyTrainingsComponent } from './my-trainings.component';
 import { CalendarModule } from '../calendar/calendar.module';
-import { UserTrainingsComponent } from '../user-trainings/user-trainings.component';
 import { PrettyJsonModule } from 'angular2-prettyjson';
-import { TrainingsRoutingModule } from './training-routing.module';
+import { MyTrainingsRoutingModule } from './my-training-routing.module';
 
 
 @NgModule({
   declarations: [
-    TrainingsComponent,
-    UserTrainingsComponent,
     MyTrainingsComponent,
-    TrainingViewerComponent
   ],
   imports: [
     RouterModule,
@@ -84,13 +78,10 @@ import { TrainingsRoutingModule } from './training-routing.module';
     NzDatePickerModule,
     NzCollapseModule,
     PrettyJsonModule,
-    TrainingsRoutingModule,
+    MyTrainingsRoutingModule
   ],
   exports: [
-    TrainingsComponent,
     MyTrainingsComponent,
-    UserTrainingsComponent,
-    TrainingViewerComponent
   ]
 })
-export class TrainingsModule { }
+export class MyTrainingsModule { }

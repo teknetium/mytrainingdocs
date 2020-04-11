@@ -15,6 +15,7 @@ import { NgChartjsModule } from 'ng-chartjs';
 import { LandingpageModule } from './components/landingpage/landingpage.module';
 import { CallbackModule } from './components/callback/callback.module';
 import { PricingModule } from './components/pricing/pricing.module';
+import { MyteamModule } from './components/myteam/myteam.module';
 import { TrainingsModule } from './components/trainings/trainings.module';
 import { MyIconPickerModule } from './components/my-icon-picker/my-icon-picker.module';
 import { SignupModule } from './components/signup/signup.module';
@@ -70,7 +71,8 @@ registerLocaleData(en);
         NzBadgeModule,
         VgOverlayPlayModule,
         PrettyJsonModule,
-        SettingsModule
+        SettingsModule,
+        MyteamModule
     ],
     providers: [
         { 

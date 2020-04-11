@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild, TemplateRef } from '@angular/core';
-import { FileService } from '../../../shared/services/file.service';
-import { TrainingService } from '../../../shared/services/training.service';
-import { UserService } from '../../../shared/services/user.service';
-import { UserTrainingService } from '../../../shared/services/userTraining.service';
-import { AuthService } from '../../../shared/services/auth.service';
+import { FileService } from '../../shared/services/file.service';
+import { TrainingService } from '../../shared/services/training.service';
+import { UserService } from '../../shared/services/user.service';
+import { UserTrainingService } from '../../shared/services/userTraining.service';
+import { AuthService } from '../../shared/services/auth.service';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { TrainingModel, Page, Portlet, Assessment, AssessmentItem, TrainingVersion, TrainingArchive } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -13,14 +13,14 @@ import { UserModel, UserIdHash } from 'src/app/shared/interfaces/user.type';
 import { VgAPI } from 'videogular2/compiled/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { merge, take } from 'rxjs/operators';
-import { SendmailService } from '../../../shared/services/sendmail.service';
-import { MessageModel } from '../../../shared/interfaces/message.type';
+import { SendmailService } from '../../shared/services/sendmail.service';
+import { MessageModel } from '../../shared/interfaces/message.type';
 import { NzMessageService } from 'ng-zorro-antd';
 import * as cloneDeep from 'lodash/cloneDeep';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { read } from 'fs';
 import { takeUntil } from 'rxjs/operators';
-import { BaseComponent } from '../../base.component';
+import { BaseComponent } from '../base.component';
 
 
 
@@ -32,7 +32,7 @@ import { BaseComponent } from '../../base.component';
     trigger('tocToggle', [
       // ...
       state('closed', style({
-        'margin-left': '-300px'
+        'margin-left': '-200px'
       })),
       state('open', style({
         'margin-left': '0',

@@ -6,12 +6,7 @@ import { CallbackComponent } from './components/callback/callback.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { AuthenticatedROUTES } from './authenticated.routes';
 import { AuthGuard } from './shared/guard/auth.guard';
-import { TrainingViewerComponent } from './components/trainings/training-viewer/training-viewer.component';
 import { LoginComponent } from './components/login/login.component';
-import { MyteamComponent } from './components/myteam/myteam.component';
-import { HomeComponent } from './components/home/home.component';
-import { TrainingsComponent } from './components/trainings/trainings.component';
-import { MyTrainingsComponent } from './components/trainings/my-trainings/my-trainings.component';
 
 
 const appRoutes: Routes = [

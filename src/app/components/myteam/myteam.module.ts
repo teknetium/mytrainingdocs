@@ -5,6 +5,7 @@ import { NzTagModule, NzToolTipModule, NzTabsModule, NzIconModule, NzModalModule
 import { MyteamComponent } from './myteam.component';
 import { TrainingsModule } from '../trainings/trainings.module';
 import { TeammemberComponent } from './teammember/teammember.component';
+import { MyteamRoutingModule } from './myteam-routing.module';
 
 
 
@@ -31,10 +32,12 @@ import { TeammemberComponent } from './teammember/teammember.component';
     NzCollapseModule,
     NzTableModule,
     NzAlertModule,
-    NzAutocompleteModule
+    NzAutocompleteModule,
+    MyteamRoutingModule
   ],
   exports: [
-    MyteamComponent
+    MyteamComponent,
+    TeammemberComponent
   ]
 })
 export class MyteamModule { }

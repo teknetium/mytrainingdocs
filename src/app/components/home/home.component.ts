@@ -6,7 +6,7 @@ import { EventService } from '../../shared/services/event.service';
 import { Observable, Subscription } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.type';
 import { EventModel } from '../../shared/interfaces/event.type';
-import { TrainingViewerComponent } from '../trainings/training-viewer/training-viewer.component';
+import { TrainingViewerComponent } from '../training-viewer/training-viewer.component';
 import { filter } from 'rxjs/operators';
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";

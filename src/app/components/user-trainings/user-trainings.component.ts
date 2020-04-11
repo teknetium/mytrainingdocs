@@ -1,14 +1,14 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { UserModel } from '../../../shared/interfaces/user.type';
-import { TrainingModel, TrainingIdHash } from '../../../shared/interfaces/training.type';
-import { TrainingService } from '../../../shared/services/training.service';
-import { CommentService } from '../../../shared/services/comment.service';
-import { UserService } from '../../../shared/services/user.service';
-import { UserTrainingService } from '../../../shared/services/userTraining.service';
+import { UserModel } from '../../shared/interfaces/user.type';
+import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
+import { TrainingService } from '../../shared/services/training.service';
+import { CommentService } from '../../shared/services/comment.service';
+import { UserService } from '../../shared/services/user.service';
+import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { UserTrainingModel, UserTrainingHash, UidUserTrainingHash } from 'src/app/shared/interfaces/userTraining.type';
 import { takeUntil } from 'rxjs/operators';
-import { BaseComponent } from '../../base.component';
+import { BaseComponent } from '../base.component';
 
 
 @Component({
@@ -40,6 +40,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
 
 //  userTrainingHash$: Observable<UserTrainingHash>;
   uidUserTrainingHash$: Observable<UidUserTrainingHash>;
+  userTrainings$: Observable<UserTrainingModel[]>;
   userTrainings: UserTrainingModel[];
   trainingIdHash$: Observable<TrainingIdHash>;
   trainingIdHash: TrainingIdHash;
@@ -66,7 +67,8 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     private cd: ChangeDetectorRef,
   ) {
     super();
-    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
+    this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
+//    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
@@ -86,28 +88,41 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       this.trainingIdHash = trainingIdHash;
     })
 
+    this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
+      if (!userTrainings) {
+        return;
+      }
+      this.userTrainings   = userTrainings;
+      for (let userTraining of userTrainings) {
+        this.utIdHash[userTraining._id] = userTraining;
+      }
+      this.cd.detectChanges();
+    });
+
     this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       console.log('selectedUser$', user);
       if (!user) {
         return;
       }
-      this.userTrainings = [];
+//      this.userTrainings = [];
       this.selectedUser = user;
-      this.userTrainingService.loadTrainingsForUser(user._id);
-      this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
-        console.log('uidUserTrainingHash$', uidUserTrainingHash);
-        let userTrainingHash = uidUserTrainingHash[this.selectedUser._id];
-        if (Object.keys(userTrainingHash).length === 0) {
-          return;
-        }
-        this.userTrainings = Object.values(userTrainingHash);
-        for (let ut of this.userTrainings) {
-          this.utIdHash[ut._id] = ut;
-        }
-        this.cd.detectChanges();
-      })
-    });
+      this.userTrainingService.selectUser(user._id);
 
+//      this.userTrainingService.loadTrainingsForUser(user._id);
+    });
+/*  
+    this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
+      let userTrainingHash = uidUserTrainingHash[this.selectedUser._id];
+      if (Object.keys(userTrainingHash).length === 0) {
+        return;
+      }
+      this.userTrainings = Object.values(userTrainingHash);
+      for (let ut of this.userTrainings) {
+        this.utIdHash[ut._id] = ut;
+      }
+      this.cd.detectChanges();
+    })
+*/
   }
 
   timeFormat(ms): string {
@@ -126,7 +141,8 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   }
 
   confirmDeleteUserTraining(ut) {
-    this.userTrainingService.deleteUserTraining(ut._id, ut.uid)
+    this.userTrainingService.deleteUserTraining(ut._id, ut.uid);
+    this.userTrainingService.selectUser(ut.uid);
   }
 
   handleMarkAsCompletedCancel() {

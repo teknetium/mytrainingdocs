@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { UidUserTrainingHash } from '../../../shared/interfaces/userTraining.type';
+import { UserTrainingModel } from '../../../shared/interfaces/userTraining.type';
 import { TrainingModel, TrainingIdHash } from 'src/app/shared/interfaces/training.type';
 import { UserTrainingService } from '../../../shared/services/userTraining.service';
 import { TrainingService } from '../../../shared/services/training.service';
@@ -34,7 +34,7 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
   assignableTrainings: TrainingModel[] = [];
   teamTrainings: TrainingModel[] = [];
   trainings: TrainingModel[] = [];
-  uidUserTrainingHash$: Observable<UidUserTrainingHash>;
+  userTrainings$: Observable<UserTrainingModel[]>;
   showUserTrainingModal = false;
   selectedUser$: Observable<UserModel>;
   authenticatedUser$: Observable<UserModel>;
@@ -51,7 +51,7 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
   ) {
     super();
     this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
-    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
+    this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
   }
@@ -83,12 +83,13 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
       this.userIdSelected = user._id;
       this.trainingService.selectTraining(null);
 
-      this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
+      this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
+        if (!userTrainings) {
+          return;
+        }
         this.assignableTrainings = [];
-        let utHash = uidUserTrainingHash[this.userIdSelected];
-        let utList = Object.values(utHash);
         let tids = [];
-        for (let ut of utList) {
+        for (let ut of userTrainings) {
           tids.push(ut.tid);
         }
         for (let training of this.teamTrainings) {

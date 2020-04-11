@@ -313,16 +313,17 @@
             </nz-modal>
         </div>
     </div>
-    <div style="width:100%;overflow: scroll;"
-        [ngClass]="{'main-content-container-fullscreen': fullscreen, 'main-content-container': !fullscreen}">
+    <div class="main-content-container">
         <div class="main-content">
             <div class="toc">
                 <div [@tocToggle]="isOpen ? 'open' : 'closed'" class="toc-text-container">
                     <div #toc style="position: relative;text-align: left;">
                         <div class="toc-title">
                             <span style="text-align: center;">Table of Contents</span>
+                            <!--
                             <i nz-icon nzType="unordered-list" [nzTheme]="'outline'" (click)="toggleTOC(false)"
                                 style="float:right;cursor:pointer;font-size:24px;vertical-align: baseline;margin-left:10px;"></i>
+                                -->
                         </div>
                         <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                             class="toc-entry" (click)="setCurrentPage('config')"
@@ -363,9 +364,9 @@
                                 <i nz-icon [nzType]="page.icon" [nzTheme]="'twotone'" [nzTwotoneColor]="page.color"
                                     class="toc-icon" style="margin-right:10px;">
                                 </i>
-                                <span style="display: inline-block;">
+                                <div style="display: inline-block;overflow: hidden;">
                                     {{page.title}}
-                                </span>
+                                </div>
                             </div>
                         </div>
                         <div *ngIf="selectedTraining.useAssessment || selectedTraining.status === 'unlocked' && production === 'false' && mode === 'Edit'"

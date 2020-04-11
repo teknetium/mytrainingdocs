@@ -1,13 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { UserTrainingModel } from '../../../shared/interfaces/userTraining.type';
-import { TrainingModel } from '../../../shared/interfaces/training.type';
-import { UserModel } from '../../../shared/interfaces/user.type';
-import { UserTrainingService } from '../../../shared/services/userTraining.service';
-import { UserService } from '../../../shared/services/user.service';
-import { TrainingService } from '../../../shared/services/training.service';
+import { UserTrainingModel } from '../../shared/interfaces/userTraining.type';
+import { TrainingModel } from '../../shared/interfaces/training.type';
+import { UserModel } from '../../shared/interfaces/user.type';
+import { UserTrainingService } from '../../shared/services/userTraining.service';
+import { UserService } from '../../shared/services/user.service';
+import { TrainingService } from '../../shared/services/training.service';
 import { Observable, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { BaseComponent } from '../../base.component';
+import { BaseComponent } from '../base.component';
 
 
 

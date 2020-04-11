@@ -62,7 +62,7 @@ export class CalendarComponent extends BaseComponent implements OnInit {
     private trainingService: TrainingService) {
     super();
     this.selectedUser$ = this.userService.getSelectedUserStream();
-    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
+//    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
 
     for (let i = 0; i < 12; i++) {
       let days = new Array<Day>(this.monthDays[i]);
@@ -91,7 +91,7 @@ export class CalendarComponent extends BaseComponent implements OnInit {
         return;
       }
       this.selectedUser = user;
-      this.userTrainingService.loadTrainingsForUser(this.selectedUser._id);
+//      this.userTrainingService.loadTrainingsForUser(this.selectedUser._id);
       this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
         let utHash = uidUserTrainingHash[this.selectedUser._id];
         let userTrainings = Object.values(utHash);

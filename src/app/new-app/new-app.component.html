@@ -140,6 +140,17 @@
                     </div>
                 </nz-dropdown-menu>
             </li>
+            <li style="float:right;margin-right:20px;" nz-tooltip nzTooltipTitle="Task Tutorials"
+                nzTooltipPlacement="bottom">
+                <a (click)="playTaskVideo(null)">
+                    <i nz-icon nzType="youtube" theme="outline" style="font-size:20px;"></i>
+                </a>
+                <nz-drawer *ngIf="authenticatedUser$ | async as user" [nzWidth]="300" nzTitle="App Settings"
+                    [nzClosable]="false" [nzVisible]="quickViewVisible" nzPlacement="right"
+                    (nzOnClose)="quickViewToggle()">
+                    <app-settings></app-settings>
+                </nz-drawer>
+            </li>
         </ul>
     </nz-header>
     <nz-content class="inner-content">
@@ -188,18 +199,42 @@
             <div [@showVideo]="isVideoOpen ? 'open' : 'closed'"
                 style="position: absolute;top:-100%; left: 0;right:0;height:100%;z-index:10;background-color:rgba(0,0,0,0.7);text-align: center;">
                 <div
-                    style="height:fit-content;width:fit-content; display:inline-block;z-index:10;border:1px solid black;margin-top:100px;background-color: #2b303a;">
+                    style="height:fit-content;width:fit-content;z-index:10;display:inline-block;border:1px solid black;margin-top:100px;background-color: #2b303a;">
+                    <div style="display:block;color:white;width:100%;padding:10px;border-bottom:1px solid #53535e;">
+                        <span style="font-size:18px;">Task Tutorials</span>
+                        <i nz-icon nzType="close-circle" [nzTheme]="'outline'" (click)="isVideoOpen = false"
+                            style="font-size:20px;font-weight: 200;cursor:pointer;float:right;color:#dddddd;"></i>
+                    </div>
+                    <div *ngIf="authenticatedUser$ | async as user"
+                        style="text-align: left;float:left;min-width:300px;max-height:500px;overflow:scroll;">
+                        <ul *ngFor="let pageName of pageNames" style="list-style-type: none;">
+                            <div style="text-align: center;font-size:16px;">
+                                <span>{{aboutThisPageHash[pageName].title}}</span>
+                            </div>
+                            <li *ngFor="let taskName of pageTaskHash[pageName]; index as i"
+                                style="padding:15px;border-bottom:1px solid #53535e;" (click)="playTaskVideo(taskName)"
+                                [ngClass]="{'current-task': taskName === currentTask}" class="task">
+                                <div
+                                    *ngIf="aboutThisPageHash[pageName].taskHash[taskName].userType.includes(user.userType)">
+                                    <i nz-icon nzType="youtube" [nzTheme]="'outline'" nz-tooltip
+                                        nzTooltipTitle="Play the task How-To video"
+                                        style="cursor:pointer;font-size:24px;vertical-align: baseline;color:#52c41a;"></i>
+                                    &nbsp;&nbsp;
+                                    <span>{{aboutThisPageHash[pageName].taskHash[taskName].desc}}</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                     <div *ngIf="aboutThisPageHash[currentPage] && aboutThisPageHash[currentPage].taskHash[currentTask]"
-                        style="text-align: center;">
+                        style="text-align: center;float:right;">
+                        <!--
                         <div style="padding:10px;">
                             <span style="font-size:16px;float:left;color:white;">
                                 Task : {{aboutThisPageHash[currentPage].taskHash[currentTask].desc}}
                             </span>
-                            <i nz-icon nzType="close-circle" [nzTheme]="'outline'" (click)="isVideoOpen = false"
-                                style="font-size:20px;font-weight: 200;cursor:pointer;float:right;color:#dddddd;"></i>
                         </div>
-                        <div
-                            style="display:inline-block;margin-top:5px;background-color: black;padding:5px;width:600px;height:500px;">
+                        -->
+                        <div style="background-color: black;width:600px;height:500px;">
                             <vg-player (onPlayerReady)="onPlayerReady($event)">
                                 <vg-controls>
                                     <vg-play-pause></vg-play-pause>
@@ -221,26 +256,13 @@
                                 </vg-controls>
                                 <video style="background-color: #dddddd;" [vgMedia]="media" #media id="singleVideo"
                                     preload="none" [src]="(taskBS$ | async)?.safeUrl" crossorigin
-                                    [poster]="(taskBS$ | async)?.poster">
+                                    [poster]="(taskBS$ | async)?.poster"
+                                    >
                                 </video>
                             </vg-player>
                         </div>
                     </div>
-                    <div *ngIf="authenticatedUser$ | async as user" style="text-align: left;">
-                        <ul style="list-style-type: none;">
-                            <li *ngFor="let taskName of taskNames; index as i" style="padding:15px;border-top:1px solid #53535e;" (click)="playTaskVideo(taskName, i)"
-                            [ngClass]="{'current-task': taskName === currentTask}" class="task">
-                                <div *ngIf="aboutThisPageHash[currentPage].taskHash[taskName].userType.includes(user.userType)">
-                                    <i nz-icon nzType="youtube" [nzTheme]="'outline'" nz-tooltip nzTooltipTitle="Play the task How-To video"
-                                        
-                                        style="cursor:pointer;font-size:24px;vertical-align: baseline;margin-left:20px;color:#52c41a;"></i>
-                                    &nbsp;&nbsp;
-                                    <span style="">{{aboutThisPageHash[currentPage].taskHash[taskName].desc}}</span>
-                                </div>
-                            </li>
-                        </ul>
-
-                    </div>
+                    <div style="clear: both;"></div>
                 </div>
             </div>
             <!--

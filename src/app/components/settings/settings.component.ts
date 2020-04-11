@@ -19,9 +19,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   colors = [
     {
       name: 'grey',
-      primary: 'black',
-      secondary: '#e5e5e5',
-      bgColor: '#f1f1f1',
+      primary: 'white',
+      secondary: '#999999',
+      bgColor: '#e9e9e9',
     },
     {
       name: 'green',
@@ -38,8 +38,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     {
       name: 'orange ',
       bgColor: 'orange',
-      primary: 'black',
-      secondary: '#dddddd',
+      primary: 'white',
+      secondary: '#c54f0a',
     },
     {
       name: 'purple',
