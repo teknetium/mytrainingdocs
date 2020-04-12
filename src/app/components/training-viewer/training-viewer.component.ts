@@ -319,6 +319,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.mode = 'Edit';
+    this.trainingService.selectTraining(null);
 
     this.selectedTraining$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(training => {
 

@@ -92,7 +92,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       if (!userTrainings) {
         return;
       }
-      this.userTrainings   = userTrainings;
+      this.userTrainings = userTrainings;
       for (let userTraining of userTrainings) {
         this.utIdHash[userTraining._id] = userTraining;
       }
@@ -176,7 +176,6 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     this.utIdHash[this.currentUserTraining].status = 'completed';
     this.userTrainingService.saveUserTraining(this.utIdHash[this.currentUserTraining]);
     this.commentService.saveTrainingComment(comment);
-    console.log('markTrainingAsComplete', comment);
   }
 
   ratingChanged(event) {
@@ -191,6 +190,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
 //      this.utIdHash[this.currentUserTraining].status = 'completed';
       this.userTrainingService.saveUserTraining(this.utIdHash[this.currentUserTraining]);
       this.markAsComplete(this.currentUserTraining);
+      this.trainingIsVisible = false;
     }
     this.userTrainingService.setAssessmentResult(this.selectedUser._id, event.tid, event.score, event.pass);
   }

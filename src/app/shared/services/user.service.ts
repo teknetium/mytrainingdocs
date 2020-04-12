@@ -164,10 +164,6 @@ export class UserService {
 
   }
 
-  checkUserId(uid: string): Observable<UserModel> {
-    return this.getUser$(uid);
-  }
-
   getAllOrgUsers() {
     this.getOrg$(this.authenticatedUser.org).subscribe(userList => {
       if (!userList) {

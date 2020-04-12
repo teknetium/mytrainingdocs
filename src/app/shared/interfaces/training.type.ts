@@ -40,13 +40,6 @@ export interface AssessmentItem {
   correctChoice: number
 }
 
-export interface Rating {
-  rating: number,
-  comment: string,
-  version: string
-}
-
-
 export interface Assessment {
   _id: string,
   type: string,
@@ -55,13 +48,6 @@ export interface Assessment {
   items: AssessmentItem[]
 }
 
-export interface Comment {
-  _id: string,
-  author: string,
-  content: string,
-  avatar: string,
-  children: Comment[]
-}
 export interface TrainingVersion {
   readonly _id: string,
   version: string,
@@ -101,12 +87,6 @@ export interface TextBlock {
   height: number,
   xLoc: number,
   yLoc: number
-}
-
-export interface Comment {
-  userId: string,
-  commentText: string,
-  rating: number
 }
 
 export interface TrainingArchive {

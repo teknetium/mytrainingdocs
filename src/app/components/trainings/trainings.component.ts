@@ -154,6 +154,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit {
 
   showComments(tid) {
     this.currentTrainingId = tid;
+    console.log('showComments', tid, this.trainingIdHash);
     this.showCommentsPanel = true;
   }
 }

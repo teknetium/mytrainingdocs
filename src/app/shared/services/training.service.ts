@@ -95,6 +95,7 @@ export class TrainingService {
           let teamTrainingIds = Object.keys(this.teamTrainingHash);
           this.teamTrainingHashBS$.next(this.teamTrainingHash);
           this.teamTrainingCntBS$.next(teamTrainingIds.length);
+          this.allTrainingHashBS$.next(this.allTrainingHash);
 
           // Load system trainings
           this.getTrainings$('mytrainingdocs').subscribe(systemTrainings => {
