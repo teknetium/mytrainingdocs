@@ -189,10 +189,10 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
 //      this.utIdHash[this.currentUserTraining].dateCompleted = new Date().getTime();
 //      this.utIdHash[this.currentUserTraining].status = 'completed';
       this.userTrainingService.saveUserTraining(this.utIdHash[this.currentUserTraining]);
+      this.userTrainingService.stopSession(event.tid);
       this.markAsComplete(this.currentUserTraining);
       this.trainingIsVisible = false;
     }
     this.userTrainingService.setAssessmentResult(this.selectedUser._id, event.tid, event.score, event.pass);
   }
-
 }

@@ -58,7 +58,7 @@ module.exports = function(app, config) {
  */
 
   const trainingArchiveProjection = "_id trainings";
-  const trainingListProjection = "_id title versions type owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle assessment useAssessment status interestList shared isValid isDirty";
+  const trainingListProjection = "_id title versions type category subcategory owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle assessment useAssessment status interestList shared isValid isDirty";
   const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponse passedAssessment score trainingVersion";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email teamAdmin orgAdmin appAdmin teamId org supervisorId profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
@@ -191,6 +191,8 @@ module.exports = function(app, config) {
       _id: req.body._id,
       title: req.body.title,
       type: req.body.type,
+      category: req.body.category,
+      subcategory: req.body.subcategory,
       versions: req.body.versions,
       teamId: req.body.teamId,
       owner: req.body.owner,
@@ -234,6 +236,8 @@ module.exports = function(app, config) {
       }
       training._id = req.body._id;
       training.type = req.body.type;
+      training.category = req.body.category;
+      training.subcategory = req.body.subcategory;
       training.versions = req.body.versions;
       training.title = req.body.title;
       training.teamId = req.body.teamId;

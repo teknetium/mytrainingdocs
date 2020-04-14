@@ -226,6 +226,7 @@
                     nzTooltipTitle="Show Debug Info" class="header-icon" (click)="debug = !debug">
                     <i nz-icon nzType="bug" [nzTheme]="'twotone'" style="vertical-align: top;"></i>
                 </button>
+                <!--
                 <button *ngIf="production === 'false' && selectedTraining.status === 'unlocked'" nz-button
                     nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Delete Training" class="header-icon"
                     (click)="showConfirmDelete()">
@@ -233,6 +234,7 @@
                         style="vertical-align: top;">
                     </i>
                 </button>
+                -->
                 <ng-template #vertSeparator>
                     <span style="font-size:16px;color:black;">|</span>
                 </ng-template>
@@ -329,8 +331,10 @@
                             class="toc-entry" (click)="setCurrentPage('config')"
                             [ngClass]="{'active-toc':currentPageId === 'config', 'disabled': assessmentInProgress}">
 
-                            <i *ngIf="!trainingWC.isValid['config']" nz-icon nzType="minus" [nzTheme]="'outline'" class="checklist-not-done"></i>
-                            <i *ngIf="trainingWC.isValid['config']" nz-icon nzType="check" [nzTheme]="'outline'" class="checklist-done"></i>
+                            <i *ngIf="!trainingWC.isValid['config']" nz-icon nzType="minus" [nzTheme]="'outline'"
+                                class="checklist-not-done"></i>
+                            <i *ngIf="trainingWC.isValid['config']" nz-icon nzType="check" [nzTheme]="'outline'"
+                                class="checklist-done"></i>
                             Training Configuration
                         </div>
                         <div class="toc-entry" (click)="setCurrentPage('intro')"
@@ -344,9 +348,13 @@
                         <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                             class="toc-entry" style="cursor: default;" [ngClass]="{'disabled': assessmentInProgress}"
                             (click)="setCurrentPage('mainContent')">
-                            <i *ngIf="!trainingWC.isValid['mainContent']" nz-icon nzType="minus" [nzTheme]="'outline'" class="checklist-not-done"></i>
-                            <i *ngIf="trainingWC.isValid['mainContent']" nz-icon nzType="check" [nzTheme]="'outline'" class="checklist-done"></i>
+                            <i *ngIf="!trainingWC.isValid['mainContent']" nz-icon nzType="minus" [nzTheme]="'outline'"
+                                class="checklist-not-done"></i>
+                            <i *ngIf="trainingWC.isValid['mainContent']" nz-icon nzType="check" [nzTheme]="'outline'"
+                                class="checklist-done"></i>
                             Main Content
+                            <i *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
+                                nz-icon nzType="file-add" [nzTheme]="'twotone'" class=""></i>
                         </div>
                         <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
                             class="toc-entry" style="cursor: default;" [ngClass]="{'disabled': assessmentInProgress}">
@@ -373,10 +381,9 @@
                             class="toc-entry" (click)="setCurrentPage('assessment')"
                             [ngClass]="{'active-toc':currentPageId === 'assessment', 'disabled': currentUser}">
                             <i *ngIf="!trainingWC.isValid['assessment'] && production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
-                                nz-icon nzType="minus" [nzTheme]="'outline'"  class="checklist-not-done"></i>
+                                nz-icon nzType="minus" [nzTheme]="'outline'" class="checklist-not-done"></i>
                             <i *ngIf="trainingWC.isValid['assessment'] && production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
-                                nz-icon nzType="check" [nzTheme]="'outline'" class="checklist-done"
-                                style=""></i>
+                                nz-icon nzType="check" [nzTheme]="'outline'" class="checklist-done" style=""></i>
                             Assessment
                         </div>
                         <!--
@@ -411,7 +418,30 @@
                                 <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes</span>
                             </div>
                         </div>
+                        <div class="config-page-row">
+                            <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
+                                <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Category</label>
+                            </div>
+                            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
 
+                                <input
+                                    style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;"
+                                    nz-input [(ngModel)]="trainingWC.category" nzSize="small"
+                                    (ngModelChange)="saveTraining(false)" />
+                            </div>
+                        </div>
+                        <div class="config-page-row">
+                            <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
+                                <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Subcategory</label>
+                            </div>
+                            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
+
+                                <input
+                                    style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;"
+                                    nz-input [(ngModel)]="trainingWC.subcategory" nzSize="small"
+                                    (ngModelChange)="saveTraining(false)" />
+                            </div>
+                        </div>
                         <div class="config-page-row">
                             <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
                                 <label style="margin-bottom: 0;font-size:12px;color:#bbbbbb;">Job Title</label>
@@ -750,7 +780,32 @@
                                     </div>
                                 </nz-modal>
                             </div>
-                            <div style="margin-top:20px;">
+                            <div *ngIf="page.type === 'none'" style=" margin:40px 0;position:relative;">
+                                Select the content type you would like to upload
+
+                                <i [@itemFocus]="itemWithFocus === 'doc' ? 'in' : 'out'" nz-icon nzType="file"
+                                    (mouseenter)="itemWithFocus = 'doc'" (mouseleave)="itemWithFocus = ''"
+                                    [nzTheme]="'twotone'" (click)="openPicker('doc')"
+                                    style="cursor:pointer;position:absolute;bottom:-30px;left:0;" nz-tooltip
+                                    nzTooltipTitle="Upload a Document"></i>
+                                <i [@itemFocus]="itemWithFocus === 'video' ? 'in' : 'out'" nz-icon
+                                    (click)="openPicker('video')" nzType="video-camera" [nzTheme]="'twotone'"
+                                    (mouseenter)="itemWithFocus = 'video'" (mouseleave)="itemWithFocus = ''"
+                                    style="cursor:pointer;position:absolute;bottom:-30px;left:60px;" nz-tooltip
+                                    nzTooltipTitle="Upload a Video"></i>
+                                <i [@itemFocus]="itemWithFocus === 'audio' ? 'in' : 'out'" nz-icon nzType="audio"
+                                    [nzTheme]="'twotone'" (click)="openPicker('audio')"
+                                    (mouseenter)="itemWithFocus = 'audio'" (mouseleave)="itemWithFocus = ''"
+                                    style="cursor:pointer;position:absolute;bottom:-30px;left:120px;" nz-tooltip
+                                    nzTooltipTitle="Upload an Audio File"></i>
+                                <i [@itemFocus]="itemWithFocus === 'image' ? 'in' : 'out'" nz-icon nzType="file-image"
+                                    [nzTheme]="'twotone'" (click)="openPicker('image')"
+                                    (mouseenter)="itemWithFocus = 'image'" (mouseleave)="itemWithFocus = ''"
+                                    style="cursor:pointer;position:absolute;bottom:-30px;left:180px;" nz-tooltip
+                                    nzTooltipTitle="Upload an Image File"></i>
+                            </div>
+
+                            <div *ngIf="page.type !== 'none'" style="margin-top:20px;border:2px solid black;">
                                 <div *ngIf="page.type !== 'url' && page.type !== 'html'"
                                     style="margin-top:20px;text-align: center;">
                                     <span style="display:inline-block;color:#aaaaaa;">

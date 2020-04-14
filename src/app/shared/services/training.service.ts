@@ -263,9 +263,20 @@ export class TrainingService {
       items: []
     }
 
+    const page = <Page>{
+      _id: String(new Date().getTime()),
+      type: 'none',
+      title: 'Page 1',
+      url: null,
+      file: null,
+      intro: 'Page 1 introduction',
+    }
+
     const newTraining = <TrainingModel>{
       _id: String(baseId),
       type: 'online',
+      category: '',
+      subcategory: '',
       versions: [],
       versionPending: '',
       title: 'New Training Template',
@@ -287,7 +298,7 @@ export class TrainingService {
       iconClass: 'fad fa-graduation-cap',
       iconColor: 'orange',
       iconSource: 'fontawesome',
-      pages: [],
+      pages: [page],
       assessment: assessment,
       useAssessment: true,
       interestList: [],

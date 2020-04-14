@@ -58,8 +58,9 @@ const trainingSchema = new Schema({
       iconClass: String,
       iconColor: String,
     }],
-
   status: { type: String, required: true },
+  category: { type: String, required: false },
+  subcategory: { type: String, required: false },
   title: { type: String, required: true },
   teamId: { type: String, required: true },
   owner: { type: String, required: true },

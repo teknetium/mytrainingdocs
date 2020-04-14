@@ -324,7 +324,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.selectedTraining$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(training => {
 
       if (!training || !training.versions) {
-        console.log('selectedTraining$: ERROR!!!!!!!!!!!!!!!', training);
         return;
       }
 
@@ -822,7 +821,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.okDisabled = true;
   }
 
-  closeViewer() {
+  closeViewer() { 
     console.log('closeVIewer');
     this.userTrainingService.stopSession(this.trainingWC._id);
     this.trainingService.reloadAllTrainings();

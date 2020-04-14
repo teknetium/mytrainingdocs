@@ -13,8 +13,8 @@
 }
 
 .nav-badge-cell {
-  width:18px;
-  height: 18px;
+  width:8px;
+  height: 8px;
   border: 1px solid white;
   border-radius: 50%;
   background-color: #3e9c1c;
@@ -53,6 +53,10 @@ nz-footer {
 
 .ant-menu.ant-menu-dark .ant-menu-item-selected {
   background-color: transparent;
+}
+
+.ant-menu-item {
+  padding: 0 10px !important;
 }
 
 .footer {

@@ -25,33 +25,18 @@
                 <a routerLink="/mytrainings" routerLinkActive="active-link">
                     My Trainings
                 </a>
-                <!--
-                <div class="nav-badge-cell">
-                    <span style="text-align: center;position:absolute;top:-23px;right:6px;">{{myTrainingCnt}}</span>
-                </div>
-                -->
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
                 class="nav-badge">
                 <a routerLink="/myteam" routerLinkActive="active-link">
                     My Team
                 </a>
-                <!--
-                <div class="nav-badge-cell">
-                    <span style="text-align: center;position:absolute;top:-23px;right:6px;">{{myTeamCnt}}</span>
-                </div>
-                -->
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor' || (authenticatedUser$ | async)?.teamAdmin"
                 nz-menu-item nzMatchRouter>
                 <a routerLink="/trainings" routerLinkActive="active-link">
                     All Trainings
                 </a>
-                <!--
-                <div class="nav-badge-cell">
-                    <span style="text-align: center;position:absolute;top:-23px;right:6px;">{{teamTrainingCnt}}</span>
-                </div>
-                -->
             </li>
             <li style="float:right;margin-right:20px;" nz-tooltip nzTooltipTitle="Settings"
                 nzTooltipPlacement="bottomLeft">

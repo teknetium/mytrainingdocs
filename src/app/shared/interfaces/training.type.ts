@@ -4,6 +4,8 @@ export interface TrainingModel {
   _id: string,
   type: 'online' | 'system',
   versions: TrainingVersion[],
+  category: string,
+  subcategory: string,
   status: 'locked' | 'unlocked' | 'archived',
   title: string,
   teamId: string,
@@ -62,7 +64,7 @@ export interface TrainingVersion {
 
 export interface Page {
   _id: string,
-  type: 'url' | 'file' | 'text',
+  type: 'url' | 'file' | 'text' | 'none',
   title: string,
   url: string,
   file: string,
@@ -70,6 +72,7 @@ export interface Page {
   intro: string,
   icon: string,
   color: string,
+  asseessment: Assessment,
 }
 
 export interface Portlet {

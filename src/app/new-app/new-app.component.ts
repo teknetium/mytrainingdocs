@@ -6,10 +6,10 @@ import { UserTrainingService } from '../shared/services/userTraining.service';
 import { BehaviorSubject, Observable, from, Subscription } from 'rxjs';
 import { UserModel, UserIdHash } from '../shared/interfaces/user.type';
 import { TrainingModel, TrainingIdHash } from '../shared/interfaces/training.type';
+import { UserTrainingModel } from '../shared/interfaces/userTraining.type';
 import { Router, NavigationEnd } from '@angular/router';
 import { FileModel } from '../shared/interfaces/file.type';
 import { FileService } from '../shared/services/file.service';
-// import { Auth0ProfileModel } from './shared/models/auth0Profile.model';
 import { NotificationService } from '../shared/services/notification.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -244,7 +244,8 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
   fileIdToDelete: string;
 
-  uidUserTrainingHash$: Observable<UidUserTrainingHash>;
+//  uidUserTrainingHash$: Observable<UidUserTrainingHash>;
+  userTrainings$: Observable<UserTrainingModel[]>;
   myTrainingIdHash$: Observable<TrainingIdHash>;
   teamTrainingCnt$: Observable<number>;
   myTeamIdHash$: Observable<UserIdHash>;
@@ -288,6 +289,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     super();
 //    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
+    this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
     this.teamTrainingCnt$ = this.trainingService.getTeamTrainingCntStream();
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
@@ -305,6 +307,14 @@ export class NewAppComponent extends BaseComponent implements OnInit {
         this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
       }
     });
+/*
+    this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
+      if (!userTrainings) {
+        return;
+      }
+      this.myTrainingCnt = userTrainings.length;
+    });
+*/
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         return;

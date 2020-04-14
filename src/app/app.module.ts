@@ -36,6 +36,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { PrettyJsonModule } from 'angular2-prettyjson';
 import { CommentService } from './shared/services/comment.service';
 import { SettingsModule } from './components/settings/settings.module';
+import { AssessmentComponent } from './components/assessment/assessment.component';
 
 const ngZorroConfig: NzConfig = {
     message: { nzTop: 300 },
@@ -48,6 +49,7 @@ registerLocaleData(en);
     declarations: [
         AppComponent,
         NewAppComponent,
+        AssessmentComponent,
     ],
     imports: [
         PricingModule,
