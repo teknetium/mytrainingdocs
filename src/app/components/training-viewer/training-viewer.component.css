@@ -327,3 +327,23 @@
 	border: 2px solid #d64594;
 	background-color: #fcf1f6 !important;
 }
+
+.page-template-container {
+	width: 100%;
+	display: block;
+}
+
+.page-template {
+	width: 250px;
+	height: 324px;
+	padding:5px;
+	float:left;
+	margin-right:5%;
+	border: 1px solid #dddddd;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+}
+
+.page-template:hover {
+	background-color: #f5f5f5;
+	border: 1px solid black;
+}

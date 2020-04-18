@@ -4,10 +4,10 @@ import { TrainingService } from './shared/services/training.service';
 import { UserService } from './shared/services/user.service';
 import { BehaviorSubject, Observable, from } from 'rxjs';
 import { UserModel } from './shared/interfaces/user.type';
-import { TrainingModel } from './shared/interfaces/training.type';
+// import { TrainingModel } from './shared/interfaces/training.type';
 import { Router } from '@angular/router';
 import { FileModel } from './shared/interfaces/file.type';
-import { FileService } from './shared/services/file.service';
+//import { FileService } from './shared/services/file.service';
 // import { Auth0ProfileModel } from './shared/models/auth0Profile.model';
 import { NotificationService } from './shared/services/notification.service';
 import { SafeResourceUrl } from '@angular/platform-browser';
@@ -121,11 +121,11 @@ export class AppComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private trainingService: TrainingService,
+//    private trainingService: TrainingService,
     private router: Router,
-    private notificationService: NotificationService,
+//    private notificationService: NotificationService,
     private zorroNotificationService: NzNotificationService,
-    private fileService: FileService,
+//    private fileService: FileService,
   ) {
   }
 

@@ -9,32 +9,34 @@
                 <i nz-icon nzType="search" theme="outline" style="font-size:20px;margin: 0 20px;color:white;"></i>
             </a>
             -->
+            <!--
             <nz-drawer [nzWidth]="380" nzTitle="Search" [nzVisible]="searchVisible" nzPlacement="left"
                 (nzOnClose)="searchToggle()">
                 <app-search></app-search>
             </nz-drawer>
+            -->
         </div>
         <ul nz-menu nzTheme="light" nzMode="horizontal"
             [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.bgColor, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary }">
             <li nz-menu-item nzMatchRouter>
-                <a routerLink="/home" routerLinkActive="active-link">
+                <a routerLink="/app/home" routerLinkActive="active-link">
                     Home
                 </a>
             </li>
             <li nz-menu-item nzMatchRouter class="nav-badge">
-                <a routerLink="/mytrainings" routerLinkActive="active-link">
+                <a routerLink="/app/mytrainings" routerLinkActive="active-link">
                     My Trainings
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
                 class="nav-badge">
-                <a routerLink="/myteam" routerLinkActive="active-link">
+                <a routerLink="/app/myteam" routerLinkActive="active-link">
                     My Team
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor' || (authenticatedUser$ | async)?.teamAdmin"
                 nz-menu-item nzMatchRouter>
-                <a routerLink="/trainings" routerLinkActive="active-link">
+                <a routerLink="/app/trainings" routerLinkActive="active-link">
                     All Trainings
                 </a>
             </li>

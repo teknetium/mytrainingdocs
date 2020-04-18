@@ -64,32 +64,20 @@ export interface TrainingVersion {
 
 export interface Page {
   _id: string,
-  type: 'url' | 'file' | 'text' | 'none',
+  type: 'single' | 'double',
   title: string,
-  url: string,
-  file: string,
-  portlets: Portlet[],
+  content: Content[],
   intro: string,
-  icon: string,
-  color: string,
-  asseessment: Assessment,
+  assessment: Assessment,
+  
 }
 
-export interface Portlet {
+export interface Content {
   _id: string,
+  type: 'file' | 'url' | 'video' | 'text' | 'none',
   file: string,
-  width: number,
-  height: number,
-  xLoc: number,
-  yLoc: number
-}
-export interface TextBlock {
-  _id: string,
-  content: string,
-  width: number,
-  height: number,
-  xLoc: number,
-  yLoc: number
+  url: string,
+  text: string
 }
 
 export interface TrainingArchive {

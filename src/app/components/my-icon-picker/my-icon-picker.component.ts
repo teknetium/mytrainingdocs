@@ -1,7 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import icons from '../../../assets/fontawesome-pro/metadata/icons.json';
-
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from '../../shared/services/auth.service';
+import { ENV } from '../../shared/services/env.config';
+import { throwError as ObservableThrowError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-icon-picker',
@@ -45,16 +48,22 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   selectedIconIndex = -1;
   @ViewChild('iconSearch', { static: false }) iconSearch: ElementRef;
 
-  constructor() {
-    this.iconNames = Object.keys(icons);
+  constructor(private auth: AuthService, private http: HttpClient) {
+    /*
+    this.iconNames = Object.keys(this.icons);
     for (const iconName of this.iconNames) {
-      if (icons[iconName].styles.includes('duotone')) {
+      if (this.icons[iconName].styles.includes('duotone')) {
         this.duotoneIconNames.push(iconName);
         this.matchingIcons.push('fad fa-fw fa-' + iconName);
-        this.iconSearchTermHash[iconName] = icons[iconName].search.terms;
+        this.iconSearchTermHash[iconName] = this.icons[iconName].search.terms;
       }
     }
-    this.matchingIconsBS$.next(this.matchingIcons);
+    */
+    this.getIcons$('*').subscribe(icons => {
+      this.matchingIconsBS$.next(icons);
+    })
+
+    
   }
 
   ngOnInit() {
@@ -90,7 +99,6 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   }
 
   selectIcon(i) {
-
     this.selectedIconIndex = i;
     this.selectedIcon = this.matchingIcons[i];
     this.icon.emit({ icon: this.matchingIcons[i], color: this.iconColor });
@@ -105,6 +113,12 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   searchForIcons() {
     this.selectedIconIndex = -1;
     this.matchingIcons = [];
+    this.getIcons$(this.iconSearchStr).subscribe(icons => {
+      console.log('searchForIcons', icons);
+
+      this.matchingIcons = icons;
+      this.matchingIconsBS$.next(this.matchingIcons);
+    })
     /*
     for (const iconStr of this.iconNamesSolid) {
       if (iconStr.indexOf(this.iconSearchStr) >= 0) {
@@ -114,6 +128,7 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
       }
     }
     */
+    /*
     for (const iconStr of this.duotoneIconNames) {
       if (iconStr.indexOf(this.iconSearchStr) >= 0) {
         this.matchingIcons.push('fad fa-fw fa-' + iconStr);
@@ -126,12 +141,33 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
         }
       }
     }
-
-    this.matchingIconsBS$.next(this.matchingIcons);
+*/
   }
 
   onColorChange(newColor) {
     this.iconColor = newColor;
     this.icon.emit({ icon: this.selectedIcon, color: this.iconColor });
+  }
+
+  private get _authHeader(): string {
+    return `Bearer ${this.auth.accessToken}`;
+  }
+
+  getIcons$(searchStr: string): Observable<string[]> {
+    return this.http
+      .get<string[]>(`${ENV.BASE_API}icons/${searchStr}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+
+  private _handleError(err: HttpErrorResponse | any): Observable<any> {
+    const errorMsg = err.message || 'Error: Unable to complete request.';
+    if (err.message && err.message.indexOf('No JWT present') > -1) {
+      this.auth.login();
+    }
+    return ObservableThrowError(errorMsg);
   }
 }

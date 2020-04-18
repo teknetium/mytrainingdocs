@@ -546,7 +546,7 @@ export class FileService {
       });
   }
 
-  selectFsHandle(file: FileModel, versionIndex: number) {
+  selectFsHandle(file: FileModel, versionIndex: number): SafeResourceUrl {
     
     let mediaItem: SafeResourceUrl;
 
@@ -562,6 +562,7 @@ export class FileService {
 //    this.safeFileUrlBS$.next(mediaItem);
     this.file$.next(file);
     this.safeFileUrlBS$.next(mediaItem);
+    return mediaItem;
   }
 
   viewFile(file: FileModel, versionIndex: number, streamId: string) {

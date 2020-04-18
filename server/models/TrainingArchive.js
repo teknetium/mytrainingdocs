@@ -7,25 +7,20 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const portletSchema = new Schema({
+const contentSchema = new Schema({
   _id: { type: String, required: true },
+  type: { type: String, required: true },
   file: { type: String },
-  width: { type: Number },
-  height: { type: Number },
-  xLoc: { type: Number },
-  yLoc: { type: Number }
+  url: { type: String },
+  text: { type: String },
 })
 
 const pageSchema = new Schema({
   _id: { type: String, required: true },
   type: { type: String, required: true },
-  url: { type: String },
   title: { type: String },
-  file: { type: String },
-  icon: { type: String },
-  color: { type: String },
   intro: { type: String },
-  portlets: [portletSchema],
+  Content: [contentSchema],
 })
 
 const assessmentSchema = new Schema({

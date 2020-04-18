@@ -1,0 +1,155 @@
+<!--
+<div>
+    <div>
+        <button *ngIf="mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false'" nz-button
+            nzType="primary" nzSize="small" (click)="uploadNewVersion()">
+            <i nz-icon nzType="upload" [nzTheme]="'outline'"></i>
+            <span style="font-size:12px;">Upload New Version</span>
+        </button>
+        <div style="text-align:center;display:block;width:100%;margin-top:10px;margin-bottom:5px;font-size:12px;">
+            <nz-table nzSize="small" nzBordered="false" nzShowPagination="false"
+                [nzData]="fileService.getFile(page.file).versions"
+                style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
+                <thead>
+                    <tr style="font-size:12px;">
+                        <th>Version</th>
+                        <th>Comments</th>
+                        <th>Date Uploaded</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let version of fileService.getFile(page.file).versions; let i = index;"
+                        [ngClass]="{'current-version': currentVersionIndex === i}" (click)="viewVersion(i)"
+                        style="cursor: pointer;font-size:12px;background-color: white;line-height:10px;">
+                        <td style="font-size:12px;width:10%;">
+                            {{ version.version }}
+                        </td>
+                        <td style="font-size:12px;width:50%;">
+                            {{ version.changeLog }}
+                        </td>
+                        <td style="font-size:12px;width:25%;">
+                            {{ version.dateUploaded | date:'medium'}}
+                        </td>
+                        <td style="font-size:14px;width:15%;text-align: center;">
+                            <i nz-icon nzType="download" [nzTheme]="'outline'" nz-tooltip
+                                nzTooltipTitle="Download Document"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+        <nz-modal [(nzVisible)]="isNewVersionModalVisible" [nzTitle]="fileService.getFile(page.file).name" nzWidth="60%"
+            nzOkDisabled="false" nzCancelDisabled="false" (nzOnCancel)="dismissNewVersionModal()"
+            (nzOnOk)="handleNewVersionContinue()">
+            <div style="display: inline-block;width:20%;padding-bottom:30px;">
+            </div>
+            <div style="display:inline-block;width:80%;">
+                <h3 nz-title>
+                    What actions should be taken as a result of the changes you have made?
+                </h3>
+            </div>
+            <div style="clear: both;"></div>
+            <div style="display: block;">
+                <nz-radio-group [(ngModel)]="changeLevel">
+                    <label nz-radio [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}"
+                        nzValue="major">Reset
+                        training
+                        status for all responsible users. </label>
+                    <label nz-radio [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}"
+                        nzValue="minor">Notify
+                        all
+                        responsible users.</label>
+                    <label nz-radio [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}" nzValue="patch">No
+                        action
+                        needed.</label>
+                </nz-radio-group>
+                <p *ngIf="error1" style="color:red;">Please select one of the 3 options.</p>
+                <p>
+                    Please describe the changes you have made.
+                </p>
+                <textarea rows="4" nz-input [(ngModel)]="newVersion.changeLog"></textarea>
+                <p *ngIf="error2" style="color:red;">Please enter a description of the
+                    changes
+                    made.</p>
+
+            </div>
+        </nz-modal>
+    </div>
+    <div *ngIf="page.type === 'none'" style=" margin:40px 0;position:relative;">
+        Select the content type you would like to upload
+
+        <i [@itemFocus]="itemWithFocus === 'doc' ? 'in' : 'out'" nz-icon nzType="file"
+            (mouseenter)="itemWithFocus = 'doc'" (mouseleave)="itemWithFocus = ''" [nzTheme]="'twotone'"
+            (click)="openPicker('doc')" style="cursor:pointer;position:absolute;bottom:-30px;left:0;" nz-tooltip
+            nzTooltipTitle="Upload a Document"></i>
+        <i [@itemFocus]="itemWithFocus === 'video' ? 'in' : 'out'" nz-icon (click)="openPicker('video')"
+            nzType="video-camera" [nzTheme]="'twotone'" (mouseenter)="itemWithFocus = 'video'"
+            (mouseleave)="itemWithFocus = ''" style="cursor:pointer;position:absolute;bottom:-30px;left:60px;"
+            nz-tooltip nzTooltipTitle="Upload a Video"></i>
+        <i [@itemFocus]="itemWithFocus === 'audio' ? 'in' : 'out'" nz-icon nzType="audio" [nzTheme]="'twotone'"
+            (click)="openPicker('audio')" (mouseenter)="itemWithFocus = 'audio'" (mouseleave)="itemWithFocus = ''"
+            style="cursor:pointer;position:absolute;bottom:-30px;left:120px;" nz-tooltip
+            nzTooltipTitle="Upload an Audio File"></i>
+        <i [@itemFocus]="itemWithFocus === 'image' ? 'in' : 'out'" nz-icon nzType="file-image" [nzTheme]="'twotone'"
+            (click)="openPicker('image')" (mouseenter)="itemWithFocus = 'image'" (mouseleave)="itemWithFocus = ''"
+            style="cursor:pointer;position:absolute;bottom:-30px;left:180px;" nz-tooltip
+            nzTooltipTitle="Upload an Image File"></i>
+    </div>
+    <div *ngIf="type !== 'url' && type !== 'html'" style="margin-top:20px;text-align: center;">
+        <span style="display:inline-block;color:#aaaaaa;">
+            Version {{ selectedTraining.versions[currentVersionIndex].version }}
+        </span>
+    </div>
+    <div style="text-align: center;margin-top:5px;">
+        <vg-player (onPlayerReady)="onPlayerReady($event)"
+            *ngIf="page.type === 'file' && pageFileHash[page._id] && pageFileHash[page._id].iconType === 'video'">
+
+            <vg-controls>
+                <vg-play-pause></vg-play-pause>
+                <vg-playback-button></vg-playback-button>
+
+                <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+
+                <vg-scrub-bar>
+                    <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                    <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                </vg-scrub-bar>
+
+                <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+
+                <vg-track-selector></vg-track-selector>
+                <vg-mute></vg-mute>
+                <vg-volume></vg-volume>
+
+                <vg-fullscreen></vg-fullscreen>
+            </vg-controls>
+            <video [vgMedia]="media" #media id="singleVideo" preload="'auto'" [src]="safeFileUrl$ | async"
+                crossorigin></video>
+            < !--
+                <video [vgMedia]="media" #media id="singleVideo" preload="'auto'" [src]="(file$ | async)?.versions[currentVersionIndex].safeUrl" crossorigin></video>
+            -- >
+        </vg-player>
+    </div>
+    <div *ngIf="type === 'file' && pageFileHash[page._id] && pageFileHash[page._id].iconType !== 'video'"
+        style="text-align: center;height:90%;margin-top:5px;">
+        <div style="width:100%;height:900px;display:inline-block;">
+            <iframe [src]="safeFileUrl$ | async" allowfullscreen width="100%" height="100%">
+            </iframe>
+        </div>
+    </div>
+    <div *ngIf="page.type === 'url'" style="text-align: center;height:90%;margin-top:5px;">
+        <div style="display: block;color:#bbbbbb;">
+            {{ page.url }}
+        </div>
+        <div style="width:100%;height:900px;display:inline-block;">
+            <iframe [src]="safeUrlHash[page.url]" allowfullscreen width="100%" height="100%">
+            </iframe>
+        </div>
+    </div>
+</div>
+-->
+<div>
+    Content here
+</div>

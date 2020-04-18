@@ -23,9 +23,11 @@ import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
 import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
 import { MyTrainingsComponent } from './my-trainings.component';
-import { CalendarModule } from '../calendar/calendar.module';
+//import { CalendarModule } from '../calendar/calendar.module';
 import { PrettyJsonModule } from 'angular2-prettyjson';
 import { MyTrainingsRoutingModule } from './my-training-routing.module';
+import { TrainingViewerModule } from '../training-viewer/training-viewer.module';
+import { UserTrainingsModule } from '../user-trainings/user-trainings.module';
 
 
 @NgModule({
@@ -34,7 +36,7 @@ import { MyTrainingsRoutingModule } from './my-training-routing.module';
   ],
   imports: [
     RouterModule,
-    ColorPickerModule,
+//    ColorPickerModule,
     NzAlertModule,
     NzToolTipModule,
     NzInputNumberModule,
@@ -74,11 +76,13 @@ import { MyTrainingsRoutingModule } from './my-training-routing.module';
     VgControlsModule,
     NzSwitchModule,
     NzCalendarModule,
-    CalendarModule,
+//    CalendarModule,
     NzDatePickerModule,
     NzCollapseModule,
     PrettyJsonModule,
-    MyTrainingsRoutingModule
+    MyTrainingsRoutingModule,
+    TrainingViewerModule,
+    UserTrainingsModule
   ],
   exports: [
     MyTrainingsComponent,

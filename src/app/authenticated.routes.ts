@@ -13,11 +13,7 @@ export const AuthenticatedROUTES: Routes = [
     },
     {
         path: 'myteam',
-        component: MyteamComponent,
-        data: {
-            title: 'My Team'
-        }
-//        loadChildren: () => import('./components/myteam/myteam.module').then(m => m.MyteamModule)
+        loadChildren: () => import('./components/myteam/myteam.module').then(m => m.MyteamModule)
     },
     {
         path: 'trainings',
@@ -26,5 +22,5 @@ export const AuthenticatedROUTES: Routes = [
     {
         path: 'mytrainings',
         loadChildren: () => import('./components/my-trainings/my-trainings.module').then(m => m.MyTrainingsModule)
-    }
-];
+    },
+]

@@ -80,7 +80,7 @@
                       style="font-size:16px;vertical-align: middle;color:#52c41a;"></i>
                   </td>
                   <td>
-                    <nz-rate nzDisabled [(ngModel)]="ratingHash[data._id]" class="small"></nz-rate>
+                    <nz-rate ngDefaultControl nzDisabled [(ngModel)]="ratingHash[data._id]" class="small"></nz-rate>
                   </td>
                   <td>{{ versionFormatter(data.versions[0].version) }}</td>
                   <td>{{ data.dateCreated | date:'mediumDate' }}</td>
@@ -160,7 +160,7 @@
           </div>
           <div *ngFor="let comment of commentHash[currentTrainingId]" style="padding-left:20px;">
             <div style="display: block;">
-              <nz-rate nzDisabled [(ngModel)]="comment.rating" class="small"
+              <nz-rate nzDisabled [(ngModel)]="comment.rating" class="small" ngDefaultControl
                 style="display: inline-block;margin-right:20px;"></nz-rate>
               <div style="display: inline-block;font-size:10px;">
                 {{ comment.date | date:'medium' }}

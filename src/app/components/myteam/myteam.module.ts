@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzTagModule, NzToolTipModule, NzTabsModule, NzIconModule, NzModalModule, NzInputModule, NzRadioModule, NzCheckboxModule, NzPopconfirmModule, NzButtonModule, NzCollapseModule, NzTableModule, NzAlertModule, NzAutocompleteModule } from 'ng-zorro-antd';
 import { MyteamComponent } from './myteam.component';
-import { TrainingsModule } from '../trainings/trainings.module';
-import { TeammemberComponent } from './teammember/teammember.component';
+import { UserTrainingsModule } from '../user-trainings/user-trainings.module';
+import { TeammemberModule } from '../teammember/teammember.module';
 import { MyteamRoutingModule } from './myteam-routing.module';
 
 
@@ -12,7 +12,6 @@ import { MyteamRoutingModule } from './myteam-routing.module';
 @NgModule({
   declarations: [
     MyteamComponent,
-    TeammemberComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +20,7 @@ import { MyteamRoutingModule } from './myteam-routing.module';
     NzTabsModule,
     NzIconModule,
     NzModalModule,
-    TrainingsModule,
+    UserTrainingsModule,
     NzInputModule,
     FormsModule,
     ReactiveFormsModule,
@@ -33,11 +32,11 @@ import { MyteamRoutingModule } from './myteam-routing.module';
     NzTableModule,
     NzAlertModule,
     NzAutocompleteModule,
+    TeammemberModule,
     MyteamRoutingModule
   ],
   exports: [
     MyteamComponent,
-    TeammemberComponent
   ]
 })
 export class MyteamModule { }

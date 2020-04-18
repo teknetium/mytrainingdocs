@@ -3,6 +3,7 @@
  | Dependencies
  |--------------------------------------
  */
+const icons = require("./icons.json");
 
 const jwt = require("express-jwt");
 const jwks = require("jwks-rsa");
@@ -36,6 +37,7 @@ module.exports = function(app, config) {
     algorithm: "RS256",
   });
 
+  let icon
 
   // Check for an authenticated admin user
   const adminCheck = (req, res, next) => {
@@ -56,6 +58,20 @@ module.exports = function(app, config) {
  | API Routes
  |--------------------------------------
  */
+  let iconNames = [];
+  let iconSearchTermHash = {};
+  let duotoneIconNames = [];
+  let matchingIcons = [];
+
+  iconNames = Object.keys(icons);
+  for (iconName of iconNames) {
+    if (icons[iconName].styles.includes('duotone')) {
+      duotoneIconNames.push(iconName);
+      matchingIcons.push('fad fa-fw fa-' + iconName);
+      iconSearchTermHash[iconName] = icons[iconName].search.terms;
+    }
+  }
+
 
   const trainingArchiveProjection = "_id trainings";
   const trainingListProjection = "_id title versions type category subcategory owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle assessment useAssessment status interestList shared isValid isDirty";
@@ -81,6 +97,31 @@ module.exports = function(app, config) {
       html: req.body.html,
     };
     sgMail.send(msg);
+  });
+
+  app.get("/api/icons/:searchStr", (req, res) => {
+    matchingIcons = [];
+    const iconSearchStr = req.params.searchStr;
+    if (iconSearchStr === '*') {
+      for (iconStr of duotoneIconNames) {
+        matchingIcons.push('fad fa-fw fa-' + iconStr);
+      }
+    } else {
+      for (iconStr of duotoneIconNames) {
+        if (iconStr.indexOf(iconSearchStr) >= 0) {
+          matchingIcons.push('fad fa-fw fa-' + iconStr);
+          continue;
+        }
+        for (term of iconSearchTermHash[iconStr]) {
+          if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
+            matchingIcons.push('fad fa-fw fa-' + iconStr);
+            break;
+          }
+        }
+      }
+    }
+
+    return res.send(matchingIcons);
   });
 
   app.get("/api/daily/usertrainingstatuscheck", (req, res) => {

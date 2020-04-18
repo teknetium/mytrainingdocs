@@ -10,12 +10,18 @@ import { LoginComponent } from './components/login/login.component';
 
 
 const appRoutes: Routes = [
-    {
+    {   
         path: '',
+        redirectTo: 'app',
+        pathMatch: 'full'
+    },
+    {
+        path: 'app',
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
         component: NewAppComponent,
         children: AuthenticatedROUTES
+
     },
     {
         path: 'callback',

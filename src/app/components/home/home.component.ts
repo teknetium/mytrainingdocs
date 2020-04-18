@@ -8,14 +8,14 @@ import { UserModel } from '../../shared/interfaces/user.type';
 import { EventModel } from '../../shared/interfaces/event.type';
 import { TrainingViewerComponent } from '../training-viewer/training-viewer.component';
 import { filter } from 'rxjs/operators';
-import * as am4core from "@amcharts/amcharts4/core";
-import * as am4charts from "@amcharts/amcharts4/charts";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+//import * as am4core from "@amcharts/amcharts4/core";
+//import * as am4charts from "@amcharts/amcharts4/charts";
+//import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
 
 
-am4core.useTheme(am4themes_animated);
+//am4core.useTheme(am4themes_animated);
 
 @Component({
   selector: 'app-home',
@@ -23,30 +23,29 @@ am4core.useTheme(am4themes_animated);
   styleUrls: ['./home.component.css'],
   //  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent extends BaseComponent implements AfterViewInit {
+export class HomeComponent extends BaseComponent implements OnInit {
 
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
   myTeamCnt$: Observable<number>;
   showNewUserModal = false;
   currentTab = 'gettingStarted';
-  private chart: am4charts.XYChart;
+  //  private chart: am4charts.XYChart;
 
   @ViewChild('chartElement', { static: false }) chartElement: ElementRef<HTMLElement>;
 
-  constructor(private auth: AuthService,
-    private userService: UserService,
-    private zone: NgZone,
+  constructor(private auth: AuthService, private userService: UserService) {
+    //    private zone: NgZone,
     //    private cd: ChangeDetectorRef,
-    private trainingService: TrainingService,
-    private eventService: EventService) {
+    //    private trainingService: TrainingService,
+    //    private eventService: EventService) {
     super();
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
-    this.myTeamCnt$ = this.userService.getMyTeamCntStream();
+    //    this.myTeamCnt$ = this.userService.getMyTeamCntStream();
   }
 
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         console.log('home:init:authenticatedUser$.subscribe', user);
@@ -99,17 +98,4 @@ export class HomeComponent extends BaseComponent implements AfterViewInit {
     })
   }
 
-  ngOnDestroy() {
-    /*
-    this.zone.runOutsideAngular(() => {
-      if (this.chart) {
-        this.chart.dispose();
-      }
-    });
-    */
-  }
-
-  setCurrentTab(tabName) {
-    this.currentTab = tabName;
-  }
 }

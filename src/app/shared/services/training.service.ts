@@ -6,11 +6,12 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Page, Portlet, TextBlock, Assessment, TrainingIdHash, TrainingVersion, TrainingArchive } from '../interfaces/training.type';
+import { TrainingModel, Page, Content, Assessment, TrainingIdHash, TrainingVersion, TrainingArchive } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.type';
 import { TrainingsModule } from 'src/app/components/trainings/trainings.module';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as cloneDeep from 'lodash/cloneDeep';
+import { AssessmentComponent } from 'src/app/components/assessment/assessment.component';
 
 
 @Injectable({
@@ -255,7 +256,7 @@ export class TrainingService {
   addNewTraining() {
     const baseId = new Date().getTime();
 
-    const assessment = <Assessment>{
+    const trainingAssessment = <Assessment>{
       _id: String(baseId + 'assessment'),
       type: '',
       timeLimit: 0,
@@ -263,13 +264,20 @@ export class TrainingService {
       items: []
     }
 
-    const page = <Page>{
+    const content = <Content>{
       _id: String(new Date().getTime()),
       type: 'none',
-      title: 'Page 1',
-      url: null,
       file: null,
+      url: null,
+      text: null
+    }
+    const page = <Page>{
+      _id: String(new Date().getTime()),
+      type: 'single',
+      title: 'Page 1',
       intro: 'Page 1 introduction',
+      content: [content],
+      assessment: null,
     }
 
     const newTraining = <TrainingModel>{
@@ -299,7 +307,7 @@ export class TrainingService {
       iconColor: 'orange',
       iconSource: 'fontawesome',
       pages: [page],
-      assessment: assessment,
+      assessment: trainingAssessment,
       useAssessment: true,
       interestList: [],
       shared: false,
@@ -371,14 +379,10 @@ export class TrainingService {
     
     const newPage = <Page>{
       _id: String(new Date().getTime()),
-      type: type,
-      url: url,
       title: pageTitle,
       intro: 'Introduction to the document',
-      file: fileId,
-      icon: iconClass,
-      color: color,
-      portlets: [],
+      content: [],
+      assessment: null
     };
 
     if (!this.teamTrainingHash[trainingId]) {
@@ -395,15 +399,7 @@ export class TrainingService {
     return newPage;
   }
 
-  unlockTraining(training) {
-    training.status = 'unlocked';
-    this.editTraining$(training).subscribe(trainingObj => {
-
-      //      this.createTrainingWC(trainingObj);
-      this.reloadAllTrainings();
-    })
-  }
-
+  /*
   loadArchivedVersion(tid, version) { 
     let trainingArchive = this.trainingArchiveHash[tid];
     if (!trainingArchive) {
@@ -417,6 +413,7 @@ export class TrainingService {
       }
     } 
   }
+  */
 /*
   createTrainingArchive(training: TrainingModel) {
 
