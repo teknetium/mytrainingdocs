@@ -26,6 +26,11 @@
   text-align: center;
 }
 
+.navbar-rhs {
+  float:right;
+  margin-right: 10px;
+}
+
 .nav-badge {
   margin: 0 10px;
 }

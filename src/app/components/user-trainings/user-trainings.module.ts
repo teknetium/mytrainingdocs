@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-//import { TrainingViewerComponent } from '../training-viewer/training-viewer.component';
-
 import { NzTableModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule, NzCommentModule, NzAvatarModule, NzListModule, NzDropDownModule, NzStepsModule, NzCalendarModule, NzDatePickerModule, NzCollapseModule } from 'ng-zorro-antd';
 import { NzButtonModule } from 'ng-zorro-antd';
 import { NzIconModule } from 'ng-zorro-antd';
 //import { NzTagModule } from 'ng-zorro-antd';
 //import { NzDividerModule } from 'ng-zorro-antd';
 import { NzModalModule } from 'ng-zorro-antd';
-//import { NzPopconfirmModule } from 'ng-zorro-antd';
+import { NzPopconfirmModule } from 'ng-zorro-antd';
 import { NzFormModule } from 'ng-zorro-antd';
 //import { NzSelectModule } from 'ng-zorro-antd';
 import { NzToolTipModule } from 'ng-zorro-antd';
@@ -44,7 +42,7 @@ import { TrainingViewerModule } from '../training-viewer/training-viewer.module'
 //    NzAlertModule,
     NzToolTipModule,
 //    NzInputNumberModule,
-//    NzPopconfirmModule,
+    NzPopconfirmModule,
 //    NzInputModule,
     FormsModule,
  //   NzRadioModule,

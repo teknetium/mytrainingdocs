@@ -1,4 +1,5 @@
-import { CalendarModule } from "src/app/components/calendar/calendar.module";
+import { FileModel } from "src/app/shared/interfaces/file.type";
+import { SafeResourceUrl } from '@angular/platform-browser';
 
 export interface TrainingModel {
   _id: string,
@@ -69,15 +70,24 @@ export interface Page {
   content: Content[],
   intro: string,
   assessment: Assessment,
-  
+
 }
 
 export interface Content {
   _id: string,
   type: 'file' | 'url' | 'video' | 'text' | 'none',
-  file: string,
-  url: string,
-  text: string
+  name: string,
+  versions: [Version]
+}
+export interface Version {
+  _id: string,
+  changeLog: string,
+  dateUploaded: number,
+  version: string,
+  file: FileModel,
+  webUrl: string,
+  safeWebUrl: SafeResourceUrl,
+  text: string,
 }
 
 export interface TrainingArchive {

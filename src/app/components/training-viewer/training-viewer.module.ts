@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NzTableModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule, NzCommentModule, NzAvatarModule, NzListModule, NzDropDownModule, NzStepsModule, NzCalendarModule, NzDatePickerModule, NzCollapseModule } from 'ng-zorro-antd';
 import { NzButtonModule } from 'ng-zorro-antd';
@@ -23,7 +24,6 @@ import { MyIconPickerModule } from '../my-icon-picker/my-icon-picker.module';
 import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
 import { TrainingViewerComponent } from './training-viewer.component';
-//import { CalendarModule } from '../calendar/calendar.module';
 import { PrettyJsonModule } from 'angular2-prettyjson';
 
 
@@ -73,7 +73,6 @@ import { PrettyJsonModule } from 'angular2-prettyjson';
     VgControlsModule,
     NzSwitchModule,
     NzCalendarModule,
-//    CalendarModule,
     NzDatePickerModule,
     NzCollapseModule,
     PrettyJsonModule,

@@ -6,7 +6,7 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Page, Content, Assessment, TrainingIdHash, TrainingVersion, TrainingArchive } from '../interfaces/training.type';
+import { TrainingModel, Page, Content, Version, Assessment, TrainingIdHash, TrainingVersion, TrainingArchive } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.type';
 import { TrainingsModule } from 'src/app/components/trainings/trainings.module';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -47,7 +47,6 @@ export class TrainingService {
   private allTrainingIds: string[];
 
   //  trainingCollectionHash = {};
-  trainingWCCollectionHash = {};
 
   teamId: string;
   archivedTrainingCnt = 0;
@@ -133,7 +132,7 @@ export class TrainingService {
       }
     });
   }
-
+/*
   reloadTeamTrainings() {
     console.log('trainingService reloadTeamTrainings', this.teamId);
     this.teamTrainingHash = {};
@@ -145,7 +144,7 @@ export class TrainingService {
       }
       for (let training of teamTrainings) {
         //        this.trainingCollectionHash[training._id] = training;
-        /*
+        / *
         if (training.status === 'unlocked') {
           this.getTrainingWCById$(training._id).subscribe(trainingObj => {
             this.trainingWCCollectionHash[trainingObj._id] = trainingObj;
@@ -153,7 +152,7 @@ export class TrainingService {
             this.teamTrainingHash[trainingObj._id] = trainingObj;
           });
         }
-        */
+        * /
         this.teamTrainingHash[training._id] = training;
         this.allTrainingHash[training._id] = training;
       }
@@ -161,7 +160,8 @@ export class TrainingService {
       this.allTrainingHashBS$.next(this.allTrainingHash);
     });
   }
-
+*/
+  
   reloadAllTrainings() {
     this.allTrainingHash = {};
     this.teamTrainingHash = {};
@@ -214,12 +214,10 @@ export class TrainingService {
   selectTraining(tid: string): void {
     if (!tid) {
       this.selectedTrainingBS$.next(null);
-      this.selectedTrainingWCBS$.next(null);
       return;
     }
 
-    this.selectedTrainingWCBS$.next(this.allTrainingHash[tid]);
-    this.selectedTrainingBS$.next(this.allTrainingHash[tid]);
+        this.selectedTrainingBS$.next(this.allTrainingHash[tid]);
     this.selectedTrainingVersionsBS$.next(cloneDeep(this.allTrainingHash[tid].versions));
   }
 
@@ -246,9 +244,6 @@ export class TrainingService {
   getSelectedTrainingStream(): Observable<TrainingModel> {
     return this.selectedTrainingBS$.asObservable();
   }
-  getSelectedTrainingWCStream(): Observable<TrainingModel> {
-    return this.selectedTrainingWCBS$.asObservable();
-  }
   getSelectedTrainingVersionsStream(): Observable<TrainingVersion[]> {
     return this.selectedTrainingVersionsBS$.asObservable();
   }
@@ -263,14 +258,14 @@ export class TrainingService {
       passingGrade: 70,
       items: []
     }
-
+/*
     const content = <Content>{
       _id: String(new Date().getTime()),
       type: 'none',
-      file: null,
-      url: null,
-      text: null
+      name: null,
+      versions: [null]
     }
+
     const page = <Page>{
       _id: String(new Date().getTime()),
       type: 'single',
@@ -279,7 +274,7 @@ export class TrainingService {
       content: [content],
       assessment: null,
     }
-
+*/
     const newTraining = <TrainingModel>{
       _id: String(baseId),
       type: 'online',
@@ -306,7 +301,7 @@ export class TrainingService {
       iconClass: 'fad fa-graduation-cap',
       iconColor: 'orange',
       iconSource: 'fontawesome',
-      pages: [page],
+      pages: [],
       assessment: trainingAssessment,
       useAssessment: true,
       interestList: [],
@@ -338,8 +333,7 @@ export class TrainingService {
 
     this.postTraining$(newTraining).subscribe(trainingObj => {
       this.allTrainingHash[trainingObj._id] = trainingObj;
-      this.selectedTrainingBS$.next(trainingObj)
-      this.selectedTrainingWCBS$.next(trainingObj)
+      this.selectedTrainingBS$.next(trainingObj);
       this.reloadAllTrainings();
     });
   }
@@ -350,38 +344,30 @@ export class TrainingService {
 
   selectVersion(training: TrainingModel) {
     this.selectedTrainingBS$.next(training);
-    this.selectedTrainingWCBS$.next(training  )
   }
 
   selectTrainingVersion(training: TrainingModel) {
-    this.selectedTrainingWCBS$.next(training)
     this.selectedTrainingBS$.next(training);
-  }
-  selectTrainingWC(training: TrainingModel) {
-    this.selectedTrainingWCBS$.next(training);
   }
 
   addNewPage(trainingId: string, type: string, url: string, fileId: string, pageTitle: string): Page {
     if (!pageTitle || pageTitle === '') {
       return;
     }
-    let iconClass = '';
-    let color = '';
-    let fileObj
 
-    if (type === 'url') {
-      iconClass = 'fad fa-spider-web';
-      color = 'blue';
-    } else if (type === 'file') {
-      iconClass = this.fileService.getFile(fileId).iconClass;
-      color = this.fileService.getFile(fileId).iconColor;
+    const content = <Content>{
+      _id: String(new Date().getTime()),
+      type: 'none',
+      versions: [null]
     }
     
+
     const newPage = <Page>{
       _id: String(new Date().getTime()),
+      type: 'single',
       title: pageTitle,
       intro: 'Introduction to the document',
-      content: [],
+      content: [content],
       assessment: null
     };
 
@@ -395,7 +381,7 @@ export class TrainingService {
     this.teamTrainingHash[trainingId].isValid['mainContent'] = true;
     this.teamTrainingHash[trainingId].pages.push(newPage);
     this.saveTraining(this.teamTrainingHash[trainingId], false);
-    this.selectedTrainingWCBS$.next(this.teamTrainingHash[trainingId]);
+    this.selectedTrainingBS$.next(this.teamTrainingHash[trainingId]);
     return newPage;
   }
 
@@ -485,6 +471,7 @@ export class TrainingService {
   saveTraining(training: TrainingModel, reload: boolean) {
     this.trainingIsDirtyBS$.next(true);
     training.isDirty = true;
+    console.log('trainingService.saveTraining', training);
     this.editTraining$(training).subscribe(data => {
       if (reload) {
         //        this.selectedTrainingBS$.next(data);

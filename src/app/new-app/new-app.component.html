@@ -40,20 +40,8 @@
                     All Trainings
                 </a>
             </li>
-            <li style="float:right;margin-right:20px;" nz-tooltip nzTooltipTitle="Settings"
-                nzTooltipPlacement="bottomLeft">
-                <a (click)="quickViewToggle()">
-                    <i nz-icon nzType="setting" theme="outline" style="font-size:20px;"></i>
-                </a>
-                <nz-drawer *ngIf="authenticatedUser$ | async as user" [nzWidth]="300" nzTitle="App Settings"
-                    [nzClosable]="false" [nzVisible]="quickViewVisible" nzPlacement="right"
-                    (nzOnClose)="quickViewToggle()">
-                    <app-settings></app-settings>
-                </nz-drawer>
-            </li>
-            <li nz-menu-item style="float:right;">
-                <span class=" pointer" nz-dropdown [nzDropdownMenu]="profile" [nzTrigger]="'click'"
-                    [nzPlacement]="'bottomRight'">
+            <li nz-menu-item class="navbar-rhs">
+                <span class=" pointer" nz-dropdown [nzDropdownMenu]="profile" [nzTrigger]="'click'" [nzPlacement]="'bottomRight'">
                     <nz-avatar [nzText]="(authenticatedUser$ | async)?.firstName"
                         [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.secondary, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary}">
                     </nz-avatar>
@@ -88,7 +76,13 @@
                     </ul>
                 </nz-dropdown-menu>
             </li>
-            <li nz-menu-item style="float:right;" nz-tooltip nzTooltipTitle="Notifications"
+            <li  class="navbar-rhs" nz-tooltip nzTooltipTitle="Settings"
+                nzTooltipPlacement="bottomLeft">
+                <a (click)="quickViewToggle()">
+                    <i nz-icon nzType="setting" theme="outline" style="font-size:20px;"></i>
+                </a>
+            </li>
+            <li nz-menu-item class="navbar-rhs" nz-tooltip nzTooltipTitle="Notifications"
                 nzTooltipPlacement="bottomLeft">
                 <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="popNotification" [nzPlacement]="'bottomRight'">
                     <nz-badge nzDot>
@@ -127,7 +121,7 @@
                     </div>
                 </nz-dropdown-menu>
             </li>
-            <li style="float:right;margin-right:20px;" nz-tooltip nzTooltipTitle="Task Tutorials"
+            <li class="navbar-rhs" nz-tooltip nzTooltipTitle="Task Tutorials"
                 nzTooltipPlacement="bottom">
                 <a (click)="playTaskVideo(null)">
                     <i nz-icon nzType="youtube" theme="outline" style="font-size:20px;"></i>
@@ -275,6 +269,10 @@
 
             </div>
         </nz-modal>
+                <nz-drawer *ngIf="authenticatedUser$ | async as user" nzWidth="500px" nzTitle="App Settings" [nzClosable]="false"
+                    [nzVisible]="quickViewVisible" nzPlacement="right" (nzOnClose)="quickViewToggle()">
+                    <app-settings></app-settings>
+                </nz-drawer>
     </nz-content>
     <!--
     <nz-footer class="footer">Copyright ©2020 Teknetium, LLC</nz-footer>

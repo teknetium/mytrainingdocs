@@ -126,17 +126,62 @@
 	overflow: scroll;
 }
 
+.content-type-row {
+	cursor:pointer;
+	display:block;
+	width:100%;
+	padding:10px;
+}
+
+.content-type-row:hover {
+	background-color: #f5f5f5;
+}
+
 .page {
 	display: inline-block;
 	background-color: white;
 	width: 100%;
-	min-height: 1100px;
+	height: 100%;
 	border: 1px solid #dddddd;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
 	text-align: left;
 	padding: 50px 40px;
 	position: relative;
 }
+.page-title {
+	border: 2px solid white;
+ 	margin-bottom: 10px;
+}
+
+.page-title:hover {
+	border-color: #bbbbbb;
+}
+
+.page-intro {
+	border: 2px solid white;
+	padding: 10px;
+	margin-bottom: 10px;
+}
+.page-intro:hover {
+	border-color: #bbbbbb;
+}
+
+.page-content {
+	border: 2px solid white;
+	padding: 10px;
+	height:84%;
+	overflow: scroll;
+ 	margin-bottom: 10px;
+}
+.page-content:hover {
+	border-color: #bbbbbb;
+}
+.page-section-selected {
+	background-color: #fefbe8;
+	border: 2px solid #e5e5e5;
+
+}
+
 .page-url {
 	display: inline-block;
 	background-color: white;
@@ -337,8 +382,6 @@
 	width: 250px;
 	height: 324px;
 	padding:5px;
-	float:left;
-	margin-right:5%;
 	border: 1px solid #dddddd;
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
 }

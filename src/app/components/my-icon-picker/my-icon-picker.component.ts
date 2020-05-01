@@ -61,6 +61,7 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
     */
     this.getIcons$('*').subscribe(icons => {
       this.matchingIconsBS$.next(icons);
+      this.matchingIcons = icons;
     })
 
     
@@ -80,6 +81,9 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   }
 
   mouseEnter(i) {
+    if (!this.matchingIcons[i]) {
+      return;
+    }
     this.currentIcon = i;
     this.iconName = this.matchingIcons[i].substring(13);
   }

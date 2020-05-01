@@ -7,12 +7,29 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const versionSchema = new Schema({
+  _id: { type: String, required: true },
+  changeLog: { type: String, required: false },
+  dateUploaded: { type: Number, required: false },
+  version: { type: String },
+  file: {
+    _id: { type: String },
+    name: { type: String },
+    mimeType: { type: String },
+    fileStackId: { type: String },
+    fileStackUrl: { type: String },
+    dateUploaded: { type: Number}
+  },
+  webUrl: { type: String },
+  safeWebUrl: { type: String },
+  text: { type: String },
+})
+
 const contentSchema = new Schema({
   _id: { type: String, required: true },
   type: { type: String, required: true },
-  file: { type: String },
-  url: { type: String },
-  text: { type: String },
+  name: { type: String, required: false },
+  versions: [versionSchema]
 })
 
 const pageSchema = new Schema({
@@ -20,7 +37,7 @@ const pageSchema = new Schema({
   type: { type: String, required: true },
   title: { type: String },
   intro: { type: String },
-  Content: [contentSchema],
+  content: [contentSchema],
 })
 
 const assessmentSchema = new Schema({

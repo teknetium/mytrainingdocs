@@ -1,12 +1,17 @@
-
+.settings-item {
+  padding:20px 10px;
+  display:block;
+}
 .settings-item-left {
-  display: inline-block;
-  width: 70%;
+  float: left;
+  font-size: 14px;
+  vertical-align: middle;
 }
 .settings-item-right {
-  display: inline-block;
-  width: 30%;
+  float:right;
+  font-size: 14px;
   text-align: right;
+  vertical-align: middle;
 }
 
 .current-theme {
