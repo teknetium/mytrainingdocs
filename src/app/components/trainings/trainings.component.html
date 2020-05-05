@@ -40,9 +40,9 @@
               <tr>
                 <th nzShowExpand></th>
                 <th nzShowSort>State</th>
-                <th nzShowSort>Cat/Subcat</th>
                 <th nzShowSort>Title</th>
-                <th nzShowSort>Assessment</th>
+                <th nzShowSort>Category</th>
+                <th nzShowSort>Subcategory</th>
                 <th nzShowSort>Rating</th>
                 <th>Version</th>
                 <th nzShowSort>Date Created</th>
@@ -62,22 +62,16 @@
                       nz-tooltip nzTooltipTitle="This training is locked."></i>
                   </td>
                   <td>
-                    <ng-container *ngIf="data.category">
-                    <span style="font-size:12px;">{{ data.category }}/<br>{{ data.subcategory }}</span>
-                    </ng-container>
-                    <ng-container *ngIf="!data.category">
-                      &nbsp;
-                    </ng-container>
-                  </td>
-                  <td>
                     <i [ngClass]="data.iconClass" style="font-size:22px;margin-right:10px;vertical-align: middle;"
                       [ngStyle]="{'color': data.iconColor}">
                     </i>
                     {{ data.title }}
                   </td>
-                  <td style="vertical-align: middle;padding-left:30px;">
-                    <i *ngIf="data.useAssessment" nz-icon nzType="check" [nzTheme]="'outline'"
-                      style="font-size:16px;vertical-align: middle;color:#52c41a;"></i>
+                  <td>
+                    {{ data.category }}
+                  </td>
+                  <td>
+                    {{ data.subcategory }}
                   </td>
                   <td>
                     <nz-rate ngDefaultControl nzDisabled [(ngModel)]="ratingHash[data._id]" class="small"></nz-rate>

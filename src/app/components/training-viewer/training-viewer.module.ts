@@ -25,7 +25,7 @@ import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
 import { TrainingViewerComponent } from './training-viewer.component';
 import { PrettyJsonModule } from 'angular2-prettyjson';
-
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 
 @NgModule({
   declarations: [
@@ -34,6 +34,7 @@ import { PrettyJsonModule } from 'angular2-prettyjson';
   imports: [
     RouterModule,
     ColorPickerModule,
+    NzAutocompleteModule,
     NzAlertModule,
     NzToolTipModule,
     NzInputNumberModule,

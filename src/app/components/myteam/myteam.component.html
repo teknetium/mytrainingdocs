@@ -27,6 +27,12 @@
                             [(ngModel)]="newTeamMember.lastName" style="margin-bottom:2px;">
                         <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl
                             [(ngModel)]="newTeamMember.email" style="margin-bottom:2px;">
+                        <input style="margin-bottom:2px;" placeholder="Job Title"
+                            nz-input [(ngModel)]="newTeamMember.jobTitle" ngDefaultControl nzSize="small"
+                            (ngModelChange)="onJobTitleChange($event)" [nzAutocomplete]="auto"
+                            (keydown.enter)="setJobTitle($event)" (blur)="setJobTitle($event)"/>
+                        <nz-autocomplete [nzDataSource]="matchingJobTitles" #auto></nz-autocomplete>
+                        <!--
                         <input nz-input nzSize="small" type="text" placeholder="Job Title" ngDefaultControl
                             [(ngModel)]="newTeamMember.jobTitle" style="display:inline-block;margin-bottom:2px;"
                             (input)="onInput($event.target?.value)" [nzAutocomplete]="auto">
@@ -35,6 +41,7 @@
                                 {{ option }}
                             </nz-auto-option>
                         </nz-autocomplete>
+                    -->
                         <div style="display:block;">
                             <span style="margin-right:20px;float:left;">User Type</span>
                             <nz-radio-group ngDefaultControl [(ngModel)]="newTeamMember.userType"
@@ -60,18 +67,20 @@
                                     <span style="margin-left:10px;  font-size:12px;">Customer</span>
                                 </label>
                             </nz-radio-group>
-                            <label nz-checkbox ngDefaultControl [(ngModel)]="newTeamMember.teamAdmin" style="margin-top:5px;font-size:12px;" nz-tooltip
+                            <label nz-checkbox ngDefaultControl [(ngModel)]="newTeamMember.teamAdmin"
+                                style="margin-top:5px;font-size:12px;" nz-tooltip
                                 nzTooltipTitle="Give this person the ability to create, update, delete trainings.">Training
                                 Admin
                                 Access</label>
                         </div>
                         <div style="clear:both;"></div>
                         <div>
-                        <button nz-button nzSize="small" nzShape="round" (click)="handleCancel()" nzType="default"
-                            style="margin: 10px;display:inline-block;">Cancel
-                        </button>
-                        <button nz-button nzSize="small" nzShape="round" (click)="handleAddUser()" nzType="primary" style="margin: 10px;display:inline-block;">Add User
-                        </button>
+                            <button nz-button nzSize="small" nzShape="round" (click)="handleCancel()" nzType="default"
+                                style="margin: 10px;display:inline-block;">Cancel
+                            </button>
+                            <button nz-button nzSize="small" nzShape="round" (click)="handleAddUser()" nzType="primary"
+                                style="margin: 10px;display:inline-block;">Add User
+                            </button>
                         </div>
                     </div>
                     <hr *ngIf="isUserAddPanelOpen" style="margin: 10px 0;">
@@ -83,7 +92,8 @@
                                 [nzTooltipTitle]=""></i>&nbsp;
                             <span style="display:inline-block;">{{ user.firstName }} {{ user.lastName }} </span>&nbsp;
                         </div>
-                        <div style="cursor:pointer;display:block;margin-left:10px;width:fit-content;border-left:1px solid #bbbbbb;">
+                        <div
+                            style="cursor:pointer;display:block;margin-left:10px;width:fit-content;border-left:1px solid #bbbbbb;">
                             <div style="display:block;position:relative;top:11px;">
                                 <div *ngFor="let user of myTeam" class="direct-report-cell">
                                     <div *ngIf="user._id !== (authenticatedUser$ | async)?._id" class="user-button"

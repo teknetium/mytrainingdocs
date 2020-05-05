@@ -124,6 +124,7 @@
 	height: 100%;
 	width: 75%;
 	overflow: scroll;
+	background-color: white;
 }
 
 .content-type-row {

@@ -26,7 +26,7 @@ const versionSchema = new Schema({
 })
 
 const contentSchema = new Schema({
-  _id: { type: String, required: true },
+  _id: { type: String, required: true },  
   type: { type: String, required: true },
   name: { type: String, required: false },
   versions: [versionSchema]

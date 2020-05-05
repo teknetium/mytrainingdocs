@@ -10,6 +10,7 @@ import { Auth0ProfileModel } from '../interfaces/auth0Profile.type';
 import { Router } from '@angular/router';
 import { EventModel } from '../interfaces/event.type';
 import { EventService } from './event.service';
+import { JobTitleService } from './jobtitle.service';
 
 
 @Injectable({
@@ -26,8 +27,6 @@ export class UserService {
   private myTeamCntBS$ = new BehaviorSubject<number>(0);
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
   private newUser$: Observable<UserModel>;
-  private jobTitlesBS$ = new BehaviorSubject<string[]>([]);
-  private jobTitles: string[] = [];
   private allOrgUserHash: UserIdHash = {};
 
   userTypeIconHash = {
@@ -48,6 +47,7 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private auth: AuthService,
+    private jobTitleService: JobTitleService,
     private userTrainingService: UserTrainingService,
     private router: Router,
     private eventService: EventService,
@@ -62,7 +62,7 @@ export class UserService {
           this.authenticatedUser = user;
           this.getAllOrgUsers();
           if (this.authenticatedUser.jobTitle) {
-            this.jobTitles.push(this.authenticatedUser.jobTitle);
+            this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
           }
           this.authenticatedUserBS$.next(this.authenticatedUser);
           this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
@@ -85,7 +85,7 @@ export class UserService {
               this.authenticatedUser = res;
               this.getAllOrgUsers();
               if (this.authenticatedUser.jobTitle) {
-                this.jobTitles.push(this.authenticatedUser.jobTitle);
+                this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
               }
               this.authenticatedUserBS$.next(this.authenticatedUser);
               this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
@@ -125,7 +125,7 @@ export class UserService {
                 this.authenticatedUser = data;
                 this.getAllOrgUsers();
                 if (this.authenticatedUser.jobTitle) {
-                  this.jobTitles.push(this.authenticatedUser.jobTitle);
+                  this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
                 }
                 this.authenticatedUserBS$.next(this.authenticatedUser);
                 //                this.authenticatedUserBS$.complete();
@@ -172,10 +172,9 @@ export class UserService {
       for (let user of userList) {
         this.allOrgUserHash[user._id] = user;
         if (user.jobTitle) {
-          this.jobTitles.push(user.jobTitle);
+          this.jobTitleService.addJobTitle(user.jobTitle);
         }
       }
-      this.jobTitlesBS$.next(this.jobTitles);
     })
   }
 
@@ -188,6 +187,9 @@ export class UserService {
       for (let user of userList) {
         this.myTeamIdHash[user._id] = user;
         this.userTrainingService.initUserTrainingsForUser(user._id);
+        if (user.jobTitle) {
+          this.jobTitleService.addJobTitle(user.jobTitle);
+        }
       }
 
 
@@ -215,10 +217,6 @@ export class UserService {
 
   getSelectedUserStream(): Observable<UserModel> {
     return this.selectedUserBS$.asObservable();
-  }
-
-  getJobTitleStream(): Observable<string[]> {
-    return this.jobTitlesBS$.asObservable();
   }
 
   selectAuthenticatedUser() {

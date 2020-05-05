@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { FileService } from './file.service';
+import { JobTitleService } from './jobtitle.service';
 import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -29,7 +30,6 @@ export class TrainingService {
   private authenticatedUser: UserModel;
 
   private allTrainingHashBS$ = new BehaviorSubject<TrainingIdHash>({});
-  private jobTitlesBS$ = new BehaviorSubject<string[]>([]);
 
   // teamTrainings is an array of training id's created by the team
   private teamTrainingHashBS$ = new BehaviorSubject<TrainingIdHash>({});
@@ -40,7 +40,6 @@ export class TrainingService {
   private sharedTrainingHash = {};
   private allTrainingHash = {};
   private trainingArchiveHash = {};
-  private jobTitles: string[] = [];
   private teamTrainingIds: string[];
   private systemTrainingIds: string[];
   private sharedTrainingIds: string[];
@@ -62,6 +61,7 @@ export class TrainingService {
     private http: HttpClient,
     private auth: AuthService,
     private userService: UserService,
+    private jobTitleService: JobTitleService,
     private fileService: FileService,
     private sanitizer: DomSanitizer) {
 
@@ -75,7 +75,6 @@ export class TrainingService {
         } else if (this.authenticatedUser.userType === 'supervisor') {
           this.teamId = this.authenticatedUser.uid;
         }
-
         // load team trainings
         this.getTrainings$(this.teamId).subscribe(teamTrainings => {
           if (!teamTrainings) {
@@ -88,7 +87,7 @@ export class TrainingService {
             this.teamTrainingHash[training._id] = training;
             this.allTrainingHash[training._id] = training;
             if (training.jobTitle) {
-              this.jobTitles.push(training.jobTitle);
+              this.jobTitleService.addJobTitle(training.jobTitle);
             }
 
           }
@@ -106,7 +105,7 @@ export class TrainingService {
               this.systemTrainingHash[training._id] = training;
               this.allTrainingHash[training._id] = training;
               if (training.jobTitle) {
-                this.jobTitles.push(training.jobTitle);
+                this.jobTitleService.addJobTitle(training.jobTitle);
               }
             }
 
@@ -119,17 +118,17 @@ export class TrainingService {
                 this.sharedTrainingHash[training._id] = training;
                 this.allTrainingHash[training._id] = training;
                 if (training.jobTitle) {
-                  this.jobTitles.push(training.jobTitle);
+                  this.jobTitleService.addJobTitle(training.jobTitle);
                 }
               }
               this.allTrainingIds = Object.keys(this.allTrainingHash);
 
-              this.jobTitlesBS$.next(this.jobTitles);
               this.allTrainingHashBS$.next(this.allTrainingHash);
             });
           });
         });
       }
+
     });
   }
 /*
@@ -162,6 +161,8 @@ export class TrainingService {
   }
 */
   
+  AddNewJobTitle
+  
   reloadAllTrainings() {
     this.allTrainingHash = {};
     this.teamTrainingHash = {};
@@ -174,6 +175,9 @@ export class TrainingService {
       for (let training of teamTrainings) {
         this.teamTrainingHash[training._id] = training;
         this.allTrainingHash[training._id] = training;
+        if (training.jobTitle) {
+          this.jobTitleService.addJobTitle(training.jobTitle);
+        }
       }
       let teamTrainingIds = Object.keys(this.teamTrainingHash);
       this.teamTrainingHashBS$.next(this.teamTrainingHash);
@@ -219,10 +223,6 @@ export class TrainingService {
 
         this.selectedTrainingBS$.next(this.allTrainingHash[tid]);
     this.selectedTrainingVersionsBS$.next(cloneDeep(this.allTrainingHash[tid].versions));
-  }
-
-  getJobTitleStream(): Observable<string[]> {
-    return this.jobTitlesBS$.asObservable();
   }
 
   getTrainingIsDirtyStream(): Observable<boolean> {
@@ -473,8 +473,8 @@ export class TrainingService {
     training.isDirty = true;
     console.log('trainingService.saveTraining', training);
     this.editTraining$(training).subscribe(data => {
-      if (reload) {
         //        this.selectedTrainingBS$.next(data);
+      if (reload) {
         this.reloadAllTrainings();
         this.selectTrainingVersion(training)
       }

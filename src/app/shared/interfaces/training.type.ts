@@ -77,7 +77,7 @@ export interface Content {
   _id: string,
   type: 'file' | 'url' | 'video' | 'text' | 'none',
   name: string,
-  versions: [Version]
+  versions: Version[]
 }
 export interface Version {
   _id: string,

@@ -375,6 +375,7 @@ export class FileService {
 
       this.fileUploaded$.next(this.uploadedFile);
       this.safeFileUrlBS$.next(this.uploadedFile.safeFileUrl);
+      this.uploadedFile = <FileModel>{};
     }
       /*
       for (const file of results.filesUploaded) {

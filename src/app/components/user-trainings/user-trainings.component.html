@@ -5,14 +5,14 @@
             <tr style="font-size:12px;">
                 <th>Status</th>
                 <th style="padding-left:40px;">Title</th>
-                <th style="padding-left:10px;">Time</th>
+                <th style="padding-left:10px;">Time (mm:ss)</th>
                 <th style="padding-left:10px;">Due Date</th>
                 <th style="padding-left:10px;">Date Completed</th>
                 <th style="padding-left:30px;">Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let userTraining of userTrainings"
+            <tr *ngFor="let userTraining of userTrainings" (click)="viewTraining(userTraining._id, userTraining.tid)"
                 style="cursor: pointer;font-size:12px;background-color: white;line-height:10px;">
                 <td style="font-size:12px;width:7%;" nz-tooltip
                     [nzTooltipTitle]="statusIconHash[userTraining.status].desc">

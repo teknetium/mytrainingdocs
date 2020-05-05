@@ -3,7 +3,7 @@
     </div>
 </ng-template>
 <div *ngIf="selectedTraining$ | async as selectedTraining" class="training-viewer-fullscreen">
-    <div style="position:relative;width:100%;padding-top:5px;background-color: #fcfcfc;">
+    <div style="position:relative;width:100%;padding-top:5px;background-color: #fcfcfc;overflow:scroll;">
         <div *ngIf="production === 'false'"
             style="position:absolute;left:5px;top:5px;margin-right:20px;display:inline-block;">
             <i *ngIf="selectedTraining.status === 'unlocked'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
@@ -246,15 +246,15 @@
                     <div style="display: block;">
                         Selected Training
                     </div>
-                    <div style="height:600px;overflow: scroll;display: block;">
+                    <div style="height:400px;overflow: scroll;display: block;">
                         <prettyjson style="font-size:8px;" [obj]="selectedTraining"></prettyjson>
                     </div>
                 </div>
                 <div style="width:33%;display: inline-block;">
                     <div style="display: block;">
-                        currentPage
+                        Current Page
                     </div>
-                    <div style="height:600px;overflow: scroll;display: block;">
+                    <div style="height:400px;overflow: scroll;display: block;">
                         <prettyjson style="font-size:8px;" [obj]="currentPage"></prettyjson>
                     </div>
                 </div>
@@ -262,8 +262,8 @@
                     <div style="display: block;">
                         Content Zero
                     </div>
-                    <div style="height:600px;overflow: scroll;display: block;">
-                        <prettyjson style="font-size:8px;" [obj]="contentZero"></prettyjson>
+                    <div style="height:400px;overflow: scroll;display: block;">
+                        <prettyjson style="font-size:8px;" [obj]="currentPage.content[0]"></prettyjson>
                     </div>
                 </div>
             </div>
@@ -319,7 +319,7 @@
     <div class="main-content-container">
         <div class="main-content">
             <div class="toc">
-                <div [@tocToggle]="isOpen ? 'open' : 'closed'" class="toc-text-container">
+                <div class="toc-text-container">
                     <div #toc style="position: relative;text-align: left;">
                         <div class="toc-title">
                             <span style="text-align: center;">Table of Contents</span>
@@ -420,7 +420,8 @@
                                 <input
                                     style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;"
                                     nz-input [(ngModel)]="selectedTraining.jobTitle" ngDefaultControl nzSize="small"
-                                    (ngModelChange)="saveTraining(false)" />
+                                    (ngModelChange)="onJobTitleChange($event)"  [nzAutocomplete]="auto" (keydown.enter)="setJobTitle($event)" (blur)="setJobTitle($event)"/>
+                                    <nz-autocomplete [nzDataSource]="matchingJobTitles" #auto></nz-autocomplete>
                             </div>
                         </div>
                         <div class="config-page-row">
@@ -725,37 +726,37 @@
                         </span>
                     </div>
                 </div>
-                <div class="page" style="height:100%;">
-                    <div *ngIf="currentPage" style="height:100%;">
+                <div>
+                    <div *ngFor="let page of selectedTraining.pages; index as pageIndex">
                         <!-- page actions -->
-                        <div style="height:100%;">
+                        <div *ngIf="currentPageId === page._id" [ngClass]="{'page': page.type === 'file', 'page-url': page.type === 'url'}">
                             <div *ngIf="mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false'"
                                 style="position:absolute;top:20px;right:20px;width:fit-content;height:fit-content;">
-                                <i nz-icon nzType="up-square" [ngClass]="{'disabled': isFirstPage(currentPage._id)}"
+                                <i nz-icon nzType="up-square" [ngClass]="{'disabled': pageIndex === 0}"
                                     [nzTheme]="'twotone'" nz-tooltip nzTooltipTitle="Move document up in list"
-                                    (click)="movePage(currentPage, -1)" class="page-action"></i>
+                                    (click)="movePage(page, -1)" class="page-action"></i>
                                 <i nz-icon nzType="down-square" [nzTheme]="'twotone'" nz-tooltip
-                                    [ngClass]="{'disabled': isLastPage(     currentPage._id)}"
-                                    nzTooltipTitle="Move document down in list" (click)="movePage(currentPage, 1)"
+                                    [ngClass]="{'disabled': pageIndex === selectedTraining.pages.length - 1}"
+                                    nzTooltipTitle="Move document down in list" (click)="movePage(page, 1)"
                                     class="page-action"></i>
                                 <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-tooltip
                                     nzTooltipTitle="Delete Page" nz-popconfirm nzPopconfirmTitle="Delete this Page?"
                                     [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'right'"
-                                    (nzOnConfirm)="confirmDeletePage(currentPage)" class="page-action"></i>
+                                    (nzOnConfirm)="confirmDeletePage(page)" class="page-action"></i>
                             </div>
                             <div *ngIf="mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false'"
                                 class="page-title" (click)="selectSection('title')"
                                 [ngClass]="{'page-section-selected': currentSection === 'title'}">
                                 <h3 style="text-align: center;margin-bottom:10px;">
-                                    <p nz-paragraph (nzContentChange)="pageContentChanged($event, currentPage, 'title')"
-                                        nzEditable [(nzContent)]="currentPage.title" style="margin-bottom:0;">
+                                    <p nz-paragraph (nzContentChange)="pageContentChanged($event, page, 'title')"
+                                        nzEditable [(nzContent)]="page.title" style="margin-bottom:0;">
                                     </p>
                                 </h3>
                             </div>
                             <div
                                 *ngIf="mode === 'Preview' || selectedTraining.status === 'locked' || production === 'true'">
                                 <span>
-                                    <h3 style="text-align: center;margin-bottom:30px;">{{currentPage.title}}</h3>
+                                    <h3 style="text-align: center;margin-bottom:30px;">{{page.title}}</h3>
                                 </span>
                             </div>
 
@@ -764,13 +765,13 @@
                                 [ngClass]="{'page-section-selected': currentSection === 'intro'}">
                                 <div style="font-size:16px;">
                                     <p nz-paragraph (nzContentChange)="pageContentChanged($event, pageIndex, 'intro')"
-                                        nzEditable [(nzContent)]="currentPage.intro"></p>
+                                        nzEditable [(nzContent)]="page.intro"></p>
                                 </div>
                             </div>
                             <div
                                 *ngIf="mode === 'Preview' || selectedTraining.status === 'locked' || production === 'true'">
                                 <span>
-                                    {{currentPage.intro}}
+                                    {{page.intro}}
                                 </span>
                             </div>
 
@@ -799,15 +800,15 @@
                             </div>
                             -->
 
-                            <div  (click)="selectSection('contentZero')"
-                                [ngClass]="{'page-section-selected': (currentSection === 'contentZero' && mode !== 'Preview' && selectedTraining.status !== 'locked' && production !== 'true'), 'page-content': (mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false')}">
-                                <span *ngIf="!showVersion === 'true' && contentZero.versions"
+                            <div (click)="selectSection('page.content[0]')"
+                                [ngClass]="{'page-section-selected': (currentSection === 'page.content[0]' && mode !== 'Preview' && selectedTraining.status !== 'locked' && production !== 'true'), 'page-content': (mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false')}">
+                                <span *ngIf="!showVersion === 'true' && page.content[0].versions"
                                     style="cursor:pointer;font-size:12px;" (click)="showVersions = true">Show
                                     Versions</span>
-                                <span *ngIf="showVersion === 'false' && contentZero.versions"
+                                <span *ngIf="showVersion === 'false' && page.content[0].versions"
                                     style="cursor:pointer;font-size:12px;" (click)="showVersions = false">Hide
                                     Versions</span>
-                                <div *ngIf="showVersions && contentZero.versions && (contentZero.type === 'file' || contentZero.type === 'video')"
+                                <div *ngIf="showVersions && page.content[0].versions && (page.content[0].type === 'file' || page.content[0].type === 'video')"
                                     style="display:block;width:100%;margin-top:10px;margin-bottom:5px;font-size:12px;">
                                     <button
                                         *ngIf="mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false'"
@@ -817,7 +818,7 @@
                                         <span style="text-align:center;font-size:12px;">Upload New Version</span>
                                     </button>
                                     <nz-table nzSize="small" nzBordered="false" nzShowPagination="false"
-                                        [nzData]="contentZero.versions" #versionTable
+                                        [nzData]="page.content[0].versions" #versionTable
                                         style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
                                         <thead>
                                             <tr style="font-size:12px;">
@@ -850,7 +851,7 @@
                                     </nz-table>
                                 </div>
                                 <nz-modal [(nzVisible)]="isNewVersionModalVisible"
-                                    [nzTitle]="currentPage.content[0].name" nzWidth="60%" nzOkDisabled="false"
+                                    [nzTitle]="page.content[0].name" nzWidth="60%" nzOkDisabled="false"
                                     nzCancelDisabled="false" (nzOnCancel)="dismissNewVersionModal()"
                                     (nzOnOk)="handleNewVersionContinue()">
                                     <div style="display: inline-block;width:20%;padding-bottom:30px;">
@@ -889,7 +890,7 @@
 
                                     </div>
                                 </nz-modal>
-                                <div *ngIf="contentZero && contentZero.type === 'none'"
+                                <div *ngIf="page.content[0] && page.content[0].type === 'none'"
                                     style=" margin:40px 0;position:relative;">
                                     Select the content type you would like to upload
                                     <div style="margin-top:20px;">
@@ -934,19 +935,32 @@
                                                 Image Files
                                             </div>
                                         </div>
+                                        <div class="content-type-row">
+                                            <div>Use an existing web page</div>
+                                            <nz-alert *ngIf="badUrl" nzType="error" nzCloseable="true"
+                                                nzMessage="URL format error.  URL's must use HTTPS!" nzShowIcon
+                                                style="margin:10px 0;">
+                                            </nz-alert>
+                                            <br>
+                                            <input
+                                                style="margin-left:20px;  display:inline-block;color:black;font-size:14px;width:50%;"
+                                                nz-input [(ngModel)]="pageUrl" nzSize="small"
+                                                (keydown.enter)="pageUrlChanged()" (blur)="pageUrlChanged()"
+                                                placeholder="Enter a website URL   https://example.com" />
+                                        </div>
                                     </div>
                                 </div>
-                                <div *ngIf="contentZero && (contentZero.type === 'file' || contentZero.type === 'video')"
+                                <div *ngIf="page.content[0] && (page.content[0].type === 'file' || page.content[0].type === 'video')"
                                     style="margin-top:20px;">
                                     <div>
                                         <!--
                                         <div style="margin-top:20px;text-align: center;">
                                             <span style="display:inline-block;color:#aaaaaa;">
-                                                Version {{ contentZeroVersion.version }}
+                                                Version {{ currentPage.content[0]Version.version }}
                                             </span>
                                         </div>
                                         -->
-                                        <div *ngIf="contentZero.type === 'video' && contentZeroVersion && contentZeroVersion.file"
+                                        <div *ngIf="page.content[0].type === 'video' && page.content[0].versions && page.content[0].versions[0].file"
                                             style="text-align: center;margin-top:5px;">
                                             <vg-player (onPlayerReady)="onPlayerReady($event)">
 
@@ -974,7 +988,7 @@
                                                     <vg-fullscreen></vg-fullscreen>
                                                 </vg-controls>
                                                 <video [vgMedia]="media" #media id="singleVideo" preload="'auto'"
-                                                    width="100%" [src]="contentZeroVersion.file.safeFileUrl"
+                                                    width="100%" [src]="page.content[0].versions[0].file.safeFileUrl"
                                                     crossorigin></video>
                                                 <!-- <video [vgMedia]="media" #media id="singleVideo" preload="'auto'"
                                             [src]="(file$ | async)?.versions[currentVersionIndex].safeUrl" crossorigin>
@@ -982,24 +996,24 @@
                                             -->
                                             </vg-player>
                                         </div>
-                                        <div *ngIf="contentZero.type === 'file'"
+                                        <div *ngIf="page.content[0].type === 'file'"
                                             style="text-align: center;height:90%;margin-top:5px;">
                                             <div style="width:100%;height:900px;display:inline-block;">
-                                                <iframe [src]="contentZeroVersion.file.safeFileUrl" allowfullscreen
+                                                <iframe [src]="page.content[0].versions[0].file.safeFileUrl" allowfullscreen
                                                     width="100%" height="100%">
                                                 </iframe>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div *ngIf="contentZero && contentZero.type === 'url'"
+                                <div *ngIf="page.content[0] && page.content[0].type === 'url'"
                                     style="text-align: center;height:90%;margin-top:5px;">
                                     <div>
                                         style="display: block;color:#bbbbbb;">
-                                        {{ currentPage.content[0].versions[0].webUrl }}
+                                        {{ page.content[0].versions[0].webUrl }}
                                     </div>
                                     <div style="width:100%;height:900px;display:inline-block;">
-                                        <iframe [src]="contentZeroVersion.safeWebUrl" allowfullscreen width="100%"
+                                        <iframe [src]="page.content[0].versions[0].safeWebUrl" allowfullscreen width="100%"
                                             height="100%">
                                         </iframe>
                                     </div>

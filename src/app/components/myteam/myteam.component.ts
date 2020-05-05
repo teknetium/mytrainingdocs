@@ -104,6 +104,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
   message: MessageModel;
   userIdSelected = '';
+  matchingJobTitles: string[] = [];
 
 
   constructor(
@@ -161,9 +162,18 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
     this.jobTitles$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(jobTitles => {
       this.jobTitles = jobTitles;
+      this.matchingJobTitles = this.jobTitles;
     })
+  }
 
+  setJobTitle(value) {
+    this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
+    this.userService.updateUser(this.authenticatedUser, false);
+  }
 
+  onJobTitleChange(value: string): void {
+    console.log('onJobTitleChange', this.jobTitles);
+    this.matchingJobTitles = this.jobTitles.filter(jobTitle => jobTitle.toLowerCase().indexOf(value.toLowerCase()) !== -1);
   }
 
   addUser() {
