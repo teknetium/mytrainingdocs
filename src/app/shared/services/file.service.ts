@@ -18,148 +18,11 @@ import { SafeMethodCall } from '@angular/compiler';
 })
 export class FileService {
 
-//  authenticatedUser: UserModel;
-//  authenticatedUser$: Observable<UserModel>;
   fileUploadResult: PickerResponse;
-
-//  private files: FileModel[] = [];
-//  private file$ = new BehaviorSubject<FileModel>(null);
-//  private files$ = new BehaviorSubject<FileModel[]>(null);
-//  private fileCnt$ = new BehaviorSubject<number>(0);
-
-//  private filesAlertBS$ = new BehaviorSubject<{ show: boolean, type: string, message: string, description: string }>(null);
-
-//  private failedFiles$ = new BehaviorSubject<FileModel[]>(null);
   private fileUploaded$ = new BehaviorSubject<FileModel>(null);
-//  private newVersion$ = new BehaviorSubject<Version>(null);
-//  private filesUploadedCnt$ = new BehaviorSubject<number>(0);
   private safeFileUrlBS$ = new BehaviorSubject<SafeResourceUrl>(null);
 
   processResultCnt = 0;
-//  newFile: FileModel;
-
-//  fileTags: { label: string, value: string }[] = [];
-//  fileTags$ = new BehaviorSubject<{ label: string, value: string }[]>(null);
-//  tagsStringArray: string[] = [];
-/*
-  fileTypeHash = {
-    ppt: {
-      iconClass: 'file-ppt',
-      iconColor: '#fa541c',
-      iconType: 'doc',
-    },
-    pptx: {
-      iconClass: 'file-ppt',
-      iconColor: '#fa541c',
-      iconType: 'doc'
-    },
-    xls: {
-      iconClass: 'file-excel',
-      iconColor: '#52c41a',
-      iconType: 'doc'
-    },
-    xlsx: {
-      iconClass: 'file-excel',
-      iconColor: '#52c41a',
-      iconType: 'doc'
-    },
-    doc: {
-      iconClass: 'file-word',
-      iconColor: '#3f87f5',
-      iconType: 'doc'
-    },
-    docx: {
-      iconClass: 'file-word',
-      iconColor: '#3f87f5',
-      iconType: 'doc'
-    },
-    pdf: {
-      iconClass: 'file-pdf',
-      iconColor: '#de4436',
-      iconType: 'doc'
-    },
-    gif: {
-      iconClass: 'file-image',
-      iconColor: '#eb2f96',
-      iconType: 'image'
-    },
-    tiff: {
-      iconClass: 'file-image',
-      iconColor: '#eb2f96',
-      iconType: 'image'
-    },
-    jpg: {
-      iconClass: 'file-image',
-      iconColor: '#eb2f96',
-      iconType: 'image'
-    },
-    png: {
-      iconClass: 'file-image',
-      iconColor: '#eb2f96',
-      iconType: 'image'
-    },
-    psd: {
-      iconClass: 'file-image',
-      iconColor: '#eb2f96',
-      iconType: 'image'
-    },
-    ai: {
-      iconClass: 'file-image',
-      iconColor: '#eb2f96',
-      iconType: 'image'
-    },
-    mp4: {
-      iconClass: 'video-camera',
-      iconColor: '#886cff',
-      iconType: 'video'
-    },
-    MP4: {
-      iconClass: 'video-camera',
-      iconColor: '#886cff',
-      iconType: 'video'
-    },
-    flv: {
-      iconClass: 'video-camera',
-      iconColor: '#886cff',
-      iconType: 'video'
-    },
-    avi: {
-      iconClass: 'video-camera',
-      iconColor: '#886cff',
-      iconType: 'video'
-    },
-    wmv: {
-      iconClass: 'video-camera',
-      iconColor: '#886cff',
-      iconType: 'video'
-    },
-    mov: {
-      iconClass: 'video-camera',
-      iconColor: '#886cff',
-      iconType: 'video'
-    },
-    txt: {
-      iconClass: 'file-text',
-      iconColor: '#a0d911',
-      iconType: 'txt'
-    },
-    unknown: {
-      iconClass: 'file-unknown',
-      iconColor: '#ff0000',
-      iconType: 'unknown'
-    },
-    html: {
-      iconClass: 'html5',
-      iconColor: '#e9913a',
-      iconType: 'html'
-    },
-    mp3: {
-      iconClass: 'audio',
-      iconColor: '#e9764f',
-      iconType: 'audio'
-    },
-  };
-*/
   iconClass = '';
   iconColor = '';
   docURL: SafeResourceUrl;
@@ -221,6 +84,18 @@ export class FileService {
     },
     uploadInBackground: false
   };
+  allOptions: PickerOptions = {
+    maxFiles: 20,
+    fromSources: [
+      'local_file_system',
+      'dropbox',
+      'googledrive',
+    ],
+    onUploadDone: (results: PickerResponse) => {
+      this.processResults(results);
+    },
+    uploadInBackground: false
+  };
   //  https://cdn.filestackcontent.com/preview=css:"https://cdn.filestackcontent.com/CSS_FILEHANDLE"/DOCUMENT_FILEHANDLE
 
   // https://cdn.filestackcontent.com/zWy9yljTOWm8maPCZsOe
@@ -229,16 +104,8 @@ export class FileService {
   previewUrlBase = this.base;
   downloadUrlBase = 'https://cdn.filestackcontent.com/';
   docPreviewUrlBS$ = new BehaviorSubject<SafeResourceUrl>(null);
-  //  videoBS$ = new BehaviorSubject<SafeResourceUrl>(null);
-  //  docDownloadUrlBS$ = new BehaviorSubject<string>('');
   selectedFileBS$ = new BehaviorSubject<FileModel>(null);
-  //  selectedFileToEditBS$ = new BehaviorSubject<FileModel>(null);
   selectedFileIndexBS$ = new BehaviorSubject<number>(-1);
-  //  statusMessageBS$ = new BehaviorSubject<{ color: string, msg: string }>(null);
-  //  titleBS$ = new BehaviorSubject<string>('');
-  //  showStatusBS$ = new BehaviorSubject<boolean>(false);
-  //  showSelectedIndexFeedbackBS$ = new BehaviorSubject<boolean>(true);
-  //  showSelectedItemBS$ = new BehaviorSubject<boolean>(false);
   uploadResultsBS$ = new BehaviorSubject<PickerResponse>(null);
   filesForSelect$ = new BehaviorSubject<{ label: string, value: string }[]>([]);
   fileOptions: [{ label: string, value: string }] = [null];
@@ -259,97 +126,15 @@ export class FileService {
       safeFileUrl: null,
       mimeType: '',
     };
-    /*
-    this.authenticatedUser$ = userService.getAuthenticatedUserStream();
-    this.authenticatedUser$.subscribe((userObj) => {
-      if (userObj) {
-        let uid = '';
-        this.authenticatedUser = userObj;
-        this.action = 'init';
-        if (this.authenticatedUser.userType === 'supervisor') {
-          uid = this.authenticatedUser._id;
-        } else {
-          uid = this.authenticatedUser.supervisorId;
-        }
-        this.getAllFiles$(this.authenticatedUser.uid).subscribe(files => {
-          if (!files) {
-            return;
-          }
-          this.files = files;
-          for (const file of files) {
-            this.fileIdHash[file._id] = file;
-          }
-
-          for (const index in files) {
-            this.fileIdIndexHash[this.files[index]._id] = index;
-          }
-//          this.loadData();
-//          this.setAction('init');
-        })
-      }
-    });
-    //    this.client.picker().open();
-
-    //    picker = this.client.picker(this.options);
-*/
   }
   private get _authHeader(): string {
     return `Bearer ${this.auth.accessToken}`;
   }
-/*
-  loadData() {
-    this.files$.next(this.files);
-    this.fileCnt$.next(this.files.length);
-
-    let i;
-    if (this.action === 'save') {
-      i = this.selectedFileIndexBS$.value;
-    } else if (this.action === 'init') {
-      i = -1;
-    } else if (this.action === 'newFile') {
-      i = this.files.length - 1;
-    } else if (this.action === 'add') {
-      i = this.files.length - 1;
-    } else {
-      if (this.selectedFileIndexBS$.value > this.files.length - 1) {
-        i = this.files.length - 1;
-      } else {
-        i = this.selectedFileIndexBS$.value;
-      }
-    }
-  }
-*/
-/*
-  getFileStream(): Observable<FileModel> {
-    return this.file$.asObservable();
-  }
-  */
 
   getSafeFileUrlStream(): Observable<SafeResourceUrl> {
     return this.safeFileUrlBS$.asObservable();
   }
 
-  /*
-    viewDoc(elementId: string) {
-      this.selectedFileBS$.subscribe(item => {
-        if (item) {
-          this.client.preview(item._id, {id: elementId, css: this.previewUrl});
-        }
-      });
-    }
-  
-   */
-
-/*
-  getFile(id): FileModel {
-    return this.fileIdHash[id];
-  }
-*/
-  /*
-  getNewVersionStream(): Observable<Version> {
-    return this.newVersion$.asObservable();
-  }
-*/
 
   processResults(results: PickerResponse) {
 
@@ -365,11 +150,13 @@ export class FileService {
       this.uploadedFile.fileStackUrl = file.url;
       this.uploadedFile.mimeType = file.mimetype;
       this.uploadedFile.dateUploaded = new Date().getTime();
+      /*
       if (this.uploadedFile.mimeType.includes('video')) {
         this.uploadedFile.safeFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.uploadedFile.fileStackUrl));
       } else {
         this.uploadedFile.safeFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI((this.previewUrlBase) + this.uploadedFile.fileStackId));
       }
+      */
 
       console.log('FileService: processResults', this.uploadedFile);
 
@@ -377,246 +164,17 @@ export class FileService {
       this.safeFileUrlBS$.next(this.uploadedFile.safeFileUrl);
       this.uploadedFile = <FileModel>{};
     }
-      /*
-      for (const file of results.filesUploaded) {
-        let sizeStr: string;
-
-        if (file.size < 1000) {
-          sizeStr = file.size + ' B';
-        } else if (file.size < 1000000) {
-          sizeStr = (file.size / 1000).toFixed(1) + ' kB';
-        } else {
-          sizeStr = (file.size / 1000000).toFixed(1) + ' MB';
-        }
-
-        let fileExt: string;
-
-        if (file.filename.indexOf('.') > 0) {
-          fileExt = file.filename.substring(file.filename.lastIndexOf('.') + 1);
-        } else {
-          fileExt = 'unkwown'
-        }
-
-        let iconClass: string;
-        let iconType: string;
-        let iconColor: string;
-
-        if (!this.fileTypeHash[fileExt]) {
-          iconClass = 'file-unknown';
-          iconType = 'unknown';
-          iconColor = '#ff0000';
-        } else {
-          iconClass = this.fileTypeHash[fileExt].iconClass;
-          iconType = this.fileTypeHash[fileExt].iconType;
-          iconColor = this.fileTypeHash[fileExt].iconColor;
-        }
-        let mediaItem: any;
-        let safeUrl: string;
-
-        this.postFile$(this.newFile).subscribe(data => {
-          this.newFile = data;
-          if (this.newFile.iconType === 'video') {
-            safeUrl = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.url)));
-            mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.downloadUrlBase) + this.newFile.versions[0].fsHandle);
-          } else {
-            safeUrl = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + file.handle));
-            mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + this.newFile.versions[0].fsHandle);
-          }
-          this.files.push(this.newFile);
-          this.fileIdHash[this.newFile._id] = this.newFile;
-          this.fileIdIndexHash[this.newFile._id] = this.files.length - 1;
-          this.fileUploaded$.next((this.newFile));
-          this.loadData();
-        });
-      }
-      */
-  }
-/*
-  getFileIdStream(id): Observable<SafeResourceUrl> {
-    return this.fileIdStreamHash[id].asObservable();
   }
 
-  cancelEdit(): void {
-    //    this.selectedFileToEditBS$.next(null);
-  }
-  */
-/*
-  saveFile(file: FileModel) {
-    this.action = 'save';
-    this.putFile$(file).subscribe(data => {
-      console.log('fileservice: saveFile', data);
-    },
-      err => {
-        console.log('saveFile', file);
-      });
-  }
-*/
-  /*
-  selectFsHandle(versionIndex: number): SafeResourceUrl {
-    
-    let mediaItem: SafeResourceUrl;
-
-    this.selectedFile = file;
-
-    let mediaItems: SafeResourceUrl[] = [];
-    if (file.iconType === 'video') {
-      file.versions[versionIndex].safeUrl = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.versions[versionIndex].url)));
-      mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.versions[versionIndex].url));
-    } else {
-      mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI((this.previewUrlBase) + file.versions[versionIndex].fsHandle));
-    }
-//    this.safeFileUrlBS$.next(mediaItem);
-    this.file$.next(file);
-    this.safeFileUrlBS$.next(mediaItem);
-    return mediaItem;
-  }
-
-  */
-/*
-  viewFile(file: FileModel, versionIndex: number, streamId: string) {
-    console.log('In fileService:viewFile');
-    let mediaItem: SafeResourceUrl;
-    if (file.iconType === 'video') {
-      mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.versions[versionIndex].url));
-      if (!this.privateSelectedFileHash[streamId]) {
-        console.log('ERROR ...fileService.viewFile, privateVideoPreviewStreamHash is null...', streamId);
-      }
-      this.privateSelectedFileHash[streamId].next(mediaItem);
-
-    } else {
-      mediaItem = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewUrlBase) + file.versions[versionIndex].fsHandle);
-      console.log('fileService.viewFile', mediaItem, streamId);
-      this.privateSelectedFileHash[streamId].next(mediaItem);
-      this.docPreviewUrlBS$.next(mediaItem);
-    }
-  }
-
-  selectItemById(id, streamId: string) {
-    this.selectItem(this.fileIdIndexHash[id], streamId);
-  }
-*/
-  /*
-  setupPrivateDocumentStream(pSId: string) {
-    console.log('setupPrivateDocumentStream', pSId);
-    this.privateDocumentStreamHash[pSId] = new BehaviorSubject<FileModel>(null);
-  }
-  setupPrivateVideoStream(pSId: string) {
-    console.log('setupPrivateVideoStream', pSId);
-    this.privateVideoStreamHash[pSId] = new BehaviorSubject<FileModel>(null);
-  }
-*/
-
-  /*
-  publishToPrivateDoc$(fileIndex: number, streamId: string) {
-    console.log('pubToPDoc$')
-    this.privateDocumentHash[streamId].next(this.files[fileIndex]);
-  }
- 
-  publishByIdToPDoc$(id: string, streamId: string) {
-    this.privateDocumentHash[streamId].next(this.fileIdHash[id]);
-  }
-*/
-/*
-  selectItem(index, streamId) {
-    if (streamId === null) {
-      this.selectedFile = this.files[index];
-      return;
-    }
-    if (index < 0 || index >= this.files.length) {
-      //      this.showSelectedItemBS$.next(false);
-      if (this.privateSelectedFileHash[streamId]) {
-        this.privateSelectedFileHash[streamId].next(null);
-      }
-
-      if (this.privateSelectedFileIndexHash[streamId]) {
-        this.privateSelectedFileIndexHash[streamId].next(null);
-      }
-
-      if (this.privateDocumentHash[streamId]) {
-        this.privateDocumentHash[streamId].next(null);
-      }
-
-      this.docPreviewUrlBS$.next(null);
-      this.selectedFileIndexBS$.next(index);
-      this.selectedFileBS$.next(null);
-      return;
-    }
-    this.selectedFile = this.files[index];
-
-    const fileHandle = this.files[index].versions[0].fsHandle;
-    //    const previewUrl = this.sanitizer.bypassSecurityTrustResourceUrl( encodeURI(this.previewUrlBase) + fileHandle);
-    //    console.log('previewURL', previewUrl);
-    //    const downloadUrl = this.downloadUrlBase + fileHandle + '?dl=1';
-    //    this.docDownloadUrlBS$.next(downloadUrl);
-    //    this.docPreviewUrlBS$.next(previewUrl);
-    //    this.showSelectedIndexFeedbackBS$.next(true)
-    this.privateSelectedFileHash[streamId].next(this.files[index]);
-    this.selectedFileIndexBS$.next(index);
-    this.selectedFileBS$.next(this.selectedFile);
-    this.viewFile(this.selectedFile, 0, streamId);
-  }
-
-  setAction(action: string) {
-    this.action = action;
-    this.actionBS$.next(this.action);
-  }
-*/
-  /*
-  selectFileToEdit(index): void {
-    this.selectedFileToEditBS$.next(this.files[index]);
-  }
-  */
-/*
-  getFilesStream(): Observable<FileModel[]> {
-    return this.files$.asObservable();
-  }
-  */
-/*
-  getSelectedFileStream(): Observable<FileModel> {
-    return this.selectedFileBS$.asObservable();
-  }
-
-  getSelectedFileIndexStream(): Observable<number> {
-    return this.selectedFileIndexBS$.asObservable();
-  }
-
-  getDocPreviewStream(): Observable<SafeResourceUrl> {
-    return this.docPreviewUrlBS$.asObservable();
-  }
-
-  getFileCntStream(): Observable<number> {
-    return this.fileCnt$.asObservable();
-  }
-
-  getFilesAlertStream(): Observable<{ show: boolean, type: string, message: string, description: string }> {
-    return this.filesAlertBS$.asObservable();
-  }
-
-  getFilesFailedStream() {
-    return this.failedFiles$.asObservable();
-  }
-
-  */
   getUploadedFileStream(): Observable<FileModel> {
     return this.fileUploaded$.asObservable();
   }
-/*
-  deleteFile(id: string): void {
-    this.action = 'delete';
-    this.deleteFile$(id).subscribe(val => {
-      this.getAllFiles$(this.authenticatedUser.uid).subscribe(files => {
-        if (!files) {
-          return;
-        }
-        this.files = files;
-        this.selectedFileBS$.next(null);
-        this.loadData();
-        //        this.selectItem(-1, '');
-      })
-    });
 
+
+  openAllPicker() {
+    this.picker = 'all';
+    this.client.picker(this.allOptions).open();
   }
-*/
   openDocPicker() {
     this.picker = 'doc';
     this.client.picker(this.docOptions).open();

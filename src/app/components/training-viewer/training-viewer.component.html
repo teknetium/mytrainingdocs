@@ -178,7 +178,7 @@
                 </div>
             </div>
             <div style="display:inline-block;float:right;padding-top:20px;">
-                <div style="font-size:12px;width:fit-content;display:inline-block;">
+                <div  *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'" style="font-size:12px;width:fit-content;display:inline-block;">
                     <span style="color:#bbbbbb;">Version : </span>
                     <span>
                         {{versionFormatter(selectedTraining.versions[0].version)}}
@@ -186,7 +186,9 @@
                 </div>
                 <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked'"
                     style="width:fit-content;display:inline-block;">
+                    <!--
                     <span class="separator">|</span>
+                    -->
                     <span
                         style="display:inline-block;font-size:12px;color:#bbbbbb;">Mode&nbsp;&nbsp;:&nbsp;&nbsp;</span>
                     <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click"
@@ -850,7 +852,7 @@
                                         </tbody>
                                     </nz-table>
                                 </div>
-                                <nz-modal [(nzVisible)]="isNewVersionModalVisible"
+                                <nz-modal  *ngIf="page.content[0]" [(nzVisible)]="isNewVersionModalVisible"
                                     [nzTitle]="page.content[0].name" nzWidth="60%" nzOkDisabled="false"
                                     nzCancelDisabled="false" (nzOnCancel)="dismissNewVersionModal()"
                                     (nzOnOk)="handleNewVersionContinue()">
@@ -894,11 +896,19 @@
                                     style=" margin:40px 0;position:relative;">
                                     Select the content type you would like to upload
                                     <div style="margin-top:20px;">
-                                        <div class="content-type-row" (click)="openPicker('doc')">
+                                        <div *ngIf="authenticatedUser.appAdmin" class="content-type-row" (click)="openPicker('all')">
                                             <div
                                                 style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
-                                                <i style="font-size:24px;" nz-icon nzType="file"
+                                                <i style="font-size:24px;" nz-icon nzType="bug"
                                                     [nzTheme]="'twotone'"></i>
+                                            </div>
+                                            <div style="display:inline-block;width:80%;">
+                                                Any File
+                                            </div>
+                                        </div>
+                                        <div class="content-type-row" (click)="openPicker('doc')">
+                                            <div style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
+                                                <i style="font-size:24px;" nz-icon nzType="file" [nzTheme]="'twotone'"></i>
                                             </div>
                                             <div style="display:inline-block;width:80%;">
                                                 Application Documents - .doc, .docx, .ppt, .pptx, .xls, .xlsx, .ai,
@@ -988,7 +998,7 @@
                                                     <vg-fullscreen></vg-fullscreen>
                                                 </vg-controls>
                                                 <video [vgMedia]="media" #media id="singleVideo" preload="'auto'"
-                                                    width="100%" [src]="page.content[0].versions[0].file.safeFileUrl"
+                                                    width="100%" [src]="safeUrlHash[page.content[0].versions[0].file.fileStackUrl]"
                                                     crossorigin></video>
                                                 <!-- <video [vgMedia]="media" #media id="singleVideo" preload="'auto'"
                                             [src]="(file$ | async)?.versions[currentVersionIndex].safeUrl" crossorigin>
@@ -999,7 +1009,7 @@
                                         <div *ngIf="page.content[0].type === 'file'"
                                             style="text-align: center;height:90%;margin-top:5px;">
                                             <div style="width:100%;height:900px;display:inline-block;">
-                                                <iframe [src]="page.content[0].versions[0].file.safeFileUrl" allowfullscreen
+                                                <iframe [src]="safeUrlHash[page.content[0].versions[0].file.fileStackUrl]" allowfullscreen
                                                     width="100%" height="100%">
                                                 </iframe>
                                             </div>
@@ -1008,12 +1018,11 @@
                                 </div>
                                 <div *ngIf="page.content[0] && page.content[0].type === 'url'"
                                     style="text-align: center;height:90%;margin-top:5px;">
-                                    <div>
-                                        style="display: block;color:#bbbbbb;">
+                                    <div style="display: block;color:#bbbbbb;">
                                         {{ page.content[0].versions[0].webUrl }}
                                     </div>
                                     <div style="width:100%;height:900px;display:inline-block;">
-                                        <iframe [src]="page.content[0].versions[0].safeWebUrl" allowfullscreen width="100%"
+                                        <iframe [src]="safeUrlHash[page.content[0].versions[0].webUrl]" allowfullscreen width="100%"
                                             height="100%">
                                         </iframe>
                                     </div>

@@ -161,8 +161,6 @@ export class TrainingService {
   }
 */
   
-  AddNewJobTitle
-  
   reloadAllTrainings() {
     this.allTrainingHash = {};
     this.teamTrainingHash = {};
@@ -328,13 +326,13 @@ export class TrainingService {
     };
     newTraining.versions.unshift(newTrainingVersionObj);
 
-    this.saveNewVersion(cloneDeep(newTraining));
     newTraining.status = 'unlocked';
 
     this.postTraining$(newTraining).subscribe(trainingObj => {
+      this.saveNewVersion(newTraining);
       this.allTrainingHash[trainingObj._id] = trainingObj;
-      this.selectedTrainingBS$.next(trainingObj);
       this.reloadAllTrainings();
+//      this.selectedTrainingBS$.next(trainingObj);
     });
   }
 
@@ -446,6 +444,7 @@ export class TrainingService {
 
   saveNewVersion(training: TrainingModel) {
     let trainingArchive = this.trainingArchiveHash[training._id];
+    console.log('saveNewVersion', training);
     if (trainingArchive) {
       trainingArchive.trainings.unshift(training);
       this.putTrainingArchive$(trainingArchive).subscribe(tA => {

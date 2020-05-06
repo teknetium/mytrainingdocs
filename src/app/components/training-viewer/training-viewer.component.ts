@@ -286,7 +286,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   currentPage = null;
   videoWidth = 500;
   isNewVersionModalVisible = false;
-  previewBase = 'https://cdn.filestackcontent.com/preview=css:"https://cdn.filestackcontent.com/2fnGzVLASRGFGHQ1reBF"/';
+  //  previewBase = 'https://cdn.filestackcontent.com/preview=css:"https://cdn.filestackcontent.com/2fnGzVLASRGFGHQ1reBF"/';
+  previewBase = 'https://cdn.filestackcontent.com/preview=css:"https://cdn.filestackcontent.com/jtNVfsaDTieo28ZL7hkr"/';
   showVersions = false;
   currentSection = null;
   pageIndexHash = {};
@@ -356,8 +357,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
       if (this.selectedTraining.status === 'locked') {
         this.currentPageId = 'intro';
-      } else {
-        this.currentPageId = 'config';
       }
 
       for (let pageIndex in this.selectedTraining.pages) {
@@ -375,11 +374,14 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
                     if (contentItem.type === 'video') {
                       console.log('selectedTraining$.', contentItem, version);
                       //                      version.file.safeFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(version.file.fileStackUrl));
-                      version.file.safeFileUrl = version.file.fileStackUrl;
+                      //                      version.file.safeFileUrl = version.file.fileStackUrl;
+                      this.safeUrlHash[version.file.fileStackUrl] = version.file.fileStackUrl;
                     } else if (contentItem.type === 'file') {
-                      version.file.safeFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + version.file.fileStackId));
+//                      version.file.safeFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + version.file.fileStackId));
+                      this.safeUrlHash[version.file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + version.file.fileStackId));
                     } else if (contentItem.type === 'url') {
-                      version.safeWebUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(version.webUrl));
+//                      version.safeWebUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(version.webUrl));
+                      this.safeUrlHash[version.webUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(version.webUrl));
                     }
                   }
                 }
@@ -424,15 +426,22 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       }
       this.currentPage = this.mainContentPageHash[this.currentPageId];
 
+      if (!this.currentPage) {
+        return;
+      }
+
       this.currentPage.content[0].versions[0].dateUploaded = file.dateUploaded;
       this.currentPage.content[0].versions[0].version = '1_0_0';
       this.currentPage.content[0].versions[0].file = file;
 
+
       if (file.mimeType.includes('video')) {
         //        console.log('fileUpload$', this.selectedTraining.pages[])
         this.currentPage.content[0].type = 'video';
+        this.safeUrlHash[file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.fileStackUrl));
       } else if (file.mimeType.includes('application') || file.mimeType.includes('image')) {
         this.currentPage.content[0].type = 'file';
+        this.safeUrlHash[file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase +  file.fileStackId));
       }
       this.currentPage.title = file.name;
 
@@ -506,15 +515,15 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     patchNum++;
     return majorNum + '_' + minorNum + '_' + patchNum;
   }
-/*
-  selectPageTemplate(templateName: string) {
-    if (templateName === 'singleContent') {
-      let newPage = <Page>{
-
+  /*
+    selectPageTemplate(templateName: string) {
+      if (templateName === 'singleContent') {
+        let newPage = <Page>{
+  
+        }
       }
     }
-  }
-*/
+  */
   onJobTitleChange(value: string): void {
     console.log('onJobTitleChange', this.jobTitles);
     this.matchingJobTitles = this.jobTitles.filter(jobTitle => jobTitle.toLowerCase().indexOf(value.toLowerCase()) !== -1);
@@ -574,6 +583,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       this.fileService.openAudioPicker();
     } else if (type === 'image') {
       this.fileService.openImagePicker();
+    } else if (type === 'all') {
+      this.fileService.openAllPicker();
     }
   }
 
@@ -768,20 +779,20 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       this.pageUrl = '';
       return;
     }
-
     let safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.pageUrl));
+
     this.safeUrlHash[this.pageUrl] = safeUrl;
-    const newPage = <Page>{
-      _id: String(new Date().getTime()),
-      title: this.pageUrl,
-      intro: 'Introduction to the document',
-      content: [],
-    };
-    console.log('URL Page', newPage);
-    this.selectedTraining.pages.push(newPage);
-    this.setValidation('mainContent', true);
-    this.saveTraining(false);
-    this.setCurrentPage(newPage._id);
+    this.currentPage = this.mainContentPageHash[this.currentPageId];
+
+    this.currentPage.content[0].versions[0].dateUploaded = new Date().getTime();
+    this.currentPage.content[0].versions[0].version = '1_0_0';
+    this.currentPage.content[0].versions[0].webUrl = this.pageUrl;
+
+    this.currentPage.content[0].type = 'url';
+    this.currentPage.title = this.pageUrl;
+
+    this.saveTraining(true);
+
     this.pageUrl = '';
   }
 
@@ -822,7 +833,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.currentPage = newPage;
     this.pageIndexHash[newPage._id] = this.selectedTraining.pages.length - 1;
     this.mainContentPageHash[newPage._id] = newPage;
-    this.saveTraining(false);
+    this.saveTraining(true);
     this.setCurrentPage(newPage._id);
   }
 
@@ -880,12 +891,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       });
     }, 800);
   }
-/*
-  setCurrentStepPanel(newIndex) {
-    this.currentStep = newIndex;
-    //    this.runningTour = true;
-  }
-  */
+  /*
+    setCurrentStepPanel(newIndex) {
+      this.currentStep = newIndex;
+      //    this.runningTour = true;
+    }
+    */
   /*
     viewVersion(index) {
       this.currentVersionIndex = index;
@@ -1057,7 +1068,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       return;
     }
     console.log('TrainingViewerComponent:saveTraining', this.selectedTraining);
-    this.trainingService.saveTraining(this.selectedTraining, reload);
+    this.trainingService.saveTraining(this.selectedTraining, true);
     this.setCurrentPage(this.currentPageId);
   }
 
