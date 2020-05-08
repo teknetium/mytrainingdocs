@@ -26,8 +26,9 @@ export class UserService {
   private myTeamIdHashBS$ = new BehaviorSubject<UserIdHash>(null);
   private myTeamCntBS$ = new BehaviorSubject<number>(0);
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
-  private newUser$: Observable<UserModel>;
+  private newUserBS$ = new BehaviorSubject<UserModel>(null);
   private allOrgUserHash: UserIdHash = {};
+  private myTeam: UserModel[];
 
   userTypeIconHash = {
     supervisor: 'fad fa-user-tie',
@@ -183,6 +184,7 @@ export class UserService {
       if (!userList) {
         return;
       }
+      this.myTeam = userList;
       this.myTeamIdHash = {};
       for (let user of userList) {
         this.myTeamIdHash[user._id] = user;
@@ -205,6 +207,7 @@ export class UserService {
 
   createNewUser(user: UserModel) {
     this.postUser$(user).subscribe(data => {
+
       this.loadData(this.teamId);
     })
   }
@@ -252,6 +255,10 @@ export class UserService {
 
   getAuthenticatedUserStream(): Observable<UserModel> {
     return this.authenticatedUserBS$.asObservable();
+  }
+
+  getNewUserStream(): Observable<UserModel> {
+    return this.newUserBS$.asObservable();
   }
 
   private get _authHeader(): string {

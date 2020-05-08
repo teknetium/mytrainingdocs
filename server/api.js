@@ -73,7 +73,7 @@ module.exports = function(app, config) {
   }
 
 
-  const trainingArchiveProjection = "_id trainings";
+  const trainingArchiveProjection = "_id title versions type category subcategory owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle assessment useAssessment status interestList shared isValid isDirty";
   const trainingListProjection = "_id title versions type category subcategory owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle assessment useAssessment status interestList shared isValid isDirty";
   const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponse passedAssessment score trainingVersion";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email teamAdmin orgAdmin appAdmin teamId org supervisorId profilePicUrl settings";
@@ -338,27 +338,55 @@ module.exports = function(app, config) {
   // Training Archive API
   //
   app.get("/api/trainingarchive/:id", (req, res) => {
-    TrainingArchive.findOne({ _id: req.params.id },
-      trainingArchiveProjection, (err, training) => {
+    TrainingArchive.findById(req.params.id, trainingArchiveProjection, (err, trainingArchive) => {
         if (err) {
           return res.status(500).send({ message: err.message });
         }
-        res.send(training);
+        res.send(trainingArchive);
       },
     );
   });
   app.post("/api/trainingarchive/new", jwtCheck, (req, res) => {
-    const trainingArchive = new TrainingArchive({
-      _id: req.body._id,
-      trainings: req.body.trainings
-    });
-    TrainingArchive.create(trainingArchive, function (err, trainingArchiveObj) {
-      if (err) {
-        return res.status(500).send({ message: err.message });
-      }
-      res.send(trainingArchiveObj);
-    });
+    const training = new TrainingArchive({
+        _id: req.body._id,
+        title: req.body.title,
+        type: req.body.type,
+        category: req.body.category,
+        subcategory: req.body.subcategory,
+        versions: req.body.versions,
+        teamId: req.body.teamId,
+        owner: req.body.owner,
+        dateCreated: req.body.dateCreated,
+        estimatedTimeToComplete: req.body.estimatedTimeToComplete,
+        jobTitle: req.body.jobTitle,
+        description: req.body.description,
+        execSummary: req.body.execSummary,
+        execSummaryLabel: req.body.execSummaryLabel,
+        introduction: req.body.introduction,
+        introductionLabel: req.body.introductionLabel,
+        goals: req.body.goals,
+        goalsLabel: req.body.goalsLabel,
+        image: req.body.image,
+        iconClass: req.body.iconClass,
+        iconColor: req.body.iconColor,
+        iconSource: req.body.iconSource,
+        pages: req.body.pages,
+        assessment: req.body.assessment,
+        useAssessment: req.body.useAssessment,
+        status: req.body.status,
+        interestList: req.body.interestList,
+        shared: req.body.shared,
+        isValid: req.body.isValid,
+        isDirty: req.body.isDirty,
+      });
+      TrainingArchive.create(training, function (err, trainingArchiveObj) {
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        res.send(trainingArchiveObj);
+      });
   });
+  /*
   app.put("/api/trainingarchive/:id", jwtCheck, (req, res) => {
     TrainingArchive.findById(req.params.id, (err, trainingArchive) => {
       if (err) {
@@ -367,8 +395,7 @@ module.exports = function(app, config) {
       if (!trainingArchive) {
         return res.status(400).send({ message: "Training archive not found." });
       }
-      trainingArchive._id = req.body._id;
-      trainingArchive.trainings = req.body.trainings;
+      trainingArchive.trainings.unshift(req.body.training);
 
       trainingArchive.save(err2 => {
         if (err2) {
@@ -378,6 +405,7 @@ module.exports = function(app, config) {
       });
     });
   });
+  */
   app.delete("/api/trainingarchive/:id", jwtCheck, (req, res) => {
     TrainingArchive.findById(req.params.id, (err, foo) => {
       if (err) {

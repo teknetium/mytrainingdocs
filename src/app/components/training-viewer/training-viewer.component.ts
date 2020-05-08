@@ -6,7 +6,7 @@ import { JobTitleService } from '../../shared/services/jobtitle.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { AuthService } from '../../shared/services/auth.service';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { TrainingModel, Page, Content, Assessment, AssessmentItem, TrainingVersion, TrainingArchive, Version } from 'src/app/shared/interfaces/training.type';
+import { TrainingModel, Page, Content, Assessment, AssessmentItem, TrainingVersion, Version } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FileModel } from 'src/app/shared/interfaces/file.type';
@@ -22,6 +22,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { read } from 'fs';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
+import { TrainingViewerModule } from './training-viewer.module';
 
 
 
@@ -94,6 +95,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   isAuthenticated$: Observable<boolean>;
   isIconSelectModalVisible = false;
   selectedTraining$: Observable<TrainingModel>;
+  trainingArchiveList$: Observable<TrainingModel[]>;
   selectedTrainingVersions$: Observable<TrainingVersion[]>;
   //  selectedTrainingIndex$: Observable<number>;
   fileUploaded$: Observable<FileModel>;
@@ -277,8 +279,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   currentSelectedTrainingVersionObj: TrainingVersion;
   debug = false;
   versionRequestError = false;
-  trainingArchiveObj: TrainingArchive;
-  trainingArchiveList: TrainingModel[];
   trainingClone: TrainingModel;
   currentTraining: TrainingModel;
   mainContentPageHash = {};
@@ -296,6 +296,14 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   jobTitles: string[] = [];
   matchingJobTitles: string[] = [];
   jobTitles$: Observable<string[]>;
+  assignedFromJobTitle: string[] = [];
+  removedFromJobTitle: string[] = [];
+  assignedFromJobTitleDialogIsVisible = false;
+  trainingArchiveList: TrainingModel[] = [];
+  trainingArchiveHash = {};
+  trainingVersions$: Observable<TrainingVersion[]>;
+
+  currentObjects: any[] = [];
 
   constructor(
     private trainingService: TrainingService,
@@ -322,9 +330,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.users$ = this.userTrainingService.getUsersForTrainingStream();
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     this.trainingIsDirty$ = this.trainingService.getTrainingIsDirtyStream();
+    this.trainingArchiveList$ = this.trainingService.getTrainingArchiveListStream();
+//    this.trainingVersions$ = this.trainingService.getTrainingVersionsStream();
   }
 
   ngOnInit() {
+    this.currentVersionIndex = 0;
     this.mode = 'Edit';
     this.currentTraining = null;
     this.trainingService.selectTraining(null);
@@ -346,11 +357,14 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         this.currentSelectedTrainingVersions = training.versions;
         this.currentSelectedTrainingVersionObj = training.versions[0];
         this.selectedTraining = training;
+        this.trainingService.getTrainingArchive(this.selectedTraining);
+        /*
         this.trainingService.getTrainingArchive$(this.selectedTraining._id).subscribe(trainingArchive => {
           console.log('trainingArchive ', trainingArchive);
           this.trainingArchiveObj = trainingArchive;
           this.trainingArchiveList = this.trainingArchiveObj.trainings;
         })
+        */
       } else {
         this.selectedTraining = training;
       }
@@ -362,7 +376,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       for (let pageIndex in this.selectedTraining.pages) {
         this.pageIndexHash[this.selectedTraining.pages[pageIndex]._id] = pageIndex;
       }
-      console.log('XXXXXXXXonitInit', this.pageIndexHash);
 
       if (this.selectedTraining.pages) {
         for (let page of this.selectedTraining.pages) {
@@ -372,15 +385,14 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
                 for (let version of contentItem.versions) {
                   if (version) {
                     if (contentItem.type === 'video') {
-                      console.log('selectedTraining$.', contentItem, version);
                       //                      version.file.safeFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(version.file.fileStackUrl));
                       //                      version.file.safeFileUrl = version.file.fileStackUrl;
                       this.safeUrlHash[version.file.fileStackUrl] = version.file.fileStackUrl;
                     } else if (contentItem.type === 'file') {
-//                      version.file.safeFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + version.file.fileStackId));
+                      //                      version.file.safeFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + version.file.fileStackId));
                       this.safeUrlHash[version.file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + version.file.fileStackId));
                     } else if (contentItem.type === 'url') {
-//                      version.safeWebUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(version.webUrl));
+                      //                      version.safeWebUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(version.webUrl));
                       this.safeUrlHash[version.webUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(version.webUrl));
                     }
                   }
@@ -396,7 +408,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       this.setCurrentPage(this.currentPageId);
       /*
       for (const page of this.selectedTraining.pages) {
-        for (const item of page.content) {
+        for (const item of page.content) {  
           if (item.type === 'url') {
             this.safeContentUrlHash[item.url] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(item.url));
           } else if (item.type === 'file') {
@@ -415,10 +427,20 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         console.log('selectedTrainingVersions$ : ERROR', versions);
         return;
       }
-
       this.selectedTrainingVersions = versions;
-
     })
+
+/*
+    this.trainingArchiveList$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(trainingArchiveList => {
+      if (!trainingArchiveList) {
+        return;
+      }
+      this.trainingArchiveList = trainingArchiveList; 
+      for (let training of this.trainingArchiveList) {
+        this.trainingArchiveHash[training._id] = training;
+      }
+    });
+    */
 
     this.fileUploaded$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(file => {
       if (!file) {
@@ -441,7 +463,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         this.safeUrlHash[file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.fileStackUrl));
       } else if (file.mimeType.includes('application') || file.mimeType.includes('image')) {
         this.currentPage.content[0].type = 'file';
-        this.safeUrlHash[file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase +  file.fileStackId));
+        this.safeUrlHash[file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + file.fileStackId));
       }
       this.currentPage.title = file.name;
 
@@ -532,6 +554,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   setJobTitle(value) {
     this.jobTitleService.addJobTitle(this.selectedTraining.jobTitle);
     this.saveTraining(true);
+
   }
 
   unlockTraining() {
@@ -540,7 +563,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   loadVersion(version, index) {
-    this.trainingService.selectTrainingVersion(this.trainingArchiveList[index]);
+    if (index === 0) {
+      this.trainingService.selectTrainingVersion(this.currentTraining);
+    } else {
+      this.trainingService.selectTrainingArchive(this.currentTraining._id + '-' + version.version);
+    }
     this.currentVersionIndex = index;
   }
 
@@ -683,7 +710,31 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       iconColor: this.selectedTraining.iconColor,
     };
     this.selectedTraining.versions.unshift(newTrainingVersionObj);
+//    this.currentSelectedTrainingVersions.unshift(newTrainingVersionObj);
     let trainingClone = cloneDeep(this.selectedTraining);
+    
+    // if the job title being saved for this version is not the same as the previous version
+    // then we have some work to do.   Remove the training from the users with the old job title
+    // and assign the training to the users with the new jopb title
+    if (this.selectedTraining.jobTitle !== this.trainingArchiveList[0].jobTitle) {
+
+      for (let userId of this.assignedToUsers) {
+        if (this.myTeamHash[userId].jobTitle === this.trainingArchiveList[0].jobTitle) {
+          this.userTrainingService.deleteUserTrainingByTidUid(this.selectedTraining._id, userId);
+          this.removedFromJobTitle.push(userId);
+        }
+      }
+
+      for (let userId of this.assignableUsers) {
+        if (this.myTeamHash[userId].jobTitle === this.selectedTraining.jobTitle) {
+          this.userTrainingService.assignTraining(userId, this.selectedTraining._id);
+          this.assignedFromJobTitle.push(userId);
+        }
+      }
+      if (this.assignedFromJobTitle.length > 0) {
+        this.assignedFromJobTitleDialogIsVisible = true;
+      }
+    }
 
     this.trainingService.saveNewVersion(trainingClone);
     this.trainingService.selectTrainingVersion(trainingClone);
@@ -708,9 +759,21 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         iconColor: this.selectedTraining.iconColor,
       };
       this.selectedTraining.versions.unshift(newTrainingVersionObj);
+//      this.currentSelectedTrainingVersions.unshift(newTrainingVersionObj);
       this.trainingClone = cloneDeep(this.selectedTraining);
       this.trainingService.saveNewVersion(this.trainingClone);
       this.trainingService.selectTrainingVersion(this.trainingClone);
+      if (this.selectedTraining.jobTitle) {
+        for (let userId of this.assignableUsers) {
+          if (this.myTeamHash[userId].jobTitle === this.selectedTraining.jobTitle) {
+            this.userTrainingService.assignTraining(userId, this.selectedTraining._id);
+            this.assignedFromJobTitle.push(userId);
+          }
+        }
+        if (this.assignedFromJobTitle.length > 0) {
+          this.assignedFromJobTitleDialogIsVisible = true;
+        }
+      }
     } else {
       this.lockTrainingModalIsVisible = true;
     }
@@ -924,7 +987,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       this.currentPage = this.mainContentPageHash[this.currentPageId];
       this.currentPageIndex = this.pageIndexHash[pageId];
       this.currentPage.content[0] = this.currentPage.content[0];
-      console.log('setCurrentPage', this.currentPage.content[0].versions[0]);
     }
 
     /*
@@ -1005,10 +1067,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   closeViewer() {
     console.log('closeViewer');
+    this.currentTraining = null;
     this.userTrainingService.stopSession(this.selectedTraining._id);
     //    this.trainingService.reloadAllTrainings();
     this.trainingService.selectTraining(null);
     this.assessmentInProgress = false;
+    this.currentVersionIndex = 0;
   }
 
   toggleTOC() {

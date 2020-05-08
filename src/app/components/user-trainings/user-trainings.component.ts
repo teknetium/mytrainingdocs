@@ -143,6 +143,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   confirmDeleteUserTraining(ut) {
     this.userTrainingService.deleteUserTraining(ut._id, ut.uid);
     this.userTrainingService.selectUser(ut.uid);
+    this.trainingIsVisible = false;
   }
 
   handleMarkAsCompletedCancel() {
@@ -171,6 +172,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       rating: this.rating,
       date: new Date().getTime()
     }
+    this.trainingIsVisible = false;
     this.markCompletedModalIsVisible = false;
     this.utIdHash[this.currentUserTraining].dateCompleted = new Date().getTime();
     this.utIdHash[this.currentUserTraining].status = 'completed';

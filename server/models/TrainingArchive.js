@@ -37,7 +37,7 @@ const pageSchema = new Schema({
   type: { type: String, required: true },
   title: { type: String },
   intro: { type: String },
-  Content: [contentSchema],
+  content: [contentSchema],
 })
 
 const assessmentSchema = new Schema({
@@ -54,54 +54,49 @@ const assessmentSchema = new Schema({
   ]
 })
 
+
 const trainingArchiveSchema = new Schema({
   _id: { type: String, required: true },
-  trainings: [
+  type: { type: String, required: true },
+  versions: [
     {
-    _id: { type: String, required: true },
-    type: { type: String, required: true },
-    versions: [
-      {
-        _id: String,
-        version: String,
-        pending: Boolean,
-        changeLog: String,
-        ownerId: String,
-        dateCreated: Number,
-        title: String,
-        iconClass: String,
-        iconColor: String,
-      }],
-
-    status: { type: String, required: true },
-    category: { type: String, required: false },
-    subcategory: { type: String, required: false },
-    title: { type: String, required: true },
-    teamId: { type: String, required: true },
-    owner: { type: String, required: true },
-    dateCreated: { type: Number, required: true },
-    estimatedTimeToComplete: { type: Number, required: true },
-    jobTitle: { type: String, required: false },
-    description: { type: String, required: true },
-    image: { type: String, required: false },
-    introductionLabel: { type: String, required: false },
-    introduction: { type: String, required: false },
-    execSummaryLabel: { type: String, required: false },
-    execSummary: { type: String, required: false },
-    goalsLabel: { type: String, required: false },
-    goals: { type: String, required: false },
-    iconClass: { type: String, required: true },
-    iconColor: { type: String, required: true },
-    iconSource: { type: String, required: true },
-    pages: [pageSchema],
-    useAssessment: { type: Boolean },
-    assessment: assessmentSchema,
-    interestList: [String],
-    shared: { type: Boolean },
-    isValid: { type: Object },
-    isDirty: { type: Boolean },
-}
-  ]
+      _id: String,
+      version: String,
+      pending: Boolean,
+      changeLog: String,
+      ownerId: String,
+      dateCreated: Number,
+      title: String,
+      iconClass: String,
+      iconColor: String,
+    }],
+  status: { type: String, required: true },
+  category: { type: String, required: false },
+  subcategory: { type: String, required: false },
+  title: { type: String, required: true },
+  teamId: { type: String, required: true },
+  owner: { type: String, required: true },
+  dateCreated: { type: Number, required: true },
+  estimatedTimeToComplete: { type: Number, required: true },
+  jobTitle: { type: String, required: false },
+  description: { type: String, required: true },
+  image: { type: String, required: false },
+  introductionLabel: { type: String, required: false },
+  introduction: { type: String, required: false },
+  execSummaryLabel: { type: String, required: false },
+  execSummary: { type: String, required: false },
+  goalsLabel: { type: String, required: false },
+  goals: { type: String, required: false },
+  iconClass: { type: String, required: true },
+  iconColor: { type: String, required: true },
+  iconSource: { type: String, required: true },
+  pages: [pageSchema],
+  useAssessment: { type: Boolean },
+  assessment: assessmentSchema,
+  interestList: [String],
+  shared: { type: Boolean },
+  isValid: { type: Object },
+  isDirty: { type: Boolean },
 });
 
 module.exports = mongoose.model("TrainingArchive", trainingArchiveSchema);

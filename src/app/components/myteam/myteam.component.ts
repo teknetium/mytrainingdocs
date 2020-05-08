@@ -69,8 +69,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   includeNewSupervisorsTeam = true;
   isNewSupervisorPanelOpen = false;
   isUserAddPanelOpen = false;
-  
+
   selectedUser$: Observable<UserModel>;
+  newUser$: Observable<UserModel>;
   selectedUser: UserModel;
   selectedUserId: string;
   authenticatedUser: UserModel;
@@ -119,10 +120,17 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
+    this.newUser$ = this.userService.getNewUserStream();
     this.jobTitles$ = this.jobTitleService.getJobTitleStream();
   }
 
   ngOnInit() {
+    this.newUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(newUser => {
+      if (!newUser) {
+        return;
+      }
+      this.trainingService.assignTrainingsForJobTitle(newUser.jobTitle, newUser._id);
+    });
     this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamIdHash => {
       if (!myTeamIdHash) {
         return;
@@ -131,12 +139,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
       this.myTeam = Object.values(this.myTeamIdHash);
       this.cd.detectChanges();
-/*
-      if (this.myTeam.length > 0) {
-        this.userIdSelected = this.myTeam[0]._id;
-        this.userService.selectUser(this.myTeam[0]._id);
-      }
-      */
+      /*
+            if (this.myTeam.length > 0) {
+              this.userIdSelected = this.myTeam[0]._id;
+              this.userService.selectUser(this.myTeam[0]._id);
+            }
+            */
     });
     this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
@@ -144,6 +152,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         return;
       }
       this.userIdSelected = user._id;
+      this.selectedUser = user;
       this.trainingService.selectTraining(null);
 
     });
@@ -167,8 +176,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   setJobTitle(value) {
-    this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
-    this.userService.updateUser(this.authenticatedUser, false);
+    this.jobTitleService.addJobTitle(this.newTeamMember.jobTitle);
+    //    this.userService.updateUser(this.authenticatedUser, false);
   }
 
   onJobTitleChange(value: string): void {
@@ -177,6 +186,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   addUser() {
+    this.newTeamMember.firstName = '';
+    this.newTeamMember.lastName = '';
+    this.newTeamMember.email = '';
+    this.newTeamMember.teamAdmin = false;
     this.isUserAddPanelOpen = true;
     this.options = [];
   }
@@ -202,10 +215,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
     this.mailService.sendMessage(this.message);
     this.isUserAddPanelOpen = false;
-    this.newTeamMember.firstName = '';
-    this.newTeamMember.lastName = '';
-    this.newTeamMember.email = '';
-    this.newTeamMember.teamAdmin = false;
     this.cd.detectChanges();
   }
 

@@ -89,8 +89,3 @@ export interface Version {
   safeWebUrl: SafeResourceUrl,
   text: string,
 }
-
-export interface TrainingArchive {
-  _id: string,
-  trainings: TrainingModel[]
-}

@@ -113,6 +113,7 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
     }
     this.userService.deleteUser(user._id);
     this.userTrainingService.deleteUTForUser(user._id);
+    this.userService.selectAuthenticatedUser();
   }
 
   handleCancelUserTraining() {
