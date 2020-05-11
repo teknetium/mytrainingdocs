@@ -2,5 +2,5 @@
     [ngClass]="{'no-padding': useBanner === 'no', 'with-padding': useBanner === 'yes'}">
     <div *ngIf="useBanner === 'yes'" class="my-team-header">
     </div>
-    <app-user-trainings logSession="on"></app-user-trainings>
+    <app-user-trainings logSession="on" production="on"></app-user-trainings>
 </div>

@@ -7,6 +7,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { AuthenticatedROUTES } from './authenticated.routes';
 import { AuthGuard } from './shared/guard/auth.guard';
 import { LoginComponent } from './components/login/login.component';
+import { TrainingViewerComponent } from './components/training-viewer/training-viewer.component';
 
 
 const appRoutes: Routes = [
@@ -28,6 +29,7 @@ const appRoutes: Routes = [
         children: AuthenticatedROUTES
     },
     */
+
     {
         path: 'callback',
         component: CallbackComponent,

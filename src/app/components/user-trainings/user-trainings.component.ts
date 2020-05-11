@@ -50,6 +50,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   
   @Input() mode = '';
   @Input() logSession = 'off';
+  @Input() production = 'off';
 
   currentUserTraining: string;
   markCompletedModalIsVisible: boolean;

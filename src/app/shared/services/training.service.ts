@@ -31,11 +31,9 @@ export class TrainingService {
 
   private allTrainingHashBS$ = new BehaviorSubject<TrainingIdHash>({});
 
-  // teamTrainings is an array of training id's created by the team
   private teamTrainingHashBS$ = new BehaviorSubject<TrainingIdHash>({});
-  private trainingArchiveListBS$ = new BehaviorSubject<TrainingModel[]>([]);
-  private trainingVersionsBS$ = new BehaviorSubject<TrainingVersion[]>([]);
   private teamTrainingCntBS$ = new BehaviorSubject<number>(0);
+
 
   private teamTrainingHash = {};
   private systemTrainingHash = {};
@@ -57,6 +55,11 @@ export class TrainingService {
   selectedTrainingVersionsBS$ = new BehaviorSubject<TrainingVersion[]>(null);
 
   trainingIsDirtyBS$ = new BehaviorSubject<boolean>(false);
+  categoriesBS$ = new BehaviorSubject<string[]>([]);
+  categories: string[] = [];
+  subcategoriesBS$ = new BehaviorSubject<string[]>([]);
+  subcategories: string[] = [];
+  previousVersionBS$ = new BehaviorSubject<TrainingModel>(null);
 
   // Using Angular DI we use the HTTP service
   constructor(
@@ -87,6 +90,12 @@ export class TrainingService {
             if (training.jobTitle) {
               this.jobTitleService.addJobTitle(training.jobTitle);
             }
+            if (training.category) {
+              this.addCategory(training.category);
+            }
+            if (training.subcategory) {
+              this.addSubcategory(training.subcategory);
+            }
 
           }
           let teamTrainingIds = Object.keys(this.teamTrainingHash);
@@ -105,6 +114,12 @@ export class TrainingService {
               if (training.jobTitle) {
                 this.jobTitleService.addJobTitle(training.jobTitle);
               }
+              if (training.category) {
+                this.addCategory(training.category);
+              }
+              if (training.subcategory) {
+                this.addSubcategory(training.subcategory);
+              }
             }
 
             // load shared trainings
@@ -118,9 +133,14 @@ export class TrainingService {
                 if (training.jobTitle) {
                   this.jobTitleService.addJobTitle(training.jobTitle);
                 }
+                if (training.category) {
+                  this.addCategory(training.category);
+                }
+                if (training.subcategory) {
+                  this.addSubcategory(training.subcategory);
+                }
               }
               this.allTrainingIds = Object.keys(this.allTrainingHash);
-
               this.allTrainingHashBS$.next(this.allTrainingHash);
             });
           });
@@ -128,6 +148,32 @@ export class TrainingService {
       }
 
     });
+  }
+
+  getCategoryStream(): Observable<string[]> {
+    return this.categoriesBS$.asObservable();
+  }
+  addCategory(category: string) {
+    category = category.trim();
+    if (category && !this.categories.includes(category)) {
+      this.categories.push(category);
+      this.categoriesBS$.next(this.categories);
+    }
+  }
+
+  getSubcategoryStream(): Observable<string[]> {
+    return this.subcategoriesBS$.asObservable();
+  }
+  addSubcategory(subcategory: string) {
+    subcategory = subcategory.trim();
+    if (subcategory && !this.subcategories.includes(subcategory)) {
+      this.subcategories.push(subcategory);
+      this.subcategoriesBS$.next(this.subcategories);
+    }
+  }
+
+  getPreviousVersionStream(): Observable<TrainingModel> {
+    return this.previousVersionBS$.asObservable();
   }
 
   assignTrainingsForJobTitle(jobTitle: string, userId: string): void {
@@ -139,35 +185,6 @@ export class TrainingService {
     }
   }
 
-  /*
-    reloadTeamTrainings() {
-      console.log('trainingService reloadTeamTrainings', this.teamId);
-      this.teamTrainingHash = {};
-      //    this.trainingCollectionHash = {};
-      //    this.trainingWCCollectionHash = {};
-      this.getTrainings$(this.teamId).subscribe(teamTrainings => {
-        if (!teamTrainings) {
-          teamTrainings = [];
-        }
-        for (let training of teamTrainings) {
-          //        this.trainingCollectionHash[training._id] = training;
-          / *
-          if (training.status === 'unlocked') {
-            this.getTrainingWCById$(training._id).subscribe(trainingObj => {
-              this.trainingWCCollectionHash[trainingObj._id] = trainingObj;
-              this.allTrainingHash[trainingObj._id] = trainingObj;
-              this.teamTrainingHash[trainingObj._id] = trainingObj;
-            });
-          }
-          * /
-          this.teamTrainingHash[training._id] = training;
-          this.allTrainingHash[training._id] = training;
-        }
-        this.teamTrainingHashBS$.next(this.teamTrainingHash);
-        this.allTrainingHashBS$.next(this.allTrainingHash);
-      });
-    }
-  */
 
   reloadAllTrainings() {
     this.allTrainingHash = {};
@@ -230,6 +247,10 @@ export class TrainingService {
 
     this.selectedTrainingBS$.next(this.allTrainingHash[tid]);
     this.selectedTrainingVersionsBS$.next(cloneDeep(this.allTrainingHash[tid].versions));
+    let previousVersionId = tid + '-' + this.allTrainingHash[tid].versions[0].version;
+    this.getTrainingArchive$(previousVersionId).subscribe(trainingArchive => {
+      this.previousVersionBS$.next(trainingArchive);
+    })
   }
 
   getTrainingIsDirtyStream(): Observable<boolean> {
@@ -240,14 +261,6 @@ export class TrainingService {
     return this.allTrainingHashBS$.asObservable();
   }
 
-  getTrainingArchiveListStream(): Observable<TrainingModel[]> {
-    return this.trainingArchiveListBS$.asObservable();
-  }
-  /*
-    getTrainingVersionsStream(): Observable<TrainingVersion[]> {
-      return this.trainingVersionsBS$.asObservable();
-    }
-  */
   getTeamTrainingHashStream(): Observable<TrainingIdHash> {
     return this.teamTrainingHashBS$.asObservable();
   }
@@ -344,10 +357,12 @@ export class TrainingService {
     newTraining.versions.unshift(newTrainingVersionObj);
 
     this.postTraining$(newTraining).subscribe(trainingObj => {
-      this.saveNewVersion(trainingObj);
+//      this.saveNewVersion(trainingObj);
       this.allTrainingHash[trainingObj._id] = trainingObj;
-      this.reloadAllTrainings();
-      //      this.selectedTrainingBS$.next(trainingObj);
+      trainingObj.status = 'unlocked';
+      this.saveTraining(trainingObj,true);
+//      this.reloadAllTrainings();
+      this.selectedTrainingBS$.next(trainingObj);
     });
   }
 
@@ -402,26 +417,6 @@ export class TrainingService {
     return newPage;
   }
 
-  /*
-  loadArchivedVersion(tid, version) { 
-    let trainingArchive = this.trainingArchiveHash[tid];
-    if (!trainingArchive) {
-      console.log('loadArchivedVersion ...ERROR no trainingArchive object', this.trainingArchiveHash[tid]);
-    } else {
-      for (let training of trainingArchive.trainings) {
-        if (training.versions[0].version === version) {
-          this.selectTrainingVersion(training);
-          break;
-        }
-      }
-    } 
-  }
-  */
-  /*
-    createTrainingArchive(training: TrainingModel) {
-  
-    }
-  */
   createTraining(training: TrainingModel) {
     this.postTraining$(training).subscribe(trainingObj => {
       this.reloadAllTrainings();
@@ -434,30 +429,13 @@ export class TrainingService {
       });
     }
     */
-
+  
   selectTrainingArchive(trainingArchiveID: string) {
     this.getTrainingArchive$(trainingArchiveID).subscribe(trainingArchive => {
       this.selectTrainingVersion(trainingArchive);
     })
   }
-  
-  getTrainingArchive(training: TrainingModel) {
-    let versionCnt = training.versions.length;
-    let archiveList: TrainingModel[] = new Array(versionCnt);
-    for (let index in training.versions) {
-      this.getTrainingArchive$(training._id + '-' + training.versions[index].version).subscribe(trainingArchive => {
-        for (let index in training.versions) {
-          let archiveId = training._id + '-' + training.versions[index].version;
-          if (archiveId === trainingArchive._id) {
-            archiveList[index] = trainingArchive;
-          }
-        }
-      });
-    }
-
-    this.trainingArchiveListBS$.next(archiveList);
-  }
-
+ 
   deleteTraining(id: string) {
     this.deleteTraining$(id).subscribe(item => {
       this.reloadAllTrainings();
@@ -487,18 +465,11 @@ export class TrainingService {
   saveNewVersion(training: TrainingModel) {
     let newVersion = training.versions[0];
     let trainingArchiveId = training._id + '-' + newVersion.version;
-//    let trainingArchiveList = this.trainingArchiveListHash[training._id];
-
-//    if (!trainingArchiveList) {
-//      trainingArchiveList = [];
-//    }
     let trainingArchive = cloneDeep(training);
     trainingArchive._id = trainingArchiveId;
     this.editTraining$(training).subscribe(obj => {
       this.postTrainingArchive$(trainingArchive).subscribe(tA => {
-//        trainingArchiveList.unshift(tA);
-//        this.trainingArchiveListHash[training._id] = trainingArchiveList;
-//        this.trainingArchiveListBS$.next(trainingArchiveList);
+        this.reloadAllTrainings();
         this.selectedTrainingVersionsBS$.next(training.versions);
       });
     })
@@ -515,9 +486,6 @@ export class TrainingService {
         this.selectTrainingVersion(training)
       }
     });
-    //    this.editTrainingWC$(training).subscribe(data => {
-    //      this.reloadAllTrainings();
-    //    });
   }
 
   // GET a training by ID (login required)
@@ -530,17 +498,6 @@ export class TrainingService {
         catchError((error) => this._handleError(error))
       );
   }
-  /*
-  getTrainingWCById$(id: string): Observable<TrainingModel> {
-    return this.http
-      .get<TrainingModel>(`${ENV.BASE_API}trainingsworkingcopy/${id}`, {
-        headers: new HttpHeaders().set('Authorization', this._authHeader)
-      })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-  }
-*/
 
   // POST new training (admin only)
   postTraining$(training: TrainingModel): Observable<TrainingModel> {
@@ -561,17 +518,6 @@ export class TrainingService {
         catchError((error) => this._handleError(error))
       );
   }
-  /*
-    postTrainingWC$(training: TrainingModel): Observable<TrainingModel> {
-      return this.http
-        .post<TrainingModel>(`${ENV.BASE_API}trainingworkingcopy/new`, training, {
-          headers: new HttpHeaders().set('Authorization', this._authHeader)
-        })
-        .pipe(
-          catchError((error) => this._handleError(error))
-        );
-    }
-    */
 
   // PUT existing training (admin only)
   editTraining$(training: TrainingModel): Observable<TrainingModel> {
@@ -583,28 +529,6 @@ export class TrainingService {
         catchError((error) => this._handleError(error))
       );
   }
-  /*
-  putTrainingArchive$(training: TrainingModel): Observable<TrainingArchive> {
-    return this.http
-      .put<TrainingArchive>(`${ENV.BASE_API}trainingarchive/${training._id}`, training, {
-        headers: new HttpHeaders().set('Authorization', this._authHeader)
-      })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-  }
-  */
-  /*
-  editTrainingWC$(training: TrainingModel): Observable<TrainingModel> {
-    return this.http
-      .put<TrainingModel>(`${ENV.BASE_API}trainingsworkingcopy/${training._id}`, training, {
-        headers: new HttpHeaders().set('Authorization', this._authHeader)
-      })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-  }
-  */
 
   // DELETE existing training and all associated Users (admin only)
   deleteTraining$(id: string): Observable<TrainingModel> {
@@ -616,17 +540,6 @@ export class TrainingService {
         catchError((error) => this._handleError(error))
       );
   }
-  /*
-  deleteTrainingWC$(id: string): Observable<TrainingModel> {
-    return this.http
-      .delete(`${ENV.BASE_API}trainingsworkingcopy/${id}`, {
-        headers: new HttpHeaders().set('Authorization', this._authHeader)
-      })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-  }
-  */
 
   // GET all trainings for a specific user
   getUserTrainings$(userId: string): Observable<TrainingModel[]> {
@@ -638,18 +551,6 @@ export class TrainingService {
         catchError((error) => this._handleError(error))
       );
   }
-  // GET Users by training ID (login required)
-  /*
-  getUsersBytrainingId$(trainingId: string): Observable<UserModel[]> {
-    return this.http
-      .get<UserModel[]>(`${ENV.BASE_API}training/${trainingId}/Users`, {
-        headers: new HttpHeaders().set('Authorization', this._authHeader)
-      })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-  }
-  */
 
   private _handleError(err: HttpErrorResponse | any): Observable<any> {
     const errorMsg = err.message || 'Error: Unable to complete request.';

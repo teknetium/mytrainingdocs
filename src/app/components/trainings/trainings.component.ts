@@ -1,16 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
-import { CommentModel } from '../../shared/interfaces/comment.type';
 import { TrainingService } from '../../shared/services/training.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
-import { AuthService } from '../../shared/services/auth.service';
-
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserModel, UserIdHash } from '../../shared/interfaces/user.type';
-import { SafeResourceUrl } from '@angular/platform-browser';
 import { UserService } from '../../shared/services/user.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { take, takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
 import { CommentService } from 'src/app/shared/services/comment.service';
@@ -22,7 +17,7 @@ import { CommentService } from 'src/app/shared/services/comment.service';
   styleUrls: ['./trainings.component.css'],
 })
 
-export class TrainingsComponent extends BaseComponent implements OnInit {
+export class TrainingsComponent extends BaseComponent implements OnInit, AfterViewInit {
 
   isAuthenticated$: Observable<boolean>;
   cellFontSize = '28';
@@ -51,11 +46,12 @@ export class TrainingsComponent extends BaseComponent implements OnInit {
   myTeamIdHash: UserIdHash;
   selectedTrainingId = null;
   currentTrainingId = '';
+  tid: string = null;
   
   constructor(
-    private formBuilder: FormBuilder,
     private trainingService: TrainingService,
     private commentService: CommentService,
+    private route: ActivatedRoute,
     private userTrainingService: UserTrainingService,
     private userService: UserService) {
     super();
@@ -68,6 +64,9 @@ export class TrainingsComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
 
+    this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+      this.tid = params.get('tid');
+    });
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((user) => {
       if (!user) {
         return;
@@ -108,6 +107,13 @@ export class TrainingsComponent extends BaseComponent implements OnInit {
     })
   }
 
+  ngAfterViewInit() {
+    if (this.tid) {
+      this.selectTraining(this.tid);
+    }
+
+  }
+
   deleteTraining(tid: string) {
     this.userTrainingService.getUTForTraining$(tid).pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
       for (let ut of userTrainings) {
@@ -146,6 +152,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit {
 
   createNewTraining() {
     this.trainingService.addNewTraining();
+
   }
 
   editTraining(training) {

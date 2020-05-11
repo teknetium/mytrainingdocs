@@ -11,13 +11,14 @@ import { SendmailService } from '../../shared/services/sendmail.service';
 import { JobTitleService } from '../../shared/services/jobtitle.service';
 import { MessageModel } from '../../shared/interfaces/message.type';
 import { takeUntil, filter } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from '../base.component';
 
 @Component({
   selector: 'app-myteam',
   templateUrl: './myteam.component.html',
   styleUrls: ['./myteam.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+//  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('supervisorSignupToggle', [
       // ...
@@ -106,6 +107,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   message: MessageModel;
   userIdSelected = '';
   matchingJobTitles: string[] = [];
+  uid: string;
 
 
   constructor(
@@ -114,7 +116,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private userService: UserService,
     private mailService: SendmailService,
     private trainingService: TrainingService,
-    private jobTitleService: JobTitleService
+    private jobTitleService: JobTitleService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     super();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
@@ -122,6 +126,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.selectedUser$ = this.userService.getSelectedUserStream();
     this.newUser$ = this.userService.getNewUserStream();
     this.jobTitles$ = this.jobTitleService.getJobTitleStream();
+
   }
 
   ngOnInit() {
@@ -138,7 +143,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.myTeamIdHash = myTeamIdHash;
 
       this.myTeam = Object.values(this.myTeamIdHash);
-      this.cd.detectChanges();
+//      this.cd.detectChanges();
       /*
             if (this.myTeam.length > 0) {
               this.userIdSelected = this.myTeam[0]._id;
@@ -162,7 +167,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         return;
       }
       this.authenticatedUser = user;
-      this.selectUser(this.authenticatedUser._id);
+      this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+        this.uid = params.get('uid');
+        if (!this.uid) {
+          this.uid = this.authenticatedUser._id;
+        }
+        this.userService.selectUser(this.uid);
+      });
+//      this.selectUser(this.authenticatedUser._id);
       this.newTeamMember.teamId = this.authenticatedUser.uid;
       this.newTeamMember.supervisorId = this.authenticatedUser.uid;
       this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);

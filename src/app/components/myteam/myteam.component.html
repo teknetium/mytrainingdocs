@@ -3,9 +3,11 @@
         <div *ngIf="myTeam && myTeam.length > 0" style="height:95%;">
             <div class="team-container">
                 <div class="direct-report-container">
+                    <!--
                     <div style="text-align: center;font-size: 20px;font-weight: 300;margin-bottom:10px;">
                         My Team
                     </div>
+                    -->
                     <div style="display:block;">
                         <button nz-button nzShape="circle" (click)="addUser()"
                             nzType="primary" style="margin: 0 0 10px 0;" nz-tooltip nzTooltipTitle="Add a team member">
@@ -121,9 +123,11 @@
                 </div>
             </div>
             <div class="my-team-rightside" style="width:77%;">
+                <!--
                 <div style="text-align: center;font-size: 20px;font-weight: 300;margin-bottom:10px;">
                     Team Member
                 </div>
+                -->
                 <app-teammember></app-teammember>
             </div>
         </div>

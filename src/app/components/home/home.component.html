@@ -1,5 +1,5 @@
-<div  style="height:100%;width:100%;padding:30px 60px;">
-    <div style="display:block;margin-left:20px;">
+<div style="height:100%;width:100%;padding:30px;">
+    <div style="display:block;">
         <div style="display: inline-block;margin-left:20px;">
             <span style="font-weight: 200;font-size:28px;">
                 Welcome,
@@ -10,52 +10,57 @@
             </span>
         </div>
     </div>
-    <!--
-    <div  #chartElement style="width: 100%; height: 500px"></div>
-    -->
-    <!--
-    <div *ngIf="user.userType === 'supervisor'" style="display:block;font-size:18px;">
-        <div style="display:block;margin-top:80px;">
-            <div style="display: inline-block;width:70%;padding-top:40px;padding-left:50px;">
-                As a <span style="font-size:20px;color:blue;">Supervisor</span>, it is your responsibility to add
-                your team
-                members to the site.
-                It is also your responsibility to create the trainings for your team. The good news is that both of
-                these
-                tasks are simple, fun, and easy to accomplish!
+        <div style="width:60%;display:inline-block;">
+        <div style="width:100%;display:block;padding:20px;">
+            <div joyrideStep="step1" title="Page Title" text="Main title!" style="font-size:22px;border-bottom:1px solid #dddddd;">
+                Team Members
             </div>
-            <div style="float:right;width:20%;text-align: center;">
-                <img src="../../../assets/images/yoga0.png" alt="lotus pose" height="150">
+            <div *ngIf="myTeam.length === 0" style="padding:40px">
+                <span style="font-size: 22px;font-weight:200;" (click)="goTo('/myteam')">
+                    You have not added any team members yet!<br>
+                    Head over to the <a routerLink="">My Team</a> page.
+                </span>
             </div>
-            <div style="clear: both;"></div>
-        </div>
-        <div style="display:block;margin-top:80px;">
-            <div style="display: inline-block;width:20%;text-align: center;">
-                <img src="../../../assets/images/yoga4.png" alt="lotus pose" height="150">
-            </div>
-            <div style="float:right;width:70%;padding-top:40px;padding-right:50px;">
-                There is more good news, you can enlist help in creating your team's trainings from members of
-                your team by
-                checking the <span style="font-size:20px;color:blue;">Training Admin Access</span> box in the
-                registration
-                dialog.
+            <div *ngIf="myTeam.length > 0">
+                <nz-list nzItemLayout="vertical" nzSize="small">
+                    <nz-list-item *ngFor="let user of myTeam" (click)="selectUser(user._id)" class="list-item">
+                        <i [ngClass]="userTypeIconHash[user.userType]" style="font-size:20px;width:10%;"
+                            [ngStyle]="{'color': trainingStatusColorHash[user.trainingStatus]}">
+                        </i>
+                        <span style="width: 25%;">
+                            {{ user.firstName }} {{ user.lastName }}
+                        </span>
+                    </nz-list-item>
+                </nz-list>
             </div>
         </div>
+        <div style="width:100%;display:block;padding:20px;">
+            <div joyrideStep="step2" title="Page Title" text="Main title!" style="font-size:22px;border-bottom:1px solid #dddddd;">
+                Trainings
+            </div>
+            <div *ngIf="trainings.length === 0" style="padding:40px">
+                <span style="font-size: 22px;font-weight:200;" (click)="goTo('/trainings')">
+                    You have not created any trainings yet!<br>
+                    Head over to the <a routerLink="/trainings">All Trainings</a> page.
+                </span>
+            </div>
+            <div *ngIf="trainings.length > 0">
+                <nz-list nzItemLayout="vertical" nzSize="small">
+                    <nz-list-item *ngFor="let training of trainings" (click)="selectTraining(training._id)"
+                        class="list-item">
+                        <i [ngClass]="training.iconClass"
+                            style="font-size:20px;width:10%;text-align:center;vertical-align: middle;"
+                            [ngStyle]="{'color': training.iconColor}">
+                        </i>
+                        <span style="width: 40%;">
+                            {{ training.title }}
+                        </span>
+                    </nz-list-item>
+                </nz-list>
+            </div>
+        </div>
     </div>
-    <div *ngIf="user.userType === 'individualContributor' && (authenticatedUser$ | async)?.teamAdmin"
-        style="margin-top: 20px;font-size:18px;padding:40px;">
-        As an <span style="font-size:20px;color:blue;">Individual Contributor</span>, it is your responsibility to
-        complete your trainings
-        by their assigned due date.
-        <br>
-        Your supervisor has given you special access to assist in the creation of your team's trainings. The good
-        news is that it is simple, fun, and fast!
-        <br><br>
+    <div style="width:40%;display:inline-block;">
 
     </div>
-    <div *ngIf="user.userType === 'individualContributor' && !user.teamAdmin"
-        style="margin-top: 20px;font-size:18px;padding:40px;">
-
-    </div>
-    -->
 </div>

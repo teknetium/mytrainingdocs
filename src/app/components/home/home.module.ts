@@ -5,7 +5,9 @@ import { MyteamModule } from '../myteam/myteam.module';
 import { HomeComponent } from './home.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TrainingsModule } from '../trainings/trainings.module';
-import { NzModalModule, NzInputModule, NzIconModule, NzBadgeModule } from 'ng-zorro-antd';
+import { NzModalModule, NzInputModule, NzIconModule, NzBadgeModule, NzListModule, NzAvatarModule } from 'ng-zorro-antd';
+import { NgZorroAntdModule } from 'ng-zorro-antd';
+import { JoyrideModule, JoyrideService } from 'ngx-joyride';
 
 @NgModule({
   declarations: [
@@ -20,10 +22,17 @@ import { NzModalModule, NzInputModule, NzIconModule, NzBadgeModule } from 'ng-zo
     NzInputModule,
     FormsModule,
     ReactiveFormsModule,
-    NzIconModule
+    NzIconModule,
+    NzListModule,
+    NzAvatarModule,
+    JoyrideModule.forRoot()
   ],
   exports: [
     HomeComponent
+  ],
+  providers:
+    [
+    JoyrideService
   ]
 })
 export class HomeModule { }

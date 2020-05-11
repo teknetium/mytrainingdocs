@@ -20,6 +20,14 @@
                         [nzTwotoneColor]="statusIconHash[userTraining.status].color" style="font-size:18px;"></i>
                 </td>
                 <td style="font-size:12px;width:35%;">
+                    <i *ngIf="trainingIdHash[userTraining.tid].status === 'unlocked' && production === 'off'" nz-icon nzType="unlock"
+                        [nzTheme]="'twotone'"
+                        style="margin-right:5px;display:inline-block;font-size:12px;vertical-align: middle;"
+                        [nzTwotoneColor]="'#52c41a'"></i>
+                    <i *ngIf="trainingIdHash[userTraining.tid].status === 'locked' && production === 'off'" nz-icon nzType="lock"
+                        [nzTheme]="'twotone'"
+                        style="margin-right:5px;display:inline-block;font-size:12px;vertical-align: middle;"
+                        [nzTwotoneColor]="'red'"></i>
                     <i [ngClass]="(trainingIdHash$ | async)[userTraining.tid].iconClass"
                         style="font-size:22px;margin-right:10px;vertical-align: middle;"
                         [ngStyle]="{'color': trainingIdHash[userTraining.tid].iconColor}">
@@ -30,8 +38,8 @@
                     {{ timeFormat(userTraining.timeToDate) }}
                 </td>
                 <td *ngIf="mode === 'admin'" style="font-size:12px;width:15%;">
-                    <nz-date-picker nzFormat="MM-dd-yyyy" nzSize="small" ngDefaultControl [ngModel]="userTraining.dueDate"
-                        (ngModelChange)="updateDueDate($event, userTraining)">
+                    <nz-date-picker nzFormat="MM-dd-yyyy" nzSize="small" ngDefaultControl
+                        [ngModel]="userTraining.dueDate" (ngModelChange)="updateDueDate($event, userTraining)">
                     </nz-date-picker>
                 </td>
                 <td *ngIf="mode !== 'admin'" style="font-size:12px;width:15%;">
@@ -70,8 +78,8 @@
         (nzOnCancel)="handleMarkAsCompletedCancel()" (nzOnOk)="markTrainingAsComplete(selectedTraining)"
         style="width:800px;">
         <span style="display:block;">Rate this Training</span>
-        <nz-rate style="display:block;margin-bottom:20px;" [(ngModel)]="rating" ngDefaultControl (ngModelChange)="ratingChanged($event)"
-            nzAllowHalf class="small"></nz-rate>
+        <nz-rate style="display:block;margin-bottom:20px;" [(ngModel)]="rating" ngDefaultControl
+            (ngModelChange)="ratingChanged($event)" nzAllowHalf class="small"></nz-rate>
         <span style="display:block;">Comments/Feedback</span>
         <textarea style="display:block;width:100%;" rows="4" nz-input ngDefaultControl [(ngModel)]="comment"></textarea>
     </nz-modal>

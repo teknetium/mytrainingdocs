@@ -28,7 +28,7 @@
 
 .navbar-rhs {
   float:right;
-  margin-right: 10px;
+  margin-right: 20px;
 }
 
 .nav-badge {
@@ -52,7 +52,8 @@ nz-footer {
 }
 
 .inner-content {
-	background: #fff;
+  background: #fff;
+  padding:20px 20px 0 20px;
   height:100%;
 }
 

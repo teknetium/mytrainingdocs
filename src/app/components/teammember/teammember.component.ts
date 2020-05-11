@@ -118,6 +118,7 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
 
   handleCancelUserTraining() {
     this.showUserTrainingModal = false;
+    this.selectedTrainingId = null;
   }
 
   handleAssignUserTraining() {
@@ -128,11 +129,7 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
     this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId);
     this.showUserTrainingModal = false;
     this.assignableTrainings.splice(this.assignableTrainings.indexOf(this.selectedTrainingId), 1);
-    /*
-    if (this.assignableTrainings.length === 0) {
-      this.assignToDisabled = true;
-    }
-    */
+    this.selectedTrainingId = null;
   }
 
 }

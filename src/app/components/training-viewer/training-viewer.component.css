@@ -81,7 +81,7 @@
 }
 
 .main-content-container {
-	height: 85%;
+	height: 91%;
 }
 
 .assigned-user-selected {
@@ -144,39 +144,24 @@
 	width: 100%;
 	min-height:100%;
 	height: fit-content;
-	border: 1px solid #dddddd;
-	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
 	text-align: left;
-	padding: 50px 40px;
+	padding: 0 20px;
 	position: relative;
 }
 .page-title {
-	border: 2px solid white;
  	margin-bottom: 10px;
 }
 
-.page-title:hover {
-	border-color: #bbbbbb;
-}
-
 .page-intro {
-	border: 2px solid white;
 	padding: 10px;
 	margin-bottom: 10px;
 }
-.page-intro:hover {
-	border-color: #bbbbbb;
-}
 
 .page-content {
-	border: 2px solid white;
 	padding: 10px;
 	height:84%;
 	overflow: scroll;
  	margin-bottom: 10px;
-}
-.page-content:hover {
-	border-color: #bbbbbb;
 }
 .page-section-selected {
 	background-color: #fefbe8;

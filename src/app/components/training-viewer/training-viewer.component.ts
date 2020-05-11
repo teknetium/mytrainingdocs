@@ -22,7 +22,8 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { read } from 'fs';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
-import { TrainingViewerModule } from './training-viewer.module';
+// import { TrainingViewerModule } from './training-viewer.module';
+import { JoyrideService } from 'ngx-joyride';
 
 
 
@@ -294,8 +295,16 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   pageIndex;
   currentPageIndex;
   jobTitles: string[] = [];
+  categories: string[] = [];
+  subcategories: string[] = [];
   matchingJobTitles: string[] = [];
+  matchingCategories: string[] = [];
+  matchingSubcategories: string[] = [];
   jobTitles$: Observable<string[]>;
+  categories$: Observable<string[]>;
+  subcategories$: Observable<string[]>;
+  previousVersion$: Observable<TrainingModel>;
+  previousVersion: TrainingModel;
   assignedFromJobTitle: string[] = [];
   removedFromJobTitle: string[] = [];
   assignedFromJobTitleDialogIsVisible = false;
@@ -304,6 +313,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   trainingVersions$: Observable<TrainingVersion[]>;
 
   currentObjects: any[] = [];
+  tid: string = null;
 
   constructor(
     private trainingService: TrainingService,
@@ -315,11 +325,15 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     private userService: UserService,
     private userTrainingService: UserTrainingService,
     private mailService: SendmailService,
+    private joyrideService: JoyrideService,
     private cd: ChangeDetectorRef,
     private message: NzMessageService,
     private authService: AuthService) {
     super();
     this.jobTitles$ = this.jobTitleService.getJobTitleStream();
+    this.categories$ = this.trainingService.getCategoryStream();
+    this.subcategories$ = this.trainingService.getSubcategoryStream();
+    this.previousVersion$ = this.trainingService.getPreviousVersionStream();
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.myTeamHash$ = this.userService.getMyTeamIdHashStream();
@@ -330,19 +344,39 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.users$ = this.userTrainingService.getUsersForTrainingStream();
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     this.trainingIsDirty$ = this.trainingService.getTrainingIsDirtyStream();
-    this.trainingArchiveList$ = this.trainingService.getTrainingArchiveListStream();
-//    this.trainingVersions$ = this.trainingService.getTrainingVersionsStream();
   }
 
   ngOnInit() {
+    /*
+    this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+      this.tid = params.get('tid');
+      this.trainingService.selectTraining(this.tid);
+    });
+    */
     this.currentVersionIndex = 0;
     this.mode = 'Edit';
     this.currentTraining = null;
-    this.trainingService.selectTraining(null);
 
     this.jobTitles$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(jobTitles => {
       this.jobTitles = jobTitles;
       this.matchingJobTitles = this.jobTitles;
+    });
+
+    this.categories$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(categories => {
+      this.categories = categories;
+      this.matchingCategories = this.categories;
+    });
+    this.subcategories$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(subcategories => {
+      this.subcategories = subcategories;
+      this.matchingSubcategories = this.subcategories;
+    });
+
+    this.previousVersion$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(training => {
+      if (!training) {
+        return;
+      }
+      this.previousVersion = training;
+      this.previousVersion._id = training._id.substring(0, training._id.indexOf('-'));
     });
 
     this.selectedTraining$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(training => {
@@ -357,14 +391,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         this.currentSelectedTrainingVersions = training.versions;
         this.currentSelectedTrainingVersionObj = training.versions[0];
         this.selectedTraining = training;
-        this.trainingService.getTrainingArchive(this.selectedTraining);
-        /*
-        this.trainingService.getTrainingArchive$(this.selectedTraining._id).subscribe(trainingArchive => {
-          console.log('trainingArchive ', trainingArchive);
-          this.trainingArchiveObj = trainingArchive;
-          this.trainingArchiveList = this.trainingArchiveObj.trainings;
-        })
-        */
       } else {
         this.selectedTraining = training;
       }
@@ -547,14 +573,28 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
   */
   onJobTitleChange(value: string): void {
-    console.log('onJobTitleChange', this.jobTitles);
     this.matchingJobTitles = this.jobTitles.filter(jobTitle => jobTitle.toLowerCase().indexOf(value.toLowerCase()) !== -1);
   }
 
   setJobTitle(value) {
     this.jobTitleService.addJobTitle(this.selectedTraining.jobTitle);
     this.saveTraining(true);
+  }
 
+  onSubcategoryChange(value: string): void {
+    this.matchingSubcategories = this.subcategories.filter(subcategory => subcategory.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+  }
+  setSubcategory(value) {
+    this.trainingService.addSubcategory(this.selectedTraining.subcategory);
+    this.saveTraining(true);
+  }
+
+  onCategoryChange(value: string): void {
+    this.matchingCategories = this.categories.filter(category => category.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+  }
+  setCategory(value) {
+    this.trainingService.addCategory(this.selectedTraining.category);
+    this.saveTraining(true);
   }
 
   unlockTraining() {
@@ -572,10 +612,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   rollback() {
-    let lastSavedTrainingImage = this.trainingService.rollback(this.selectedTraining._id);
-    this.selectedTraining = lastSavedTrainingImage;
+    this.selectedTraining = cloneDeep(this.previousVersion);
     this.selectedTraining.isDirty = false;
-    this.saveTraining(false);
+    this.currentTraining = this.selectedTraining;
+    this.saveTraining(true);
     this.trainingService.selectTrainingVersion(this.selectedTraining);
   }
   cancelLockTraining() {
@@ -716,7 +756,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     // if the job title being saved for this version is not the same as the previous version
     // then we have some work to do.   Remove the training from the users with the old job title
     // and assign the training to the users with the new jopb title
-    if (this.selectedTraining.jobTitle !== this.trainingArchiveList[0].jobTitle) {
+    if (this.selectedTraining.jobTitle !== this.previousVersion.jobTitle) {
 
       for (let userId of this.assignedToUsers) {
         if (this.myTeamHash[userId].jobTitle === this.trainingArchiveList[0].jobTitle) {
@@ -924,6 +964,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     } else {
       return false;
     }
+  }
+  startTour() {
+    this.joyrideService.startTour(
+      { steps: ['viewerStep1', 'viewerStep2', 'viewerStep3']}
+    );
+
   }
 
   playVideo() {

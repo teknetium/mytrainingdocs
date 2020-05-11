@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AUTH_CONFIG } from '../../shared/services/auth.config';
 import * as auth0 from 'auth0-js';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
 

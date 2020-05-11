@@ -2,3 +2,9 @@
     background-color: #e0eafd;
     color:blue;
 }
+.all-training-list-entry {
+
+}
+.all-training-list-entry:hover {
+    background-color: #e0eafd;
+}

@@ -121,21 +121,26 @@
                     </div>
                 </nz-dropdown-menu>
             </li>
-            <li class="navbar-rhs" nz-tooltip nzTooltipTitle="Task Tutorials"
-                nzTooltipPlacement="bottom">
+            <li class="navbar-rhs" nz-tooltip nzTooltipTitle="Task Tutorials" nzTooltipPlacement="bottom">
+                <!--
                 <a (click)="playTaskVideo(null)">
-                    <i nz-icon nzType="youtube" theme="outline" style="font-size:20px;"></i>
+                    <i nz-icon nzType="youtube" theme="outline" style="font-size:20px;margin:0 5px;"></i>
                 </a>
-                <nz-drawer *ngIf="authenticatedUser$ | async as user" [nzWidth]="300" nzTitle="App Settings"
-                    [nzClosable]="false" [nzVisible]="quickViewVisible" nzPlacement="right"
-                    (nzOnClose)="quickViewToggle()">
+                -->
+                <nz-drawer *ngIf="authenticatedUser$ | async as user" [nzWidth]="300" nzTitle="App Settings" [nzClosable]="false"
+                    [nzVisible]="quickViewVisible" nzPlacement="right" (nzOnClose)="quickViewToggle()">
                     <app-settings></app-settings>
                 </nz-drawer>
+            </li>
+            <li class="navbar-rhs" nz-tooltip nzTooltipTitle="Start Page Tour" nzTooltipPlacement="bottom">
+                <a (click)="startTour()">
+                    <i nz-icon nzType="car" theme="outline" style="font-size:20px;margin:0 5px;"></i>
+                </a>
             </li>
         </ul>
     </nz-header>
     <nz-content class="inner-content">
-        <div *ngIf="aboutThisPageHash[currentPage]" style="padding:20px 20px 0 20px;">
+        <div *ngIf="aboutThisPageHash[currentPage]" style="">
             <i *ngIf="!aboutThisPageHash[currentPage].visible" nz-icon nzType="info-circle" [nzTheme]="'twotone'"
                 (click)="aboutThisPageHash[currentPage].visible = true"
                 style="font-size:24px;font-weight: 500;cursor:pointer;"></i>
@@ -165,7 +170,7 @@
                                     *ngIf="aboutThisPageHash[currentPage].taskHash[taskName].userType.includes(user.userType)">
                                     <i nz-icon nzType="youtube" [nzTheme]="'outline'" nz-tooltip
                                         nzTooltipTitle="Play the task How-To video" (click)="playTaskVideo(taskName)"
-                                        style="cursor:pointer;font-size:24px;vertical-align: baseline;margin-left:20px;color:#52c41a;"></i>
+                                        style="cursor:pointer;font-size:24px;vertical-align: top;margin-left:20px;color:#52c41a;"></i>
                                     &nbsp;&nbsp;{{aboutThisPageHash[currentPage].taskHash[taskName].desc}}
                                 </div>
                             </li>
@@ -199,7 +204,7 @@
                                     *ngIf="aboutThisPageHash[pageName].taskHash[taskName].userType.includes(user.userType)">
                                     <i nz-icon nzType="youtube" [nzTheme]="'outline'" nz-tooltip
                                         nzTooltipTitle="Play the task How-To video"
-                                        style="cursor:pointer;font-size:24px;vertical-align: baseline;color:#52c41a;"></i>
+                                        style="cursor:pointer;font-size:24px;vertical-align: top;color:#52c41a;"></i>
                                     &nbsp;&nbsp;
                                     <span>{{aboutThisPageHash[pageName].taskHash[taskName].desc}}</span>
                                 </div>

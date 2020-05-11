@@ -19,6 +19,7 @@ import { filter } from 'rxjs/operators';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../components/base.component';
+import { JoyrideService } from 'ngx-joyride';
 
 
 export interface Task {
@@ -88,7 +89,7 @@ export interface Task {
     ]),
   ]
 })
-  
+
 export class NewAppComponent extends BaseComponent implements OnInit {
 
   aboutThisPageHash = {
@@ -96,6 +97,11 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       title: 'Home',
       visible: true,
       intro: 'Introduction to the page.',
+      tourSteps: {
+        steps: [
+          'step1', 'step2', 'step3'
+        ]
+      },
       taskHash: {
         gettingStartedSupervisor: {
           userType: ['supervisor'],
@@ -145,6 +151,11 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       title: 'My Trainings',
       visible: true,
       intro: 'Introduction to the page.',
+      tourSteps: {
+        steps: [
+          'step1', 'step2', 'step3'
+        ]
+      },
       taskHash: {
         executeTraining: {
           userType: ['supervisor', 'individualContributor'],
@@ -159,6 +170,11 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       title: 'My Team',
       visible: true,
       intro: 'Introduction to the page.',
+      tourSteps: {
+        steps: [
+          'step1', 'step2', 'step3'
+        ]
+      },
       taskHash: {
         addTeamMember: {
           userType: ['supervisor'],
@@ -180,6 +196,14 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       title: 'Trainings',
       visible: true,
       intro: 'Introduction to the page.',
+      tourSteps: [
+        {
+          steps: ['step1', 'step2', 'step3']
+        },
+        {
+          viewerSteps: ['viewerStep1', 'viewerStep2', 'viewerStep3']
+        }
+      ],
       taskHash: {
         manageTrainings: {
           userType: ['supervisor'],
@@ -244,7 +268,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
   fileIdToDelete: string;
 
-//  uidUserTrainingHash$: Observable<UidUserTrainingHash>;
+  //  uidUserTrainingHash$: Observable<UidUserTrainingHash>;
   userTrainings$: Observable<UserTrainingModel[]>;
   myTrainingIdHash$: Observable<TrainingIdHash>;
   teamTrainingCnt$: Observable<number>;
@@ -282,12 +306,13 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     private trainingService: TrainingService,
     private userTrainingService: UserTrainingService,
     private router: Router,
+    private joyrideService: JoyrideService,
     private notificationService: NotificationService,
     private zorroNotificationService: NzNotificationService,
     private sanitizer: DomSanitizer
   ) {
     super();
-//    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
+    //    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
     this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
     this.teamTrainingCnt$ = this.trainingService.getTeamTrainingCntStream();
@@ -307,14 +332,14 @@ export class NewAppComponent extends BaseComponent implements OnInit {
         this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
       }
     });
-/*
-    this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
-      if (!userTrainings) {
-        return;
-      }
-      this.myTrainingCnt = userTrainings.length;
-    });
-*/
+    /*
+        this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
+          if (!userTrainings) {
+            return;
+          }
+          this.myTrainingCnt = userTrainings.length;
+        });
+    */
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         return;
@@ -325,7 +350,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       if (this.authenticatedUser.firstName === '') {
         this.firstTimer = true;
         this.showNewUserModal = true;
-//        this.playTaskVideo('gettingStarted');
+        //        this.playTaskVideo('gettingStarted');
       }
       this.authenticatedUser = user;
       this.userTrainingService.initUserTrainingsForUser(user._id);
@@ -357,7 +382,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       if (!task) {
         return;
       }
-      
+
       this.showTaskVideoModal = true;
     })
   };
@@ -420,6 +445,11 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     console.log('saveName', this.authenticatedUser);
     this.userService.updateUser(this.authenticatedUser, true);
     this.showNewUserModal = false;
+  }
+
+  startTour() {
+    let toursteps = this.aboutThisPageHash[this.currentPage].tourSteps;
+    this.joyrideService.startTour(toursteps);
   }
 
   playTaskVideo(taskName) {

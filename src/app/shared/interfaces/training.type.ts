@@ -7,7 +7,7 @@ export interface TrainingModel {
   versions: TrainingVersion[],
   category: string,
   subcategory: string,
-  status: 'locked' | 'unlocked' | 'archived',
+  status: 'locked' | 'unlocked',
   title: string,
   teamId: string,
   owner: string,
