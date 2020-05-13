@@ -16,39 +16,16 @@ export interface TrainingModel {
   description: string,
   jobTitle: string,
   image: string,
-  introductionLabel: string,
-  introduction: string,
-  execSummaryLabel: string,
-  execSummary: string,
-  goalsLabel: string,
-  goals: string,
   iconClass: string,
   iconColor: string,
   iconSource: string,
   pages: Page[],
-  assessment: Assessment,
-  useAssessment: boolean,
   interestList: string[],
   shared: boolean,
-  isValid: {},
   isDirty: boolean
 }
 export interface TrainingIdHash {
   [indexer: string]: TrainingModel;
-}
-
-export interface AssessmentItem {
-  question: string,
-  choices: string[],
-  correctChoice: number
-}
-
-export interface Assessment {
-  _id: string,
-  type: string,
-  timeLimit: number,
-  passingGrade: number,
-  items: AssessmentItem[]
 }
 
 export interface TrainingVersion {
@@ -65,17 +42,16 @@ export interface TrainingVersion {
 
 export interface Page {
   _id: string,
-  type: 'single' | 'double',
+  type: 'blank' | 'single' | 'double' | 'assessment',
   title: string,
-  content: Content[],
   intro: string,
-  assessment: Assessment,
-
+  icon: string,
+  content: Content[]
 }
 
 export interface Content {
   _id: string,
-  type: 'file' | 'url' | 'video' | 'text' | 'none',
+  type: 'file' | 'url' | 'video' | 'text' | 'none' | 'image' | 'html'
   name: string,
   versions: Version[]
 }

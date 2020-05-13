@@ -26,7 +26,7 @@ const versionSchema = new Schema({
 })
 
 const contentSchema = new Schema({
-  _id: { type: String, required: true },  
+  _id: { type: String, required: true },
   type: { type: String, required: true },
   name: { type: String, required: false },
   versions: [versionSchema]
@@ -37,22 +37,10 @@ const pageSchema = new Schema({
   type: { type: String, required: true },
   title: { type: String },
   intro: { type: String },
+  icon: { type: String, required: false },
   content: [contentSchema],
 })
 
-const assessmentSchema = new Schema({
-  _id: { type: String, required: true },
-  type: { type: String, required: false },
-  timeLimit: { type: Number, required: false },
-  passingGrade: { type: Number, required: false },
-  items: [
-    {
-      question: { type: String },
-      choices: { type: [String] },
-      correctChoice: { type: Number }
-    }
-  ]
-})
 
 
 const trainingSchema = new Schema({
@@ -81,18 +69,10 @@ const trainingSchema = new Schema({
   jobTitle: { type: String, required: false },
   description: { type: String, required: true },
   image: { type: String, required: false },
-  introductionLabel: { type: String, required: false },
-  introduction: { type: String, required: false },
-  execSummaryLabel: { type: String, required: false },
-  execSummary: { type: String, required: false },
-  goalsLabel: { type: String, required: false },
-  goals: { type: String, required: false },
   iconClass: { type: String, required: true },
   iconColor: { type: String, required: true },
   iconSource: { type: String, required: true },
   pages: [pageSchema],
-  useAssessment: { type: Boolean },
-  assessment: assessmentSchema,
   interestList: [String],
   shared: { type: Boolean },
   isValid: { type: Object },

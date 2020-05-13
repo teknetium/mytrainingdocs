@@ -20,6 +20,7 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
 import { VgOverlayPlayModule } from 'videogular2/compiled/overlay-play';
 import { SettingsModule } from './components/settings/settings.module';
 import { JoyrideModule } from 'ngx-joyride';
+import { AssessmentComponent } from './components/page-contents/assessment/assessment.component';
 
 const ngZorroConfig: NzConfig = {
     message: { nzTop: 300 },
@@ -32,6 +33,7 @@ registerLocaleData(en);
     declarations: [
         AppComponent,
         NewAppComponent,
+        AssessmentComponent,
     ],
     imports: [
         VgCoreModule,

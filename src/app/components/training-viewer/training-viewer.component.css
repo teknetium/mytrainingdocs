@@ -81,7 +81,7 @@
 }
 
 .main-content-container {
-	height: 91%;
+	height: 85%;
 }
 
 .assigned-user-selected {
@@ -111,7 +111,6 @@
 	display: block;
 	background-color: #fcfcfc;
 	border-bottom: 1px solid #dddddd;
-	padding: 10px 5px 0 10px;
 	position: relative;
 }
 .separator {
@@ -122,7 +121,7 @@
 .page-container {
 	float: right;
 	height: 100%;
-	width: 75%;
+	width: 100%;
 	overflow: scroll;
 	background-color: white;
 }
@@ -154,12 +153,20 @@
 
 .page-intro {
 	padding: 10px;
-	margin-bottom: 10px;
+}
+
+.page-icon {
+	margin-left:20px;
+	color:#bbbbbb;
+}
+
+.page-icon:hover {
+	cursor: pointer;
 }
 
 .page-content {
-	padding: 10px;
-	height:84%;
+	padding: 0 10px;
+	height:80%;
 	overflow: scroll;
  	margin-bottom: 10px;
 }
@@ -167,6 +174,10 @@
 	background-color: #fefbe8;
 	border: 2px solid #e5e5e5;
 
+}
+
+.current-page {
+	color: #4891f7 !important;
 }
 
 .page-url {
@@ -230,7 +241,6 @@
 	display: block;
 	position: relative;
 	background-color: #f5f5f5;
-	overflow: scroll;
 }
 
 .toc-label {

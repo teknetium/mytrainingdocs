@@ -7,7 +7,7 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Page, Content, Version, Assessment, TrainingIdHash, TrainingVersion } from '../interfaces/training.type';
+import { TrainingModel, Page, Content, Version, TrainingIdHash, TrainingVersion } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.type';
 import { TrainingsModule } from 'src/app/components/trainings/trainings.module';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -279,37 +279,72 @@ export class TrainingService {
   addNewTraining() {
     const baseId = new Date().getTime();
 
-    const trainingAssessment = <Assessment>{
-      _id: String(baseId + 'assessment'),
-      type: '',
-      timeLimit: 0,
-      passingGrade: 70,
-      items: []
+    const version = <Version>{
+      _id: String(new Date().getTime()),
+      dateUploaded: new Date().getTime(),
+      version: '1_0_0',
+      text: `<h2>HTML Table</h2>
+
+<table>
+  <tr>
+    <th>Company</th>
+    <th>Contact</th>
+    <th>Country</th>
+  </tr>
+  <tr>
+    <td>Alfreds Futterkiste</td>
+    <td>Maria Anders</td>
+    <td>Germany</td>
+  </tr>
+  <tr>
+    <td>Centro comercial Moctezuma</td>
+    <td>Francisco Chang</td>
+    <td>Mexico</td>
+  </tr>
+  <tr>
+    <td>Ernst Handel</td>
+    <td>Roland Mendel</td>
+    <td>Austria</td>
+  </tr>
+  <tr>
+    <td>Island Trading</td>
+    <td>Helen Bennett</td>
+    <td>UK</td>
+  </tr>
+  <tr>
+    <td>Laughing Bacchus Winecellars</td>
+    <td>Yoshi Tannamuri</td>
+    <td>Canada</td>
+  </tr>
+  <tr>
+    <td>Magazzini Alimentari Riuniti</td>
+    <td>Giovanni Rovelli</td>
+    <td>Italy</td>
+  </tr>
+</table>
+`
+    };
+
+    const content = <Content>{
+      _id: String(new Date().getTime()),
+      type: 'text',
+      name: undefined,
+      versions: [version]
     }
-    /*
-        const content = <Content>{
-          _id: String(new Date().getTime()),
-          type: 'none',
-          name: null,
-          versions: [null]
-        }
-    
-        const page = <Page>{
-          _id: String(new Date().getTime()),
-          type: 'single',
-          title: 'Page 1',
-          intro: 'Page 1 introduction',
-          content: [content],
-          assessment: null,
-        }
-    */
+
+    const page = <Page>{
+      _id: String(new Date().getTime()),
+      type: 'single',
+      title: 'Page 1',
+      intro: 'Page 1 introduction',
+      content: [content],
+    }
     const newTraining = <TrainingModel>{
       _id: String(baseId),
       type: 'online',
       category: '',
       subcategory: '',
       versions: [],
-      versionPending: '',
       title: 'New Training Template',
       status: 'locked',
       rating: [],
@@ -320,26 +355,12 @@ export class TrainingService {
       jobTitle: '',
       description: 'This is a useless description',
       image: 'assets/images/others/bb.jpg',
-      introductionLabel: 'Training Introduction',
-      introduction: 'Replace this text.',
-      execSummaryLabel: 'Replace this text.',
-      execSummary: 'Replace this text.',
-      goalsLabel: 'Replace this text.',
-      goals: 'Replace this text.',
       iconClass: 'fad fa-graduation-cap',
       iconColor: 'orange',
       iconSource: 'fontawesome',
-      pages: [],
-      assessment: trainingAssessment,
-      useAssessment: true,
+      pages: [page],
       interestList: [],
       shared: false,
-      isValid: {
-        config: false,
-        intro: false,
-        mainContent: false,
-        assessment: false
-      },
       isDirty: false
     };
 
@@ -357,11 +378,18 @@ export class TrainingService {
     newTraining.versions.unshift(newTrainingVersionObj);
 
     this.postTraining$(newTraining).subscribe(trainingObj => {
-//      this.saveNewVersion(trainingObj);
+      //      this.saveNewVersion(trainingObj);
+      let archiveId = trainingObj._id + '-' + newTrainingVersionObj.version;
+      let trainingArchive = cloneDeep(trainingObj);
+      trainingArchive._id = archiveId;
+      this.postTrainingArchive$(trainingArchive).subscribe(tA => {
+        this.reloadAllTrainings();
+        this.selectedTrainingVersionsBS$.next(trainingObj.versions);
+      });
       this.allTrainingHash[trainingObj._id] = trainingObj;
       trainingObj.status = 'unlocked';
-      this.saveTraining(trainingObj,true);
-//      this.reloadAllTrainings();
+      this.saveTraining(trainingObj, true);
+      //      this.reloadAllTrainings();
       this.selectedTrainingBS$.next(trainingObj);
     });
   }
@@ -400,7 +428,6 @@ export class TrainingService {
       title: pageTitle,
       intro: 'Introduction to the document',
       content: [content],
-      assessment: null
     };
 
     if (!this.teamTrainingHash[trainingId]) {
@@ -429,13 +456,13 @@ export class TrainingService {
       });
     }
     */
-  
+
   selectTrainingArchive(trainingArchiveID: string) {
     this.getTrainingArchive$(trainingArchiveID).subscribe(trainingArchive => {
       this.selectTrainingVersion(trainingArchive);
     })
   }
- 
+
   deleteTraining(id: string) {
     this.deleteTraining$(id).subscribe(item => {
       this.reloadAllTrainings();

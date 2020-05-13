@@ -1,1 +1,211 @@
-<p>assessment works!</p>
+<div *ngIf="mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false'">
+    <div style="display:block;margin-bottom:10px;">
+        <div>
+            <div style="text-align: left;font-size:12px;">
+                <div style="margin-top: 10px;position:relative;">
+                    <nz-alert nzType="info" [nzMessage]="assessmentTitleTemplate"
+                        [nzDescription]="assessmentDescriptionTemplate" nzShowIcon nzCloseable="true"
+                        [nzCloseText]="assessmentCloseTemplate" style="margin-bottom:20px;">
+                    </nz-alert>
+                    <ng-template #assessmentCloseTemplate>
+                        <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
+                            style="font-size: 24px;"></i>
+                    </ng-template>
+                    <ng-template #assessmentTitleTemplate>
+                        <div style="width:100%;padding:0 20px 20px 0;">
+                            Welcome to the Assessment Wizard. This is where you setup the
+                            assessment
+                            for this training.
+                        </div>
+                    </ng-template>
+                    <ng-template #assessmentDescriptionTemplate>
+                        <p>
+                            Select the toggle to activate an assessment for this training.
+                        </p>
+                        <p>
+                            Once activated, you can set the passing grade for this training.
+                            Users
+                            are required to
+                            score above or equal to the passing grade in order to complete the
+                            training.
+                        </p>
+                        <p>
+                            Building your assessment is easy. Selecting the <span style="color:blue;">Add New
+                                Question</span> button brings up
+                            the New Question dialog. Pretty straight forward.
+                        </p>
+                        <p>
+                            When you are done inputing your questions, give it a spin by
+                            switching
+                            to <span style="color:blue;">Preview</span> mode (the mode
+                            dropdown menu is located in the training header).
+                        </p>
+                        <p>
+                            Questions are displayed in a list. Selecting a question opens the
+                            questions panel
+                            that shows the question along with all of the choices, with the
+                            correct
+                            choice being tagged
+                            with a <i nz-icon nzType="check" [nzTheme]="'outline'"
+                                style="font-size:16px;vertical-align: baseline;color:#52c41a;"></i>.
+
+                        </p>
+                    </ng-template>
+
+                </div>
+            </div>
+        </div>
+        <div style="display:inline-block;">
+            <nz-switch nzSize="small" [(ngModel)]="selectedTraining.useAssessment" ngDefaultControl
+                (ngModelChange)="useAssessmentChanged($event)"></nz-switch>
+        </div>
+        <div *ngIf="!selectedTraining.useAssessment" style="display:inline-block;margin-left:20px;">
+            <label>Assessment page is disabled!</label>
+        </div>
+        <div *ngIf="selectedTraining.useAssessment" style="display:inline-block;margin-left:20px;">
+            <label>Assessment page is enabled</label>
+        </div>
+    </div>
+    <div *ngIf="selectedTraining.useAssessment">
+        <div style="margin-bottom: 10px;">
+            <div style="width:20%;text-align: center;display:inline-block;">
+                <label style="font-size:12px;color:#bbbbbb;">Passing
+                    Grade</label>
+            </div>
+            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
+                <nz-input-number nzSize="small" nzId="passingGrade" class="foo" ngDefaultControl style="font-size:12px;"
+                    (ngModelChange)="assessmentChanged($event)" [(ngModel)]="selectedTraining.assessment.passingGrade"
+                    [nzMin]="0" [nzMax]="100" [nzStep]="5">
+                </nz-input-number>
+                <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp;%</span>
+            </div>
+        </div>
+
+        <nz-modal [(nzVisible)]="questionEditorVisible" nzTitle="Question Editor"
+            (nzOnCancel)="handleQuestionEditCancel()" (nzOnOk)="updateQuestion()" nzWidth="800">
+            <div style="background-color: white;">
+                <div style="display:block;">
+                    <label style="display:inline-block;margin-right: 10px;font-size:18px;">Question</label>
+                    <input nz-input type="text" placeholder="Question Text" ngDefaultControl
+                        [(ngModel)]="currentQuestion.question"
+                        style="display:inline-block;margin-bottom:10px;width:500px;">
+                </div>
+                <div style="display:block;">
+                    <label style="display:inline-block;margin-right: 10px;font-size:18px;">Choices</label>
+                    <div style="display:block;padding-left:50px;">
+                        <div class="choice-container">
+                            <label class="choice-label">{{alpha[0]}}</label>
+                            <input nz-input type="text" placeholder="Choice" ngDefaultControl
+                                [(ngModel)]="currentQuestion.choices[0]" class="choice-input">
+                            <div style="clear: both;"></div>
+                        </div>
+                        <div class="choice-container">
+                            <label class="choice-label">{{alpha[1]}}</label>
+                            <input nz-input type="text" placeholder="Choice" ngDefaultControl
+                                [(ngModel)]="currentQuestion.choices[1]" class="choice-input">
+                            <div style="clear: both;"></div>
+                        </div>
+                        <div class="choice-container">
+                            <label class="choice-label">{{alpha[2]}}</label>
+                            <input nz-input type="text" placeholder="Choice" ngDefaultControl
+                                [(ngModel)]="currentQuestion.choices[2]" class="choice-input">
+                            <div style="clear: both;"></div>
+                        </div>
+                        <div class="choice-container">
+                            <label class="choice-label">{{alpha[3]}}</label>
+                            <input nz-input type="text" placeholder="Choice" ngDefaultControl
+                                [(ngModel)]="currentQuestion.choices[3]" class="choice-input">
+                            <div style="clear: both;"></div>
+                        </div>
+                        <div class="choice-container">
+                            <label class="choice-label">{{alpha[4]}}</label>
+                            <input nz-input type="text" placeholder="Choice" ngDefaultControl
+                                [(ngModel)]="currentQuestion.choices[4]" class="choice-input">
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:bun;margin-top: 10px;font-size:18px;">
+                    <label style="display:inline-block;margin-right: 10px;font-size:18px;">Correct
+                        Choice</label>
+                    <nz-radio-group [(ngModel)]="currentCorrectChoice">
+                        <label nz-radio [nzDisabled]="currentQuestion.choices[0] === undefined" nzValue="0">A</label>
+                        <label nz-radio [nzDisabled]="currentQuestion.choices[1] === undefined" nzValue="1">B</label>
+                        <label nz-radio [nzDisabled]="currentQuestion.choices[2] === undefined" nzValue="2">C</label>
+                        <label nz-radio [nzDisabled]="currentQuestion.choices[3] === undefined" nzValue="3">D</label>
+                        <label nz-radio [nzDisabled]="currentQuestion.choices[4] === undefined" nzValue="4">E</label>
+                    </nz-radio-group>
+                </div>
+            </div>
+        </nz-modal>
+        <button *ngIf="mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false'" nz-button
+            nzType="primary" nzSize="small" style="margin-bottom:10px;" (click)="addNewQuestion()">Add
+            New Question</button>
+        <nz-collapse nzAccordion="true">
+            <nz-collapse-panel [nzHeader]="headerTemplate" [nzActive]="itemIndex === currentQuestionIndex"
+                *ngFor="let item of selectedTraining.assessment.items; index as itemIndex">
+                <ng-template #headerTemplate>
+                    <div style="width:15%;display:inline-block;color:blue;">Question
+                        {{ itemIndex + 1 }}
+                    </div>
+                    <div
+                        style="vertical-align:middle;display:inline-block;width:80%;overflow: hidden;white-space: nowrap;">
+                        {{item.question}}
+                    </div>
+                </ng-template>
+                {{ item.question }}
+                <div style="font-weight:300;margin-top:10px;padding-left:25px;">
+                    <div *ngFor="let choice of item.choices; index as choiceIndex" style="width:100%;">
+                        <div *ngIf="choice !== ''">
+                            <div style="font-weight:300;width:25px;height:1em;float:left;">
+                                <i *ngIf="item.correctChoice === choiceIndex" nz-icon nzType="check"
+                                    [nzTheme]="'outline'"
+                                    style="font-size:16px;vertical-align: baseline;color:#52c41a;"></i>
+
+                            </div>
+                            <div
+                                style="display: inline-block;font-weight:300;width:30px;color:#bbbbbb;margin-bottom:5px;text-align: right;">
+                                {{alpha[choiceIndex]}}&nbsp;)
+                            </div>
+                            <div style="display: inline-block;">
+                                <span
+                                    style="font-weight:300;width:2%;color:#bbbbbb;margin-bottom:5px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                {{ choice }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--
+                                        <i class="font-size-18" [twoToneColor]="'#3f87f5'" nz-icon nzType="plus-square"
+                                            theme="twotone" [nzTwotoneColor]="'#52c41a'"
+                                            (click)="addNewChoice($event, itemIndex)"
+                                            style="display:block;text-align:left;padding-left:50px;margin-bottom:10px;cursor: pointer;width:fit-content;"
+                                            nz-tooltip nzTooltipTitle="Add new Choice"></i>
+                                            -->
+                <!--
+                                    <div style="margin-top:10px;">
+                                        The correct choice is
+                                        <span *ngIf="item.correctChoice > -1" style="margin-left:10px;color:green;">
+                                            {{ alpha[item.correctChoice] }}
+                                        </span>
+                                        <span *ngIf="item.correctChoice === -1" style="margin-left:10px;color:red;">
+                                            Not Specified
+                                        </span>
+                                    </div>
+                                    -->
+                <div style="margin-top:20px;">
+                    <i nz-icon nzType="edit" [nzTheme]="'twotone'" nz-tooltip nzTooltipTitle="Edit Question"
+                        (click)="editQuestion(itemIndex)"
+                        style="cursor:pointer;font-size:16px;vertical-align: baseline;">
+                    </i>
+                    <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-tooltip
+                        nzTooltipTitle="Delete Question" nz-popconfirm nzPopconfirmTitle="Delete this Question?"
+                        [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'top'"
+                        (nzOnConfirm)="confirmDeleteQuestion(itemIndex)"
+                        style="cursor:pointer;font-size:16px;vertical-align: baseline;margin-left:20px;">
+                    </i>
+                </div>
+            </nz-collapse-panel>
+        </nz-collapse>
+    </div>
+</div>

@@ -26,7 +26,9 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
 import { TrainingViewerComponent } from './training-viewer.component';
 import { PrettyJsonModule } from 'angular2-prettyjson';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { NzDrawerModule } from 'ng-zorro-antd';
 import { JoyrideModule, JoyrideService } from 'ngx-joyride';
+import { QuillModule } from 'ngx-quill'
 
 @NgModule({
   declarations: [
@@ -78,7 +80,9 @@ import { JoyrideModule, JoyrideService } from 'ngx-joyride';
     NzDatePickerModule,
     NzCollapseModule,
     PrettyJsonModule,
-    JoyrideModule.forRoot()
+    NzDrawerModule,
+    JoyrideModule.forRoot(),
+    QuillModule.forRoot()
   ],
   exports: [
     TrainingViewerComponent,

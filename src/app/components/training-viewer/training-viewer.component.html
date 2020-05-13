@@ -3,105 +3,23 @@
     </div>
 </ng-template>
 <div *ngIf="selectedTraining$ | async as selectedTraining" class="training-viewer-fullscreen">
+    <!--
     <div style="position:relative;width:100%;padding-top:5px;background-color: #fcfcfc;overflow:scroll;">
-        <div *ngIf="production === 'false'"
-            style="position:absolute;left:5px;top:5px;margin-right:20px;display:inline-block;">
-            <i *ngIf="selectedTraining.status === 'unlocked'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
-                [nzTwotoneColor]="'#52c41a'" style="font-size:20px;vertical-align: baseline;" nz-tooltip
-                nzTooltipTitle="This training is unlocked"></i>
-            <i *ngIf="selectedTraining.status === 'locked'" nz-icon nzType="lock" [nzTheme]="'twotone'"
-                [nzTwotoneColor]="'red'" style="font-size:20px;vertical-align: baseline;" nz-tooltip
-                nzTooltipTitle="This training is locked">
-            </i>
-        </div>
         <div>
             <div style="display:inline-block;text-align: center;background-color:#fcfcfc;width:100%;">
-                <!--
                 <div>
                     <i class="fad fa-hat-wizard"
                         style="color:#951eca;font-size:20px;margin-right:10px;vertical-align: baseline;display:inline-block;"></i>
                     <span style="display:inline-block;font-size:16px;color:#bbbbbb;">Training
                         Wizard</span>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
-                -->
                 <div *ngIf="production === 'false'">
-                    <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click"
-                        style="display:inline-block;font-size:12px;">
-                        <i [ngClass]="selectedTraining.versions[0].iconClass"
-                            style="display: inlne-block;font-size:18px;vertical-align: baseline;margin-right:10px;"
-                            [ngStyle]="{'color': selectedTraining.versions[0].iconColor}">
-                        </i>
-                        <span style="display:inline-block;font-size:16px;">{{selectedTraining.versions[0].title}}</span>
-                        &nbsp;&nbsp;
-                        <span style="font-size:14px;color:#bbbbbb;">version</span>
-                        <span style="font-size:16px;">
-                            {{ versionFormatter(selectedTraining.versions[0].version)}}</span>
-                        &nbsp;&nbsp;<span *ngIf="selectedTraining.status === 'unlocked'"
-                            style="font-size:14px;color:#bbbbbb;">(being edited)</span>
-                        <i nz-icon nzType="down" style="margin-left:5px;font-size:16px;vertical-align: middle;"></i>
-                    </a>
-                    <nz-dropdown-menu #menu="nzDropdownMenu" style="z-index:100010;display:inline-block;">
-                        <ul nz-menu nzSelectable>
-                            <li *ngFor="let version of selectedTrainingVersions; index as i" style="font-size:12px;"
-                                nz-menu-item (click)="loadVersion(version, i)">
-                                <i [ngClass]="version.iconClass"
-                                    style="display: inlne-block;font-size:16px;margin:0 5px;vertical-align: baseline;margin-right:10px;"
-                                    [ngStyle]="{'color': version.iconColor}">
-                                </i>
-                                <span
-                                    style="display:inline-block;font-size:12px;margin-right:20px;">{{version.title}}</span>
-                                &nbsp;&nbsp;
-                                <span
-                                    style="display:inline-block;font-size:12px;margin-right:20px;">v&nbsp;{{versionFormatter(version.version)}}</span>
-                                &nbsp;&nbsp;<span *ngIf="" style="font-size:14px;color:#bbbbbb;">(being
-                                    edited)</span>
-                                <span
-                                    style="display:inline-block;font-size:12px;">{{versionFormatter(version.changeLog)}}</span>
-                            </li>
-                        </ul>
-                    </nz-dropdown-menu>
-                    <!--
                     <div style="display:inline-block;">
                         <span style="font-size:14px;color:#bbbbbb;margin-left:20px;">version comment</span>
                         <i class="far fa-comment-lines" [ngStyle]="{'color': selectedTraining.iconColor}"
                             style="cursor:pointer;font-size:18px;margin-left:10px;vertical-align: text-bottom;"
                             (click)="showChangeLog()"></i>
                     </div>
-                    -->
-                    <nz-modal [(nzVisible)]="lockTrainingModalIsVisible" [nzTitle]="selectedTraining.title"
-                        nzWidth="60%" nzOkDisabled="false" nzCancelDisabled="false" (nzOnCancel)="cancelLockTraining()"
-                        (nzOnOk)="handleLockTraining()">
-                        <div style="display:inline-block;width:80%;">
-                            <h3 nz-title>
-                                What actions should be taken as a result of the changes that were made?
-                            </h3>
-                        </div>
-                        <div style="clear: both;"></div>
-                        <div style="display: block;">
-                            <nz-radio-group [(ngModel)]="changeLevel">
-                                <label nz-radio [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}"
-                                    nzValue="major">Reset
-                                    training
-                                    status for all responsible users. </label>
-                                <label nz-radio [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}"
-                                    nzValue="minor">Notify
-                                    all
-                                    responsible users.</label>
-                                <label nz-radio [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}"
-                                    nzValue="patch">No action
-                                    needed.</label>
-                            </nz-radio-group>
-                            <p *ngIf="error1" style="color:red;">Please select one of the 3 options.</p>
-                            <p>
-                                Please describe the changes you have made.
-                            </p>
-                            <textarea rows="4" nz-input [(ngModel)]="changeLog"></textarea>
-                            <p *ngIf="error2" style="color:red;">Please enter a description of the
-                                changes
-                                made.</p>
-
-                        </div>
-                    </nz-modal>
                 </div>
             </div>
         </div>
@@ -110,9 +28,41 @@
             nz-tooltip nzTooltipTitle="Close Training">
         </i>
     </div>
+    -->
+    <nz-modal [(nzVisible)]="lockTrainingModalIsVisible" [nzTitle]="selectedTraining.title" nzWidth="60%"
+        nzOkDisabled="false" nzCancelDisabled="false" (nzOnCancel)="cancelLockTraining()"
+        (nzOnOk)="handleLockTraining()">
+        <div style="display:inline-block;width:80%;">
+            <h3 nz-title>
+                What actions should be taken as a result of the changes that were made?
+            </h3>
+        </div>
+        <div style="clear: both;"></div>
+        <div style="display: block;">
+            <nz-radio-group [(ngModel)]="changeLevel">
+                <label nz-radio [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}" nzValue="major">Reset
+                    training
+                    status for all responsible users. </label>
+                <label nz-radio [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}" nzValue="minor">Notify
+                    all
+                    responsible users.</label>
+                <label nz-radio [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}" nzValue="patch">No
+                    action
+                    needed.</label>
+            </nz-radio-group>
+            <p *ngIf="error1" style="color:red;">Please select one of the 3 options.</p>
+            <p>
+                Please describe the changes you have made.
+            </p>
+            <textarea rows="4" nz-input [(ngModel)]="changeLog"></textarea>
+            <p *ngIf="error2" style="color:red;">Please enter a description of the
+                changes
+                made.</p>
+
+        </div>
+    </nz-modal>
     <div class="training-header" style="position:relative;">
-        <div style="display:block;width:100%;">
-            <!--
+        <!--
             <div class="header-left">
                 <i *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                     [ngClass]="selectedTraining.iconClass" nz-tooltip nzTooltipTitle="click to change icon"
@@ -126,42 +76,49 @@
                 </i>
             </div>
             -->
-            <nz-modal [(nzVisible)]="messageDialogVisible" nzTitle="Email Interest List"
-                (nzOnCancel)="handleEmailInterestListCancel()" (nzOnOk)="emailInterestList()">
-                <div style="display:block;padding-top:5px;"
-                    *ngFor="let email of selectedTraining.interestList; index as i">
-                    {{ email }}
-                    <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-popconfirm
-                        nzPopconfirmTitle="Delete this email address?" [nzPopconfirmTrigger]="'click'"
-                        [nzPopconfirmPlacement]="'right'" (nzOnConfirm)="deleteInterestListItem(i)"
-                        style="font-size:14px;vertical-align: baseline; margin-left:10px;"></i>
-                </div>
-                <div style="z-index: 1000;background-color: white;">
-                    <label style="margin-bottom: 3px;font-size:12px;color:#aaaaaa;">Subject</label>
-                    <input nz-input type="text" placeholder="Subject" ngDefaultControl [(ngModel)]="subject"
-                        style="margin-bottom:10px;">
-                    <label style="margin-bottom: 3px;font-size:12px;color:#aaaaaa;">Message</label>
-                    <textarea rows="4" nz-input [(ngModel)]="messageBody"></textarea>
-                </div>
-            </nz-modal>
+        <nz-modal [(nzVisible)]="messageDialogVisible" nzTitle="Email Interest List"
+            (nzOnCancel)="handleEmailInterestListCancel()" (nzOnOk)="emailInterestList()">
+            <div style="display:block;padding-top:5px;" *ngFor="let email of selectedTraining.interestList; index as i">
+                {{ email }}
+                <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-popconfirm
+                    nzPopconfirmTitle="Delete this email address?" [nzPopconfirmTrigger]="'click'"
+                    [nzPopconfirmPlacement]="'right'" (nzOnConfirm)="deleteInterestListItem(i)"
+                    style="font-size:14px;vertical-align: baseline; margin-left:10px;"></i>
+            </div>
+            <div style="z-index: 1000;background-color: white;">
+                <label style="margin-bottom: 3px;font-size:12px;color:#aaaaaa;">Subject</label>
+                <input nz-input type="text" placeholder="Subject" ngDefaultControl [(ngModel)]="subject"
+                    style="margin-bottom:10px;">
+                <label style="margin-bottom: 3px;font-size:12px;color:#aaaaaa;">Message</label>
+                <textarea rows="4" nz-input [(ngModel)]="messageBody"></textarea>
+            </div>
+        </nz-modal>
 
-            <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800"
-                (nzOnCancel)="handleIconSelectCancel()" [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled"
-                (nzOnOk)="handleIconSelectConfirm()" style="width:800px;">
-                <app-icon-picker (icon)="setIcon($event)"></app-icon-picker>
-            </nz-modal>
-        </div>
-        <div style="display:block;width:100%;height:fit-content;">
-            <div style="float: left;width:fit-content;">
+        <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800"
+            (nzOnCancel)="handleIconSelectCancel()" [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled"
+            (nzOnOk)="handleIconSelectConfirm()" style="width:800px;">
+            <app-icon-picker (icon)="setIcon($event)"></app-icon-picker>
+        </nz-modal>
+        <div style="display:flex;align-items:center;justify-content: space-between;">
+            <div *ngIf="production === 'false' && mode === 'Edit'" style="display:inline-block;margin-left:10px;">
+                <i *ngIf="selectedTraining.status === 'unlocked'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
+                    [nzTwotoneColor]="'#52c41a'" style="font-size:20px;vertical-align: baseline;" nz-tooltip
+                    nzTooltipTitle="This training is unlocked"></i>
+                <i *ngIf="selectedTraining.status === 'locked'" nz-icon nzType="lock" [nzTheme]="'twotone'"
+                    [nzTwotoneColor]="'red'" style="font-size:20px;vertical-align: baseline;" nz-tooltip
+                    nzTooltipTitle="This training is locked">
+                </i>
+            </div>
+            <div>
                 <div style="margin-left:20px;display: inline-block;">
                     <i *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                         [ngClass]="selectedTraining.iconClass" nz-tooltip nzTooltipTitle="click to change icon"
-                        style="display: inline-block;font-size:40px;cursor: pointer;margin:10px;vertical-align: middle;"
+                        style="display: inline-block;font-size:24px;cursor: pointer;margin:10px;vertical-align: middle;"
                         [ngStyle]="{'color': selectedTraining.iconColor}" (click)="showIconSelectModal()">
                     </i>
                     <i *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
                         [ngClass]="selectedTraining.iconClass"
-                        style="display: inlne-block;font-size:40px;margin:10px;vertical-align: middle;"
+                        style="display: inlne-block;font-size:24px;margin:10px;vertical-align: middle;"
                         [ngStyle]="{'color': selectedTraining.iconColor}">
                     </i>
                 </div>
@@ -172,11 +129,60 @@
                         (blur)="saveTraining(true)" />
                     <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
                         style="display:inline-block;width:fit-content;">
-                        <span style="font-size:26px;vertical-align: middle;">&nbsp;{{selectedTraining.title}}</span>
+                        <span style="font-size:22px;vertical-align: middle;">&nbsp;{{selectedTraining.title}}</span>
                     </div>
                 </div>
             </div>
-            <div style="display:inline-block;float:right;padding-top:20px;">
+            <div style="display:inline-block;margin-right:10px;">
+                <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
+                    style="display:inline-block;">
+                    <span
+                        style="display:inline-block;font-size:12px;color:#bbbbbb;">Version&nbsp;&nbsp;:&nbsp;&nbsp;</span>
+
+                    <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click"
+                        style="display:inline-block;font-size:12px;">
+                        <!--
+                    <i [ngClass]="selectedTraining.versions[0].iconClass"
+                        style="display: inlne-block;font-size:16px;vertical-align: baseline;margin-right:10px;"
+                        [ngStyle]="{'color': selectedTraining.versions[0].iconColor}">
+                    </i>
+                    <span style="display:inline-block;font-size:16px;">{{selectedTraining.versions[0].title}}</span>
+                    &nbsp;&nbsp;
+                    <span style="font-size:14px;color:#bbbbbb;">version</span>
+                -->
+                        <span style="font-size:12px;">
+                            {{ versionFormatter(selectedTraining.versions[0].version)}}</span>
+                        &nbsp;&nbsp;<span *ngIf="selectedTraining.status === 'unlocked'"
+                            style="font-size:12px;color:#bbbbbb;">(being
+                            edited)</span>
+                        <i nz-icon nzType="down" style="margin-left:5px;font-size:12px;vertical-align: middle;"></i>
+                    </a>
+                    <nz-dropdown-menu #menu="nzDropdownMenu" nzPlacement="bottomRight"
+                        style="z-index:100010;display:inline-block;">
+                        <ul nz-menu nzSelectable>
+                            <li *ngFor="let version of selectedTrainingVersions; index as i" style="font-size:12px;"
+                                nz-menu-item (click)="loadVersion(version, i)">
+                                <!--
+                            <i [ngClass]="version.iconClass"
+                                style="display: inlne-block;font-size:16px;margin:0 5px;vertical-align: baseline;margin-right:10px;"
+                                [ngStyle]="{'color': version.iconColor}">
+                            </i>
+                            <span
+                                style="display:inline-block;font-size:12px;margin-right:20px;">{{version.title}}</span>
+                            &nbsp;&nbsp;
+                            -->
+                                <span
+                                    style="display:inline-block;font-size:12px;margin-right:20px;">v&nbsp;{{versionFormatter(version.version)}}</span>
+                                &nbsp;&nbsp;<span *ngIf="" style="font-size:14px;color:#bbbbbb;">(being
+                                    edited)</span>
+                                <span
+                                    style="display:inline-block;font-size:12px;">{{versionFormatter(version.changeLog)}}</span>
+                            </li>
+                        </ul>
+                    </nz-dropdown-menu>
+                    <span class="separator">|</span>
+                </div>
+                <!--
                 <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
                     style="font-size:12px;width:fit-content;display:inline-block;">
                     <span style="color:#bbbbbb;">Version : </span>
@@ -184,18 +190,16 @@
                         {{versionFormatter(selectedTraining.versions[0].version)}}
                     </span>
                 </div>
+                -->
                 <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked'"
                     style="width:fit-content;display:inline-block;">
-                    <!--
-                    <span class="separator">|</span>
-                    -->
                     <span
                         style="display:inline-block;font-size:12px;color:#bbbbbb;">Mode&nbsp;&nbsp;:&nbsp;&nbsp;</span>
                     <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click"
                         style="display:inline-block;font-size:12px; ">{{ mode }}
                         <i nz-icon nzType="down" style="font-size:12px;vertical-align: middle;"></i>
                     </a>
-                    <nz-dropdown-menu #menu="nzDropdownMenu" style="z-index:100010;">
+                    <nz-dropdown-menu #menu="nzDropdownMenu" [nzPlacement]="'bottomRight'" style="z-index:100010;">
                         <ul nz-menu nzSelectable>
 
                             <li style="font-size:12px;" nz-menu-item (click)="setMode('Edit')"
@@ -204,37 +208,60 @@
                                 [ngClass]="{'selected-status': mode === 'Preview'}">Preview</li>
                         </ul>
                     </nz-dropdown-menu>
+                    <span class="separator">|</span>
                 </div>
-                <span class="separator">|</span>
+                <!--
                 <button *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && currentVersionIndex === 0"
-                    (click)="startTour()" class="header-icon" nz-button nzType="default" nzShape="circle" nz-tooltip
-                    nzTooltipTitle="Edit Training">
+                    (click)="startTour()" class="header-icon" nz-button nzType="default" nzShape="circle">
                     <i nz-icon nzType="car" theme="twotone" style="vertical-align: top;"></i>
                 </button>
-                <button
-                    *ngIf="production === 'false' && selectedTraining.status === 'locked' && currentVersionIndex === 0"
-                    (click)="unlockTraining()" class="header-icon" nz-button nzType="default" nzShape="circle"
-                    nz-tooltip nzTooltipTitle="Edit Training">
-                    <i nz-icon nzType="unlock" theme="twotone" style="vertical-align: top;"></i>
-                </button>
-                <button *ngIf="production === 'false' && selectedTraining.status === 'unlocked'" nz-button
-                    nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Save As New Version"
-                    class="header-icon" (click)="saveNewVersion()" [disabled]="!selectedTraining.isDirty">
-                    <i nz-icon nzType="lock" theme="twotone" [nzTwotoneColor]="'blue'" style="vertical-align: top;">
-                    </i>
-                </button>
-                <button *ngIf="production === 'false' && selectedTraining.status === 'unlocked'" nz-button
-                    nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Discard Changes"
-                    [disabled]="!selectedTraining.isDirty" style="color:orange;" class="header-icon"
-                    (click)="showRollbackConfirm()">
-                    <i nz-icon nzType="rollback" theme="outline" style="vertical-align: top;">
-                    </i>
-                </button>
-                <button *ngIf="authenticatedUser.appAdmin" nz-button nzType="default" nzShape="circle" nz-tooltip
-                    nzTooltipTitle="Show Debug Info" class="header-icon" (click)="debug = !debug">
-                    <i nz-icon nzType="bug" [nzTheme]="'twotone'" style="vertical-align: top;"></i>
-                </button>
-                <!--
+                -->
+                <div style="display:inline-block;">
+                    <button
+                        *ngIf="production === 'false' && selectedTraining.status === 'locked' && currentVersionIndex === 0"
+                        (click)="unlockTraining()" class="header-icon" nz-button nzType="default" nzShape="circle"
+                        nz-tooltip nzTooltipTitle="Edit Training">
+                        <i nz-icon nzType="unlock" theme="twotone" style="vertical-align: top;"></i>
+                    </button>
+                    <button *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
+                        nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Save As New Version"
+                        class="header-icon" (click)="saveNewVersion()" [disabled]="!selectedTraining.isDirty">
+                        <i nz-icon nzType="lock" theme="twotone" [nzTwotoneColor]="'blue'" style="vertical-align: top;">
+                        </i>
+                    </button>
+                    <button *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
+                        nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Add a New Page"
+                        class="header-icon" (click)="addNewPage('single')">
+                        <i nz-icon nzType="file-add" theme="twotone" [nzTwotoneColor]="'#52c41a'"
+                            style="vertical-align: top;">
+                        </i>
+                    </button>
+                    <button *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
+                        nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Configure Training"
+                        class="header-icon" (click)="showTrainingConfig = true">
+                        <i nz-icon nzType="setting" theme="twotone" [nzTwotoneColor]="'pink'"
+                            style="vertical-align: top;">
+                        </i>
+                    </button>
+                    <button *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
+                        nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Discard Changes"
+                        [disabled]="!selectedTraining.isDirty" style="color:orange;" class="header-icon"
+                        (click)="showRollbackConfirm()">
+                        <i nz-icon nzType="rollback" theme="outline" style="vertical-align: top;">
+                        </i>
+                    </button>
+                    <button *ngIf="authenticatedUser.appAdmin" nz-button nzType="default" nzShape="circle" nz-tooltip
+                        nzTooltipTitle="Show Debug Info" class="header-icon" (click)="debug = !debug">
+                        <i nz-icon nzType="bug" [nzTheme]="'twotone'" style="vertical-align: top;"></i>
+                    </button>
+                    <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Close Training"
+                        class="header-icon" (click)="closeViewer()">
+                        <i nz-icon nzType="close" theme="outline" style="vertical-align: top;color:red;">
+                        </i>
+                    </button>
+                </div>
+            </div>
+            <!--
                 <button *ngIf="production === 'false' && selectedTraining.status === 'unlocked'" nz-button
                     nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Delete Training" class="header-icon"
                     (click)="showConfirmDelete()">
@@ -243,39 +270,9 @@
                     </i>
                 </button>
                 -->
-                <ng-template #vertSeparator>
-                    <span style="font-size:16px;color:black;">|</span>
-                </ng-template>
-            </div>
-            <div style="clear:both;"></div>
-            <div *ngIf="debug">
-                <div style="width:33%;display: inline-block;">
-                    <div>
-                        <div style="display: block;">
-                            Selected Training
-                        </div>
-                        <div style="height:400px;overflow: scroll;display: block;">
-                            <prettyjson style="font-size:8px;" [obj]="selectedTraining"></prettyjson>
-                        </div>
-                    </div>
-                </div>
-                <div style="width:33%;display: inline-block;">
-                    <div style="display: block;">
-                        Selected Training Versions
-                    </div>
-                    <div style="height:400px;overflow: scroll;display: block;">
-                        <prettyjson style="font-size:8px;" [obj]="selectedTrainingVersions"></prettyjson>
-                    </div>
-                </div>
-                <div style="width:33%;display: inline-block;">
-                    <div style="display: block;">
-                        Previous Version
-                    </div>
-                    <div style="height:400px;overflow: scroll;display: block;">
-                        <prettyjson style="font-size:8px;" [obj]="previousVersion"></prettyjson>
-                    </div>
-                </div>
-            </div>
+            <ng-template #vertSeparator>
+                <span style="font-size:16px;color:black;">|</span>
+            </ng-template>
             <nz-modal [(nzVisible)]="showConfirmDeleteTrainingWithoutAffectedUsers"
                 nzTitle="Delete Training Confirmation" (nzOnCancel)="cancelDelete()" (nzOnOk)="confirmDelete()"
                 nzOkText="Delete Training">
@@ -325,53 +322,218 @@
             </nz-modal>
         </div>
     </div>
+    <div *ngIf="debug" style="display:block;background-color: white;">
+        <div style="width:33%;display: inline-block;">
+            <div>
+                <div style="display: block;">
+                    Selected Training
+                </div>
+                <div style="height:400px;overflow: scroll;display: block;">
+                    <prettyjson style="font-size:8px;" [obj]="selectedTraining"></prettyjson>
+                </div>
+            </div>
+        </div>
+        <div style="width:33%;display: inline-block;">
+            <div style="display: block;">
+                Selected Training Versions
+            </div>
+            <div style="height:400px;overflow: scroll;display: block;">
+                <prettyjson style="font-size:8px;" [obj]="selectedTrainingVersions"></prettyjson>
+            </div>
+        </div>
+        <div style="width:33%;display: inline-block;">
+            <div style="display: block;">
+                Previous Version
+            </div>
+            <div style="height:400px;overflow: scroll;display: block;">
+                <prettyjson style="font-size:8px;" [obj]="previousVersion"></prettyjson>
+            </div>
+        </div>
+    </div>
+    <div
+        style="height:fit-content;padding:10px;text-align: center;background-color: #f5f5f5;border-bottom:1px solid #dddddd;">
+        <div *ngIf="production === 'false'">
+            <div *ngFor="let page of selectedTraining.pages; index as pageIndex" style="float:left;">
+                <i *ngIf="page.content[0].type === 'text'" nz-icon nzType="file-text" theme="outline" class="page-icon"
+                    [ngClass]="{'current-page': currentPageId === page._id}"
+                    style="font-size:22px;vertical-align: middle;" (click)="setCurrentPage(page._id)"></i>
+                <i *ngIf="page.content[0].type === 'none'" nz-icon nzType="file-unknown" theme="outline"
+                    class="page-icon" [ngClass]="{'current-page': currentPageId === page._id}"
+                    style="font-size:22px;vertical-align: middle;" (click)="setCurrentPage(page._id)"></i>
+                <i *ngIf="page.content[0].type === 'file'" nz-icon [nzType]="page.icon" theme="outline"
+                    class="page-icon" [ngClass]="{'current-page': currentPageId === page._id}"
+                    style="font-size:22px;vertical-align: middle;" (click)="setCurrentPage(page._id)"></i>
+                <i *ngIf="page.content[0].type === 'url'" nz-icon nzType="global" theme="outline" class="page-icon"
+                    [ngClass]="{'current-page': currentPageId === page._id}"
+                    style="font-size:22px;vertical-align: middle;" (click)="setCurrentPage(page._id)"></i>
+                <i *ngIf="page.content[0].type === 'video'" nz-icon nzType="video-camera" theme="outline"
+                    class="page-icon" [ngClass]="{'current-page': currentPageId === page._id}"
+                    style="font-size:22px;vertical-align: middle;" (click)="setCurrentPage(page._id)"></i>
+                <i *ngIf="page.content[0].type === 'assessment'" nz-icon nzType="file-done" theme="outline"
+                    class="page-icon" [ngClass]="{'current-page': currentPageId === page._id}"
+                    style="font-size:22px;vertical-align: middle;" (click)="setCurrentPage(page._id)"></i>
+                <i *ngIf="page.content[0].type === 'html'" nz-icon nzType="html5" theme="outline" class="page-icon"
+                    [ngClass]="{'current-page': currentPageId === page._id}"
+                    style="font-size:22px;vertical-align: middle;" (click)="setCurrentPage(page._id)"></i>
+            </div>
+        </div>
+        <div *ngIf="production === 'true' || mode === 'Preview'">
+            <button nz-button nzType="primary" nzShape="circle" nz-tooltip nzTooltipTitle="Previous Page"
+                class="header-icon" (click)="loadPrevPage()" [disabled]="currentPageIndex === 0 || !prevIsActive">
+                <i nz-icon nzType="left" theme="outline" style="vertical-align: top;">
+                </i>
+            </button>
+            <button nz-button nzType="primary" nzShape="circle" nz-tooltip nzTooltipTitle="Next Page"
+                class="header-icon" (click)="loadNextPage()"
+                [disabled]="currentPageIndex > selectedTraining.pages.length - 1 || !nextIsActive">
+                <i nz-icon nzType="right" theme="outline" style="vertical-align: top;">
+                </i>
+            </button>
+            <!--
+            <button *ngIf="showCloseButton" nz-button nzType="primary" nzDanger nzShape="circle"
+                nz-tooltip nzTooltipTitle="Close Training" class="header-icon" (click)="closeViewer()">
+                <i nz-icon nzType="close" theme="outline" style="vertical-align: top;">
+                </i>
+            </button>
+            -->
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    <nz-drawer [nzWidth]="600" nzTitle="Training Configuration" [nzClosable]="true" [nzVisible]="showTrainingConfig"
+        nzPlacement="right" (nzOnClose)="showTrainingConfig = false">
+        <div class="config-page-row">
+            <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
+                <label style="margin-bottom: 0;font-size:12px;color:black;">Category</label>
+            </div>
+            <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
+                <input style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:80%;" nz-input
+                    [(ngModel)]="selectedTraining.category" nzSize="small" (ngModelChange)="onCategoryChange($event)"
+                    [nzAutocomplete]="autoCategory" (keydown.enter)="setCategory($event)"
+                    (blur)="setCategory($event)" />
+                <nz-autocomplete [nzDataSource]="matchingCategories" #autoCategory></nz-autocomplete>
+            </div>
+        </div>
+        <div class="config-page-row">
+            <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
+                <label style="margin-bottom: 0;font-size:12px;color:black;">Subcategory</label>
+            </div>
+            <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
+                <input style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:80%;" nz-input
+                    ngDefaultControl [(ngModel)]="selectedTraining.subcategory" nzSize="small"
+                    (ngModelChange)="onSubcategoryChange($event)" [nzAutocomplete]="autoSubcategory"
+                    (keydown.enter)="setSubcategory($event)" (blur)="setSubcategory($event)" />
+                <nz-autocomplete [nzDataSource]="matchingSubcategories" #autoSubcategory>
+                </nz-autocomplete>
+            </div>
+        </div>
+        <div class="config-page-row">
+            <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
+                <label style="margin-bottom: 0;font-size:12px;color:black;">Job Title</label>
+            </div>
+            <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
+                <input style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:80%;" nz-input
+                    [(ngModel)]="selectedTraining.jobTitle" ngDefaultControl nzSize="small"
+                    (ngModelChange)="onJobTitleChange($event)" [nzAutocomplete]="auto"
+                    (keydown.enter)="setJobTitle($event)" (blur)="setJobTitle($event)" />
+                <nz-autocomplete [nzDataSource]="matchingJobTitles" #auto></nz-autocomplete>
+            </div>
+        </div>
+        <div class="config-page-row">
+            <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
+                <label style="margin-bottom: 0;display: inline-block;font-size:12px;color:black;">
+                    Estimated Time To Complete
+                </label>
+            </div>
+            <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
+                <nz-input-number nzSize="small" nzId="estTimeToComplete" class="foo" style="font-size:12px;"
+                    [(ngModel)]="selectedTraining.estimatedTimeToComplete" [nzMin]="10" [nzMax]="240" [nzStep]="5"
+                    (ngModelChange)="configChanged($event)">
+                </nz-input-number>
+                <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes</span>
+            </div>
+        </div>
+        <div class="config-page-row">
+            <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
+                <label style="margin-bottom: 0;font-size:12px;color:black;">Share With Other
+                    Teams</label>
+            </div>
+            <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
+
+                <label nz-checkbox [(ngModel)]="selectedTraining.shared" ngDefaultControl
+                    (click)="saveTraining()"></label>
+            </div>
+        </div>
+        <div class="config-page-row">
+            <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
+                <label style="margin-bottom: 0;font-size:12px;color:black;">Interest List</label>
+            </div>
+            <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
+                <div>
+                    <div style="width:80%;text-align: left;display:inline-block;">
+                        <input nz-input nzSize="small" class="foo" style="font-size:12px;" [(ngModel)]="emailAddr"
+                            placeholder="Email Address" ngDefaultControl (keydown.enter)="addEmailToInterestList()" />
+                    </div>
+                </div>
+
+                <div style="display:block;padding-top:5px;"
+                    *ngFor="let email of selectedTraining.interestList; index as i">
+                    {{ email }}
+                    <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-popconfirm
+                        nzPopconfirmTitle="Delete this email address?" [nzPopconfirmTrigger]="'click'"
+                        [nzPopconfirmPlacement]="'right'" (nzOnConfirm)="deleteInterestListItem(i)"
+                        style="font-size:14px;vertical-align: baseline; margin-left:10px;"></i>
+                </div>
+            </div>
+        </div>
+    </nz-drawer>
     <div class="main-content-container">
         <div class="main-content">
+            <!--
             <div class="toc">
                 <div class="toc-text-container">
                     <div #toc style="position: relative;text-align: left;">
                         <div class="toc-title">
                             <span style="text-align: center;">Table of Contents</span>
-                            <!--
+                            < !--
                             <i nz-icon nzType="unordered-list" [nzTheme]="'outline'" (click)="toggleTOC(false)"
                                 style="float:right;cursor:pointer;font-size:24px;vertical-align: baseline;margin-left:10px;"></i>
-                                -->
+                                -- >
                         </div>
                         <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                             class="toc-entry" (click)="setCurrentPage('config')"
                             [ngClass]="{'active-toc':currentPageId === 'config', 'disabled': assessmentInProgress}"
                             joyrideStep="viewerStep1" title="Configure Training Properties"
                             text="Configure your training here.">
-                            <!--
+                            < !--
                             <i *ngIf="!selectedTraining.isValid['config']" nz-icon nzType="minus" [nzTheme]="'outline'"
                                 class="checklist-not-done"></i>
                             <i *ngIf="selectedTraining.isValid['config']" nz-icon nzType="check" [nzTheme]="'outline'"
                                 class="checklist-done"></i>
-                                -->
+                                -- >
                             Training Configuration
                         </div>
                         <div class="toc-entry" (click)="setCurrentPage('intro')"
                             [ngClass]="{'active-toc':currentPageId === 'intro', 'disabled': assessmentInProgress}"
                             joyrideStep="viewerStep2" title="Customize the training Introduction "
                             text="Customize your trainings introduction, executive summary, and goals.">
-                            <!--
+                            < !--
                             <i *ngIf="!selectedTraining.isValid['intro'] && production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                 nz-icon nzType="minus" [nzTheme]="'outline'" class="checklist-not-done"></i>
                             <i *ngIf="selectedTraining.isValid['intro'] && production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                 nz-icon nzType="check" [nzTheme]="'outline'" class="checklist-done"></i>
-                                -->
+                                -- >
                             {{selectedTraining.introductionLabel}}
                         </div>
                         <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                             class="toc-entry" style="cursor: default;" [ngClass]="{'disabled': assessmentInProgress}"
                             (click)="setCurrentPage('mainContent')" joyrideStep="viewerStep3"
                             title="Select a training template." text="">
-                            <!--
+                            < !--
                             <i *ngIf="!selectedTraining.isValid['mainContent']" nz-icon nzType="minus"
                                 [nzTheme]="'outline'" class="checklist-not-done"></i>
                             <i *ngIf="selectedTraining.isValid['mainContent']" nz-icon nzType="check"
                                 [nzTheme]="'outline'" class="checklist-done"></i>
-                                -->
+                                -- >
                             Main Content
                         </div>
                         <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
@@ -394,114 +556,21 @@
                         <div *ngIf="selectedTraining.useAssessment || selectedTraining.status === 'unlocked' && production === 'false' && mode === 'Edit'"
                             class="toc-entry" (click)="setCurrentPage('assessment')"
                             [ngClass]="{'active-toc':currentPageId === 'assessment', 'disabled': currentUser}">
-                            <!--
+                            < !--
                             <i *ngIf="!selectedTraining.isValid['assessment'] && production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                 nz-icon nzType="minus" [nzTheme]="'outline'" class="checklist-not-done"></i>
                             <i *ngIf="selectedTraining.isValid['assessment'] && production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                 nz-icon nzType="check" [nzTheme]="'outline'" class="checklist-done" style=""></i>
-                                -->
+                                -- >
                             Assessment
                         </div>
                     </div>
                 </div>
             </div>
+        -->
+
             <div class="page-container">
-                <div *ngIf="currentPageId === 'config' && mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false'"
-                    class="page">
-                    <h3 style="display:inline-block;text-align: center;margin-bottom:30px;width:100%;">Training
-                        Configuration</h3>
-                    <div>
-                        <div class="config-page-row">
-                            <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
-                                <label style="margin-bottom: 0;font-size:12px;color:black;">Category</label>
-                            </div>
-                            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
-                                <input
-                                    style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;"
-                                    nz-input [(ngModel)]="selectedTraining.category" nzSize="small"
-                                    (ngModelChange)="onCategoryChange($event)" [nzAutocomplete]="autoCategory"
-                                    (keydown.enter)="setCategory($event)" (blur)="setCategory($event)" />
-                                <nz-autocomplete [nzDataSource]="matchingCategories" #autoCategory></nz-autocomplete>
-                            </div>
-                        </div>
-                        <div class="config-page-row">
-                            <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
-                                <label style="margin-bottom: 0;font-size:12px;color:black;">Subcategory</label>
-                            </div>
-                            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
-                                <input
-                                    style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;"
-                                    nz-input ngDefaultControl [(ngModel)]="selectedTraining.subcategory" nzSize="small"
-                                    (ngModelChange)="onSubcategoryChange($event)" [nzAutocomplete]="autoSubcategory"
-                                    (keydown.enter)="setSubcategory($event)" (blur)="setSubcategory($event)" />
-                                <nz-autocomplete [nzDataSource]="matchingSubcategories" #autoSubcategory>
-                                </nz-autocomplete>
-                            </div>
-                        </div>
-                        <div class="config-page-row">
-                            <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
-                                <label style="margin-bottom: 0;font-size:12px;color:black;">Job Title</label>
-                            </div>
-                            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
-                                <input
-                                    style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:50%;"
-                                    nz-input [(ngModel)]="selectedTraining.jobTitle" ngDefaultControl nzSize="small"
-                                    (ngModelChange)="onJobTitleChange($event)" [nzAutocomplete]="auto"
-                                    (keydown.enter)="setJobTitle($event)" (blur)="setJobTitle($event)" />
-                                <nz-autocomplete [nzDataSource]="matchingJobTitles" #auto></nz-autocomplete>
-                            </div>
-                        </div>
-                        <div class="config-page-row">
-                            <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
-                                <label style="margin-bottom: 0;display: inline-block;font-size:12px;color:black;">
-                                    Estimated Time To Complete
-                                </label>
-                            </div>
-                            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
-                                <nz-input-number nzSize="small" nzId="estTimeToComplete" class="foo"
-                                    style="font-size:12px;" [(ngModel)]="selectedTraining.estimatedTimeToComplete"
-                                    [nzMin]="10" [nzMax]="240" [nzStep]="5" (ngModelChange)="configChanged($event)">
-                                </nz-input-number>
-                                <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes</span>
-                            </div>
-                        </div>
-                        <div class="config-page-row">
-                            <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
-                                <label style="margin-bottom: 0;font-size:12px;color:black;">Share With Other
-                                    Teams</label>
-                            </div>
-                            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
-
-                                <label nz-checkbox [(ngModel)]="selectedTraining.shared" ngDefaultControl
-                                    (click)="saveTraining()"></label>
-                            </div>
-                        </div>
-                        <div class="config-page-row">
-                            <div style="width:25%;text-align: right;display:inline-block;padding-right:10px;">
-                                <label style="margin-bottom: 0;font-size:12px;color:black;">Interest List</label>
-                            </div>
-                            <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
-                                <div>
-                                    <div style="width:35%;text-align: left;display:inline-block;">
-                                        <input nz-input nzSize="small" class="foo" style="font-size:12px;"
-                                            [(ngModel)]="emailAddr" placeholder="Email Address" ngDefaultControl
-                                            (keydown.enter)="addEmailToInterestList()" />
-                                    </div>
-                                </div>
-
-                                <div style="display:block;padding-top:5px;"
-                                    *ngFor="let email of selectedTraining.interestList; index as i">
-                                    {{ email }}
-                                    <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
-                                        nz-popconfirm nzPopconfirmTitle="Delete this email address?"
-                                        [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'right'"
-                                        (nzOnConfirm)="deleteInterestListItem(i)"
-                                        style="font-size:14px;vertical-align: baseline; margin-left:10px;"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!--
                 <div *ngIf="currentPageId === 'comments'" class="page">
                     <h3 style="display:inline-block;text-align: left;margin-bottom:30px;">Comments</h3>
                     <div style="padding:20px;background-color:white;">
@@ -533,6 +602,8 @@
 
                     </div>
                 </div>
+                -->
+                <!--
                 <div *ngIf="currentPageId === 'mainContent' && selectedTraining.status === 'unlocked' && production === 'false'"
                     class="page">
                     <h3 style="text-align: center;margin-bottom:20px;">Main Content</h3>
@@ -558,7 +629,7 @@
                                     and you are done!
                                 </p>
                             </ng-template>
-                            <!--
+                            < !--
                             <div style=" margin:40px 0;position:relative;">
                                 Select the content type you would like to upload
                                 <i [@itemFocus]="itemWithFocus === 'doc' ? 'in' : 'out'" nz-icon nzType="file"
@@ -582,7 +653,7 @@
                                     style="cursor:pointer;position:absolute;bottom:-30px;left:180px;" nz-tooltip
                                     nzTooltipTitle="Upload an Image File"></i>
                             </div>
-                            -->
+                            -- >
 
                             <div class="page-template-container">
                                 <div style="float:left;margin-right:5%;">
@@ -643,7 +714,7 @@
                                 </div>
                                 <div style="clear: both;"></div>
                             </div>
-                            <!--
+                            < !--
                             <div style="display:block;">
                                 <div>
                                     <div class="config-page-row">
@@ -687,8 +758,8 @@
 
                                 </div>
                             </div>
-                            -->
-                            <!--
+                            -- >
+                            < !--
                         <div style="margin-top:60px;height:60px;position:relative;">
                             <div style="">
                                 Use an existing web page
@@ -701,10 +772,12 @@
                                 nz-input [(ngModel)]="pageUrl" nzSize="small" (keydown.enter)="pageUrlChanged()"
                                 (blur)="pageUrlChanged()" placeholder="Enter a website URL   https://example.com" />
                         </div>
-                        -->
+                        -- >
                         </div>
                     </div>
                 </div>
+                -->
+                <!--
                 <div *ngIf="currentPageId === 'intro'" class="page">
                     <h3 style="text-align: center;margin-bottom:20px;">{{selectedTraining.introductionLabel}}</h3>
 
@@ -753,12 +826,14 @@
                         </span>
                     </div>
                 </div>
+                -->
                 <div>
                     <div *ngFor="let page of selectedTraining.pages; index as pageIndex">
                         <!-- page actions -->
                         <div *ngIf="currentPageId === page._id" class="page">
                             <div *ngIf="mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false'"
                                 style="position:absolute;top:20px;right:20px;width:fit-content;height:fit-content;">
+                                <!--
                                 <i nz-icon nzType="up-square" [ngClass]="{'disabled': pageIndex === 0}"
                                     [nzTheme]="'twotone'" nz-tooltip nzTooltipTitle="Move document up in list"
                                     (click)="movePage(page, -1)" class="page-action"></i>
@@ -766,6 +841,7 @@
                                     [ngClass]="{'disabled': pageIndex === selectedTraining.pages.length - 1}"
                                     nzTooltipTitle="Move document down in list" (click)="movePage(page, 1)"
                                     class="page-action"></i>
+                                    -->
                                 <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-tooltip
                                     nzTooltipTitle="Delete Page" nz-popconfirm nzPopconfirmTitle="Delete this Page?"
                                     [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'right'"
@@ -774,7 +850,7 @@
                             <div *ngIf="mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false'"
                                 class="page-title" (click)="selectSection('title')"
                                 [ngClass]="{'page-section-selected': currentSection === 'title'}">
-                                <h3 style="text-align: center;margin-bottom:10px;">
+                                <h3 style="text-align: center;margin-bottom:10px;margin-top:20px;">
                                     <p nz-paragraph (nzContentChange)="pageContentChanged($event, page, 'title')"
                                         nzEditable [(nzContent)]="page.title" style="margin-bottom:0;">
                                     </p>
@@ -788,8 +864,7 @@
                             </div>
 
                             <div *ngIf="mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false'"
-                                class="page-intro" (click)="selectSection('intro')"
-                                [ngClass]="{'page-section-selected': currentSection === 'intro'}">
+                                class="page-intro">
                                 <div style="font-size:16px;">
                                     <p nz-paragraph (nzContentChange)="pageContentChanged($event, pageIndex, 'intro')"
                                         nzEditable [(nzContent)]="page.intro"></p>
@@ -917,80 +992,130 @@
 
                                     </div>
                                 </nz-modal>
-                                <div *ngIf="page.content && page.content[0] && page.content[0].type === 'none'"
-                                    style=" margin:40px 0;position:relative;">
-                                    Select the content type you would like to upload
-                                    <div style="margin-top:20px;">
-                                        <div *ngIf="authenticatedUser.appAdmin" class="content-type-row"
-                                            (click)="openPicker('all')">
-                                            <div
-                                                style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
-                                                <i style="font-size:24px;" nz-icon nzType="bug"
-                                                    [nzTheme]="'twotone'"></i>
+                                <div *ngIf="page.content && page.content[0] && page.content[0].type === 'none'">
+                                    <div style="display:block;padding-left:40px;padding-top:20px;width:80%;">
+                                        <div>
+                                            <span style="font-size:24px;font-weight:500;">Upload a File</span>
+                                            <div *ngIf="authenticatedUser.appAdmin" class="content-type-row"
+                                                (click)="openPicker('all')">
+                                                <div
+                                                    style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
+                                                    <i style="font-size:24px;" nz-icon nzType="bug"
+                                                        [nzTheme]="'twotone'"></i>
+                                                </div>
+                                                <div style="display:inline-block;width:80%;">
+                                                    Any File
+                                                </div>
                                             </div>
-                                            <div style="display:inline-block;width:80%;">
-                                                Any File
+                                            <div class="content-type-row" (click)="openPicker('text')">
+                                                <div
+                                                    style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
+                                                    <i style="font-size:24px;" nz-icon nzType="file-text"
+                                                        [nzTheme]="'twotone'"></i>
+                                                </div>
+                                                <div style="display:inline-block;width:80%;">
+                                                    Text Files
+                                                </div>
+                                            </div>
+                                            <div class="content-type-row" (click)="openPicker('doc')">
+                                                <div
+                                                    style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
+                                                    <i style="font-size:24px;" nz-icon nzType="file"
+                                                        [nzTheme]="'twotone'"></i>
+                                                </div>
+                                                <div style="display:inline-block;width:80%;">
+                                                    Application Documents - .doc, .docx, .ppt, .pptx, .xls, .xlsx, .ai,
+                                                    .pdf, .ps
+                                                </div>
+                                            </div>
+                                            <div class="content-type-row" (click)="openPicker('video')">
+                                                <div
+                                                    style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
+                                                    <i style="font-size:24px;" nz-icon nzType="video-camera"
+                                                        [nzTheme]="'twotone'"></i>
+                                                </div>
+                                                <div style="display:inline-block;width:80%;">
+                                                    Video Files
+                                                </div>
+                                            </div>
+                                            <div class="content-type-row" (click)="openPicker('audio')">
+                                                <div
+                                                    style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
+                                                    <i style="font-size:24px;" nz-icon nzType="audio"
+                                                        [nzTheme]="'twotone'"></i>
+                                                </div>
+                                                <div style="display:inline-block;width:80%;">
+                                                    Audio Files
+                                                </div>
+                                            </div>
+                                            <div class="content-type-row" (click)="openPicker('image')">
+                                                <div
+                                                    style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
+                                                    <i style="font-size:24px;" nz-icon nzType="file-image"
+                                                        [nzTheme]="'twotone'"></i>
+                                                </div>
+                                                <div style="display:inline-block;width:80%;">
+                                                    Image Files
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="content-type-row" (click)="openPicker('doc')">
-                                            <div
-                                                style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
-                                                <i style="font-size:24px;" nz-icon nzType="file"
-                                                    [nzTheme]="'twotone'"></i>
-                                            </div>
-                                            <div style="display:inline-block;width:80%;">
-                                                Application Documents - .doc, .docx, .ppt, .pptx, .xls, .xlsx, .ai,
-                                                .pdf, .ps
-                                            </div>
-                                        </div>
-                                        <div class="content-type-row" (click)="openPicker('video')">
-                                            <div
-                                                style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
-                                                <i style="font-size:24px;" nz-icon nzType="video-camera"
-                                                    [nzTheme]="'twotone'"></i>
-                                            </div>
-                                            <div style="display:inline-block;width:80%;">
-                                                Video Files
-                                            </div>
-                                        </div>
-                                        <div class="content-type-row" (click)="openPicker('audio')">
-                                            <div
-                                                style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
-                                                <i style="font-size:24px;" nz-icon nzType="audio"
-                                                    [nzTheme]="'twotone'"></i>
-                                            </div>
-                                            <div style="display:inline-block;width:80%;">
-                                                Audio Files
+                                        <div style="display:block;padding-top:20px;width:80%;">
+                                            <span style="font-size:24px;font-weight:500;">Embed a Web Page</span>
+
+                                            <div class="content-type-row">
+                                                <nz-alert *ngIf="badUrl" nzType="error" nzCloseable="true"
+                                                    nzMessage="URL format error.  URL's must use HTTPS!" nzShowIcon
+                                                    style="margin:10px 0;">
+                                                </nz-alert>
+                                                <div
+                                                    style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
+                                                    <i style="font-size:24px;color:#4198f7;" nz-icon nzType="global"
+                                                        [nzTheme]="'outline'"></i>
+                                                </div>
+                                                <div style="display:inline-block;width:80%;">
+                                                    <input
+                                                        style="display:inline-block;color:black;font-size:14px;width:50%;"
+                                                        nz-input [(ngModel)]="pageUrl" nzSize="small"
+                                                        (keydown.enter)="pageUrlChanged()" (blur)="pageUrlChanged()"
+                                                        placeholder="Enter a website URL   https://example.com" />
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="content-type-row" (click)="openPicker('image')">
-                                            <div
-                                                style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
-                                                <i style="font-size:24px;" nz-icon nzType="file-image"
-                                                    [nzTheme]="'twotone'"></i>
-                                            </div>
-                                            <div style="display:inline-block;width:80%;">
-                                                Image Files
+                                        <div style="display:block;padding-top:20px;width:80%;">
+                                            <span style="font-size:24px;font-weight:500;">Create an HTML Page</span>
+
+                                            <div class="content-type-row"
+                                                (click)="this.currentPage.content[0].type = 'html'">
+                                                <div
+                                                    style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
+                                                    <i style="font-size:24px;" nz-icon nzType="html5"
+                                                        [nzTheme]="'twotone'"></i>
+                                                </div>
+                                                <div style="display:inline-block;width:80%;">
+                                                    Open HTML editor
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="content-type-row">
-                                            <div>Use an existing web page</div>
-                                            <nz-alert *ngIf="badUrl" nzType="error" nzCloseable="true"
-                                                nzMessage="URL format error.  URL's must use HTTPS!" nzShowIcon
-                                                style="margin:10px 0;">
-                                            </nz-alert>
-                                            <br>
-                                            <input
-                                                style="margin-left:20px;  display:inline-block;color:black;font-size:14px;width:50%;"
-                                                nz-input [(ngModel)]="pageUrl" nzSize="small"
-                                                (keydown.enter)="pageUrlChanged()" (blur)="pageUrlChanged()"
-                                                placeholder="Enter a website URL   https://example.com" />
+                                        <div style="display:block;padding-top:20px;width:80%;">
+                                            <span style="font-size:24px;font-weight:500;">Create an Assessment</span>
+                                            <div class="content-type-row"
+                                                (click)="this.currentPage.content[0].type = 'assessment'">
+                                                <div
+                                                    style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
+                                                    <i style="font-size:24px;color:#4198f7;" nz-icon nzType="file-done"
+                                                        [nzTheme]="'outline'"></i>
+                                                </div>
+                                                <div style="display:inline-block;width:80%;">
+                                                    Open Assessment Wizard
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
                                 <div *ngIf="page.content && page.content[0] && (page.content[0].type === 'file' || page.content[0].type === 'video')"
-                                    style="margin-top:20px;">
-                                    <div>
+                                    style="margin-top:20px;width:100%;height:100%;">
+                                    <div style="height:100%;width:100%;text-align: center;">
                                         <!--
                                         <div style="margin-top:20px;text-align: center;">
                                             <span style="display:inline-block;color:#aaaaaa;">
@@ -999,8 +1124,10 @@
                                         </div>
                                         -->
                                         <div *ngIf="page.content[0].type === 'video' && page.content[0].versions && page.content[0].versions[0].file"
-                                            style="text-align: center;margin-top:5px;">
-                                            <vg-player (onPlayerReady)="onPlayerReady($event)">
+                                            [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
+                                            style="text-align: center;margin-top:5px;display: inline-block;">
+                                            <vg-player (onPlayerReady)="onPlayerReady($event)"
+                                                [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}">
 
                                                 <vg-controls>
                                                     <vg-play-pause></vg-play-pause>
@@ -1026,7 +1153,7 @@
                                                     <vg-fullscreen></vg-fullscreen>
                                                 </vg-controls>
                                                 <video [vgMedia]="media" #media id="singleVideo" preload="'auto'"
-                                                    width="100%"
+                                                    [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
                                                     [src]="safeUrlHash[page.content[0].versions[0].file.fileStackUrl]"
                                                     crossorigin></video>
                                                 <!-- <video [vgMedia]="media" #media id="singleVideo" preload="'auto'"
@@ -1036,258 +1163,43 @@
                                             </vg-player>
                                         </div>
                                         <div *ngIf="page.content[0].type === 'file'"
-                                            style="text-align: center;height:90%;margin-top:5px;">
-                                            <div style="width:100%;height:900px;display:inline-block;">
+                                            style="text-align: center;margin-top:5px;width:100%;height:100%;">
+                                            <div style="display:inline-block;">
                                                 <iframe
+                                                    [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
                                                     [src]="safeUrlHash[page.content[0].versions[0].file.fileStackUrl]"
-                                                    allowfullscreen width="100%" height="100%">
+                                                    allowfullscreen [width]="contentWidth" [height]="contentHeight">
                                                 </iframe>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div *ngIf="page.content[0] && page.content[0].type === 'url'"
-                                    style="text-align: center;height:90%;margin-top:5px;">
+                                    style="text-align: center;margin-top:5px;"
+                                    [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}">
                                     <div style="display: block;color:#bbbbbb;">
                                         {{ page.content[0].versions[0].webUrl }}
                                     </div>
-                                    <div style="width:100%;height:900px;display:inline-block;">
+                                    <div style="display:inline-block;">
                                         <iframe [src]="safeUrlHash[page.content[0].versions[0].webUrl]" allowfullscreen
-                                            width="100%" height="100%">
+                                            [width]="contentWidth" [height]="contentHeight">
                                         </iframe>
+                                    </div>
+                                </div>
+                                <div *ngIf="page.content[0] && page.content[0].type === 'html'"
+                                    style="text-align: center;margin-top:5px;"
+                                    [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}">
+                                    <div style="width:100%;height:60%;">
+                                        <quill-editor></quill-editor>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!--
                 <div *ngIf="currentPageId === 'assessment'" class="page">
                     <h3 style="text-align: center;margin-bottom:30px;">Assessment</h3>
-                    <div *ngIf="mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false'">
-                        <div style="display:block;margin-bottom:10px;">
-                            <div>
-                                <div style="text-align: left;font-size:12px;">
-                                    <div style="margin-top: 10px;position:relative;">
-                                        <nz-alert nzType="info" [nzMessage]="assessmentTitleTemplate"
-                                            [nzDescription]="assessmentDescriptionTemplate" nzShowIcon
-                                            nzCloseable="true" [nzCloseText]="assessmentCloseTemplate"
-                                            style="margin-bottom:20px;">
-                                        </nz-alert>
-                                        <ng-template #assessmentCloseTemplate>
-                                            <i nz-icon nzType="close-circle" [nzTheme]="'twotone'"
-                                                [nzTwotoneColor]="'red'" style="font-size: 24px;"></i>
-                                        </ng-template>
-                                        <ng-template #assessmentTitleTemplate>
-                                            <div style="width:100%;padding:0 20px 20px 0;">
-                                                Welcome to the Assessment Wizard. This is where you setup the
-                                                assessment
-                                                for this training.
-                                            </div>
-                                        </ng-template>
-                                        <ng-template #assessmentDescriptionTemplate>
-                                            <p>
-                                                Select the toggle to activate an assessment for this training.
-                                            </p>
-                                            <p>
-                                                Once activated, you can set the passing grade for this training.
-                                                Users
-                                                are required to
-                                                score above or equal to the passing grade in order to complete the
-                                                training.
-                                            </p>
-                                            <p>
-                                                Building your assessment is easy. Selecting the <span
-                                                    style="color:blue;">Add New Question</span> button brings up
-                                                the New Question dialog. Pretty straight forward.
-                                            </p>
-                                            <p>
-                                                When you are done inputing your questions, give it a spin by
-                                                switching
-                                                to <span style="color:blue;">Preview</span> mode (the mode
-                                                dropdown menu is located in the training header).
-                                            </p>
-                                            <p>
-                                                Questions are displayed in a list. Selecting a question opens the
-                                                questions panel
-                                                that shows the question along with all of the choices, with the
-                                                correct
-                                                choice being tagged
-                                                with a <i nz-icon nzType="check" [nzTheme]="'outline'"
-                                                    style="font-size:16px;vertical-align: baseline;color:#52c41a;"></i>.
-
-                                            </p>
-                                        </ng-template>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="display:inline-block;">
-                                <nz-switch nzSize="small" [(ngModel)]="selectedTraining.useAssessment" ngDefaultControl
-                                    (ngModelChange)="useAssessmentChanged($event)"></nz-switch>
-                            </div>
-                            <div *ngIf="!selectedTraining.useAssessment" style="display:inline-block;margin-left:20px;">
-                                <label>Assessment page is disabled!</label>
-                            </div>
-                            <div *ngIf="selectedTraining.useAssessment" style="display:inline-block;margin-left:20px;">
-                                <label>Assessment page is enabled</label>
-                            </div>
-                        </div>
-                        <div *ngIf="selectedTraining.useAssessment">
-                            <div style="margin-bottom: 10px;">
-                                <div style="width:20%;text-align: center;display:inline-block;">
-                                    <label style="font-size:12px;color:#bbbbbb;">Passing
-                                        Grade</label>
-                                </div>
-                                <div style="width:70%;text-align: left;display:inline-block;padding-left:10px;">
-                                    <nz-input-number nzSize="small" nzId="passingGrade" class="foo" ngDefaultControl
-                                        style="font-size:12px;" (ngModelChange)="assessmentChanged($event)"
-                                        [(ngModel)]="selectedTraining.assessment.passingGrade" [nzMin]="0" [nzMax]="100"
-                                        [nzStep]="5">
-                                    </nz-input-number>
-                                    <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp;%</span>
-                                </div>
-                            </div>
-
-                            <nz-modal [(nzVisible)]="questionEditorVisible" nzTitle="Question Editor"
-                                (nzOnCancel)="handleQuestionEditCancel()" (nzOnOk)="updateQuestion()" nzWidth="800">
-                                <div style="background-color: white;">
-                                    <div style="display:block;">
-                                        <label
-                                            style="display:inline-block;margin-right: 10px;font-size:18px;">Question</label>
-                                        <input nz-input type="text" placeholder="Question Text" ngDefaultControl
-                                            [(ngModel)]="currentQuestion.question"
-                                            style="display:inline-block;margin-bottom:10px;width:500px;">
-                                    </div>
-                                    <div style="display:block;">
-                                        <label
-                                            style="display:inline-block;margin-right: 10px;font-size:18px;">Choices</label>
-                                        <div style="display:block;padding-left:50px;">
-                                            <div class="choice-container">
-                                                <label class="choice-label">{{alpha[0]}}</label>
-                                                <input nz-input type="text" placeholder="Choice" ngDefaultControl
-                                                    [(ngModel)]="currentQuestion.choices[0]" class="choice-input">
-                                                <div style="clear: both;"></div>
-                                            </div>
-                                            <div class="choice-container">
-                                                <label class="choice-label">{{alpha[1]}}</label>
-                                                <input nz-input type="text" placeholder="Choice" ngDefaultControl
-                                                    [(ngModel)]="currentQuestion.choices[1]" class="choice-input">
-                                                <div style="clear: both;"></div>
-                                            </div>
-                                            <div class="choice-container">
-                                                <label class="choice-label">{{alpha[2]}}</label>
-                                                <input nz-input type="text" placeholder="Choice" ngDefaultControl
-                                                    [(ngModel)]="currentQuestion.choices[2]" class="choice-input">
-                                                <div style="clear: both;"></div>
-                                            </div>
-                                            <div class="choice-container">
-                                                <label class="choice-label">{{alpha[3]}}</label>
-                                                <input nz-input type="text" placeholder="Choice" ngDefaultControl
-                                                    [(ngModel)]="currentQuestion.choices[3]" class="choice-input">
-                                                <div style="clear: both;"></div>
-                                            </div>
-                                            <div class="choice-container">
-                                                <label class="choice-label">{{alpha[4]}}</label>
-                                                <input nz-input type="text" placeholder="Choice" ngDefaultControl
-                                                    [(ngModel)]="currentQuestion.choices[4]" class="choice-input">
-                                                <div style="clear: both;"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div style="display:bun;margin-top: 10px;font-size:18px;">
-                                        <label style="display:inline-block;margin-right: 10px;font-size:18px;">Correct
-                                            Choice</label>
-                                        <nz-radio-group [(ngModel)]="currentCorrectChoice">
-                                            <label nz-radio [nzDisabled]="currentQuestion.choices[0] === undefined"
-                                                nzValue="0">A</label>
-                                            <label nz-radio [nzDisabled]="currentQuestion.choices[1] === undefined"
-                                                nzValue="1">B</label>
-                                            <label nz-radio [nzDisabled]="currentQuestion.choices[2] === undefined"
-                                                nzValue="2">C</label>
-                                            <label nz-radio [nzDisabled]="currentQuestion.choices[3] === undefined"
-                                                nzValue="3">D</label>
-                                            <label nz-radio [nzDisabled]="currentQuestion.choices[4] === undefined"
-                                                nzValue="4">E</label>
-                                        </nz-radio-group>
-                                    </div>
-                                </div>
-                            </nz-modal>
-                            <button
-                                *ngIf="mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false'"
-                                nz-button nzType="primary" nzSize="small" style="margin-bottom:10px;"
-                                (click)="addNewQuestion()">Add
-                                New Question</button>
-                            <nz-collapse nzAccordion="true">
-                                <nz-collapse-panel [nzHeader]="headerTemplate"
-                                    [nzActive]="itemIndex === currentQuestionIndex"
-                                    *ngFor="let item of selectedTraining.assessment.items; index as itemIndex">
-                                    <ng-template #headerTemplate>
-                                        <div style="width:15%;display:inline-block;color:blue;">Question
-                                            {{ itemIndex + 1 }}
-                                        </div>
-                                        <div
-                                            style="vertical-align:middle;display:inline-block;width:80%;overflow: hidden;white-space: nowrap;">
-                                            {{item.question}}
-                                        </div>
-                                    </ng-template>
-                                    {{ item.question }}
-                                    <div style="font-weight:300;margin-top:10px;padding-left:25px;">
-                                        <div *ngFor="let choice of item.choices; index as choiceIndex"
-                                            style="width:100%;">
-                                            <div *ngIf="choice !== ''">
-                                                <div style="font-weight:300;width:25px;height:1em;float:left;">
-                                                    <i *ngIf="item.correctChoice === choiceIndex" nz-icon nzType="check"
-                                                        [nzTheme]="'outline'"
-                                                        style="font-size:16px;vertical-align: baseline;color:#52c41a;"></i>
-
-                                                </div>
-                                                <div
-                                                    style="display: inline-block;font-weight:300;width:30px;color:#bbbbbb;margin-bottom:5px;text-align: right;">
-                                                    {{alpha[choiceIndex]}}&nbsp;)
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <span
-                                                        style="font-weight:300;width:2%;color:#bbbbbb;margin-bottom:5px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                                    {{ choice }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--
-                                        <i class="font-size-18" [twoToneColor]="'#3f87f5'" nz-icon nzType="plus-square"
-                                            theme="twotone" [nzTwotoneColor]="'#52c41a'"
-                                            (click)="addNewChoice($event, itemIndex)"
-                                            style="display:block;text-align:left;padding-left:50px;margin-bottom:10px;cursor: pointer;width:fit-content;"
-                                            nz-tooltip nzTooltipTitle="Add new Choice"></i>
-                                            -->
-                                    <!--
-                                    <div style="margin-top:10px;">
-                                        The correct choice is
-                                        <span *ngIf="item.correctChoice > -1" style="margin-left:10px;color:green;">
-                                            {{ alpha[item.correctChoice] }}
-                                        </span>
-                                        <span *ngIf="item.correctChoice === -1" style="margin-left:10px;color:red;">
-                                            Not Specified
-                                        </span>
-                                    </div>
-                                    -->
-                                    <div style="margin-top:20px;">
-                                        <i nz-icon nzType="edit" [nzTheme]="'twotone'" nz-tooltip
-                                            nzTooltipTitle="Edit Question" (click)="editQuestion(itemIndex)"
-                                            style="cursor:pointer;font-size:16px;vertical-align: baseline;">
-                                        </i>
-                                        <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
-                                            nz-tooltip nzTooltipTitle="Delete Question" nz-popconfirm
-                                            nzPopconfirmTitle="Delete this Question?" [nzPopconfirmTrigger]="'click'"
-                                            [nzPopconfirmPlacement]="'top'"
-                                            (nzOnConfirm)="confirmDeleteQuestion(itemIndex)"
-                                            style="cursor:pointer;font-size:16px;vertical-align: baseline;margin-left:20px;">
-                                        </i>
-                                    </div>
-                                </nz-collapse-panel>
-                            </nz-collapse>
-                        </div>
-                    </div>
                     <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
                         style="position:relative;">
                         <div *ngIf="currentAssessmentItemIndex === -1 && !assessmentComplete">
@@ -1384,6 +1296,7 @@
                         </div>
                     </div>
                 </div>
+            -->
             </div>
         </div>
     </div>

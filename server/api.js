@@ -11,7 +11,7 @@ const Training = require("./models/Training");
 const TrainingArchive = require("./models/TrainingArchive");
 const UserTraining = require("./models/UserTraining");
 const User = require("./models/User");
-const File = require("./models/File");
+const Assessment = require("./models/Assessment");
 const Event = require("./models/Event");
 const Comment = require("./models/Comment");
 const UTSession = require("./models/UTSession");
@@ -73,13 +73,14 @@ module.exports = function(app, config) {
   }
 
 
-  const trainingArchiveProjection = "_id title versions type category subcategory owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle assessment useAssessment status interestList shared isValid isDirty";
-  const trainingListProjection = "_id title versions type category subcategory owner description introduction introductionLabel goals goalsLabel execSummary execSummaryLabel teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle assessment useAssessment status interestList shared isValid isDirty";
+  const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty";
+  const trainingListProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty";
   const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponse passedAssessment score trainingVersion";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email teamAdmin orgAdmin appAdmin teamId org supervisorId profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const commentListProjection = "_id tid version author text rating date";
+  const assessmentListProjection = "_id type timeLimit passingGrade items";
   const utSessionProjection = "_id utId uid tid startTime stopTime";
 
   // GET API root
@@ -241,19 +242,11 @@ module.exports = function(app, config) {
       estimatedTimeToComplete: req.body.estimatedTimeToComplete,
       jobTitle: req.body.jobTitle,
       description: req.body.description,
-      execSummary: req.body.execSummary,
-      execSummaryLabel: req.body.execSummaryLabel,
-      introduction: req.body.introduction,
-      introductionLabel: req.body.introductionLabel,
-      goals: req.body.goals,
-      goalsLabel: req.body.goalsLabel,
       image: req.body.image,
       iconClass: req.body.iconClass,
       iconColor: req.body.iconColor,
       iconSource: req.body.iconSource,
       pages: req.body.pages,
-      assessment: req.body.assessment,
-      useAssessment: req.body.useAssessment,
       status: req.body.status,
       interestList: req.body.interestList,
       shared: req.body.shared,
@@ -287,12 +280,6 @@ module.exports = function(app, config) {
       training.estimatedTimeToComplete = req.body.estimatedTimeToComplete;
       training.jobTitle = req.body.jobTitle;
       training.description = req.body.description;
-      training.introduction = req.body.introduction;
-      training.introductionLabel = req.body.introductionLabel;
-      training.goals = req.body.goals;
-      training.goalsLabel = req.body.goalsLabel;
-      training.execSummary = req.body.execSummary;
-      training.execSummaryLabel = req.body.execSummaryLabel;
       training.image = req.body.image;
       training.iconClass = req.body.iconClass;
       training.iconColor = req.body.iconColor;
@@ -300,8 +287,6 @@ module.exports = function(app, config) {
       training.files = req.body.files;
       training.pages = req.body.pages;
       training.status = req.body.status;
-      training.assessment = req.body.assessment;
-      training.useAssessment = req.body.useAssessment;
       training.interestList = req.body.interestList;
       training.shared = req.body.shared;
       training.isValid = req.body.isValid;
@@ -360,19 +345,11 @@ module.exports = function(app, config) {
         estimatedTimeToComplete: req.body.estimatedTimeToComplete,
         jobTitle: req.body.jobTitle,
         description: req.body.description,
-        execSummary: req.body.execSummary,
-        execSummaryLabel: req.body.execSummaryLabel,
-        introduction: req.body.introduction,
-        introductionLabel: req.body.introductionLabel,
-        goals: req.body.goals,
-        goalsLabel: req.body.goalsLabel,
         image: req.body.image,
         iconClass: req.body.iconClass,
         iconColor: req.body.iconColor,
         iconSource: req.body.iconSource,
         pages: req.body.pages,
-        assessment: req.body.assessment,
-        useAssessment: req.body.useAssessment,
         status: req.body.status,
         interestList: req.body.interestList,
         shared: req.body.shared,
@@ -734,81 +711,72 @@ module.exports = function(app, config) {
   });
 
   //
-  // FILE methods
+  // ASSESSMENT methods
   //
 
-  app.get("/api/files/:teamId", (req, res) => {
+  app.get("/api/assessment/:id", (req, res) => {
 //    File.find({ teamId: req.params.teamId }, fileListProjection, (err, files) => {
-      File.find({}, fileListProjection, (err, files) => {
-      let filesArr = [];
+    Assessment.findById(req.params.id, assessmentListProjection, (err, assessment) => {
       if (err) {
         return res.status(500).send({message: err.message});
       }
-      if (files) {
-        files.forEach(file => {
-          filesArr.push(file);
-        });
+      if (!assessment) {
+        return res.status(400).send({ message: "Assessment not found." });
       }
-      res.send(files);
+      res.send(assessment);
     });
   });
 
-  app.post("/api/files/new", jwtCheck, (req, res) => {
-    const file = new File({
-      versions: req.body.versions,
-      teamId: req.body.teamId,
-      iconClass: req.body.iconClass,
-      iconType: req.body.iconType,
-      iconColor: req.body.iconColor,
-      iconSource: req.body.iconSource,
-      description: req.body.description,
+  app.post("/api/assessment/new", jwtCheck, (req, res) => {
+    const assessment = new Assessment({
+      type: req.body.type,
+      timeLimit: req.body.timeLimit,
+      passingGrade: req.body.passingGrade,
+      items: req.body.items,
       _id: req.body._id,
     });
-    File.create(file, function(err2, fileObj) {
+    Assessment.create(assessment, function(err2, assessmentObj) {
       if (err2) {
         return res.status(500).send({message: err2.message});
       }
-      res.send(fileObj);
+      res.send(assessmentObj);
     });
   });
-  app.put("/api/files/:id", jwtCheck, (req, res) => {
-    File.findById(req.params.id, (err, file) => {
+  app.put("/api/assessment/:id", jwtCheck, (req, res) => {
+    Assessment.findById(req.params.id, (err, assessment) => {
       if (err) {
         return res.status(500).send({message: err.message});
       }
       if (!file) {
-        return res.status(400).send({message: "File not found."});
+        return res.status(400).send({ message: "Assessment not found."});
       }
-      file.teamId = req.body.teamId;
-      file.iconClass = req.body.iconClass;
-      file.iconType = req.body.iconType;
-      file.iconColor = req.body.iconColor;
-      file.iconSource = req.body.iconSource;
-      file.description = req.body.description;
-      file.versions = req.body.versions;
-      file._id = req.body._id;
+      assessment._id = req.body._id;
+      assessment.type = req.body.type;
+      assessment.timeLimit = req.body.timeLimit;
+      assessment.passingGrade = req.body.passingGrade;
+      assessment.items = req.body.items;
 
-      file.save(err2 => {
+      Assessment.save(err2 => {
         if (err2) {
           return res.status(500).send({message: err2.message});
         }
-        res.send(file);
+        res.send(Assessment);
       });
     });
   });
-  app.delete("/api/files/:id", jwtCheck, (req, res) => {
-    File.findById(req.params.id, (err, file) => {
+  app.delete("/api/assessment/:id", jwtCheck, (req, res) => {
+    Assessment.findById(req.params.id, (err, assessment) => {
       if (err) {
         return res.status(500).send({message: err.message});
       }
-      if (!file) {
+      if (!assessment) {
         return res.status(400).send({message: "File not found."});
       }
-      file.remove(err2 => {
+      assessment.remove(err2 => {
         if (err2) {
           return res.status(500).send({message: err2.message});
         }
-        res.status(200).send({message: "File successfully deleted."});
+        res.status(200).send({ message: "Assessment successfully deleted."});
       });
     });
   });

@@ -32,6 +32,7 @@ export class FileService {
 
   picker = '';
 
+
   docOptions: PickerOptions = {
     maxFiles: 20,
     fromSources: [
@@ -79,6 +80,19 @@ export class FileService {
       'googledrive',
     ],
     accept: 'image/*',
+    onUploadDone: (results: PickerResponse) => {
+      this.processResults(results);
+    },
+    uploadInBackground: false
+  };
+  textOptions: PickerOptions = {
+    maxFiles: 1,
+    fromSources: [
+      'local_file_system',
+      'dropbox',
+      'googledrive',
+    ],
+    accept: 'text/*',
     onUploadDone: (results: PickerResponse) => {
       this.processResults(results);
     },
@@ -145,6 +159,8 @@ export class FileService {
 
       console.log('processResults', file);
 
+
+
       this.uploadedFile.name = file.filename;
       this.uploadedFile.fileStackId = file.handle;
       this.uploadedFile.fileStackUrl = file.url;
@@ -174,6 +190,10 @@ export class FileService {
   openAllPicker() {
     this.picker = 'all';
     this.client.picker(this.allOptions).open();
+  }
+  openTextPicker() {
+    this.picker = 'text';
+    this.client.picker(this.textOptions).open();
   }
   openDocPicker() {
     this.picker = 'doc';
