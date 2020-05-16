@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NzModalModule, NzInputModule, NzIconModule, NzBadgeModule, NzListModule, NzAvatarModule } from 'ng-zorro-antd';
+import { NzModalModule, NzInputModule, NzIconModule } from 'ng-zorro-antd';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { AssessmentComponent } from './assessment.component';
 
@@ -20,9 +20,6 @@ import { AssessmentComponent } from './assessment.component';
   ],
   exports: [
     AssessmentComponent
-  ],
-  providers:
-    [
   ]
 })
-export class HomeModule { }
+export class AssessmentModule { }

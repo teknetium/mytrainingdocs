@@ -15,7 +15,6 @@
   },
   "private": true,
   "dependencies": {
-    "@amcharts/amcharts4": "^4.9.5",
     "@angular/animations": "^9.0.1",
     "@angular/common": "^9.0.1",
     "@angular/compiler": "^9.0.1",
@@ -25,7 +24,7 @@
     "@angular/platform-browser-dynamic": "^9.0.1",
     "@angular/platform-server": "^9.0.1",
     "@angular/router": "^9.0.1",
-    "@nicky-lenaers/ngx-scroll-to": "^3.0.1",
+    "@nicky-lenaers/ngx-scroll-to": "^9.0.0",
     "@sendgrid/mail": "^6.5.2",
     "@types/chartist": "^0.9.47",
     "angular2-prettyjson": "^3.0.1",
@@ -62,8 +61,8 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.900.0",
-    "@angular/cli": "^9.0.0",
-    "@angular/compiler-cli": "^9.0.1",
+    "@angular/cli": "^9.1.6",
+    "@angular/compiler-cli": "^9.1.7",
     "@angular/language-service": "^9.0.1",
     "@types/core-js": "^2.5.3",
     "@types/jasmine": "^3.5.4",
@@ -75,8 +74,8 @@
     "protractor": "^5.4.3",
     "rxjs-tslint": "^0.1.5",
     "ts-node": "~5.0.1",
-    "tslint": "^5.20.1",
     "tslib": "^1.10.0",
+    "tslint": "^5.20.1",
     "typescript": "^3.7.5",
     "video.js": "^7.6.6"
   }

@@ -6,7 +6,7 @@ import { JobTitleService } from '../../shared/services/jobtitle.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { AuthService } from '../../shared/services/auth.service';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { TrainingModel, Page, Content, TrainingVersion, Version } from 'src/app/shared/interfaces/training.type';
+import { TrainingModel, Page, Content, TrainingVersion } from 'src/app/shared/interfaces/training.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FileModel } from 'src/app/shared/interfaces/file.type';
@@ -141,8 +141,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   };
 
   trainingStatusColorHash = {
-    uptodate: '#52c41a',
-    pastdue: 'red'
+    upToDate: '#52c41a',
+    pastDue: 'red'
   }
 
   okDisabled = true;
@@ -165,25 +165,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   showAssignToUserDialog = false;
   assignedUserIdSelected = '';
 
-  private items = [
-    {
-      name: 'toc-container',
-    },
-    {
-      name: 'toc-title',
-    },
-    {
-      name: 'toc-entry',
-    },
-    {
-      name: 'main-content',
-    },
-    {
-      name: 'page',
-    }
-  ]
-
-
   alpha = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
   assessment;
@@ -198,11 +179,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   @Input() trainingId = null;
   @Input() production = 'false';
   @Output() assessmentResult = new EventEmitter<{ tid: string, score: number, pass: boolean }>();
-  @HostListener('window:resize', ['$event'])
-  onResize(event) {
-    this.contentHeight = Math.floor(window.innerHeight * .6);
-    this.contentWidth = Math.floor(window.innerWidth * .8);
-  }
   pageFileHash = {};
   pageIdHash = {};
   commentsVisible = false;
@@ -218,15 +194,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   error1 = false;
   error2 = false;
   changeLevel = '';
-  newVersion: Version;
 
 
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
   selectedFile: FileModel;
   safeFileUrlHash = {};
-  newVersion$: Observable<Version>;
-  //  versionsHash = {};
 
   data: any[] = [];
   submitting = false;
@@ -339,6 +312,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   contentWidth: number;
   contentHeight: number;
   showCloseButton = false;
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.contentHeight = Math.floor((window.innerHeight - (.20 * window.innerHeight)) * .90);
+    this.contentWidth = Math.floor(window.innerWidth * .8);
+  }
 
 
   constructor(
@@ -373,7 +351,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.contentHeight = Math.floor(window.innerHeight * .6);
+    this.contentHeight = Math.floor((window.innerHeight - (.20 * window.innerHeight)) * .90);
     this.contentWidth = Math.floor(window.innerWidth * .8);
 
     /*
@@ -442,22 +420,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         for (let page of this.selectedTraining.pages) {
           if (page.content) {
             for (let contentItem of page.content) {
-              if (contentItem.versions) {
-                for (let version of contentItem.versions) {
-                  if (version) {
-                    if (contentItem.type === 'video') {
-                      //                      version.file.safeFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(version.file.fileStackUrl));
-                      //                      version.file.safeFileUrl = version.file.fileStackUrl;
-                      this.safeUrlHash[version.file.fileStackUrl] = version.file.fileStackUrl;
-                    } else if (contentItem.type === 'file') {
-                      //                      version.file.safeFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + version.file.fileStackId));
-                      this.safeUrlHash[version.file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + version.file.fileStackId));
-                    } else if (contentItem.type === 'url') {
-                      //                      version.safeWebUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(version.webUrl));
-                      this.safeUrlHash[version.webUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(version.webUrl));
-                    }
-                  }
-                }
+              if (contentItem.type === 'video') {
+                this.safeUrlHash[contentItem.file.fileStackUrl] = contentItem.file.fileStackUrl;
+              } else if (contentItem.type === 'file') {
+                this.safeUrlHash[contentItem.file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + contentItem.file.fileStackId));
+              } else if (contentItem.type === 'url') {
+                this.safeUrlHash[contentItem.webUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(contentItem.webUrl));
               }
             }
           }
@@ -513,26 +481,24 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         return;
       }
 
-      this.currentPage.content[0].versions[0].dateUploaded = file.dateUploaded;
-      this.currentPage.content[0].versions[0].version = '1_0_0';
-      this.currentPage.content[0].versions[0].file = file;
-      let fileExt = this.currentPage.content[0].versions[0].file.name.substring(this.currentPage.content[0].versions[0].file.name.indexOf('.') + 1);
-      console.log('FILE EXT', this.currentPage, fileExt);
-      this.currentPage.icon = this.fileExtensionHash[fileExt];
-      this.saveTraining(true);
-
+      let newContent = <Content>{
+        _id: String(new Date().getTime()),
+        type: undefined,
+        file: file,
+      };
       if (file.mimeType.includes('video')) {
-        //        console.log('fileUpload$', this.selectedTraining.pages[])
-        this.currentPage.content[0].type = 'video';
+        newContent.type = 'video';
         this.safeUrlHash[file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.fileStackUrl));
       } else if (file.mimeType.includes('application') || file.mimeType.includes('image')) {
-        this.currentPage.content[0].type = 'file';
+        newContent.type = 'file';
         this.safeUrlHash[file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + file.fileStackId));
       }
-      this.currentPage.title = file.name;
 
+      this.currentPage.content.push(newContent);
 
-      //        this.setValidation('mainContent', true);
+      let fileExt = file.name.substring(file.name.indexOf('.') + 1);
+      this.currentPage.icon = this.fileExtensionHash[fileExt];
+
       this.saveTraining(false);
       //      this.cd.detectChanges();
     });
@@ -570,8 +536,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       if (!version) {
         return;
       }
-
-
+    
+    
       console.log('newVersion$.subscribe', version, this.currentPageId, this.pageFileHash); 
       this.fileService.selectFsHandle(this.currentPage.content[0].file, 0);
     })
@@ -605,7 +571,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     selectPageTemplate(templateName: string) {
       if (templateName === 'singleContent') {
         let newPage = <Page>{
-  
+   
         }
       }
     }
@@ -661,19 +627,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.changeLevel = '';
     this.changeLog = '';
   }
-  uploadNewVersion() {
-    this.newVersion = <Version>{
-      _id: '',
-      version: '',
-      changeLog: '',
-      dateUploaded: 0,
-      file: null,
-      webUrl: '',
-      text: ''
-    };
-
-    this.isNewVersionModalVisible = true;
-  }
 
   showVersionModal() {
     this.isNewVersionModalVisible = true;
@@ -700,53 +653,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.isNewVersionModalVisible = false;
   }
 
-
-  handleNewVersionContinue() {
-    this.error1 = false;
-    this.error2 = false;
-
-    if (!this.changeLevel) {
-      this.error1 = true;
-      this.isNewVersionModalVisible = true;
-      return;
-    }
-
-    if (!this.newVersion.changeLog) {
-      this.error2 = true;
-      this.isNewVersionModalVisible = true;
-      return;
-    }
-
-    const versionArray = this.currentPage.content[0].versions[0].version.split('_', 3);
-    let majorNum = parseInt(versionArray[0], 10);
-    let minorNum = parseInt(versionArray[1], 10);
-    let patchNum = parseInt(versionArray[2], 10);
-    if (this.changeLevel === 'major') {
-      majorNum++;
-      minorNum = 0;
-      patchNum = 0;
-    } else if (this.changeLevel === 'minor') {
-      minorNum++;
-      patchNum = 0;
-    } else if (this.changeLevel === 'patch') {
-      patchNum++;
-    }
-    this.newVersion.version = majorNum + '_' + minorNum + '_' + patchNum;
-
-    this.newVersion.dateUploaded = new Date().getTime();
-
-    let mimeType = this.currentPage.content[0].versions[0].mimeType.substring(0, this.currentPage.content[0].versions[0].mimeType.indexOf('/'));
-    let pickerType;
-    console.log('mimetype', mimeType);
-    if (mimeType === 'application') {
-      pickerType = 'doc';
-    } else {
-      pickerType = mimeType;
-    }
-
-    this.fileService.pickNewVersion(pickerType);
-    this.isNewVersionModalVisible = false;
-  }
 
   handleLockTraining() {
     this.error1 = false;
@@ -875,7 +781,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     setValidation(item: string, value: boolean) {
       this.selectedTraining.isValid[item] = value;
       this.saveTraining(false);
-  
+   
       let trainingIsValid = true;
       for (let item of this.validationItems) {
         if (!this.selectedTraining.isValid[item]) {
@@ -889,6 +795,14 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   useAssessmentChanged(event) {
     console.log('useAssessmentChanged', event);
     //    this.setValidation('assessment', true);
+  }
+
+  htmlContentChanged(data) {
+    this.saveTraining(false);
+  }
+
+  quillBlur(data) {
+    this.saveTraining(false);
   }
 
 
@@ -944,28 +858,15 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   addNewPage(type: string) {
-    const version = <Version>{
-      _id: String(new Date().getTime()),
-      changeLog: undefined,
-      dateUploaded: 0,
-      version: '1_0_0',
-      file: undefined,
-      webUrl: undefined,
-      text: undefined,
-    }
-
     const content = <Content>{
       _id: String(new Date().getTime()),
       type: 'none',
       name: undefined,
-      versions: new Array(version)
     }
 
     const page = <Page>{
       _id: String(new Date().getTime()),
       type: 'single',
-      title: 'Title',
-      intro: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Vitae auctor eu augue ut lectus. Phasellus vestibulum lorem sed risus.',
       content: new Array(content),
     }
 
@@ -1055,16 +956,18 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     if (this.mainContentPageHash[this.currentPageId]) {
       this.currentPage = this.mainContentPageHash[this.currentPageId];
       this.currentPageIndex = Number(this.pageIndexHash[pageId]);
-      if (this.currentPageIndex > 0) {
-        this.prevIsActive = true;
-        if (this.currentPageIndex < this.selectedTraining.pages.length - 1 && this.currentPage.content[0].type !== 'video') {
-          this.nextIsActive = true;
-        } else {
-          this.nextIsActive = false;
-        }
+      /*
+    if (this.currentPageIndex > 0) {
+      this.prevIsActive = true;
+      if (this.currentPageIndex < this.selectedTraining.pages.length - 1 && this.currentPage.content[0].type !== 'video') {
+        this.nextIsActive = true;
       } else {
-        this.prevIsActive = false;
+        this.nextIsActive = false;
       }
+    } else {
+      this.prevIsActive = false;
+    }
+      */
     }
 
   }
@@ -1075,7 +978,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.okDisabled = false;
   }
 
-  deleteAssignedUser() {  
+  deleteAssignedUser() {
     this.userTrainingService.deleteUserTrainingByTidUid(this.selectedTraining._id, this.assignedUserIdSelected);
     this.userTrainingService.getUTForTraining(this.selectedTraining._id);
     //    this.trainingService.reloadAllTrainings();
@@ -1260,17 +1163,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     */
   }
 
-  confirmDeletePage(page) {
-    this.pageIndex = this.pageIndexHash[page._id];
-    console.log('confirmDeletePage', page, this.pageIndex);
+  confirmDeletePage() {
+    this.pageIndex = this.pageIndexHash[this.currentPageId];
     this.selectedTraining.pages.splice(this.pageIndex, 1);
-    /*
-        if (this.selectedTraining.pages.length > 0) {
-          this.setValidation('mainContent', true);
-        } else {
-          this.setValidation('mainContent', false);
-        }
-    */
+
     this.saveTraining(false);
     if (this.selectedTraining.pages.length > 0 && (this.pageIndex < this.selectedTraining.pages.length)) {
       this.setCurrentPage(this.selectedTraining.pages[this.pageIndex]._id);
@@ -1337,7 +1233,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   beginTour() {
     this.runningTour = true;
   }
-
+  
   endTour() {
     this.currentStep = -1;
     this.runningTour = false;

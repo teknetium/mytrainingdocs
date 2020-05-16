@@ -64,8 +64,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     candidate: 'fas fa-fw fa-user-graduate'
   }
   trainingStatusColorHash = {
-    uptodate: '#52c41a',
-    pastdue: 'red'
+    upToDate: '#52c41a',
+    pastDue: 'red'
   }
   includeNewSupervisorsTeam = true;
   isNewSupervisorPanelOpen = false;
@@ -98,7 +98,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     userType: 'individualContributor',
     uid: '',
     userStatus: 'pending',
-    trainingStatus: 'uptodate',
+    trainingStatus: 'upToDate',
     profilePicUrl: '',
     supervisorId: null,
     settings: {},

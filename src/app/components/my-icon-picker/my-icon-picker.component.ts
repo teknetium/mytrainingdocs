@@ -99,7 +99,6 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
 
   chooseIcon(i) {
     this.selectedIcon = this.matchingIcons[i];
-    console.log('chooseIcon', this.selectedIcon);
   }
 
   selectIcon(i) {
@@ -117,9 +116,13 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   searchForIcons() {
     this.selectedIconIndex = -1;
     this.matchingIcons = [];
+    if (this.iconSearchStr === '') {
+      this.getIcons$('*').subscribe(icons => {
+        this.matchingIcons = icons;
+        this.matchingIconsBS$.next(this.matchingIcons);
+      })
+    }
     this.getIcons$(this.iconSearchStr).subscribe(icons => {
-      console.log('searchForIcons', icons);
-
       this.matchingIcons = icons;
       this.matchingIconsBS$.next(this.matchingIcons);
     })

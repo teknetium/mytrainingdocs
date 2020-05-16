@@ -29,7 +29,9 @@
                       ],
                       "styles": [
                         "./node_modules/videogular2/fonts/videogular.css",
-                        "src/styles.scss" 
+                        "src/styles.scss",
+                        "src/assets/css/bootstrap.min.css"
+
                       ],
                       "scripts": [
                           "node_modules/jquery/dist/jquery.js",

@@ -1,5 +1,5 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'
 import { LandingpageComponent } from './landingpage.component';
 import { ScrollToModule, ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
@@ -8,7 +8,7 @@ import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
 
@@ -18,7 +18,7 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
   ],
   imports: [
     CommonModule,
-    ScrollToModule,
+    ScrollToModule.forRoot(),
     NzCollapseModule,
     NzDrawerModule,
     NzCarouselModule,
@@ -26,6 +26,7 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
     NzGridModule,
     NzInputNumberModule,
     FormsModule,
+    ReactiveFormsModule,
     NzAddOnModule,
     NzRadioModule,
     NzCardModule,
@@ -37,11 +38,8 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
   exports: [
     LandingpageComponent
   ],
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
-  ],
   providers: [
-    ScrollToService
+    ScrollToService 
   ]
 
 })

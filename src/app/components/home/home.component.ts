@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, ChangeDetectio
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
 import { TrainingService } from '../../shared/services/training.service';
+import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { EventService } from '../../shared/services/event.service';
 import { Observable, Subscription } from 'rxjs';
 import { UserModel, UserIdHash } from '../../shared/interfaces/user.type';
@@ -13,6 +14,17 @@ import { BaseComponent } from '../base.component';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
 import { JoyrideService } from 'ngx-joyride';
 
+export interface UserStat {
+  uid: string,
+  trainingStatus: string,
+  upToDateCnt: number,
+  completedCnt: number,
+  pastDueCnt: number
+}
+
+export interface TrainingStat {
+  tid: string,
+}
 
 //am4core.useTheme(am4themes_animated);
 
@@ -32,9 +44,10 @@ export class HomeComponent extends BaseComponent implements OnInit {
     candidate: 'fas fa-fw fa-user-graduate'
   }
   trainingStatusColorHash = {
-    uptodate: '#52c41a',
-    pastdue: 'red'
+    upToDate: '#52c41a',
+    pastDue: 'red'
   }
+
 
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
@@ -45,11 +58,16 @@ export class HomeComponent extends BaseComponent implements OnInit {
   teamTrainingHash$: Observable<TrainingIdHash>;
   teamTrainingHash = {};
   trainings: TrainingModel[];
+  upToDateCnt = 0;
+  pastDueCnt = 0;
+  completedCnt = 0;
+  userStatHash = {};
 
   constructor(
     private auth: AuthService,
     private userService: UserService,
     private trainingService: TrainingService,
+    private userTrainingService: UserTrainingService,
     private joyrideService: JoyrideService,
     private router: Router
   ) {
@@ -82,6 +100,29 @@ export class HomeComponent extends BaseComponent implements OnInit {
           for (let index = 0; index < this.myTeam.length; index++) {
             if (this.myTeam[index]._id === this.authenticatedUser._id) {
               this.myTeam.splice(index, 1);
+            } else {
+              let userStatObj = <UserStat>{
+                uid: this.myTeam[index]._id,
+                trainingStatus: undefined,
+                upToDateCnt: 0,
+                pastDueCnt: 0,
+                completedCnt: 0
+              }
+              this.userTrainingService.getUTForUser$(this.myTeam[index]._id).subscribe(utList => {
+                for (let ut of utList) {
+                  if (ut.status === 'upToDate') {
+                    userStatObj.upToDateCnt++;
+                  } else if (ut.status === 'completed') {
+                    userStatObj.completedCnt++;
+                  } else if (ut.status === 'pastDue') {
+                    userStatObj.pastDueCnt++;
+                  }
+                }
+                if (userStatObj.pastDueCnt > 1) {
+                  userStatObj.trainingStatus = 'pastDue'
+                }
+                this.userStatHash[userStatObj.uid] = userStatObj;
+              })
             }
           }
         });

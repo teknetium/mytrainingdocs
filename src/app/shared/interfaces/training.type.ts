@@ -43,8 +43,6 @@ export interface TrainingVersion {
 export interface Page {
   _id: string,
   type: 'blank' | 'single' | 'double' | 'assessment',
-  title: string,
-  intro: string,
   icon: string,
   content: Content[]
 }
@@ -53,15 +51,9 @@ export interface Content {
   _id: string,
   type: 'file' | 'url' | 'video' | 'text' | 'none' | 'image' | 'html'
   name: string,
-  versions: Version[]
-}
-export interface Version {
-  _id: string,
-  changeLog: string,
-  dateUploaded: number,
-  version: string,
   file: FileModel,
-  webUrl: string,
-  safeWebUrl: SafeResourceUrl,
   text: string,
+  webUrl: string,
+  size: { width: number, height: number },
+  location: { x: number, y: number }
 }

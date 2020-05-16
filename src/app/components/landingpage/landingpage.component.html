@@ -1,5 +1,4 @@
 <div style="width:100%;">
-  <!-- END NAVBAR -->
   <div
     style="background: rgba(4, 23, 63, 0.9);font-size: 14px;position: fixed; top:0; left:0; height: 64px;z-index: 100;text-align: center;width:100%;">
     <div
@@ -7,39 +6,39 @@
       <img height="35" src="assets/images/logo/logo.png">
     </div>
 
-
     <div class="nav-link">
-      <a [ngx-scroll-to]="destinations['home'].ngxScrollToDestination" [ngx-scroll-to-duration]="ngxScrollToDuration"
-        [ngx-scroll-to-easing]="ngxScrollToEasing">
+      <a [ngxScrollTo]="destinations['home'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
+        [ngxScrollToEasing]="ngxScrollToEasing">
         Home
       </a>
     </div>
     <div class="nav-link">
-      <a [ngx-scroll-to]="destinations['benefits'].ngxScrollToDestination"
-        [ngx-scroll-to-duration]="ngxScrollToDuration" [ngx-scroll-to-easing]="ngxScrollToEasing">
+      <a [ngxScrollTo]="destinations['benefits'].ngxScrollToDestination"
+        [ngxScrollToDuration]="ngxScrollToDuration" [ngxScrollToEasing]="ngxScrollToEasing">
         Benefits
       </a>
     </div>
     <!--
     <div class="nav-link">
-      <a   [ngx-scroll-to]="destinations['howitworks'].ngxScrollToDestination"
-           [ngx-scroll-to-duration]="ngxScrollToDuration"
-           [ngx-scroll-to-easing]="ngxScrollToEasing"
+      <a   [ngxScrollTo]="destinations['howitworks'].ngxScrollToDestination"
+           [ngxScrollToDuration]="ngxScrollToDuration"
+           [ngxScrollToEasing]="ngxScrollToEasing"
       >How It Works</a>
     </div>
     -->
     <div class="nav-link">
-      <a [ngx-scroll-to]="destinations['price'].ngxScrollToDestination" [ngx-scroll-to-duration]="ngxScrollToDuration"
-        [ngx-scroll-to-easing]="ngxScrollToEasing">Pricing</a>
+      <a [ngxScrollTo]="destinations['price'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
+        [ngxScrollToEasing]="ngxScrollToEasing">Pricing</a>
     </div>
     <div class="nav-link">
-      <a [ngx-scroll-to]="destinations['faq'].ngxScrollToDestination" [ngx-scroll-to-duration]="ngxScrollToDuration"
-        [ngx-scroll-to-easing]="ngxScrollToEasing">FAQ</a>
+      <a [ngxScrollTo]="destinations['faq'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
+        [ngxScrollToEasing]="ngxScrollToEasing">FAQ</a>
     </div>
     <div class="nav-link">
-      <a [ngx-scroll-to]="destinations['contact'].ngxScrollToDestination" [ngx-scroll-to-duration]="ngxScrollToDuration"
-        [ngx-scroll-to-easing]="ngxScrollToEasing">Contact Us</a>
+      <a [ngxScrollTo]="destinations['contact'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
+        [ngxScrollToEasing]="ngxScrollToEasing">Contact Us</a>
     </div>
+
     <div style="width:20%;position: fixed; top:0; right:0;height: 64px;">
       <div class="nav-link"
         style="cursor:pointer;width:10%;font-size: 14px;height: 64px;width:100px;z-index: 100;float:right;"
@@ -189,7 +188,7 @@
       </div>
     </div>
   </section>
-
+  <!--
   <nz-drawer *ngIf="benefit$ | async as bene" nzClosable="true" [nzVisible]="visible" [nzPlacement]="placement"
     [nzTitle]="bene.title" (nzOnClose)="close()">
     <div>
@@ -201,6 +200,7 @@
 
     </div>
   </nz-drawer>
+  -->
   <!-- START CTA -->
   <section class="section bg-light" style="margin-bottom: 50px;">
     <div class="container">
@@ -258,8 +258,8 @@
             <!--
             <div class="text-center">
               <div>
-                <a class="btn btn-custom text-white" [ngx-scroll-to]="destinations['contact'].ngxScrollToDestination"
-                  [ngx-scroll-to-duration]="ngxScrollToDuration" [ngx-scroll-to-easing]="ngxScrollToEasing">Choose
+                <a class="btn btn-custom text-white" [ngxScrollTo]="destinations['contact'].ngxScrollToDestination"
+                  [ngxScrollToDuration]="ngxScrollToDuration" [ngxScrollToEasing]="ngxScrollToEasing">Choose
                   Plan</a>
               </div>
             </div>
@@ -285,8 +285,8 @@
             <!--
             <div class="text-center">
               <div>
-                <a class="btn btn-custom text-white" [ngx-scroll-to]="destinations['contact'].ngxScrollToDestination"
-                  [ngx-scroll-to-duration]="ngxScrollToDuration" [ngx-scroll-to-easing]="ngxScrollToEasing">Choose
+                <a class="btn btn-custom text-white" [ngxScrollTo]="destinations['contact'].ngxScrollToDestination"
+                  [ngxScrollToDuration]="ngxScrollToDuration" [ngxScrollToEasing]="ngxScrollToEasing">Choose
                   Plan</a>
               </div>
             </div>
@@ -308,8 +308,8 @@
             <!--
             <div class="text-center">
               <div>
-                <a class="btn btn-custom text-white" [ngx-scroll-to]="destinations['contact'].ngxScrollToDestination"
-                  [ngx-scroll-to-duration]="ngxScrollToDuration" [ngx-scroll-to-easing]="ngxScrollToEasing">Choose
+                <a class="btn btn-custom text-white" [ngxScrollTo]="destinations['contact'].ngxScrollToDestination"
+                  [ngxScrollToDuration]="ngxScrollToDuration" [ngxScrollToEasing]="ngxScrollToEasing">Choose
                   Plan</a>
               </div>
             </div>
@@ -492,10 +492,12 @@
   <!--END FOOTER-->
 
   <!-- BACK TO TOP -->
+  <!--
   <a href="#" class="" style="position: fixed;right:20px;bottom: 10px;font-size:40px;"> <i
       class="fad fa-chevron-square-up" style="background: rgba(50,110,246, .25) !important;"> </i> </a>
-  <a [ngx-scroll-to]="destinations['home'].ngxScrollToDestination" [ngx-scroll-to-duration]="ngxScrollToDuration"
-    [ngx-scroll-to-easing]="ngxScrollToEasing"><i class="fad fa-chevron-square-up"
+  <a [ngxScrollTo]="destinations['home'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
+    [ngxScrollToEasing]="ngxScrollToEasing"><i class="fad fa-chevron-square-up"
       style="background: rgba(50,110,246, .25) !important;"> </i></a>
+      -->
 
 </div>

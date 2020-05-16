@@ -107,7 +107,7 @@ export class UserService {
                 orgAdmin: false,
                 appAdmin: false,
                 userStatus: 'new-supervisor-without-team',
-                trainingStatus: 'uptodate',
+                trainingStatus: 'upToDate',
                 jobTitle: '',
                 profilePicUrl: '',
                 supervisorId: null,

@@ -7,36 +7,34 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const versionSchema = new Schema({
+const contentSchema = new Schema({
   _id: { type: String, required: true },
-  changeLog: { type: String, required: false },
-  dateUploaded: { type: Number, required: false },
-  version: { type: String },
+  type: { type: String, required: true },
+  name: { type: String, required: false },
   file: {
     _id: { type: String },
     name: { type: String },
     mimeType: { type: String },
     fileStackId: { type: String },
     fileStackUrl: { type: String },
-    dateUploaded: { type: Number}
+    dateUploaded: { type: Number }
   },
   webUrl: { type: String },
   safeWebUrl: { type: String },
   text: { type: String },
-})
-
-const contentSchema = new Schema({
-  _id: { type: String, required: true },
-  type: { type: String, required: true },
-  name: { type: String, required: false },
-  versions: [versionSchema]
+  size: {
+    width: { type: Number, required: true },
+    height: { type: Number, required: true }
+  },
+  location: {
+    x: { type: Number, required: true },
+    y: { type: Number, required: true }
+  }
 })
 
 const pageSchema = new Schema({
   _id: { type: String, required: true },
   type: { type: String, required: true },
-  title: { type: String },
-  intro: { type: String },
   icon: { type: String, required: false },
   content: [contentSchema],
 })

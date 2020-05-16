@@ -4,7 +4,7 @@ import { UserService } from '../../shared/services/user.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.type';
 import { Router } from '@angular/router';
-import { ScrollToAnimationEasing, ScrollToOffsetMap } from '@nicky-lenaers/ngx-scroll-to';
+import { ScrollToAnimationEasing } from '@nicky-lenaers/ngx-scroll-to';
 import { VgAPI } from 'videogular2/compiled/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { TrainingService } from '../../shared/services/training.service';

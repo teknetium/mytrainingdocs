@@ -7,7 +7,7 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Page, Content, Version, TrainingIdHash, TrainingVersion } from '../interfaces/training.type';
+import { TrainingModel, Page, Content, TrainingIdHash, TrainingVersion } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.type';
 import { TrainingsModule } from 'src/app/components/trainings/trainings.module';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -279,64 +279,15 @@ export class TrainingService {
   addNewTraining() {
     const baseId = new Date().getTime();
 
-    const version = <Version>{
-      _id: String(new Date().getTime()),
-      dateUploaded: new Date().getTime(),
-      version: '1_0_0',
-      text: `<h2>HTML Table</h2>
-
-<table>
-  <tr>
-    <th>Company</th>
-    <th>Contact</th>
-    <th>Country</th>
-  </tr>
-  <tr>
-    <td>Alfreds Futterkiste</td>
-    <td>Maria Anders</td>
-    <td>Germany</td>
-  </tr>
-  <tr>
-    <td>Centro comercial Moctezuma</td>
-    <td>Francisco Chang</td>
-    <td>Mexico</td>
-  </tr>
-  <tr>
-    <td>Ernst Handel</td>
-    <td>Roland Mendel</td>
-    <td>Austria</td>
-  </tr>
-  <tr>
-    <td>Island Trading</td>
-    <td>Helen Bennett</td>
-    <td>UK</td>
-  </tr>
-  <tr>
-    <td>Laughing Bacchus Winecellars</td>
-    <td>Yoshi Tannamuri</td>
-    <td>Canada</td>
-  </tr>
-  <tr>
-    <td>Magazzini Alimentari Riuniti</td>
-    <td>Giovanni Rovelli</td>
-    <td>Italy</td>
-  </tr>
-</table>
-`
-    };
-
     const content = <Content>{
       _id: String(new Date().getTime()),
-      type: 'text',
-      name: undefined,
-      versions: [version]
+      type: 'html',
+      text: undefined
     }
 
     const page = <Page>{
       _id: String(new Date().getTime()),
       type: 'single',
-      title: 'Page 1',
-      intro: 'Page 1 introduction',
       content: [content],
     }
     const newTraining = <TrainingModel>{
@@ -417,16 +368,13 @@ export class TrainingService {
 
     const content = <Content>{
       _id: String(new Date().getTime()),
-      type: 'none',
-      versions: [null]
+      type: 'none'
     }
 
 
     const newPage = <Page>{
       _id: String(new Date().getTime()),
       type: 'single',
-      title: pageTitle,
-      intro: 'Introduction to the document',
       content: [content],
     };
 

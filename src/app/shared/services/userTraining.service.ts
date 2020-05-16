@@ -97,11 +97,11 @@ export class UserTrainingService {
     this.getUTForUser$(uid).subscribe(userTrainings => {
       for (let ut of userTrainings) {
         if (ut.status === 'pastDue') {
-          return 'pastdue';
+          return 'pastDue';
         }
       }
     })
-    return 'uptodate';
+    return 'upToDate';
   }
 
   resetUserTrainingStatus(tid) {

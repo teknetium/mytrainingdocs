@@ -26,8 +26,8 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
   }
   showAssignTrainingDialog = false;
   trainingStatusColorHash = {
-    uptodate: '#52c41a',
-    pastdue: 'red'
+    upToDate: '#52c41a',
+    pastDue: 'red'
   }
   allTrainingIdHash$: Observable<TrainingIdHash>;
   allTrainingIdHash: TrainingIdHash = {};

@@ -11,7 +11,7 @@ export interface UserModel {
   appAdmin: boolean,
   orgAdmin: boolean,
   userStatus: 'pending' | 'active' | 'new-supervisor-including-team' | 'new-supervisor-without-team' | 'new-user',
-  trainingStatus: 'uptodate' | 'pastdue',
+  trainingStatus: 'upToDate' | 'pastDue',
   jobTitle: string,
   profilePicUrl: string,
   supervisorId: string,
