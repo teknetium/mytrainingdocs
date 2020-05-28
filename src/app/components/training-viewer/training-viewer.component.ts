@@ -307,15 +307,18 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   icon = 'file';
   nextIsActive = true;
   prevIsActive = false;
-  innerWidth: number;
-  innerHeight: number;
+  browserInnerWidth: number;
+  browserInnerHeight: number;
   contentWidth: number;
   contentHeight: number;
   showCloseButton = false;
+  percentageOfBrowserHeight = .35
   @HostListener('window:resize', ['$event'])
   onResize(event) {
-    this.contentHeight = Math.floor((window.innerHeight - (.20 * window.innerHeight)) * .90);
-    this.contentWidth = Math.floor(window.innerWidth * .8);
+    this.browserInnerHeight = window.innerHeight;
+    this.browserInnerWidth = window.innerWidth;
+    this.contentHeight = Math.floor((window.innerHeight - (this.percentageOfBrowserHeight * window.innerHeight)) * .90);
+    this.contentWidth = Math.floor(window.innerWidth * .9);
   }
 
 
@@ -351,8 +354,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.contentHeight = Math.floor((window.innerHeight - (.20 * window.innerHeight)) * .90);
-    this.contentWidth = Math.floor(window.innerWidth * .8);
+    this.browserInnerHeight = window.innerHeight;
+    this.browserInnerWidth = window.innerWidth;
+    
+    this.contentHeight = Math.floor((window.innerHeight - (.35 * window.innerHeight)) * .90);
+    this.contentWidth = Math.floor(window.innerWidth * .9);
 
     /*
       this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
@@ -860,7 +866,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   addNewPage(type: string) {
     const content = <Content>{
       _id: String(new Date().getTime()),
-      type: 'none',
+      type: type,
       name: undefined,
     }
 

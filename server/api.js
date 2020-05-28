@@ -747,7 +747,7 @@ module.exports = function(app, config) {
       if (err) {
         return res.status(500).send({message: err.message});
       }
-      if (!file) {
+      if (!assessment) {
         return res.status(400).send({ message: "Assessment not found."});
       }
       assessment._id = req.body._id;
@@ -756,11 +756,11 @@ module.exports = function(app, config) {
       assessment.passingGrade = req.body.passingGrade;
       assessment.items = req.body.items;
 
-      Assessment.save(err2 => {
+      assessment.save(err2 => {
         if (err2) {
           return res.status(500).send({message: err2.message});
         }
-        res.send(Assessment);
+        res.send(assessment);
       });
     });
   });
@@ -770,7 +770,7 @@ module.exports = function(app, config) {
         return res.status(500).send({message: err.message});
       }
       if (!assessment) {
-        return res.status(400).send({message: "File not found."});
+        return res.status(400).send({message: "Assessment not found."});
       }
       assessment.remove(err2 => {
         if (err2) {

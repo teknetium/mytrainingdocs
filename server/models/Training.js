@@ -22,14 +22,6 @@ const contentSchema = new Schema({
   webUrl: { type: String },
   safeWebUrl: { type: String },
   text: { type: String },
-  size: {
-    width: { type: Number, required: true },
-    height: { type: Number, required: true }
-  },
-  location: {
-    x: { type: Number, required: true },
-    y: { type: Number, required: true }
-  }
 })
 
 const pageSchema = new Schema({

@@ -1,4 +1,4 @@
-<div style="padding-left:20px;">
+<div>
   <nz-tabset>
     <nz-tab [nzTitle]="template1">
       <ng-template #template1>
@@ -139,20 +139,22 @@
             </div>
           </ng-template>
         </div>
-        <div *ngIf="showCommentsPanel" style="display: block;padding-top:20px;">
+        <div *ngIf="showCommentsPanel" style="display: block;margin-top:20px;border:1px solid #f1f1f1;background-color: #fafafa;border-radius: 5px;padding-bottom:10px;">
           <div *ngIf="currentTrainingId"
-            style="display: block;padding:10px;text-align: center;border-bottom: 1px solid #e1e1e1;">
+            style="display: block;padding:10px;text-align: center;">
+            <span style="font-size:24px;color:#aaaaaa;font-weight:200;">Ratings & Comments&nbsp;&nbsp;-&nbsp;&nbsp;</span>
             <i [ngClass]="trainingIdHash[currentTrainingId].iconClass"
               style="font-size:24px;vertical-align:baseline;margin-right:10px;"
               [ngStyle]="{'color': trainingIdHash[currentTrainingId].iconColor}">
             </i>
             <span style="font-size:24px;">{{ trainingIdHash[currentTrainingId].title }}</span>
-            <i nz-icon nzType="close-circle" [nzTheme]="'outline'" style="cursor:pointer;color:red;font-size:18px;vertical-align: baseline;float:right;padding:10px;"
+            <i nz-icon nzType="close-circle" [nzTheme]="'outline'" style="cursor:pointer;color:red;font-size:24px;vertical-align: baseline;float:right;margin:6px;"
             (click)="showCommentsPanel = false">
             </i>
 
           </div>
-          <div *ngFor="let comment of commentHash[currentTrainingId]" style="padding-left:20px;">
+          <div *ngFor="let comment of commentHash[currentTrainingId]; index as commentIndex" style="padding: 0 20px;">
+            <hr style="display: block;margin:10px 0;">
             <div style="display: block;">
               <nz-rate nzDisabled [(ngModel)]="comment.rating" class="small" ngDefaultControl
                 style="display: inline-block;margin-right:20px;"></nz-rate>
@@ -163,7 +165,6 @@
             <div style="display: block;font-size:16px;">
               {{ comment.text }}
             </div>
-            <hr style="display: block;margin:10px 0;">
           </div>
           <div *ngIf="commentHash[currentTrainingId] && commentHash[currentTrainingId].length === 0" style="padding:20px;">
             <i nz-icon nzType="frown" [nzTheme]="'twotone'"

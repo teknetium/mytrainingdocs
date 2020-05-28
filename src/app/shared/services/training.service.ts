@@ -281,7 +281,7 @@ export class TrainingService {
 
     const content = <Content>{
       _id: String(new Date().getTime()),
-      type: 'html',
+      type: 'intro',
       text: undefined
     }
 

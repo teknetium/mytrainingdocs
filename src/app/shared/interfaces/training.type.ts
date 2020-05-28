@@ -49,11 +49,9 @@ export interface Page {
 
 export interface Content {
   _id: string,
-  type: 'file' | 'url' | 'video' | 'text' | 'none' | 'image' | 'html'
+  type: 'file' | 'url' | 'video' | 'text' | 'none' | 'image' | 'html' | 'intro' ,
   name: string,
   file: FileModel,
   text: string,
   webUrl: string,
-  size: { width: number, height: number },
-  location: { x: number, y: number }
 }

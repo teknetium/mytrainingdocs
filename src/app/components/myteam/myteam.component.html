@@ -96,7 +96,7 @@
                         </div>
                         <div
                             style="cursor:pointer;display:block;margin-left:10px;width:fit-content;border-left:1px solid #bbbbbb;">
-                            <div style="display:block;position:relative;top:11px;">
+                            <div style="display:block;position:relative;top:11px;width:fi">
                                 <div *ngFor="let user of myTeam" class="direct-report-cell">
                                     <div *ngIf="user._id !== (authenticatedUser$ | async)?._id" class="user-button"
                                         (click)="selectUser(user._id)"

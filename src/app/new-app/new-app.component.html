@@ -60,7 +60,7 @@
                         <li nz-menu-item routerLink="/profile">
                             <a class="p-v-5 d-flex align-items-center justify-content-between">
                                 <div>
-                                    <i class="opacity-04 font-size-16" nz-icon nzType="user" theme="outline"></i>
+                                    <i class="" nz-icon nzType="user" theme="outline" style="vertical-align: baseline;font-size:20px;"></i>
                                     <span class="m-l-10">Edit Profile</span>
                                 </div>
                             </a>
@@ -68,7 +68,7 @@
                         <li nz-menu-item (click)="logout()">
                             <a class="p-v-5 d-flex align-items-center justify-content-between">
                                 <div>
-                                    <i class="opacity-04 font-size-16" nz-icon nzType="logout" theme="outline"></i>
+                                    <i class="" nz-icon nzType="logout" theme="outline" style="vertical-align: baseline;font-size:20px;color:#bbbbbb;"></i>
                                     <span class="m-l-10">Logout</span>
                                 </div>
                             </a>
@@ -79,14 +79,14 @@
             <li  class="navbar-rhs" nz-tooltip nzTooltipTitle="Settings"
                 nzTooltipPlacement="bottomLeft">
                 <a (click)="quickViewToggle()">
-                    <i nz-icon nzType="setting" theme="outline" style="font-size:20px;"></i>
+                    <i nz-icon nzType="setting" theme="outline" style="font-size:20px;color:black;"></i>
                 </a>
             </li>
             <li nz-menu-item class="navbar-rhs" nz-tooltip nzTooltipTitle="Notifications"
                 nzTooltipPlacement="bottomLeft">
                 <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="popNotification" [nzPlacement]="'bottomRight'">
                     <nz-badge nzDot>
-                        <i nz-icon nzType="notification" theme="outline" style="font-size:20px;"></i>
+                        <i nz-icon nzType="notification" theme="outline" style="font-size:20px;color:black;"></i>
                     </nz-badge>
                 </a>
                 <nz-dropdown-menu #popNotification="nzDropdownMenu">
@@ -134,7 +134,7 @@
             </li>
             <li class="navbar-rhs" nz-tooltip nzTooltipTitle="Start Page Tour" nzTooltipPlacement="bottom">
                 <a (click)="startTour()">
-                    <i nz-icon nzType="car" theme="outline" style="font-size:20px;margin:0 5px;"></i>
+                    <i nz-icon nzType="car" theme="outline" style="font-size:20px;margin:0 5px;color:black;"></i>
                 </a>
             </li>
         </ul>
