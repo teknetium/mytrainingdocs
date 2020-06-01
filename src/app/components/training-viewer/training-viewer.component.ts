@@ -320,7 +320,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.contentHeight = Math.floor((window.innerHeight - (this.percentageOfBrowserHeight * window.innerHeight)) * .90);
     this.contentWidth = Math.floor(window.innerWidth * .9);
   }
-
+  embeddedPageDialogIsVisible = false;
 
   constructor(
     private trainingService: TrainingService,
@@ -845,11 +845,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.safeUrlHash[this.pageUrl] = safeUrl;
     this.currentPage = this.mainContentPageHash[this.currentPageId];
 
-    this.currentPage.content[0].versions[0].dateUploaded = new Date().getTime();
-    this.currentPage.content[0].versions[0].version = '1_0_0';
-    this.currentPage.content[0].versions[0].webUrl = this.pageUrl;
+    this.currentPage.content.dateUploaded = new Date().getTime();
+    this.currentPage.content.webUrl = this.pageUrl;
 
-    this.currentPage.content[0].type = 'url';
+    this.currentPage.content.type = 'url';
     this.currentPage.title = this.pageUrl;
 
     this.saveTraining(true);
@@ -870,7 +869,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     const newPage = <Page>{
       _id: String(new Date().getTime()),
       type: 'text',
-      title: 'Page Introduction',
+      title: 'New Page',
       text: '<p class=\"ql-align-center\"><span class=\"ql-size-huge\" style=\"color: rgb(230, 0, 0);\">Sample Page Introduction<\/span><\/p><p>This is a sample page introduction.<\/p><p><br><\/p>',
       content: content
     }
