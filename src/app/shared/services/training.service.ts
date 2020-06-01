@@ -279,16 +279,12 @@ export class TrainingService {
   addNewTraining() {
     const baseId = new Date().getTime();
 
-    const content = <Content>{
-      _id: String(new Date().getTime()),
-      type: 'intro',
-      text: undefined
-    }
-
     const page = <Page>{
       _id: String(new Date().getTime()),
-      type: 'single',
-      content: [content],
+      type: 'training-intro',
+      title: 'Introduction',
+      text: '<p class=\"ql-align-center\"><span class=\"ql-size-huge\" style=\"color: rgb(230, 0, 0);\">Sample Training Introduction<\/span><\/p><p>This is a sample training introduction.  <\/p><p><br><\/p><p><span class=\"ql-size-large\">Executive Summary<\/span><\/p><p>\tBlah blah blah.<\/p><p><br><\/p><p><span class=\"ql-size-large\">Training Goals<\/span><\/p><p>\tBlah blah blah.<\/p>',
+      content: undefined
     }
     const newTraining = <TrainingModel>{
       _id: String(baseId),
@@ -361,6 +357,7 @@ export class TrainingService {
     this.selectedTrainingBS$.next(this.trainingArchiveHash[archiveId,]);
   }
 */
+  /*
   addNewPage(trainingId: string, type: string, url: string, fileId: string, pageTitle: string): Page {
     if (!pageTitle || pageTitle === '') {
       return;
@@ -374,8 +371,8 @@ export class TrainingService {
 
     const newPage = <Page>{
       _id: String(new Date().getTime()),
-      type: 'single',
-      content: [content],
+      type: 'none',
+      content: content,
     };
 
     if (!this.teamTrainingHash[trainingId]) {
@@ -391,7 +388,7 @@ export class TrainingService {
     this.selectedTrainingBS$.next(this.teamTrainingHash[trainingId]);
     return newPage;
   }
-
+*/
   createTraining(training: TrainingModel) {
     this.postTraining$(training).subscribe(trainingObj => {
       this.reloadAllTrainings();

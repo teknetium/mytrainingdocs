@@ -42,15 +42,15 @@ export interface TrainingVersion {
 
 export interface Page {
   _id: string,
-  type: 'blank' | 'single' | 'double' | 'assessment',
-  icon: string,
-  content: Content[]
+  type: 'file' | 'url' | 'text' | 'assessment' | 'training-intro',
+  title: string,
+  text: string,
+  content: Content
 }
 
 export interface Content {
   _id: string,
-  type: 'file' | 'url' | 'video' | 'text' | 'none' | 'image' | 'html' | 'intro' ,
-  name: string,
+  type: 'file' | 'url' | 'video'  | 'audio' | 'text' | 'none' | 'image' | 'html' ,
   file: FileModel,
   text: string,
   webUrl: string,

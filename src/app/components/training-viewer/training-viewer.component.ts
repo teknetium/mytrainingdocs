@@ -425,15 +425,13 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       if (this.selectedTraining.pages) {
         for (let page of this.selectedTraining.pages) {
           if (page.content) {
-            for (let contentItem of page.content) {
-              if (contentItem.type === 'video') {
-                this.safeUrlHash[contentItem.file.fileStackUrl] = contentItem.file.fileStackUrl;
-              } else if (contentItem.type === 'file') {
-                this.safeUrlHash[contentItem.file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + contentItem.file.fileStackId));
-              } else if (contentItem.type === 'url') {
-                this.safeUrlHash[contentItem.webUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(contentItem.webUrl));
+              if (page.content.type === 'video') {
+                this.safeUrlHash[page.content.file.fileStackUrl] = page.content.file.fileStackUrl;
+              } else if (page.content.type === 'file') {
+                this.safeUrlHash[page.content.file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + page.content.file.fileStackId));
+              } else if (page.content.type === 'url') {
+                this.safeUrlHash[page.content.webUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(page.content.webUrl));
               }
-            }
           }
           this.mainContentPageHash[page._id] = page;
         }
@@ -500,10 +498,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         this.safeUrlHash[file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + file.fileStackId));
       }
 
-      this.currentPage.content.push(newContent);
+      this.currentPage.title = file.name;
 
-      let fileExt = file.name.substring(file.name.indexOf('.') + 1);
-      this.currentPage.icon = this.fileExtensionHash[fileExt];
+      this.currentPage.content = newContent;
+
 
       this.saveTraining(false);
       //      this.cd.detectChanges();
@@ -863,20 +861,19 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.currentSection = sectionName;
   }
 
-  addNewPage(type: string) {
+  addNewPage() {
+
     const content = <Content>{
       _id: String(new Date().getTime()),
-      type: type,
-      name: undefined,
+      type: 'none',
     }
-
-    const page = <Page>{
+    const newPage = <Page>{
       _id: String(new Date().getTime()),
-      type: 'single',
-      content: new Array(content),
+      type: 'text',
+      title: 'Page Introduction',
+      text: '<p class=\"ql-align-center\"><span class=\"ql-size-huge\" style=\"color: rgb(230, 0, 0);\">Sample Page Introduction<\/span><\/p><p>This is a sample page introduction.<\/p><p><br><\/p>',
+      content: content
     }
-
-    let newPage = cloneDeep(page);
 
     this.selectedTraining.pages.push(newPage);
     this.currentPage = newPage;

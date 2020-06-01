@@ -59,7 +59,7 @@
             (nzOnOk)="handleIconSelectConfirm()" style="width:800px;">
             <app-icon-picker (icon)="setIcon($event)"></app-icon-picker>
         </nz-modal>
-        <div *ngIf="production === 'true'" style="position:relative;width:">
+        <div *ngIf="production === 'true'" style="position:relative;width:100%;">
             <div style="position: absolute;left:40%;">
                 <i [ngClass]="selectedTraining.iconClass"
                     style="display: inlne-block;font-size:24px;margin:10px;vertical-align: middle;"
@@ -156,7 +156,7 @@
                                 [ngClass]="{'selected-status': mode === 'Preview'}">Preview</li>
                         </ul>
                     </nz-dropdown-menu>
-                    <span  *ngIf="mode === 'Edit'" class="separator">|</span>
+                    <span *ngIf="mode === 'Edit'" class="separator">|</span>
                 </div>
                 <!--
                 <button *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && currentVersionIndex === 0"
@@ -206,7 +206,7 @@
                         class="header-icon" (click)="debug = !debug">
                         <i nz-icon nzType="bug" [nzTheme]="'twotone'" style="vertical-align: top;"></i>
                     </button>
-                    <button *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
+                    <button *ngIf="production === 'false'"
                         nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Close Training"
                         class="header-icon" (click)="closeViewer()">
                         <i nz-icon nzType="close" theme="outline" style="vertical-align: top;color:red;">
@@ -306,6 +306,7 @@
     <div style="height:fit-content;;background-color: white;border-bottom:1px solid #dddddd;">
         <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
             style="display:block;padding:5px;">
+            <!--
             <button nz-button [nzSize]="'small'" nzType="default" nzShape="round" nz-dropdown
                 [nzDropdownMenu]="menu"><span style="font-size:12px;">Upload a File</span><i nz-icon
                     nzType="down"></i></button>
@@ -332,41 +333,37 @@
                 (click)="addNewPage('assessment')">
                 <span style="font-size:12px;">Create an Assessment</span>
             </button>
+            -->
+            <button nz-button [nzSize]="'small'" nzType="default" nzShape="round" class="header-icon"
+                (click)="addNewPage()">
+                <span style="font-size:12px;">Add New Page</span>
+            </button>
             <button nz-button [nzSize]="'small'" nzType="default" nzDanger nzShape="round" class="header-icon"
-                (click)="delesPage('assessment')" style="float:right;color:red;" nz-popconfirm
-                nzPopconfirmTitle="Delete this Page?" [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'left'"
-                (nzOnConfirm)="confirmDeletePage()">
+                (click)="delesPage('assessment')" style="color:red;" nz-popconfirm nzPopconfirmTitle="Delete this Page?"
+                [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'left'" (nzOnConfirm)="confirmDeletePage()">
                 <span style="font-size:12px;">Delete Page</span>
             </button>
         </div>
         <div style="padding:10px;text-align: center">
-            <ng-container *ngIf="production === 'false' && mode === 'Edit'">
+            <ng-container>
                 <div *ngFor="let page of selectedTraining.pages; index as pageIndex"
                     style="display:inline-block;margin-left:10px;margin-right:10px;">
-                    <i *ngIf="page.content[0].type === 'text'" nz-icon nzType="file-text" theme="outline"
-                        class="page-icon" [ngClass]="{'current-page': currentPageId === page._id}"
-                        style="display:block;font-size:26px;" (click)="setCurrentPage(page._id)"></i>
-                    <i *ngIf="page.content[0].type === 'none'" nz-icon nzType="file-unknown" theme="outline"
-                        class="page-icon" [ngClass]="{'current-page': currentPageId === page._id}"
-                        style="font-size:26px;display:block;" (click)="setCurrentPage(page._id)"></i>
-                    <i *ngIf="page.content[0].type === 'file'" nz-icon [nzType]="page.icon" theme="outline"
-                        class="page-icon" [ngClass]="{'current-page': currentPageId === page._id}"
-                        style="font-size:26px;display:block;" (click)="setCurrentPage(page._id)"></i>
-                    <i *ngIf="page.content[0].type === 'url'" nz-icon nzType="global" theme="outline" class="page-icon"
+                    <i *ngIf="page.type === 'file'" nz-icon nzType="file-text" theme="outline" class="page-icon"
+                        [ngClass]="{'current-page': currentPageId === page._id}" style="display:block;font-size:26px;"
+                        (click)="setCurrentPage(page._id)"></i>
+                    <i *ngIf="page.type === 'url'" nz-icon nzType="global" theme="outline" class="page-icon"
                         [ngClass]="{'current-page': currentPageId === page._id}" style="font-size:26px;display:block;"
                         (click)="setCurrentPage(page._id)"></i>
-                    <i *ngIf="page.content[0].type === 'video'" nz-icon nzType="video-camera" theme="outline"
-                        class="page-icon" [ngClass]="{'current-page': currentPageId === page._id}"
-                        style="font-size:26px;display:block;" (click)="setCurrentPage(page._id)"></i>
-                    <i *ngIf="page.content[0].type === 'assessment'" nz-icon nzType="file-done" theme="outline"
-                        class="page-icon" [ngClass]="{'current-page': currentPageId === page._id}"
-                        style="font-size:26px;display:block;" (click)="setCurrentPage(page._id)"></i>
-                    <i *ngIf="page.content[0].type === 'html'" nz-icon nzType="html5" theme="outline" class="page-icon"
+                    <i *ngIf="page.type === 'assessment'" nz-icon nzType="file-done" theme="outline" class="page-icon"
                         [ngClass]="{'current-page': currentPageId === page._id}" style="font-size:26px;display:block;"
                         (click)="setCurrentPage(page._id)"></i>
-                    <i *ngIf="page.content[0].type === 'intro'" nz-icon nzType="align-left" theme="outline"
-                        class="page-icon" [ngClass]="{'current-page': currentPageId === page._id}"
-                        style="font-size:26px;display:block;" (click)="setCurrentPage(page._id)"></i>
+                    <i *ngIf="page.type === 'text'" nz-icon nzType="file" theme="outline" class="page-icon"
+                        [ngClass]="{'current-page': currentPageId === page._id}" style="font-size:26px;display:block;"
+                        (click)="setCurrentPage(page._id)"></i>
+                    <i *ngIf="page.type === 'training-intro'" nz-icon nzType="file" theme="outline" class="page-icon"
+                        [ngClass]="{'current-page': currentPageId === page._id}" style="font-size:26px;display:block;"
+                        (click)="setCurrentPage(page._id)"></i>
+                    <span style="font-size:11px;">{{page.title}}</span>
                 </div>
             </ng-container>
         </div>
@@ -462,182 +459,259 @@
     <div class="main-content-container">
         <div class="main-content">
             <div class="page-container">
-                <div>
-                    <div *ngFor="let page of selectedTraining.pages; index as pageIndex">
-                        <div *ngFor="let content of page.content; index as contentIndex">
-                            <div *ngIf="currentPageId === page._id" class="page">
-                                <div
-                                    [ngClass]="{'page-content': (mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false')}">
-                                    <div *ngIf="content && content.type === 'video'"
-                                        style="margin-top:20px;width:100%;height:100%;">
-                                        <div style="height:100%;width:100%;text-align: center;">
-                                            <!--
+                <div *ngFor="let page of selectedTraining.pages; index as pageIndex">
+                    <div *ngIf="currentPageId === page._id" class="page">
+                        <div
+                            [ngClass]="{'page-content': (mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false')}">
+                            <p *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'" nz-typography nzEditable [(nzContent)]="page.title" style="text-align: center;font-size:24px;"></p>
+                            <p *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'" [(nzContent)]="page.title" style="text-align: center;font-size:24px;">{{page.title}}</p>
+                            <div *ngIf="page.type && page.type === 'training-intro'"
+                                style="text-align: center;margin-top:5px;width:100%;height:100%;">
+                                <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
+                                    style="display: inline-block;height:fit-content;"
+                                    [ngStyle]="{'width.px':browserInnerWidth * .9}">
+                                    <quill-editor style="height:fit-content;width:90%;" format="html"
+                                        [(ngModel)]="page.text" (onBlur)="quillBlur($event);">
+                                        <div quill-editor-toolbar style="background-color: #f5f5f5;">
+                                            <select class="ql-size">
+                                                <option value="small"></option>
+                                                <!-- Note a missing, thus falsy value, is used to reset to default -->
+                                                <option selected></option>
+                                                <option value="large"></option>
+                                                <option value="huge"></option>
+                                            </select>
+
+                                            <span class="ql-formats" style="float:left;margin-left:10px;">
+                                                <select class="ql-align" [title]="'Aligment'">
+                                                    <option selected></option>
+                                                    <option value="center"></option>
+                                                    <option value="right"></option>
+                                                    <option value="justify"></option>
+                                                </select>
+
+                                                <select class="ql-color" [title]="'Color'">
+                                                </select>
+
+                                                <select class="ql-background" [title]="'BackgroundColor'">
+                                                </select>
+                                            </span>
+                                        </div>
+                                    </quill-editor>
+                                </div>
+                                <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
+                                    [ngStyle]="{'width.px':browserInnerWidth * .9}"
+                                    style="display: inline-block;overflow-y: scroll;height:fit-content;border:1px solid #dddddd;border-radius: 5px;background-color: #fafafa;margin-top:20px;">
+                                    <quill-view-html style="width:100%;height:fit-content;" [content]="page.text"
+                                        format="html">
+                                    </quill-view-html>
+                                </div>
+                            </div>
+                            <div *ngIf="page.type && page.type !== 'training-intro'"
+                                style="text-align: center;margin-top:5px;width:100%;height:100%;">
+                                <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
+                                    style="display: inline-block;height:fit-content;padding-top:20px;"
+                                    [ngStyle]="{'width.px':browserInnerWidth * .9}">
+                                    <quill-editor style="height:fit-content;width:90%;" format="html"
+                                        [(ngModel)]="page.text" (onBlur)="quillBlur($event);">
+                                        <div quill-editor-toolbar style="background-color: #f5f5f5;">
+                                            <select class="ql-size">
+                                                <option value="small"></option>
+                                                <!-- Note a missing, thus falsy value, is used to reset to default -->
+                                                <option selected></option>
+                                                <option value="large"></option>
+                                                <option value="huge"></option>
+                                            </select>
+
+                                            <span class="ql-formats" style="float:left;margin-left:10px;">
+                                                <select class="ql-align" [title]="'Aligment'">
+                                                    <option selected></option>
+                                                    <option value="center"></option>
+                                                    <option value="right"></option>
+                                                    <option value="justify"></option>
+                                                </select>
+
+                                                <select class="ql-color" [title]="'Color'">
+                                                </select>
+
+                                                <select class="ql-background" [title]="'BackgroundColor'">
+                                                </select>
+                                            </span>
+                                        </div>
+                                    </quill-editor>
+                                </div>
+                                <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
+                                    [ngStyle]="{'width.px':browserInnerWidth * .9}"
+                                    style="display: inline-block;overflow-y: scroll;height:fit-content;border:1px solid #dddddd;border-radius: 5px;background-color: #fafafa;margin-top:20px;">
+                                    <quill-view-html style="width:100%;height:fit-content;" [content]="page.text"
+                                        format="html">
+                                    </quill-view-html>
+                                </div>
+
+                                <div *ngIf="page.content && page.content.type === 'video'"
+                                    style="margin-top:20px;width:100%;height:100%;">
+                                    <div style="height:100%;width:100%;text-align: center;">
+                                        <!--
                                         <div style="margin-top:20px;text-align: center;">
                                             <span style="display:inline-block;color:#aaaaaa;">
                                                 Version {{ currentPage.content[0]Version.version }}
                                             </span>
                                         </div>
                                         -->
-                                            <div [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
-                                                style="text-align: center;margin-top:5px;display: inline-block;">
-                                                <vg-player (onPlayerReady)="onPlayerReady($event)"
-                                                    [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}">
+                                        <div [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
+                                            style="text-align: center;margin-top:5px;display: inline-block;">
+                                            <vg-player (onPlayerReady)="onPlayerReady($event)"
+                                                [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}">
 
-                                                    <vg-controls>
-                                                        <vg-play-pause></vg-play-pause>
-                                                        <vg-playback-button></vg-playback-button>
+                                                <vg-controls>
+                                                    <vg-play-pause></vg-play-pause>
+                                                    <vg-playback-button></vg-playback-button>
 
-                                                        <vg-time-display vgProperty="current" vgFormat="mm:ss">
-                                                        </vg-time-display>
+                                                    <vg-time-display vgProperty="current" vgFormat="mm:ss">
+                                                    </vg-time-display>
 
-                                                        <vg-scrub-bar>
-                                                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                                                            <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-                                                        </vg-scrub-bar>
+                                                    <vg-scrub-bar>
+                                                        <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                                        <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                                                    </vg-scrub-bar>
 
-                                                        <vg-time-display vgProperty="left" vgFormat="mm:ss">
-                                                        </vg-time-display>
-                                                        <vg-time-display vgProperty="total" vgFormat="mm:ss">
-                                                        </vg-time-display>
+                                                    <vg-time-display vgProperty="left" vgFormat="mm:ss">
+                                                    </vg-time-display>
+                                                    <vg-time-display vgProperty="total" vgFormat="mm:ss">
+                                                    </vg-time-display>
 
-                                                        <vg-track-selector></vg-track-selector>
-                                                        <vg-mute></vg-mute>
-                                                        <vg-volume></vg-volume>
+                                                    <vg-track-selector></vg-track-selector>
+                                                    <vg-mute></vg-mute>
+                                                    <vg-volume></vg-volume>
 
-                                                        <vg-fullscreen></vg-fullscreen>
-                                                    </vg-controls>
-                                                    <video [vgMedia]="media" #media id="singleVideo" preload="'auto'"
-                                                        [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
-                                                        [src]="safeUrlHash[content.file.fileStackUrl]"
-                                                        crossorigin></video>
-                                                    <!-- <video [vgMedia]="media" #media id="singleVideo" preload="'auto'"
+                                                    <vg-fullscreen></vg-fullscreen>
+                                                </vg-controls>
+                                                <video [vgMedia]="media" #media id="singleVideo" preload="'auto'"
+                                                    [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
+                                                    [src]="safeUrlHash[page.content.file.fileStackUrl]"
+                                                    crossorigin></video>
+                                                <!-- <video [vgMedia]="media" #media id="singleVideo" preload="'auto'"
                                             [src]="(file$ | async)?.versions[currentVersionIndex].safeUrl" crossorigin>
                                             </video>
                                             -->
-                                                </vg-player>
+                                            </vg-player>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="page.content && page.content.type === 'none'"
+                                    style="width:100%;height:100%;display:block;text-align: center;">
+                                    <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
+                                        [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
+                                        style="display:inline-block;border: 1px solid #dddddd;">
+                                        <div style="height:fit-content;border-bottom:1px solid #dddddd;background-color: #f5f5f5;">
+                                            <div style="font-size: 18px;">
+                                                Main Content
                                             </div>
+                                            <button nz-button [nzSize]="'small'" nzType="default" nzShape="round"
+                                                nz-dropdown [nzDropdownMenu]="menu"><span style="font-size:12px;">Upload
+                                                    a
+                                                    File</span><i nz-icon nzType="down"></i></button>
+                                            <nz-dropdown-menu #menu="nzDropdownMenu">
+                                                <ul nz-menu nzSelectable>
+                                                    <li nz-menu-item (click)="openPicker('text')">Text File</li>
+                                                    <li nz-menu-item (click)="openPicker('doc')">Document File (.doc,
+                                                        .docx,
+                                                        .ppt, .pptx,
+                                                        .xls, .xlsx,
+                                                        .ai, .pdf, .ps)</li>
+                                                    <li nz-menu-item (click)="openPicker('video')">Video File</li>
+                                                    <li nz-menu-item (click)="openPicker('audio')">Audio File</li>
+                                                    <li nz-menu-item (click)="openPicker('image')">Image File</li>
+                                                </ul>
+                                            </nz-dropdown-menu>
+                                            <button nz-button [nzSize]="'small'" nzType="default" nzShape="round"
+                                                class="header-icon" (click)="addNewPage('embedded')">
+                                                <span style="font-size:12px;">Embed a Web Page</span>
+                                            </button>
+                                            <button nz-button [nzSize]="'small'" nzType="default" nzShape="round"
+                                                class="header-icon" (click)="addNewPage('html')">
+                                                <span style="font-size:12px;">Create an HTML Page</span>
+                                            </button>
+                                            <button nz-button [nzSize]="'small'" nzType="default" nzShape="round"
+                                                class="header-icon" (click)="addNewPage('assessment')">
+                                                <span style="font-size:12px;">Create an Assessment</span>
+                                            </button>
+                                        </div>
+                                        <div [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}">
+
                                         </div>
                                     </div>
-                                    <div *ngIf="content && content.type === 'file'">
-                                        <div>
-                                            <div style="text-align: center;margin-top:5px;width:100%;height:100%;">
-                                                <div style="display:inline-block;">
-                                                    <iframe
-                                                        [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
-                                                        [src]="safeUrlHash[content.file.fileStackUrl]" allowfullscreen
-                                                        [width]="contentWidth" [height]="contentHeight">
-                                                    </iframe>
-                                                </div>
-                                            </div>
+
+                                </div>
+                                <div *ngIf="page.content && page.content.type === 'file'"
+                                    style="text-align: center;margin-top:5px;width:100%;height:100%;">
+                                    <iframe [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
+                                        [src]="safeUrlHash[page.content.file.fileStackUrl]" allowfullscreen
+                                        [width]="contentWidth" [height]="contentHeight">
+                                    </iframe>
+                                </div>
+                                <div *ngIf="page.content && page.content.type === 'assessment'">
+                                    <div style="text-align: center;margin-top:5px;width:100%;height:100%;">
+                                        <div style="display:inline-block;">
+                                            <app-assessment></app-assessment>
                                         </div>
                                     </div>
-                                    <div *ngIf="content && content.type === 'assessment'">
-                                        <div>
-                                            <div style="text-align: center;margin-top:5px;width:100%;height:100%;">
-                                                <div style="display:inline-block;">
-                                                    <app-assessment></app-assessment>
-                                                </div>
-                                            </div>
-                                        </div>
+                                </div>
+                                <div *ngIf="page.content && page.content.type === 'url'"
+                                    style="text-align: center;margin-top:5px;width:100%;height:100%;">
+                                    <div style="display: block;color:#bbbbbb;">
+                                        {{ page.content.webUrl }}
                                     </div>
-                                    <div *ngIf="content && content.type === 'url'"
-                                        style="text-align: center;margin-top:5px;width:100%;height:100%;">
-                                        <div style="display: block;color:#bbbbbb;">
-                                            {{ content.webUrl }}
-                                        </div>
-                                        <div style="display:inline-block;"
-                                            [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}">
-                                            <iframe [src]="safeUrlHash[content.webUrl]" allowfullscreen
-                                                [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
-                                                [width]="contentWidth" [height]="contentHeight">
-                                            </iframe>
-                                        </div>
-                                    </div>
-                                    <div *ngIf="content && content.type === 'html'"
-                                        style="text-align: center;margin-top:5px;width:100%;height:100%;">
-                                        <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
+                                    <div style="display:inline-block;"
+                                        [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}">
+                                        <iframe [src]="safeUrlHash[content.webUrl]" allowfullscreen
                                             [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
-                                            style="display: inline-block;">
-                                            <quill-editor style="height:100%;width:100%;" format="html"
-                                                [(ngModel)]="content.text" (onBlur)="quillBlur($event);">
-                                                <div quill-editor-toolbar style="background-color: #f5f5f5;">
-                                                    <select class="ql-size">
-                                                        <option value="small"></option>
-                                                        <!-- Note a missing, thus falsy value, is used to reset to default -->
+                                            [width]="contentWidth" [height]="contentHeight">
+                                        </iframe>
+                                    </div>
+                                </div>
+                                <div *ngIf="page.content && page.content.type === 'html'"
+                                    style="text-align: center;margin-top:5px;width:100%;height:100%;">
+                                    <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
+                                        [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
+                                        style="display: inline-block;">
+                                        <quill-editor style="height:100%;width:100%;" format="html"
+                                            [(ngModel)]="page.content.text" (onBlur)="quillBlur($event);">
+                                            <div quill-editor-toolbar style="background-color: #f5f5f5;">
+                                                <select class="ql-size">
+                                                    <option value="small"></option>
+                                                    <!-- Note a missing, thus falsy value, is used to reset to default -->
+                                                    <option selected></option>
+                                                    <option value="large"></option>
+                                                    <option value="huge"></option>
+                                                </select>
+
+                                                <span class="ql-formats">
+                                                    <select class="ql-align" [title]="'Aligment'">
                                                         <option selected></option>
-                                                        <option value="large"></option>
-                                                        <option value="huge"></option>
+                                                        <option value="center"></option>
+                                                        <option value="right"></option>
+                                                        <option value="justify"></option>
                                                     </select>
 
-                                                    <span class="ql-formats">
-                                                        <select class="ql-align" [title]="'Aligment'">
-                                                            <option selected></option>
-                                                            <option value="center"></option>
-                                                            <option value="right"></option>
-                                                            <option value="justify"></option>
-                                                        </select>
-
-                                                        <select class="ql-color" [title]="'Color'">
-                                                        </select>
-
-                                                        <select class="ql-background" [title]="'BackgroundColor'">
-                                                        </select>
-                                                    </span>
-                                                </div>
-                                            </quill-editor>
-                                        </div>
-                                        <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
-                                            [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
-                                            style="display: inline-block;">
-                                            <quill-view-html style="height:100%;width:100%;" [content]="content.text"
-                                                format="html">
-                                            </quill-view-html>
-                                        </div>
-
-                                    </div>
-                                    <div *ngIf="content && content.type === 'intro'"
-                                        style="text-align: center;margin-top:5px;width:100%;height:100%;">
-                                        <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
-                                            style="display: inline-block;height:fit-content;"
-                                            [ngStyle]="{'width.px':browserInnerWidth * .9}">
-                                            <quill-editor style="height:fit-content;width:90%;" format="html"
-                                                [(ngModel)]="content.text" (onBlur)="quillBlur($event);">
-                                                <div quill-editor-toolbar style="background-color: #f5f5f5;">
-                                                    <select class="ql-size">
-                                                        <option value="small"></option>
-                                                        <!-- Note a missing, thus falsy value, is used to reset to default -->
-                                                        <option selected></option>
-                                                        <option value="large"></option>
-                                                        <option value="huge"></option>
+                                                    <select class="ql-color" [title]="'Color'">
                                                     </select>
 
-                                                    <span class="ql-formats" style="float:left;margin-left:10px;">
-                                                        <select class="ql-align" [title]="'Aligment'">
-                                                            <option selected></option>
-                                                            <option value="center"></option>
-                                                            <option value="right"></option>
-                                                            <option value="justify"></option>
-                                                        </select>
-
-                                                        <select class="ql-color" [title]="'Color'">
-                                                        </select>
-
-                                                        <select class="ql-background" [title]="'BackgroundColor'">
-                                                        </select>
-                                                    </span>
-                                                </div>
-                                            </quill-editor>
-                                        </div>
-                                        <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
-                                            [ngStyle]="{'width.px':browserInnerWidth * .9}"
-                                            style="display: inline-block;overflow-y: scroll;height:fit-content;border:1px solid #dddddd;border-radius: 5px;background-color: #fafafa;margin-top:20px;">
-                                            <quill-view-html style="width:100%;height:fit-content;"
-                                                [content]="content.text" format="html">
-                                            </quill-view-html>
-                                        </div>
-
+                                                    <select class="ql-background" [title]="'BackgroundColor'">
+                                                    </select>
+                                                </span>
+                                            </div>
+                                        </quill-editor>
                                     </div>
-                                    <!--
+                                    <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
+                                        [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
+                                        style="display: inline-block;">
+                                        <quill-view-html style="height:100%;width:100%;" [content]="content.text"
+                                            format="html">
+                                        </quill-view-html>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--
                                 <div *ngIf="page.content[0] && page.content[0].type === 'none'"
                                     style="margin-top:5px;border:1px solid #bbbbbb;">
                                     <div [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}">
@@ -793,8 +867,6 @@
                                     </div>
                                 </div>
                                 -->
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

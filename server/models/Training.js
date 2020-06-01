@@ -10,7 +10,6 @@ const Schema = mongoose.Schema;
 const contentSchema = new Schema({
   _id: { type: String, required: true },
   type: { type: String, required: true },
-  name: { type: String, required: false },
   file: {
     _id: { type: String },
     name: { type: String },
@@ -27,11 +26,10 @@ const contentSchema = new Schema({
 const pageSchema = new Schema({
   _id: { type: String, required: true },
   type: { type: String, required: true },
-  icon: { type: String, required: false },
-  content: [contentSchema],
+  title: { type: String, required: false },
+  text: { type: String, required: false },
+  content: contentSchema,
 })
-
-
 
 const trainingSchema = new Schema({
   _id: { type: String, required: true },
