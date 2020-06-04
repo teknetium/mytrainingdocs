@@ -42,7 +42,7 @@ export interface TrainingVersion {
 
 export interface Page {
   _id: string,
-  type: 'file' | 'url' | 'text' | 'assessment' | 'training-intro',
+  type: 'file' | 'url' | 'text' | 'assessment' | 'training-intro' | 'none',
   title: string,
   text: string,
   content: Content
@@ -50,8 +50,24 @@ export interface Page {
 
 export interface Content {
   _id: string,
-  type: 'file' | 'url' | 'video'  | 'audio' | 'text' | 'none' | 'image' | 'html' ,
+  type: 'file' | 'url' | 'video'  | 'audio' | 'text' | 'none' | 'image' | 'html' | 'assessment' ,
   file: FileModel,
   text: string,
   webUrl: string,
+  assessment: Assessment
 }
+
+export interface AssessmentItem {
+  question: string,
+  choices: string[],
+  correctChoice: number
+}
+
+export interface Assessment {
+  _id: string,
+  type: string,
+  timeLimit: number,
+  passingGrade: number,
+  items: AssessmentItem[]
+}
+

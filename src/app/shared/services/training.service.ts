@@ -280,10 +280,10 @@ export class TrainingService {
     const baseId = new Date().getTime();
 
     const page = <Page>{
-      _id: String(new Date().getTime()),
+      _id: 'training-introduction',
       type: 'training-intro',
       title: 'Introduction',
-      text: '<p class=\"ql-align-center\"><span class=\"ql-size-huge\" style=\"color: rgb(230, 0, 0);\">Sample Training Introduction<\/span><\/p><p>This is a sample training introduction.  <\/p><p><br><\/p><p><span class=\"ql-size-large\">Executive Summary<\/span><\/p><p>\tBlah blah blah.<\/p><p><br><\/p><p><span class=\"ql-size-large\">Training Goals<\/span><\/p><p>\tBlah blah blah.<\/p>',
+      text: '<p class=\"ql-align-center\"><span class=\"ql-size-large\" style=\"color: rgb(0, 0, 0);\">Sample Training Introduction<\/span><\/p><p>This is a sample training introduction.  <\/p><p><br><\/p><p><span class=\"ql-size-large\">Executive Summary<\/span><\/p><p>\tBlah blah blah.<\/p><p><br><\/p><p><span class=\"ql-size-large\">Training Goals<\/span><\/p><p>\tBlah blah blah.<\/p>',
       content: undefined
     }
     const newTraining = <TrainingModel>{

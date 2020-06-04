@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Assessment } from '../interfaces/assessment.type';
+import { Assessment } from '../interfaces/training.type';
 import { BehaviorSubject, Observable, throwError as ObservableThrowError, Subscription } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
@@ -11,13 +11,53 @@ import { catchError } from 'rxjs/operators';
 })
 export class AssessmentService {
 
+  assessmentBS$ = new BehaviorSubject<Assessment>(null);
+  assessmentHash = {};
+
   constructor(
     private http: HttpClient,
     private auth: AuthService) {
   }
 
+  createAssessment(): string {
+    let assessmentId = String(new Date().getTime());
+    let assessment = <Assessment>{
+      _id: assessmentId,
+      passingGrade: 60,
+      items: undefined
+    };
+    this.postAssessment$(assessment).subscribe(assessmentObj => {
+      this.assessmentHash[assessmentObj._id] = assessmentObj;
+      this.assessmentBS$.next(assessmentObj);
+    })
+    return assessmentId;
+  }
+
   nextQuestion() {
 
+  }
+
+  loadAssessment(assessmentId: string) {
+    let assessmentObj = this.assessmentHash[assessmentId];
+    if (assessmentObj) {
+      this.assessmentBS$.next(assessmentObj);
+    } else {
+      this.getAssessment$(assessmentId).subscribe(assessObj => {
+        if (assessObj) {
+          this.assessmentBS$.next(assessObj);
+        }
+      })
+    }
+  }
+
+  updateAssessment(assessment: Assessment) {
+    this.updateAssessment$(assessment).subscribe(assObj => {
+      console.log('update Assessment', assessment);
+    })
+  }
+
+  getAssessmentStream(): Observable<Assessment> {
+    return this.assessmentBS$.asObservable();
   }
   
   private get _authHeader(): string {
@@ -54,7 +94,7 @@ export class AssessmentService {
       );
   }
 
-  getAssessment$(id: string): Observable<Assessment[]> {
+  getAssessment$(id: string): Observable<Assessment> {
     return this.http
       .get<Assessment>(`${ENV.BASE_API}assessment/${id}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),

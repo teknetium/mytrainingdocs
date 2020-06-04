@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NzModalModule, NzInputModule, NzIconModule } from 'ng-zorro-antd';
+import { NzModalModule, NzRadioModule, NzInputModule, NzIconModule, NzCollapseModule, NzInputNumberModule, NzPopconfirmModule, NzFormModule } from 'ng-zorro-antd';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { AssessmentComponent } from './assessment.component';
+import { NzButtonModule } from 'ng-zorro-antd';
 
 
 @NgModule({
@@ -17,6 +18,14 @@ import { AssessmentComponent } from './assessment.component';
     FormsModule,
     ReactiveFormsModule,
     NzIconModule,
+    NzButtonModule,
+    NzCollapseModule,
+    NzInputNumberModule,
+    NzPopconfirmModule,
+    NzInputModule,
+    NzFormModule,
+    NgZorroAntdModule,
+    NzRadioModule
   ],
   exports: [
     AssessmentComponent

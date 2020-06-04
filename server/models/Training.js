@@ -7,6 +7,18 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const assessmentItemSchema = new Schema({
+  question: { type: String, required: true },
+  choices: [String],
+  correctChoice: { type: Number, required: true },
+})
+const assessmentSchema = new Schema({
+  _id: { type: String, required: true },
+  type: { type: String, required: false },
+  timeLimit: { type: Number, required: false },
+  passingGrade: { type: Number, required: true },
+  items: [assessmentItemSchema],
+})
 const contentSchema = new Schema({
   _id: { type: String, required: true },
   type: { type: String, required: true },
@@ -21,6 +33,7 @@ const contentSchema = new Schema({
   webUrl: { type: String },
   safeWebUrl: { type: String },
   text: { type: String },
+  assessment: assessmentSchema,
 })
 
 const pageSchema = new Schema({
@@ -30,6 +43,7 @@ const pageSchema = new Schema({
   text: { type: String, required: false },
   content: contentSchema,
 })
+
 
 const trainingSchema = new Schema({
   _id: { type: String, required: true },
