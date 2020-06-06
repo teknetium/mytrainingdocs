@@ -79,7 +79,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
       if (trainingIdHash) {
         this.trainingIdHash = trainingIdHash;
         allTrainings = Object.values(trainingIdHash);
-        console.log('trainings component:init', allTrainings, trainingIdHash);
+        console.log('trainings component:init');
         this.trainings = [];
         for (let training of allTrainings) {
           if (training.teamId === 'mytrainingdocs' || training.teamId === 'shared') {

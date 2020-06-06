@@ -367,7 +367,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('-----ngOnInit------');
+    console.log('ngOnInit');
     if (this.production === 'true') {
       this.percentageOfBrowserHeight = .35;
     }
@@ -479,7 +479,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
     this.selectedTrainingVersions$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(versions => {
       if (!versions) {
-        console.log('selectedTrainingVersions$ : ERROR', versions);
         return;
       }
       this.selectedTrainingVersions = versions;
@@ -535,7 +534,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     })
 
     this.users$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
-      console.log('TrainingViewer:users$.subscribe userList', userList);
       if (!userList) {
         return;
       }
@@ -557,7 +555,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         this.assignToDisabled = true;
       }
     })
-
+/*
     this.assessment$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(assessment => {
       if (!assessment) {
         return;
@@ -565,7 +563,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       console.log('assessment$', assessment);
       this.currentPage.content.assessmentId = assessment._id;
     });
-
+*/
     /*
     this.newVersion$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(version => {
       if (!version) {
@@ -827,11 +825,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       this.trainingIsValidBS$.next(trainingIsValid);
     }
   */
-  useAssessmentChanged(event) {
-    console.log('useAssessmentChanged', event);
-    //    this.setValidation('assessment', true);
-  }
-
   htmlContentChanged(data) {
     this.saveTraining(false);
   }
@@ -848,7 +841,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   sendNotifications() {
     this.subject = 'The Content of a Training has changed!'
     this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated.  Please review the training."
-    console.log('sending notification message');
     for (let user of this.assignedToUsers) {
       let msg = <MessageModel>{
         to: this.myTeamHash[user].email,
@@ -973,7 +965,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     */
 
   loadNextPage() {
-    console.log('LoadNextPage', this.currentPageIndex);
     this.currentPageIndex++;
     this.setCurrentPage(this.selectedTraining.pages[this.currentPageIndex]._id, undefined);
   }
@@ -1022,7 +1013,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   pageContentChanged(newVal: string, page: Page, propName: string) {
-    console.log('pageContentChanged', newVal, propName);
     page[propName] = newVal;
     this.saveTraining(false);
     this.setCurrentPage(this.currentPageId, undefined);
@@ -1053,7 +1043,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   closeViewer() {
-    console.log('closeViewer');
     this.currentTraining = null;
     this.previousVersion = null;
     this.userTrainingService.stopSession(this.selectedTraining._id);
@@ -1080,8 +1069,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     if (this.selectedTraining.teamId === 'mytrainingdocs') {
       return;
     }
-    console.log('TrainingViewerComponent:saveTraining', this.selectedTraining);
     this.trainingService.saveTraining(this.selectedTraining, reload);
+    console.log('saveTraining', this.currentPageId);
     this.setCurrentPage(this.currentPageId, undefined);
   }
 
@@ -1202,7 +1191,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       this.setCurrentPage(this.selectedTraining.pages[this.pageIndex]._id, undefined);
     }
 
-    this.saveTraining(true);
+    this.saveTraining(false);
 
   }
 
@@ -1351,13 +1340,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   questionChanged(event, item, itemIndex) {
-
-    console.log('questionChanged', item, itemIndex);
     this.currentPage.content.assessment.items[itemIndex] = item;
   }
 
   choiceContentChanged(event, choice: string, itemIndex: number, choiceIndex: number) {
-    console.log('choiceContentChanged', event);
     this.currentPage.content.assessment.items[itemIndex].choices[choiceIndex] = choice;
   }
 
@@ -1434,7 +1420,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   updateQuestion() {
     this.currentQuestion.correctChoice = Number(this.currentCorrectChoice);
     this.currentPage.content.assessment.items[this.currentQuestionIndex] = this.currentQuestion;
-    console.log('updateQuestion')
     this.saveTraining(false);
     this.questionEditorVisible = false;
   }
