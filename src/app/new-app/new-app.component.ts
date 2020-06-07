@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, TemplateRef } from '@angular/core';
 import { AuthService } from '../shared/services/auth.service';
 import { TrainingService } from '../shared/services/training.service';
 import { UserService } from '../shared/services/user.service';
@@ -91,7 +91,18 @@ export interface Task {
 })
 
 export class NewAppComponent extends BaseComponent implements OnInit {
+  browserInnerHeight;
+  browserInnerWidth;
+  contentHeight;
+  contentWidth;
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.browserInnerHeight = window.innerHeight;
+    this.browserInnerWidth = window.innerWidth;
+    this.contentHeight = Math.floor(window.innerHeight  * .9);
+    this.contentWidth = Math.floor(window.innerWidth * .9);
+  }
   aboutThisPageHash = {
     home: {
       title: 'Home',
@@ -328,6 +339,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
     this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       this.currentPage = event.url.substring(1);
+      console.log('Route', this.currentPage, event.url);
+      if (this.currentPage.indexOf('/') > -1) {
+
+      }
       if (this.aboutThisPageHash[this.currentPage]) {
         this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
       }

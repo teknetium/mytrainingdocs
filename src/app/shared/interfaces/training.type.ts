@@ -68,6 +68,7 @@ export interface Assessment {
   type: string,
   timeLimit: number,
   passingGrade: number,
+  completed: boolean,
   items: AssessmentItem[]
 }
 

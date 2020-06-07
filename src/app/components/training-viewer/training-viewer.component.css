@@ -1,16 +1,10 @@
 .training-viewer {
 	width: 100%;
 	height: 100%;
-	border: 1px solid #dddddd;
 }
 
 .training-viewer-fullscreen {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
 	height: 100%;
-	z-index: 10;
 }
 .selected-user-to-assign {
 	background-color: #f6f6f6;
@@ -80,8 +74,17 @@
 	margin-bottom: 5px;
 }
 
+.not-production {
+	height: 100%;
+	border:1px solid #dddddd;
+}
+
+.production {
+	height: 100%;
+	border:1px solid #dddddd;
+}
+
 .main-content-container {
-	height: 85%;
 }
 
 .assigned-user-selected {
@@ -144,7 +147,7 @@
 	min-height:100%;
 	height: fit-content;
 	text-align: left;
-	padding: 0 20px;
+	padding: 20px;
 	position: relative;
 }
 .page-title {

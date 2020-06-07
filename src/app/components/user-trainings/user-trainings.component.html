@@ -1,4 +1,4 @@
-<div style="width:100%;height:fit-content;font-size:12px;">
+<div *ngIf="!selectedTraining" style="width:100%;height:fit-content;font-size:12px;">
     <nz-table nzSize="small" nzBordered="false" nzShowPagination="false" [nzData]="userTrainings"
         style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
         <thead>
@@ -84,7 +84,7 @@
         <textarea style="display:block;width:100%;" rows="4" nz-input ngDefaultControl [(ngModel)]="comment"></textarea>
     </nz-modal>
 </div>
-<div *ngIf="trainingIsVisible">
+<div *ngIf="selectedTraining">
     <app-training-viewer style="width:100%;height:100%;" production="true"
         (assessmentResult)="processAssessmentResult($event)"></app-training-viewer>
 </div>

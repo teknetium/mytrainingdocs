@@ -429,8 +429,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         this.selectedTraining = training;
       }
 
-      this.currentPageId = 'training-introduction';
       this.currentPage = this.selectedTraining.pages[0];
+      this.currentPageId = this.currentPage._id;
       this.currentPageIndex = 0;
 
 
@@ -900,10 +900,18 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
     this.selectedTraining.pages.push(newPage);
     this.currentPage = newPage;
-    this.pageIndexHash[newPage._id] = this.selectedTraining.pages.length - 1;
-    this.mainContentPageHash[newPage._id] = newPage;
+    this.buildPageHashes();
     this.saveTraining(false);
     this.setCurrentPage(newPage._id, undefined);
+  }
+
+  buildPageHashes() {
+    this.pageIndexHash = {};
+    this.mainContentPageHash = {};
+    for (let pageIndex in this.selectedTraining.pages) {
+      this.pageIndexHash[this.selectedTraining.pages[pageIndex]._id] = pageIndex;
+      this.mainContentPageHash[this.selectedTraining.pages[pageIndex]._id] = this.selectedTraining.pages[pageIndex];
+    }
   }
 
   onPlayerReady(api: VgAPI) {

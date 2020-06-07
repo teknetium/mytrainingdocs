@@ -122,11 +122,9 @@
                 </nz-dropdown-menu>
             </li>
             <li class="navbar-rhs" nz-tooltip nzTooltipTitle="Task Tutorials" nzTooltipPlacement="bottom">
-                <!--
                 <a (click)="playTaskVideo(null)">
-                    <i nz-icon nzType="youtube" theme="outline" style="font-size:20px;margin:0 5px;"></i>
+                    <i nz-icon nzType="youtube" theme="outline" style="font-size:20px;margin:0 5px;color:black;"></i>
                 </a>
-                -->
                 <nz-drawer *ngIf="authenticatedUser$ | async as user" [nzWidth]="300" nzTitle="App Settings" [nzClosable]="false"
                     [nzVisible]="quickViewVisible" nzPlacement="right" (nzOnClose)="quickViewToggle()">
                     <app-settings></app-settings>
@@ -140,7 +138,7 @@
         </ul>
     </nz-header>
     <nz-content class="inner-content">
-        <div *ngIf="aboutThisPageHash[currentPage]" style="margin-bottom: 20px;">
+        <div *ngIf="aboutThisPageHash[currentPage]">
             <i *ngIf="!aboutThisPageHash[currentPage].visible" nz-icon nzType="info-circle" [nzTheme]="'twotone'"
                 (click)="aboutThisPageHash[currentPage].visible = true"
                 style="font-size:24px;font-weight: 500;cursor:pointer;"></i>
@@ -257,7 +255,7 @@
             <ng-template #taskVideoTemplate>
             </ng-template>
         </div>
-        <router-outlet></router-outlet>
+        <router-outlet [ngStyle]="{'height.px': browserInnerHeight - 64}"></router-outlet>
         <nz-modal [(nzVisible)]="showNewUserModal" nzCancelDisabled="true" nzClosable="false" nzTitle="New User Info"
             (nzOnOk)="saveName()">
             <div style="padding:20px;color:black;">

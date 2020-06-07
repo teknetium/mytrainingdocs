@@ -47,6 +47,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
   selectedTrainingId = null;
   currentTrainingId = '';
   tid: string = null;
+  selectedTraining = false;
   
   constructor(
     private trainingService: TrainingService,
@@ -66,6 +67,13 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
 
     this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
       this.tid = params.get('tid');
+    });
+    this.selectedTraining$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(selectedTraining => {
+      if (!selectedTraining) {
+        this.selectedTraining = false;
+      } else {
+        this.selectedTraining = true;
+      }
     });
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((user) => {
       if (!user) {

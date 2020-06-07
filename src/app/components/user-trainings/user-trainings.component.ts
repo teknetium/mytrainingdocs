@@ -58,6 +58,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   utIdHash = {};
   comment = '';
   rating = 0;
+  selectedTraining = false;
 
 
   constructor(
@@ -79,6 +80,9 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     this.selectedTraining$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(selectedTraining => {
       if (!selectedTraining) {
         this.currentUserTraining = '';
+        this.selectedTraining = false;
+      } else {
+        this.selectedTraining = true;
       }
     })
     this.trainingIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(trainingIdHash => {
