@@ -101,7 +101,6 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
                 ratingTotal = ratingTotal + comments[index].rating;
               }
               this.ratingHash[training._id] = ratingTotal / comments.length;
-              console.log('ratings', ratingTotal, comments);
             })
           }
         }

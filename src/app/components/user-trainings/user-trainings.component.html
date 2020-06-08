@@ -84,7 +84,7 @@
         <textarea style="display:block;width:100%;" rows="4" nz-input ngDefaultControl [(ngModel)]="comment"></textarea>
     </nz-modal>
 </div>
-<div *ngIf="selectedTraining">
+<div *ngIf="selectedTraining" style="position:relative;">
     <app-training-viewer style="width:100%;height:100%;" production="true"
         (assessmentResult)="processAssessmentResult($event)"></app-training-viewer>
 </div>

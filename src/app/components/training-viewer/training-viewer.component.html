@@ -35,7 +35,7 @@
 
         </div>
     </nz-modal>
-    <div style="height:100%;border:1px solid #dddddd;">
+    <div [ngClass]="{'not-production': production === 'false', 'production': production === 'true'}">
         <!--
         <div *ngIf="production === 'false'" style="background-color: white;text-align: center;padding:10px;height:5%;">
             <i class="fad fa-hat-wizard" style="color:#951eca;font-size:24px;margin-right:10px;"></i>
@@ -447,7 +447,6 @@
                                     nz-typography nzEditable [(nzContent)]="page.title"
                                     style="text-align: center;font-size:24px;color:black;"></p>
                                 <p *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
-                                    [(nzContent)]="page.title"
                                     style="color:black;text-align: center;font-size:24px;margin-bottom:5px;">
                                     {{page.title}}</p>
                                 <div *ngIf="page.type && page.type === 'training-intro'"

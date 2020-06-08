@@ -522,6 +522,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       this.currentPage.title = file.name;
       this.currentPage.type = 'file';
 
+      if (this.currentPage._id === 'training-introduction') {
+        console.log('fileUploaded - ERROR - currentPage is training-introduction');
+      }
       this.currentPage.content = newContent;
 
 
@@ -666,6 +669,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   openPicker(type: string): void {
+    console.log('openPicker', this.currentPage._id);  
     if (type === 'doc') {
       this.fileService.openDocPicker();
     } else if (type === 'video') {
@@ -867,7 +871,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
     this.safeUrlHash[this.pageUrl] = safeUrl;
     this.currentPage.type = 'url';
-    this.currentPage = this.mainContentPageHash[this.currentPageId];
+//    this.currentPage = this.mainContentPageHash[this.currentPageId];
 
     this.currentPage.content.dateUploaded = new Date().getTime();
     this.currentPage.content.webUrl = this.pageUrl;
@@ -1062,6 +1066,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.currentPageId = 'training-introduction';
     this.currentPage = this.selectedTraining.pages[0];
     this.mode = 'Edit';
+    this.trainingService.reloadAllTrainings();
   }
 
   toggleTOC() {
@@ -1077,7 +1082,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     if (this.selectedTraining.teamId === 'mytrainingdocs') {
       return;
     }
-    this.trainingService.saveTraining(this.selectedTraining, reload);
+    this.trainingService.saveTraining(this.selectedTraining, false);
     console.log('saveTraining', this.currentPageId);
     this.setCurrentPage(this.currentPageId, undefined);
   }

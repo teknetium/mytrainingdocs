@@ -178,7 +178,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.newTeamMember.teamId = this.authenticatedUser.uid;
       this.newTeamMember.supervisorId = this.authenticatedUser.uid;
       this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
-      this.newTeamMember._id = String(new Date().getTime());
     })
 
     this.jobTitles$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(jobTitles => {
@@ -198,6 +197,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   addUser() {
+    this.newTeamMember._id = String(new Date().getTime());
     this.newTeamMember.firstName = '';
     this.newTeamMember.lastName = '';
     this.newTeamMember.email = '';
