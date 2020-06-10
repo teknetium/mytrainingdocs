@@ -7,11 +7,20 @@ export interface UserTrainingModel {
   dueDate: number,
   dateCompleted: number,
   timeToDate: number,
-  score: number,
-  passedAssessment: boolean,
-  assessmentResponse: number[]
+  assessmentResponses: AssessmentResponse[]
 }
 
+export interface AssessmentResponse {
+  uid: string,
+  tid: string,
+  assessmentId: string,
+  passed: boolean,
+  completed: boolean,
+  score: number,
+  answers: number[],
+  isFinal: boolean
+}
+ 
 export interface UTSession {
   _id: string,
   utId: string,

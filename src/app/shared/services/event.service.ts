@@ -12,6 +12,7 @@ import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscr
 })
 export class EventService {
 
+  private startTourBS$ = new BehaviorSubject<string>(null);
   private events: EventModel[] = [];
   private eventsBS$ = new BehaviorSubject<EventModel[]>([]);
 
@@ -20,7 +21,13 @@ export class EventService {
 
   }
 
-  
+  getStartTourStream(): Observable<string> {
+    return this.startTourBS$.asObservable();
+  }
+
+  startTour(page: string) {
+    this.startTourBS$.next(page);
+  }
 
   getEventStream(): Observable<EventModel[]> {
     return this.eventsBS$.asObservable();

@@ -3,7 +3,8 @@ import * as cms from 'filestack-js';
 import { PickerDisplayMode, PickerOptions, PickerResponse } from 'filestack-js/build/main/lib/picker';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BehaviorSubject, Observable, throwError as ObservableThrowError, Subscription } from 'rxjs';
-import { FileModel } from '../interfaces/file.type';
+import { FileModel, FilePlusModel } from '../interfaces/file.type';
+import { Page } from '../interfaces/training.type';
 import { UserService } from './user.service';
 import { UserModel } from '../interfaces/user.type';
 import { ENV } from './env.config';
@@ -19,7 +20,7 @@ import { SafeMethodCall } from '@angular/compiler';
 export class FileService {
 
   fileUploadResult: PickerResponse;
-  private fileUploaded$ = new BehaviorSubject<FileModel>(null);
+  private fileUploaded$ = new BehaviorSubject<FilePlusModel>(null);
   private safeFileUrlBS$ = new BehaviorSubject<SafeResourceUrl>(null);
 
   processResultCnt = 0;
@@ -128,17 +129,19 @@ export class FileService {
   uploadType = 'newFile';
 //  newVersion: Version;
   actionBS$ = new BehaviorSubject<string>('');
-  uploadedFile: FileModel = null;
+  uploadedFile: FilePlusModel = null;
+  currentPage: Page;
 
 
   constructor(private http: HttpClient, private auth: AuthService, private sanitizer: DomSanitizer) {
-    this.uploadedFile = <FileModel>{
+    this.uploadedFile = <FilePlusModel>{
       _id: String(new Date().getTime()),
       dateUploaded: 0,
       fileStackId: '',
       fileStackUrl: '',
       safeFileUrl: null,
       mimeType: '',
+      page: null
     };
   }
   private get _authHeader(): string {
@@ -166,6 +169,7 @@ export class FileService {
       this.uploadedFile.fileStackUrl = file.url;
       this.uploadedFile.mimeType = file.mimetype;
       this.uploadedFile.dateUploaded = new Date().getTime();
+      this.uploadedFile.page = this.currentPage;
       /*
       if (this.uploadedFile.mimeType.includes('video')) {
         this.uploadedFile.safeFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.uploadedFile.fileStackUrl));
@@ -178,36 +182,42 @@ export class FileService {
 
       this.fileUploaded$.next(this.uploadedFile);
       this.safeFileUrlBS$.next(this.uploadedFile.safeFileUrl);
-      this.uploadedFile = <FileModel>{};
+      this.uploadedFile = <FilePlusModel>{};
     }
   }
 
-  getUploadedFileStream(): Observable<FileModel> {
+  getUploadedFileStream(): Observable<FilePlusModel> {
     return this.fileUploaded$.asObservable();
   }
 
 
-  openAllPicker() {
+  openAllPicker(page: Page) {
+    this.currentPage = page;
     this.picker = 'all';
     this.client.picker(this.allOptions).open();
   }
-  openTextPicker() {
+  openTextPicker(page: Page) {
+    this.currentPage = page;
     this.picker = 'text';
     this.client.picker(this.textOptions).open();
   }
-  openDocPicker() {
+  openDocPicker(page: Page) {
+    this.currentPage = page;
     this.picker = 'doc';
     this.client.picker(this.docOptions).open();
   }
-  openVideoPicker() {
+  openVideoPicker(page: Page) {
+    this.currentPage = page;
     this.picker = 'video';
     this.client.picker(this.videoOptions).open();
   }
-  openAudioPicker() {
+  openAudioPicker(page: Page) {
+    this.currentPage = page;
     this.picker = 'audio';
     this.client.picker(this.audioOptions).open();
   }
-  openImagePicker() {
+  openImagePicker(page: Page) {
+    this.currentPage = page;
     this.picker = 'image';
     this.client.picker(this.imageOptions).open();
   }
@@ -219,6 +229,12 @@ export class FileService {
       this.client.picker(this.videoOptions).close();
     } else if (this.picker === 'audio') {
       this.client.picker(this.audioOptions).close();
+    } else if (this.picker === 'image') {
+      this.client.picker(this.imageOptions).close();
+    } else if (this.picker === 'text') {
+      this.client.picker(this.textOptions).close();
+    } else if (this.picker === 'all') {
+      this.client.picker(this.allOptions).close();
     }
   }
 

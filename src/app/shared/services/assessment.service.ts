@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Assessment } from '../interfaces/training.type';
+import { Assessment, AssessmentItem } from '../interfaces/training.type';
 import { BehaviorSubject, Observable, throwError as ObservableThrowError, Subscription } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
@@ -10,13 +10,18 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AssessmentService {
-
-  assessmentBS$ = new BehaviorSubject<Assessment>(null);
-  assessmentHash = {};
-
+/*
+  assessmentItemsBS$ = new BehaviorSubject<AssessmentItem[]>(null);
+  assessmentItems: AssessmentItem[] = [];
+*/
   constructor(
     private http: HttpClient,
     private auth: AuthService) {
+  }
+
+/*
+  addAssessmentItem(item: AssessmentItem) {
+    if( item.quesi)
   }
 
   createAssessment(): string {
@@ -111,6 +116,6 @@ export class AssessmentService {
     }
     return ObservableThrowError(errorMsg);
   }
-
+*/
 }
 

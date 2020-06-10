@@ -48,6 +48,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     pastDue: 'red'
   }
 
+  startTour$: Observable<string>;
 
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
@@ -65,6 +66,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
+    private eventService: EventService,
     private userService: UserService,
     private trainingService: TrainingService,
     private userTrainingService: UserTrainingService,
@@ -73,12 +75,19 @@ export class HomeComponent extends BaseComponent implements OnInit {
   ) {
     super();
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
+    this.startTour$ = this.eventService.getStartTourStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
     this.teamTrainingHash$ = this.trainingService.getTeamTrainingHashStream();
   }
 
 
   ngOnInit() {
+    this.startTour$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(page => {
+      if (page == 'home') {
+        console.log('startTour', page);
+        this.startTour();
+      }
+    });
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         return;
@@ -140,7 +149,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   startTour() {
     this.joyrideService.startTour(
-      { steps: ['firstStep', 'secondStep'] } // Your steps order
+      { steps: ['step1', 'step2'] } // Your steps order
     );
   }
 

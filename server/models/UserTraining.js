@@ -7,6 +7,16 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const assessmentResponseSchema = new Schema({
+  uid: { type: String, required: true },
+  tid: { type: String, required: true },
+  passed: { type: Boolean, required: false },
+  completed: { type: Boolean, required: false },
+  assessmentId: { type: String, required: true },
+      score: { type: Number, required: false },
+  answers: { type: [Number], required: false }
+})
+
 const userTrainingSchema = new Schema({
   _id: { type: String, required: true },
   tid: { type: String, required: true },
@@ -15,10 +25,8 @@ const userTrainingSchema = new Schema({
   status: { type: String, required: true },
   dueDate: { type: Number, required: false },
   timeToDate: { type: Number, required: false },
-  score: { type: Number, required: false },
   dateCompleted: { type: Number, required: false },
-  passedAssessment: { type: Boolean, required: false },
-  assessmentResponse: { type: [Number], required: false }
+  assessmentResponses: [assessmentResponseSchema]
 })
 
 module.exports = mongoose.model("UserTraining", userTrainingSchema);

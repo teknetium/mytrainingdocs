@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, throwError as ObservableThrowError, Subscr
 import { EventService } from '../services/event.service';
 import { EventModel } from '../interfaces/event.type';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { UserTrainingModel, UserTrainingHash, UTSession, UTSessionHash } from '../interfaces/userTraining.type';
+import { UserTrainingModel, AssessmentResponse, UserTrainingHash, UTSession, UTSessionHash } from '../interfaces/userTraining.type';
 import { AuthService } from './auth.service';
 import { ENV } from './env.config';
 import { catchError } from 'rxjs/operators';
@@ -141,9 +141,7 @@ export class UserTrainingService {
       dueDate: new Date().getTime() + 1209600000,
       dateCompleted: 0,
       timeToDate: 0,
-      score: 0,
-      passedAssessment: false,
-      assessmentResponse: []
+      assessmentResponses: []
     };
     this.postUserTraining$(userTraining).subscribe(userTraining => {
       this.getUTForUser$(uid).subscribe(userTrainings => {
@@ -161,10 +159,9 @@ export class UserTrainingService {
     })
   }
 
-  setAssessmentResult(uid: string, tid: string, score: number, pass: boolean) {
+  setAssessmentResult(result: AssessmentResponse) {
     let userTraining = this.allUserTrainingHash[this.currentUT];
-    userTraining.score = score;
-    userTraining.passedAssessment = pass;
+    userTraining.assessmentResponses.push(result);
     userTraining.dateCompleted = new Date().getTime();
     userTraining.status = 'completed';
     console.log('setAssessmentResult', userTraining);

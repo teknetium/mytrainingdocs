@@ -22,7 +22,8 @@ export interface TrainingModel {
   pages: Page[],
   interestList: string[],
   shared: boolean,
-  isDirty: boolean
+  isDirty: boolean,
+  useFinalAssessment: boolean
 }
 export interface TrainingIdHash {
   [indexer: string]: TrainingModel;
@@ -60,6 +61,7 @@ export interface Content {
 export interface AssessmentItem {
   question: string,
   choices: string[],
+  extraInfo: string[],
   correctChoice: number
 }
 
@@ -68,7 +70,7 @@ export interface Assessment {
   type: string,
   timeLimit: number,
   passingGrade: number,
-  completed: boolean,
+  isFinal: boolean,
   items: AssessmentItem[]
 }
 

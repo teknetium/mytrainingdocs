@@ -7,12 +7,11 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Page, Content, TrainingIdHash, TrainingVersion } from '../interfaces/training.type';
+import { TrainingModel, Page, Content, TrainingIdHash, TrainingVersion, AssessmentItem } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.type';
 import { TrainingsModule } from 'src/app/components/trainings/trainings.module';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as cloneDeep from 'lodash/cloneDeep';
-import { AssessmentComponent } from 'src/app/components/assessment/assessment.component';
 
 
 @Injectable({
@@ -60,6 +59,8 @@ export class TrainingService {
   subcategoriesBS$ = new BehaviorSubject<string[]>([]);
   subcategories: string[] = [];
   previousVersionBS$ = new BehaviorSubject<TrainingModel>(null);
+  assessmentItemsBS$ = new BehaviorSubject<AssessmentItem[]>(null);
+  assessmentItems: AssessmentItem[] = [];
 
   // Using Angular DI we use the HTTP service
   constructor(
@@ -95,6 +96,12 @@ export class TrainingService {
             }
             if (training.subcategory) {
               this.addSubcategory(training.subcategory);
+            }
+
+            for (let page of training.pages) {
+              if (page.type === 'assessment') {
+                this.addAssessmentItems(page.content.assessment.items);
+              }
             }
 
           }
@@ -149,7 +156,30 @@ export class TrainingService {
 
     });
   }
+  getAssessmentItemStream(): Observable<AssessmentItem[]> {
+    return this.assessmentItemsBS$.asObservable();
+  }
 
+  addAssessmentItems(items: AssessmentItem[]): void {
+    let newItems = false;
+    for (let newItem of items) {
+      let itemFound = false;
+      for (let existingItem of this.assessmentItems) {
+        if (newItem.question === existingItem.question) {
+          itemFound = true;
+          break;
+        }
+      }
+      if (!itemFound) {
+        newItems = true;
+        this.assessmentItems.push(newItem);
+      }
+    }
+    if (newItems) {
+      this.assessmentItemsBS$.next(this.assessmentItems);
+    }
+  }
+    
   getCategoryStream(): Observable<string[]> {
     return this.categoriesBS$.asObservable();
   }
@@ -298,7 +328,7 @@ export class TrainingService {
       teamId: this.teamId,
       owner: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),
-      estimatedTimeToComplete: 0,
+      estimatedTimeToComplete: 30,
       jobTitle: '',
       description: 'This is a useless description',
       image: 'assets/images/others/bb.jpg',
@@ -308,7 +338,8 @@ export class TrainingService {
       pages: [page],
       interestList: [],
       shared: false,
-      isDirty: false
+      isDirty: false,
+      useFinalAssessment: false
     };
 
     let newTrainingVersionObj: TrainingVersion = {
@@ -502,7 +533,6 @@ export class TrainingService {
       );
   }
 
-  // DELETE existing training and all associated Users (admin only)
   deleteTraining$(id: string): Observable<TrainingModel> {
     return this.http
       .delete(`${ENV.BASE_API}trainings/${id}`, {

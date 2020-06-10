@@ -20,7 +20,6 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
 import { VgOverlayPlayModule } from 'videogular2/compiled/overlay-play';
 import { SettingsModule } from './components/settings/settings.module';
 import { JoyrideModule } from 'ngx-joyride';
-import { AssessmentModule } from './components/assessment/assessment.module';
 import { LandingpageModule } from './components/landingpage/landingpage.module';
 
 const ngZorroConfig: NzConfig = {
@@ -49,7 +48,6 @@ registerLocaleData(en);
         NzBadgeModule,
         VgOverlayPlayModule,
         SettingsModule,
-        AssessmentModule,
         LandingpageModule
     ],
     providers: [

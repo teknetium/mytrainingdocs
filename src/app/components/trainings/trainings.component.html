@@ -4,7 +4,7 @@
       Create a New Training
     </button>
   </div>
-  <div style="display:block;">
+  <div *ngIf="trainings && trainings.length > 0" style="display:block;">
     <nz-table #nestedTable [nzData]="trainings" nzSize="small" [nzShowPagination]="false"
       style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
       <thead nzSingleSort>

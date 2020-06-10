@@ -73,9 +73,9 @@ module.exports = function(app, config) {
   }
 
 
-  const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty";
-  const trainingListProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty";
-  const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponse passedAssessment score trainingVersion";
+  const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment";
+  const trainingListProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment";
+  const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponses trainingVersion";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email teamAdmin orgAdmin appAdmin teamId org supervisorId profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
@@ -252,6 +252,7 @@ module.exports = function(app, config) {
       shared: req.body.shared,
       isValid: req.body.isValid,
       isDirty: req.body.isDirty,
+      useFinalAssessment: req.body.useFinalAssessment
     });
     Training.create(training, function (err, trainingObj) {
       if (err) {
@@ -291,6 +292,7 @@ module.exports = function(app, config) {
       training.shared = req.body.shared;
       training.isValid = req.body.isValid;
       training.isDirty = req.body.isDirty;
+      training.useFinalAssessment = req.body.useFinalAssessment;
 
       training.save(err2 => {
         if (err2) {
@@ -301,14 +303,18 @@ module.exports = function(app, config) {
     });
   });
   app.delete("/api/trainings/:id", jwtCheck, (req, res) => {
-    Training.findById(req.params.id, (err, foo) => {
+    let tid = req.params.id;
+    Training.findById(req.params.id, (err, training) => {
       if (err) {
         return res.status(500).send({ message: err.message });
       }
-      if (!foo) {
+      if (!training) {
         return res.status(400).send({ message: "Training not found." });
       }
-      foo.remove(err2 => {
+      for (let version of training.versions) {
+        TrainingArchive.findByIdAndDelete(tid + '-' + version.version);
+      }
+      training.remove(err2 => {
         if (err2) {
           return res.status(500).send({ message: err2.message });
         }
@@ -355,6 +361,7 @@ module.exports = function(app, config) {
         shared: req.body.shared,
         isValid: req.body.isValid,
         isDirty: req.body.isDirty,
+        useFinalAssessment: req.body.useFinalAssessment
       });
       TrainingArchive.create(training, function (err, trainingArchiveObj) {
         if (err) {
@@ -444,9 +451,7 @@ module.exports = function(app, config) {
       dueDate: req.body.dueDate,
       dateCompleted: req.body.dateCompleted,
       timeToDate: req.body.timeToDate,
-      passedAssessment: req.body.passedAssessment,
-      score: req.body.score,
-      assessmentResponse: req.body.assessmentResponse,
+      assessmentResponses: req.body.assessmentResponses,
       trainingVersion: req.body.trainingVersion
     });
     UserTraining.create(userTraining, function (err, userTrainingObj) {
@@ -470,9 +475,7 @@ module.exports = function(app, config) {
       userTraining.status = req.body.status;
       userTraining.dueDate = req.body.dueDate;
       userTraining.dateCompleted = req.body.dateCompleted;
-      userTraining.assessmentResponse = req.body.assessmentResponse;
-      userTraining.score = req.body.score;
-      userTraining.passedAssessment = req.body.passedAssessment;
+      userTraining.assessmentResponses = req.body.assessmentResponses;
       userTraining.trainingVersion = req.body.trainingVersion;
       userTraining.timeToDate = req.body.timeToDate;
 

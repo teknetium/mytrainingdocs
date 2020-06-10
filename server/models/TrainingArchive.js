@@ -10,11 +10,14 @@ const Schema = mongoose.Schema;
 const assessmentItemSchema = new Schema({
   question: { type: String, required: true },
   choices: [String],
+  extraInfo: [String],
   correctChoice: { type: Number, required: true },
 })
 const assessmentSchema = new Schema({
   _id: { type: String, required: true },
   type: { type: String, required: false },
+  completed: { type: Boolean, required: false },
+  isFinal: { type: Boolean, required: false },
   timeLimit: { type: Number, required: false },
   passingGrade: { type: Number, required: true },
   items: [assessmentItemSchema],
@@ -28,7 +31,7 @@ const contentSchema = new Schema({
     mimeType: { type: String },
     fileStackId: { type: String },
     fileStackUrl: { type: String },
-    dateUploaded: { type: Number }
+    dateUploaded: { type: Number },
   },
   webUrl: { type: String },
   safeWebUrl: { type: String },
@@ -77,6 +80,7 @@ const trainingArchiveSchema = new Schema({
   shared: { type: Boolean },
   isValid: { type: Object },
   isDirty: { type: Boolean },
+  useFinalAssessment: { type: Boolean },
 });
 
 module.exports = mongoose.model("TrainingArchive", trainingArchiveSchema);

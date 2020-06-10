@@ -9,7 +9,7 @@ import { TrainingModel, TrainingIdHash } from '../shared/interfaces/training.typ
 import { UserTrainingModel } from '../shared/interfaces/userTraining.type';
 import { Router, NavigationEnd } from '@angular/router';
 import { FileModel } from '../shared/interfaces/file.type';
-import { FileService } from '../shared/services/file.service';
+import { EventService } from '../shared/services/event.service';
 import { NotificationService } from '../shared/services/notification.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -279,7 +279,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
   fileIdToDelete: string;
 
-  //  uidUserTrainingHash$: Observable<UidUserTrainingHash>;
   userTrainings$: Observable<UserTrainingModel[]>;
   myTrainingIdHash$: Observable<TrainingIdHash>;
   teamTrainingCnt$: Observable<number>;
@@ -318,6 +317,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     private userTrainingService: UserTrainingService,
     private router: Router,
     private joyrideService: JoyrideService,
+    private eventService: EventService,
     private notificationService: NotificationService,
     private zorroNotificationService: NzNotificationService,
     private sanitizer: DomSanitizer
@@ -341,7 +341,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       this.currentPage = event.url.substring(1);
       console.log('Route', this.currentPage, event.url);
       if (this.currentPage.indexOf('/') > -1) {
-
       }
       if (this.aboutThisPageHash[this.currentPage]) {
         this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
@@ -463,8 +462,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   }
 
   startTour() {
-    let toursteps = this.aboutThisPageHash[this.currentPage].tourSteps;
-    this.joyrideService.startTour(toursteps);
+    console.log('new-app:startTour', this.currentPage);
+    this.eventService.startTour(this.currentPage);
+//    let toursteps = this.aboutThisPageHash[this.currentPage].tourSteps;
+//    this.joyrideService.startTour(toursteps);
   }
 
   playTaskVideo(taskName) {

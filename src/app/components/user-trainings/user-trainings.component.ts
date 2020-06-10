@@ -6,7 +6,7 @@ import { TrainingService } from '../../shared/services/training.service';
 import { CommentService } from '../../shared/services/comment.service';
 import { UserService } from '../../shared/services/user.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
-import { UserTrainingModel, UserTrainingHash, UidUserTrainingHash } from 'src/app/shared/interfaces/userTraining.type';
+import { UserTrainingModel, UserTrainingHash, UidUserTrainingHash, AssessmentResponse } from 'src/app/shared/interfaces/userTraining.type';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
 
@@ -189,10 +189,9 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     this.rating = event;
   }
 
-  processAssessmentResult(event: { tid: string, score: number, pass: boolean }) {
-    if (event.pass) {
-      this.utIdHash[this.currentUserTraining].passedAssessment = true;
-      this.utIdHash[this.currentUserTraining].score = event.score;
+  processAssessmentResult(event: AssessmentResponse) {
+    if (event.passed) {
+      this.utIdHash[this.currentUserTraining].assessmentResponses.push(event);
 //      this.utIdHash[this.currentUserTraining].dateCompleted = new Date().getTime();
 //      this.utIdHash[this.currentUserTraining].status = 'completed';
       this.userTrainingService.saveUserTraining(this.utIdHash[this.currentUserTraining]);
@@ -200,6 +199,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       this.markAsComplete(this.currentUserTraining);
       this.trainingIsVisible = false;
     }
-    this.userTrainingService.setAssessmentResult(this.selectedUser._id, event.tid, event.score, event.pass);
+    event.uid = this.selectedUser._id;
+    this.userTrainingService.setAssessmentResult(event);
   }
 }

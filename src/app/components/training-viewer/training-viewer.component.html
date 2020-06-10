@@ -1,7 +1,28 @@
-<ng-template #messageTemplate let-message>
-    <div style="background-color: black;">
+<nz-modal [(nzVisible)]="tourModalIsVisible" nzTitle="Training Wizard Tour" nzWidth="60%" nzOkDisabled="true"
+    nzCancelDisabled="false" (nzOnCancel)="cancelTour()">
+    <div>
+        <span style="font-size:18px;font-weight: 300;">Welcome to the Training Wizard feature tour!</span>
+
+        The features of the Training Wizard have been broken down into the following 4 mini-tours. It is recommended
+        that they be taken in order.
+
+        <ol>
+            <li>
+                <span (click)="startTour('overview')">Training Wizard Overview</span>
+            </li>
+            <li>
+                <span (click)="startTour('header')">Training Wizard Header</span>
+            </li>
+            <li>
+                <span (click)="startTour('pages')">Training Wizard Pages</span>
+            </li>
+            <li>
+                <span (click)="startTour('pageContent')">Training Wizard Page Content</span>
+            </li>
+        </ol>
+
     </div>
-</ng-template>
+</nz-modal>
 <div *ngIf="selectedTraining$ | async as selectedTraining" class="training-viewer">
     <nz-modal [(nzVisible)]="lockTrainingModalIsVisible" [nzTitle]="selectedTraining.title" nzWidth="60%"
         nzOkDisabled="false" nzCancelDisabled="false" (nzOnCancel)="cancelLockTraining()"
@@ -35,7 +56,10 @@
 
         </div>
     </nz-modal>
+    <!--
     <div [ngClass]="{'not-production': production === 'false', 'production': production === 'true'}">
+        -->
+    <div class="production">
         <!--
         <div *ngIf="production === 'false'" style="background-color: white;text-align: center;padding:10px;height:5%;">
             <i class="fad fa-hat-wizard" style="color:#951eca;font-size:24px;margin-right:10px;"></i>
@@ -78,7 +102,11 @@
                         <span style="font-size:22px;vertical-align: middle;">&nbsp;{{selectedTraining.title}}</span>
                     </div>
                 </div>
-
+                <button *ngIf="authenticatedUser && authenticatedUser.appAdmin" nz-button nzType="default"
+                    nzShape="circle" nz-tooltip nzTooltipTitle="Show Debug Info" class="header-icon"
+                    (click)="debug = !debug">
+                    <i nz-icon nzType="bug" [nzTheme]="'twotone'" style="vertical-align: top;"></i>
+                </button>
                 <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Close Training"
                     (click)="closeViewer()" style="position:absolute;right:7px;top:7px;">
                     <i nz-icon nzType="close" theme="outline" style="vertical-align: top;color:red;">
@@ -147,7 +175,7 @@
                                 </li>
                             </ul>
                         </nz-dropdown-menu>
-                        <span class="separator">|</span>
+                        <span *ngIf="!viewingArchiveVersion" class="separator">|</span>
                     </div>
                     <div *ngIf="selectedTraining.status === 'unlocked'" style="width:fit-content;display:inline-block;">
                         <span
@@ -167,7 +195,7 @@
                         </nz-dropdown-menu>
                         <span *ngIf="mode === 'Edit'" class="separator">|</span>
                     </div>
-                    <div style="display:inline-block;">
+                    <div *ngIf="!viewingArchiveVersion" style="display:inline-block;">
                         <button *ngIf="selectedTraining.status === 'locked' && currentVersionIndex === 0"
                             (click)="unlockTraining()" class="header-icon" nz-button nzType="default" nzShape="circle"
                             nz-tooltip nzTooltipTitle="Edit Training">
@@ -194,10 +222,9 @@
                             <i nz-icon nzType="rollback" theme="outline" style="vertical-align: top;">
                             </i>
                         </button>
-                        <button
-                            *ngIf="selectedTraining.status === 'unlocked' && mode === 'Edit' && authenticatedUser && authenticatedUser.appAdmin"
-                            nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Show Debug Info"
-                            class="header-icon" (click)="debug = !debug">
+                        <button *ngIf="authenticatedUser && authenticatedUser.appAdmin" nz-button nzType="default"
+                            nzShape="circle" nz-tooltip nzTooltipTitle="Show Debug Info" class="header-icon"
+                            (click)="debug = !debug">
                             <i nz-icon nzType="bug" [nzTheme]="'twotone'" style="vertical-align: top;"></i>
                         </button>
                         <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Close Training"
@@ -274,18 +301,18 @@
             </div>
             <div style="width:33%;display: inline-block;">
                 <div style="display: block;">
-                    Selected Training Versions
+                    Assessment Response
                 </div>
                 <div style="height:400px;overflow: scroll;display: block;">
-                    <prettyjson style="font-size:8px;" [obj]="selectedTrainingVersions"></prettyjson>
+                    <prettyjson style="font-size:8px;" [obj]="assessmentResponse"></prettyjson>
                 </div>
             </div>
             <div style="width:33%;display: inline-block;">
                 <div style="display: block;">
-                    Previous Version
+                    Current Page Content Assessment
                 </div>
-                <div style="height:400px;overflow: scroll;display: block;">
-                    <prettyjson style="font-size:8px;" [obj]="previousVersion"></prettyjson>
+                <div *ngIf="currentPage.content" style="height:400px;overflow: scroll;display: block;">
+                    <prettyjson style="font-size:8px;" [obj]="currentPage.content.assessment"></prettyjson>
                 </div>
             </div>
         </div>
@@ -405,6 +432,16 @@
                 <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
                     <label style="margin-bottom: 0;font-size:12px;color:black;">Share With Other
                         Teams</label>
+                </div>
+                <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
+
+                    <label nz-checkbox [(ngModel)]="selectedTraining.useFinalAssessment" ngDefaultControl
+                        (click)="addFinalAssessmentPage()"></label>
+                </div>
+            </div>
+            <div class="config-page-row">
+                <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
+                    <label style="margin-bottom: 0;font-size:12px;color:black;">Use Training Ending Assessment</label>
                 </div>
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
 
@@ -549,15 +586,16 @@
                                                     File</span><i nz-icon nzType="down"></i></button>
                                             <nz-dropdown-menu #menu="nzDropdownMenu">
                                                 <ul nz-menu nzSelectable>
-                                                    <li nz-menu-item (click)="openPicker('text')">Text File</li>
-                                                    <li nz-menu-item (click)="openPicker('doc')">Document File (.doc,
+                                                    <li nz-menu-item (click)="openPicker('text', page)">Text File</li>
+                                                    <li nz-menu-item (click)="openPicker('doc', page)">Document File
+                                                        (.doc,
                                                         .docx,
                                                         .ppt, .pptx,
                                                         .xls, .xlsx,
                                                         .ai, .pdf, .ps)</li>
-                                                    <li nz-menu-item (click)="openPicker('video')">Video File</li>
-                                                    <li nz-menu-item (click)="openPicker('audio')">Audio File</li>
-                                                    <li nz-menu-item (click)="openPicker('image')">Image File</li>
+                                                    <li nz-menu-item (click)="openPicker('video', page)">Video File</li>
+                                                    <li nz-menu-item (click)="openPicker('audio', page)">Audio File</li>
+                                                    <li nz-menu-item (click)="openPicker('image', page)">Image File</li>
                                                 </ul>
                                             </nz-dropdown-menu>
                                             <button nz-button [nzSize]="'small'" nzType="primary" nzShape="round"
@@ -784,14 +822,14 @@
                                                                         </div>
                                                                     </div>
                                                                     <div style="display:block;margin:20px ;">
-                                                                        <div *ngIf="assessmentComplete && passedAssessment"
+                                                                        <div *ngIf="assessmentComplete && assessmentResponse.passed"
                                                                             style="margin:20px 0;">
                                                                             <nz-alert nzType="success"
                                                                                 nzMessage="Congratulations, you passed!"
                                                                                 nzShowIcon>
                                                                             </nz-alert>
                                                                         </div>
-                                                                        <div *ngIf="assessmentComplete && !passedAssessment"
+                                                                        <div *ngIf="assessmentComplete && !assessmentResponse.passed"
                                                                             style="margin:20px 0;">
                                                                             <nz-alert nzType="error"
                                                                                 nzMessage="Sorry, you did not pass!"
@@ -805,7 +843,7 @@
                                                                             style="display:inline-block;">
                                                                             <button nz-button nzType="primary"
                                                                                 nzSize="small"
-                                                                                (click)="beginAssessment()">Begin
+                                                                                (click)="beginAssessment(page.content.assessment._id)">Begin
                                                                                 Assessment</button>
                                                                         </div>
                                                                         <div *ngIf="assessmentComplete && selectedTraining.status === 'unlocked' && production === 'false'"
@@ -983,8 +1021,10 @@
     <div *ngIf="currentQuestion" style="background-color: white;">
         <div style="display:block;">
             <label style="display:inline-block;margin-right: 10px;font-size:18px;">Question</label>
-            <input nz-input type="text" placeholder="Question Text" ngDefaultControl
+        <input nz-input type="text" placeholder="Question Text" ngDefaultControl [nzAutocomplete]="autoQuestion"
+                (ngModelChange)="onQuestionChange($event)"
                 [(ngModel)]="currentQuestion.question" style="display:inline-block;margin-bottom:10px;width:500px;">
+                <nz-autocomplete [nzDataSource]="matchingQuestions" #autoQuestion></nz-autocomplete>
         </div>
         <div style="display:block;">
             <label style="display:inline-block;margin-right: 10px;font-size:18px;">Choices</label>
