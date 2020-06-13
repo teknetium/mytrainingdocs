@@ -7,7 +7,8 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { TrainingModel, Page, Content, TrainingIdHash, TrainingVersion, AssessmentItem } from '../interfaces/training.type';
+import { AssessmentItem } from "../interfaces/assessment.type";
+import { TrainingModel, Page, Content, TrainingIdHash, TrainingVersion } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.type';
 import { TrainingsModule } from 'src/app/components/trainings/trainings.module';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -146,6 +147,13 @@ export class TrainingService {
                 if (training.subcategory) {
                   this.addSubcategory(training.subcategory);
                 }
+
+                for (let page of training.pages) {
+                  if (page.type === 'assessment') {
+                    this.addAssessmentItems(page.content.assessment.items);
+                  }
+                }
+
               }
               this.allTrainingIds = Object.keys(this.allTrainingHash);
               this.allTrainingHashBS$.next(this.allTrainingHash);

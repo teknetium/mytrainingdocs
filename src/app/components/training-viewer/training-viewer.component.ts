@@ -6,7 +6,8 @@ import { JobTitleService } from '../../shared/services/jobtitle.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { AuthService } from '../../shared/services/auth.service';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { TrainingModel, Page, Content, TrainingVersion, Assessment, AssessmentItem } from 'src/app/shared/interfaces/training.type';
+import { TrainingModel, Page, Content, TrainingVersion } from 'src/app/shared/interfaces/training.type';
+import { Assessment, AssessmentItem } from 'src/app/shared/interfaces/assessment.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FileModel, FilePlusModel } from 'src/app/shared/interfaces/file.type';
@@ -560,7 +561,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     })
 
     this.assessmentItems$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(items => {
-      if (items.length === 0) {
+      if (items && items.length === 0) {
         return;
       }
       this.assessmentItems = items;
@@ -627,6 +628,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     if (this.matchingQuestions.length === 1) {
       this.currentQuestion = this.assessmentHash[this.matchingQuestions[0]];
       this.currentCorrectChoice = String(this.currentQuestion.correctChoice);
+    } else if (this.matchingQuestions.length === 0) {
+      this.currentQuestion.choices = [];
+      this.currentQuestion.correctChoice = -1;
+      this.currentQuestion.extraInfo = undefined;
     }
   }
 
@@ -899,7 +904,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       _id: String(new Date().getTime()),
       type: 'none',
       title: 'New Page',
-      text: '<p class=\"ql-align-center\"><span class=\"ql-size-large\" style=\"color: rgb(0, 0, 0);\">Sample Page Introduction<\/span><\/p><p><span style=\"color: rgb(0, 0, 0);\">This is a sample page introduction.<\/span><\/p>',
+      text: '<p class=\"ql-align-center\"><span class=\"ql-size-large\" style=\"color: rgb(0, 0, 0);\">Page Introduction<\/span><\/p><p><span style=\"color: rgb(0, 0, 0);\">Enter your page introduction here.<\/span><\/p>',
       content: content
     }
 
@@ -987,6 +992,14 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.setCurrentPage(this.selectedTraining.pages[this.currentPageIndex]._id, undefined);
   }
 
+  setCurrentPageFromIcon(pageId) {
+    if (this.production === 'true' || this.mode === 'Preview') {
+      console.log('production or preview', this.production, this.mode);
+      return;
+    }
+    this.setCurrentPage(pageId, -1);
+  }
+  
   setCurrentPage(pageId: string, pageIndex: number) {
     this.currentPageId = pageId;
 
@@ -1182,14 +1195,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     //    this.resetAssessment();
   }
 
-  confirmDeleteQuestion(questionIndex) {
-    /*
-    this.selectedTraining.assessment.items.splice(questionIndex, 1);
-    if (this.selectedTraining.assessment.items.length === 0) {
-      this.setValidation('assessment', false);
-    }
+  confirmDeleteQuestion(page, questionIndex) {
+    page.content.assessment.items.splice(questionIndex, 1);
     this.saveTraining(false);
-    */
   }
 
   confirmDeletePage() {
@@ -1345,7 +1353,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       correctChoice: -1
     };
 
-    this.currentPage.content.assessment.items.push(newItem);
+    this.currentPage.content.assessment.items.push(cloneDeep(newItem));
     this.editQuestion(newQuestionIndex);
   }
 
@@ -1466,6 +1474,22 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.currentCorrectChoice = this.currentPage.content.assessment.items[itemIndex].correctChoice.toString();
     this.currentQuestionIndex = itemIndex;
     this.questionEditorVisible = true;
+  }
+
+  resetPageContent(page: Page) {
+    if (page.type === 'file') {
+      page.content.file = null;
+    } else if (page.type === 'url') {
+      page.content.webUrl = undefined;
+    } else if (page.type === 'text') {
+      page.content.text = undefined;
+    } else if (page.type === 'assessment') {
+      page.content.assessment = null;
+    }
+    page.type = 'none';
+    page.content.type = 'none';
+    page.title = 'Reset Content';
+    this.saveTraining(false);
   }
 
   addFinalAssessmentPage() {

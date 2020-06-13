@@ -80,7 +80,7 @@ module.exports = function(app, config) {
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const commentListProjection = "_id tid version author text rating date";
-  const assessmentListProjection = "_id type timeLimit passingGrade items";
+  const assessmentListProjection = "_id type title owner description timeLimit isFinal passingGrade items";
   const utSessionProjection = "_id utId uid tid startTime stopTime";
 
   // GET API root
@@ -733,6 +733,10 @@ module.exports = function(app, config) {
   app.post("/api/assessment/new", jwtCheck, (req, res) => {
     const assessment = new Assessment({
       type: req.body.type,
+      title: req.body.title,
+      owner: req.body.owner,
+      isFinal: req.body.isFinal,
+      description: req.body.description,
       timeLimit: req.body.timeLimit,
       passingGrade: req.body.passingGrade,
       items: req.body.items,
@@ -755,6 +759,10 @@ module.exports = function(app, config) {
       }
       assessment._id = req.body._id;
       assessment.type = req.body.type;
+      assessment.owner = req.body.owner;
+      assessment.title = req.body.title;
+      assessment.isFinal = req.body.isFinal;
+      assessment.description = req.body.description;
       assessment.timeLimit = req.body.timeLimit;
       assessment.passingGrade = req.body.passingGrade;
       assessment.items = req.body.items;

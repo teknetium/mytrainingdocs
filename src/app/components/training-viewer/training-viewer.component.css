@@ -117,9 +117,18 @@
 .training-header {
 	width: 100%;
 	display: block;
-	background-color: #f1f1f1;
-	border-bottom: 1px solid #dddddd;
-	position: relative;
+	background-color: #dddddd;
+	padding-top:5px;
+	border-bottom: 1px solid #bbbbbb;
+	height: 120px;
+}
+.production-training-header {
+	width: 100%;
+	display: block;
+	background-color: #dddddd;
+	padding-top:5px;
+	border-bottom: 1px solid #bbbbbb;
+	height: 64px;
 }
 .separator {
 	margin: 0 10px;

@@ -50,16 +50,20 @@
             <td>{{ versionFormatter(data.versions[0].version) }}</td>
             <td>{{ data.dateCreated | date:'mediumDate' }}</td>
             <td>
-              <i nz-icon nzType="edit" [nzTheme]="'twotone'"
-                style="cursor:pointer;font-size:14px;vertical-align: middle;margin-right:5px;"
+              <i nz-icon nzType="edit" [nzTheme]="'twotone'" class="action"
+                
                 (click)="selectTraining(data._id)" nz-tooltip nzTooltipTitle="Edit Training">
               </i>
               <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
-                style="cursor:pointer;font-size:14px;vertical-align: middle;margin-right:5px;"
+                 class="action"
                 (click)="showComments(data._id)" nz-tooltip nzTooltipTitle="View Comments">
               </i>
+              <i nz-icon nzType="file-done" [nzTheme]="'outline'"
+                 class="action" style="color:green;" (click)="showAssessmentStats(data._id)"
+                nz-tooltip nzTooltipTitle="View Assessment Stats">
+              </i>
               <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
-                style="cursor:pointer;font-size:14px;vertical-align: middle;" nz-popconfirm
+                class="action" nz-popconfirm
                 nzPopconfirmTitle="Delete this Training?" [nzPopconfirmTrigger]="'click'"
                 [nzPopconfirmPlacement]="'top'" (nzOnConfirm)="deleteTraining(data._id)" nz-tooltip
                 nzTooltipTitle="Delete Training">
@@ -137,6 +141,29 @@
         style="font-size:28px;vertical-align: baseline;margin-right:15px;">
       </i>
       No Comments Yet
+    </div>
+  </nz-drawer>
+  <nz-drawer [nzWidth]="600" nzTitle="Assessment Stats" [nzClosable]="true" [nzVisible]="showAssessmentPanel"
+    nzPlacement="right" (nzOnClose)="showAssessmentPanel = false">
+    <div *ngIf="currentTrainingId" style="display: block;padding:10px;text-align: center;">
+      <i [ngClass]="trainingIdHash[currentTrainingId].iconClass"
+        style="font-size:24px;vertical-align:baseline;margin-right:10px;"
+        [ngStyle]="{'color': trainingIdHash[currentTrainingId].iconColor}">
+      </i>
+      <span style="font-size:24px;">{{ trainingIdHash[currentTrainingId].title }}</span>
+    </div>
+    <div *ngFor="let ut of userTrainings; index as utIndex" style="padding: 0 20px;">
+      <div *ngFor="let assessmentResponse of ut.assessmentResponses; index as assessmentResponseIndex" style="display: block;">
+        <div style="display: inline-block;font-size:10px;">
+        </div>
+      </div>
+      <div style="display: block;font-size:16px;">
+      </div>
+    </div>
+    <div style="padding:20px;">
+      <i nz-icon nzType="frown" [nzTheme]="'twotone'" style="font-size:28px;vertical-align: baseline;margin-right:15px;">
+      </i>
+      No Assessment Data
     </div>
   </nz-drawer>
   <div *ngIf="trainings && trainings.length === 0" style="text-align: center;margin-top:40px;">

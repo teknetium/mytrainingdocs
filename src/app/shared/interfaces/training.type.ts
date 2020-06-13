@@ -1,4 +1,5 @@
 import { FileModel } from "src/app/shared/interfaces/file.type";
+import { Assessment } from "src/app/shared/interfaces/assessment.type";
 import { SafeResourceUrl } from '@angular/platform-browser';
 
 export interface TrainingModel {
@@ -58,19 +59,4 @@ export interface Content {
   assessment: Assessment
 }
 
-export interface AssessmentItem {
-  question: string,
-  choices: string[],
-  extraInfo: string[],
-  correctChoice: number
-}
-
-export interface Assessment {
-  _id: string,
-  type: string,
-  timeLimit: number,
-  passingGrade: number,
-  isFinal: boolean,
-  items: AssessmentItem[]
-}
 

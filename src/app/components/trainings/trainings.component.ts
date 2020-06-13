@@ -9,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { take, takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
 import { CommentService } from 'src/app/shared/services/comment.service';
+import { UserTrainingModel } from 'src/app/shared/interfaces/userTraining.type';
 
 
 @Component({
@@ -30,12 +31,14 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
   ratingHash = {};
   showCommentsPanel = false;
 
+  userTrainings: UserTrainingModel[];
   iconColor = 'red';
   iconClass = 'far fa-fw fa-file';
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
   selectedTraining$: Observable<TrainingModel>;
   isOpen = false;
+  userTrainingForTid$: Observable<UserTrainingModel[]>;
   trainingIdHash$: Observable<TrainingIdHash>;
   teamTrainingHash$: Observable<TrainingIdHash>;
   teamTrainingHash = {};
@@ -48,6 +51,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
   currentTrainingId = '';
   tid: string = null;
   selectedTraining = false;
+  showAssessmentPanel = false;
   
   constructor(
     private trainingService: TrainingService,
@@ -56,6 +60,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
     private userTrainingService: UserTrainingService,
     private userService: UserService) {
     super();
+    this.userTrainingForTid$ = this.userTrainingService.getUserTrainingForTidStream();
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.teamTrainingHash$ = this.trainingService.getTeamTrainingHashStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
@@ -112,6 +117,9 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
       this.teamTrainingHash = teamTrainingHash;
       this.trainings = Object.values(this.teamTrainingHash);
     })
+    this.userTrainingForTid$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uts => {
+      this.userTrainings = uts;
+    })
   }
 
   ngAfterViewInit() {
@@ -164,6 +172,12 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
 
   editTraining(training) {
 
+  }
+
+  showAssessmentStats(tid) {
+    this.userTrainingService.getUTForTraining(tid);
+    this.currentTrainingId = tid;
+    this.showAssessmentPanel = true;
   }
 
   showComments(tid) {

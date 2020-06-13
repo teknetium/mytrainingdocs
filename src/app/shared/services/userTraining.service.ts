@@ -14,6 +14,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class UserTrainingService {
 
+  private userTrainingForTidBS$ = new BehaviorSubject<UserTrainingModel[]>([]);
   private userTrainings$BS = new BehaviorSubject<UserTrainingModel[]>(null);
   private allUserTrainingHash: UserTrainingHash = {};
   //  private userTrainingHashBS$ = new BehaviorSubject<UserTrainingHash>({});
@@ -44,6 +45,10 @@ export class UserTrainingService {
         this.allUserTrainingHash[userTraining._id] = userTraining;
       }
     });
+  }
+
+  getUserTrainingForTidStream(): Observable<UserTrainingModel[]> {
+    return this.userTrainingForTidBS$.asObservable();
   }
 
   getUserTrainingStream() {
@@ -115,6 +120,12 @@ export class UserTrainingService {
     })
   }
 
+/*
+  getAllUserTrainings() {
+    this.allUserTrainingHash
+  }
+*/
+  
   getUTForTraining(tid: string) {
     let uids: string[] = [];
     this.getUTForTraining$(tid).subscribe(uts => {
@@ -123,10 +134,9 @@ export class UserTrainingService {
         for (let ut of uts) {
           uids.push(ut.uid);
         }
-        this.usersBS$.next(uids);
-      } else {
-        this.usersBS$.next(uids);
       }
+      this.userTrainingForTidBS$.next(uts);
+      this.usersBS$.next(uids);
     })
 
   }

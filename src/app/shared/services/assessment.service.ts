@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Assessment, AssessmentItem } from '../interfaces/training.type';
+import { Assessment, AssessmentItem } from '../interfaces/assessment.type';
 import { BehaviorSubject, Observable, throwError as ObservableThrowError, Subscription } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { AuthService } from './auth.service';
@@ -19,11 +19,8 @@ export class AssessmentService {
     private auth: AuthService) {
   }
 
-/*
-  addAssessmentItem(item: AssessmentItem) {
-    if( item.quesi)
-  }
 
+/*
   createAssessment(): string {
     let assessmentId = String(new Date().getTime());
     let assessment = <Assessment>{
@@ -37,32 +34,21 @@ export class AssessmentService {
     })
     return assessmentId;
   }
-
-  nextQuestion() {
-
-  }
-
-  loadAssessment(assessmentId: string) {
-    let assessmentObj = this.assessmentHash[assessmentId];
-    if (assessmentObj) {
-      this.assessmentBS$.next(assessmentObj);
-    } else {
-      this.getAssessment$(assessmentId).subscribe(assessObj => {
-        if (assessObj) {
-          this.assessmentBS$.next(assessObj);
-        }
-      })
-    }
-  }
-
+*/
   updateAssessment(assessment: Assessment) {
     this.updateAssessment$(assessment).subscribe(assObj => {
       console.log('update Assessment', assessment);
     })
   }
 
+/*
   getAssessmentStream(): Observable<Assessment> {
     return this.assessmentBS$.asObservable();
+  }
+  */
+  
+  getAssessment(id: string): Assessment {
+    return 
   }
   
   private get _authHeader(): string {
@@ -116,6 +102,6 @@ export class AssessmentService {
     }
     return ObservableThrowError(errorMsg);
   }
-*/
+
 }
 

@@ -44,6 +44,13 @@
 	opacity: .7;
 }
 
+.action {
+	cursor:pointer;
+	font-size:16px;
+	vertical-align: middle;
+	margin-right:10px;
+}
+
 .active-item {
 	background-color: #f7f1fe !important;
 	border-color: #6939c9 !important;
