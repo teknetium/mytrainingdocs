@@ -309,6 +309,8 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   isVideoOpen = false;
   bannerColor = '#f1f1f1';
   pageTaskHash = {};
+  userPanelVisible = false;
+
 
   constructor(
     private authService: AuthService,
@@ -480,5 +482,14 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     }
     this.task.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.aboutThisPageHash[this.currentPage].taskHash[taskName].url));
     this.taskBS$.next(this.task);
+  }
+
+  handleUpdateUserCancel() {
+    this.userPanelVisible = false;
+  }
+
+  handleUpdateUser() {
+    this.userPanelVisible = false;
+    this.userService.updateUser(this.authenticatedUser, true);
   }
 }

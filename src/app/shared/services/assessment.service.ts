@@ -20,21 +20,6 @@ export class AssessmentService {
   }
 
 
-/*
-  createAssessment(): string {
-    let assessmentId = String(new Date().getTime());
-    let assessment = <Assessment>{
-      _id: assessmentId,
-      passingGrade: 60,
-      items: undefined
-    };
-    this.postAssessment$(assessment).subscribe(assessmentObj => {
-      this.assessmentHash[assessmentObj._id] = assessmentObj;
-      this.assessmentBS$.next(assessmentObj);
-    })
-    return assessmentId;
-  }
-*/
   updateAssessment(assessment: Assessment) {
     this.updateAssessment$(assessment).subscribe(assObj => {
       console.log('update Assessment', assessment);

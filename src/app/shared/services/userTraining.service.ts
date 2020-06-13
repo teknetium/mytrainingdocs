@@ -87,6 +87,10 @@ export class UserTrainingService {
     session.stopTime = new Date().getTime();
     console.log('stopSession', this.currentUT, this.allUserTrainingHash);
     let ut = this.allUserTrainingHash[this.currentUT];
+
+    if (!ut) {
+      console.log('UserTrainingService:stopSession    allUserTrainingHash[this.currentUT] undefined', this.allUserTrainingHash);
+    }
     ut.timeToDate += session.stopTime - session.startTime;
     this.saveUserTraining(ut);
     this.utSessionHash[tid] = null;

@@ -41,7 +41,8 @@
                 </a>
             </li>
             <li nz-menu-item class="navbar-rhs">
-                <span class=" pointer" nz-dropdown [nzDropdownMenu]="profile" [nzTrigger]="'click'" [nzPlacement]="'bottomRight'">
+                <span class=" pointer" nz-dropdown [nzDropdownMenu]="profile" [nzTrigger]="'click'"
+                    [nzPlacement]="'bottomRight'">
                     <nz-avatar [nzText]="(authenticatedUser$ | async)?.firstName"
                         [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.secondary, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary}">
                     </nz-avatar>
@@ -57,10 +58,11 @@
                                 </div>
                             </div>
                         </li>
-                        <li nz-menu-item routerLink="/profile">
+                        <li nz-menu-item>
                             <a class="p-v-5 d-flex align-items-center justify-content-between">
-                                <div>
-                                    <i class="" nz-icon nzType="user" theme="outline" style="vertical-align: baseline;font-size:20px;"></i>
+                                <div (click)="userPanelVisible = true">
+                                    <i class="" nz-icon nzType="user" theme="outline"
+                                        style="vertical-align: baseline;font-size:20px;"></i>
                                     <span class="m-l-10">Edit Profile</span>
                                 </div>
                             </a>
@@ -68,7 +70,8 @@
                         <li nz-menu-item (click)="logout()">
                             <a class="p-v-5 d-flex align-items-center justify-content-between">
                                 <div>
-                                    <i class="" nz-icon nzType="logout" theme="outline" style="vertical-align: baseline;font-size:20px;color:#bbbbbb;"></i>
+                                    <i class="" nz-icon nzType="logout" theme="outline"
+                                        style="vertical-align: baseline;font-size:20px;color:#bbbbbb;"></i>
                                     <span class="m-l-10">Logout</span>
                                 </div>
                             </a>
@@ -76,8 +79,7 @@
                     </ul>
                 </nz-dropdown-menu>
             </li>
-            <li  class="navbar-rhs" nz-tooltip nzTooltipTitle="Settings"
-                nzTooltipPlacement="bottomLeft">
+            <li class="navbar-rhs" nz-tooltip nzTooltipTitle="Settings" nzTooltipPlacement="bottomLeft">
                 <a (click)="quickViewToggle()">
                     <i nz-icon nzType="setting" theme="outline" style="font-size:20px;color:black;"></i>
                 </a>
@@ -125,8 +127,9 @@
                 <a (click)="playTaskVideo(null)">
                     <i nz-icon nzType="youtube" theme="outline" style="font-size:20px;margin:0 5px;color:black;"></i>
                 </a>
-                <nz-drawer *ngIf="authenticatedUser$ | async as user" [nzWidth]="300" nzTitle="App Settings" [nzClosable]="false"
-                    [nzVisible]="quickViewVisible" nzPlacement="right" (nzOnClose)="quickViewToggle()">
+                <nz-drawer *ngIf="authenticatedUser$ | async as user" [nzWidth]="300" nzTitle="App Settings"
+                    [nzClosable]="false" [nzVisible]="quickViewVisible" nzPlacement="right"
+                    (nzOnClose)="quickViewToggle()">
                     <app-settings></app-settings>
                 </nz-drawer>
             </li>
@@ -240,8 +243,7 @@
                                 </vg-controls>
                                 <video style="background-color: #dddddd;" [vgMedia]="media" #media id="singleVideo"
                                     preload="none" [src]="(taskBS$ | async)?.safeUrl" crossorigin
-                                    [poster]="(taskBS$ | async)?.poster"
-                                    >
+                                    [poster]="(taskBS$ | async)?.poster">
                                 </video>
                             </vg-player>
                         </div>
@@ -272,12 +274,76 @@
 
             </div>
         </nz-modal>
-                <nz-drawer *ngIf="authenticatedUser$ | async as user" nzWidth="500px" nzTitle="App Settings" [nzClosable]="false"
-                    [nzVisible]="quickViewVisible" nzPlacement="right" (nzOnClose)="quickViewToggle()">
-                    <app-settings></app-settings>
-                </nz-drawer>
+        <nz-drawer *ngIf="authenticatedUser$ | async as user" nzWidth="500px" nzTitle="App Settings"
+            [nzClosable]="false" [nzVisible]="quickViewVisible" nzPlacement="right" (nzOnClose)="quickViewToggle()">
+            <app-settings></app-settings>
+        </nz-drawer>
     </nz-content>
     <!--
     <nz-footer class="footer">Copyright ©2020 Teknetium, LLC</nz-footer>
     -->
+    <nz-drawer [nzClosable]="false" [nzMaskClosable]="true" [nzVisible]="userPanelVisible" nzPlacement="right"
+        nzTitle="User Profile" [nzWidth]="700">
+        <div *ngIf="authenticatedUser" style="display:block;width:100%;">
+            <div style="display:block;width:90%;">
+                <div style="display:inline-block;width:25%;text-align: right;">
+                    <label style="font-size:14px;color:black;">
+                        First Name
+                    </label>
+                </div>
+                <div style="display:inline-block;width:70%;margin-left:20px;">
+                    <input nz-input nzSize="small" type="text" placeholder="First Name" ngDefaultControl
+                        [(ngModel)]="authenticatedUser.firstName" style="margin-bottom:2px;">
+                </div>
+            </div>
+            <div style="display:block;width:90%;">
+                <div style="display:inline-block;width:25%;text-align: right;">
+                    <label style="font-size:14px;color:black;">
+                        Last Name
+                    </label>
+                </div>
+                <div style="display:inline-block;width:70%;margin-left:20px;">
+                    <input nz-input nzSize="small" type="text" placeholder="Last Name" ngDefaultControl
+                        [(ngModel)]="authenticatedUser.lastName" style="margin-bottom:2px;">
+                </div>
+            </div>
+            <div style="display:block;width:90%;">
+                <div style="display:inline-block;width:25%;text-align: right;">
+                    <label style="font-size:14px;color:black;">
+                        Email
+                    </label>
+                </div>
+                <div style="display:inline-block;width:70%;margin-left:20px;">
+                    <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl
+                        [(ngModel)]="authenticatedUser.email" style="margin-bottom:2px;">
+                </div>
+            </div>
+            <!--
+            <div style="display:block;width:90%;">
+                <div style="display:inline-block;width:25%;text-align: right;">
+                    <label style="font-size:14px;color:black;">
+                        Job Title
+                    </label>
+                </div>
+                <div style="display:inline-block;width:70%;margin-left:20px;">
+                    <input style="margin-bottom:2px;" placeholder="Job Title" nz-input
+                        [(ngModel)]="selectedUser.jobTitle" ngDefaultControl nzSize="small"
+                        (ngModelChange)="onJobTitleChange($event)" [nzAutocomplete]="auto"
+                        (keydown.enter)="setJobTitle($event)" (blur)="setJobTitle($event)" />
+                    <nz-autocomplete [nzDataSource]="matchingJobTitles" #auto></nz-autocomplete>
+                </div>
+            </div>
+            -->
+            <div style="display:block;margin-top:20px;width:90%;text-align: center;">
+                <div style="display:inline-block;width:60%;">
+                    <button nz-button nzSize="small" nzShape="round" (click)="handleUpdateUserCancel()" nzType="default"
+                        style="margin: 10px;display:inline-block;">Cancel
+                    </button>
+                    <button *ngIf="authenticatedUser" nz-button nzSize="small" nzShape="round" (click)="handleUpdateUser()"
+                        nzType="primary" style="margin: 10px;display:inline-block;">Update User
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nz-drawer>
 </nz-layout>

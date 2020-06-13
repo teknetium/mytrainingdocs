@@ -36,6 +36,7 @@
     "date-fns": "^2.9.0",
     "express-jwt": "^5.3.1",
     "filestack-js": "^3.12.3",
+    "flatfile-csv-importer": "^0.2.9",
     "jquery": "^3.3.1",
     "jwks-rsa": "^1.6.2",
     "lodash": "^4.17.15",
