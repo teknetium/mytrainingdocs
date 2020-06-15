@@ -16,7 +16,7 @@ import { takeUntil, filter } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from '../base.component';
 import FlatfileImporter from "flatfile-csv-importer";
-
+import { NzFormatEmitEvent, NzTreeNodeOptions, NzTreeNode } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-myteam',
@@ -65,14 +65,15 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   private importer: FlatfileImporter;
 
-
+  nodes: NzTreeNode[] = [];
+  children: NzTreeNode[] = [];
 
   userTypeIconHash = {
-    individualContributor: 'fas fa-fw fa-user',
-    supervisor: 'fas fa-fw fa-user-tie',
-    volunteer: 'fas fa-fw fa-user-cowboy',
-    customer: 'fas fa-fw fa-user-crown',
-    candidate: 'fas fa-fw fa-user-graduate'
+    individualContributor: 'fad fa-fw fa-user',
+    supervisor: 'fad fa-fw fa-user-tie',
+    volunteer: 'fad fa-fw fa-user-cowboy',
+    customer: 'fad fa-fw fa-user-crown',
+    candidate: 'fad fa-fw fa-user-graduate'
   }
   trainingStatusColorHash = {
     upToDate: '#52c41a',
@@ -93,6 +94,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   authenticatedUser$: Observable<UserModel>;
   myTeamIdHash: UserIdHash;
   myTeam: UserModel[] = [];
+  myTeamFiltered: UserModel[] = [];
   jobTitles$: Observable<string[]>;
   jobTitles: string[] = [];
   options: string[];
@@ -128,7 +130,17 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   selectedTrainingId = null;
   allTrainingIdHash$: Observable<TrainingIdHash>;
   allTrainingIdHash: TrainingIdHash = {};
-  newUsers: UserModel[];
+  newUsers: [{ firstName: string, lastName: string, email: string, jobTitle: string, supervisorName }];
+  supervisorHash = {};
+  userNameHash = {};
+  authenticatedUserFullName;
+  usersNotOnMyTeam: string[] = [];
+  showUpToDate = true;
+  showPastDue = true;
+  showIndividualContributors = true;
+  showSupervisors = true;
+  showVolunteers = true;
+  showCustomers = true;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -167,6 +179,29 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.myTeamIdHash = myTeamIdHash;
 
       this.myTeam = Object.values(this.myTeamIdHash);
+      this.myTeamFiltered = this.myTeam;
+      console.log('myTeamIdHash:', this.myTeam);
+      let node = new NzTreeNode({ title: '', key: '' });
+      for (let teamMember of this.myTeam) {
+        /*
+        if (teamMember && teamMember._id === this.authenticatedUser._id) {
+          continue;
+        }
+        */
+        node.title = teamMember.firstName + ' ' + teamMember.lastName;
+        node.key = teamMember._id;
+        this.children.push(node);
+      }
+      /*
+            for (let teamMember of this.myTeam) {
+              console.log("myTeamIdHash", teamMember);
+              if (!teamMember.supervisorId) {
+                teamMember.supervisorId = this.userNameHash[this.supervisorHash[teamMember._id]];
+                teamMember.teamId = teamMember.supervisorId;
+                this.userService.updateUser(teamMember, true);  
+              }
+            }
+      */
       //      this.cd.detectChanges();
       /*
             if (this.myTeam.length > 0) {
@@ -175,6 +210,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
             }
             */
     });
+
     this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         this.userIdSelected = null;
@@ -211,11 +247,32 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!user) {
         return;
       }
+
       this.authenticatedUser = user;
+      this.authenticatedUserFullName = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
       this.importer.setCustomer({
         userId: this.authenticatedUser._id,
         name: this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName
       });
+
+      this.nodes[0] = new NzTreeNode({
+        title: this.authenticatedUserFullName,
+        key: this.authenticatedUser._id,
+        children: this.children
+      });
+
+      /*
+            for (let teamMember of this.myTeam) {
+              console.log()
+              this.nodes[0].children.push(
+                {
+                  title: teamMember.firstName + ' ' + teamMember.lastName,
+                  key: teamMember._id,
+                  isLeaf:
+                }
+              );
+            }
+            */
 
 
       this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
@@ -249,14 +306,90 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     })
   }
 
-  async launchImporter() {
-    if (!this.LICENSE_KEY) {
-      return alert("Set LICENSE_KEY on Line 13 before continuing.");
+  toggleFilter(filter: string) {
+    this.myTeamFiltered = [];
+    if (filter === 'up-to-date') {
+      this.showUpToDate = !this.showUpToDate;
+    } else if (filter === 'past-due') {
+      this.showPastDue = !this.showPastDue;
+    } else if (filter === 'individual-contributor') {
+      this.showIndividualContributors = !this.showIndividualContributors;
+    } else if (filter === 'supervisor') {
+      this.showSupervisors = !this.showSupervisors;
+    } else if (filter === 'volunteer') {
+      this.showVolunteers = !this.showVolunteers;
+    } else if (filter === 'customer') {
+      this.showCustomers = !this.showCustomers;
     }
+
+    for (let user of this.myTeam) {
+      if (!this.showUpToDate && user.trainingStatus === 'upToDate') {
+        continue;
+      } else if (!this.showPastDue && user.trainingStatus === 'pastDue') {
+        continue;
+      } else if (!this.showIndividualContributors && user.userType === 'individualContributor') {
+        continue;
+      } else if (!this.showSupervisors && user.userType === 'supervisor') {
+        continue;
+      } else if (!this.showVolunteers && user.userType === 'volunteer') {
+        continue;
+      } else if (!this.showCustomers && user.userType === 'customer') {
+        continue;
+      }
+      this.myTeamFiltered.push(user);
+    }
+  }
+
+  nzEvent(event: NzFormatEmitEvent): void {
+    console.log('loadNode', event);
+    // load child async
+    if (event.eventName === 'expand') {
+      const node = event.node;
+      if (node?.getChildren().length === 0 && node?.isExpanded) {
+        this.loadNode(node.key).then(users => {
+          let teamData: NzTreeNodeOptions[] = [];
+          for (let user of users) {
+            teamData.push(
+              {
+                title: user.firstName + ' ' + user.lastName,
+                key: String(new Date().getTime()),
+                uid: user._id
+                //                origin: {
+                //                  uid: user._id,
+                //                title: user.firstName + ' ' + user.lastName,
+                //                  key: String(new Date().getTime()),
+                //                }
+              }
+            )
+          }
+          console.log('loadNode', users, teamData);
+
+          node.addChildren(teamData);
+        })
+      }
+    }
+  }
+
+  loadNode(uid: string): Promise<NzTreeNodeOptions[]> {
+    return new Promise(resolve => {
+      setTimeout(
+        () =>
+          resolve([
+            { title: 'Child Node', key: `${new Date().getTime()}-0` },
+            { title: 'Child Node', key: `${new Date().getTime()}-1` }
+          ]),
+        1000
+      );
+    });
+
+    //  return this.userService.getTeam$(uid).pipe(toPromise()).subscribe(users => {
+
+  }
+  async launchImporter() {
     try {
       /*
       Observable.defer(this.importer.requestDataFromUser().subscribe(results => {
-
+  
       }))
       */
       let results = await this.importer.requestDataFromUser();
@@ -265,24 +398,44 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.results = JSON.stringify(results.validData, null, 2);
 
       this.newUsers = JSON.parse(this.results);
+      let supervisorName: string;
       for (let user of this.newUsers) {
         this.newTeamMember._id = String(new Date().getTime());
         this.newTeamMember.firstName = user.firstName;
         this.newTeamMember.lastName = user.lastName;
         this.newTeamMember.email = user.email;
         this.newTeamMember.jobTitle = user.jobTitle;
+        if (user.supervisorName !== this.authenticatedUserFullName) {
+          this.usersNotOnMyTeam.push(this.newTeamMember._id);
+        }
+        //        this.newTeamMember.supervisorId = undefined;
+        //        this.newTeamMember.teamId = undefined;
+        this.supervisorHash[this.newTeamMember._id] = user.supervisorName;
+        this.userNameHash[this.newTeamMember.firstName + ' ' + this.newTeamMember.lastName] = this.newTeamMember._id;
+
         this.newTeamMember.teamAdmin = false;
         this.handleAddUser();
         this.trainingService.assignTrainingsForJobTitle(this.newTeamMember.jobTitle, this.newTeamMember._id);
+        this.newUsers = [{ firstName: '', lastName: '', email: '', jobTitle: '', supervisorName: '' }];
       }
-/*
-      // emulate a server call, replace the timeout with an XHR request
-      setTimeout(() => {
-        this.importer.displaySuccess("Success!");
-        this.results = JSON.stringify(results.validData, null, 2);
-        
-      }, 500);
-*/
+      /*
+      do {
+        for (let uid of this.usersNotOnMyTeam) {
+          let userObj = this.myTeamIdHash[uid];
+          if (!userObj) {
+  
+          }
+        }
+      } while (this.usersNotOnMyTeam.length > 0)
+      */
+      /*
+            // emulate a server call, replace the timeout with an XHR request
+            setTimeout(() => {
+              this.importer.displaySuccess("Success!");
+              this.results = JSON.stringify(results.validData, null, 2);
+              
+            }, 500);
+      */
     } catch (e) {
       console.info(e || "window close");
     }
@@ -319,6 +472,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           label: "Job Title",
           key: "jobTitle",
           validators: []
+        },
+        {
+          label: "Supervisor",
+          key: "supervisorName",
+          validators: []
         }
       ],
       type: "Users",
@@ -346,13 +504,21 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.newTeamMember.lastName = '';
     this.newTeamMember.email = '';
     this.newTeamMember.teamAdmin = false;
-    this.selectedUser = this.newTeamMember;
-    this.userPanelVisible = true;
-    this.options = [];
-  }
+    this.newTeamMember.settings = {
+      themeColor: {
+        name: 'grey',
+        primary: 'white',
+        secondary: '#999999',
+        bgColor: '#e9e9e9',
+      }
+    };
+      this.selectedUser = this.newTeamMember;
+      this.userPanelVisible = true;
+      this.options = [];
+    }
 
-  handleCancel(): void {
-    if (this.newUser) {
+    handleCancel(): void {
+      if(this.newUser) {
       this.userService.selectUser(this.authenticatedUser._id);
       this.newUser = false;
     }
@@ -377,12 +543,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
     this.mailService.sendMessage(this.message);
     this.userPanelVisible = false;
-    this.cd.detectChanges();
+    //    this.cd.detectChanges();
   }
 
   handleUpdateUser() {
     this.userPanelVisible = false;
-    this.userService.updateUser(this.selectedUser, true);
+    this.userService.updateUser(this.selectedUser, false);
   }
 
   selectUser(userId) {

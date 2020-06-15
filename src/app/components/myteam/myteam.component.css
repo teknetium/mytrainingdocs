@@ -19,6 +19,7 @@
     border-right: 1px solid #e0e0e0;
     display:inline-block;
     overflow-x: scroll;
+    padding-right:10px;
 }
 
 .mm-header {
@@ -51,8 +52,8 @@
 .user-button {
     background-color: #fafafa;
     border:1px solid #bbbbbb;
-    border-radius: 8px;
-    padding:5px;    
+    border-radius: 4px;
+    padding:1px;    
     width: fit-content;
     overflow:auto;
     white-space: nowrap;
@@ -166,3 +167,9 @@
   background-color: gray;
   cursor: not-allowed;
 }
+.showing {
+    border:2px solid #75c140 !important;
+}
+.not-showing {
+    border:2px solid red !important;
+} 

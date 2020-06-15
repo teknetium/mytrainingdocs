@@ -1,6 +1,6 @@
 <div  *ngIf="!selectedTraining" class="training-container">
   <div *ngIf="trainings && trainings.length > 0">
-    <button nz-button nzType="primary" nzShape="round" (click)="createNewTraining()" style="margin:0 0 20px 0;">
+    <button nz-button nzType="primary" nzShape="round" nzSize="small" (click)="createNewTraining()" style="margin:0 0 20px 0;">
       Create a New Training
     </button>
   </div>
@@ -168,7 +168,7 @@
   </nz-drawer>
   <div *ngIf="trainings && trainings.length === 0" style="text-align: center;margin-top:40px;">
     <span style="font-size:20px;font-weight: 200;display:block;">You haven't created any trainings yet!</span>
-    <button nz-button nzType="primary" nzShape="round" (click)="newTraining()" style="margin-top: 20px;">
+    <button nz-button nzType="primary" nzSize="small" nzShape="round" (click)="newTraining()" style="margin-top: 20px;">
       Create a New Training
     </button>
   </div>

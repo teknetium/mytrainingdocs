@@ -35,15 +35,15 @@
                                 {{ user.firstName }} {{ user.lastName }}
                             </div>
                             <div style="display:inline-block;width:fit-content;width:35%;justify-content: left;">
-                                <div style="display:inline-block;margin-right:20px;" nz-tooltip nzTooltipTitle="Completed Trainings">
+                                <div *ngIf="userStatHash[user._id].completedCnt > 0" style="display:inline-block;margin-right:20px;" nz-tooltip nzTooltipTitle="Completed Trainings">
                                     <i class="fad fa-graduation-cap"
                                         style="font-size:14px;color:blue;"></i>&nbsp;-&nbsp;{{ userStatHash[user._id].completedCnt }}
                                 </div>
-                                <div style="display:inline-block;margin-right:20px;" nz-tooltip nzTooltipTitle="Past Due Trainings">
+                                <div *ngIf="userStatHash[user._id].pastDueCnt > 0" style="display:inline-block;margin-right:20px;" nz-tooltip nzTooltipTitle="Past Due Trainings">
                                     <i class="fad fa-graduation-cap"
                                         style="font-size:14px;color:red;"></i>&nbsp;-&nbsp;{{ userStatHash[user._id].pastDueCnt }}
                                 </div>
-                                <div style="display:inline-block;margin-right:20px;" nz-tooltip nzTooltipTitle="Up To Date Trainings">
+                                <div *ngIf="userStatHash[user._id].upToDateCnt > 0  " style="display:inline-block;margin-right:20px;" nz-tooltip nzTooltipTitle="Up To Date Trainings">
                                     <i class="fad fa-graduation-cap"
                                         style="font-size:14px;color:#75c040;"></i>&nbsp;-&nbsp;{{ userStatHash[user._id].upToDateCnt }}
                                 </div>

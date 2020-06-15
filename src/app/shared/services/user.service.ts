@@ -253,6 +253,8 @@ export class UserService {
     return this.myTeamCntBS$.asObservable();
   }
 
+  getTeam(uid: string) {}
+
   getAuthenticatedUserStream(): Observable<UserModel> {
     return this.authenticatedUserBS$.asObservable();
   }
@@ -326,7 +328,8 @@ export class UserService {
         );
     }
     */
-
+  
+  
   getTeam$(teamId: string): Observable<UserModel[]> {
     return this.http
       .get<UserModel>(`${ENV.BASE_API}users/${teamId}`, {
