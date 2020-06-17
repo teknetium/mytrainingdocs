@@ -36,17 +36,30 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
 
   timer1;
   iconSearchStr = '';
+  searchStr = '';
   matchingIconsBS$ = new BehaviorSubject<string[]>([]);
   matchingIcons$: Observable<string[]> = this.matchingIconsBS$.asObservable();
   matchingIcons: string[] = [];
   iconSearchTermHash = {};
+  @Input() currentIconClass = '';
+  @Input() currentColor = '';
   @Output() icon = new EventEmitter<{ icon: string, color: string }>();
   iconName: string = '';
   currentIcon = -1;
-  iconColor: string = 'black';
+  iconColor: string;
   selectedIcon: string = '';
   selectedIconIndex = -1;
   @ViewChild('iconSearch', { static: false }) iconSearch: ElementRef;
+  solid = true;
+  regular = true;
+  light = true;
+  duotone = true;
+  styleStr = 'style=solid,regular,light,duotone';
+  redValue = 0;
+  greenValue = 0;
+  blueValue = 0;
+  currentStyles = ['Solid', 'Regular', 'Light', 'Two Tone'];
+  rgbArray: number[] = [];
 
   constructor(private auth: AuthService, private http: HttpClient) {
     /*
@@ -59,16 +72,102 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
       }
     }
     */
-    this.getIcons$('*').subscribe(icons => {
+    this.getIcons$('searchString=*:style=solid,regular,light,duotone').subscribe(icons => {
       this.matchingIconsBS$.next(icons);
       this.matchingIcons = icons;
     })
 
-    
+
   }
 
   ngOnInit() {
-    //    this.searchForIcons();
+    this.selectedIcon = this.currentIconClass;
+    this.iconColor = this.currentColor;
+    this.hexToRgb(this.currentColor);
+    console.log('icon-picker', this.rgbArray);
+    this.redValue = this.rgbArray[0];
+    this.greenValue = this.rgbArray[1];
+    this.blueValue = this.rgbArray[2];
+  }
+
+  colorVal(): string {
+    this.iconColor = '#' + this.redValue.toString(16).padStart(2, '0') + this.greenValue.toString(16).padStart(2, '0') + this.blueValue.toString(16).padStart(2, '0');
+
+    return this.iconColor;
+    //    return 'rgb(' + this.redValue + ',' + this.greenValue + ',' + this.blueValue + ')';
+  }
+
+  toggleStyle(style) {
+    this.currentStyles = [];
+    this.styleStr = 'style=';
+    if (style === 'solid') {
+      this.solid = !this.solid;
+    } else if (style === 'regular') {
+      this.regular = !this.regular;
+    } else if (style === 'light') {
+      this.light = !this.light;
+    } else if (style === 'duotone') {
+      this.duotone = !this.duotone;
+    }
+
+    if (this.solid) {
+      this.currentStyles.push('Solid');
+      this.styleStr += 'solid,';
+    }
+    if (this.regular) {
+      this.currentStyles.push('Regular');
+      this.styleStr += ',regular';
+    }
+    if (this.light) {
+      this.currentStyles.push('Light');
+      this.styleStr += ',light';
+    }
+    if (this.duotone) {
+      this.currentStyles.push('Two Tone');
+      this.styleStr += ',duotone';
+    }
+
+    this.searchForIcons();
+  }
+
+  colorChange(data, color) {
+    /*
+    if (color === 'red') {
+      this.redValue = data;
+    } else if (color === 'green') {
+      this.greenValue = data;
+    } else if (color === 'blue') {
+      this.blueValue = data;
+    }
+    */
+
+    this.iconColor = '#' + this.redValue.toString(16).padStart(2, '0') + this.greenValue.toString(16).padStart(2, '0') + this.blueValue.toString(16).padStart(2, '0');
+    console.log('colorChange', data, color);
+
+    this.icon.emit({ icon: this.selectedIcon, color: this.iconColor });
+  }
+
+  hexToRgb(c) {
+    this.rgbArray = [];
+    if (/^#([a-f0-9]{3}){1,2}$/.test(c)) {
+      if (c.length == 4) {
+        c = '#' + [c[1], c[1], c[2], c[2], c[3], c[3]].join('');
+      }
+      c = '0x' + c.substring(1);
+      this.rgbArray.push((c >> 16) & 255);
+      this.rgbArray.push((c >> 8) & 255);
+      this.rgbArray.push(c & 255);
+      //    return 'rgb(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ')';
+    }
+  }
+
+  hex_to_RGB(hex) {
+    var m = hex.match(/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);
+    return {
+      r: parseInt(m[1], 16),
+      g: parseInt(m[2], 16),
+      b: parseInt(m[3], 16)
+    };
   }
 
   sizeChange(val) {
@@ -116,13 +215,21 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   searchForIcons() {
     this.selectedIconIndex = -1;
     this.matchingIcons = [];
+    this.searchStr = 'searchString=';
     if (this.iconSearchStr === '') {
+      this.searchStr += '*';
+      /*
       this.getIcons$('*').subscribe(icons => {
         this.matchingIcons = icons;
         this.matchingIconsBS$.next(this.matchingIcons);
       })
+      */
+    } else {
+      this.searchStr += this.iconSearchStr;
     }
-    this.getIcons$(this.iconSearchStr).subscribe(icons => {
+    this.searchStr = this.searchStr + ':' + this.styleStr;
+    console.log('searchForIcons', this.searchStr);
+    this.getIcons$(this.searchStr).subscribe(icons => {
       this.matchingIcons = icons;
       this.matchingIconsBS$.next(this.matchingIcons);
     })

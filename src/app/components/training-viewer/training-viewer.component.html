@@ -88,15 +88,15 @@
                 </div>
             </nz-modal>
 
-            <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800"
+            <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800" nzHeight="600"
                 (nzOnCancel)="handleIconSelectCancel()" [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled"
-                (nzOnOk)="handleIconSelectConfirm()" style="width:800px;">
-                <app-icon-picker (icon)="setIcon($event)"></app-icon-picker>
+                (nzOnOk)="handleIconSelectConfirm()" style="width:800px;height:700px;">
+                <app-icon-picker [currentIconClass]="selectedTraining.iconClass" [currentColor]="selectedTraining.iconColor" (icon)="setIcon($event)" style="width:100%;height:700px;"></app-icon-picker>
             </nz-modal>
             <div *ngIf="production === 'true'" style="position:relative;height:70%;width:100%;text-align: center;">
                 <div style="display:inline-block;">
                     <i [ngClass]="selectedTraining.iconClass"
-                        style="display:inline-block;font-size:24px;margin:10px;vertical-align: middle;"
+                        style="display:inline-block;font-size:28px;margin:10px;vertical-align: middle;"
                         [ngStyle]="{'color': selectedTraining.iconColor}">
                     </i>
                     <div style="display:inline-block;">
@@ -535,12 +535,12 @@
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}">
                                         <quill-editor style="height:fit-content;width:90%;" format="html"
                                             [(ngModel)]="page.text" (onBlur)="quillBlur($event);">
-
                                             <div quill-editor-toolbar
                                                 style="background-color: #f5f5f5;border:1px solid #dddddd;">
+                                            <!--
                                                 <select class="ql-size">
                                                     <option value="small"></option>
-                                                    <!-- Note a missing, thus falsy value, is used to reset to default -->
+                                                    < !-- Note a missing, thus falsy value, is used to reset to default -- >
                                                     <option selected></option>
                                                     <option value="large"></option>
                                                     <option value="huge"></option>
@@ -561,6 +561,7 @@
                                                     <select class="ql-background" [title]="'BackgroundColor'">
                                                     </select>
                                                 </span>
+                                            -->
                                             </div>
                                         </quill-editor>
                                     </div>

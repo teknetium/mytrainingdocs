@@ -161,7 +161,8 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     mytrainings: {
       title: 'My Trainings',
       visible: true,
-      intro: 'Introduction to the page.',
+      intro: `Here you will find the trainings for which you are responsible.
+       `,
       tourSteps: {
         steps: [
           'step1', 'step2', 'step3'
@@ -180,7 +181,8 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     myteam: {
       title: 'My Team',
       visible: true,
-      intro: 'Introduction to the page.',
+      intro: `Here is where you manage your team.  Add new members, assign trainings, update
+      profile info, etc.`,
       tourSteps: {
         steps: [
           'step1', 'step2', 'step3'
@@ -415,11 +417,11 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     //    return JSON.stringify(file);
     return '';
   }
-
+/*
   toggleHelp() {
     this.helpIsClosed = !this.helpIsClosed;
   }
-
+*/
   onPlayerReady(api: VgAPI) {
     this.vgApi = api;
     /*

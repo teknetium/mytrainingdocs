@@ -32,6 +32,13 @@ export class LandingpageComponent implements OnInit {
     },
     {
       focus: false,
+      title: 'Assessments Made Easy',
+      class: 'fal fa-file-certificate text-danger bg-danger-opacity',
+      blurb: 'Assessments are critical to ensuring mastery of content as well as understanding the effectiveness of the training content itself.',
+      learnMore: ''
+    },
+    {
+      focus: false,
       title: 'Saves Time & Resources',
       class: 'fal fa-clock text-blue bg-blue-opacity',
       blurb: 'Your entire team and all of your training content will be up and running in less than 30 minutes!',

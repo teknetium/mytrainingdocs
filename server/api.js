@@ -61,10 +61,28 @@ module.exports = function(app, config) {
   let iconNames = [];
   let iconSearchTermHash = {};
   let duotoneIconNames = [];
+  let regularIconNames = [];
+  let lightIconNames = [];
+  let solidIconNames = [];
   let matchingIcons = [];
 
   iconNames = Object.keys(icons);
   for (iconName of iconNames) {
+    if (icons[iconName].styles.includes('solid')) {
+      solidIconNames.push(iconName);
+      matchingIcons.push('fas fa-fw fa-' + iconName);
+      iconSearchTermHash[iconName] = icons[iconName].search.terms;
+    }
+    if (icons[iconName].styles.includes('light')) {
+      lightIconNames.push(iconName);
+      matchingIcons.push('fal fa-fw fa-' + iconName);
+      iconSearchTermHash[iconName] = icons[iconName].search.terms;
+    }
+    if (icons[iconName].styles.includes('regular')) {
+      regularIconNames.push(iconName);
+      matchingIcons.push('fad fa-fw fa-' + iconName);
+      iconSearchTermHash[iconName] = icons[iconName].search.terms;
+    }
     if (icons[iconName].styles.includes('duotone')) {
       duotoneIconNames.push(iconName);
       matchingIcons.push('fad fa-fw fa-' + iconName);
@@ -102,21 +120,97 @@ module.exports = function(app, config) {
 
   app.get("/api/icons/:searchStr", (req, res) => {
     matchingIcons = [];
-    const iconSearchStr = req.params.searchStr;
+    searchTerms = [];
+    styles = [];
+    let iconSearchTerm;
+    let iconSearchStr;
+    let styleTerm;
+    let styleStr;
+    const searchStr = req.params.searchStr;
+    searchTerms = searchStr.split(':');
+    iconSearchTerm = searchTerms[0];
+    styleTerm = searchTerms[1];
+    searchTerms = iconSearchTerm.split('=');
+    iconSearchStr = searchTerms[1];
+    searchTerms = styleTerm.split('=');
+    styleStr = searchTerms[1];
+    styles = styleStr.split(',');
+
     if (iconSearchStr === '*') {
-      for (iconStr of duotoneIconNames) {
-        matchingIcons.push('fad fa-fw fa-' + iconStr);
+      if (styles.includes('duotone')) {
+        for (iconStr of duotoneIconNames) {
+          matchingIcons.push('fad fa-fw fa-' + iconStr);
+        }
+      }
+      if (styles.includes('solid')) {
+        for (iconStr of solidIconNames) {
+          matchingIcons.push('fas fa-fw fa-' + iconStr);
+        }
+      }
+      if (styles.includes('regular')) {
+        for (iconStr of regularIconNames) {
+          matchingIcons.push('far fa-fw fa-' + iconStr);
+        }
+      }
+      if (styles.includes('light')) {
+        for (iconStr of lightIconNames) {
+          matchingIcons.push('fal fa-fw fa-' + iconStr);
+        }
       }
     } else {
-      for (iconStr of duotoneIconNames) {
-        if (iconStr.indexOf(iconSearchStr) >= 0) {
-          matchingIcons.push('fad fa-fw fa-' + iconStr);
-          continue;
-        }
-        for (term of iconSearchTermHash[iconStr]) {
-          if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
+      if (styles.includes('duotone')) {
+        for (iconStr of duotoneIconNames) {
+          if (iconStr.indexOf(iconSearchStr) >= 0) {
             matchingIcons.push('fad fa-fw fa-' + iconStr);
-            break;
+            continue;
+          }
+          for (term of iconSearchTermHash[iconStr]) {
+            if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
+              matchingIcons.push('fad fa-fw fa-' + iconStr);
+              break;
+            }
+          }
+        }
+      }
+      if (styles.includes('solid')) {
+        for (iconStr of solidIconNames) {
+          if (iconStr.indexOf(iconSearchStr) >= 0) {
+            matchingIcons.push('fas fa-fw fa-' + iconStr);
+            continue;
+          }
+          for (term of iconSearchTermHash[iconStr]) {
+            if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
+              matchingIcons.push('fas fa-fw fa-' + iconStr);
+              break;
+            }
+          }
+        }
+      }
+      if (styles.includes('regular')) {
+        for (iconStr of regularIconNames) {
+          if (iconStr.indexOf(iconSearchStr) >= 0) {
+            matchingIcons.push('far fa-fw fa-' + iconStr);
+            continue;
+          }
+          for (term of iconSearchTermHash[iconStr]) {
+            if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
+              matchingIcons.push('far fa-fw fa-' + iconStr);
+              break;
+            }
+          }
+        }
+      }
+      if (styles.includes('light')) {
+        for (iconStr of lightIconNames) {
+          if (iconStr.indexOf(iconSearchStr) >= 0) {
+            matchingIcons.push('fal fa-fw fa-' + iconStr);
+            continue;
+          }
+          for (term of iconSearchTermHash[iconStr]) {
+            if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
+              matchingIcons.push('fal fa-fw fa-' + iconStr);
+              break;
+            }
           }
         }
       }

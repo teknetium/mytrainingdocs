@@ -33,3 +33,9 @@
 .color-picker {
 	width: 100% !important;
 }
+.showing {
+    border:3px solid #75c140 !important;
+}
+.not-showing {
+    border:3px solid red !important;
+} 

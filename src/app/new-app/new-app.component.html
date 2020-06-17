@@ -144,9 +144,9 @@
         <div *ngIf="aboutThisPageHash[currentPage]">
             <i *ngIf="!aboutThisPageHash[currentPage].visible" nz-icon nzType="info-circle" [nzTheme]="'twotone'"
                 (click)="aboutThisPageHash[currentPage].visible = true"
-                style="font-size:24px;font-weight: 500;cursor:pointer;"></i>
+                style="font-size:24px;font-weight: 500;cursor:pointer;margin-bottom:20px;"></i>
             <div *ngIf="((authenticatedUser$ | async)?.settings.showPageInfo && aboutThisPageHash[currentPage].visible)"
-                style="padding:20px;position:relative;" class="about-this-page">
+                style="padding:20px;position:relative;margin-bottom:20px;" class="about-this-page">
                 <div>
                     <i nz-icon nzType="info-circle" [nzTheme]="'twotone'"
                         style="position:absolute;font-size:24px;font-weight: 500;"></i>
