@@ -19,13 +19,13 @@ export class AssessmentService {
     private auth: AuthService) {
   }
 
-
+/*
   updateAssessment(assessment: Assessment) {
     this.updateAssessment$(assessment).subscribe(assObj => {
       console.log('update Assessment', assessment);
     })
   }
-
+*/
 /*
   getAssessmentStream(): Observable<Assessment> {
     return this.assessmentBS$.asObservable();
@@ -39,7 +39,7 @@ export class AssessmentService {
   private get _authHeader(): string {
     return `Bearer ${this.auth.accessToken}`;
   }
-
+/*
   postAssessment$(assessment: Assessment): Observable<Assessment> {
     return this.http
       .post<Assessment>(`${ENV.BASE_API}assessment/new/`, assessment, {
@@ -79,6 +79,7 @@ export class AssessmentService {
         catchError((error) => this._handleError(error))
       );
   }
+  */
 
   private _handleError(err: HttpErrorResponse | any): Observable<any> {
     const errorMsg = err.message || 'Error: Unable to complete request.';

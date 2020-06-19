@@ -1,4 +1,4 @@
-<div *ngIf="!selectedTraining" style="width:100%;height:fit-content;font-size:12px;">
+<div style="width:100%;height:fit-content;font-size:12px;">
     <nz-table *ngIf="userTrainings?.length > 0" nzSize="small" nzBordered="false" nzShowPagination="false" [nzData]="userTrainings"
         style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
         <thead>
@@ -77,7 +77,7 @@
     <div *ngIf="userTrainings?.length === 0" style="text-align: center;">
         <span style="font-size:22px;display:inline-block;font-weight:300;margin-top:40px;">
             No trainings have been assigned to
-            <span style="font-size:28px;color:blue;">{{selectedUser.firstName}}&nbsp;{{selectedUser.lastName}}</span> yet!
+            <span style="font-size:28px;color:blue;">{{selectedUser?.firstName}}&nbsp;{{selectedUser?.lastName}}</span> yet!
         </span>
     </div>
     <nz-modal [(nzVisible)]="markCompletedModalIsVisible" nzTitle="Mark this Training as Completed" nzWidth="800"

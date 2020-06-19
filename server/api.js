@@ -137,11 +137,6 @@ module.exports = function(app, config) {
     styles = styleStr.split(',');
 
     if (iconSearchStr === '*') {
-      if (styles.includes('duotone')) {
-        for (iconStr of duotoneIconNames) {
-          matchingIcons.push('fad fa-fw fa-' + iconStr);
-        }
-      }
       if (styles.includes('solid')) {
         for (iconStr of solidIconNames) {
           matchingIcons.push('fas fa-fw fa-' + iconStr);
@@ -157,21 +152,12 @@ module.exports = function(app, config) {
           matchingIcons.push('fal fa-fw fa-' + iconStr);
         }
       }
-    } else {
       if (styles.includes('duotone')) {
         for (iconStr of duotoneIconNames) {
-          if (iconStr.indexOf(iconSearchStr) >= 0) {
-            matchingIcons.push('fad fa-fw fa-' + iconStr);
-            continue;
-          }
-          for (term of iconSearchTermHash[iconStr]) {
-            if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
-              matchingIcons.push('fad fa-fw fa-' + iconStr);
-              break;
-            }
-          }
+          matchingIcons.push('fad fa-fw fa-' + iconStr);
         }
       }
+    } else {
       if (styles.includes('solid')) {
         for (iconStr of solidIconNames) {
           if (iconStr.indexOf(iconSearchStr) >= 0) {
@@ -209,6 +195,20 @@ module.exports = function(app, config) {
           for (term of iconSearchTermHash[iconStr]) {
             if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
               matchingIcons.push('fal fa-fw fa-' + iconStr);
+              break;
+            }
+          }
+        }
+      }
+      if (styles.includes('duotone')) {
+        for (iconStr of duotoneIconNames) {
+          if (iconStr.indexOf(iconSearchStr) >= 0) {
+            matchingIcons.push('fad fa-fw fa-' + iconStr);
+            continue;
+          }
+          for (term of iconSearchTermHash[iconStr]) {
+            if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
+              matchingIcons.push('fad fa-fw fa-' + iconStr);
               break;
             }
           }

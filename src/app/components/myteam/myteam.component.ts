@@ -4,7 +4,7 @@ import { UserService } from '../../shared/services/user.service';
 import { EventService } from '../../shared/services/event.service';
 import { TrainingService } from '../../shared/services/training.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
-import { UserTrainingModel } from '../../shared/interfaces/userTraining.type';
+import { UserTrainingModel, UidUTHash } from '../../shared/interfaces/userTraining.type';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
 import { Observable, BehaviorSubject, Subscription, defer } from 'rxjs';
 import { UserModel, UserIdHash } from '../../shared/interfaces/user.type';
@@ -14,6 +14,7 @@ import { JobTitleService } from '../../shared/services/jobtitle.service';
 import { MessageModel } from '../../shared/interfaces/message.type';
 import { takeUntil, filter } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as cloneDeep from 'lodash/cloneDeep';
 import { BaseComponent } from '../base.component';
 import FlatfileImporter from "flatfile-csv-importer";
 import { NzFormatEmitEvent, NzTreeNodeOptions, NzTreeNode } from 'ng-zorro-antd';
@@ -141,6 +142,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   showSupervisors = true;
   showVolunteers = true;
   showCustomers = true;
+  uidUTHash$: Observable<UidUTHash>;
+  uidUTHash = {};
+  showTrainingHash = {};
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -154,6 +158,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private router: Router
   ) {
     super();
+    this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
     this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
@@ -172,6 +177,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
       this.trainingService.assignTrainingsForJobTitle(newUser.jobTitle, newUser._id);
     });
+    this.uidUTHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUTHash => {
+      if (!uidUTHash) {
+        return;
+      }
+      this.uidUTHash = uidUTHash;
+    });
     this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamIdHash => {
       if (!myTeamIdHash) {
         return;
@@ -179,29 +190,17 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.myTeamIdHash = myTeamIdHash;
 
       this.myTeam = Object.values(this.myTeamIdHash);
-      this.myTeamFiltered = this.myTeam;
-      console.log('myTeamIdHash:', this.myTeam);
-      let node = new NzTreeNode({ title: '', key: '' });
+      this.myTeamFiltered = cloneDeep(this.myTeam);
       for (let teamMember of this.myTeam) {
+        this.uidUTHash[teamMember._id] = this.userTrainingService.getUidUTList(teamMember._id);
         /*
-        if (teamMember && teamMember._id === this.authenticatedUser._id) {
-          continue;
+        if (!teamMember.supervisorId) {
+          teamMember.supervisorId = this.userNameHash[this.supervisorHash[teamMember._id]];
+          teamMember.teamId = teamMember.supervisorId;
+          this.userService.updateUser(teamMember, true);  
         }
-        */
-        node.title = teamMember.firstName + ' ' + teamMember.lastName;
-        node.key = teamMember._id;
-        this.children.push(node);
+*/
       }
-      /*
-            for (let teamMember of this.myTeam) {
-              console.log("myTeamIdHash", teamMember);
-              if (!teamMember.supervisorId) {
-                teamMember.supervisorId = this.userNameHash[this.supervisorHash[teamMember._id]];
-                teamMember.teamId = teamMember.supervisorId;
-                this.userService.updateUser(teamMember, true);  
-              }
-            }
-      */
       //      this.cd.detectChanges();
       /*
             if (this.myTeam.length > 0) {
@@ -292,6 +291,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         for (let training of trainings) {
           if (training.teamId === this.authenticatedUser.uid) {
             this.teamTrainings.push(training);
+            this.showTrainingHash[training._id] = training
           }
         }
       })
@@ -322,6 +322,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.showCustomers = !this.showCustomers;
     }
 
+
     for (let user of this.myTeam) {
       if (!this.showUpToDate && user.trainingStatus === 'upToDate') {
         continue;
@@ -340,51 +341,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
   }
 
-  nzEvent(event: NzFormatEmitEvent): void {
-    console.log('loadNode', event);
-    // load child async
-    if (event.eventName === 'expand') {
-      const node = event.node;
-      if (node?.getChildren().length === 0 && node?.isExpanded) {
-        this.loadNode(node.key).then(users => {
-          let teamData: NzTreeNodeOptions[] = [];
-          for (let user of users) {
-            teamData.push(
-              {
-                title: user.firstName + ' ' + user.lastName,
-                key: String(new Date().getTime()),
-                uid: user._id
-                //                origin: {
-                //                  uid: user._id,
-                //                title: user.firstName + ' ' + user.lastName,
-                //                  key: String(new Date().getTime()),
-                //                }
-              }
-            )
-          }
-          console.log('loadNode', users, teamData);
-
-          node.addChildren(teamData);
-        })
-      }
-    }
-  }
-
-  loadNode(uid: string): Promise<NzTreeNodeOptions[]> {
-    return new Promise(resolve => {
-      setTimeout(
-        () =>
-          resolve([
-            { title: 'Child Node', key: `${new Date().getTime()}-0` },
-            { title: 'Child Node', key: `${new Date().getTime()}-1` }
-          ]),
-        1000
-      );
-    });
-
-    //  return this.userService.getTeam$(uid).pipe(toPromise()).subscribe(users => {
-
-  }
   async launchImporter() {
     try {
       /*
@@ -512,13 +468,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         bgColor: '#e9e9e9',
       }
     };
-      this.selectedUser = this.newTeamMember;
-      this.userPanelVisible = true;
-      this.options = [];
-    }
+    this.selectedUser = this.newTeamMember;
+    this.userPanelVisible = true;
+    this.options = [];
+  }
 
-    handleCancel(): void {
-      if(this.newUser) {
+  handleCancel(): void {
+    if (this.newUser) {
       this.userService.selectUser(this.authenticatedUser._id);
       this.newUser = false;
     }
@@ -601,5 +557,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.showUserTrainingModal = false;
     this.assignableTrainings.splice(this.assignableTrainings.indexOf(this.selectedTrainingId), 1);
     this.selectedTrainingId = null;
+    this.userTrainingService.getUTForUser$(this.userIdSelected).subscribe(utList => {
+      this.uidUTHash[this.userIdSelected] = utList;
+    })
   }
 }

@@ -341,7 +341,7 @@ export class TrainingService {
       description: 'This is a useless description',
       image: 'assets/images/others/bb.jpg',
       iconClass: 'fad fa-graduation-cap',
-      iconColor: 'orange',
+      iconColor: '#ff0000',
       iconSource: 'fontawesome',
       pages: [page],
       interestList: [],
@@ -359,7 +359,7 @@ export class TrainingService {
       dateCreated: new Date().getTime(),
       title: 'New Training',
       iconClass: 'fad fa-graduation-cap',
-      iconColor: 'orange',
+      iconColor: '#ff0000',
     };
     newTraining.versions.unshift(newTrainingVersionObj);
 

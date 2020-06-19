@@ -53,8 +53,8 @@
   </div>
   <!--
   <nz-modal [(nzVisible)]="showTaskVideoModal" nzWidth="700" nzTitle="Task Video" nzCancelDisabled="true"
-    (nzOnOk)="closeTaskVideoModal()" style="background-color: black;">
-    <div style="text-align: center;margin-top:5px;background-color: black;">
+    (nzOnOk)="closeTaskVideoModal()" style="background-color: #000000;">
+    <div style="text-align: center;margin-top:5px;background-color: #000000;">
       <vg-player (onPlayerReady)="onPlayerReady($event)">
 
         <vg-controls>
@@ -345,7 +345,7 @@
       </div>
       <nz-collapse nzAccordion>
         <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="headerTemplate" [nzActive]="panel.active">
-          <div style="padding-left:20px;font-size: 20px;color:black;font-weight: 200;">{{ panel.answer }}</div>
+          <div style="padding-left:20px;font-size: 20px;color:#000000;font-weight: 200;">{{ panel.answer }}</div>
           <ng-template #headerTemplate>
             <div style="color:#888888;font-size: 18px;font-weight: 200;">
               {{ panel.question }}

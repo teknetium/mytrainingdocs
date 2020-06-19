@@ -1,7 +1,7 @@
 <div style="width:100%;height:800px;">
     <div style="width:100%;text-align: center;height:fit-content;">
 
-        <i [ngClass]="selectedIcon" style="font-size:60px;" [ngStyle]="{'color': colorVal()}">
+        <i [ngClass]="selectedIcon" style="font-size:60px;" [ngStyle]="{'color': iconColor}">
         </i>
         <span *ngIf="selectedIcon === ''">No Icon Selected</span>
 
@@ -21,62 +21,74 @@
                 </nz-slider>
                 <i class="fad fa-fw fa-user-graduate" style="font-size:30px;float:right;vertical-align: middle;"></i>
             </div>
-            <div style="display:block;width:100%;">
-                <div style="float:left;position: relative;">
-                    <span style="float:left;font-size:18px;margin:30px 20px 0 30px;">Color</span>
-                    <span style="position:absolute;left:98px;top:-10px;font-size:12px;margin-bottom:5px;">Red</span>
-                    <nz-slider [nzMin]="0" [nzMax]="255" [nzStep]="1" [(ngModel)]="redValue" nzVertical="true"
-                        (ngModelChange)="colorChange($event, 'red')" nzTooltipVisible="default"
-                        style="float:left;height:64px;margin-bottom:30px;margin-right:20px;">
-                    </nz-slider>
-                    <span style="position:absolute;left:132px;top:-10px;font-size:12px;margin-bottom:5px;">Green</span>
-                    <nz-slider [nzMin]="0" [nzMax]="255" [nzStep]="1" [(ngModel)]="greenValue" nzVertical="true"
-                        (ngModelChange)="colorChange($event, 'green')" nzTooltipVisible="default"
-                        style="float:left;height:64px;margin-bottom:30px;margin-right:20px;">
-                    </nz-slider>
-                    <span style="position:absolute;left:180px;top:-10px;font-size:12px;margin-bottom:5px;">Blue</span>
-                    <nz-slider [nzMin]="0" [nzMax]="255" [nzStep]="1" [(ngModel)]="blueValue" nzVertical="true"
-                        (ngModelChange)="colorChange($event, 'blue')" nzTooltipVisible="default"
-                        style="float:left;height:64px;margin-bottom:30px;margin-right:20px;">
-                    </nz-slider>
-                    <div style="clear:both;"></div>
+            <div style="display:block;width:100%;margin-bottom:10px;">
+                <div style="float:left;position:relative;">
+                    <span style="float:left;font-size:18px;margin:40px 0;margin-right:30px;">Color</span>
+                    <div style="display:inline-block;font-size:18px;text-align: center;width:40px;">
+                        <span style="display:block;font-size:12px;">{{redValue}}</span>
+                        <nz-slider [nzMin]="0" [nzMax]="255" [nzStep]="1" [(ngModel)]="redValue" nzVertical="true"
+                            (ngModelChange)="colorChange($event, 'red')" nzTooltipVisible="default"
+                            style="display:inline-block;height:64px;margin-bottom:10px;">
+                        </nz-slider>
+                        <span style="display:inline-block;font-size:12px;margin-bottom:5px;">Red</span>
+                    </div>
+                    <div style="display:inline-block;font-size:18px;text-align: center;width:40px;">
+                        <span style="display:block;font-size:12px;">{{greenValue}}</span>
+                        <nz-slider [nzMin]="0" [nzMax]="255" [nzStep]="1" [(ngModel)]="greenValue" nzVertical="true"
+                            (ngModelChange)="colorChange($event, 'green')" nzTooltipVisible="default"
+                            style="display:inline-block;height:64px;margin-bottom:10px;">
+                        </nz-slider>
+                        <span style="display:inline-block;font-size:12px;margin-bottom:5px;">Green</span>
+                    </div>
+                    <div style="display:inline-block;font-size:18px;text-align: center;width:40px;">
+                        <span style="display:block;font-size:12px;">{{blueValue}}</span>
+                        <nz-slider [nzMin]="0" [nzMax]="255" [nzStep]="1" [(ngModel)]="blueValue" nzVertical="true"
+                            (ngModelChange)="colorChange($event, 'blue')" nzTooltipVisible="default"
+                            style="display:inline-block;height:64px;margin-bottom:10px;">
+                        </nz-slider>
+                        <span style="display:inline-block;font-size:12px;margin-bottom:5px;">Blue</span>
+                    </div>
                 </div>
                 <div style="float:right;">
-                    <div style="display:block;">
-                        <span style="float:left;font-size:18px;margin:30px 20px 0 30px;">Icon Styles</span>
-                        <div style="display:inline-block;cursor:pointer;padding:4px;border-radius:4px;border:1px solid #bbbbbb;margin-right:1px;margin-top:20px;vertical-align: top;"
+                    <div style="display:block;padding-top:20px;">
+                        <!--
+                        <span style="float:right;">{{styleLabel}}</span>
+                        -->
+                        <span style="float:left;font-size:18px;margin:20px 20px">Icon Styles</span>
+                        <div style="display:inline-block;cursor:pointer;padding:2px;border-radius:4px;border:1px solid #bbbbbb;margin-right:1px;margin-top:20px;vertical-align: top;"
                             (click)="toggleStyle('solid')" [ngClass]="{'showing': solid, 'not-showing': !solid}"
-                            nz-tooltip nzTooltipTitle="Solid">
-                            <i class="fas fa-fw fa-hat-witch"
-                                style="font-size:36px;display:inline-block;vertical-align: bottom;"></i>
+                            nz-tooltip nzTooltipTitle="Solid" (mouseenter)="styleLabel = 'Solid'" (mouseleave)="styleLabel = ''">
+                            <i class="fas fa-fw fa-user"
+                                style="font-size:24px;display:inline-block;vertical-align: bottom;"></i>
                         </div>
-                        <div style="display:inline-block;cursor:pointer;padding:4px;border-radius:4px;border:1px solid #bbbbbb;margin-right:1px;margin-top:20px;vertical-align: top;"
+                        <div style="display:inline-block;cursor:pointer;padding:2px;border-radius:4px;border:1px solid #bbbbbb;margin-right:1px;margin-top:20px;vertical-align: top;"
                             (click)="toggleStyle('regular')" [ngClass]="{'showing': regular, 'not-showing': !regular}"
-                            nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Regular">
-                            <i class="far fa-fw fa-hat-witch"
-                                style="font-size:36px;display:inline-block;vertical-align: bottom;"></i>
+                            nz-tooltip nzTooltipTitle="Regular" (mouseenter)="styleLabel = 'Regular'" (mouseleave)="styleLabel = ''">
+                            <i class="far fa-fw fa-user"
+                                style="font-size:24px;display:inline-block;vertical-align: bottom;"></i>
                         </div>
-                        <div style="display:inline-block;cursor:pointer;padding:4px;border-radius:4px;border:1px solid #bbbbbb;margin-right:1px;margin-top:20px;vertical-align: top;"
+                        <div style="display:inline-block;cursor:pointer;padding:2px;border-radius:4px;border:1px solid #bbbbbb;margin-right:1px;margin-top:20px;vertical-align: top;"
                             (click)="toggleStyle('light')" [ngClass]="{'showing': light, 'not-showing': !light}"
-                            nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Light">
-                            <i class="fal fa-fw fa-hat-witch"
-                                style="font-size:36px;display:inline-block;vertical-align: bottom;"></i>
+                            nz-tooltip nzTooltipTitle="Light" (mouseenter)="styleLabel = 'Light'" (mouseleave)="styleLabel = ''">
+                            <i class="fal fa-fw fa-user"
+                                style="font-size:24px;display:inline-block;vertical-align: bottom;"></i>
                         </div>
-                        <div style="display:inline-block;cursor:pointer;padding:4px;border-radius:4px;border:1px solid #bbbbbb;margin-right:1px;margin-top:20px;vertical-align: top;"
+                        <div style="display:inline-block;cursor:pointer;padding:2px;border-radius:4px;border:1px solid #bbbbbb;margin-right:1px;margin-top:20px;vertical-align: top;"
                             (click)="toggleStyle('duotone')" [ngClass]="{'showing': duotone, 'not-showing': !duotone}"
-                            nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Two Tone">
-                            <i class=" fad fa-fw fa-hat-witch"
-                                style="font-size:36px;display:inline-block; ;vertical-align: bottom;"></i>
+                            nz-tooltip nzTooltipTitle="Two Tone" (mouseenter)="styleLabel = 'Two Tone'" (mouseleave)="styleLabel = ''">
+                            <i class=" fad fa-fw fa-user"
+                                style="font-size:24px;display:inline-block; ;vertical-align: bottom;"></i>
                         </div>
                     </div>
                     <div style="display:block;font-size:12px;color:#bbbbbb;">
                         <span style="float:right;">
-                            Showing icon styles: &nbsp;
-
+                            {{styleLabel}}
+<!--
                             <span *ngFor="let style of currentStyles; index as styleIndex">
                                 {{style}}
                                 <span *ngIf="styleIndex < currentStyles.length - 1">,</span>
                             </span>
+                            -->
                         </span>
                     </div>
                 </div>
@@ -87,7 +99,7 @@
                 <span style="float:right;font-size:14px;margin-left:10px;color:green;">{{matchingIcons.length}}
                     matching icons </span>
             </div>
-            <div style="display:inline-block;height:70%;" [ngStyle]="{'color': colorVal()}">
+            <div style="display:inline-block;height:65%;" [ngStyle]="{'color': iconColor}">
                 <div class="icon-container">
                     <div *ngFor="let icon of matchingIcons$ | async; index as i" (mouseenter)="mouseEnter(i)"
                         (mouseleave)="mouseLeave(i)" (click)="selectIcon(i)" class="icon-box"
@@ -99,3 +111,16 @@
         </div>
     </div>
 </div>
+<!--
+<nz-modal [(nzVisible)]="showColorInitModal" nzTitle="Bad Color"
+    (nzOnCancel)="colorInitCancel()" (nzOnOk)="colorInitOk()">
+    <div style="display:block;padding-top:5px;">
+        Invalid color : {{currentColor}}<br><br>
+        Please enter another color.
+    </div>
+    <div style="display:block;">
+        <input nz-input type="text" placeholder="" ngDefaultControl [(ngModel)]="currentColor"
+            style="margin-bottom:10px;">
+    </div>
+</nz-modal>
+-->

@@ -91,12 +91,14 @@
             <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800" nzHeight="600"
                 (nzOnCancel)="handleIconSelectCancel()" [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled"
                 (nzOnOk)="handleIconSelectConfirm()" style="width:800px;height:700px;">
-                <app-icon-picker [currentIconClass]="selectedTraining.iconClass" [currentColor]="selectedTraining.iconColor" (icon)="setIcon($event)" style="width:100%;height:700px;"></app-icon-picker>
+                <app-icon-picker [currentIconClass]="selectedTraining.iconClass"
+                    [currentColor]="selectedTraining.iconColor" (icon)="setIcon($event)"
+                    style="width:100%;height:700px;"></app-icon-picker>
             </nz-modal>
             <div *ngIf="production === 'true'" style="position:relative;height:70%;width:100%;text-align: center;">
                 <div style="display:inline-block;">
                     <i [ngClass]="selectedTraining.iconClass"
-                        style="display:inline-block;font-size:28px;margin:10px;vertical-align: middle;"
+                        style="display:inline-block;font-size:38px;margin:10px;vertical-align: middle;"
                         [ngStyle]="{'color': selectedTraining.iconColor}">
                     </i>
                     <div style="display:inline-block;">
@@ -129,18 +131,18 @@
                     <div style="display:inline-block;width:fit-content;">
                         <i *ngIf="selectedTraining.status === 'unlocked' && mode === 'Edit'"
                             [ngClass]="selectedTraining.iconClass" nz-tooltip nzTooltipTitle="click to change icon"
-                            style="display: inline-block;font-size:28px;cursor: pointer;margin:10px;vertical-align: middle;"
+                            style="display: inline-block;font-size:38px;cursor: pointer;margin:10px;vertical-align: middle;"
                             [ngStyle]="{'color': selectedTraining.iconColor}" (click)="showIconSelectModal()">
                         </i>
                         <i *ngIf="selectedTraining.status === 'locked' || mode === 'Preview'"
                             [ngClass]="selectedTraining.iconClass"
-                            style="display: inline-block;font-size:28px;margin:10px;vertical-align: middle;"
+                            style="display: inline-block;font-size:38px;margin:10px;vertical-align: middle;"
                             [ngStyle]="{'color': selectedTraining.iconColor}">
                         </i>
                     </div>
                     <div style="display: inline-block;width:fit-content;">
                         <input *ngIf="selectedTraining.status === 'unlocked' && mode === 'Edit'"
-                            style="display:inline-block;color:black;width:500px;font-size:18px;" nz-input
+                            style="display:inline-block;color:#000000;width:500px;font-size:18px;" nz-input
                             [(ngModel)]="selectedTraining.title" nzSize="default" (keydown.enter)="saveTraining(true)"
                             (blur)="saveTraining(true)" />
                         <div *ngIf="selectedTraining.status === 'locked' || mode === 'Preview'"
@@ -152,7 +154,7 @@
                 <div style="position:absolute;right:7px;bottom:7px;">
                     <div *ngIf="mode === 'Edit'" style="display:inline-block;">
                         <span
-                            style="display:inline-block;font-size:12px;color:black;">Version&nbsp;&nbsp;:&nbsp;&nbsp;</span>
+                            style="display:inline-block;font-size:12px;color:#000000;">Version&nbsp;&nbsp;:&nbsp;&nbsp;</span>
 
                         <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click" nzPlacement="bottomRight"
                             style="display:inline-block;font-size:12px;color:blue;">
@@ -180,7 +182,7 @@
                     </div>
                     <div *ngIf="selectedTraining.status === 'unlocked'" style="width:fit-content;display:inline-block;">
                         <span
-                            style="display:inline-block;font-size:12px;color:black;">Mode&nbsp;&nbsp;:&nbsp;&nbsp;</span>
+                            style="display:inline-block;font-size:12px;color:#000000;">Mode&nbsp;&nbsp;:&nbsp;&nbsp;</span>
                         <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click" [nzPlacement]="'bottomRight'"
                             style="display:inline-block;font-size:12px;color:blue;">{{ mode }}
                             <i nz-icon nzType="down" style="font-size:12px;vertical-align: middle;"></i>
@@ -236,7 +238,7 @@
                     </div>
                 </div>
                 <ng-template #vertSeparator>
-                    <span style="font-size:16px;color:black;">|</span>
+                    <span style="font-size:16px;color:#000000;">|</span>
                 </ng-template>
                 <nz-modal [(nzVisible)]="showConfirmDeleteTrainingWithoutAffectedUsers"
                     nzTitle="Delete Training Confirmation" (nzOnCancel)="cancelDelete()" (nzOnOk)="confirmDelete()"
@@ -356,8 +358,8 @@
             </div>
             <div style="padding:10px;text-align: center;background-color: #fefbe7;">
                 <div *ngFor="let page of selectedTraining.pages; index as pageIndex"
-                    style="display:inline-block;padding:5px;" class="page-icon"
-                    [ngClass]="{'current-page': currentPageId === page._id}" (click)="setCurrentPageFromIcon(page._id)">
+                    style="display:inline-block;padding:5px;" 
+                    [ngClass]="{'current-page': currentPageId === page._id, 'page-icon-production':production === 'true', 'page-icon': production === 'false' && mode === 'Edit' }" (click)="setCurrentPageFromIcon(page._id)">
                     <i *ngIf="page.type === 'file'" nz-icon nzType="file-text" theme="outline"
                         style="display:block;font-size:22px;"></i>
                     <i *ngIf="page.type === 'url'" nz-icon nzType="global" theme="outline"
@@ -378,10 +380,10 @@
             nzPlacement="right" (nzOnClose)="showTrainingConfig = false">
             <div class="config-page-row">
                 <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
-                    <label style="margin-bottom: 0;font-size:12px;color:black;">Category</label>
+                    <label style="margin-bottom: 0;font-size:12px;color:#000000;">Category</label>
                 </div>
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
-                    <input style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:80%;" nz-input
+                    <input style="display:inline-block;color:#000000;margin-bottom:0;font-size:14px;width:80%;" nz-input
                         [(ngModel)]="selectedTraining.category" nzSize="small"
                         (ngModelChange)="onCategoryChange($event)" [nzAutocomplete]="autoCategory"
                         (keydown.enter)="setCategory($event)" (blur)="setCategory($event)" />
@@ -390,10 +392,10 @@
             </div>
             <div class="config-page-row">
                 <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
-                    <label style="margin-bottom: 0;font-size:12px;color:black;">Subcategory</label>
+                    <label style="margin-bottom: 0;font-size:12px;color:#000000;">Subcategory</label>
                 </div>
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
-                    <input style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:80%;" nz-input
+                    <input style="display:inline-block;color:#000000;margin-bottom:0;font-size:14px;width:80%;" nz-input
                         ngDefaultControl [(ngModel)]="selectedTraining.subcategory" nzSize="small"
                         (ngModelChange)="onSubcategoryChange($event)" [nzAutocomplete]="autoSubcategory"
                         (keydown.enter)="setSubcategory($event)" (blur)="setSubcategory($event)" />
@@ -403,10 +405,10 @@
             </div>
             <div class="config-page-row">
                 <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
-                    <label style="margin-bottom: 0;font-size:12px;color:black;">Job Title</label>
+                    <label style="margin-bottom: 0;font-size:12px;color:#000000;">Job Title</label>
                 </div>
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
-                    <input style="display:inline-block;color:black;margin-bottom:0;font-size:14px;width:80%;" nz-input
+                    <input style="display:inline-block;color:#000000;margin-bottom:0;font-size:14px;width:80%;" nz-input
                         [(ngModel)]="selectedTraining.jobTitle" ngDefaultControl nzSize="small"
                         (ngModelChange)="onJobTitleChange($event)" [nzAutocomplete]="auto"
                         (keydown.enter)="setJobTitle($event)" (blur)="setJobTitle($event)" />
@@ -415,7 +417,7 @@
             </div>
             <div class="config-page-row">
                 <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
-                    <label style="margin-bottom: 0;display: inline-block;font-size:12px;color:black;">
+                    <label style="margin-bottom: 0;display: inline-block;font-size:12px;color:#000000;">
                         Estimated Time To Complete
                     </label>
                 </div>
@@ -429,7 +431,7 @@
             </div>
             <div class="config-page-row">
                 <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
-                    <label style="margin-bottom: 0;font-size:12px;color:black;">Share With Other
+                    <label style="margin-bottom: 0;font-size:12px;color:#000000;">Share With Other
                         Teams</label>
                 </div>
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
@@ -440,7 +442,7 @@
             </div>
             <div class="config-page-row">
                 <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
-                    <label style="margin-bottom: 0;font-size:12px;color:black;">Use Training Ending Assessment</label>
+                    <label style="margin-bottom: 0;font-size:12px;color:#000000;">Use Training Ending Assessment</label>
                 </div>
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
 
@@ -450,7 +452,7 @@
             </div>
             <div class="config-page-row">
                 <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
-                    <label style="margin-bottom: 0;font-size:12px;color:black;">Interest List</label>
+                    <label style="margin-bottom: 0;font-size:12px;color:#000000;">Interest List</label>
                 </div>
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
                     <div>
@@ -481,10 +483,10 @@
                                 style="text-align:center;">
                                 <p *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                     nz-typography nzEditable [(nzContent)]="page.title"
-                                    style="font-style:italic;display:inline-block;font-size:30px;color:black;width:50%;">
+                                    style="font-style:italic;display:inline-block;font-size:30px;color:#000000;width:50%;">
                                 </p>
                                 <p *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
-                                    style="color:black;text-align: center;font-size:30px;margin-bottom:5px;width:50%;display: inline-block;">
+                                    style="color:#000000;text-align: center;font-size:30px;margin-bottom:5px;width:50%;display: inline-block;">
                                     {{page.title}}</p>
                                 <div *ngIf="page.type && page.type === 'training-intro'"
                                     style="text-align: center;width:100%;height:100%;">
@@ -493,11 +495,12 @@
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}">
                                         <quill-editor style="height:fit-content;width:90%;" format="html"
                                             [(ngModel)]="page.text" (onBlur)="quillBlur($event);">
+                                            <!--
                                             <div quill-editor-toolbar
                                                 style="background-color: #f5f5f5;border:1px solid #dddddd;">
                                                 <select class="ql-size">
                                                     <option value="small"></option>
-                                                    <!-- Note a missing, thus falsy value, is used to reset to default -->
+                                                    < !-- Note a missing, thus falsy value, is used to reset to default -- >
                                                     <option selected></option>
                                                     <option value="large"></option>
                                                     <option value="huge"></option>
@@ -518,6 +521,7 @@
                                                     </select>
                                                 </span>
                                             </div>
+                                            -->
                                         </quill-editor>
                                     </div>
                                     <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
@@ -535,9 +539,9 @@
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}">
                                         <quill-editor style="height:fit-content;width:90%;" format="html"
                                             [(ngModel)]="page.text" (onBlur)="quillBlur($event);">
+                                            <!--
                                             <div quill-editor-toolbar
                                                 style="background-color: #f5f5f5;border:1px solid #dddddd;">
-                                            <!--
                                                 <select class="ql-size">
                                                     <option value="small"></option>
                                                     < !-- Note a missing, thus falsy value, is used to reset to default -- >
@@ -561,8 +565,8 @@
                                                     <select class="ql-background" [title]="'BackgroundColor'">
                                                     </select>
                                                 </span>
-                                            -->
                                             </div>
+                                            -->
                                         </quill-editor>
                                     </div>
                                     <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
@@ -654,7 +658,7 @@
                                                             -->
                                                             <div style="display:inline-block;width:90%;">
                                                                 <input
-                                                                    style="display:inline-block;color:black;font-size:14px;width:90%;"
+                                                                    style="display:inline-block;color:#000000;font-size:14px;width:90%;"
                                                                     nz-input [(ngModel)]="pageUrl" nzSize="small"
                                                                     (keydown.enter)="pageUrlChanged()"
                                                                     (blur)="pageUrlChanged()"
@@ -689,7 +693,7 @@
                                                     <span style="display:inline-block;font-size:18px;">HTML</span>
                                                 </div>
                                                 <div style="position:absolute;right:10px;top:10px;">
-                                                    <i nz-icon nzType="close" theme="outline" nz-tooltip
+                                                    <i nz-icon nzType="rollback" theme="outline" nz-tooltip
                                                         nzTooltipTitle="Reset Content" nz-popconfirm
                                                         nzPopconfirmTitle="Reset the content of this page?"
                                                         [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'left'"
@@ -763,9 +767,10 @@
                                                                     <div
                                                                         style="display:inline-block;margin-right:40px;width:50%;">
                                                                         <div style="display:block;width:100%;">
-                                                                            <div style="display:inline-block;width:25%;text-align: right;">
+                                                                            <div
+                                                                                style="display:inline-block;width:25%;text-align: right;">
                                                                                 <label
-                                                                                    style="font-size:14px;color:black;">
+                                                                                    style="font-size:14px;color:#000000;">
                                                                                     Title
                                                                                 </label>
                                                                             </div>
@@ -779,9 +784,10 @@
                                                                             </div>
                                                                         </div>
                                                                         <div style="display:block;width:100%;">
-                                                                            <div style="display:inline-block;width:25%;text-align: right;">
+                                                                            <div
+                                                                                style="display:inline-block;width:25%;text-align: right;">
                                                                                 <label
-                                                                                    style="font-size:14px;color:black;">
+                                                                                    style="font-size:14px;color:#000000;">
                                                                                     Description
                                                                                 </label>
                                                                             </div>
@@ -790,7 +796,8 @@
                                                                                 <input nz-input nzSize="small"
                                                                                     class="foo" style="font-size:12px;"
                                                                                     [(ngModel)]="page.content.assessment.description"
-                                                                                    placeholder="Short Description  " ngDefaultControl
+                                                                                    placeholder="Short Description  "
+                                                                                    ngDefaultControl
                                                                                     (keydown.enter)="saveTraining(false)" />
                                                                             </div>
                                                                         </div>
@@ -799,7 +806,7 @@
                                                                         <div style="display:block;">
                                                                             <div style="display:inline-block;">
                                                                                 <label
-                                                                                    style="font-size:14px;color:black;">
+                                                                                    style="font-size:14px;color:#000000;">
                                                                                     Passing Grade
                                                                                 </label>
                                                                             </div>
@@ -821,7 +828,7 @@
                                                                         <div style="display:block;">
                                                                             <div style="display:inline-block;">
                                                                                 <label
-                                                                                    style="font-size:14px;color:black;">
+                                                                                    style="font-size:14px;color:#000000;">
                                                                                     Final Assessment
                                                                                 </label>
                                                                             </div>
@@ -981,7 +988,7 @@
                                                                                 <div
                                                                                     style="display: inline-block;font-size:16px;">
                                                                                     <div
-                                                                                        style="color:black;font-weight: 300;">
+                                                                                        style="color:#000000;font-weight: 300;">
                                                                                         {{item.question}}
                                                                                     </div>
                                                                                 </div>
@@ -1018,7 +1025,7 @@
                                                                                                 <span
                                                                                                     style="font-weight:300;color:#bbbbbb;">{{alpha[choiceIndex]}}&nbsp;)&nbsp;&nbsp;</span>
                                                                                                 <span
-                                                                                                    style="font-size:14px;color:black;font-weight: 300;">{{choice}}</span>
+                                                                                                    style="font-size:14px;color:#000000;font-weight: 300;">{{choice}}</span>
                                                                                             </div>
                                                                                         </div>
                                                                                     </nz-radio-group>
@@ -1056,11 +1063,12 @@
                                                 style="display: inline-block;">
                                                 <quill-editor style="height:100%;width:100%;" format="html"
                                                     [(ngModel)]="page.content.text" (onBlur)="quillBlur($event);">
+                                                    <!--
                                                     <div quill-editor-toolbar
                                                         style="background-color: #f5f5f5;border:1px solid #dddddd;">
                                                         <select class="ql-size">
                                                             <option value="small"></option>
-                                                            <!-- Note a missing, thus falsy value, is used to reset to default -->
+                                                            < !-- Note a missing, thus falsy value, is used to reset to default -- >
                                                             <option selected></option>
                                                             <option value="large"></option>
                                                             <option value="huge"></option>
@@ -1081,6 +1089,7 @@
                                                             </select>
                                                         </span>
                                                     </div>
+                                                -->
                                                 </quill-editor>
                                             </div>
                                             <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
@@ -1125,10 +1134,11 @@
     <div *ngIf="currentQuestion" style="background-color: white;">
         <div style="display:block;">
             <label style="display:inline-block;margin-right: 10px;font-size:18px;">Question</label>
-            <input nz-input type="text" placeholder="Question Text" ngDefaultControl [nzAutocomplete]="autoQuestion"
-                (ngModelChange)="onQuestionChange($event)" [(ngModel)]="currentQuestion.question"
-                style="display:inline-block;margin-bottom:10px;width:500px;">
+            <input nz-input type="text" placeholder="Question Text" ngDefaultControl
+                [(ngModel)]="currentQuestion.question" style="display:inline-block;margin-bottom:10px;width:500px;">
+            <!--
             <nz-autocomplete [nzDataSource]="matchingQuestions" #autoQuestion></nz-autocomplete>
+            -->
         </div>
         <div style="display:block;">
             <label style="display:inline-block;margin-right: 10px;font-size:18px;">Choices</label>

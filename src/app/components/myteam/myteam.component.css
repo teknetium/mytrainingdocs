@@ -8,13 +8,13 @@
 }
 
 .my-team-rightside {
-    width: 70%;
+    width: 74%;
     height:100%;    
     float:right;
 }
 
 .team-container {
-    width: 22%;
+    width: 25%;
     height:100%;
     border-right: 1px solid #e0e0e0;
     display:inline-block;
@@ -35,10 +35,8 @@
 }
 
 .direct-report-cell {
-    width: fit-content;
-    position: relative;
-    margin-bottom: 10px;
-    border-bottom:1px solid #bbbbbb;
+    width: 100%;
+    padding:5px;
 }
 
 .direct-report {
@@ -50,18 +48,19 @@
 }
 
 .user-button {
-    background-color: #fafafa;
-    border:1px solid #bbbbbb;
-    border-radius: 4px;
-    padding:1px;    
-    width: fit-content;
+    padding: 10px;
     overflow:auto;
     white-space: nowrap;
+    border-top:1px solid #dddddd;
+}
+.user-button:hover {
+    background-color: #f1f1f1   ;
 }
 
-.user-button:hover {
-    border-color: #3b5ae3;
+.selected-training {
+    background-color: #dddddd;
 }
+
 
 .all-training-list-entry {
     padding:5px;
@@ -73,8 +72,6 @@
 
 .user-selected {
     background-color: #e0eafd;
-    color: #3b5ae3;
-    border-color: #3b5ae3;    
 }
 
 .legend {

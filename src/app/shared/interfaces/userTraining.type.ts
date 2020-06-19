@@ -34,6 +34,10 @@ export interface UTSessionHash {
   [indexer: string]: UTSession;
 }
 
+export interface UidUTHash {
+  [indexer: string]: UserTrainingModel[];
+}
+
 export interface UserTrainingHash {
   [indexer: string]: UserTrainingModel;
 }

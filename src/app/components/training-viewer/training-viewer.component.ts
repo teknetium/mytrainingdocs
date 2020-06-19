@@ -561,9 +561,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     })
 
     this.assessmentItems$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(items => {
-      if (items && items.length === 0) {
+      if (!items) {
         return;
       }
+
       this.assessmentItems = items;
       this.questions = [];
       this.assessmentHash = {};
@@ -1347,13 +1348,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
     this.questionEditorVisible = true;
     let newQuestionIndex = this.currentPage.content.assessment.items.length;
-    let newItem = {
-      question: '',
-      choices: [],
-      correctChoice: -1
-    };
 
-    this.currentPage.content.assessment.items.push(cloneDeep(newItem));
+    this.currentPage.content.assessment.items.push({question: '', choices:[], correctChoice: -1});
     this.editQuestion(newQuestionIndex);
   }
 

@@ -175,6 +175,9 @@
 .page-icon {
 	border:1px solid #fefbe7;
 }
+.page-icon-production {
+	border:1px solid #fefbe7;
+}
 
 .page-icon:hover {
 	cursor: pointer;

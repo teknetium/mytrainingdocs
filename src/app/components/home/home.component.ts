@@ -6,6 +6,7 @@ import { UserTrainingService } from '../../shared/services/userTraining.service'
 import { EventService } from '../../shared/services/event.service';
 import { Observable, Subscription } from 'rxjs';
 import { UserModel, UserIdHash } from '../../shared/interfaces/user.type';
+import { UidUTHash, UTSession } from '../../shared/interfaces/userTraining.type';
 import { EventModel } from '../../shared/interfaces/event.type';
 import { filter } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
@@ -19,7 +20,8 @@ export interface UserStat {
   trainingStatus: string,
   upToDateCnt: number,
   completedCnt: number,
-  pastDueCnt: number
+  pastDueCnt: number,
+  trainingIdList: string[]
 }
 
 export interface TrainingStat {
@@ -35,13 +37,18 @@ export interface TrainingStat {
   //  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent extends BaseComponent implements OnInit {
+  uidUTHash$: Observable<UidUTHash>;
+  uidUTHash = {};
+  sessionLog$: Observable<UTSession[]>;
+  sessionLog: UTSession[];
+  filteredSessionLog: UTSession[] = [];
 
   userTypeIconHash = {
-    individualContributor: 'fas fa-fw fa-user',
-    supervisor: 'fas fa-fw fa-user-tie',
-    volunteer: 'fas fa-fw fa-user-cowboy',
-    customer: 'fas fa-fw fa-user-crown',
-    candidate: 'fas fa-fw fa-user-graduate'
+    individualContributor: 'fad fa-fw fa-user',
+    supervisor: 'fad fa-fw fa-user-tie',
+    volunteer: 'fad fa-fw fa-user-cowboy',
+    customer: 'fad fa-fw fa-user-crown',
+    candidate: 'fad fa-fw fa-user-graduate'
   }
   trainingStatusColorHash = {
     upToDate: '#52c41a',
@@ -63,6 +70,10 @@ export class HomeComponent extends BaseComponent implements OnInit {
   pastDueCnt = 0;
   completedCnt = 0;
   userStatHash = {};
+  dateRange = [];
+  startRangeTimeMS;
+  endRangeTimeMS;
+  now;
 
   constructor(
     private auth: AuthService,
@@ -74,6 +85,8 @@ export class HomeComponent extends BaseComponent implements OnInit {
     private router: Router
   ) {
     super();
+    this.sessionLog$ = this.userTrainingService.getSessionLogStream();
+    this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
     this.startTour$ = this.eventService.getStartTourStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
@@ -82,11 +95,30 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
 
   ngOnInit() {
+    this.now = new Date().getTime();
+    this.startRangeTimeMS = this.now - 604800000;
+    this.endRangeTimeMS = this.now + 3600000;
+    this.dateRange = [new Date(this.startRangeTimeMS), new Date(this.endRangeTimeMS) ]
+    
+
     this.startTour$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(page => {
       if (page == 'home') {
         console.log('startTour', page);
         this.startTour();
       }
+    });
+    this.uidUTHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUTHash => {
+      if (!uidUTHash) {
+        return;
+      }
+      this.uidUTHash = uidUTHash;
+    });
+    this.sessionLog$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(sessionLog => {
+      if (!sessionLog) {
+        return;
+      }
+      this.sessionLog = sessionLog;
+      this.onDateRangeChange(this.dateRange);
     });
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
@@ -115,10 +147,12 @@ export class HomeComponent extends BaseComponent implements OnInit {
                 trainingStatus: undefined,
                 upToDateCnt: 0,
                 pastDueCnt: 0,
-                completedCnt: 0
+                completedCnt: 0,
+                trainingIdList: []
               }
               this.userTrainingService.getUTForUser$(this.myTeam[index]._id).subscribe(utList => {
                 for (let ut of utList) {
+                  userStatObj.trainingIdList.push(ut.tid);
                   if (ut.status === 'upToDate') {
                     userStatObj.upToDateCnt++;
                   } else if (ut.status === 'completed') {
@@ -149,12 +183,29 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   startTour() {
     this.joyrideService.startTour(
-      { steps: ['step1', 'step2'] } // Your steps order
+      { steps: ['step1', 'step2', 'step3', 'step4'] } // Your steps order
     );
+  }
+
+  onDateRangeChange(dateRange) {
+    this.filteredSessionLog = [];
+    this.startRangeTimeMS = dateRange[0].getTime();
+    this.endRangeTimeMS = dateRange[1].getTime();
+    for (let session of this.sessionLog) {
+      if (session.startTime >= this.startRangeTimeMS && session.startTime <= this.endRangeTimeMS) {
+        this.filteredSessionLog.push(session);
+      } 
+    }
   }
 
   goTo(route: string) {
     this.router.navigate([route]);
+  }
+
+  timeFormat(ms): string {
+    let m = String(Math.floor(ms / 60000)).padStart(2, '0');
+    let s = String(Math.floor(((ms % 3600000) % 60000) / 1000)).padStart(2, '0');
+    return m + ':' + s;
   }
 
   selectTraining(tid: string) {

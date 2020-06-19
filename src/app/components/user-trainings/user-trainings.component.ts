@@ -47,19 +47,20 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   selectedUser$: Observable<UserModel>;
   selectedUser: UserModel;
   selectedTraining$: Observable<TrainingModel>;
+  selectedTraining: TrainingModel;
   
   @Input() mode = '';
   @Input() logSession = 'off';
   @Input() production = 'off';
 
   currentUserTraining: string;
+  currentTrainingId;
   markCompletedModalIsVisible: boolean;
   trainingIsVisible: boolean;
   utIdHash = {};
   comment = '';
   rating = 0;
-  selectedTraining = false;
-
+  
 
   constructor(
     private userService: UserService,
@@ -80,9 +81,9 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     this.selectedTraining$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(selectedTraining => {
       if (!selectedTraining) {
         this.currentUserTraining = '';
-        this.selectedTraining = false;
+        this.selectedTraining = null;
       } else {
-        this.selectedTraining = true;
+        this.selectedTraining = selectedTraining;
       }
     })
     this.trainingIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(trainingIdHash => {
@@ -140,6 +141,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     if (this.logSession === 'on') {
       this.userTrainingService.startSession(utid, this.selectedUser._id, tid);
     }
+    this.currentTrainingId = tid;
     this.currentUserTraining = utid;
     this.trainingIsVisible = true;
     this.trainingService.selectTraining(tid);
@@ -167,10 +169,10 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     this.userTrainingService.saveUserTraining(ut);
   }
 
-  markTrainingAsComplete() {
+  markTrainingAsComplete(selectedTraining: TrainingModel) {
     let comment = {
       _id: String(new Date().getTime()),
-      tid: this.utIdHash[this.currentUserTraining].tid,
+      tid: this.currentTrainingId,
       version: this.trainingIdHash[this.utIdHash[this.currentUserTraining].tid].versions[0].version,
       author: this.selectedUser._id,
       text: this.comment,

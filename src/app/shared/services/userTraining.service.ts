@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, throwError as ObservableThrowError, Subscr
 import { EventService } from '../services/event.service';
 import { EventModel } from '../interfaces/event.type';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { UserTrainingModel, AssessmentResponse, UserTrainingHash, UTSession, UTSessionHash } from '../interfaces/userTraining.type';
+import { UserTrainingModel, AssessmentResponse, UserTrainingHash, UTSession, UTSessionHash, UidUTHash } from '../interfaces/userTraining.type';
 import { AuthService } from './auth.service';
 import { ENV } from './env.config';
 import { catchError } from 'rxjs/operators';
@@ -22,6 +22,10 @@ export class UserTrainingService {
   private usersBS$ = new BehaviorSubject<string[]>([]);
   private utSessionHash: UTSessionHash = {};
   private currentUT: string;
+  private uidUTHashBS$ = new BehaviorSubject<UidUTHash>(null);
+  private uidUTHash = {};
+  private sessionLog: UTSession[] = [];
+  private sessionLogBS$ = new BehaviorSubject<UTSession[]>(null);
 
   constructor(private eventService: EventService,
     private http: HttpClient,
@@ -38,13 +42,20 @@ export class UserTrainingService {
 
   initUserTrainingsForUser(uid) {
     let now = new Date().getTime();
-    let utHash = {};
     this.getUTForUser$(uid).subscribe(utList => {
+      this.uidUTHash[uid] = utList;
       for (let userTraining of utList) {
-        utHash[userTraining._id] = userTraining;
         this.allUserTrainingHash[userTraining._id] = userTraining;
       }
     });
+  }
+
+  getSessionLogStream(): Observable<UTSession[]> {
+    return this.sessionLogBS$.asObservable();
+  }
+
+  getUidUTHashStream() {
+    return this.uidUTHashBS$.asObservable();
   }
 
   getUserTrainingForTidStream(): Observable<UserTrainingModel[]> {
@@ -95,11 +106,21 @@ export class UserTrainingService {
     this.saveUserTraining(ut);
     this.utSessionHash[tid] = null;
     this.postUTSession$(session).subscribe(utSession => {
+      this.sessionLog.push(utSession);
+      this.sessionLogBS$.next(this.sessionLog);
     });
   }
 
   getUsersForTrainingStream(): Observable<string[]> {
     return this.usersBS$.asObservable();
+  }
+
+  getUidUTList(uid: string): UserTrainingModel[] {
+    let utList: UserTrainingModel[] = this.uidUTHash[uid];
+    if (!utList) {
+      utList = [];
+    }
+    return utList;
   }
 
   getStatusForUser(uid: string): string {
@@ -124,12 +145,12 @@ export class UserTrainingService {
     })
   }
 
-/*
-  getAllUserTrainings() {
-    this.allUserTrainingHash
-  }
-*/
-  
+  /*
+    getAllUserTrainings() {
+      this.allUserTrainingHash
+    }
+  */
+
   getUTForTraining(tid: string) {
     let uids: string[] = [];
     this.getUTForTraining$(tid).subscribe(uts => {
@@ -161,10 +182,13 @@ export class UserTrainingService {
       this.getUTForUser$(uid).subscribe(userTrainings => {
         console.log('userTrainingService: ', userTrainings);
         this.userTrainings$BS.next(userTrainings);
+        this.uidUTHash[uid] = userTrainings;
+        this.uidUTHashBS$.next(this.uidUTHash);
         this.allUserTrainingHash[userTraining._id] = userTraining;
       })
     })
   }
+
   saveUserTraining(ut: UserTrainingModel): void {
     this.updateUserTraining$(ut).subscribe(userTraining => {
       this.getUTForUser$(userTraining.uid).subscribe(userTrainings => {
@@ -201,6 +225,9 @@ export class UserTrainingService {
       for (let ut of utList) {
         if (ut.tid === tid) {
           this.deleteUserTraining(ut._id, uid);
+          utList.splice(utList.indexOf(ut), 1);
+          this.uidUTHash[uid] = utList;
+          this.uidUTHashBS$.next(this.uidUTHash);
         }
       }
     })
@@ -209,6 +236,8 @@ export class UserTrainingService {
   deleteUserTraining(id, uid) {
     this.deleteUserTraining$(id).subscribe(item => {
       this.getUTForUser$(uid).subscribe(utList => {
+        this.uidUTHash[uid] = utList;
+        this.uidUTHashBS$.next(this.uidUTHash);
         this.userTrainings$BS.next(utList);
       });
     })

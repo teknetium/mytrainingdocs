@@ -1,6 +1,11 @@
 <div style="height:100%;width:100%;padding:30px;">
+    <i nz-icon nzType="car" nzTheme="twotone"
+        style="cursor:pointer;position:fixed;top:74px;left:10px;font-size:20px;color:#000000;" (click)="startTour()"
+        nz-tooltip nzTooltipTitle="Tour the Page!"></i>
     <div style="display:block;">
-        <div style="margin-bottom:20px;display: inline-block;margin-left:20px;">
+        <div joyrideStep="step1" title="Welcome"
+            text="Lets get started!  On this page you will find three sections that are intended to give you a very quick, high level understanding of your team and their training."
+            style="margin-bottom:20px;display: inline-block;margin-left:20px;">
             <span style="font-weight: 200;font-size:28px;">
                 Welcome,
             </span>
@@ -12,7 +17,8 @@
     </div>
     <div style="width:60%;display:inline-block;">
         <div style="width:100%;display:block;padding:20px;">
-            <div joyrideStep="step1" title="Page Title" text="Main title!"
+            <div joyrideStep="step2" title="Your Team"
+                text="This section lists all of your current team members along with the trainings that have been assigned to them.  Selecting a team member from this section takes you directly to the My Team page with that user pre-selected."
                 style="font-size:22px;border-bottom:1px solid #dddddd;">
                 Team Members
             </div>
@@ -35,18 +41,35 @@
                                 {{ user.firstName }} {{ user.lastName }}
                             </div>
                             <div style="display:inline-block;width:fit-content;width:35%;justify-content: left;">
-                                <div *ngIf="userStatHash[user._id].completedCnt > 0" style="display:inline-block;margin-right:20px;" nz-tooltip nzTooltipTitle="Completed Trainings">
+                                <span *ngFor="let tid of userStatHash[user._id].trainingIdList "
+                                    style="float:right;margin-left:10px;   " nz-tooltip
+                                    [nzTooltipTitle]="teamTrainingHash[tid].title">
+                                    <i [ngClass]="teamTrainingHash[tid].iconClass"
+                                        style="display:inline-block;font-size:24px;vertical-align: middle;"
+                                        [ngStyle]="{'color': teamTrainingHash[tid].iconColor}">
+                                    </i>
+                                    <nz-badge nzStatus="success"></nz-badge>
+                                </span>
+                                <!--
+                                <div *ngIf="userStatHash[user._id].completedCnt > 0"
+                                    style="display:inline-block;margin-right:20px;" nz-tooltip
+                                    nzTooltipTitle="Completed Trainings">
                                     <i class="fad fa-graduation-cap"
                                         style="font-size:14px;color:blue;"></i>&nbsp;-&nbsp;{{ userStatHash[user._id].completedCnt }}
                                 </div>
-                                <div *ngIf="userStatHash[user._id].pastDueCnt > 0" style="display:inline-block;margin-right:20px;" nz-tooltip nzTooltipTitle="Past Due Trainings">
+                                <div *ngIf="userStatHash[user._id].pastDueCnt > 0"
+                                    style="display:inline-block;margin-right:20px;" nz-tooltip
+                                    nzTooltipTitle="Past Due Trainings">
                                     <i class="fad fa-graduation-cap"
                                         style="font-size:14px;color:red;"></i>&nbsp;-&nbsp;{{ userStatHash[user._id].pastDueCnt }}
                                 </div>
-                                <div *ngIf="userStatHash[user._id].upToDateCnt > 0  " style="display:inline-block;margin-right:20px;" nz-tooltip nzTooltipTitle="Up To Date Trainings">
+                                <div *ngIf="userStatHash[user._id].upToDateCnt > 0  "
+                                    style="display:inline-block;margin-right:20px;" nz-tooltip
+                                    nzTooltipTitle="Up To Date Trainings">
                                     <i class="fad fa-graduation-cap"
                                         style="font-size:14px;color:#75c040;"></i>&nbsp;-&nbsp;{{ userStatHash[user._id].upToDateCnt }}
                                 </div>
+                                -->
                             </div>
                         </div>
                     </nz-list-item>
@@ -54,7 +77,8 @@
             </div>
         </div>
         <div style="width:100%;display:block;padding:20px;">
-            <div joyrideStep="step2" title="Page Title" [text]=""
+            <div joyrideStep="step3" title="Your Team's Trainings"
+                text="This section lists all of your trainings.  Selecting a training in this section will put you directly in the training editor."
                 style="font-size:22px;border-bottom:1px solid #dddddd;">
                 Trainings
             </div>
@@ -80,7 +104,50 @@
             </div>
         </div>
     </div>
-    <div style="width:40%;display:inline-block;">
-
+    <div style="width:40%;float:right;height:100%;border-left:1px solid #dddddd;text-align: center;">
+        <div style="font-size:22px;margin-bottom:20px;" joyrideStep="step4" title="Team member training sessions"
+            text="This section provides a view of your teams training sessions. The timeline provides start time and session duration. Using the date range picker you can view sessions from any date range you like.">
+            Training Sessions
+        </div>
+        <div style="display:block;width:100%;margin-bottom:20px;">
+            <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onDateRangeChange($event)"></nz-range-picker>
+        </div>
+        <div style="display:block;width:100%;padding:20px;text-align:left;">
+            <nz-timeline *ngIf="filteredSessionLog && filteredSessionLog.length > 0">
+                <nz-timeline-item *ngFor="let session of filteredSessionLog">
+                    <div style="display:block;">
+                        <div style="float:left;">
+                            {{myTeamIdHash[session.uid].firstName}} {{myTeamIdHash[session.uid].lastName}}
+                        </div>
+                        <div style="float:right;">
+                            <div style="display:inline-block;margin-right:10px;">
+                                <i [ngClass]="teamTrainingHash[session.tid].iconClass"
+                                    style="font-size:20px;vertical-align: middle;"
+                                    [ngStyle]="{'color': teamTrainingHash[session.tid].iconColor}">
+                                </i>
+                            </div>
+                            <div style="display:inline-block;">
+                                {{teamTrainingHash[session.tid].title}}
+                            </div>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div style="display:block;">
+                        <div style="float:left;">
+                            {{session.startTime| date:'medium'}}
+                        </div>
+                        <div style="float:right;">
+                            {{timeFormat(session.stopTime - session.startTime)}} <span
+                                style="font-size:12px;color:#bbbbbb;">(mm:ss)</span>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </nz-timeline-item>
+            </nz-timeline>
+            <div *ngIf="filteredSessionLog && filteredSessionLog.length === 0">
+                No sessions found!<br>
+                {{startRangeTimeMS| date:'medium'}}&nbsp;&nbsp; - &nbsp;&nbsp;{{endRangeTimeMS| date:'medium'}}
+            </div>
+        </div>
     </div>
 </div>

@@ -81,14 +81,14 @@
             </li>
             <li class="navbar-rhs" nz-tooltip nzTooltipTitle="Settings" nzTooltipPlacement="bottomLeft">
                 <a (click)="quickViewToggle()">
-                    <i nz-icon nzType="setting" theme="outline" style="font-size:20px;color:black;"></i>
+                    <i nz-icon nzType="setting" theme="outline" style="font-size:20px;color:#000000;"></i>
                 </a>
             </li>
             <li nz-menu-item class="navbar-rhs" nz-tooltip nzTooltipTitle="Notifications"
                 nzTooltipPlacement="bottomLeft">
                 <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="popNotification" [nzPlacement]="'bottomRight'">
                     <nz-badge nzDot>
-                        <i nz-icon nzType="notification" theme="outline" style="font-size:20px;color:black;"></i>
+                        <i nz-icon nzType="notification" theme="outline" style="font-size:20px;color:#000000;"></i>
                     </nz-badge>
                 </a>
                 <nz-dropdown-menu #popNotification="nzDropdownMenu">
@@ -125,7 +125,7 @@
             </li>
             <li class="navbar-rhs" nz-tooltip nzTooltipTitle="Task Tutorials" nzTooltipPlacement="bottom">
                 <a (click)="playTaskVideo(null)">
-                    <i nz-icon nzType="youtube" theme="outline" style="font-size:20px;margin:0 5px;color:black;"></i>
+                    <i nz-icon nzType="youtube" theme="outline" style="font-size:20px;margin:0 5px;color:#000000;"></i>
                 </a>
                 <nz-drawer *ngIf="authenticatedUser$ | async as user" [nzWidth]="300" nzTitle="App Settings"
                     [nzClosable]="false" [nzVisible]="quickViewVisible" nzPlacement="right"
@@ -133,11 +133,13 @@
                     <app-settings></app-settings>
                 </nz-drawer>
             </li>
+            <!--
             <li class="navbar-rhs" nz-tooltip nzTooltipTitle="Start Page Tour" nzTooltipPlacement="bottom">
                 <a (click)="startTour()">
-                    <i nz-icon nzType="car" theme="outline" style="font-size:20px;margin:0 5px;color:black;"></i>
+                    <i nz-icon nzType="car" theme="outline" style="font-size:20px;margin:0 5px;color:#000000;"></i>
                 </a>
             </li>
+            -->
         </ul>
     </nz-header>
     <nz-content class="inner-content">
@@ -186,7 +188,7 @@
             <div [@showVideo]="isVideoOpen ? 'open' : 'closed'"
                 style="position: absolute;top:-100%; left: 0;right:0;height:100%;z-index:10;background-color:rgba(0,0,0,0.7);text-align: center;">
                 <div
-                    style="height:fit-content;width:fit-content;z-index:10;display:inline-block;border:1px solid black;margin-top:100px;background-color: #2b303a;">
+                    style="height:fit-content;width:fit-content;z-index:10;display:inline-block;border:1px solid #000000;margin-top:100px;background-color: #2b303a;">
                     <div style="display:block;color:white;width:100%;padding:10px;border-bottom:1px solid #53535e;">
                         <span style="font-size:18px;">Task Tutorials</span>
                         <i nz-icon nzType="close-circle" [nzTheme]="'outline'" (click)="isVideoOpen = false"
@@ -221,7 +223,7 @@
                             </span>
                         </div>
                         -->
-                        <div style="background-color: black;width:600px;height:500px;">
+                        <div style="background-color: #000000;width:600px;height:500px;">
                             <vg-player (onPlayerReady)="onPlayerReady($event)">
                                 <vg-controls>
                                     <vg-play-pause></vg-play-pause>
@@ -258,19 +260,51 @@
             </ng-template>
         </div>
         <router-outlet [ngStyle]="{'height.px': browserInnerHeight - 64}"></router-outlet>
-        <nz-modal [(nzVisible)]="showNewUserModal" nzCancelDisabled="true" nzClosable="false" nzTitle="New User Info"
-            (nzOnOk)="saveName()">
-            <div style="padding:20px;color:black;">
-                <p style="font-size:16px;">
-                    Please give us a bit more info about you...
-                </p>
+        <nz-modal nzWidth="600" [(nzVisible)]="showNewUserModal" nzCancelDisabled="true" nzClosable="false"
+            nzTitle="Welcome!" (nzOnOk)="saveName()">
+            <div style="padding:20px;color:#000000;">
+                <div style="text-align: center;">
+                    <h3>Welcome to <span style="color:red;">my</span>Training<span style="color:red;">docs</span>!</h3>
+                </div>
+                <br>
+
+                <div style="font-size:16px;color:black;">
+                    Before we get started, you should be familiar with 2 icons that can help answer questions you might
+                    have
+                    along the way.
+                </div>
+                <br>
+                <p>
+                    <span style="color:#000000;">
+                        <i nz-icon nzType="car" nzTheme="twotone" nzTwotoneColor="blue"
+                            style="margin-left:30px;font-size:20px;"></i>
+                        &nbsp;&nbsp;
+                        Gives you a tour of the page
+                        <br>
+                        <i nz-icon nzType="youtube" nzTheme="outline"
+                            style="margin-top:10px;color:blue;margin-left:30px;font-size:20px;"></i> &nbsp;&nbsp;
+                        Screencasts of common
+                        tasks
+                        <br>
+                        <br>
+                        <div>
+                            So, let's get started! Oh, one more bit of housekeeping...
+                        </div>
+                    </span>
 
             </div>
             <div *ngIf="authenticatedUser$ | async as user" style="background-color: white;">
-                <input nz-input type="text" placeholder="First Name" ngDefaultControl [(ngModel)]="user.firstName"
-                    style="margin-bottom:10px;">
-                <input nz-input type="text" placeholder="Last Name" ngDefaultControl [(ngModel)]="user.lastName"
-                    style="margin-bottom:10px;">
+                <div style="display:block;margin-bottom:10px;width:100%;">
+                    <label style="display:inline-block;text-align: right;width:20%;padding-right:10px;">First
+                        Name</label>
+                    <input style="display:inline-block;width:80%;" nz-input type="text" placeholder="First Name"
+                        ngDefaultControl [(ngModel)]="user.firstName">
+                </div>
+                <div style="display:block;margin-bottom:10px;width:100%;">
+                    <label style="display:inline-block;text-align: right;width:20%;padding-right:10px;">Last Name</label>
+                    <input style="display:inline-block;width:80%;" nz-input type="text" placeholder="Last Name"
+                        ngDefaultControl [(ngModel)]="user.lastName">
+                </div>
 
             </div>
         </nz-modal>
@@ -287,7 +321,7 @@
         <div *ngIf="authenticatedUser" style="display:block;width:100%;">
             <div style="display:block;width:90%;">
                 <div style="display:inline-block;width:25%;text-align: right;">
-                    <label style="font-size:14px;color:black;">
+                    <label style="font-size:14px;color:#000000;">
                         First Name
                     </label>
                 </div>
@@ -298,7 +332,7 @@
             </div>
             <div style="display:block;width:90%;">
                 <div style="display:inline-block;width:25%;text-align: right;">
-                    <label style="font-size:14px;color:black;">
+                    <label style="font-size:14px;color:#000000;">
                         Last Name
                     </label>
                 </div>
@@ -309,7 +343,7 @@
             </div>
             <div style="display:block;width:90%;">
                 <div style="display:inline-block;width:25%;text-align: right;">
-                    <label style="font-size:14px;color:black;">
+                    <label style="font-size:14px;color:#000000;">
                         Email
                     </label>
                 </div>
@@ -321,7 +355,7 @@
             <!--
             <div style="display:block;width:90%;">
                 <div style="display:inline-block;width:25%;text-align: right;">
-                    <label style="font-size:14px;color:black;">
+                    <label style="font-size:14px;color:#000000;">
                         Job Title
                     </label>
                 </div>
@@ -339,8 +373,9 @@
                     <button nz-button nzSize="small" nzShape="round" (click)="handleUpdateUserCancel()" nzType="default"
                         style="margin: 10px;display:inline-block;">Cancel
                     </button>
-                    <button *ngIf="authenticatedUser" nz-button nzSize="small" nzShape="round" (click)="handleUpdateUser()"
-                        nzType="primary" style="margin: 10px;display:inline-block;">Update User
+                    <button *ngIf="authenticatedUser" nz-button nzSize="small" nzShape="round"
+                        (click)="handleUpdateUser()" nzType="primary" style="margin: 10px;display:inline-block;">Update
+                        User
                     </button>
                 </div>
             </div>
