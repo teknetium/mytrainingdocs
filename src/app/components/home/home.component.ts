@@ -21,7 +21,8 @@ export interface UserStat {
   upToDateCnt: number,
   completedCnt: number,
   pastDueCnt: number,
-  trainingIdList: string[]
+  trainingIdList: string[],
+  tidUTHash: {}
 }
 
 export interface TrainingStat {
@@ -111,6 +112,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
       if (!uidUTHash) {
         return;
       }
+
       this.uidUTHash = uidUTHash;
     });
     this.sessionLog$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(sessionLog => {
@@ -148,7 +150,8 @@ export class HomeComponent extends BaseComponent implements OnInit {
                 upToDateCnt: 0,
                 pastDueCnt: 0,
                 completedCnt: 0,
-                trainingIdList: []
+                trainingIdList: [],
+                tidUTHash: {}
               }
               this.userTrainingService.getUTForUser$(this.myTeam[index]._id).subscribe(utList => {
                 for (let ut of utList) {

@@ -113,6 +113,7 @@ export class UserService {
                 supervisorId: null,
                 settings: {
                   foo: 'test',
+                  showPageInfo: true,
                   themeColor: {
                     name: 'grey',
                     primary: 'white',

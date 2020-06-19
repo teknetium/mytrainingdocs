@@ -107,7 +107,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     home: {
       title: 'Home',
       visible: true,
-      intro: 'Introduction to the page.',
+      intro: `Here you will find information on your team members, your team's trainings, and training sessions.`,
       tourSteps: {
         steps: [
           'step1', 'step2', 'step3'
@@ -117,10 +117,11 @@ export class NewAppComponent extends BaseComponent implements OnInit {
         gettingStartedSupervisor: {
           userType: ['supervisor'],
           desc: 'Getting Started',
-          url: 'https://www.youtube.com/watch?v=N_DktBxPDow&t=2s',
+          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
           mimeType: 'video/mpeg',
           poster: './assets/images/logo/logo.png'
-        },
+        }
+        /*
         executeTraining: {
           userType: ['supervisor', 'individualContributor'],
           desc: 'Take Your Training',
@@ -156,6 +157,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
         }
+        */
       },
     },
     mytrainings: {
