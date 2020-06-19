@@ -144,9 +144,9 @@
                     </div>
                 </nz-timeline-item>
             </nz-timeline>
-            <div *ngIf="filteredSessionLog && filteredSessionLog.length === 0">
+            <div *ngIf="filteredSessionLog && filteredSessionLog.length === 0" style="font-size: 16px;font-weight:200;">
                 No sessions found!<br>
-                {{startRangeTimeMS| date:'medium'}}&nbsp;&nbsp; - &nbsp;&nbsp;{{endRangeTimeMS| date:'medium'}}
+                <span style="font-size: 16px;font-weight:200;">{{startRangeTimeMS| date:'medium'}}&nbsp;&nbsp; - &nbsp;&nbsp;{{endRangeTimeMS| date:'medium'}}</span>
             </div>
         </div>
     </div>
