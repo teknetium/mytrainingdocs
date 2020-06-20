@@ -143,7 +143,7 @@
         </ul>
     </nz-header>
     <nz-content class="inner-content">
-        <div *ngIf="aboutThisPageHash[currentPage]">
+        <div *ngIf="(authenticatedUser && authenticatedUser.firstName !== '') && aboutThisPageHash[currentPage]">
             <i *ngIf="!aboutThisPageHash[currentPage].visible" nz-icon nzType="info-circle" [nzTheme]="'twotone'"
                 (click)="aboutThisPageHash[currentPage].visible = true"
                 style="font-size:24px;font-weight: 500;cursor:pointer;margin-bottom:20px;"></i>

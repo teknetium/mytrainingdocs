@@ -475,11 +475,13 @@ export class TrainingService {
 
   saveNewVersion(training: TrainingModel) {
     let newVersion = training.versions[0];
+
     let trainingArchiveId = training._id + '-' + newVersion.version;
     let trainingArchive = cloneDeep(training);
     trainingArchive._id = trainingArchiveId;
     this.editTraining$(training).subscribe(obj => {
       this.postTrainingArchive$(trainingArchive).subscribe(tA => {
+        this.previousVersionBS$.next(tA);
         this.reloadAllTrainings();
         this.selectedTrainingVersionsBS$.next(training.versions);
       });

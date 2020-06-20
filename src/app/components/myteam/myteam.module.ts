@@ -33,7 +33,7 @@ import { MyteamRoutingModule } from './myteam-routing.module';
     NzAutocompleteModule,
     MyteamRoutingModule,
     NzDrawerModule,
-    NzTreeModule
+    NzTreeModule,
   ],
   exports: [
     MyteamComponent,

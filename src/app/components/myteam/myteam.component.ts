@@ -145,6 +145,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   uidUTHash$: Observable<UidUTHash>;
   uidUTHash = {};
   showTrainingHash = {};
+  trainingStatusFilterVal: string;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -189,8 +190,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
       this.myTeamIdHash = myTeamIdHash;
 
-      this.myTeam = Object.values(this.myTeamIdHash);
-      this.myTeamFiltered = cloneDeep(this.myTeam);
+      this.myTeam = Object.assign([], Object.values(this.myTeamIdHash));
+
+//      this.filterUsers();
+
       for (let teamMember of this.myTeam) {
         this.uidUTHash[teamMember._id] = this.userTrainingService.getUidUTList(teamMember._id);
         /*
@@ -304,6 +307,26 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.jobTitles = jobTitles;
       this.matchingJobTitles = this.jobTitles;
     })
+  }
+
+  filterUsers() {
+    this.myTeamFiltered = [];
+    for (let user of this.myTeam) {
+      if (!this.showUpToDate && user.trainingStatus === 'upToDate') {
+        continue;
+      } else if (!this.showPastDue && user.trainingStatus === 'pastDue') {
+        continue;
+      } else if (!this.showIndividualContributors && user.userType === 'individualContributor') {
+        continue;
+      } else if (!this.showSupervisors && user.userType === 'supervisor') {
+        continue;
+      } else if (!this.showVolunteers && user.userType === 'volunteer') {
+        continue;
+      } else if (!this.showCustomers && user.userType === 'customer') {
+        continue;
+      }
+      this.myTeamFiltered.push(user);
+    }
   }
 
   toggleFilter(filter: string) {
@@ -486,6 +509,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     console.log('handleAddUser', this.newTeamMember);
     this.userService.updateUser(this.authenticatedUser, false);
     this.userService.createNewUser(this.newTeamMember);
+
     if (this.newTeamMember.jobTitle) {
       this.jobTitleService.addJobTitle(this.newTeamMember.jobTitle);
     }
@@ -499,12 +523,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
     this.mailService.sendMessage(this.message);
     this.userPanelVisible = false;
-    //    this.cd.detectChanges();
+//    this.filterUsers();
+    this.cd.detectChanges();
   }
 
   handleUpdateUser() {
     this.userPanelVisible = false;
     this.userService.updateUser(this.selectedUser, false);
+    this.filterUsers();
   }
 
   selectUser(userId) {
@@ -559,6 +585,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.selectedTrainingId = null;
     this.userTrainingService.getUTForUser$(this.userIdSelected).subscribe(utList => {
       this.uidUTHash[this.userIdSelected] = utList;
+//      this.filterUsers();
     })
   }
 }

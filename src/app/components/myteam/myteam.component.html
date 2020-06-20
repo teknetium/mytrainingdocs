@@ -104,7 +104,7 @@
                             </span>
                         </div>
                         <div style="cursor:pointer;display:block;padding-left:20px;">
-                            <div *ngFor="let user of myTeamFiltered">
+                            <div *ngFor="let user of myTeam">
                                 <div *ngIf="user._id !== (authenticatedUser$ | async)?._id" class="user-button"
                                     [ngClass]="{'user-selected': userIdSelected === user._id}"
                                     (click)="selectUser(user._id)">
@@ -134,7 +134,7 @@
                     </div>
                 </div>
             </div>
-            <div class="my-team-rightside">
+            <div class="my-team-rightside" >
                 <div style="text-align: center;">
                     <span style="font-size:24px;display:inline-block;">Member Details</span>
                     <hr style="margin-bottom:10px 0;">

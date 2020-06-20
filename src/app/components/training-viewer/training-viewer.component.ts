@@ -760,15 +760,21 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     // if the job title being saved for this version is not the same as the previous version
     // then we have some work to do.   Remove the training from the users with the old job title
     // and assign the training to the users with the new jopb title
+
+    this.trainingService.saveNewVersion(trainingClone);
+    this.trainingService.selectTrainingVersion(trainingClone);
+
+    this.lockTrainingModalIsVisible = false;
+    
     if (this.selectedTraining.jobTitle !== this.previousVersion.jobTitle) {
-/*
-      for (let userId of this.assignedToUsers) {
-        if (this.myTeamHash[userId].jobTitle === this.trainingArchiveList[0].jobTitle) {
-          this.userTrainingService.deleteUserTrainingByTidUid(this.selectedTraining._id, userId);
-          this.removedFromJobTitle.push(userId);
-        }
-      }
-*/
+      /*
+            for (let userId of this.assignedToUsers) {
+              if (this.myTeamHash[userId].jobTitle === this.trainingArchiveList[0].jobTitle) {
+                this.userTrainingService.deleteUserTrainingByTidUid(this.selectedTraining._id, userId);
+                this.removedFromJobTitle.push(userId);
+              }
+            }
+      */
       for (let userId of this.assignableUsers) {
         if (this.myTeamHash[userId].jobTitle === this.selectedTraining.jobTitle) {
           this.userTrainingService.assignTraining(userId, this.selectedTraining._id);
@@ -779,11 +785,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         this.assignedFromJobTitleDialogIsVisible = true;
       }
     }
-
-    this.trainingService.saveNewVersion(trainingClone);
-    this.trainingService.selectTrainingVersion(trainingClone);
-
-    this.lockTrainingModalIsVisible = false;
   }
 
   saveNewVersion() {

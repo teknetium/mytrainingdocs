@@ -6,7 +6,7 @@ import { RouterModule } from "@angular/router";
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { SearchPipe } from './pipes/search.pipe';
-import { AuthService } from './services/auth.service'
+import { AuthService } from './services/auth.service';
 
 @NgModule({
     exports: [
@@ -24,7 +24,7 @@ import { AuthService } from './services/auth.service'
         PerfectScrollbarModule
     ],
     declarations: [
-        SearchPipe
+        SearchPipe,
     ],
     providers: [
         AuthService,

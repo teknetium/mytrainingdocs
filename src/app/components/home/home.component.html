@@ -1,4 +1,4 @@
-<div style="height:100%;width:100%;padding:30px;position:relative;">
+<div *ngIf="authenticatedUser && authenticatedUser.firstName !== ''" style="height:100%;width:100%;padding:30px;position:relative;">
     <i nz-icon nzType="car" nzTheme="twotone"
         style="cursor:pointer;position:absolute;top:0;left:0;font-size:20px;color:#000000;" (click)="startTour()"
         nz-tooltip nzTooltipTitle="Tour the Page!"></i>
