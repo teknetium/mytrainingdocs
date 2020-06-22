@@ -13,8 +13,8 @@
       </a>
     </div>
     <div class="nav-link">
-      <a [ngxScrollTo]="destinations['benefits'].ngxScrollToDestination"
-        [ngxScrollToDuration]="ngxScrollToDuration" [ngxScrollToEasing]="ngxScrollToEasing">
+      <a [ngxScrollTo]="destinations['benefits'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
+        [ngxScrollToEasing]="ngxScrollToEasing">
         Benefits
       </a>
     </div>
@@ -107,11 +107,74 @@
                   <b>SCALES</b> to large organizations.</p>
               </div>
             </div>
-            <div style="display:block;font-size:40px;color:cyan;">
+            <div style="display:block;font-size:16px;width:800px;">
+              <div style="text-align: center;margin-top:5px;background-color: #000000;">
+                <vg-player (onPlayerReady)="onPlayerReady($event)">
+
+                  <vg-controls>
+                    <vg-play-pause></vg-play-pause>
+                    <vg-playback-button></vg-playback-button>
+
+                    <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+
+                    <vg-scrub-bar>
+                      <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                      <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                    </vg-scrub-bar>
+
+                    <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                    <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+
+                    <vg-track-selector></vg-track-selector>
+                    <vg-mute></vg-mute>
+                    <vg-volume></vg-volume>
+
+                    <vg-fullscreen></vg-fullscreen>
+                  </vg-controls>
+
+                  <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
+                    <source [src]="currentVideo" type="video/mp4">
+                  </video>
+                </vg-player>
+              </div>
+              <div style="display:block;padding:20px;width:100%;text-align: center;">
+                <div style="display:block;padding:20px;width:100%;color:white;text-align: center;">
+                  <h2>How It Works</h2>
+                </div>
+                <div style="display:flex;justify-content: space-between;text-align: center;">
+                  <div>
+                    <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('explainer')">
+                      <img width="140" src="../../../assets/images/explainer.png">
+                    </div>
+                    <span style="display:block;color:white;font-size:12px;">Explainer</span>
+                  </div>
+                  <div>
+                    <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('step1')">
+                      <img width="140" src="../../../assets/images/step1.png">
+                    </div>
+                    <span style="display:block;color:white;font-size:12px;">Step1 - Screencast</span>
+                  </div>
+                  <div>
+                    <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('step2')">
+                      <img width="140" src="../../../assets/images/step2.png">
+                    </div>
+                    <span style="display:block;color:white;font-size:12px;">Step2 - Screencast</span>
+                  </div>
+                  <div>
+                    <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('step3')">
+                      <img width="140" src="../../../assets/images/step3.png">
+                    </div>
+                    <span style="display:block;color:white;font-size:12px;">Step3 - Screencast</span>
+                  </div>
+                </div>
+              </div>
+
+              <!--
               <i nz-icon nzType="unlock" [nzTheme]="'outline'" style="display:block;font-size:60px;margin-bottom:30px;"></i>
               <div style="display:block;font-size:40px;font-weight: 300;">
                 Unlock your employees' potential!
               </div>
+            -->
             </div>
             <!--
             <div style="width:100%;padding:100px;height:200px;background-color: antiquewhite;">

@@ -213,6 +213,7 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   currentStyles = ['Solid', 'Regular', 'Light', 'Two Tone'];
   rgbArray: number[] = [];
   showColorInitModal = false;
+  currentIconSize = 50;
 
   constructor(private auth: AuthService, private http: HttpClient) {
     /*
@@ -333,6 +334,15 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
     this.icon.emit({ icon: this.selectedIcon, color: this.iconColor });
   }
 
+  bigger() {
+    this.currentIconSize += 10;
+    this.sizeChange(this.currentIconSize);
+  }
+  smaller() {
+    this.currentIconSize -= 10;
+    this.sizeChange(this.currentIconSize);
+  }
+  
   hexToRgb(c): number[] {
     let rgbArray = [];
     if (/^#([a-f0-9]{3}){1,2}$/.test(c)) {

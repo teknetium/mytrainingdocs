@@ -31,7 +31,7 @@
             <div *ngIf="myTeam.length > 0" style="width:100%;">
                 <nz-list nzItemLayout="vertical" nzSize="small" style="width:100%;">
                     <nz-list-item *ngFor="let user of myTeam" (click)="selectUser(user._id)" class="list-item"
-                        style="width:100%;">
+                        style="width:100%;cursor:pointer;">
                         <div *ngIf="userStatHash[user._id]" style="width:100%;">
                             <i [ngClass]="userTypeIconHash[user.userType]"
                                 style="display:inline-block;font-size:20px;width:10%;justify-content: left;"
@@ -91,7 +91,7 @@
             <div *ngIf="trainings.length > 0">
                 <nz-list nzItemLayout="vertical" nzSize="small">
                     <nz-list-item *ngFor="let training of trainings" (click)="selectTraining(training._id)"
-                        class="list-item">
+                        class="list-item" style="cursor:pointer;">
                         <i [ngClass]="training.iconClass"
                             style="font-size:20px;width:10%;text-align:center;vertical-align: middle;"
                             [ngStyle]="{'color': training.iconColor}">

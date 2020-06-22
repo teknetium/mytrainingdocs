@@ -312,6 +312,15 @@ export class UserTrainingService {
         catchError((error) => this._handleError(error))
       );
   }
+  getUTSessionsForTeam$(teamId: string): Observable<UTSession[]> {
+    return this.http
+      .get<UTSession[]>(`${ENV.BASE_API}utsession/${teamId}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );    
+  }
   getUserTraining$(id: string): Observable<UserTrainingModel[]> {
     return this.http
       .get<UserTrainingModel>(`${ENV.BASE_API}usertraining/${id}`, {

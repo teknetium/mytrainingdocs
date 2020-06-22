@@ -161,6 +161,11 @@ export class LandingpageComponent implements OnInit {
   timerCnt = 0;
   currentHowMsg: string;
   sub1: Subscription;
+  explainerUrl = 'https://cdn.filestackcontent.com/7krAbmMBS686u8g6FXr2';
+  step1Url;
+  step2Url;
+  step3Url;
+  currentVideo;
 
   constructor(
     private auth: AuthService,
@@ -175,6 +180,7 @@ export class LandingpageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.currentVideo = this.explainerUrl;
     /*
     this.taskVideo$.subscribe(safeUrl => {
       if (!safeUrl) {

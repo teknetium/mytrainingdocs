@@ -1,4 +1,4 @@
-<div style="height:100%;">
+<div *ngIf="authenticatedUser" style="height:100%;">
     <div class="my-team" style="height:100%;">
         <div *ngIf="myTeam && myTeam.length > 0" style="height:95%;">
             <div class="team-container">
@@ -90,7 +90,7 @@
                     </div>
                     <div style="background-color: white;text-align:left;">
                         <div *ngIf="authenticatedUser$ | async as user" class='user-button' style="font-size:18px;"
-                            (click)="selectUser(user._id)" [ngClass]="{'user-selected': userIdSelected === user._id }">
+                            (click)="selectUser(user._id)" [ngClass]="{'user-selected': selectedUser._id === user._id }">
                             <i [ngClass]="userTypeIconHash[user.userType]"
                                 [ngStyle]="{'color': trainingStatusColorHash[user.trainingStatus]}" nz-tooltip
                                 [nzTooltipTitle]=""></i>&nbsp;
@@ -98,15 +98,15 @@
                             <span *ngFor="let ut of uidUTHash[user._id]" style="float:right;" nz-tooltip
                                 [nzTooltipTitle]="allTrainingIdHash[ut.tid].title">
                                 <i [ngClass]="allTrainingIdHash[ut.tid].iconClass"
-                                    style="display:inline-block;font-size:14px;margin-right:5px;vertical-align: middle;"
+                                    style="display:inline-block;font-size:16px;margin-right:5px;vertical-align: middle;"
                                     [ngStyle]="{'color': allTrainingIdHash[ut.tid].iconColor}">
                                 </i>
                             </span>
                         </div>
                         <div style="cursor:pointer;display:block;padding-left:20px;">
-                            <div *ngFor="let user of myTeam">
-                                <div *ngIf="user._id !== (authenticatedUser$ | async)?._id" class="user-button"
-                                    [ngClass]="{'user-selected': userIdSelected === user._id}"
+                            <div *ngFor="let user of myGroup">
+                                <div *ngIf="user._id !== authenticatedUser._id" class="user-button"
+                                    [ngClass]="{'user-selected': selectedUser._id === user._id}"
                                     (click)="selectUser(user._id)">
                                     <i [ngClass]="userTypeIconHash[user.userType]"
                                         [ngStyle]="{'color': trainingStatusColorHash[user.trainingStatus]}"></i>&nbsp;
@@ -123,7 +123,7 @@
                                     <span *ngFor="let ut of uidUTHash[user._id]" style="float:right;" nz-tooltip
                                         [nzTooltipTitle]="allTrainingIdHash[ut.tid].title">
                                         <i [ngClass]="allTrainingIdHash[ut.tid].iconClass"
-                                            style="display:inline-block;font-size:14px;margin-right:5px;vertical-align: middle;"
+                                            style="display:inline-block;font-size:16px;margin-right:5px;vertical-align: middle;"
                                             [ngStyle]="{'color': allTrainingIdHash[ut.tid].iconColor}">
                                         </i>
                                     </span>

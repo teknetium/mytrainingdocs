@@ -17,13 +17,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as cloneDeep from 'lodash/cloneDeep';
 import { BaseComponent } from '../base.component';
 import FlatfileImporter from "flatfile-csv-importer";
-import { NzFormatEmitEvent, NzTreeNodeOptions, NzTreeNode } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-myteam',
   templateUrl: './myteam.component.html',
   styleUrls: ['./myteam.component.css'],
-  //  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('supervisorSignupToggle', [
       // ...
@@ -66,9 +65,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   private importer: FlatfileImporter;
 
-  nodes: NzTreeNode[] = [];
-  children: NzTreeNode[] = [];
-
   userTypeIconHash = {
     individualContributor: 'fad fa-fw fa-user',
     supervisor: 'fad fa-fw fa-user-tie',
@@ -94,6 +90,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
   myTeamIdHash: UserIdHash;
+  myTeam$: Observable<UserModel[]>;
   myTeam: UserModel[] = [];
   myTeamFiltered: UserModel[] = [];
   jobTitles$: Observable<string[]>;
@@ -146,6 +143,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   uidUTHash = {};
   showTrainingHash = {};
   trainingStatusFilterVal: string;
+  myGroup: UserModel[];
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -161,6 +159,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     super();
     this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
     this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
+    this.myTeam$ = this.userService.getMyTeamStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
@@ -184,33 +183,22 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
       this.uidUTHash = uidUTHash;
     });
+    this.myTeam$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
+      if (!userList) {
+        return;
+      }
+      this.myGroup = userList;
+      this.myTeam = userList;
+      for (let teamMember of this.myTeam) {
+        this.uidUTHash[teamMember._id] = this.userTrainingService.getUidUTList(teamMember._id);
+      }
+    });
+
     this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamIdHash => {
       if (!myTeamIdHash) {
         return;
       }
       this.myTeamIdHash = myTeamIdHash;
-
-      this.myTeam = Object.assign([], Object.values(this.myTeamIdHash));
-
-//      this.filterUsers();
-
-      for (let teamMember of this.myTeam) {
-        this.uidUTHash[teamMember._id] = this.userTrainingService.getUidUTList(teamMember._id);
-        /*
-        if (!teamMember.supervisorId) {
-          teamMember.supervisorId = this.userNameHash[this.supervisorHash[teamMember._id]];
-          teamMember.teamId = teamMember.supervisorId;
-          this.userService.updateUser(teamMember, true);  
-        }
-*/
-      }
-      //      this.cd.detectChanges();
-      /*
-            if (this.myTeam.length > 0) {
-              this.userIdSelected = this.myTeam[0]._id;
-              this.userService.selectUser(this.myTeam[0]._id);
-            }
-            */
     });
 
     this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
@@ -256,25 +244,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         userId: this.authenticatedUser._id,
         name: this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName
       });
-
-      this.nodes[0] = new NzTreeNode({
-        title: this.authenticatedUserFullName,
-        key: this.authenticatedUser._id,
-        children: this.children
-      });
-
-      /*
-            for (let teamMember of this.myTeam) {
-              console.log()
-              this.nodes[0].children.push(
-                {
-                  title: teamMember.firstName + ' ' + teamMember.lastName,
-                  key: teamMember._id,
-                  isLeaf:
-                }
-              );
-            }
-            */
 
 
       this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
@@ -507,13 +476,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   handleAddUser() {
     this.newUser = false;
     console.log('handleAddUser', this.newTeamMember);
-    this.userService.updateUser(this.authenticatedUser, false);
+//    this.userService.updateUser(this.authenticatedUser, false);
     this.userService.createNewUser(this.newTeamMember);
 
     if (this.newTeamMember.jobTitle) {
       this.jobTitleService.addJobTitle(this.newTeamMember.jobTitle);
     }
     this.options = [];
+
     let url = 'https://mytrainingdocs.com/signup/' + this.newTeamMember.email;
     this.message = <MessageModel>{
       to: this.newTeamMember.email,
@@ -524,7 +494,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.mailService.sendMessage(this.message);
     this.userPanelVisible = false;
 //    this.filterUsers();
-    this.cd.detectChanges();
+//    this.cd.detectChanges();
   }
 
   handleUpdateUser() {

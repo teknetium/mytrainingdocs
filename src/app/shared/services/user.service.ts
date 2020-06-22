@@ -24,11 +24,13 @@ export class UserService {
   // Writable streams
   private authenticatedUserBS$ = new BehaviorSubject<UserModel>(null);
   private myTeamIdHashBS$ = new BehaviorSubject<UserIdHash>(null);
+  private myTeamBS$ = new BehaviorSubject<UserModel[]>([]);
   private myTeamCntBS$ = new BehaviorSubject<number>(0);
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
   private newUserBS$ = new BehaviorSubject<UserModel>(null);
   private allOrgUserHash: UserIdHash = {};
   private myTeam: UserModel[];
+  private myOrgUsers: UserModel[];
 
   userTypeIconHash = {
     supervisor: 'fad fa-user-tie',
@@ -61,13 +63,12 @@ export class UserService {
       this.getUserByUid(profile.uid).subscribe(
         user => {
           this.authenticatedUser = user;
-          this.getAllOrgUsers();
+//          this.getAllOrgUsers();
           if (this.authenticatedUser.jobTitle) {
             this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
           }
           this.authenticatedUserBS$.next(this.authenticatedUser);
           this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
-          //this.authenticatedUserBS$.complete();
           this.logLoginEvent();
           if (this.authenticatedUser.userType === 'supervisor') {
             this.teamId = this.authenticatedUser.uid;
@@ -84,14 +85,12 @@ export class UserService {
               res.userStatus = 'active';
               this.updateUser(res, true);
               this.authenticatedUser = res;
-              this.getAllOrgUsers();
+//              this.getAllOrgUsers();
               if (this.authenticatedUser.jobTitle) {
                 this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
               }
               this.authenticatedUserBS$.next(this.authenticatedUser);
               this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
-              //              this.authenticatedUserBS$.complete();
-              //              this.loadData();
             },
             err => {
               this.authenticatedUser = <UserModel>{
@@ -125,16 +124,13 @@ export class UserService {
 
               this.postUser$(this.authenticatedUser).subscribe((data) => {
                 this.authenticatedUser = data;
-                this.getAllOrgUsers();
+//                this.getAllOrgUsers();
                 if (this.authenticatedUser.jobTitle) {
                   this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
                 }
                 this.authenticatedUserBS$.next(this.authenticatedUser);
-                //                this.authenticatedUserBS$.complete();
-                //                this.logLoginEvent();
                 this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
-                //                this.loadData();
-                //        this.router.navigate([`gettingstarted`]);
+                this.loadData(data._id);
               });
 
             }
@@ -165,12 +161,13 @@ export class UserService {
     this.eventService.addEvent(loginEvent);
 
   }
-
+/*
   getAllOrgUsers() {
     this.getOrg$(this.authenticatedUser.org).subscribe(userList => {
       if (!userList) {
         return;
       }
+      this.myOrgUsers = userList;
       for (let user of userList) {
         this.allOrgUserHash[user._id] = user;
         if (user.jobTitle) {
@@ -179,12 +176,13 @@ export class UserService {
       }
     })
   }
-
+*/
   loadData(teamId) {
     this.getTeam$(teamId).subscribe((userList) => {
       if (!userList) {
         return;
       }
+      console.log('UserService    loadData', userList);
       this.myTeam = userList;
       this.myTeamIdHash = {};
       for (let user of userList) {
@@ -197,8 +195,10 @@ export class UserService {
 
 
       this.myTeamIdHash[this.authenticatedUser._id] = this.authenticatedUser;
+      this.myTeam.push(this.authenticatedUser);
+      this.myTeamBS$.next(this.myTeam);
       
-      this.myTeamCntBS$.next(Object.keys(this.myTeamIdHash).length);
+//      this.myTeamCntBS$.next(Object.keys(this.myTeamIdHash).length);
 
       console.log('UserService:loadData', userList, this.authenticatedUser._id, this.myTeamIdHash);
       this.myTeamIdHashBS$.next(this.myTeamIdHash);
@@ -208,8 +208,10 @@ export class UserService {
 
   createNewUser(user: UserModel) {
     this.postUser$(user).subscribe(data => {
+      this.myTeam.push(data);
+      this.myTeamBS$.next(this.myTeam);
 
-      this.loadData(this.teamId);
+//      this.loadData(this.authenticatedUser._id);
     })
   }
 
@@ -254,7 +256,9 @@ export class UserService {
     return this.myTeamCntBS$.asObservable();
   }
 
-  getTeam(uid: string) {}
+  getMyTeamStream(): Observable<UserModel[]> {
+    return this.myTeamBS$.asObservable();
+  }
 
   getAuthenticatedUserStream(): Observable<UserModel> {
     return this.authenticatedUserBS$.asObservable();
