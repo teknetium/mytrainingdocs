@@ -358,8 +358,9 @@
             </div>
             <div style="padding:10px;text-align: center;background-color: #fefbe7;">
                 <div *ngFor="let page of selectedTraining.pages; index as pageIndex"
-                    style="display:inline-block;padding:5px;" 
-                    [ngClass]="{'current-page': currentPageId === page._id, 'page-icon-production':production === 'true', 'page-icon': production === 'false' && mode === 'Edit' }" (click)="setCurrentPageFromIcon(page._id)">
+                    style="display:inline-block;padding:5px;"
+                    [ngClass]="{'current-page': currentPageId === page._id, 'page-icon-production':production === 'true', 'page-icon': production === 'false' && mode === 'Edit' }"
+                    (click)="setCurrentPageFromIcon(page._id)">
                     <i *ngIf="page.type === 'file'" nz-icon nzType="file-text" theme="outline"
                         style="display:block;font-size:22px;"></i>
                     <i *ngIf="page.type === 'url'" nz-icon nzType="global" theme="outline"
@@ -693,12 +694,19 @@
                                                     <span style="display:inline-block;font-size:18px;">HTML</span>
                                                 </div>
                                                 <div style="position:absolute;right:10px;top:10px;">
-                                                    <i nz-icon nzType="rollback" theme="outline" nz-tooltip
-                                                        nzTooltipTitle="Reset Content" nz-popconfirm
-                                                        nzPopconfirmTitle="Reset the content of this page?"
-                                                        [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'left'"
-                                                        (nzOnConfirm)="resetPageContent(page)"
-                                                        style="font-size:22px;vertical-align: middle;margin-right:10px;color:red;   "></i>
+                                                    <a nz-dropdown [nzDropdownMenu]="menu">
+                                                        <i nz-icon nzType="more"></i>
+                                                    </a>
+                                                    <nz-dropdown-menu #menu="nzDropdownMenu">
+                                                        <ul nz-menu nzSelectable>
+                                                            <li nz-menu-item>
+                                                                <i nz-icon nzType="download" style="display:inline-block;"></i>
+                                                                <a [href]="page.content.file.fileStackUrl" download style="display:inline-block;">Download</a></li>
+                                                            <li nz-menu-item (click)="resetPageContent(page)">
+                                                                <i nz-icon nzType="rollback" theme="outline"></i>
+                                                                Reset Content</li>
+                                                        </ul>
+                                                    </nz-dropdown-menu>
                                                 </div>
                                             </div>
                                         </div>

@@ -300,6 +300,10 @@ export class LandingpageComponent implements OnInit {
     return this.benefits[index].focus;
   }
 
+  hiddenSignup() {
+    this.auth.signup();
+  }
+
   signup() {
     this.router.navigate(['/signup-beta']);
 

@@ -3,7 +3,7 @@
     style="background: rgba(4, 23, 63, 0.9);font-size: 14px;position: fixed; top:0; left:0; height: 64px;z-index: 100;text-align: center;width:100%;">
     <div
       style="position: absolute;left: 10px;top: 10px;height: 44px;border-radius: 24px;padding: 5px 8px; background: rgba(255,255,255,.3); width: 180px;">
-      <img height="35" src="assets/images/logo/logo.png">
+      <img height="35" src="assets/images/logo/logo.png" (click)="hiddenSignup()">
     </div>
 
     <div class="nav-link">
@@ -40,11 +40,13 @@
     </div>
 
     <div style="width:20%;position: fixed; top:0; right:0;height: 64px;">
+      <!--
       <div class="nav-link"
         style="cursor:pointer;width:10%;font-size: 14px;height: 64px;width:100px;z-index: 100;float:right;"
         (click)="signup()">
         Sign Up
       </div>
+      -->
       <div class="nav-link" style="cursor:pointer;font-size: 14px;z-index: 100;;height: 64px; float:right;"
         (click)="login()">
         Log In
@@ -94,6 +96,10 @@
           <div class="row justify-content-center">
             <div class="col-lg-12">
               <div class="text-center header_content mx-auto" style="margin-bottom: 50px;">
+                <div style="display:inline-block;width:fit-content;margin-bottom:60px;background: rgba(255,255,255,.1);padding:10px;border-radius: 60px;">
+                  <img width="100" src="../../../assets/images/rocket.png">
+                  <span style="font-size:22px;color:orange;">&nbsp;&nbsp;BETA Release Coming Soon!</span>
+                </div>
                 <!--
                 <h5 class="header_small_title"><span>New</span></h5>
                 -->
@@ -137,82 +143,82 @@
                   </video>
                 </vg-player>
                 <vg-player *ngIf="currentVideo === step1Url" (onPlayerReady)="onPlayerReady($event)">
-                
+
                   <vg-controls>
                     <vg-play-pause></vg-play-pause>
                     <vg-playback-button></vg-playback-button>
-                
+
                     <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-                
+
                     <vg-scrub-bar>
                       <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
                       <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
                     </vg-scrub-bar>
-                
+
                     <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
                     <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-                
+
                     <vg-track-selector></vg-track-selector>
                     <vg-mute></vg-mute>
                     <vg-volume></vg-volume>
-                
+
                     <vg-fullscreen></vg-fullscreen>
                   </vg-controls>
-                
+
                   <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
                     <source [src]="step1Url" type="video/mp4">
                   </video>
                 </vg-player>
                 <vg-player *ngIf="currentVideo === step2Url" (onPlayerReady)="onPlayerReady($event)">
-                
+
                   <vg-controls>
                     <vg-play-pause></vg-play-pause>
                     <vg-playback-button></vg-playback-button>
-                
+
                     <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-                
+
                     <vg-scrub-bar>
                       <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
                       <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
                     </vg-scrub-bar>
-                
+
                     <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
                     <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-                
+
                     <vg-track-selector></vg-track-selector>
                     <vg-mute></vg-mute>
                     <vg-volume></vg-volume>
-                
+
                     <vg-fullscreen></vg-fullscreen>
                   </vg-controls>
-                
+
                   <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
                     <source [src]="step2Url" type="video/mp4">
                   </video>
                 </vg-player>
                 <vg-player *ngIf="currentVideo === step3Url" (onPlayerReady)="onPlayerReady($event)">
-                
+
                   <vg-controls>
                     <vg-play-pause></vg-play-pause>
                     <vg-playback-button></vg-playback-button>
-                
+
                     <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-                
+
                     <vg-scrub-bar>
                       <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
                       <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
                     </vg-scrub-bar>
-                
+
                     <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
                     <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-                
+
                     <vg-track-selector></vg-track-selector>
                     <vg-mute></vg-mute>
                     <vg-volume></vg-volume>
-                
+
                     <vg-fullscreen></vg-fullscreen>
                   </vg-controls>
-                
+
                   <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
                     <source [src]="step3Url" type="video/mp4">
                   </video>
@@ -251,7 +257,6 @@
                   </div>
                 </div>
               </div>
-
               <!--
               <i nz-icon nzType="unlock" [nzTheme]="'outline'" style="display:block;font-size:60px;margin-bottom:30px;"></i>
               <div style="display:block;font-size:40px;font-weight: 300;">
@@ -303,6 +308,19 @@
     </div>
   </section>
   <!-- END HOME -->
+  <!--
+  <section class="section" id="beta">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="text-center">
+          <div style="display:block;width:100%">
+            <img width="100%" src="../../../assets/images/launch.png">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  -->
   <section class="section" id="benefits">
     <div class="row">
       <div class="col-lg-12">
@@ -348,6 +366,7 @@
   </nz-drawer>
   -->
   <!-- START CTA -->
+  <!--
   <section class="section bg-light" style="margin-bottom: 50px;">
     <div class="container">
       <div class="row justify-content-center">
@@ -357,7 +376,6 @@
             <p class="text-muted mx-auto cta-desc mt-4 pt-2">Start your 14 day free trail today. No credit card needed.
             </p>
             <div class="mt-4 pt-3">
-              <!-- Button trigger modal -->
               <button type="button" class="btn btn-custom btn-rounded" (click)="signup()">Start Free Trial</button>
             </div>
           </div>
@@ -365,8 +383,9 @@
       </div>
     </div>
   </section>
+  -->
   <!-- END CTA -->
-  <section class="section" id="price">
+  <section class="section bg-light" id="price">
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
@@ -477,7 +496,7 @@
 
 
   <!-- START FAQ -->
-  <section class="section bg-light" id="faq">
+  <section class="section" id="faq">
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
@@ -504,6 +523,7 @@
   <!-- END FAQ -->
 
   <!-- START CTA -->
+  <!--
   <section class="section">
     <div class="container">
       <div class="row justify-content-center">
@@ -515,15 +535,13 @@
               will respond promptly. Or Start your 14 day free trail today. No credit card needed.</p>
             <div class="mt-4 pt-3">
               <button type="button" class="btn btn-custom btn-rounded" (click)="signup()">Start Free Trial</button>
-              <!--
-              <button type="button" class="btn btn-custom btn-rounded" style="background: rgba(50,110,246, .25);" (click)="signup()">Start Free Trial</button>
-              -->
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+  -->
   <!-- END CTA -->
 
   <!-- START CONTACT -->
