@@ -109,7 +109,7 @@
             </div>
             <div style="display:block;font-size:16px;width:800px;">
               <div style="text-align: center;margin-top:5px;background-color: #000000;">
-                <vg-player (onPlayerReady)="onPlayerReady($event)">
+                <vg-player *ngIf="currentVideo === explainerUrl" (onPlayerReady)="onPlayerReady($event)">
 
                   <vg-controls>
                     <vg-play-pause></vg-play-pause>
@@ -133,36 +133,119 @@
                   </vg-controls>
 
                   <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
-                    <source [src]="currentVideo" type="video/mp4">
+                    <source [src]="explainerUrl" type="video/mp4">
+                  </video>
+                </vg-player>
+                <vg-player *ngIf="currentVideo === step1Url" (onPlayerReady)="onPlayerReady($event)">
+                
+                  <vg-controls>
+                    <vg-play-pause></vg-play-pause>
+                    <vg-playback-button></vg-playback-button>
+                
+                    <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+                
+                    <vg-scrub-bar>
+                      <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                      <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                    </vg-scrub-bar>
+                
+                    <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                    <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+                
+                    <vg-track-selector></vg-track-selector>
+                    <vg-mute></vg-mute>
+                    <vg-volume></vg-volume>
+                
+                    <vg-fullscreen></vg-fullscreen>
+                  </vg-controls>
+                
+                  <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
+                    <source [src]="step1Url" type="video/mp4">
+                  </video>
+                </vg-player>
+                <vg-player *ngIf="currentVideo === step2Url" (onPlayerReady)="onPlayerReady($event)">
+                
+                  <vg-controls>
+                    <vg-play-pause></vg-play-pause>
+                    <vg-playback-button></vg-playback-button>
+                
+                    <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+                
+                    <vg-scrub-bar>
+                      <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                      <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                    </vg-scrub-bar>
+                
+                    <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                    <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+                
+                    <vg-track-selector></vg-track-selector>
+                    <vg-mute></vg-mute>
+                    <vg-volume></vg-volume>
+                
+                    <vg-fullscreen></vg-fullscreen>
+                  </vg-controls>
+                
+                  <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
+                    <source [src]="step2Url" type="video/mp4">
+                  </video>
+                </vg-player>
+                <vg-player *ngIf="currentVideo === step3Url" (onPlayerReady)="onPlayerReady($event)">
+                
+                  <vg-controls>
+                    <vg-play-pause></vg-play-pause>
+                    <vg-playback-button></vg-playback-button>
+                
+                    <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+                
+                    <vg-scrub-bar>
+                      <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                      <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                    </vg-scrub-bar>
+                
+                    <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+                    <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+                
+                    <vg-track-selector></vg-track-selector>
+                    <vg-mute></vg-mute>
+                    <vg-volume></vg-volume>
+                
+                    <vg-fullscreen></vg-fullscreen>
+                  </vg-controls>
+                
+                  <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
+                    <source [src]="step3Url" type="video/mp4">
                   </video>
                 </vg-player>
               </div>
-              <div style="display:block;padding:20px;width:100%;text-align: center;">
-                <div style="display:block;padding:20px;width:100%;color:white;text-align: center;">
+            </div>
+            <div style="display:block;width:100%">
+              <div style="display:block;padding-top:40px;width:100%;text-align: center;">
+                <div style="display:block;width:100%;color:white;text-align: center;margin-bottom:20px;">
                   <h2>How It Works</h2>
                 </div>
-                <div style="display:flex;justify-content: space-between;text-align: center;">
+                <div style="display:flex;justify-content: space-evenly;text-align: center;">
                   <div>
                     <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('explainer')">
-                      <img width="140" src="../../../assets/images/explainer.png">
+                      <img width="200" src="../../../assets/images/explainer.png">
                     </div>
                     <span style="display:block;color:white;font-size:12px;">Explainer</span>
                   </div>
                   <div>
                     <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('step1')">
-                      <img width="140" src="../../../assets/images/step1.png">
+                      <img width="200" src="../../../assets/images/step1.png">
                     </div>
                     <span style="display:block;color:white;font-size:12px;">Step1 - Screencast</span>
                   </div>
                   <div>
                     <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('step2')">
-                      <img width="140" src="../../../assets/images/step2.png">
+                      <img width="200" src="../../../assets/images/step2.png">
                     </div>
                     <span style="display:block;color:white;font-size:12px;">Step2 - Screencast</span>
                   </div>
                   <div>
                     <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('step3')">
-                      <img width="140" src="../../../assets/images/step3.png">
+                      <img width="200" src="../../../assets/images/step3.png">
                     </div>
                     <span style="display:block;color:white;font-size:12px;">Step3 - Screencast</span>
                   </div>

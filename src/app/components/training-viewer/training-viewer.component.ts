@@ -306,7 +306,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   lockedContentHeight: number;
   contentHeight: number;
   showCloseButton = false;
-  percentageOfBrowserHeight = .55;
+  percentageOfBrowserHeight = .60;
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.browserInnerHeight = window.innerHeight;

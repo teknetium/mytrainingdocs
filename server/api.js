@@ -14,6 +14,7 @@ const User = require("./models/User");
 const Assessment = require("./models/Assessment");
 const Event = require("./models/Event");
 const Comment = require("./models/Comment");
+const Doc = require("./models/Doc");
 const UTSession = require("./models/UTSession");
 const sgMail = require('@sendgrid/mail');
 
@@ -97,6 +98,7 @@ module.exports = function(app, config) {
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email teamAdmin orgAdmin appAdmin teamId org supervisorId profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
+  const docProjection = '_id productId productVersion author featureName sections images';
   const commentListProjection = "_id tid version author text rating date";
   const assessmentListProjection = "_id type title owner description timeLimit isFinal passingGrade items";
   const utSessionProjection = "_id utId uid tid startTime stopTime";
@@ -985,6 +987,55 @@ module.exports = function(app, config) {
     });
   });
   app.post("/api/comments/new", jwtCheck, (req, res) => {
+    const comment = new Comment({
+      tid: req.body.tid,
+      date: req.body.date,
+      text: req.body.text,
+      rating: req.body.rating,
+      rating: req.body.rating,
+      author: req.body.author,
+      version: req.body.version,
+      _id: req.body._id,
+    });
+    Comment.create(comment, function (err2, commentObj) {
+      if (err2) {
+        return res.status(500).send({ message: err2.message });
+      }
+      res.send(commentObj);
+    });
+  });
+  app.delete("/api/comments/:id", jwtCheck, (req, res) => {
+    Comment.findById(req.params.id, (err, comment) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (!event) {
+        return res.status(400).send({ message: "Event not found." });
+      }
+      comment.remove(err2 => {
+        if (err2) {
+          return res.status(500).send({ message: err2.message });
+        }
+        res.status(200).send({ message: "Comment successfully deleted." });
+      });
+    });
+  });
+
+  //
+  // Doc methods
+  //
+  app.get("/api/doc/:id", (req, res) => {
+    Doc.findById(req.params.id, docProjection, (err, doc) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (!doc) {
+        return res.status(400).send({ message: "Doc not found." });
+      }
+      res.send(doc);
+    });
+  });
+  app.post("/api/docs/new", jwtCheck, (req, res) => {
     const comment = new Comment({
       tid: req.body.tid,
       date: req.body.date,

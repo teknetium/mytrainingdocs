@@ -82,7 +82,7 @@
     </div>
     <nz-modal [(nzVisible)]="markCompletedModalIsVisible" nzTitle="Mark this Training as Completed" nzWidth="800"
         (nzOnCancel)="handleMarkAsCompletedCancel()" (nzOnOk)="markTrainingAsComplete(selectedTraining)"
-        style="width:800px;">
+        nzCancelDisabled="true" style="width:800px;">
         <span style="display:block;">Rate this Training</span>
         <nz-rate style="display:block;margin-bottom:20px;" [(ngModel)]="rating" ngDefaultControl
             (ngModelChange)="ratingChanged($event)" nzAllowHalf class="small"></nz-rate>

@@ -208,10 +208,12 @@ export class UserService {
 
   createNewUser(user: UserModel) {
     this.postUser$(user).subscribe(data => {
+      /*
       this.myTeam.push(data);
       this.myTeamBS$.next(this.myTeam);
+      */
 
-//      this.loadData(this.authenticatedUser._id);
+      this.loadData(this.authenticatedUser._id);
     })
   }
 

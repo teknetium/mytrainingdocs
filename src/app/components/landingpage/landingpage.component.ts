@@ -106,15 +106,17 @@ export class LandingpageComponent implements OnInit {
     },
     {
       active: false,
-      question: 'Do I have to manage my training content locally after I have started using myTrainingdocs?',
-      answer: `No.  Once your content has been uploaded, mytrainingdocs becomes the place of record for that content.`
-    },
+      question: 'Do I have to manage my training content locally after I have uploaded it into myTrainingdocs?',
+      answer: `No, you do not need to keep your local copy.  You can download the file from the training template.`
+    }
+/*
     {
       active: false,
       question: 'How do I update the content of a document I have uploaded into myTrainingdocs?',
       answer: `You simply download the document, modify it, and re-upload it.  myTrainingdocs saves
       all old versions.`
     } 
+    */
   ];
 
   plans: string = "monthly"
@@ -161,12 +163,13 @@ export class LandingpageComponent implements OnInit {
   timerCnt = 0;
   currentHowMsg: string;
   sub1: Subscription;
-  explainerUrl = 'https://cdn.filestackcontent.com/7krAbmMBS686u8g6FXr2';
-  step1Url;
-  step2Url;
-  step3Url;
+  explainerUrl = 'https://cdn.filestackcontent.com/kiKtqljARoygXbEeCN6V';
+  step1Url = 'https://cdn.filestackcontent.com/FQvfclWnRHyku9t3rKw3';
+  step2Url = 'https://cdn.filestackcontent.com/VtSeKZ5cRgSyD0ci7llL';
+  step3Url = 'https://cdn.filestackcontent.com/fpj1JwxTnOmIzTgLAW4Q';
   currentVideo;
 
+  
   constructor(
     private auth: AuthService,
     private userService: UserService,
@@ -277,6 +280,18 @@ export class LandingpageComponent implements OnInit {
         */
   }
 
+  loadVideo(id) {
+    if (id === 'explainer') {
+      this.currentVideo = this.explainerUrl;
+    } else if (id === 'step1') {
+      this.currentVideo = this.step1Url;
+    } else if (id === 'step2') {
+      this.currentVideo = this.step2Url;
+    } else if (id === 'step3') {
+      this.currentVideo = this.step3Url;
+    }
+  }
+
   playVideo() {
     this.vgApi.play();
   }
@@ -286,7 +301,9 @@ export class LandingpageComponent implements OnInit {
   }
 
   signup() {
-    this.auth.signup();
+    this.router.navigate(['/signup-beta']);
+
+//    this.auth.signup();
   }
   login() {
     this.auth.login();

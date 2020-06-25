@@ -197,8 +197,9 @@ export class AuthService {
     this.refreshSub = expiresIn$
       .subscribe(
         () => {
-          this.renewToken();
-          this.scheduleRenewal();
+          this.logout();
+//          this.renewToken();
+//          this.scheduleRenewal();
         }
       );
   }

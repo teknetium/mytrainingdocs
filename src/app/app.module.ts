@@ -21,6 +21,7 @@ import { VgOverlayPlayModule } from 'videogular2/compiled/overlay-play';
 import { SettingsModule } from './components/settings/settings.module';
 import { JoyrideModule } from 'ngx-joyride';
 import { LandingpageModule } from './components/landingpage/landingpage.module';
+import { DocsModule } from './components/docs/docs.module';
 
 const ngZorroConfig: NzConfig = {
     message: { nzTop: 300 },
@@ -48,7 +49,8 @@ registerLocaleData(en);
         NzBadgeModule,
         VgOverlayPlayModule,
         SettingsModule,
-        LandingpageModule
+        LandingpageModule,
+        DocsModule
     ],
     providers: [
         { 
