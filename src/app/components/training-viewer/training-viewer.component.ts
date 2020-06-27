@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, Input, Output, EventEmitter, ElementRef, ViewChild, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, Input, Output, EventEmitter, ElementRef, ViewChild, TemplateRef, ViewEncapsulation, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FileService } from '../../shared/services/file.service';
 import { TrainingService } from '../../shared/services/training.service';
 import { UserService } from '../../shared/services/user.service';
@@ -28,20 +28,20 @@ import { JoyrideService } from 'ngx-joyride';
 import { AssessmentResponse } from 'src/app/shared/interfaces/userTraining.type';
 
 
-
 @Component({
   selector: 'app-training-viewer',
   templateUrl: './training-viewer.component.html',
   styleUrls: ['./training-viewer.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  //  encapsulation: ViewEncapsulation.Native,
+  //    changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger('tocToggle', [
+    trigger('headerToggle', [
       // ...
       state('closed', style({
-        'margin-left': '-200px'
+        'height': '64px'
       })),
       state('open', style({
-        'margin-left': '0',
+        'height': '150px',
       })),
       transition('open => closed', [
         animate('200ms')
@@ -319,6 +319,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   startTour$: Observable<string>;
   viewingArchiveVersion = false;
   currentAssessmentId = null;
+  editor;
+
+
 
   constructor(
     private trainingService: TrainingService,
@@ -354,7 +357,85 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.trainingIsDirty$ = this.trainingService.getTrainingIsDirtyStream();
 
   }
+  /*
+  public options: Object = {
+    charCounterCount: true,
+    theme: 'gray',
+    toolbarButtons: {
+      // Key represents the more button from the toolbar.
+      moreText: {
+        // List of buttons used in the  group.
+        buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
 
+        // Alignment of the group in the toolbar.
+        align: 'left',
+
+        // By default, 3 buttons are shown in the main toolbar. The rest of them are available when using the more button.
+        buttonsVisible: 3
+      },
+
+
+      moreParagraph: {
+        buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote'],
+        align: 'left',
+        buttonsVisible: 3
+      },
+
+      moreRich: {
+        buttons: ['insertLink', 'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR'],
+        align: 'left',
+        buttonsVisible: 3
+      },
+
+      moreMisc: {
+        buttons: ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help'],
+        align: 'right',
+        buttonsVisible: 2
+      }
+    },
+
+    // Change buttons for XS screen.
+    toolbarButtonsXS: [['undo', 'redo'], ['bold', 'italic', 'underline']]
+    /*
+    toolbarButtonsMD: {
+      'moreText': {
+        buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
+        align: 'left',
+        buttonsVisible: 3
+      },
+      'moreParagraph': {
+        buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote'],
+        align: 'left',
+        buttonsVisible: 3
+      },
+      'moreRich': {
+        buttons: ['insertLink', 'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR'],
+        align: 'left',
+        buttonsVisible: 3
+      },
+      'moreMisc': {
+        buttons: ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help'],
+        align: 'right',
+        buttonsVisible: 2
+      }
+    },
+  */
+//    toolbarButtons: {
+//      buttonsVisible: 10,
+//      buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontSize', 'textColor', 'paragraphFormat', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting']
+//    },
+/*
+    toolbarButtonsXS: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
+    toolbarButtonsSM: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
+    toolbarButtonsMD: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
+    moreParagraph: {
+      buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote'],
+      align: 'left',
+      buttonsVisible: 12
+    },
+    pluginsEnabled: ['align', 'charCounter', 'colors', 'fontFamily', 'fontSize', 'fullscreen', 'image', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quickInsert', 'quote', 'save', 'image', 'link']
+    };
+  */
   ngOnInit() {
     console.log('ngOnInit');
     if (this.production === 'true') {
@@ -362,7 +443,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
     this.browserInnerHeight = window.innerHeight;
     this.browserInnerWidth = window.innerWidth;
-    
+
     this.contentHeight = Math.floor((window.innerHeight - (this.percentageOfBrowserHeight * window.innerHeight)) * .90);
     this.contentWidth = Math.floor(window.innerWidth * .9);
 
@@ -437,13 +518,13 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       if (this.selectedTraining.pages) {
         for (let page of this.selectedTraining.pages) {
           if (page.content) {
-              if (page.content.type === 'video') {
-                this.safeUrlHash[page.content.file.fileStackUrl] = page.content.file.fileStackUrl;
-              } else if (page.content.type === 'file') {
-                this.safeUrlHash[page.content.file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + page.content.file.fileStackId));
-              } else if (page.content.type === 'url') {
-                this.safeUrlHash[page.content.webUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(page.content.webUrl));
-              }
+            if (page.content.type === 'video') {
+              this.safeUrlHash[page.content.file.fileStackUrl] = page.content.file.fileStackUrl;
+            } else if (page.content.type === 'file') {
+              this.safeUrlHash[page.content.file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + page.content.file.fileStackId));
+            } else if (page.content.type === 'url') {
+              this.safeUrlHash[page.content.webUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(page.content.webUrl));
+            }
           }
           this.mainContentPageHash[page._id] = page;
         }
@@ -765,7 +846,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.trainingService.selectTrainingVersion(trainingClone);
 
     this.lockTrainingModalIsVisible = false;
-    
+
     if (this.selectedTraining.jobTitle !== this.previousVersion.jobTitle) {
       /*
             for (let userId of this.assignedToUsers) {
@@ -879,7 +960,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
     this.safeUrlHash[this.pageUrl] = safeUrl;
     this.currentPage.type = 'url';
-//    this.currentPage = this.mainContentPageHash[this.currentPageId];
+    //    this.currentPage = this.mainContentPageHash[this.currentPageId];
 
     this.currentPage.content.dateUploaded = new Date().getTime();
     this.currentPage.content.webUrl = this.pageUrl;
@@ -1001,7 +1082,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
     this.setCurrentPage(pageId, -1);
   }
-  
+
   setCurrentPage(pageId: string, pageIndex: number) {
     this.currentPageId = pageId;
 
@@ -1081,16 +1162,16 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.mode = 'Edit';
     this.trainingService.reloadAllTrainings();
   }
-/*
-  toggleTOC() {
-    this.isOpen = !this.isOpen;
-    if (this.isOpen) {
-      this.pageContainerMarginLeft = '270';
-    } else {
-      this.pageContainerMarginLeft = '20';
+  /*
+    toggleTOC() {
+      this.isOpen = !this.isOpen;
+      if (this.isOpen) {
+        this.pageContainerMarginLeft = '270';
+      } else {
+        this.pageContainerMarginLeft = '20';
+      }
     }
-  }
-*/
+  */
   saveTraining(reload: boolean) {
     if (this.selectedTraining.teamId === 'mytrainingdocs') {
       return;
@@ -1246,9 +1327,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.saveTraining(false);
   }
 
-//  setCurrentHelpPanel(panelName: string): void {
-//    this.currentHelpPanel = panelName;
-//  }
+  //  setCurrentHelpPanel(panelName: string): void {
+  //    this.currentHelpPanel = panelName;
+  //  }
 
   postMessageDialog() {
     this.messageDialogVisible = true;
@@ -1350,7 +1431,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.questionEditorVisible = true;
     let newQuestionIndex = this.currentPage.content.assessment.items.length;
 
-    this.currentPage.content.assessment.items.push({question: '', choices:[], correctChoice: -1});
+    this.currentPage.content.assessment.items.push({ question: '', choices: [], correctChoice: -1 });
     this.editQuestion(newQuestionIndex);
   }
 
@@ -1412,7 +1493,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         this.assessmentResponse.passed = false;
       } else {
         this.assessmentResponse.passed = true;
-//        this.passedAssessment = true;
+        //        this.passedAssessment = true;
         this.assessmentResult.emit(this.assessmentResponse);
         this.assessmentResponse = {
           tid: undefined,

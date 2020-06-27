@@ -34,10 +34,12 @@ const appRoutes: Routes = [
         path: 'callback',
         component: CallbackComponent,
     },
+    /*
     {
         path: 'signup-beta',
         component: SignupComponent
     },
+    */
     {
         path: 'signup/:id',
         component: SignupComponent

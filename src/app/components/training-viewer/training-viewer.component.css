@@ -139,7 +139,6 @@
 	float: right;
 	height: 100%;
 	width: 100%;
-	overflow: scroll;
 	background-color: white;
 }
 
@@ -187,7 +186,6 @@
 .page-content {
 	padding: 0 10px;
 	height:80%;
-	overflow: scroll;
  	margin-bottom: 10px;
 }
 .page-section-selected {

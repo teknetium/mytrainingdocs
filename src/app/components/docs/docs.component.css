@@ -1,0 +1,10 @@
+.left-side {
+    display:inline-block;
+    width:20%;
+    border:1pd solid #bbbbbb;
+}
+
+.right-side {
+    width:80%;
+    display:inline-block;
+}

@@ -28,7 +28,8 @@ import { PrettyJsonModule } from 'angular2-prettyjson';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzDrawerModule } from 'ng-zorro-antd';
 import { JoyrideModule, JoyrideService } from 'ngx-joyride';
-import { QuillModule } from 'ngx-quill';
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import 'froala-editor/js/plugins.pkgd.min.js';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,8 @@ import { QuillModule } from 'ngx-quill';
   imports: [
     RouterModule,
     ColorPickerModule,
+    FroalaEditorModule.forRoot(),
+    FroalaViewModule.forRoot(),
     NzAutocompleteModule,
     NzAlertModule,
     NzToolTipModule,
@@ -82,8 +85,7 @@ import { QuillModule } from 'ngx-quill';
     PrettyJsonModule,
     NzDrawerModule,
     JoyrideModule.forRoot(),
-    QuillModule.forRoot()
-  ],
+    ],
   exports: [
     TrainingViewerComponent,
   ],

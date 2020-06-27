@@ -41,4 +41,11 @@ export const AuthenticatedROUTES: Routes = [
         path: 'mytrainings',
         loadChildren: () => import('./components/my-trainings/my-trainings.module').then(m => m.MyTrainingsModule)
     },
+    /*
+    {
+        path: 'docs',
+        loadChildren: () => import('./components/docs/docs.module').then(m => m.DocsModule)
+    },
+    */
+
 ]

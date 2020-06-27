@@ -29,14 +29,21 @@
                       ],
                       "styles": [
                         "./node_modules/videogular2/fonts/videogular.css",
-                        "src/styles.scss",
-                        "src/assets/css/bootstrap.min.css"
-
-                      ],
+                        "src/styles.scss"
+                    ],
                       "scripts": [
                           "node_modules/jquery/dist/jquery.js",
-                          "src/assets/lib/hljs/highlight.pack.js"
-                      ]
+                          "src/assets/lib/hljs/highlight.pack.js",
+                          "./node_modules/froala-editor/js/froala_editor.pkgd.min.js",
+                          "./node_modules/froala-editor/js/plugins.pkgd.min.js",
+                        "./node_modules/froala-editor/js/plugins/char_counter.min.js",
+                        "./node_modules/froala-editor/js/plugins/paragraph_format.min.js",
+                        "./node_modules/froala-editor/js/plugins/paragraph_style.min.js",
+                        "./node_modules/froala-editor/js/plugins/font_family.min.js",
+                        "./node_modules/froala-editor/js/plugins/font_size.min.js",
+                        "./node_modules/froala-editor/js/plugins/image.min.js",
+                        "./node_modules/froala-editor/js/plugins/align.min.js"
+                    ]
                   },
                   "configurations": {
                       "production": {
