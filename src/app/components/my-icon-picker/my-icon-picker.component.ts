@@ -195,6 +195,8 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   iconSearchTermHash = {};
   @Input() currentIconClass = '';
   @Input() currentColor = '';
+  @Input() height = 200;
+
   @Output() icon = new EventEmitter<{ icon: string, color: string }>();
   iconName: string = '';
   currentIcon = -1;

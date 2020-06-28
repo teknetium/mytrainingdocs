@@ -22,7 +22,7 @@ import { SettingsModule } from './components/settings/settings.module';
 import { JoyrideModule } from 'ngx-joyride';
 import { LandingpageModule } from './components/landingpage/landingpage.module';
 import { DocsModule } from './components/docs/docs.module';
-import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+
 
 const ngZorroConfig: NzConfig = {
     message: { nzTop: 300 },

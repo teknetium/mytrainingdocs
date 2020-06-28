@@ -88,12 +88,13 @@
                 </div>
             </nz-modal>
 
-            <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800" nzHeight="600"
+            <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800" [nzHeight]="browserInnerHeight - 300"
                 (nzOnCancel)="handleIconSelectCancel()" [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled"
-                (nzOnOk)="handleIconSelectConfirm()" style="width:800px;height:700px;">
+                (nzOnOk)="handleIconSelectConfirm()" >
                 <app-icon-picker [currentIconClass]="selectedTraining.iconClass"
                     [currentColor]="selectedTraining.iconColor" (icon)="setIcon($event)"
-                    style="width:100%;height:700px;"></app-icon-picker>
+                    [height]="browserInnerHeight - 300"
+                    style="width:100%;"></app-icon-picker>
             </nz-modal>
             <div *ngIf="production === 'true'" style="position:relative;height:70%;width:100%;text-align: center;">
                 <div style="display:inline-block;">
@@ -494,7 +495,7 @@
                                     <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                         style="display: inline-block;height:fit-content;"
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}">
-                                        <div [froalaEditor] [(froalaModel)]="page.text"></div>
+                                        <div [froalaEditor]="froalaOptions" [(froalaModel)]="page.text" ></div>
                                     </div>
                                     <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}"
@@ -507,7 +508,7 @@
                                     <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit' && (page.content && page.content.type !== 'html')"
                                         style="display: inline-block;height:fit-content;margin-bottom:20px;"
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}">
-                                        <div style="margin-bottom:20px;" [froalaEditor] [(froalaModel)]="page.text"></div>
+                                        <div style="margin-bottom:20px;" [froalaEditor]="froalaOptions" [(froalaModel)]="page.text"></div>
                                     </div>
                                     <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview' && (page.content && page.content.type !== 'html')"
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}"
@@ -576,7 +577,7 @@
                                                         <span style="font-size:14px;font-weight:300;">Enter the web
                                                             address
                                                             of the website you would like to embed.<br>
-                                                            The web address must use secure HTTP (https). </span><br>
+                                                            </span><br>
                                                         <span
                                                             style="font-size:12px;color:red;margin-left:40px;">Warning:
                                                             Some websites do not allow themselves to be embedded.</span>
@@ -1021,7 +1022,7 @@
                                             <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                                 [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
                                                 style="display: inline-block;">
-                                                <div [froalaEditor] [(froalaModel)]="page.content.text"
+                                                <div [froalaEditor]="froalaOptions2" [(froalaModel)]="page.content.text "
                                                     style="height:100%;width:100%;"></div>
 
                                                 <!--

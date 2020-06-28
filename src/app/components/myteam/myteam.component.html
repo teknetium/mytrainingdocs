@@ -43,7 +43,7 @@
                                         <i class="fad fa-user" style="color:red;"></i>
                                     </div>
                                 </div>
-                                <div style="float:right;">
+                                <div style="float:right;margin-right:10px;">
                                     <div style="display:block;">
                                         <span style="font-size:12px;">User Type</span>
                                     </div>
@@ -89,7 +89,7 @@
                         </div>
                     </div>
                     <div style="background-color: white;text-align:left;">
-                        <div *ngIf="authenticatedUser$ | async as user" class='user-button' style="font-size:18px;"
+                        <div *ngIf="authenticatedUser$ | async as user" class='user-button' style="font-size:20px;"
                             (click)="selectUser(user._id)" [ngClass]="{'user-selected': selectedUser._id === user._id }">
                             <i [ngClass]="userTypeIconHash[user.userType]"
                                 [ngStyle]="{'color': trainingStatusColorHash[user.trainingStatus]}" nz-tooltip
@@ -103,27 +103,20 @@
                                 </i>
                             </span>
                         </div>
-                        <div style="cursor:pointer;display:block;padding-left:20px;">
+                        <div style="cursor:pointer;display:block;">
                             <div *ngFor="let user of myGroup">
                                 <div *ngIf="user._id !== authenticatedUser._id" class="user-button"
                                     [ngClass]="{'user-selected': selectedUser._id === user._id}"
-                                    (click)="selectUser(user._id)">
+                                    (click)="selectUser(user._id)" style="">
                                     <i [ngClass]="userTypeIconHash[user.userType]"
-                                        [ngStyle]="{'color': trainingStatusColorHash[user.trainingStatus]}"></i>&nbsp;
-                                    <span style="display:inline-block">{{ user.firstName }} {{ user.lastName }}
-                                    </span>&nbsp;
-                                    <i *ngIf="user.teamAdmin === true" nz-icon nzType="crown" [nzTheme]="'twotone'"
-                                        [nzTwotoneColor]="'#6939c9'"
-                                        style="display:inline-block;font-size:12px;vertical-align:text-bottom;"
-                                        nz-tooltip nzTooltipTitle="Admin User"></i>
-                                    <i *ngIf="user.userStatus === 'pending'" nz-icon nzType="warning"
-                                        [nzTheme]="'twotone'" [nzTwotoneColor]="'#efb753'"
-                                        style="margin-left:2px;margin-right:2px;display:inline-block;font-size:12px;vertical-align:text-bottom;"
-                                        nz-tooltip nzTooltipTitle="User Account Pending"></i>
+                                        [ngStyle]="{'color': trainingStatusColorHash[user.trainingStatus]}" style="margin-left:10px;"></i>&nbsp;
+                                    <span style="display:inline-block">{{ user.firstName }} {{ user.lastName }}</span>&nbsp;
+                                    <nz-badge *ngIf="user.teamAdmin === true" nzColor="purple" nz-tooltip nzTooltipTitle="Admin User" style="display: inline-block;"></nz-badge>
+                                    <nz-badge *ngIf="user.userStatus === 'pending'" nzColor="gold" nz-tooltip nzTooltipTitle="User Account Pending" style="display: inline-block;"></nz-badge>
                                     <span *ngFor="let ut of uidUTHash[user._id]" style="float:right;" nz-tooltip
                                         [nzTooltipTitle]="allTrainingIdHash[ut.tid].title">
                                         <i [ngClass]="allTrainingIdHash[ut.tid].iconClass"
-                                            style="display:inline-block;font-size:16px;margin-right:5px;vertical-align: middle;"
+                                            style="display:inline-block;font-size:14px;margin-right:5px;vertical-align: middle;"
                                             [ngStyle]="{'color': allTrainingIdHash[ut.tid].iconColor}">
                                         </i>
                                     </span>

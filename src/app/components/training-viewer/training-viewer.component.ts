@@ -321,7 +321,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   currentAssessmentId = null;
   editor;
 
-
+  froalaContents: string = 'Replace with your content';
 
   constructor(
     private trainingService: TrainingService,
@@ -436,6 +436,26 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     pluginsEnabled: ['align', 'charCounter', 'colors', 'fontFamily', 'fontSize', 'fullscreen', 'image', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quickInsert', 'quote', 'save', 'image', 'link']
     };
   */
+  public froalaOptions: Object = {
+    events: {
+      'blur': (e) => {
+        this.saveTraining(false);
+      },
+      'contentChanged': () => {
+        this.saveTraining(false);
+      }
+    }
+  };
+  public froalaOptions2: Object = {
+    events: {
+      'blur': (e) => {
+        this.saveTraining(false);
+      },
+      'contentChanged': () => {
+        this.saveTraining(false);
+      }
+    }
+  };
   ngOnInit() {
     console.log('ngOnInit');
     if (this.production === 'true') {
@@ -922,7 +942,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.saveTraining(false);
   }
 
-  quillBlur(data) {
+  froalaBlur(data, page) {
+    console.log('froalaBlur', data, page);
     this.saveTraining(false);
   }
 
@@ -952,9 +973,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
     this.badUrl = false;
     if (this.pageUrl !== '' && !this.pageUrl.startsWith('https://')) {
-      this.badUrl = true;
-      this.pageUrl = '';
-      return;
+      if (this.pageUrl.startsWith('http://')) {
+        this.pageUrl = 'https://' + this.pageUrl.substring(7);
+      } else {
+        this.pageUrl = 'https://' + this.pageUrl;
+      }
     }
     let safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.pageUrl));
 
@@ -1414,6 +1437,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.currentPage.type = 'text';
     this.currentPage.title = 'HTML Page';
     this.currentPage.content.type = 'html';
+    this.currentPage.content.text = '';
     this.saveTraining(false);
   }
 
