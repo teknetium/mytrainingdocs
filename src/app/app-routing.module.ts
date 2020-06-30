@@ -7,6 +7,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { AuthenticatedROUTES } from './authenticated.routes';
 import { AuthGuard } from './shared/guard/auth.guard';
 import { LoginComponent } from './components/login/login.component';
+import { DocsComponent } from './components/docs/docs.component';
 import { TrainingViewerComponent } from './components/training-viewer/training-viewer.component';
 
 
@@ -51,7 +52,11 @@ const appRoutes: Routes = [
     {
         path: 'landingpage',
         component: LandingpageComponent,
-    },
+    }
+//    {
+//        path: 'docs',
+//        component: DocsComponent,
+//    },
     ];
 
 @NgModule({

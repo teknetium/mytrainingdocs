@@ -12,6 +12,7 @@ var utSessionSchema = new Schema({
   utId: { type: String, required: true },
   uid: { type: String, required: true },
   tid: { type: String, required: true },
+  teamId: { type: String, required: true },
   startTime: { type: Number, required: true },
   stopTime: { type: Number, required: true },
 })

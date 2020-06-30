@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { MyteamComponent } from './components/myteam/myteam.component';
+import { DocsComponent } from './components/docs/docs.component';
 
 
 export const AuthenticatedROUTES: Routes = [
@@ -10,6 +11,11 @@ export const AuthenticatedROUTES: Routes = [
         data: {
             title: 'Home'
         }
+    },
+    {
+        path: 'docs',
+        component: DocsComponent,
+//        loadChildren: () => import('./components/docs/docs.module').then(m => m.DocsModule)
     },
     {
         path: 'myteam',

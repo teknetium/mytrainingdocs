@@ -14,8 +14,8 @@ export interface AssessmentResponse {
   uid: string,
   tid: string,
   assessmentId: string,
+  executionDate: number,
   passed: boolean,
-  completed: boolean,
   score: number,
   answers: number[],
   isFinal: boolean
@@ -26,6 +26,7 @@ export interface UTSession {
   utId: string,
   uid: string,
   tid: string,
+  teamId: string,
   startTime: number,
   stopTime: number,
 }

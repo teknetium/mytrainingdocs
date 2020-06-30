@@ -88,13 +88,12 @@
                 </div>
             </nz-modal>
 
-            <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800" [nzHeight]="browserInnerHeight - 300"
-                (nzOnCancel)="handleIconSelectCancel()" [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled"
-                (nzOnOk)="handleIconSelectConfirm()" >
+            <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800"
+                [nzHeight]="browserInnerHeight - 300" (nzOnCancel)="handleIconSelectCancel()"
+                [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled" (nzOnOk)="handleIconSelectConfirm()">
                 <app-icon-picker [currentIconClass]="selectedTraining.iconClass"
                     [currentColor]="selectedTraining.iconColor" (icon)="setIcon($event)"
-                    [height]="browserInnerHeight - 300"
-                    style="width:100%;"></app-icon-picker>
+                    [height]="browserInnerHeight - 300" style="width:100%;"></app-icon-picker>
             </nz-modal>
             <div *ngIf="production === 'true'" style="position:relative;height:70%;width:100%;text-align: center;">
                 <div style="display:inline-block;">
@@ -352,8 +351,8 @@
                     Prev Page
                 </button>
                 <button style="display:inline-block;" nzSize="small" nz-button nzType="primary"
-                    [disabled]="isLastPage(currentPage._id) || assessmentInProgress" nzShape="round"
-                    (click)="loadNextPage()">
+                    [disabled]="isLastPage(currentPage._id) || assessmentInProgress || (currentPage.type === 'assessment' && (assessmentStatus === 'notCompleted' || assessmentStatus === 'firstTime'))"
+                    nzShape="round" (click)="loadNextPage()">
                     Next Page
                 </button>
             </div>
@@ -431,6 +430,7 @@
                     <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes</span>
                 </div>
             </div>
+            <!--
             <div class="config-page-row">
                 <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
                     <label style="margin-bottom: 0;font-size:12px;color:#000000;">Share With Other
@@ -442,6 +442,8 @@
                         (click)="addFinalAssessmentPage()"></label>
                 </div>
             </div>
+            -->
+            <!--
             <div class="config-page-row">
                 <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
                     <label style="margin-bottom: 0;font-size:12px;color:#000000;">Use Training Ending Assessment</label>
@@ -452,6 +454,7 @@
                         (click)="saveTraining()"></label>
                 </div>
             </div>
+            -->
             <div class="config-page-row">
                 <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
                     <label style="margin-bottom: 0;font-size:12px;color:#000000;">Interest List</label>
@@ -476,7 +479,7 @@
                 </div>
             </div>
         </nz-drawer>
-        <div class="main-content-container">
+        <div class="main-content-container" [ngStyle]="{'height.px':browserInnerHeight - 250}">
             <div class="main-content">
                 <div class="page-container">
                     <div *ngFor="let page of selectedTraining.pages; index as pageIndex">
@@ -485,17 +488,17 @@
                                 style="text-align:center;">
                                 <p *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                     nz-typography nzEditable [(nzContent)]="page.title"
-                                    style="font-style:italic;display:inline-block;font-size:30px;color:#000000;width:50%;margin-bottom:40px;">
+                                    style="font-style:italic;display:inline-block;font-size:30px;color:#000000;width:50%;margin-bottom:20px;">
                                 </p>
                                 <p *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
-                                    style="color:#000000;text-align: center;font-size:30px;margin-bottom:5px;width:50%;display: inline-block;margin-bottom:40px;">
+                                    style="color:#000000;text-align: center;font-size:30px;margin-bottom:5px;width:50%;display: inline-block;margin-bottom:20px;">
                                     {{page.title}}</p>
                                 <div *ngIf="page.type && page.type === 'training-intro'"
                                     style="text-align: center;width:100%;height:100%;">
                                     <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                         style="display: inline-block;height:fit-content;"
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}">
-                                        <div [froalaEditor]="froalaOptions" [(froalaModel)]="page.text" ></div>
+                                        <div [froalaEditor]="froalaOptions" [(froalaModel)]="page.text"></div>
                                     </div>
                                     <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}"
@@ -508,7 +511,8 @@
                                     <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit' && (page.content && page.content.type !== 'html')"
                                         style="display: inline-block;height:fit-content;margin-bottom:20px;"
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}">
-                                        <div style="margin-bottom:20px;" [froalaEditor]="froalaOptions" [(froalaModel)]="page.text"></div>
+                                        <div style="margin-bottom:20px;" [froalaEditor]="froalaOptions"
+                                            [(froalaModel)]="page.text"></div>
                                     </div>
                                     <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview' && (page.content && page.content.type !== 'html')"
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}"
@@ -517,7 +521,7 @@
                                     </div>
 
                                     <div
-                                        style="width:100%;height:100%;display:block;text-align: center;margin-top:40px;">
+                                        style="width:100%;height:fit-content;display:block;text-align: center;margin-top:40px;">
                                         <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                             [ngStyle]="{'width.px':contentWidth}"
                                             style="display:inline-block;height:fit-content;border:1px solid #dddddd;">
@@ -576,8 +580,12 @@
                                                     <div style="display:block;width:100%;">
                                                         <span style="font-size:14px;font-weight:300;">Enter the web
                                                             address
-                                                            of the website you would like to embed.<br>
-                                                            </span><br>
+                                                            of the website you would like to embed. The following
+                                                            formats are allowed:<br>
+                                                            <h5>https://example.com</h5><br>
+                                                            <h5>http://example.com</h5><br>
+                                                            <h5>example.com</h5><br>
+                                                        </span><br>
                                                         <span
                                                             style="font-size:12px;color:red;margin-left:40px;">Warning:
                                                             Some websites do not allow themselves to be embedded.</span>
@@ -601,7 +609,7 @@
                                                                     nz-input [(ngModel)]="pageUrl" nzSize="small"
                                                                     (keydown.enter)="pageUrlChanged()"
                                                                     (blur)="pageUrlChanged()"
-                                                                    placeholder="Enter a website URL   https://example.com" />
+                                                                    placeholder="Enter a website URL   https://example.com or example" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -664,16 +672,17 @@
                                             </div>
                                         </div>
                                         <div *ngIf="page.content && page.content.type === 'none'"
-                                            style="width:100%;height:100%;text-align: center;">
-                                            <div [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
-                                                style="border:1px solid #bbbbbb;display:inline-block;"></div>
+                                            style="width:100%;height:900px;text-align: center;">
+                                            <div [ngStyle]="{'width.px':contentWidth}"
+                                                style="border:1px solid #bbbbbb;display:inline-block;height:100%;">
+                                            </div>
                                         </div>
                                         <div *ngIf="page.content && page.content.type === 'video'"
-                                            style="width:100%;height:100%;">
-                                            <div [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
+                                            style="width:100%;height:900px;">
+                                            <div [ngStyle]="{'width.px':contentWidth}"
                                                 style="text-align: center;display: inline-block;">
                                                 <vg-player (onPlayerReady)="onPlayerReady($event)"
-                                                    [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}">
+                                                    [ngStyle]="{'width.px':contentWidth}">
 
                                                     <vg-controls>
                                                         <vg-play-pause></vg-play-pause>
@@ -699,7 +708,7 @@
                                                         <vg-fullscreen></vg-fullscreen>
                                                     </vg-controls>
                                                     <video [vgMedia]="media" #media id="singleVideo" preload="'auto'"
-                                                        [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
+                                                        [ngStyle]="{'width.px':contentWidth}"
                                                         [src]="safeUrlHash[page.content.file.fileStackUrl]"
                                                         crossorigin></video>
                                                     <!-- <video [vgMedia]="media" #media id="singleVideo" preload="'auto'"
@@ -710,16 +719,16 @@
                                             </div>
                                         </div>
                                         <div *ngIf="page.content && page.content.type === 'file'"
-                                            style="text-align: center;width:100%;height:100%;">
-                                            <iframe [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
+                                            style="text-align: center;width:100%;height:900px;">
+                                            <iframe [ngStyle]="{'width.px':contentWidth}"
                                                 [src]="safeUrlHash[page.content.file.fileStackUrl]" allowfullscreen
-                                                [width]="contentWidth" [height]="contentHeight">
+                                                [width]="contentWidth" [height]="900">
                                             </iframe>
                                         </div>
                                         <div *ngIf="page.content && page.content.type === 'assessment'">
-                                            <div style="text-align: center;width:100%;height:100%;">
-                                                <div style="display:inline-block;border:1px solid #dddddd;border-radius:5px;"
-                                                    [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}">
+                                            <div style="text-align: center;width:100%;height:900px;">
+                                                <div style="height:60%;display:inline-block;border:1px solid #dddddd;border-radius:5px;"
+                                                    [ngStyle]="{'width.px':contentWidth}">
                                                     <div style="width: 100%;height:100%;text-align: left;padding:20px;">
                                                         <div *ngIf="page.content.assessment" style="width:100%;">
                                                             <div
@@ -901,14 +910,22 @@
                                                                         </div>
                                                                     </div>
                                                                     <div style="display:block;margin:20px ;">
-                                                                        <div *ngIf="assessmentComplete && assessmentResponse.passed"
+                                                                        <div *ngIf="assessmentStatusHash[page.content.assessment._id] === 'passed'"
                                                                             style="margin:20px 0;">
-                                                                            <nz-alert nzType="success"
-                                                                                nzMessage="Congratulations, you passed!"
+                                                                            <nz-alert
+                                                                                *ngIf="page.content.assessment.isFinal"
+                                                                                nzType="success"
+                                                                                nzMessage="Congratulations, you have passed this trainings final assessment!  This training will be marked as completed."
+                                                                                nzShowIcon>
+                                                                            </nz-alert>
+                                                                            <nz-alert
+                                                                                *ngIf="!page.content.assessment.isFinal"
+                                                                                nzType="success"
+                                                                                nzMessage="Congratulations, you passed this assessment!"
                                                                                 nzShowIcon>
                                                                             </nz-alert>
                                                                         </div>
-                                                                        <div *ngIf="assessmentComplete && !assessmentResponse.passed"
+                                                                        <div *ngIf="assessmentStatusHash[page.content.assessment._id] === 'failed'"
                                                                             style="margin:20px 0;">
                                                                             <nz-alert nzType="error"
                                                                                 nzMessage="Sorry, you did not pass!"
@@ -918,14 +935,14 @@
                                                                                 nzSize="small" (click)="retake()"
                                                                                 style="display:block;margin-top:20px;">Retake</button>
                                                                         </div>
-                                                                        <div *ngIf="currentAssessmentItemIndex === -1 && !assessmentComplete"
+                                                                        <div *ngIf="assessmentStatusHash[page.content.assessment._id] === 'firstTime'"
                                                                             style="display:inline-block;">
                                                                             <button nz-button nzType="primary"
                                                                                 nzSize="small"
                                                                                 (click)="beginAssessment(page.content.assessment._id)">Begin
                                                                                 Assessment</button>
                                                                         </div>
-                                                                        <div *ngIf="assessmentComplete && selectedTraining.status === 'unlocked' && production === 'false'"
+                                                                        <div *ngIf="assessmentStatusHash[page.content.assessment._id] === 'passed' && selectedTraining.status === 'unlocked' && production === 'false'"
                                                                             style="display:inline-block;">
                                                                             <button nz-button nzType="primary"
                                                                                 nzSize="small"
@@ -1008,63 +1025,25 @@
                                             </div>
                                         </div>
                                         <div *ngIf="page.content && page.content.type === 'url'"
-                                            style="text-align: center;width:100%;height:100%;">
-                                            <div style="display:inline-block;"
-                                                [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}">
+                                            style="text-align: center;width:100%;height:900px;">
+                                            <div style="display:inline-block;" [ngStyle]="{'width.px':contentWidth}">
                                                 <iframe [src]="safeUrlHash[page.content.webUrl]" allowfullscreen
-                                                    [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
-                                                    [width]="contentWidth" [height]="contentHeight">
+                                                    [ngStyle]="{'width.px':contentWidth}" [width]="contentWidth"
+                                                    height="900">
                                                 </iframe>
                                             </div>
                                         </div>
                                         <div *ngIf="page.content && page.content.type === 'html'"
-                                            style="text-align: center;width:100%;height:100%;">
+                                            style="text-align: center;width:100%;height:900px;">
                                             <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
-                                                [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
-                                                style="display: inline-block;">
-                                                <div [froalaEditor]="froalaOptions2" [(froalaModel)]="page.content.text "
+                                                [ngStyle]="{'width.px':contentWidth}" style="display: inline-block;">
+                                                <div [froalaEditor]="froalaOptions2"
+                                                    [(froalaModel)]="page.content.text "
                                                     style="height:100%;width:100%;"></div>
-
-                                                <!--
-                                                <quill-editor  format="html"
-                                                    [(ngModel)]="page.content.text" (onBlur)="quillBlur($event);">
-                                                    <div quill-editor-toolbar
-                                                        style="background-color: #f5f5f5;border:1px solid #dddddd;">
-                                                        <select class="ql-size">
-                                                            <option value="small"></option>
-                                                            < !-- Note a missing, thus falsy value, is used to reset to default -- >
-                                                            <option selected></option>
-                                                            <option value="large"></option>
-                                                            <option value="huge"></option>
-                                                        </select>
-
-                                                        <span class="ql-formats">
-                                                            <select class="ql-align" [title]="'Aligment'">
-                                                                <option selected></option>
-                                                                <option value="center"></option>
-                                                                <option value="right"></option>
-                                                                <option value="justify"></option>
-                                                            </select>
-
-                                                            <select class="ql-color" [title]="'Color'">
-                                                            </select>
-
-                                                            <select class="ql-background" [title]="'BackgroundColor'">
-                                                            </select>
-                                                        </span>
-                                                    </div>
-                                                </quill-editor>
-                                                -->
                                             </div>
                                             <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
-                                                [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight}"
-                                                style="display: inline-block;">
+                                                [ngStyle]="{'width.px':contentWidth}" style="display: inline-block;">
                                                 <div [froalaView]="page.content.text"></div>
-                                                <!--
-                                                <quill-view-html style="height:100%;width:100%;"
-                                                    [content]="page.content.text" format="html">
-                                                </quill-view-html>
-                                                -->
                                             </div>
                                         </div>
                                     </div>

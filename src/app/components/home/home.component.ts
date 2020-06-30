@@ -35,14 +35,14 @@ export interface TrainingStat {
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  //  changeDetection: ChangeDetectionStrategy.OnPush,
+//  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent extends BaseComponent implements OnInit {
   uidUTHash$: Observable<UidUTHash>;
   uidUTHash = {};
   sessionLog$: Observable<UTSession[]>;
   sessionLog: UTSession[];
-  filteredSessionLog: UTSession[] = [];
+  filteredSessionLog: UTSession[];
 
   userTypeIconHash = {
     individualContributor: 'fad fa-fw fa-user',
@@ -75,6 +75,12 @@ export class HomeComponent extends BaseComponent implements OnInit {
   startRangeTimeMS;
   endRangeTimeMS;
   now;
+  trainingStatusColor: string;
+  utStatusColorHash = {
+    upToDate: 'green',
+    pastDue: 'red',
+    completed: 'blue'
+  }
 
   constructor(
     private auth: AuthService,
@@ -83,6 +89,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     private trainingService: TrainingService,
     private userTrainingService: UserTrainingService,
     private joyrideService: JoyrideService,
+    private cd: ChangeDetectorRef,
     private router: Router
   ) {
     super();
@@ -120,12 +127,12 @@ export class HomeComponent extends BaseComponent implements OnInit {
         return;
       }
       this.sessionLog = sessionLog;
-      this.onDateRangeChange(this.dateRange);
     });
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         return;
       }
+
 
       this.authenticatedUser = user;
       if (this.authenticatedUser.userType !== 'supervisor') {
@@ -133,11 +140,13 @@ export class HomeComponent extends BaseComponent implements OnInit {
       }
       if (this.authenticatedUser.userType === 'supervisor') {
 
+        this.userTrainingService.getUTSessionsForTeam(this.authenticatedUser._id);
         this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamIdHash => {
           if (!myTeamIdHash) {
             return;
           }
           this.myTeamIdHash = myTeamIdHash;
+          this.onDateRangeChange(this.dateRange);
 
           this.myTeam = Object.values(this.myTeamIdHash);
           for (let index = 0; index < this.myTeam.length; index++) {
@@ -156,6 +165,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
               this.userTrainingService.getUTForUser$(this.myTeam[index]._id).subscribe(utList => {
                 for (let ut of utList) {
                   userStatObj.trainingIdList.push(ut.tid);
+                  userStatObj.tidUTHash[ut.tid] = ut;
                   if (ut.status === 'upToDate') {
                     userStatObj.upToDateCnt++;
                   } else if (ut.status === 'completed') {
@@ -191,7 +201,10 @@ export class HomeComponent extends BaseComponent implements OnInit {
   }
 
   onDateRangeChange(dateRange) {
-    this.filteredSessionLog = [];
+    if (!this.sessionLog) {
+      return;
+    }
+    this.filteredSessionLog = new Array(0);
     this.startRangeTimeMS = dateRange[0].getTime();
     this.endRangeTimeMS = dateRange[1].getTime();
     for (let session of this.sessionLog) {

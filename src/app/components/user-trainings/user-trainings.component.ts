@@ -15,7 +15,7 @@ import { BaseComponent } from '../base.component';
   selector: 'app-user-trainings',
   templateUrl: './user-trainings.component.html',
   styleUrls: ['./user-trainings.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+//  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTrainingsComponent extends BaseComponent implements OnInit {
 
@@ -38,9 +38,10 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     }
   };
 
-//  userTrainingHash$: Observable<UserTrainingHash>;
+  //  userTrainingHash$: Observable<UserTrainingHash>;
   uidUserTrainingHash$: Observable<UidUserTrainingHash>;
   userTrainings$: Observable<UserTrainingModel[]>;
+  userTrainingCompleted$: Observable<UserTrainingModel>;
   userTrainings: UserTrainingModel[];
   trainingIdHash$: Observable<TrainingIdHash>;
   trainingIdHash: TrainingIdHash;
@@ -48,7 +49,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   selectedUser: UserModel;
   selectedTraining$: Observable<TrainingModel>;
   selectedTraining: TrainingModel;
-  
+
   @Input() mode = '';
   @Input() logSession = 'off';
   @Input() production = 'off';
@@ -60,7 +61,8 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   utIdHash = {};
   comment = '';
   rating = 0;
-  
+  teamId;
+
 
   constructor(
     private userService: UserService,
@@ -70,14 +72,30 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     private cd: ChangeDetectorRef,
   ) {
     super();
+    this.userTrainingCompleted$ = this.userTrainingService.getUserTrainingCompletedStream();
     this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
-//    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
+    //    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
   }
 
   ngOnInit() {
+    /*
+    this.userTrainingCompleted$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTraining => {
+      if (!userTraining) {
+        return;
+      } else {
+        console.log('userTrainingCompleted', userTraining);
+        if (userTraining.status === 'completed') {
+          return;
+        } else {
+          this.utIdHash[userTraining._id] = userTraining;
+          this.markAsComplete(userTraining._id);
+        }
+      }
+    })
+    */
     this.selectedTraining$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(selectedTraining => {
       if (!selectedTraining) {
         this.currentUserTraining = '';
@@ -102,33 +120,33 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       for (let userTraining of userTrainings) {
         this.utIdHash[userTraining._id] = userTraining;
       }
-      this.cd.detectChanges();
+//      this.cd.detectChanges();
     });
 
     this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
-      console.log('selectedUser$', user);
+      console.log('UserTraining:selectedUser$', user);
       if (!user) {
         return;
       }
-//      this.userTrainings = [];
+      //      this.userTrainings = [];
       this.selectedUser = user;
       this.userTrainingService.selectUser(user._id);
 
-//      this.userTrainingService.loadTrainingsForUser(user._id);
+      //      this.userTrainingService.loadTrainingsForUser(user._id);
     });
-/*  
-    this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
-      let userTrainingHash = uidUserTrainingHash[this.selectedUser._id];
-      if (Object.keys(userTrainingHash).length === 0) {
-        return;
-      }
-      this.userTrainings = Object.values(userTrainingHash);
-      for (let ut of this.userTrainings) {
-        this.utIdHash[ut._id] = ut;
-      }
-      this.cd.detectChanges();
-    })
-*/
+    /*  
+        this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
+          let userTrainingHash = uidUserTrainingHash[this.selectedUser._id];
+          if (Object.keys(userTrainingHash).length === 0) {
+            return;
+          }
+          this.userTrainings = Object.values(userTrainingHash);
+          for (let ut of this.userTrainings) {
+            this.utIdHash[ut._id] = ut;
+          }
+          this.cd.detectChanges();
+        })
+    */
   }
 
   timeFormat(ms): string {
@@ -139,7 +157,15 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
 
   viewTraining(utid, tid) {
     if (this.logSession === 'on') {
-      this.userTrainingService.startSession(utid, this.selectedUser._id, tid);
+      if (this.selectedUser.userType === 'supervisor') {
+        if (!this.selectedUser.teamId) {
+          this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser._id);
+        } else {
+          this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser.teamId);
+        }
+      } else {
+        this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser.teamId);
+      }
     }
     this.currentTrainingId = tid;
     this.currentUserTraining = utid;
@@ -160,7 +186,6 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   markAsComplete(utid: string) {
     this.currentUserTraining = utid;
     this.markCompletedModalIsVisible = true;
-
   }
 
   updateDueDate(event, ut) {
@@ -170,6 +195,9 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   }
 
   markTrainingAsComplete(selectedTraining: TrainingModel) {
+    if (this.comment === '') {
+      return;
+    }
     let comment = {
       _id: String(new Date().getTime()),
       tid: this.currentTrainingId,
@@ -191,17 +219,10 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     this.rating = event;
   }
 
-  processAssessmentResult(event: AssessmentResponse) {
-    if (event.passed) {
-      this.utIdHash[this.currentUserTraining].assessmentResponses.push(event);
-//      this.utIdHash[this.currentUserTraining].dateCompleted = new Date().getTime();
-//      this.utIdHash[this.currentUserTraining].status = 'completed';
-      this.userTrainingService.saveUserTraining(this.utIdHash[this.currentUserTraining]);
-      this.userTrainingService.stopSession(event.tid);
-      this.markAsComplete(this.currentUserTraining);
-      this.trainingIsVisible = false;
-    }
-    event.uid = this.selectedUser._id;
-    this.userTrainingService.setAssessmentResult(event);
+  processAssessmentResult(event: string) {
+
+    this.markAsComplete(event);
+
+    this.trainingIsVisible = false;
   }
 }

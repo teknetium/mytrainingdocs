@@ -12,9 +12,11 @@ const assessmentResponseSchema = new Schema({
   tid: { type: String, required: true },
   passed: { type: Boolean, required: false },
   completed: { type: Boolean, required: false },
-  assessmentId: { type: String, required: true },
-      score: { type: Number, required: false },
-  answers: { type: [Number], required: false }
+  assessmentId: { type: String, required: false },
+  score: { type: Number, required: false },
+  executionDate: { type: Number, required: false },
+  answers: { type: [Number], required: false },
+  isFinal: { type: Boolean, required: false }
 })
 
 const userTrainingSchema = new Schema({

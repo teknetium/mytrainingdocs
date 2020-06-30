@@ -101,7 +101,7 @@ module.exports = function(app, config) {
   const docProjection = '_id productId productVersion author featureName sections images';
   const commentListProjection = "_id tid version author text rating date";
   const assessmentListProjection = "_id type title owner description timeLimit isFinal passingGrade items";
-  const utSessionProjection = "_id utId uid tid startTime stopTime";
+  const utSessionProjection = "_id utId uid tid teamId startTime stopTime";
 
   // GET API root
   app.get("/api/", (req, res) => {
@@ -609,6 +609,7 @@ module.exports = function(app, config) {
       utId: req.body.utId,
       uid: req.body.uid,
       tid: req.body.tid,
+      teamId: req.body.teamId,
       startTime: req.body.startTime,
       stopTime: req.body.stopTime,
     });
@@ -637,6 +638,22 @@ module.exports = function(app, config) {
   });
   app.get("/api/utsession/uid/:uid", (req, res) => {
     UTSession.find({ uid: req.params.uid },
+      utSessionProjection, (err, utSessions) => {
+        let utSessionArr = [];
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        if (utSessions) {
+          utSessions.forEach(utSession => {
+            utSessionArr.push(utSession);
+          });
+        }
+        res.send(utSessionArr);
+      },
+    );
+  });
+  app.get("/api/utsession/team/:id", (req, res) => {
+    UTSession.find({ teamId: req.params.id },
       utSessionProjection, (err, utSessions) => {
         let utSessionArr = [];
         if (err) {

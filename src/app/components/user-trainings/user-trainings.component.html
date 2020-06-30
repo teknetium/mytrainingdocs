@@ -57,7 +57,7 @@
                         <i nz-icon [nzType]="'play-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
                             style="font-size:18px;"></i>
                     </div>
-                    <div *ngIf="!trainingIdHash[userTraining.tid].useAssessment && userTraining.status !== 'completed'"
+                    <div *ngIf="!trainingIdHash[userTraining.tid].useFinalAssessment && userTraining.status !== 'completed'"
                         class="action" (click)="markAsComplete(userTraining._id)" nz-tooltip
                         nzTooltipTitle="Mark as Complete">
                         <i nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#4891f7'"
@@ -82,7 +82,7 @@
     </div>
     <nz-modal [(nzVisible)]="markCompletedModalIsVisible" nzTitle="Mark this Training as Completed" nzWidth="800"
         (nzOnCancel)="handleMarkAsCompletedCancel()" (nzOnOk)="markTrainingAsComplete(selectedTraining)"
-        nzCancelDisabled="true" style="width:800px;">
+        nzCancelDisabled="true" [nzOkDisabled]="rating === 0 || comment === ''" style="width:800px;">
         <span style="display:block;">Rate this Training</span>
         <nz-rate style="display:block;margin-bottom:20px;" [(ngModel)]="rating" ngDefaultControl
             (ngModelChange)="ratingChanged($event)" nzAllowHalf class="small"></nz-rate>
@@ -92,5 +92,5 @@
 </div>
 <div *ngIf="selectedTraining" style="position:relative;">
     <app-training-viewer style="width:100%;height:100%;" production="true"
-        (assessmentResult)="processAssessmentResult($event)"></app-training-viewer>
+        (assessmentResult)="processAssessmentResult($event)" [currentUT]="utIdHash[currentUserTraining]"></app-training-viewer>
 </div>

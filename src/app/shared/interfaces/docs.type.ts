@@ -1,8 +1,7 @@
 export interface DocModel {
   _id: string,
-  productId: string,
+  productName: string,
   productVersion: string,
-  featureName: string,
   intro: string,
   author: string,
   sections: Section[],

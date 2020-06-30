@@ -25,7 +25,7 @@ import { read } from 'fs';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
 import { JoyrideService } from 'ngx-joyride';
-import { AssessmentResponse } from 'src/app/shared/interfaces/userTraining.type';
+import { AssessmentResponse, UserTrainingModel } from 'src/app/shared/interfaces/userTraining.type';
 
 
 @Component({
@@ -174,8 +174,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     tid: undefined,
     uid: undefined,
     assessmentId: undefined,
+    executionDate: 0,
     passed: false,
-    completed: false,
     isFinal: false,
     score: -1,
     answers: []
@@ -187,7 +187,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   @Input() trainingStatus = 'unlocked';
   @Input() trainingId = null;
   @Input() production = 'false';
-  @Output() assessmentResult = new EventEmitter<AssessmentResponse>();
+  @Input() currentUT: UserTrainingModel = null;
+  @Output() assessmentResult = new EventEmitter<string>();
   pageFileHash = {};
   pageIdHash = {};
   commentsVisible = false;
@@ -320,8 +321,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   viewingArchiveVersion = false;
   currentAssessmentId = null;
   editor;
-
   froalaContents: string = 'Replace with your content';
+  assessmentStatusHash = {};
+  responseObjHash = {};
 
   constructor(
     private trainingService: TrainingService,
@@ -357,86 +359,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.trainingIsDirty$ = this.trainingService.getTrainingIsDirtyStream();
 
   }
-  /*
-  public options: Object = {
-    charCounterCount: true,
-    theme: 'gray',
-    toolbarButtons: {
-      // Key represents the more button from the toolbar.
-      moreText: {
-        // List of buttons used in the  group.
-        buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
-
-        // Alignment of the group in the toolbar.
-        align: 'left',
-
-        // By default, 3 buttons are shown in the main toolbar. The rest of them are available when using the more button.
-        buttonsVisible: 3
-      },
-
-
-      moreParagraph: {
-        buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote'],
-        align: 'left',
-        buttonsVisible: 3
-      },
-
-      moreRich: {
-        buttons: ['insertLink', 'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR'],
-        align: 'left',
-        buttonsVisible: 3
-      },
-
-      moreMisc: {
-        buttons: ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help'],
-        align: 'right',
-        buttonsVisible: 2
-      }
-    },
-
-    // Change buttons for XS screen.
-    toolbarButtonsXS: [['undo', 'redo'], ['bold', 'italic', 'underline']]
-    /*
-    toolbarButtonsMD: {
-      'moreText': {
-        buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
-        align: 'left',
-        buttonsVisible: 3
-      },
-      'moreParagraph': {
-        buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote'],
-        align: 'left',
-        buttonsVisible: 3
-      },
-      'moreRich': {
-        buttons: ['insertLink', 'insertImage', 'insertVideo', 'insertTable', 'emoticons', 'fontAwesome', 'specialCharacters', 'embedly', 'insertFile', 'insertHR'],
-        align: 'left',
-        buttonsVisible: 3
-      },
-      'moreMisc': {
-        buttons: ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help'],
-        align: 'right',
-        buttonsVisible: 2
-      }
-    },
-  */
-//    toolbarButtons: {
-//      buttonsVisible: 10,
-//      buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontSize', 'textColor', 'paragraphFormat', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting']
-//    },
-/*
-    toolbarButtonsXS: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
-    toolbarButtonsSM: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
-    toolbarButtonsMD: ['bold', 'italic', 'underline', 'paragraphFormat', 'alert'],
-    moreParagraph: {
-      buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote'],
-      align: 'left',
-      buttonsVisible: 12
-    },
-    pluginsEnabled: ['align', 'charCounter', 'colors', 'fontFamily', 'fontSize', 'fullscreen', 'image', 'link', 'lists', 'paragraphFormat', 'paragraphStyle', 'quickInsert', 'quote', 'save', 'image', 'link']
-    };
-  */
   public froalaOptions: Object = {
+    key: "0BA3jA11D9C4F6A3E4asftscjjlhi1lfixF6nablA3C11A8C6D2B4A4G2F3A3==",
     events: {
       'blur': (e) => {
         this.saveTraining(false);
@@ -447,6 +371,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
   };
   public froalaOptions2: Object = {
+    key: "0BA3jA11D9C4F6A3E4asftscjjlhi1lfixF6nablA3C11A8C6D2B4A4G2F3A3==",
     events: {
       'blur': (e) => {
         this.saveTraining(false);
@@ -466,6 +391,19 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
     this.contentHeight = Math.floor((window.innerHeight - (this.percentageOfBrowserHeight * window.innerHeight)) * .90);
     this.contentWidth = Math.floor(window.innerWidth * .9);
+
+    if (this.currentUT) {
+      if (this.currentUT.assessmentResponses) {
+        for (let item of this.currentUT.assessmentResponses) {
+          this.responseObjHash[item.assessmentId] = item;
+          if (item.passed) {
+            this.assessmentStatusHash[item.assessmentId] = 'passed';
+          } else {
+            this.assessmentStatusHash[item.assessmentId] = 'failed';
+          }
+        }
+      }
+    }
 
     /*
       this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
@@ -660,7 +598,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         this.assignToDisabled = true;
       }
     })
-
+/*
     this.assessmentItems$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(items => {
       if (!items) {
         return;
@@ -675,6 +613,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       }
       this.matchingQuestions = this.questions;
     });
+    */
 
     /*
     this.newVersion$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(version => {
@@ -724,7 +663,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   onJobTitleChange(value: string): void {
     this.matchingJobTitles = this.jobTitles.filter(jobTitle => jobTitle.toLowerCase().indexOf(value.toLowerCase()) !== -1);
   }
-
+/*
   onQuestionChange(value: string): void {
     this.matchingQuestions = this.questions.filter(question => question.toLowerCase().indexOf(value.toLowerCase()) !== -1);
     if (this.matchingQuestions.length === 1) {
@@ -736,7 +675,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       this.currentQuestion.extraInfo = undefined;
     }
   }
-
+*/
   setJobTitle(value) {
     this.jobTitleService.addJobTitle(this.selectedTraining.jobTitle);
     this.saveTraining(true);
@@ -1010,7 +949,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       _id: String(new Date().getTime()),
       type: 'none',
       title: 'New Page',
-      text: '<p class=\"ql-align-center\"><span class=\"ql-size-large\" style=\"color: rgb(0, 0, 0);\">Page Introduction<\/span><\/p><p><span style=\"color: rgb(0, 0, 0);\">Enter your page introduction here.<\/span><\/p>',
+      text: 'Your page introduction goes here.',
       content: content
     }
 
@@ -1106,16 +1045,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.setCurrentPage(pageId, -1);
   }
 
-  setCurrentPage(pageId: string, pageIndex: number) {
-    this.currentPageId = pageId;
-
-    if (this.mainContentPageHash[this.currentPageId]) {
-      this.currentPage = this.mainContentPageHash[this.currentPageId];
-      this.currentPageIndex = parseInt(this.pageIndexHash[pageId], 10);
-    }
-
-  }
-
   setIcon(event) {
     this.tempIcon = event.icon;
     this.tempIconColor = event.color;
@@ -1174,7 +1103,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.trainingService.selectTrainingVersion(this.currentTraining);
     this.currentTraining = null;
     this.previousVersion = null;
-    this.userTrainingService.stopSession(this.selectedTraining._id);
+    this.userTrainingService.stopSession(this.currentUT);
     //    this.trainingService.reloadAllTrainings();
     this.trainingService.selectTraining(null);
     this.assessmentInProgress = false;
@@ -1421,15 +1350,34 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.saveTraining(false);
   }
 
+  setCurrentPage(pageId: string, pageIndex: number) {
+    this.currentPageId = pageId;
+
+    if (this.mainContentPageHash[this.currentPageId]) {
+      this.currentPage = this.mainContentPageHash[this.currentPageId];
+      this.currentPageIndex = parseInt(this.pageIndexHash[pageId], 10);
+      if (this.currentPage.type === 'assessment') {
+        let status = this.assessmentStatusHash[this.currentPage.content.assessment._id];
+        if (!status) {
+          this.assessmentStatusHash[this.currentPage.content.assessment._id] = 'firstTime';
+        }
+      }
+    }
+
+  }
+
   createAssessment() {
     this.currentPage.content.assessment = <Assessment>{
       _id: String(new Date().getTime()),
       passingGrade: 60,
-      items: []
+      items: [],
+      isFinal: false
     }
+    this.assessmentHash[this.currentPage.content.assessment._id] = this.currentPage.content.assessment;
     this.currentPage.title = 'Assessment';
     this.currentPage.type = 'assessment';
     this.currentPage.content.type = 'assessment';
+    this.selectedTraining.useFinalAssessment = true;
     this.saveTraining(false);
   }
 
@@ -1441,14 +1389,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.saveTraining(false);
   }
 
-  beginAssessment(assessmentId: string) {
-    this.assessmentResponse.assessmentId = assessmentId;
-    this.assessmentResponse.tid = this.selectedTraining._id;
-    this.assessmentResponse.isFinal
-    this.assessmentInProgress = true;
-    this.currentAssessmentItemIndex = -1;
-    this.nextQuestion();
-  }
 
   addNewQuestion() {
 
@@ -1490,11 +1430,59 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
 
+  nextQuestion() {
+    this.slideNewQuestionHash[this.currentAssessmentItemIndex] = false;
+    this.currentAssessmentItemIndex++;
+    this.showNext = false;
+    if (this.currentAssessmentItemIndex === this.currentPage.content.assessment.items.length) {
+      this.currentAssessmentItemIndex = -1;
+      this.currentPage.content.assessment.complete = true;
+      this.assessmentResponse.score = (this.assessmentCorrectCnt / this.currentPage.content.assessment.items.length) * 100.0;
+
+      if (this.assessmentResponse.score < this.currentPage.content.assessment.passingGrade) {
+        this.assessmentStatusHash[this.currentPage.content.assessment._id] = 'failed'
+        this.assessmentResponse.passed = false;
+        this.assessmentResponse.executionDate = new Date().getTime();
+        if (this.currentUT) {
+          console.log('FAILURE', this.assessmentResponse);
+          this.currentUT.assessmentResponses.push(this.assessmentResponse);
+          this.userTrainingService.saveUserTraining(this.currentUT);
+        }
+      } else {
+        this.assessmentStatusHash[this.currentPage.content.assessment._id] = 'passed'
+        this.assessmentResponse.passed = true;
+        this.assessmentResponse.executionDate = new Date().getTime();
+        if (this.currentUT) {
+          console.log('SUCCESS', this.assessmentResponse);
+          this.currentUT.assessmentResponses.push(this.assessmentResponse);
+          this.userTrainingService.saveUserTraining(this.currentUT);
+        }
+        if (this.assessmentResponse.isFinal) {
+          this.assessmentResult.emit(this.currentUT._id);
+        }
+        this.assessmentResponse = {
+          tid: undefined,
+          uid: undefined,
+          assessmentId: undefined,
+          executionDate: 0,
+          passed: false,
+          score: -1,
+          answers: [],
+          isFinal: false
+        }
+      }
+      this.resetAssessment();
+    } else {
+      this.slideNewQuestionHash[this.currentAssessmentItemIndex] = true;
+    }
+  }
+
+
   resetAssessment() {
     this.showNext = false;
     this.assessmentInProgress = false;
-    this.assessmentResponse.completed = false;
     this.currentAssessmentItemIndex = -1;
+    this.assessmentResponse.executionDate = 0;
     this.assessmentResponse.passed = false;
     this.assessmentCorrectCnt = 0;
     this.assessmentIncorrectCnt = 0;
@@ -1504,48 +1492,31 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
   }
 
-  nextQuestion() {
-    this.slideNewQuestionHash[this.currentAssessmentItemIndex] = false;
-    this.currentAssessmentItemIndex++;
-    this.showNext = false;
-    if (this.currentAssessmentItemIndex === this.currentPage.content.assessment.items.length) {
-      this.currentAssessmentItemIndex = -1;
-      this.currentPage.content.assessment.complete = true;
-      this.assessmentInProgress = false;
-      this.assessmentResponse.score = (this.assessmentCorrectCnt / this.currentPage.content.assessment.items.length) * 100.0;
-      if (this.assessmentResponse.score < this.currentPage.content.assessment.passingGrade) {
-        this.assessmentResponse.passed = false;
-      } else {
-        this.assessmentResponse.passed = true;
-        //        this.passedAssessment = true;
-        this.assessmentResult.emit(this.assessmentResponse);
-        this.assessmentResponse = {
-          tid: undefined,
-          uid: undefined,
-          assessmentId: undefined,
-          passed: false,
-          completed: false,
-          score: -1,
-          answers: [],
-          isFinal: false
-        }
-      }
-    } else {
-      this.slideNewQuestionHash[this.currentAssessmentItemIndex] = true;
-    }
+  beginAssessment() {
+    this.assessmentInProgress = true;
+    this.currentAssessmentItemIndex = -1;
+    this.assessmentResponse.assessmentId = this.currentPage.content.assessment._id;
+    this.assessmentResponse.tid = this.selectedTraining._id;
+    this.assessmentResponse.uid = this.authenticatedUser._id;
+    this.assessmentResponse.isFinal = this.currentPage.content.assessment.isFinal;
+    this.nextQuestion();
   }
 
   retake() {
     this.assessmentInProgress = true;
-    this.assessmentResponse.completed = false;
-    this.currentAssessmentItemIndex = 0;
+    this.currentAssessmentItemIndex = -1;
     this.assessmentResponse.passed = false;
+    this.assessmentResponse.assessmentId = this.currentPage.content.assessment._id;
+    this.assessmentResponse.tid = this.selectedTraining._id;
+    this.assessmentResponse.uid = this.authenticatedUser._id;
+    this.assessmentResponse.isFinal = this.currentPage.content.assessment.isFinal;
     this.assessmentCorrectCnt = 0;
     this.assessmentIncorrectCnt = 0;
     for (let i = 0; i < this.currentPage.content.assessment.items.length; i++) {
       this.assessmentResponseHash[i] = null;
     }
-    this.slideNewQuestionHash[this.currentAssessmentItemIndex] = true;
+    this.nextQuestion();
+    //    this.slideNewQuestionHash[this.currentAssessmentItemIndex] = true;
   }
 
   assessmentChanged(event) {
@@ -1593,7 +1564,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     page.title = 'Reset Content';
     this.saveTraining(false);
   }
-
+/*
   addFinalAssessmentPage() {
 
     const newPage = <Page>{
@@ -1616,4 +1587,5 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.buildPageHashes();
     this.saveTraining(false);
   }
+  */
 }

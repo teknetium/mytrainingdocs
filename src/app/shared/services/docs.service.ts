@@ -20,6 +20,10 @@ export class DocsService {
   ) {
   }
 
+  newProductDoc(productName, productVersion) {
+    
+  }
+
   saveDoc(doc: DocModel) {
     this.postDoc$(doc).subscribe(doc => {
     })

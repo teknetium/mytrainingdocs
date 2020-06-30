@@ -321,7 +321,7 @@ export class TrainingService {
       _id: 'training-introduction',
       type: 'training-intro',
       title: 'Introduction',
-      text: '<p class=\"ql-align-center\"><span class=\"ql-size-large\" style=\"color: rgb(0, 0, 0);\">Training Introduction<\/span><\/p><p>Enter your training introduction here.  <\/p><p><br><\/p><p><span class=\"ql-size-large\">Executive Summary<\/span><\/p><p>\tBlah blah blah.<\/p><p><br><\/p><p><span class=\"ql-size-large\">Training Goals<\/span><\/p><p>\tBlah blah blah.<\/p>',
+      text: 'Your introduction goes here.',
       content: null
     }
     const newTraining = <TrainingModel>{

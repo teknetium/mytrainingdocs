@@ -16,6 +16,7 @@ export class UserTrainingService {
 
   private userTrainingForTidBS$ = new BehaviorSubject<UserTrainingModel[]>([]);
   private userTrainings$BS = new BehaviorSubject<UserTrainingModel[]>(null);
+  private userTrainingCompletedBS$ = new BehaviorSubject<UserTrainingModel>(null);
   private allUserTrainingHash: UserTrainingHash = {};
   //  private userTrainingHashBS$ = new BehaviorSubject<UserTrainingHash>({});
   private utSessionsForUidBS$ = new BehaviorSubject<UTSession[]>(null);
@@ -27,10 +28,10 @@ export class UserTrainingService {
   private sessionLog: UTSession[] = [];
   private sessionLogBS$ = new BehaviorSubject<UTSession[]>(null);
 
+
   constructor(private eventService: EventService,
     private http: HttpClient,
     private auth: AuthService) {
-
   }
 
   selectUser(id) {
@@ -66,6 +67,10 @@ export class UserTrainingService {
     return this.userTrainings$BS.asObservable();
   }
 
+  getUserTrainingCompletedStream() {
+    return this.userTrainingCompletedBS$.asObservable();
+  }
+
   getUTSessionsForUidStream(uid: string): Observable<UTSession[]> {
     return this.utSessionsForUidBS$.asObservable();
   }
@@ -76,35 +81,38 @@ export class UserTrainingService {
     })
   }
 
-  startSession(utId: string, uid: string, tid: string) {
+  startSession(utId: string, uid: string, tid: string, teamId: string) {
     this.currentUT = utId;
     let session = <UTSession>{
       _id: String(new Date().getTime()),
       utId: utId,
       uid: uid,
       tid: tid,
+      teamId: teamId,
       startTime: new Date().getTime(),
       stopTime: 0
     };
     this.utSessionHash[tid] = session;
   }
 
-  stopSession(tid) {
-    if (!this.utSessionHash[tid]) {
+  stopSession(ut: UserTrainingModel) {
+    if (!this.utSessionHash[ut.tid]) {
+      console.log('stopSession...no session');
       return;
     }
-    let session = this.utSessionHash[tid];
+    let session = this.utSessionHash[ut.tid];
+
+    if (session.stopTime !== 0) {
+      console.log('stopSession...already stopped', session);
+      return;
+    }
 
     session.stopTime = new Date().getTime();
-    console.log('stopSession', this.currentUT, this.allUserTrainingHash);
-    let ut = this.allUserTrainingHash[this.currentUT];
 
-    if (!ut) {
-      console.log('UserTrainingService:stopSession    allUserTrainingHash[this.currentUT] undefined', this.allUserTrainingHash);
-    }
+
     ut.timeToDate += session.stopTime - session.startTime;
     this.saveUserTraining(ut);
-    this.utSessionHash[tid] = null;
+    this.utSessionHash[ut.tid] = null;
     this.postUTSession$(session).subscribe(utSession => {
       this.sessionLog.push(utSession);
       this.sessionLogBS$.next(this.sessionLog);
@@ -191,20 +199,26 @@ export class UserTrainingService {
 
   saveUserTraining(ut: UserTrainingModel): void {
     this.updateUserTraining$(ut).subscribe(userTraining => {
+      console.log('saveUserTraining', userTraining);
+  
       this.getUTForUser$(userTraining.uid).subscribe(userTrainings => {
         this.userTrainings$BS.next(userTrainings);
       })
     })
   }
 
-  setAssessmentResult(result: AssessmentResponse) {
+  setAssessmentResult(result: AssessmentResponse, ut: UserTrainingModel) {
     let userTraining = this.allUserTrainingHash[this.currentUT];
     userTraining.assessmentResponses.push(result);
-    userTraining.dateCompleted = new Date().getTime();
-    userTraining.status = 'completed';
-    console.log('setAssessmentResult', userTraining);
+
+    if (result.isFinal && result.passed) {
+      this.stopSession(userTraining);
+      userTraining.dateCompleted = new Date().getTime();
+      this.userTrainingCompletedBS$.next(userTraining);
+    }
     this.updateUserTraining$(userTraining).subscribe(ut => {
       this.getUTForUser$(userTraining.uid).subscribe(userTrainings => {
+        console.log('setAssessmentResult...userTraining list', userTrainings);
         this.userTrainings$BS.next(userTrainings);
       })
     })
@@ -240,6 +254,18 @@ export class UserTrainingService {
         this.uidUTHashBS$.next(this.uidUTHash);
         this.userTrainings$BS.next(utList);
       });
+    })
+  }
+
+  getUTSessionsForTeam(teamId) {
+    this.getUTSessionsForTeam$(teamId).subscribe(utSessions => {
+      if (utSessions.length > 0) {
+        this.sessionLog = [];
+        for (let session of utSessions) {
+          this.sessionLog.push(session);
+        }
+        this.sessionLogBS$.next(this.sessionLog);
+      }
     })
   }
 
@@ -314,7 +340,7 @@ export class UserTrainingService {
   }
   getUTSessionsForTeam$(teamId: string): Observable<UTSession[]> {
     return this.http
-      .get<UTSession[]>(`${ENV.BASE_API}utsession/${teamId}`, {
+      .get<UTSession[]>(`${ENV.BASE_API}utsession/team/${teamId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
       .pipe(
