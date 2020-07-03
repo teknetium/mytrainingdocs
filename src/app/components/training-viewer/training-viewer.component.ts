@@ -324,7 +324,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   froalaContents: string = 'Replace with your content';
   assessmentStatusHash = {};
   responseObjHash = {};
-
+  iFrameBorder = 1;
+  introEditorHash = {};
+  introHash = {};
+  
   constructor(
     private trainingService: TrainingService,
     private modalService: NzModalService,
@@ -359,31 +362,13 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.trainingIsDirty$ = this.trainingService.getTrainingIsDirtyStream();
 
   }
-  public froalaOptions: Object = {
-    key: "0BA3jA11D9C4F6A3E4asftscjjlhi1lfixF6nablA3C11A8C6D2B4A4G2F3A3==",
-    events: {
-      'blur': (e) => {
-        this.saveTraining(false);
-      },
-      'contentChanged': () => {
-        this.saveTraining(false);
-      }
-    }
-  };
-  public froalaOptions2: Object = {
-    key: "0BA3jA11D9C4F6A3E4asftscjjlhi1lfixF6nablA3C11A8C6D2B4A4G2F3A3==",
-    events: {
-      'blur': (e) => {
-        this.saveTraining(false);
-      },
-      'contentChanged': () => {
-        this.saveTraining(false);
-      }
-    }
-  };
+
   ngOnInit() {
+
     console.log('ngOnInit');
+
     if (this.production === 'true') {
+//      this.iFrameBorder = 0;
       this.percentageOfBrowserHeight = .35;
     }
     this.browserInnerHeight = window.innerHeight;
@@ -475,10 +460,33 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
       if (this.selectedTraining.pages) {
         for (let page of this.selectedTraining.pages) {
+          if (page.type === 'file' || page.type === 'url' || page.type === 'assessment') {
+            this.introHash[page._id] = 'yes';
+          } else if (page.type === 'text') {
+            this.introHash[page._id] = 'no';
+          }
+          /*
+          if (page.froalaOptions) {
+            page.froalaOptions = {
+              immediateAngularModelUpdate: true,
+              key: "0BA3jA11D9C4F6A3E4asftscjjlhi1lfixF6nablA3C11A8C6D2B4A4G2F3A3==",
+              events: {
+                'blur': (e) => {
+                  this.saveTraining(false);
+                },
+                'contentChanged': () => {
+                  this.saveTraining(false);
+                }
+              }
+            }
+            this.cd.detectChanges();
+
+          }
+          */
           if (page.content) {
             if (page.content.type === 'video') {
               this.safeUrlHash[page.content.file.fileStackUrl] = page.content.file.fileStackUrl;
-            } else if (page.content.type === 'file') {
+            } else if (page.content.type === 'file' && page.content.file) {
               this.safeUrlHash[page.content.file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + page.content.file.fileStackId));
             } else if (page.content.type === 'url') {
               this.safeUrlHash[page.content.webUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(page.content.webUrl));
@@ -598,22 +606,22 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         this.assignToDisabled = true;
       }
     })
-/*
-    this.assessmentItems$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(items => {
-      if (!items) {
-        return;
-      }
-
-      this.assessmentItems = items;
-      this.questions = [];
-      this.assessmentHash = {};
-      for (let item of this.assessmentItems) {
-        this.questions.push(item.question);
-        this.assessmentHash[item.question] = item;
-      }
-      this.matchingQuestions = this.questions;
-    });
-    */
+    /*
+        this.assessmentItems$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(items => {
+          if (!items) {
+            return;
+          }
+    
+          this.assessmentItems = items;
+          this.questions = [];
+          this.assessmentHash = {};
+          for (let item of this.assessmentItems) {
+            this.questions.push(item.question);
+            this.assessmentHash[item.question] = item;
+          }
+          this.matchingQuestions = this.questions;
+        });
+        */
 
     /*
     this.newVersion$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(version => {
@@ -641,6 +649,25 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       }
     }
     */
+  editIntro(pageId) {
+    this.introEditorHash[pageId] = true;
+  }
+
+  getFroalaOptions(pageId: string):Object  {
+    return new Object({
+      placeholderText: 'Edit Your Content Here!',
+      immediateAngularModelUpdate: true,
+      key: "0BA3jA11D9C4F6A3E4asftscjjlhi1lfixF6nablA3C11A8C6D2B4A4G2F3A3==",
+      events: {
+        'contentChanged': () => {
+          this.saveTraining(false);
+        },
+        'blur': () => {
+          this.saveTraining(false);
+        }
+      }
+    })
+  }
 
   bumpPatchLevel(): string {
     const versionArray = this.currentSelectedTrainingVersions[0].version.split('_', 3);
@@ -663,19 +690,19 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   onJobTitleChange(value: string): void {
     this.matchingJobTitles = this.jobTitles.filter(jobTitle => jobTitle.toLowerCase().indexOf(value.toLowerCase()) !== -1);
   }
-/*
-  onQuestionChange(value: string): void {
-    this.matchingQuestions = this.questions.filter(question => question.toLowerCase().indexOf(value.toLowerCase()) !== -1);
-    if (this.matchingQuestions.length === 1) {
-      this.currentQuestion = this.assessmentHash[this.matchingQuestions[0]];
-      this.currentCorrectChoice = String(this.currentQuestion.correctChoice);
-    } else if (this.matchingQuestions.length === 0) {
-      this.currentQuestion.choices = [];
-      this.currentQuestion.correctChoice = -1;
-      this.currentQuestion.extraInfo = undefined;
+  /*
+    onQuestionChange(value: string): void {
+      this.matchingQuestions = this.questions.filter(question => question.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+      if (this.matchingQuestions.length === 1) {
+        this.currentQuestion = this.assessmentHash[this.matchingQuestions[0]];
+        this.currentCorrectChoice = String(this.currentQuestion.correctChoice);
+      } else if (this.matchingQuestions.length === 0) {
+        this.currentQuestion.choices = [];
+        this.currentQuestion.correctChoice = -1;
+        this.currentQuestion.extraInfo = undefined;
+      }
     }
-  }
-*/
+  */
   setJobTitle(value) {
     this.jobTitleService.addJobTitle(this.selectedTraining.jobTitle);
     this.saveTraining(true);
@@ -828,7 +855,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   saveNewVersion() {
-
+    this.introEditorHash = {};
     if (this.selectedTraining.versions.length === 1) {
 
       this.selectedTraining.status = 'locked';
@@ -939,25 +966,63 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.currentSection = sectionName;
   }
 
-  addNewPage() {
+  addNewPage(pageType: string, contentType: string) {
 
     const content = <Content>{
       _id: String(new Date().getTime()),
-      type: 'none',
+      type: contentType,
     }
     const newPage = <Page>{
       _id: String(new Date().getTime()),
-      type: 'none',
+      type: pageType,
       title: 'New Page',
       text: 'Your page introduction goes here.',
       content: content
     }
 
     this.selectedTraining.pages.push(newPage);
-    this.currentPage = newPage;
-    this.buildPageHashes();
     this.saveTraining(false);
-    this.setCurrentPage(newPage._id, undefined);
+    this.currentPage = newPage;
+    this.currentPageId = newPage._id;
+    this.buildPageHashes();
+    if (pageType === 'file') {
+      if (contentType === 'text') {
+        this.openPicker('text', this.currentPage);
+      }
+      if (contentType === 'file') {
+        this.openPicker('doc', this.currentPage);
+      }
+      if (contentType === 'video') {
+        this.openPicker('video', this.currentPage);
+      }
+      if (contentType === 'video') {
+        this.openPicker('video', this.currentPage);
+      }
+      this.introHash[this.currentPageId] = 'yes';
+    } else if (pageType === 'url') {
+      this.embeddedPageDialogIsVisible = true;
+      this.introHash[this.currentPageId] = 'yes';
+    } else if (pageType === 'assessment') {
+      this.currentPage.content.assessment = <Assessment>{
+        _id: String(new Date().getTime()),
+        passingGrade: 60,
+        items: [],
+        isFinal: false
+      }
+      this.assessmentHash[this.currentPage.content.assessment._id] = this.currentPage.content.assessment;
+      this.currentPage.title = 'Assessment';
+      this.currentPage.type = 'assessment';
+      this.currentPage.content.type = 'assessment';
+      this.selectedTraining.useFinalAssessment = true;
+      this.introHash[this.currentPageId] = 'yes';
+    } else if (pageType === 'text') {
+      this.currentPage.title = 'HTML Page';
+      this.currentPage.content.type = 'html';
+      this.currentPage.content.text = '';
+      this.introHash[this.currentPageId] = 'no';
+    }
+//    this.setCurrentPage(newPage._id, undefined);
+//    this.cd.detectChanges();
   }
 
   buildPageHashes() {
@@ -1351,6 +1416,15 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   setCurrentPage(pageId: string, pageIndex: number) {
+    /*
+    if (!pageId || this.currentPageId === pageId) {
+      return;
+    }
+    this.introEditorHash[this.currentPageId] = false;
+    if (this.currentPage && this.currentPage.text.length === 0) {
+      this.currentPage.text = 'Your page description goes here';
+    }
+    */
     this.currentPageId = pageId;
 
     if (this.mainContentPageHash[this.currentPageId]) {
@@ -1365,29 +1439,21 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
 
   }
+/*
+  createEmbeddedPage() {
+    this.addNewPage('url');
+    this.embeddedPageDialogIsVisible = true;
+  }
 
   createAssessment() {
-    this.currentPage.content.assessment = <Assessment>{
-      _id: String(new Date().getTime()),
-      passingGrade: 60,
-      items: [],
-      isFinal: false
-    }
-    this.assessmentHash[this.currentPage.content.assessment._id] = this.currentPage.content.assessment;
-    this.currentPage.title = 'Assessment';
-    this.currentPage.type = 'assessment';
-    this.currentPage.content.type = 'assessment';
-    this.selectedTraining.useFinalAssessment = true;
-    this.saveTraining(false);
+    this.addNewPage('assessment');
   }
 
   createHTMLPage() {
-    this.currentPage.type = 'text';
-    this.currentPage.title = 'HTML Page';
-    this.currentPage.content.type = 'html';
-    this.currentPage.content.text = '';
+    this.addNewPage('text');
     this.saveTraining(false);
   }
+  */
 
 
   addNewQuestion() {
@@ -1457,7 +1523,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
           this.currentUT.assessmentResponses.push(this.assessmentResponse);
           this.userTrainingService.saveUserTraining(this.currentUT);
         }
-        if (this.assessmentResponse.isFinal) {
+        if (this.currentUT && this.assessmentResponse.isFinal) {
           this.assessmentResult.emit(this.currentUT._id);
         }
         this.assessmentResponse = {
@@ -1564,28 +1630,28 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     page.title = 'Reset Content';
     this.saveTraining(false);
   }
-/*
-  addFinalAssessmentPage() {
-
-    const newPage = <Page>{
-      _id: 'final-assessment',
-      type: 'assessment',
-      title: 'Final Assessment',
-      text: '',
-      content: {
+  /*
+    addFinalAssessmentPage() {
+  
+      const newPage = <Page>{
         _id: 'final-assessment',
         type: 'assessment',
-        assessment: {
-          _id: String(new Date().getTime()),
-          passingGrade: 60,
-          items: []
+        title: 'Final Assessment',
+        text: '',
+        content: {
+          _id: 'final-assessment',
+          type: 'assessment',
+          assessment: {
+            _id: String(new Date().getTime()),
+            passingGrade: 60,
+            items: []
+          }
         }
       }
+  
+      this.selectedTraining.pages.push(newPage);
+      this.buildPageHashes();
+      this.saveTraining(false);
     }
-
-    this.selectedTraining.pages.push(newPage);
-    this.buildPageHashes();
-    this.saveTraining(false);
-  }
-  */
+    */
 }

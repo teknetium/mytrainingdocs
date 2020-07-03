@@ -322,10 +322,51 @@
         <div style="height:fit-content;;background-color: white;border-bottom:1px solid #5488ee;">
             <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                 style="display:block;padding:5px;background-color: #fefbe7;text-align: center;">
+                <!--
                 <button nz-button [nzSize]="'small'" nzType="primary" nzShape="round" class="header-icon"
                     (click)="addNewPage()">
                     <span style="font-size:12px;">Add New Page</span>
                 </button>
+                -->
+                <button nz-button [nzSize]="'small'" nzType="primary" nzShape="round" nz-dropdown
+                    [nzDropdownMenu]="newPageMenu">
+                    <span style="font-size:12px;">Add New Page</span>
+                    <i nz-icon nzType="down"></i></button>
+                <nz-dropdown-menu #newPageMenu="nzDropdownMenu">
+                    <ul nz-menu nzSelectable>
+                        <li nz-submenu nzTitle="Upload a FIle" nzIcon="file-text">
+                            <ul nz-menu nzSelectable>
+                                <li nz-menu-item (click)="addNewPage('file', 'text')">Text File
+                                </li>
+                                <li nz-menu-item (click)="addNewPage('file', 'file')">Document File
+                                    (.doc,
+                                    .docx,
+                                    .ppt, .pptx,
+                                    .xls, .xlsx,
+                                    .ai, .pdf, .ps)</li>
+                                <li nz-menu-item (click)="addNewPage('file', 'video')">Video File
+                                </li>
+                                <li nz-menu-item (click)="addNewPage('file', 'audio')">Audio File
+                                </li>
+                                <li nz-menu-item (click)="addNewPage('file', 'image')">Image File
+                                </li>
+                            </ul>
+                        </li>
+                        <li nz-menu-item (click)="addNewPage('url', 'none')">
+                            <i nz-icon nzType="global" theme="outline" style="vertical-align:top;font-size:16px;"></i>
+                            <span style="font-size:12px;">Embed a Web Page</span>
+                        </li>
+                        <li nz-menu-item (click)="addNewPage('text', 'html')">
+                            <i nz-icon nzType="html5" theme="outline" style="vertical-align:top;font-size:16px;"></i>
+                            <span style="font-size:12px;">Create an HTML Page</span>
+                        </li>
+                        <li nz-menu-item (click)="addNewPage('assessment', 'none')">
+                            <i nz-icon nzType="file-done" theme="outline"
+                                style="vertical-align:top;font-size:16px;"></i> <span style="font-size:12px;">Create an
+                                Assessment</span>
+                        </li>
+                    </ul>
+                </nz-dropdown-menu>
                 <button *ngIf="currentPage" nz-button [nzSize]="'small'" nzType="primary"
                     [disabled]="isFirstPage(currentPage._id)" nzShape="round" class="header-icon"
                     (click)="movePageUp(currentPage)">
@@ -345,6 +386,17 @@
             </div>
             <div *ngIf="production === 'true' || mode === 'Preview'"
                 style="text-align: center;padding:5px;background-color: #fefbe7;">
+                <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Previous Page"
+                    class="header-icon" (click)="loadPrevPage()">
+                    <i nz-icon nzType="left" theme="outline" style="vertical-align: top;color:blue;">
+                    </i>
+                </button>
+                <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Next Page"
+                    class="header-icon" (click)="loadNextPage()">
+                    <i nz-icon nzType="right" theme="outline" style="vertical-align: top;color:blue;">
+                    </i>
+                </button>
+                <!--
                 <button nz-button nzType="primary" nzSize="small"
                     [disabled]="isFirstPage(currentPage._id) || assessmentInProgress" nzShape="round"
                     (click)="loadPrevPage()" style="display:inline-block;margin-right:10px;">
@@ -355,6 +407,7 @@
                     nzShape="round" (click)="loadNextPage()">
                     Next Page
                 </button>
+                -->
             </div>
             <div style="padding:10px;text-align: center;background-color: #fefbe7;">
                 <div *ngFor="let page of selectedTraining.pages; index as pageIndex"
@@ -493,130 +546,100 @@
                                 <p *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
                                     style="color:#000000;text-align: center;font-size:30px;margin-bottom:5px;width:50%;display: inline-block;margin-bottom:20px;">
                                     {{page.title}}</p>
+                                <nz-modal [(nzVisible)]="embeddedPageDialogIsVisible" style="z-index:10;"
+                                    [nzTitle]="'Embed a Web Page'" nzWidth="50%" nzOkDisabled="false"
+                                    nzCancelDisabled="false" (nzOnOk)="pageUrlChanged()"
+                                    (nzOnCancel)="embeddedPageDialogIsVisible = false">
+                                    <div style="display:block;width:100%;">
+                                        <span style="font-size:14px;font-weight:300;color:black;">Enter the web
+                                            address
+                                            of the website you would like to embed.<br>
+                                            The following formats are allowed:<br>
+                                        </span>
+                                        <div style="padding-left:40px;padding-top:20px;">
+                                            <ul>
+                                                <li>https://example.com</li>
+                                                <li>http://example.com</li>
+                                                <li>example.com</li>
+                                            </ul>
+                                        </div>
+                                        <span style="font-size:12px;color:red;">Warning:
+                                            Some websites do not allow themselves to be embedded.</span>
+
+                                        <div style="cursor:pointer;display:block;width:100%;padding-top:10px;">
+                                            <nz-alert *ngIf="badUrl" nzType="error" nzCloseable="true"
+                                                nzMessage="URL format error.  URL's must use HTTPS!" nzShowIcon
+                                                style="margin:10px 0;">
+                                            </nz-alert>
+
+                                            <div style="display:inline-block;width:90%;">
+                                                <input
+                                                    style="display:inline-block;color:#000000;font-size:14px;width:90%;"
+                                                    nz-input [(ngModel)]="pageUrl" nzSize="small"
+                                                    (keydown.enter)="pageUrlChanged()" (blur)="pageUrlChanged()"
+                                                    placeholder="Enter a website URL" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </nz-modal>
                                 <div *ngIf="page.type && page.type === 'training-intro'"
                                     style="text-align: center;width:100%;height:100%;">
-                                    <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
-                                        style="display: inline-block;height:fit-content;"
+                                    <div *ngIf="!introEditorHash[page._id] && (production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit')"
+                                        style="display: inline-block;height:fit-content;border:1px solid #dddddd;text-align: left;padding:20px;border-radius: 10px;"
+                                        (click)="editIntro(page._id)" [ngStyle]="{'width.px':browserInnerWidth * .9}">
+                                        <div [froalaView]="page.text" style="display:block;"></div>
+                                    </div>
+                                    <div *ngIf="introEditorHash[page._id]"
+                                        style="display: inline-block;height:fit-content;text-align: left;border-radius: 10px;"
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}">
-                                        <div [froalaEditor]="froalaOptions" [(froalaModel)]="page.text"></div>
+                                        <div [froalaEditor]="getFroalaOptions(page._id)" [(froalaModel)]="page.text">
+                                        </div>
                                     </div>
                                     <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}"
-                                        style="display: inline-block;overflow-y: scroll;height:fit-content;border:1px solid #dddddd;border-radius: 5px;background-color: #fafafa;margin-top:20px;">
-                                        <div [froalaView]="page.text"></div>
+                                        style="display: inline-block;padding:20px;border:1px solid #dddddd;border-radius: 10px;text-align:left;overflow-y: scroll;height:fit-content;background-color: #fafafa;margin-top:20px;">
+                                        <div [froalaView]="page.text" style="display:block;">
+                                        </div>
                                     </div>
                                 </div>
                                 <div *ngIf="page.type && page.type !== 'training-intro'"
                                     style="text-align: center;width:100%;height:100%;">
+                                    <div *ngIf="introHash[page._id] === 'yes'">
+                                        <div *ngIf="!introEditorHash[page._id] && (production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit')"
+                                            style="display: inline-block;height:fit-content;border:1px solid #dddddd;text-align: left;padding:20px;border-radius: 10px;"
+                                            (click)="editIntro(page._id)"
+                                            [ngStyle]="{'width.px':browserInnerWidth * .9}">
+                                            <div [froalaView]="page.text" style="display:block;"></div>
+                                        </div>
+                                        <div *ngIf="introEditorHash[page._id]"
+                                            style="display: inline-block;height:fit-content;text-align: left;border-radius: 10px;"
+                                            [ngStyle]="{'width.px':browserInnerWidth * .9}">
+                                            <div [froalaEditor]="getFroalaOptions(page._id)"
+                                                [(froalaModel)]="page.text">
+                                            </div>
+                                        </div>
+                                        <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
+                                            [ngStyle]="{'width.px':browserInnerWidth * .9}"
+                                            style="display: inline-block;text-align: left;overflow-y: scroll;padding:20px;height:fit-content;border:1px solid #dddddd;border-radius: 10px;background-color: #fafafa;margin-top:20px;">
+                                            <div [froalaView]="page.text"></div>
+                                        </div>
+                                    </div>
+                                    <!--
                                     <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit' && (page.content && page.content.type !== 'html')"
                                         style="display: inline-block;height:fit-content;margin-bottom:20px;"
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}">
-                                        <div style="margin-bottom:20px;" [froalaEditor]="froalaOptions"
-                                            [(froalaModel)]="page.text"></div>
+                                        <div style="margin-bottom:20px;" [froalaEditor]="getFroalaOptions(page._id)"
+                                            (blur)="saveTraining(false)" [(froalaModel)]="page.text"></div>
                                     </div>
-                                    <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview' && (page.content && page.content.type !== 'html')"
-                                        [ngStyle]="{'width.px':browserInnerWidth * .9}"
-                                        style="display: inline-block;overflow-y: scroll;height:fit-content;border:1px solid #dddddd;border-radius: 5px;background-color: #fafafa;margin-top:20px;">
-                                        <div [froalaView]="page.text"></div>
-                                    </div>
+                                    -->
 
                                     <div
                                         style="width:100%;height:fit-content;display:block;text-align: center;margin-top:40px;">
+                                        <!--
                                         <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                             [ngStyle]="{'width.px':contentWidth}"
                                             style="display:inline-block;height:fit-content;border:1px solid #dddddd;">
-                                            <div *ngIf="page.type === 'none'"
-                                                style="background-color: #f5f5f5;padding:10px;">
-                                                <div style="font-size: 24px;margin-bottom:10px;">
-                                                    Main Content
-                                                </div>
-                                                <button nz-button [nzSize]="'small'" nzType="primary" nzShape="round"
-                                                    nz-dropdown [nzDropdownMenu]="menu"><span style="font-size:12px;">
-                                                        <i nz-icon nzType="file-text" theme="outline"
-                                                            style="vertical-align:top;font-size:16px;margin-right:5px;"></i>
-                                                        Upload
-                                                        a
-                                                        File</span><i nz-icon nzType="down"></i></button>
-                                                <nz-dropdown-menu #menu="nzDropdownMenu">
-                                                    <ul nz-menu nzSelectable>
-                                                        <li nz-menu-item (click)="openPicker('text', page)">Text File
-                                                        </li>
-                                                        <li nz-menu-item (click)="openPicker('doc', page)">Document File
-                                                            (.doc,
-                                                            .docx,
-                                                            .ppt, .pptx,
-                                                            .xls, .xlsx,
-                                                            .ai, .pdf, .ps)</li>
-                                                        <li nz-menu-item (click)="openPicker('video', page)">Video File
-                                                        </li>
-                                                        <li nz-menu-item (click)="openPicker('audio', page)">Audio File
-                                                        </li>
-                                                        <li nz-menu-item (click)="openPicker('image', page)">Image File
-                                                        </li>
-                                                    </ul>
-                                                </nz-dropdown-menu>
-                                                <button nz-button [nzSize]="'small'" nzType="primary" nzShape="round"
-                                                    class="header-icon" (click)="embeddedPageDialogIsVisible = true">
-                                                    <i nz-icon nzType="global" theme="outline"
-                                                        style="vertical-align:top;font-size:16px;"></i>
-                                                    <span style="font-size:12px;">Embed a Web Page</span>
-                                                </button>
-                                                <button nz-button [nzSize]="'small'" nzType="primary" nzShape="round"
-                                                    class="header-icon" (click)="createHTMLPage()">
-                                                    <i nz-icon nzType="html5" theme="outline"
-                                                        style="vertical-align:top;font-size:16px;"></i>
-                                                    <span style="font-size:12px;">Create an HTML Page</span>
-                                                </button>
-                                                <button nz-button [nzSize]="'small'" nzType="primary" nzShape="round"
-                                                    class="header-icon" (click)="createAssessment()">
-                                                    <i nz-icon nzType="file-done" theme="outline"
-                                                        style="vertical-align:top;font-size:16px;"></i> <span
-                                                        style="font-size:12px;">Create an Assessment</span>
-                                                </button>
-                                                <nz-modal [(nzVisible)]="embeddedPageDialogIsVisible"
-                                                    [nzTitle]="'Embed a Web Page'" nzWidth="50%" nzOkDisabled="false"
-                                                    nzCancelDisabled="false" (nzOnOk)="pageUrlChanged()"
-                                                    (nzOnCancel)="embeddedPageDialogIsVisible = false">
-                                                    <div style="display:block;width:100%;">
-                                                        <span style="font-size:14px;font-weight:300;">Enter the web
-                                                            address
-                                                            of the website you would like to embed. The following
-                                                            formats are allowed:<br>
-                                                            <h5>https://example.com</h5><br>
-                                                            <h5>http://example.com</h5><br>
-                                                            <h5>example.com</h5><br>
-                                                        </span><br>
-                                                        <span
-                                                            style="font-size:12px;color:red;margin-left:40px;">Warning:
-                                                            Some websites do not allow themselves to be embedded.</span>
-
-                                                        <div
-                                                            style="cursor:pointer;display:block;width:100%;padding:10px;">
-                                                            <nz-alert *ngIf="badUrl" nzType="error" nzCloseable="true"
-                                                                nzMessage="URL format error.  URL's must use HTTPS!"
-                                                                nzShowIcon style="margin:10px 0;">
-                                                            </nz-alert>
-                                                            <!--
-                                                            <div
-                                                                style="display:inline-block;width:10%;vertical-align: middle;text-align: center;">
-                                                                <i style="font-size:24px;color:#4198f7;" nz-icon
-                                                                    nzType="global" [nzTheme]="'outline'"></i>
-                                                            </div>
-                                                            -->
-                                                            <div style="display:inline-block;width:90%;">
-                                                                <input
-                                                                    style="display:inline-block;color:#000000;font-size:14px;width:90%;"
-                                                                    nz-input [(ngModel)]="pageUrl" nzSize="small"
-                                                                    (keydown.enter)="pageUrlChanged()"
-                                                                    (blur)="pageUrlChanged()"
-                                                                    placeholder="Enter a website URL   https://example.com or example" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </nz-modal>
-                                            </div>
-                                            <div *ngIf="page.type !== 'none'"
-                                                style="padding:10px;background-color: #f5f5f5;position:relative;">
+                                            <div style="padding:10px;background-color: #f5f5f5;position:relative;">
                                                 <div *ngIf="page.type === 'url'">
                                                     <i nz-icon nzType="global" theme="outline"
                                                         style="font-size:22px;display:inline-block;vertical-align: middle;margin-right:10px;"></i>
@@ -645,7 +668,8 @@
                                                     </a>
                                                     <nz-dropdown-menu #menu="nzDropdownMenu">
                                                         <ul nz-menu nzSelectable>
-                                                            <li *ngIf="page.type === 'file'" nz-menu-item>
+                                                            <li *ngIf="page.content.file && page.type === 'file'"
+                                                                nz-menu-item>
                                                                 <i nz-icon nzType="download"
                                                                     style="display:inline-block;"></i>
                                                                 <a [href]="page.content.file.fileStackUrl" download
@@ -659,27 +683,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div *ngIf="production === 'false' && page.type === 'file' && viewingArchiveVersion"
-                                            style="margin-right:40px;margin-left:40px;padding:10px;background-color: #f5f5f5;position:relative;border:1px solid #dddddd;">
-                                            <i nz-icon nzType="file-text" theme="outline"
-                                                style="display:inline-block;font-size:22px;vertical-align: middle;margin-right:10px;"></i>
-                                            <span style="display:inline-block;font-size:18px;">Uploaded
-                                                File</span>
-                                            <div style="position:absolute;right:10px;top:10px;">
-                                                <i nz-icon nzType="download" style="display:inline-block;"></i>
-                                                <a [href]="page.content.file.fileStackUrl" download
-                                                    style="display:inline-block;"></a>
-                                            </div>
-                                        </div>
-                                        <div *ngIf="page.content && page.content.type === 'none'"
-                                            style="width:100%;height:900px;text-align: center;">
-                                            <div [ngStyle]="{'width.px':contentWidth}"
-                                                style="border:1px solid #bbbbbb;display:inline-block;height:100%;">
-                                            </div>
-                                        </div>
+                                        -->
                                         <div *ngIf="page.content && page.content.type === 'video'"
                                             style="width:100%;height:900px;">
-                                            <div [ngStyle]="{'width.px':contentWidth}"
+                                            <div *ngIf="page.content && page.content.file"
+                                                [ngStyle]="{'width.px':contentWidth}"
                                                 style="text-align: center;display: inline-block;">
                                                 <vg-player (onPlayerReady)="onPlayerReady($event)"
                                                     [ngStyle]="{'width.px':contentWidth}">
@@ -719,10 +727,11 @@
                                             </div>
                                         </div>
                                         <div *ngIf="page.content && page.content.type === 'file'"
-                                            style="text-align: center;width:100%;height:900px;">
-                                            <iframe [ngStyle]="{'width.px':contentWidth}"
+                                            style="position:relative;text-align: center;width:100%;height:900px;">
+                                            <iframe *ngIf="page.content && page.content.file"
+                                                [ngStyle]="{'width.px':contentWidth}" style=""
                                                 [src]="safeUrlHash[page.content.file.fileStackUrl]" allowfullscreen
-                                                [width]="contentWidth" [height]="900">
+                                                [width]="contentWidth" [height]="900" [frameBorder]="iFrameBorder">
                                             </iframe>
                                         </div>
                                         <div *ngIf="page.content && page.content.type === 'assessment'">
@@ -926,7 +935,7 @@
                                                                             </nz-alert>
                                                                         </div>
                                                                         <div *ngIf="assessmentStatusHash[page.content.assessment._id] === 'failed'"
-                                                                            style="margin:20px 0;">
+                                                                            style="margin: 40px 0;">
                                                                             <nz-alert nzType="error"
                                                                                 nzMessage="Sorry, you did not pass!"
                                                                                 nzShowIcon>
@@ -937,7 +946,8 @@
                                                                         </div>
                                                                         <div *ngIf="assessmentStatusHash[page.content.assessment._id] === 'firstTime'"
                                                                             style="display:inline-block;">
-                                                                            <button nz-button nzType="primary"
+                                                                            <button *ngIf="!assessmentInProgress"
+                                                                                nz-button nzType="primary"
                                                                                 nzSize="small"
                                                                                 (click)="beginAssessment(page.content.assessment._id)">Begin
                                                                                 Assessment</button>
@@ -952,9 +962,16 @@
                                                                     </div>
                                                                     <div
                                                                         *ngIf="assessmentInProgress && !assessmentComplete">
+                                                                        <div *ngIf="showNext"
+                                                                            style="position:absolute;top:0;left:0   ;">
+                                                                            <button nz-button nzType="primary"
+                                                                                nzSize="small"
+                                                                                (click)="nextQuestion()">Next
+                                                                                Question</button>
+                                                                        </div>
                                                                         <div *ngFor="let item of page.content.assessment.items; index as itemIndex"
                                                                             [@questionSlide]="slideNewQuestionHash[itemIndex] ? 'in' : 'out'"
-                                                                            style="position:absolute;top:40px;left:600px;width:100%;height:200px;background-color: white;"
+                                                                            style="position:absolute;top:60px;left:600px;width:100%;height:200px;background-color: white;"
                                                                             [ngStyle]="{'z-index': 10000 - itemIndex}">
                                                                             <div
                                                                                 style="width:100%;position:relative;padding:0">
@@ -1011,12 +1028,6 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div *ngIf="showNext"
-                                                                        style="position:absolute;top:330px;left:0;">
-                                                                        <button nz-button nzType="primary"
-                                                                            nzSize="small" (click)="nextQuestion()">Next
-                                                                            Question</button>
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1037,9 +1048,9 @@
                                             style="text-align: center;width:100%;height:900px;">
                                             <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                                 [ngStyle]="{'width.px':contentWidth}" style="display: inline-block;">
-                                                <div [froalaEditor]="froalaOptions2"
-                                                    [(froalaModel)]="page.content.text "
-                                                    style="height:100%;width:100%;"></div>
+                                                <div [froalaEditor]="getFroalaOptions(page._id, '')"
+                                                    [(froalaModel)]="page.content.text " style="height:100%;width:100%;"
+                                                    (blur)="saveTraining(false)"></div>
                                             </div>
                                             <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
                                                 [ngStyle]="{'width.px':contentWidth}" style="display: inline-block;">

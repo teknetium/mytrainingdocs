@@ -100,7 +100,7 @@ export class TrainingService {
             }
 
             for (let page of training.pages) {
-              if (page.type === 'assessment') {
+              if (page.type === 'assessment' && page.content.assessment) {
                 this.addAssessmentItems(page.content.assessment.items);
               }
             }
@@ -322,7 +322,8 @@ export class TrainingService {
       type: 'training-intro',
       title: 'Introduction',
       text: 'Your introduction goes here.',
-      content: null
+      content: null,
+      froalaOptions: {}
     }
     const newTraining = <TrainingModel>{
       _id: String(baseId),

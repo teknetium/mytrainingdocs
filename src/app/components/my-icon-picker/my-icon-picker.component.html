@@ -48,13 +48,13 @@
                 <div style="display:block;height:80%;padding-top:40px;">
                     <button
                         style="display:inline-block;cursor:pointer;padding:2px;border-radius:4px;border:1px solid #bbbbbb;margin-right:1px;"
+                        (click)="smaller()" nz-tooltip nzTooltipTitle="Smaller">
+                        <i class="far fa-fw fa-angle-down" style="font-size:24px;display:inline-block;vertical-align: bottom;"></i>
+                    </button>
+                    <button
+                        style="display:inline-block;cursor:pointer;padding:2px;border-radius:4px;border:1px solid #bbbbbb;margin-right:1px;"
                         (click)="bigger()" nz-tooltip nzTooltipTitle="Bigger" >
                         <i class="far fa-fw fa-angle-up"
-                            style="font-size:24px;display:inline-block;vertical-align: bottom;"></i>
-                    </button>
-                    <button style="display:inline-block;cursor:pointer;padding:2px;border-radius:4px;border:1px solid #bbbbbb;margin-right:1px;"
-                        (click)="smaller()" nz-tooltip nzTooltipTitle="Smaller" >
-                        <i class="far fa-fw fa-angle-down"
                             style="font-size:24px;display:inline-block;vertical-align: bottom;"></i>
                     </button>
                 </div>

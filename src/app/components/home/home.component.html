@@ -115,33 +115,29 @@
         <div style="display:block;width:100%;margin-bottom:20px;">
             <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onDateRangeChange($event)"></nz-range-picker>
         </div>
-        <div style="display:block;width:100%;padding:20px;text-align:left;">
+        <div style="display:block;width:100%;padding-left:20px;padding-top:20px;text-align:left;height:85%;overflow-y: scroll;">
             <nz-timeline *ngIf="filteredSessionLog && filteredSessionLog.length > 0">
                 <nz-timeline-item *ngFor="let session of filteredSessionLog">
                     <div style="display:block;">
-                        <div *ngIf="session" style="float:left;">
+                        <div *ngIf="session" style="float:left;font-size:16px;">
                             {{myTeamIdHash[session.uid].firstName}} {{myTeamIdHash[session.uid].lastName}}
                         </div>
-                        <div *ngIf="teamTrainingHash && teamTrainingHash[session.tid]" style="float:right;">
+                        <div style="float:left;margin-left:10px;font-size:12px;color:#bbbbbb;padding:4px 0;">
+                            {{session.startTime| date:'medium'}}&nbsp;&nbsp;({{timeFormat(session.stopTime - session.startTime)}})
+                        </div>
+                        <div *ngIf="teamTrainingHash && teamTrainingHash[session.tid]" style="float:right;padding-top:4px;">
                             <div style="display:inline-block;margin-right:10px;">
                                 <i [ngClass]="teamTrainingHash[session.tid].iconClass"
                                     style="font-size:20px;vertical-align: middle;"
-                                    [ngStyle]="{'color': teamTrainingHash[session.tid].iconColor}">
+                                    [ngStyle]="{'color': teamTrainingHash[session.tid].iconColor}" nz-tooltip
+                                    [nzTooltipTitle]="teamTrainingHash[session.tid].title">
                                 </i>
                             </div>
+                            <!--
                             <div style="display:inline-block;">
                                 {{teamTrainingHash[session.tid].title}}
                             </div>
-                        </div>
-                        <div style="clear:both;"></div>
-                    </div>
-                    <div style="display:block;">
-                        <div style="float:left;">
-                            {{session.startTime| date:'medium'}}
-                        </div>
-                        <div style="float:right;">
-                            {{timeFormat(session.stopTime - session.startTime)}} <span
-                                style="font-size:12px;color:#bbbbbb;">(mm:ss)</span>
+                            -->
                         </div>
                         <div style="clear:both;"></div>
                     </div>

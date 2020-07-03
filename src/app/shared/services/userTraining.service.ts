@@ -96,6 +96,9 @@ export class UserTrainingService {
   }
 
   stopSession(ut: UserTrainingModel) {
+    if (!ut) {
+      return;
+    }
     if (!this.utSessionHash[ut.tid]) {
       console.log('stopSession...no session');
       return;
