@@ -1,7 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
 import { EventService } from '../../shared/services/event.service';
+import { ResizeEvent } from '../../shared/interfaces/event.type';
 import { TrainingService } from '../../shared/services/training.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { UserTrainingModel, UidUTHash } from '../../shared/interfaces/userTraining.type';
@@ -35,13 +36,28 @@ import FlatfileImporter from "flatfile-csv-importer";
       transition('open => closed', [
         animate('300ms')
       ]),
-      transition('* => open', [
+      transition('closed => open', [
         animate('300ms')
       ]),
     ]),
-    trigger('userAddToggle', [
+    trigger('userSlide', [
       // ...
-      state('closed', style({
+      state('in', style({
+        'opacity': '1'
+      })),
+      state('out', style({
+        'opacity': '0'  
+      })),
+      transition('in => out', [
+        animate('400ms')
+      ]),
+      transition('out => in', [
+        animate('400ms')
+      ])
+    ]),
+     trigger('switchUserToggle', [
+      // ...
+      state('', style({
         'visibility': 'hidden',
         'height': '0'
       })),
@@ -62,6 +78,19 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   LICENSE_KEY = "2bda9380-a84c-11e7-8243-1d92e7c67d6d";
   results = "";
+  browserInnerHeight;
+  browserInnerWidth;
+  contentHeight;
+  contentWidth;
+  loadNewUser = true;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.browserInnerHeight = window.innerHeight;
+    this.browserInnerWidth = window.innerWidth;
+    this.contentHeight = Math.floor(window.innerHeight * .9);
+    this.contentWidth = Math.floor(window.innerWidth * .9);
+  }
 
   private importer: FlatfileImporter;
 
@@ -72,7 +101,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     customer: 'fad fa-fw fa-user-crown',
     candidate: 'fad fa-fw fa-user-graduate'
   }
-  trainingStatusColorHash = {
+  /*
+  trainingStatusHash = {
+    upToDate: {
+      class
+    }
+  }
+  */
+  userTrainingStatusColorHash = {
     upToDate: '#52c41a',
     pastDue: 'red'
   }
@@ -139,11 +175,20 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   showSupervisors = true;
   showVolunteers = true;
   showCustomers = true;
+  showUpToDateTrainings = true;
+  showCompletedTrainings = true;
+  showPastDueTrainings = true;
   uidUTHash$: Observable<UidUTHash>;
   uidUTHash = {};
   showTrainingHash = {};
   trainingStatusFilterVal: string;
   myGroup: UserModel[];
+  teamContainerWidth = 25;
+  browserWidth;
+  browserHeight;
+  newWidth;
+  resizeBarColor;
+  dragging;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -229,8 +274,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           }
         }
 
-      })
-
+      });
     });
 
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
@@ -278,26 +322,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     })
   }
 
-  filterUsers() {
-    this.myTeamFiltered = [];
-    for (let user of this.myTeam) {
-      if (!this.showUpToDate && user.trainingStatus === 'upToDate') {
-        continue;
-      } else if (!this.showPastDue && user.trainingStatus === 'pastDue') {
-        continue;
-      } else if (!this.showIndividualContributors && user.userType === 'individualContributor') {
-        continue;
-      } else if (!this.showSupervisors && user.userType === 'supervisor') {
-        continue;
-      } else if (!this.showVolunteers && user.userType === 'volunteer') {
-        continue;
-      } else if (!this.showCustomers && user.userType === 'customer') {
-        continue;
-      }
-      this.myTeamFiltered.push(user);
-    }
-  }
-
   toggleFilter(filter: string) {
     this.myTeamFiltered = [];
     if (filter === 'up-to-date') {
@@ -312,25 +336,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.showVolunteers = !this.showVolunteers;
     } else if (filter === 'customer') {
       this.showCustomers = !this.showCustomers;
+    } else if (filter === 'trainingUpToDate') {
+      this.showUpToDateTrainings = !this.showUpToDateTrainings;
+    } else if (filter === 'trainingCompleted') {
+      this.showCompletedTrainings = !this.showCompletedTrainings;
+    } else if (filter === 'trainingPastDue') {
+      this.showPastDueTrainings = !this.showPastDueTrainings;
     }
 
-
-    for (let user of this.myTeam) {
-      if (!this.showUpToDate && user.trainingStatus === 'upToDate') {
-        continue;
-      } else if (!this.showPastDue && user.trainingStatus === 'pastDue') {
-        continue;
-      } else if (!this.showIndividualContributors && user.userType === 'individualContributor') {
-        continue;
-      } else if (!this.showSupervisors && user.userType === 'supervisor') {
-        continue;
-      } else if (!this.showVolunteers && user.userType === 'volunteer') {
-        continue;
-      } else if (!this.showCustomers && user.userType === 'customer') {
-        continue;
-      }
-      this.myTeamFiltered.push(user);
-    }
   }
 
   async launchImporter() {
@@ -476,7 +489,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   handleAddUser() {
     this.newUser = false;
     console.log('handleAddUser', this.newTeamMember);
-//    this.userService.updateUser(this.authenticatedUser, false);
+    //    this.userService.updateUser(this.authenticatedUser, false);
     this.userService.createNewUser(this.newTeamMember);
 
     if (this.newTeamMember.jobTitle) {
@@ -493,18 +506,18 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
     this.mailService.sendMessage(this.message);
     this.userPanelVisible = false;
-//    this.filterUsers();
-//    this.cd.detectChanges();
+    //    this.cd.detectChanges();
   }
 
   handleUpdateUser() {
     this.userPanelVisible = false;
     this.userService.updateUser(this.selectedUser, false);
-    this.filterUsers();
   }
 
   selectUser(userId) {
+    this.loadNewUser = true;
     this.userService.selectUser(userId);
+    this.loadNewUser = false;
   }
 
   selectSupervisor() {
@@ -555,7 +568,29 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.selectedTrainingId = null;
     this.userTrainingService.getUTForUser$(this.userIdSelected).subscribe(utList => {
       this.uidUTHash[this.userIdSelected] = utList;
-//      this.filterUsers();
+      //      this.filterUsers();
     })
   }
+
+  onDragStart(event) {
+    this.dragging = true;
+    this.resizeBarColor = '#7fa9f9';
+  }
+
+  onDrag(event) {
+    this.newWidth = Math.floor((event.clientX / window.innerWidth) * 100);
+    this.teamContainerWidth = this.newWidth;
+  }
+
+  onDragEnd(event) {
+    this.resizeBarColor = 'white';
+  }
+
+  drop(event) {
+  }
+
+  allowDrop(event) {
+    event.preventDefault();
+  }
+
 }

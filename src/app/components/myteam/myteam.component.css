@@ -1,3 +1,7 @@
+.displayNone {
+    display:none;
+}
+
 .my-team {
     width: 100%;
     height: 100%;
@@ -8,17 +12,14 @@
 }
 
 .my-team-rightside {
-    width: 74%;
     height:100%;    
     float:right;
 }
 
 .team-container {
-    width: 25%;
     height:100%;
-    border-right: 1px solid #e0e0e0;
-    display:inline-block;
-    overflow-x: scroll;
+    padding-right:10px;
+    float:left;
 }
 
 .mm-header {
@@ -166,8 +167,8 @@
   cursor: not-allowed;
 }
 .showing {
-    border:2px solid #75c140 !important;
+    opacity: 1.0;
 }
 .not-showing {
-    border:2px solid red !important;
+    opacity:.3;
 } 

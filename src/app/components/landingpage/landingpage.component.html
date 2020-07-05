@@ -96,7 +96,8 @@
           <div class="row justify-content-center">
             <div class="col-lg-12">
               <div class="text-center header_content mx-auto" style="margin-bottom: 50px;">
-                <div style="display:inline-block;width:fit-content;margin-bottom:60px;background: rgba(255,255,255,.1);padding:10px;border-radius: 60px;">
+                <div
+                  style="display:inline-block;width:fit-content;margin-bottom:60px;background: rgba(255,255,255,.1);padding:10px;border-radius: 60px;">
                   <img width="100" src="../../../assets/images/rocket.png">
                   <span style="font-size:22px;color:orange;">&nbsp;&nbsp;BETA Release Coming Soon!</span>
                 </div>
@@ -114,30 +115,29 @@
               </div>
             </div>
             <div style="display:block;font-size:16px;width:800px;">
-              <div style="text-align: center;margin-top:5px;background-color: #000000;">
+              <div style="text-align: center;margin-top:5px;background-color: #000000;position:relative;">
+                <!--
+                <div *ngIf="showYouTubeIcon" style="position:absolute;background:rgba(0, 0, 0, .3);z-index:10;height:100%;width:100%;">
+                  <i nz-icon nzType="youtube" [nzTheme]="'fill'" (click)="youtubePlayVideo()"
+                    style="font-size:100px;padding-top:20%;text-align:center;color:#fb0006;z-index:10;"></i>
+                </div>
+                -->
                 <vg-player *ngIf="currentVideo === explainerUrl" (onPlayerReady)="onPlayerReady($event)">
-
                   <vg-controls>
                     <vg-play-pause></vg-play-pause>
                     <vg-playback-button></vg-playback-button>
-
                     <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-
                     <vg-scrub-bar>
                       <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
                       <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
                     </vg-scrub-bar>
-
                     <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
                     <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-
                     <vg-track-selector></vg-track-selector>
                     <vg-mute></vg-mute>
                     <vg-volume></vg-volume>
-
                     <vg-fullscreen></vg-fullscreen>
                   </vg-controls>
-
                   <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
                     <source [src]="explainerUrl" type="video/mp4">
                   </video>

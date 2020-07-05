@@ -89,8 +89,8 @@
             </nz-modal>
 
             <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800"
-                [nzHeight]="browserInnerHeight - 300" (nzOnCancel)="handleIconSelectCancel()"
-                [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled" (nzOnOk)="handleIconSelectConfirm()">
+                (nzOnCancel)="handleIconSelectCancel()" [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled"
+                (nzOnOk)="handleIconSelectConfirm()">
                 <app-icon-picker [currentIconClass]="selectedTraining.iconClass"
                     [currentColor]="selectedTraining.iconColor" (icon)="setIcon($event)"
                     [height]="browserInnerHeight - 300" style="width:100%;"></app-icon-picker>
@@ -202,7 +202,8 @@
                         <button *ngIf="selectedTraining.status === 'locked' && currentVersionIndex === 0"
                             (click)="unlockTraining()" class="header-icon" nz-button nzType="default" nzShape="circle"
                             nz-tooltip nzTooltipTitle="Edit Training">
-                            <i nz-icon nzType="unlock" theme="twotone" style="vertical-align: top;"></i>
+                            <i nz-icon nzType="unlock" theme="twotone" [nzTwotoneColor]="'blue'"
+                                style="vertical-align: top;"></i>
                         </button>
                         <button *ngIf="selectedTraining.status === 'unlocked' && mode === 'Edit'" nz-button
                             nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Save As New Version"
@@ -214,13 +215,13 @@
                         <button *ngIf="selectedTraining.status === 'unlocked' && mode === 'Edit'" nz-button
                             nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Configure Training"
                             class="header-icon" (click)="showTrainingConfig = true">
-                            <i nz-icon nzType="setting" theme="twotone" [nzTwotoneColor]="'pink'"
+                            <i nz-icon nzType="setting" theme="twotone" [nzTwotoneColor]="'blue'"
                                 style="vertical-align: top;">
                             </i>
                         </button>
                         <button *ngIf="selectedTraining.status === 'unlocked' && mode === 'Edit'" nz-button
                             nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Discard Changes"
-                            [disabled]="!selectedTraining.isDirty" style="color:orange;" class="header-icon"
+                            [disabled]="!selectedTraining.isDirty" style="color:blue;" class="header-icon"
                             (click)="showRollbackConfirm()">
                             <i nz-icon nzType="rollback" theme="outline" style="vertical-align: top;">
                             </i>
@@ -387,12 +388,14 @@
             <div *ngIf="production === 'true' || mode === 'Preview'"
                 style="text-align: center;padding:5px;background-color: #fefbe7;">
                 <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Previous Page"
-                    class="header-icon" (click)="loadPrevPage()">
+                    class="header-icon" (click)="loadPrevPage()"
+                    [disabled]="isFirstPage(currentPage._id) || assessmentInProgress">
                     <i nz-icon nzType="left" theme="outline" style="vertical-align: top;color:blue;">
                     </i>
                 </button>
                 <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Next Page"
-                    class="header-icon" (click)="loadNextPage()">
+                    class="header-icon" (click)="loadNextPage()" [disabled]="isLastPage(currentPage._id) || assessmentInProgress || (currentPage.type === 'assessment' &&
+                    (assessmentStatus === 'notCompleted' || assessmentStatus === 'firstTime'))">
                     <i nz-icon nzType="right" theme="outline" style="vertical-align: top;color:blue;">
                     </i>
                 </button>
@@ -584,14 +587,20 @@
                                 </nz-modal>
                                 <div *ngIf="page.type && page.type === 'training-intro'"
                                     style="text-align: center;width:100%;height:100%;">
-                                    <div *ngIf="!introEditorHash[page._id] && (production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit')"
-                                        style="display: inline-block;height:fit-content;border:1px solid #dddddd;text-align: left;padding:20px;border-radius: 10px;"
-                                        (click)="editIntro(page._id)" [ngStyle]="{'width.px':browserInnerWidth * .9}">
-                                        <div [froalaView]="page.text" style="display:block;"></div>
-                                    </div>
-                                    <div *ngIf="introEditorHash[page._id]"
-                                        style="display: inline-block;height:fit-content;text-align: left;border-radius: 10px;"
+                                    <div *ngIf="!introEditorHash[page._id] && (production !== 'true' && selectedTraining.status !== 'locked' && mode !== 'Preview')"
+                                        style="display: inline-block;height:100%;border:1px solid #dddddd;text-align: left;border-radius: 10px;"
                                         [ngStyle]="{'width.px':browserInnerWidth * .9}">
+                                        <div [froalaView]="page.text"
+                                            style="display:block;height:fit-content;padding:20px;"
+                                            (click)="editIntro($event, page._id, true)"></div>
+                                    </div>
+                                    <div *ngIf="introEditorHash[page._id] && (production === 'false' || selectedTraining.status === 'unlocked' || mode === 'Edit')"
+                                        style="position:relative;display: inline-block;height:fit-content;text-align: left;border-radius: 10px;"
+                                        [ngStyle]="{'width.px':browserInnerWidth * .9}">
+                                        <div class="done-button" style="position:absolute;"
+                                            (click)="hideEditor($event)">
+                                            <span>Done</span>
+                                        </div>
                                         <div [froalaEditor]="getFroalaOptions(page._id)" [(froalaModel)]="page.text">
                                         </div>
                                     </div>
@@ -607,13 +616,17 @@
                                     <div *ngIf="introHash[page._id] === 'yes'">
                                         <div *ngIf="!introEditorHash[page._id] && (production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit')"
                                             style="display: inline-block;height:fit-content;border:1px solid #dddddd;text-align: left;padding:20px;border-radius: 10px;"
-                                            (click)="editIntro(page._id)"
+                                            (click)="editIntro($event, page._id , true)"
                                             [ngStyle]="{'width.px':browserInnerWidth * .9}">
-                                            <div [froalaView]="page.text" style="display:block;"></div>
+                                            <div [froalaView]="page.text" style="display:block;height:fit-content;"></div>
                                         </div>
                                         <div *ngIf="introEditorHash[page._id]"
-                                            style="display: inline-block;height:fit-content;text-align: left;border-radius: 10px;"
+                                            style="position:relative;display: inline-block;height:fit-content;text-align: left;border-radius: 10px;"
                                             [ngStyle]="{'width.px':browserInnerWidth * .9}">
+                                            <div class="done-button" style="position:absolute;"
+                                                (click)="hideEditor($event)">
+                                                <span>Done</span>
+                                            </div>
                                             <div [froalaEditor]="getFroalaOptions(page._id)"
                                                 [(froalaModel)]="page.text">
                                             </div>
@@ -1048,7 +1061,7 @@
                                             style="text-align: center;width:100%;height:900px;">
                                             <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                                 [ngStyle]="{'width.px':contentWidth}" style="display: inline-block;">
-                                                <div [froalaEditor]="getFroalaOptions(page._id, '')"
+                                                <div [froalaEditor]="getFroalaOptions(page._id)"
                                                     [(froalaModel)]="page.content.text " style="height:100%;width:100%;"
                                                     (blur)="saveTraining(false)"></div>
                                             </div>

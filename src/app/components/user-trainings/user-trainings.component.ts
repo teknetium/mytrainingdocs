@@ -23,7 +23,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     upToDate: {
       icon: 'smile',
       color: '#52c41a',
-      desc: 'Up To Date'
+      desc: 'In Progress'
     },
     pastDue: {
       icon: 'exclamation-circle',

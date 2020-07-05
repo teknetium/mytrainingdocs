@@ -14,3 +14,8 @@ export interface EventModel {
   creationDate: number,
   actionDate: number,
 }
+
+export interface ResizeEvent {
+  width: number,
+  height: number,
+}

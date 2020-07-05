@@ -649,21 +649,32 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       }
     }
     */
-  editIntro(pageId) {
-    this.introEditorHash[pageId] = true;
+  
+  hideEditor(event) {
+    event.preventDefault();
+    this.introEditorHash[this.currentPageId] = false;
+    this.saveTraining(false);
+  }
+
+  editIntro(event, pageId, action) {
+    event.preventDefault();
+    this.introEditorHash[pageId] = action;
   }
 
   getFroalaOptions(pageId: string):Object  {
+    console.log('getFroalaOptions', pageId);
     return new Object({
       placeholderText: 'Edit Your Content Here!',
       immediateAngularModelUpdate: true,
       key: "0BA3jA11D9C4F6A3E4asftscjjlhi1lfixF6nablA3C11A8C6D2B4A4G2F3A3==",
       events: {
         'contentChanged': () => {
+          console.log('contentChanged event');
           this.saveTraining(false);
         },
         'blur': () => {
-          this.saveTraining(false);
+          console.log('blur event');
+
         }
       }
     })
@@ -678,31 +689,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     patchNum++;
     return majorNum + '_' + minorNum + '_' + patchNum;
   }
-  /*
-    selectPageTemplate(templateName: string) {
-      if (templateName === 'singleContent') {
-        let newPage = <Page>{
-   
-        }
-      }
-    }
-  */
   onJobTitleChange(value: string): void {
     this.matchingJobTitles = this.jobTitles.filter(jobTitle => jobTitle.toLowerCase().indexOf(value.toLowerCase()) !== -1);
   }
-  /*
-    onQuestionChange(value: string): void {
-      this.matchingQuestions = this.questions.filter(question => question.toLowerCase().indexOf(value.toLowerCase()) !== -1);
-      if (this.matchingQuestions.length === 1) {
-        this.currentQuestion = this.assessmentHash[this.matchingQuestions[0]];
-        this.currentCorrectChoice = String(this.currentQuestion.correctChoice);
-      } else if (this.matchingQuestions.length === 0) {
-        this.currentQuestion.choices = [];
-        this.currentQuestion.correctChoice = -1;
-        this.currentQuestion.extraInfo = undefined;
-      }
-    }
-  */
   setJobTitle(value) {
     this.jobTitleService.addJobTitle(this.selectedTraining.jobTitle);
     this.saveTraining(true);
@@ -1286,9 +1275,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.currentAssessmentItemIndex = -1;
     this.mode = newMode;
     if (newMode === 'Preview') {
+      this.introEditorHash[this.currentPageId] = null;
       this.percentageOfBrowserHeight = .4;
       this.contentHeight = Math.floor((window.innerHeight - (.40 * window.innerHeight)) * .90);
     } else {
+      this.introEditorHash[this.currentPageId] = null;
       this.percentageOfBrowserHeight = .55;
       this.contentHeight = Math.floor((window.innerHeight - (.55 * window.innerHeight)) * .90);
     }

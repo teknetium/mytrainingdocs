@@ -168,6 +168,7 @@ export class LandingpageComponent implements OnInit {
   step2Url = 'https://cdn.filestackcontent.com/VtSeKZ5cRgSyD0ci7llL';
   step3Url = 'https://cdn.filestackcontent.com/fpj1JwxTnOmIzTgLAW4Q';
   currentVideo;
+  showYouTubeIcon = true;
 
   
   constructor(
@@ -293,6 +294,10 @@ export class LandingpageComponent implements OnInit {
   }
 
   playVideo() {
+    this.vgApi.play();
+  }
+  youtubePlayVideo() {
+    this.showYouTubeIcon = false;
     this.vgApi.play();
   }
 
