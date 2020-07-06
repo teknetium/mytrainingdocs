@@ -190,8 +190,14 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
 
   updateDueDate(event, ut) {
     let newDueDate = new Date(event).getTime();
+    if (newDueDate < new Date().getTime()) {
+      ut.status = 'pastDue';
+    } else {
+      ut.status = 'upToDate';
+    }
     ut.dueDate = newDueDate;
     this.userTrainingService.saveUserTraining(ut);
+    this.userTrainingService.getUTForUser(ut.uid);
   }
 
   markTrainingAsComplete(selectedTraining: TrainingModel) {

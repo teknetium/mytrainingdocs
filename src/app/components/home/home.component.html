@@ -25,17 +25,18 @@
                     Team Members
                 </div>
                 <div style="float:right;padding-top:7px;">
-                    <div style="float:right;margin-left:15px;">
-                        <nz-badge nzColor="red"></nz-badge>
-                        <span style="margin-left:-5px;vertical-align: bottom;font-size:12px;">Past Due</span>
+                    <div style="float:right;margin-left:15px;padding-top:4px;">
+                        <div class="pastDue" style="float:left;width:12px;height:12px;margin-right:5px;margin-top:2px;"></div>
+                        <span style="vertical-align: top;font-size:12px;">Past Due</span>
+                    </div>
+                    <div style="float:right;margin-left:15px;padding-top:4px;">
+                        <div class="completed" style="float:left;width:12px;height:12px;margin-right:5px;margin-top:2px;"></div>
+                        <span style="vertical-align: top;font-size:12px;">Completed</span>
                     </div>
                     <div style="float:right;margin-left:15px;">
-                        <nz-badge nzColor="blue"></nz-badge>
-                        <span style="margin-left:-5px;vertical-align: bottom;font-size:12px;">Completed</span>
-                    </div>
-                    <div style="float:right;margin-left:15px;">
-                        <nz-badge nzColor="green"></nz-badge>
-                        <span style="margin-left:-5px;vertical-align: bottom;font-size:12px;">In Progress</span>
+                        <i class="fad fa-award" style="font-size:14px;vertical-align: middle;">
+                        </i>
+                        <span style="margin-left:5px;vertical-align: bottom;font-size:12px;">Recurring Training</span>
                     </div>
                     <div style="clear:both;"></div>
                 </div>
@@ -63,15 +64,22 @@
                             <div
                                 style="display:inline-block;width:fit-content;width:60%;justify-content: right;vertical-align: text-bottom;">
                                 <span *ngFor="let tid of userStatHash[user._id].trainingIdList "
-                                    style="float:right;margin-left:10px;" nz-tooltip
-                                    [nzTooltipTitle]="teamTrainingHash[tid].title">
+                                    style="float:right;margin-left:10px;padding:5px; " nz-tooltip
+                                    [nzTooltipTitle]="teamTrainingHash[tid].title" [ngClass]="{'completed': userStatHash[user._id].tidUTHash[tid].status === 'completed', 'pastDue': userStatHash[user._id].tidUTHash[tid].status === 'pastDue'}">
                                     <i [ngClass]="teamTrainingHash[tid].iconClass"
-                                        style="display:inline-block;font-size:20px;vertical-align: middle;"
+                                        style="display:inline-block;font-size:22px;vertical-align: middle;"
                                         [ngStyle]="{'color': teamTrainingHash[tid].iconColor}">
                                     </i>
-                                    <nz-badge *ngIf="userStatHash[user._id].tidUTHash[tid]"
+                                    <i *ngIf="teamTrainingHash[tid].type === 'recurring'" class="fad fa-award"
+                                        style="font-size:14px;vertical-align: super;top:-3px;margin-left:3px;">
+                                    </i>
+                                    <!--
+                                    <nz-badge
+                                        *ngIf="userStatHash[user._id].tidUTHash[tid] && userStatHash[user._id].tidUTHash[tid].status !== 'upToDate'"
                                         [nzColor]="utStatusColorHash[userStatHash[user._id].tidUTHash[tid].status]"
-                                        style="margin-left:3px;"></nz-badge>
+                                        style="margin-left:3px;vertical-align: sub;top:10px;margin-left:3px;">
+                                    </nz-badge>
+                                    -->
                                 </span>
                             </div>
                         </div>
@@ -96,10 +104,14 @@
                     <nz-list-item *ngFor="let training of trainings" (click)="selectTraining(training._id)"
                         class="list-item" style="cursor:pointer;">
                         <i [ngClass]="training.iconClass"
-                            style="font-size:20px;width:10%;text-align:center;vertical-align: middle;"
+                            style="font-size:26px;vertical-align: bottom;line-height:30px;"
                             [ngStyle]="{'color': training.iconColor}">
                         </i>
-                        <span style="width: 40%;">
+                        <i *ngIf="training.type === 'recurring'" class="fad fa-award"
+                            style="font-size:14px;vertical-align: super;margin-left:3px;">
+                        </i>
+                        <span
+                            style="width: 40%;margin-left:15px;vertical-align: middle;line-height:30px;font-size:16px;">
                             {{ training.title }}
                         </span>
                     </nz-list-item>
@@ -115,7 +127,8 @@
         <div style="display:block;width:100%;margin-bottom:20px;">
             <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onDateRangeChange($event)"></nz-range-picker>
         </div>
-        <div style="display:block;width:100%;padding-left:20px;padding-top:20px;text-align:left;height:85%;overflow-y: scroll;">
+        <div
+            style="display:block;width:100%;padding-left:20px;padding-top:20px;text-align:left;height:85%;overflow-y: scroll;">
             <nz-timeline *ngIf="filteredSessionLog && filteredSessionLog.length > 0">
                 <nz-timeline-item *ngFor="let session of filteredSessionLog">
                     <div style="display:block;">
@@ -125,7 +138,8 @@
                         <div style="float:left;margin-left:10px;font-size:12px;color:#bbbbbb;padding:4px 0;">
                             {{session.startTime| date:'medium'}}&nbsp;&nbsp;({{timeFormat(session.stopTime - session.startTime)}})
                         </div>
-                        <div *ngIf="teamTrainingHash && teamTrainingHash[session.tid]" style="float:right;padding-top:4px;">
+                        <div *ngIf="teamTrainingHash && teamTrainingHash[session.tid]"
+                            style="float:right;padding-top:4px;">
                             <div style="display:inline-block;margin-right:10px;">
                                 <i [ngClass]="teamTrainingHash[session.tid].iconClass"
                                     style="font-size:20px;vertical-align: middle;"

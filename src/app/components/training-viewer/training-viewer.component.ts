@@ -662,7 +662,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   getFroalaOptions(pageId: string):Object  {
-    console.log('getFroalaOptions', pageId);
     return new Object({
       placeholderText: 'Edit Your Content Here!',
       immediateAngularModelUpdate: true,
@@ -905,11 +904,22 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   resetTrainingStatus() {
     this.userTrainingService.resetUserTrainingStatus(this.selectedTraining._id);
+    this.subject = 'Urgent: Must retake a training'
+    this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated and you are required to retake it.";
+    for (let user of this.assignedToUsers) {
+      let msg = <MessageModel>{
+        to: this.myTeamHash[user].email,
+        from: this.authenticatedUser.email,
+        subject: this.subject,
+        text: this.messageBody
+      }
+      this.mailService.sendMessage(msg);
+    }
   }
 
   sendNotifications() {
     this.subject = 'The Content of a Training has changed!'
-    this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated.  Please review the training."
+    this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated.  Please review the training.";
     for (let user of this.assignedToUsers) {
       let msg = <MessageModel>{
         to: this.myTeamHash[user].email,
@@ -1111,8 +1121,14 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     //    this.trainingService.reloadAllTrainings();
   }
 
-  configChanged(event) {
-    //    this.setValidation('config', true);
+  configChanged(event, property) {
+    if (property === 'expirationDate') {
+      if (this.selectedTraining.type === 'onetime') {
+        this.selectedTraining.expirationDate = this.selectedTraining.expirationDate * 86400000;
+      } else if (this.selectedTraining.type === 'recurring') {
+        this.selectedTraining.expirationDate = this.selectedTraining.expirationDate * 2592000000;
+      }
+    }
     this.saveTraining(false);
     this.setCurrentPage(this.currentPageId, undefined);
   }

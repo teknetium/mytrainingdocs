@@ -31,6 +31,7 @@ export class UserService {
   private allOrgUserHash: UserIdHash = {};
   private myTeam: UserModel[];
   private myOrgUsers: UserModel[];
+  private statusObj;
 
   userTypeIconHash = {
     supervisor: 'fad fa-user-tie',
@@ -57,13 +58,12 @@ export class UserService {
   ) {
     this.action = 'init';
 
-
     this.authenticatedUserProfile$ = this.auth.getAuthenticatedUserProfileStream();
     this.authenticatedUserProfile$.subscribe((profile) => {
       this.getUserByUid(profile.uid).subscribe(
         user => {
           this.authenticatedUser = user;
-//          this.getAllOrgUsers();
+          //          this.getAllOrgUsers();
           if (this.authenticatedUser.jobTitle) {
             this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
           }
@@ -85,7 +85,7 @@ export class UserService {
               res.userStatus = 'active';
               this.updateUser(res, true);
               this.authenticatedUser = res;
-//              this.getAllOrgUsers();
+              //              this.getAllOrgUsers();
               if (this.authenticatedUser.jobTitle) {
                 this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
               }
@@ -124,7 +124,7 @@ export class UserService {
 
               this.postUser$(this.authenticatedUser).subscribe((data) => {
                 this.authenticatedUser = data;
-//                this.getAllOrgUsers();
+                //                this.getAllOrgUsers();
                 if (this.authenticatedUser.jobTitle) {
                   this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
                 }
@@ -161,22 +161,22 @@ export class UserService {
     this.eventService.addEvent(loginEvent);
 
   }
-/*
-  getAllOrgUsers() {
-    this.getOrg$(this.authenticatedUser.org).subscribe(userList => {
-      if (!userList) {
-        return;
-      }
-      this.myOrgUsers = userList;
-      for (let user of userList) {
-        this.allOrgUserHash[user._id] = user;
-        if (user.jobTitle) {
-          this.jobTitleService.addJobTitle(user.jobTitle);
+  /*
+    getAllOrgUsers() {
+      this.getOrg$(this.authenticatedUser.org).subscribe(userList => {
+        if (!userList) {
+          return;
         }
-      }
-    })
-  }
-*/
+        this.myOrgUsers = userList;
+        for (let user of userList) {
+          this.allOrgUserHash[user._id] = user;
+          if (user.jobTitle) {
+            this.jobTitleService.addJobTitle(user.jobTitle);
+          }
+        }
+      })
+    }
+  */
   loadData(teamId) {
     this.getTeam$(teamId).subscribe((userList) => {
       if (!userList) {
@@ -197,13 +197,18 @@ export class UserService {
       this.myTeamIdHash[this.authenticatedUser._id] = this.authenticatedUser;
       this.myTeam.push(this.authenticatedUser);
       this.myTeamBS$.next(this.myTeam);
-      
-//      this.myTeamCntBS$.next(Object.keys(this.myTeamIdHash).length);
+
+      //      this.myTeamCntBS$.next(Object.keys(this.myTeamIdHash).length);
 
       console.log('UserService:loadData', userList, this.authenticatedUser._id, this.myTeamIdHash);
       this.myTeamIdHashBS$.next(this.myTeamIdHash);
     });
 
+  }
+
+  setUserStatusPastDue(uid: string) {
+    this.myTeamIdHash[uid].trainingStatus = 'pastDue';
+    this.updateUser(this.myTeamIdHash[uid], true);
   }
 
   createNewUser(user: UserModel) {
@@ -248,6 +253,12 @@ export class UserService {
         this.authenticatedUserBS$.next(updatedUser);
       }
     });
+  }
+
+  statusCheck() {
+    this.statusCheck$(this.authenticatedUser._id).subscribe(statusObj => {
+      this.loadData(this.authenticatedUser._id);
+    })
   }
 
   getMyTeamIdHashStream(): Observable<UserIdHash> {
@@ -335,8 +346,8 @@ export class UserService {
         );
     }
     */
-  
-  
+
+
   getTeam$(teamId: string): Observable<UserModel[]> {
     return this.http
       .get<UserModel>(`${ENV.BASE_API}users/${teamId}`, {
@@ -345,7 +356,7 @@ export class UserService {
       .pipe(
         catchError((error) => this._handleError(error))
       );
-  } 
+  }
 
   getOrg$(org: string): Observable<UserModel[]> {
     return this.http
@@ -357,6 +368,15 @@ export class UserService {
       );
   }
 
+  statusCheck$(teamId: string): Observable<{}> {
+    return this.http
+      .get(`/api/daily/usertrainingstatuscheck`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
 
   putUser$(user: UserModel): Observable<UserModel> {
     return this.http

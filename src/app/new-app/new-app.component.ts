@@ -433,6 +433,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
         */
   }
 
+  runStatusCheck() {
+    this.userService.statusCheck();
+  }
+
   playVideo() {
     this.vgApi.play();
   }

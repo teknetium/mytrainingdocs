@@ -83,6 +83,8 @@ const trainingSchema = new Schema({
   isValid: { type: Object },
   isDirty: { type: Boolean },
   useFinalAssessment: { type: Boolean },
+  notifySchedule: { type: [Number], required: true },
+  expirationDate: { type: Number, required: false },
 });
 
 module.exports = mongoose.model("Training", trainingSchema);

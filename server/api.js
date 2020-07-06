@@ -92,8 +92,8 @@ module.exports = function(app, config) {
   }
 
 
-  const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment";
-  const trainingListProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment";
+  const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
+  const trainingListProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponses trainingVersion";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email teamAdmin orgAdmin appAdmin teamId org supervisorId profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
@@ -232,6 +232,9 @@ module.exports = function(app, config) {
       }
       let pastDue = [];
       let errors = [];
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
       if (userTrainings) {
         userTrainings.forEach(userTraining => {
           if (userTraining.dueDate < now) {
@@ -348,7 +351,9 @@ module.exports = function(app, config) {
       shared: req.body.shared,
       isValid: req.body.isValid,
       isDirty: req.body.isDirty,
-      useFinalAssessment: req.body.useFinalAssessment
+      useFinalAssessment: req.body.useFinalAssessment,
+      notifySchedule: req.body.notifySchedule,
+      expirationDate: req.body.expirationDate
     });
     Training.create(training, function (err, trainingObj) {
       if (err) {
@@ -389,6 +394,8 @@ module.exports = function(app, config) {
       training.isValid = req.body.isValid;
       training.isDirty = req.body.isDirty;
       training.useFinalAssessment = req.body.useFinalAssessment;
+      training.expirationDate = req.body.expirationDate;
+      training.notifySchedule = req.body.notifySchedule;
 
       training.save(err2 => {
         if (err2) {
@@ -457,7 +464,9 @@ module.exports = function(app, config) {
         shared: req.body.shared,
         isValid: req.body.isValid,
         isDirty: req.body.isDirty,
-        useFinalAssessment: req.body.useFinalAssessment
+        useFinalAssessment: req.body.useFinalAssessment,
+        notifySchedule: req.body.notifySchedule,
+        expirationDate: req.body.expirationDate
       });
       TrainingArchive.create(training, function (err, trainingArchiveObj) {
         if (err) {

@@ -178,6 +178,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   showUpToDateTrainings = true;
   showCompletedTrainings = true;
   showPastDueTrainings = true;
+  showOnetime = true;
+  showRecurring = true;
   uidUTHash$: Observable<UidUTHash>;
   uidUTHash = {};
   showTrainingHash = {};
@@ -342,6 +344,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.showCompletedTrainings = !this.showCompletedTrainings;
     } else if (filter === 'trainingPastDue') {
       this.showPastDueTrainings = !this.showPastDueTrainings;
+    } else if (filter === 'onetime') {
+      this.showOnetime = !this.showOnetime;
+    } else if (filter === 'recurring') {
+      this.showRecurring = !this.showRecurring;
     }
 
   }

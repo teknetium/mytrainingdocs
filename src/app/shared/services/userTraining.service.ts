@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError as ObservableThrowError, Subscription } from 'rxjs';
 import { EventService } from '../services/event.service';
 import { EventModel } from '../interfaces/event.type';
+import { TrainingModel } from '../interfaces/training.type';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { UserTrainingModel, AssessmentResponse, UserTrainingHash, UTSession, UTSessionHash, UidUTHash } from '../interfaces/userTraining.type';
 import { AuthService } from './auth.service';
@@ -29,7 +30,8 @@ export class UserTrainingService {
   private sessionLogBS$ = new BehaviorSubject<UTSession[]>(null);
 
 
-  constructor(private eventService: EventService,
+  constructor(
+    private eventService: EventService,
     private http: HttpClient,
     private auth: AuthService) {
   }
@@ -148,8 +150,11 @@ export class UserTrainingService {
   resetUserTrainingStatus(tid) {
     this.getUTForTraining$(tid).subscribe(utList => {
       for (let ut of utList) {
+        // for onetime trainings, the expirationDate property holds the number of days after assignment that the training is due
         if (ut.status === 'completed') {
           ut.status = 'upToDate';
+          ut.dateCompleted = 0;
+          ut.dueDate = new Date().getTime() + 604800000;
           this.saveUserTraining(ut);
         }
       }
@@ -174,8 +179,20 @@ export class UserTrainingService {
       this.userTrainingForTidBS$.next(uts);
       this.usersBS$.next(uids);
     })
-
   }
+  
+  getUTForUser(uid: string) {
+        this.getUTForUser$(uid).subscribe(userTrainings => {
+          this.userTrainings$BS.next(userTrainings);
+          this.uidUTHash[uid] = Object.assign([], userTrainings);
+          this.uidUTHashBS$.next(this.uidUTHash);
+          for (let ut of userTrainings) {
+            this.allUserTrainingHash[ut.tid] = ut;
+          }
+        })
+  }
+
+
 
   assignTraining(uid: string, tid: string) {
     const userTraining = <UserTrainingModel>{
@@ -192,7 +209,7 @@ export class UserTrainingService {
     this.postUserTraining$(userTraining).subscribe(userTraining => {
       this.getUTForUser$(uid).subscribe(userTrainings => {
         console.log('userTrainingService: ', userTrainings);
-        this.userTrainings$BS.next(userTrainings);
+                this.userTrainings$BS.next(userTrainings);
         this.uidUTHash[uid] = userTrainings;
         this.uidUTHashBS$.next(this.uidUTHash);
         this.allUserTrainingHash[userTraining._id] = userTraining;
@@ -205,6 +222,8 @@ export class UserTrainingService {
       console.log('saveUserTraining', userTraining);
   
       this.getUTForUser$(userTraining.uid).subscribe(userTrainings => {
+        this.uidUTHash[userTraining.uid] = userTrainings;
+        this.uidUTHashBS$.next(this.uidUTHash);
         this.userTrainings$BS.next(userTrainings);
       })
     })

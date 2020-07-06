@@ -31,6 +31,13 @@
             <h3 nz-title>
                 What actions should be taken as a result of the changes that were made?
             </h3>
+
+            <p>The following users are responsible for this training:</p>
+            <ul style="margin-left:100px;">
+                <li *ngFor="let user of assignedToUsers">
+                    {{ myTeamHash[user].firstName }}  {{ myTeamHash[user].lastName }}
+                </li>
+            </ul>
         </div>
         <div style="clear: both;"></div>
         <div style="display: block;">
@@ -139,8 +146,16 @@
                             style="display: inline-block;font-size:38px;margin:10px;vertical-align: middle;"
                             [ngStyle]="{'color': selectedTraining.iconColor}">
                         </i>
+                        <!--
+                        <i *ngIf="selectedTraining.type === 'onetime'" class="fad fa-diploma"
+                            style="font-size:14px;position:absolute;top:10px;right:-10px;">
+                        </i>
+                        -->
+                        <i *ngIf="selectedTraining.type === 'recurring'" class="fad fa-award"
+                            style="display: inline-block;top:-12px;right:5px;font-size:16px;vertical-align: super;">
+                        </i>
                     </div>
-                    <div style="display: inline-block;width:fit-content;">
+                    <div style="display: inline-block;width:fit-content;margin-left:10px;">
                         <input *ngIf="selectedTraining.status === 'unlocked' && mode === 'Edit'"
                             style="display:inline-block;color:#000000;width:500px;font-size:18px;" nz-input
                             [(ngModel)]="selectedTraining.title" nzSize="default" (keydown.enter)="saveTraining(true)"
@@ -363,7 +378,8 @@
                         </li>
                         <li nz-menu-item (click)="addNewPage('assessment', 'none')">
                             <i nz-icon nzType="file-done" theme="outline"
-                                style="vertical-align:top;font-size:16px;"></i> <span style="font-size:12px;">Create an
+                                style="vertical-align:top;font-size:16px;"></i>
+                            <span style="font-size:12px;">Create an
                                 Assessment</span>
                         </li>
                     </ul>
@@ -437,6 +453,45 @@
             nzPlacement="right" (nzOnClose)="showTrainingConfig = false">
             <div class="config-page-row">
                 <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
+                    <label style="margin-bottom: 0;font-size:12px;color:#000000;">Type</label>
+                </div>
+                <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
+                    <nz-radio-group [(ngModel)]="selectedTraining.type" (ngModelChange)="configChanged($event, 'type')">
+                        <label nz-radio-button nzValue="onetime">
+                            <i class="fad fa-diploma" style="font-size:22px;vertical-align: middle;"></i>&nbsp;&nbsp;
+                            <span style="font-size:12px;">One Time</span>
+                        </label>
+                        <label nz-radio-button nzValue="recurring">
+                            <i class="fad fa-award" style="font-size:22px;vertical-align: middle;"></i>&nbsp;&nbsp;
+                            <span style="font-size:12px;">Recurring</span>
+                        </label>
+                    </nz-radio-group>
+                </div>
+            </div>
+            <div *ngIf="selectedTraining.type === 'recurring'" class="config-page-row">
+                <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
+                    <label style="margin-bottom: 0;font-size:12px;color:#000000;">Valid Period</label>
+                </div>
+                <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
+                    <nz-input-number [(ngModel)]="selectedTraining.expirationDate" [nzMin]="1" [nzMax]="36"
+                        [nzStep]="1" (ngModelChange)="configChanged($event, 'expirationDate')">
+                    </nz-input-number>
+                    <span style="font-size:12px;">&nbsp;Months</span>
+                </div>
+            </div>
+            <div *ngIf="selectedTraining.type === 'onetime'" class="config-page-row">
+                <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
+                    <label style="margin-bottom: 0;font-size:12px;color:#000000;">Due Date</label>
+                </div>
+                <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
+                    <nz-input-number [(ngModel)]="selectedTraining.expirationDate" (ngModelChange)="configChanged($event, 'expirationDate')" [nzMin]="1" [nzMax]="30"
+                        [nzStep]="1">
+                    </nz-input-number>
+                    <span style="font-size:12px;">&nbsp;Days from assignment</span>
+                </div>
+            </div>
+            <div class="config-page-row">
+                <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
                     <label style="margin-bottom: 0;font-size:12px;color:#000000;">Category</label>
                 </div>
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
@@ -481,7 +536,7 @@
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
                     <nz-input-number nzSize="small" nzId="estTimeToComplete" class="foo" style="font-size:12px;"
                         [(ngModel)]="selectedTraining.estimatedTimeToComplete" [nzMin]="10" [nzMax]="240" [nzStep]="5"
-                        (ngModelChange)="configChanged($event)">
+                        (ngModelChange)="configChanged($event, 'estTimeToComplete')">
                     </nz-input-number>
                     <span style="display:inline-block;font-size:12px;">&nbsp;&nbsp; minutes</span>
                 </div>
@@ -618,7 +673,8 @@
                                             style="display: inline-block;height:fit-content;border:1px solid #dddddd;text-align: left;padding:20px;border-radius: 10px;"
                                             (click)="editIntro($event, page._id , true)"
                                             [ngStyle]="{'width.px':browserInnerWidth * .9}">
-                                            <div [froalaView]="page.text" style="display:block;height:fit-content;"></div>
+                                            <div [froalaView]="page.text" style="display:block;height:fit-content;">
+                                            </div>
                                         </div>
                                         <div *ngIf="introEditorHash[page._id]"
                                             style="position:relative;display: inline-block;height:fit-content;text-align: left;border-radius: 10px;"
@@ -1060,13 +1116,16 @@
                                         <div *ngIf="page.content && page.content.type === 'html'"
                                             style="text-align: center;width:100%;height:900px;">
                                             <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
-                                                [ngStyle]="{'width.px':contentWidth}" style="display: inline-block;">
+                                                [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight - 400}"
+                                                style="display: inline-block;">
                                                 <div [froalaEditor]="getFroalaOptions(page._id)"
-                                                    [(froalaModel)]="page.content.text " style="height:100%;width:100%;"
-                                                    (blur)="saveTraining(false)"></div>
+                                                    [(froalaModel)]="page.content.text "
+                                                    style="height:400px;width:100%;">
+                                                </div>
                                             </div>
                                             <div *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"
-                                                [ngStyle]="{'width.px':contentWidth}" style="display: inline-block;">
+                                                [ngStyle]="{'width.px':contentWidth}"
+                                                style="display: inline-block;height:fit-content;">
                                                 <div [froalaView]="page.content.text"></div>
                                             </div>
                                         </div>

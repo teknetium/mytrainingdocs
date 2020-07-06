@@ -78,9 +78,10 @@ export class HomeComponent extends BaseComponent implements OnInit {
   trainingStatusColor: string;
   utStatusColorHash = {
     upToDate: 'green',
-    pastDue: 'red',
-    completed: 'blue'
+    pastDue: '#fee5e0',
+    completed: '#8df8fe'
   }
+
 
   constructor(
     private auth: AuthService,
@@ -121,6 +122,12 @@ export class HomeComponent extends BaseComponent implements OnInit {
       }
 
       this.uidUTHash = uidUTHash;
+      let uidList = Object.keys(this.uidUTHash);
+      for (let uid in uidList) {
+        if (this.uidUTHash[uid].status === 'pastDue') {
+          this.userService.setUserStatusPastDue(uid);
+        }
+      }
     });
     this.sessionLog$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(sessionLog => {
       if (!sessionLog) {

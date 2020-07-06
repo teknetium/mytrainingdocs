@@ -32,3 +32,15 @@
     color: blue;
     background-color: #f4f4f4;
 }
+
+.completed {
+    background-color: #8df8fe;
+    border: 1px solid blue;
+    border-radius: 5px;
+}
+
+.pastDue {
+    background-color: #feefe0;
+    border: 1px solid red;
+    border-radius: 5px;
+}

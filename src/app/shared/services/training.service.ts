@@ -168,6 +168,10 @@ export class TrainingService {
     return this.assessmentItemsBS$.asObservable();
   }
 
+  getTraining(tid: string): TrainingModel {
+    return this.allTrainingHash[tid];
+  }
+
   addAssessmentItems(items: AssessmentItem[]): void {
     let newItems = false;
     for (let newItem of items) {
@@ -327,7 +331,7 @@ export class TrainingService {
     }
     const newTraining = <TrainingModel>{
       _id: String(baseId),
-      type: 'online',
+      type: 'onetime',
       category: '',
       subcategory: '',
       versions: [],
@@ -348,7 +352,9 @@ export class TrainingService {
       interestList: [],
       shared: false,
       isDirty: false,
-      useFinalAssessment: false
+      useFinalAssessment: false,
+      notifySchedule: [],
+      expirationDate: 0
     };
 
     let newTrainingVersionObj: TrainingVersion = {

@@ -11,6 +11,7 @@
         <tr>
           <th nzShowExpand></th>
           <th nzShowSort>State</th>
+          <th nzShowSort>Type</th>
           <th nzShowSort>Title</th>
           <th nzShowSort>Category</th>
           <th nzShowSort>Subcategory</th>
@@ -24,13 +25,20 @@
         <ng-template ngFor let-data [ngForOf]="nestedTable.data">
           <tr style="font-size:12px;background-color: white;line-height:10px;">
             <td nzShowExpand [(nzExpand)]="data.expand" nz-tooltip nzTooltipTitle="Show Version History"></td>
-            <td style="vertical-align: middle;">
+            <td style="width:3%;">
               <i *ngIf="data.status === 'unlocked'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
-                style="display:inline-block;font-size:20px;vertical-align: middle;" nz-tooltip
+                style="display:inline-block;font-size:16px;vertical-align: middle;" nz-tooltip
                 nzTooltipTitle="This training is being edited." [nzTwotoneColor]="'#52c41a'"></i>
               <i *ngIf="data.status === 'locked'" nz-icon nzType="lock" [nzTheme]="'twotone'"
-                style="display:inline-block;font-size:20px;vertical-align: middle;" [nzTwotoneColor]="'red'" nz-tooltip
+                style="display:inline-block;font-size:16px;vertical-align: middle;" [nzTwotoneColor]="'red'" nz-tooltip
                 nzTooltipTitle="This training is locked."></i>
+            </td>
+            <td style="width:3%;">
+              <i *ngIf="data.type === 'onetime'" class="fad fa-diploma"
+                style="font-size:16px;vertical-align: middle;" nz-tooltip
+                nzTooltipTitle="One Time Training"></i>
+              <i *ngIf="data.type === 'recurring'" class="fad fa-award" style="font-size:16px;vertical-align: middle;" nz-tooltip
+                nzTooltipTitle="Recurring Training"></i>
             </td>
             <td>
               <i [ngClass]="data.iconClass" style="font-size:22px;margin-right:10px;vertical-align: middle;"

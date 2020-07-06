@@ -4,7 +4,7 @@ import { SafeResourceUrl } from '@angular/platform-browser';
 
 export interface TrainingModel {
   _id: string,
-  type: 'online' | 'system',
+  type: 'recurring' | 'onetime',
   versions: TrainingVersion[],
   category: string,
   subcategory: string,
@@ -24,6 +24,8 @@ export interface TrainingModel {
   interestList: string[],
   shared: boolean,
   isDirty: boolean,
+  notifySchedule: number[],
+  expirationDate: number,
   useFinalAssessment: boolean
 }
 export interface TrainingIdHash {
