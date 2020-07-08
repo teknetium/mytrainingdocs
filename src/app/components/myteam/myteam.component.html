@@ -131,14 +131,14 @@
                                 [ngStyle]="{'color': userTrainingStatusColorHash[user.trainingStatus]}" nz-tooltip
                                 [nzTooltipTitle]=""></i>&nbsp;
                             <span style="display:inline-block;">{{ user.firstName }} {{ user.lastName }} </span>&nbsp;
-                            <span *ngFor="let ut of uidUTHash[user._id]" style="float:right;" nz-tooltip
+                            <div *ngFor="let ut of uidUTHash[user._id]" style="float:right;margin-left:3px;" nz-tooltip
                                 [nzTooltipTitle]="allTrainingIdHash[ut.tid].title"
                                 [ngClass]="{'displayNone': (!showUpToDateTrainings && ut.status === 'upToDate') || (!showCompletedTrainings && ut.status === 'completed') || (!showPastDueTrainings && ut.status === 'pastDue') || (!showOnetime && allTrainingIdHash[ut.tid].type === 'onetime') || (!showRecurring && allTrainingIdHash[ut.tid].type === 'recurring')}">
                                 <i [ngClass]="allTrainingIdHash[ut.tid].iconClass"
-                                    style="display:inline-block;font-size:16px;margin-right:5px;vertical-align: middle;"
+                                    style="font-size:16px;text-align: center;vertical-align: middle;"
                                     [ngStyle]="{'color': allTrainingIdHash[ut.tid].iconColor}">
                                 </i>
-                            </span>
+                            </div>
                         </div>
                         <div style="cursor:pointer;width:100%;">
                             <div *ngFor="let user of myGroup"
@@ -157,10 +157,10 @@
                                     <nz-badge *ngIf="user.userStatus === 'pending'" nzColor="gold" nz-tooltip
                                         nzTooltipTitle="User Account Pending" style="float:left;margin:2px 4px 0 0;;">
                                     </nz-badge>
-                                    <div *ngFor="let ut of uidUTHash[user._id]" style="float:right;"
-                                        [ngClass]="{'displayNone': (!showUpToDateTrainings && ut.status === 'upToDate') || (!showCompletedTrainings && ut.status === 'completed') || (!showPastDueTrainings && ut.status === 'pastDue') || (!showOnetime && allTrainingIdHash[ut.tid].type === 'onetime') || (!showRecurring && allTrainingIdHash[ut.tid].type === 'recurring')}">
+                                    <div *ngFor="let ut of uidUTHash[user._id]" style="float:right;margin-left:3px;"
+                                        [ngClass]="{'displayNone': (!showUpToDateTrainings && ut.status === 'upToDate') || (!showCompletedTrainings && ut.status === 'completed') || (!showPastDueTrainings && ut.status === 'pastDue') || (!showOnetime && allTrainingIdHash[ut.tid].type === 'onetime') || (!showRecurring && allTrainingIdHash[ut.tid].type === 'recurring') }">
                                         <i [ngClass]="allTrainingIdHash[ut.tid].iconClass"
-                                            style="font-size:16px;margin:5px 4px 0 0;" nz-tooltip
+                                            style="font-size:16px;text-align: center;vertical-align: middle;" nz-tooltip
                                             [nzTooltipTitle]="allTrainingIdHash[ut.tid].title"
                                             [ngStyle]="{'color': allTrainingIdHash[ut.tid].iconColor}">
                                         </i>
@@ -216,6 +216,7 @@
                                         style="padding:10px 20px;width:100%;"
                                         [ngClass]="{'selected-training': selectedTrainingId === training._id}"
                                         (click)="selectedTrainingId = training._id">
+                                        <!--
                                         <i *ngIf="allTrainingIdHash[training._id].status === 'unlocked'" nz-icon
                                             nzType="unlock" [nzTheme]="'twotone'"
                                             style="margin-right:10px;display:inline-block;font-size:12px;vertical-align: middle;"
@@ -224,6 +225,7 @@
                                             nzType="lock" [nzTheme]="'twotone'"
                                             style="margin-right:10px;display:inline-block;font-size:12px;vertical-align: middle;"
                                             [nzTwotoneColor]="'red'"></i>
+                                            -->
 
                                         <i [ngClass]="allTrainingIdHash[training._id].iconClass"
                                             style="display:inline-block;font-size:20px;margin-right:10px;vertical-align: middle;"

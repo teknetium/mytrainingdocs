@@ -187,6 +187,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   @Input() trainingStatus = 'unlocked';
   @Input() trainingId = null;
   @Input() production = 'false';
+  @Input() version = '';
   @Input() currentUT: UserTrainingModel = null;
   @Output() assessmentResult = new EventEmitter<string>();
   pageFileHash = {};
@@ -786,7 +787,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       majorNum++;
       minorNum = 0;
       patchNum = 0;
-      this.resetTrainingStatus();
     } else if (this.changeLevel === 'minor') {
       minorNum++;
       patchNum = 0;
@@ -833,14 +833,20 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       */
       for (let userId of this.assignableUsers) {
         if (this.myTeamHash[userId].jobTitle === this.selectedTraining.jobTitle) {
-          this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id);
-          this.assignedFromJobTitle.push(userId);
+          if (this.selectedTraining.versions.length > 1) {
+            this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, this.selectedTraining.versions[0].version);
+            this.assignedFromJobTitle.push(userId);
+          }
         }
       }
       if (this.assignedFromJobTitle.length > 0) {
         this.assignedFromJobTitleDialogIsVisible = true;
       }
     }
+    if (this.changeLevel === 'major') {
+      this.resetTrainingStatus();
+    }
+
   }
 
 
@@ -873,7 +879,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       if (this.selectedTraining.jobTitle) {
         for (let userId of this.assignableUsers) {
           if (this.myTeamHash[userId].jobTitle === this.selectedTraining.jobTitle) {
-            this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id);
+            this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, '1_0_0');
             this.assignedFromJobTitle.push(userId);
           }
         }
@@ -910,7 +916,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
 
   resetTrainingStatus() {
-    this.userTrainingService.resetUserTrainingStatus(this.selectedTraining._id);
+    this.userTrainingService.resetUserTrainingStatus(this.selectedTraining._id, this.selectedTraining.versions[0].version);
     this.subject = 'Urgent: Must retake a training'
     this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated and you are required to retake it.";
     for (let user of this.assignedToUsers) {
@@ -1202,6 +1208,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
   */
   saveTraining(reload: boolean) {
+    if (this.production === 'true') {
+      return;
+    }
     if (this.selectedTraining.teamId === 'mytrainingdocs') {
       return;
     }
@@ -1217,7 +1226,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   confirmAssignmentToUser() {
     this.showAssignToUserDialog = false;
-    this.userTrainingService.assignTraining(this.assignToUser._id, this.selectedTraining._id, this.authenticatedUser._id);
+    this.userTrainingService.assignTraining(this.assignToUser._id, this.selectedTraining._id, this.authenticatedUser._id, this.selectedTraining.versions[0].version);
     this.userTrainingService.getUTForTraining(this.selectedTraining._id);
   }
 

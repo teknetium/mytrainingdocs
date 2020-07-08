@@ -5,6 +5,7 @@
             <tr style="font-size:12px;">
                 <th>Status</th>
                 <th style="padding-left:40px;">Title</th>
+                <th style="">Version</th>
                 <th style="padding-left:10px;">Time (mm:ss)</th>
                 <th style="padding-left:10px;">Due Date</th>
                 <th style="padding-left:10px;">Date Completed</th>
@@ -18,7 +19,7 @@
                     <i nz-icon [nzType]="statusIconHash[userTraining.status].icon" [nzTheme]="'twotone'"
                         [nzTwotoneColor]="statusIconHash[userTraining.status].color" style="font-size:18px;"></i>
                 </td>
-                <td style="width:35%;">
+                <td style="">
                     <!--
                     <i *ngIf="trainingIdHash[userTraining.tid].status === 'unlocked' && production === 'off'" nz-icon nzType="unlock"
                         [nzTheme]="'twotone'"
@@ -38,6 +39,9 @@
                     </i>
                     <span style="margin-left:10px;">{{ trainingIdHash[userTraining.tid].title }}</span>
                 </td>
+                <td style="">
+                    {{ versionFormatter(userTraining.trainingVersion) }}
+                </td>
                 <td style="width:9%;">
                     {{ timeFormat(userTraining.timeToDate) }}
                 </td>
@@ -56,7 +60,7 @@
                     &nbsp;&nbsp;
                 </td>
                 <td style="width:13%;">
-                    <div class="action" (click)="viewTraining(userTraining._id, userTraining.tid)" nz-tooltip
+                    <div class="action" (click)="viewTraining(userTraining._id, userTraining.tid, userTraining.trainingVersion)" nz-tooltip
                         nzTooltipTitle="Play Training">
                         <i nz-icon [nzType]="'play-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
                             style="font-size:18px;"></i>

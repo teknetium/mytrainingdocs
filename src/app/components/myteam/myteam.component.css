@@ -179,3 +179,11 @@
     padding:0 3px;
     border-radius:4px;
 }
+
+.completed {
+    border-bottom: 2px solid blue;
+}
+
+.pastDue {
+    border-bottom: 2px solid red;
+}

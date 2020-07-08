@@ -120,16 +120,16 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
     this.showUserTrainingModal = false;
     this.selectedTrainingId = null;
   }
-
+/*
   handleAssignUserTraining() {
     if (!this.selectedTrainingId || this.assignableTrainings.length === 0) {
       this.showUserTrainingModal = false;
       return;
     }
-    this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId, this.authenticatedUser._id);
+    this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId, this.authenticatedUser._id, );
     this.showUserTrainingModal = false;
     this.assignableTrainings.splice(this.assignableTrainings.indexOf(this.selectedTrainingId), 1);
     this.selectedTrainingId = null;
   }
-
+*/
 }

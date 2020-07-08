@@ -222,7 +222,9 @@ export class TrainingService {
     let trainings: TrainingModel[] = Object.values(this.allTrainingHash);
     for (const training of trainings) {
       if (training.jobTitle === jobTitle) {
-        this.userTrainingService.assignTraining(userId, training._id, teamId);
+        if (training.versions.length > 1) {
+          this.userTrainingService.assignTraining(userId, training._id, teamId, training.versions[0].version);
+        }
       }
     }
   }
@@ -280,6 +282,12 @@ export class TrainingService {
     });
   }
 
+  selectTrainingForProduction(tid: string, version: string) {
+    this.getTrainingArchive$(tid + '-' + version).subscribe(trainingArchive => {
+      trainingArchive._id = trainingArchive._id.substring(0, trainingArchive._id.indexOf('-'));
+      this.selectedTrainingBS$.next(trainingArchive);
+    })
+  }
 
   selectTraining(tid: string): void {
     if (!tid) {

@@ -82,7 +82,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   browserInnerWidth;
   contentHeight;
   contentWidth;
-  loadNewUser = true;
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
@@ -269,7 +268,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           if (tids.includes(training._id)) {
             continue;
           } else {
-            if (training.versions.length === 0) {
+            if (training.versions.length < 2) {
               continue;
             }
             this.assignableTrainings.push(training);
@@ -512,6 +511,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
     this.mailService.sendMessage(this.message);
     this.userPanelVisible = false;
+    this.selectUser(this.newTeamMember._id);
     //    this.cd.detectChanges();
   }
 
@@ -521,9 +521,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   selectUser(userId) {
-    this.loadNewUser = true;
     this.userService.selectUser(userId);
-    this.loadNewUser = false;
   }
 
   selectSupervisor() {
@@ -568,7 +566,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.showUserTrainingModal = false;
       return;
     }
-    this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId, this.authenticatedUser._id);
+    this.userTrainingService.assignTraining(this.userIdSelected,
+      this.selectedTrainingId,
+      this.authenticatedUser._id,
+      this.allTrainingIdHash[this.selectedTrainingId].versions[0].version);
+    
     this.showUserTrainingModal = false;
     this.assignableTrainings.splice(this.assignableTrainings.indexOf(this.selectedTrainingId), 1);
     this.selectedTrainingId = null;

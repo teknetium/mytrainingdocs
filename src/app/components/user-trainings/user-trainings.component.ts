@@ -15,7 +15,7 @@ import { BaseComponent } from '../base.component';
   selector: 'app-user-trainings',
   templateUrl: './user-trainings.component.html',
   styleUrls: ['./user-trainings.component.css'],
-//  changeDetection: ChangeDetectionStrategy.OnPush,
+  //  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTrainingsComponent extends BaseComponent implements OnInit {
 
@@ -116,11 +116,24 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       if (!userTrainings) {
         return;
       }
-      this.userTrainings = userTrainings;
-      for (let userTraining of userTrainings) {
-        this.utIdHash[userTraining._id] = userTraining;
+      let userId;
+      let pastDueFound = false;
+      if (userTrainings.length > 0) {
+        userId = userTrainings[0].uid;
+        this.userTrainings = userTrainings;
+        for (let userTraining of userTrainings) {
+          this.utIdHash[userTraining._id] = userTraining;
+          if (userTraining.status === 'pastDue') {
+            pastDueFound = true;
+            break;
+          }
+        }
+        if (pastDueFound) {
+          this.userService.setUserStatusPastDue(userId);
+        } else {
+          this.userService.setUserStatusUpToDate(userId);
+        }
       }
-//      this.cd.detectChanges();
     });
 
     this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
@@ -132,7 +145,6 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       this.selectedUser = user;
       this.userTrainingService.selectUser(user._id);
 
-      //      this.userTrainingService.loadTrainingsForUser(user._id);
     });
     /*  
         this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
@@ -149,104 +161,130 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     */
   }
 
-  timeFormat(ms): string {
-    let m = String(Math.floor(ms / 60000)).padStart(2, '0');
-    let s = String(Math.floor(((ms % 3600000) % 60000) / 1000)).padStart(2, '0');
-    return m + ':' + s;
-  }
+timeFormat(ms): string {
+  let m = String(Math.floor(ms / 60000)).padStart(2, '0');
+  let s = String(Math.floor(((ms % 3600000) % 60000) / 1000)).padStart(2, '0');
+  return m + ':' + s;
+}
 
-  viewTraining(utid, tid) {
-    if (this.logSession === 'on') {
-      if (this.selectedUser.userType === 'supervisor') {
-        if (!this.selectedUser.teamId) {
-          this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser._id);
-        } else {
-          this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser.teamId);
-        }
+versionFormatter(version) {
+  if (!version) {
+    return;
+  }
+  let re = /_/g;
+  return version.replace(re, '.');
+}
+
+viewTraining(utid, tid, version) {
+  if (this.logSession === 'on') {
+    if (this.selectedUser.userType === 'supervisor') {
+      if (!this.selectedUser.teamId) {
+        this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser._id);
       } else {
         this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser.teamId);
       }
-    }
-    this.currentTrainingId = tid;
-    this.currentUserTraining = utid;
-    this.trainingIsVisible = true;
-    this.trainingService.selectTraining(tid);
-  }
-
-  confirmDeleteUserTraining(ut) {
-    this.userTrainingService.deleteUserTraining(ut._id, ut.uid);
-    this.userTrainingService.selectUser(ut.uid);
-    this.trainingIsVisible = false;
-  }
-
-  handleMarkAsCompletedCancel() {
-    this.markCompletedModalIsVisible = false;
-  }
-
-  markAsComplete(utid: string) {
-    this.currentUserTraining = utid;
-    this.markCompletedModalIsVisible = true;
-  }
-
-  updateDueDate(event, ut) {
-    let newDueDate = new Date(event).getTime();
-    console.log('updateDueDate', ut, this.userTrainings);
-    if (newDueDate < new Date().getTime()) {
-      ut.status = 'pastDue';
-      this.userService.setUserStatusPastDue(ut.uid);
     } else {
-      ut.status = 'upToDate';
-      let anotherPastDueFound = false;
-      if ((this.userTrainings && this.userTrainings.length > 0) && (this.userTrainings[0].uid === ut.uid)) {
-        for (let userTraining of this.userTrainings) {
-          if (userTraining._id !== ut._id) {
-            if (userTraining.status === 'pastDue') {
-              anotherPastDueFound = true;
-              break;
-            }
-          }
-        }
-        if (anotherPastDueFound) {
-          this.userService.setUserStatusPastDue(ut.uid);
-        } else {
-          this.userService.setUserStatusUpToDate(ut.uid);
+      this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser.teamId);
+    }
+  }
+  this.currentTrainingId = tid;
+  this.currentUserTraining = utid;
+  this.trainingIsVisible = true;
+  this.trainingService.selectTrainingForProduction(tid, version);
+}
+
+confirmDeleteUserTraining(ut) {
+  this.userTrainingService.deleteUserTraining(ut._id, ut.uid);
+  this.userTrainingService.selectUser(ut.uid);
+
+  let anotherPastDueFound = false;
+  if ((this.userTrainings && this.userTrainings.length > 0) && (this.userTrainings[0].uid === ut.uid)) {
+    for (let userTraining of this.userTrainings) {
+      if (userTraining._id !== ut._id) {
+        if (userTraining.status === 'pastDue') {
+          anotherPastDueFound = true;
+          break;
         }
       }
     }
-    ut.dueDate = newDueDate;
-    this.userTrainingService.saveUserTraining(ut);
-    this.userTrainingService.getUTForUser(ut.uid);
-  }
-
-  markTrainingAsComplete(selectedTraining: TrainingModel) {
-    if (this.comment === '') {
-      return;
+    if (anotherPastDueFound) {
+      this.userService.setUserStatusPastDue(ut.uid);
+    } else {
+      this.userService.setUserStatusUpToDate(ut.uid);
     }
-    let comment = {
-      _id: String(new Date().getTime()),
-      tid: this.currentTrainingId,
-      version: this.trainingIdHash[this.utIdHash[this.currentUserTraining].tid].versions[0].version,
-      author: this.selectedUser._id,
-      text: this.comment,
-      rating: this.rating,
-      date: new Date().getTime()
+  }
+
+  this.trainingIsVisible = false;
+}
+
+handleMarkAsCompletedCancel() {
+  this.markCompletedModalIsVisible = false;
+}
+
+markAsComplete(utid: string) {
+  this.currentUserTraining = utid;
+  this.markCompletedModalIsVisible = true;
+}
+
+updateDueDate(event, ut) {
+  let newDueDate = new Date(event).getTime();
+  console.log('updateDueDate', ut, this.userTrainings);
+  if (newDueDate < new Date().getTime()) {
+    ut.status = 'pastDue';
+    this.userService.setUserStatusPastDue(ut.uid);
+  } else {
+    ut.status = 'upToDate';
+    let anotherPastDueFound = false;
+    if ((this.userTrainings && this.userTrainings.length > 0) && (this.userTrainings[0].uid === ut.uid)) {
+      for (let userTraining of this.userTrainings) {
+        if (userTraining._id !== ut._id) {
+          if (userTraining.status === 'pastDue') {
+            anotherPastDueFound = true;
+            break;
+          }
+        }
+      }
+      if (anotherPastDueFound) {
+        this.userService.setUserStatusPastDue(ut.uid);
+      } else {
+        this.userService.setUserStatusUpToDate(ut.uid);
+      }
     }
-    this.trainingIsVisible = false;
-    this.markCompletedModalIsVisible = false;
-    this.utIdHash[this.currentUserTraining].dateCompleted = new Date().getTime();
-    this.utIdHash[this.currentUserTraining].status = 'completed';
-    this.userTrainingService.saveUserTraining(this.utIdHash[this.currentUserTraining]);
-    this.commentService.saveTrainingComment(comment);
   }
+  ut.dueDate = newDueDate;
+  this.userTrainingService.saveUserTraining(ut);
+  this.userTrainingService.getUTForUser(ut.uid);
+}
 
-  ratingChanged(event) {
-    this.rating = event;
+markTrainingAsComplete(selectedTraining: TrainingModel) {
+  if (this.comment === '') {
+    return;
   }
-
-  processAssessmentResult(event: string) {
-
-    this.markAsComplete(event);
-
-    this.trainingIsVisible = false;
+  let comment = {
+    _id: String(new Date().getTime()),
+    tid: this.currentTrainingId,
+    version: this.trainingIdHash[this.utIdHash[this.currentUserTraining].tid].versions[0].version,
+    author: this.selectedUser._id,
+    text: this.comment,
+    rating: this.rating,
+    date: new Date().getTime()
   }
+  this.trainingIsVisible = false;
+  this.markCompletedModalIsVisible = false;
+  this.utIdHash[this.currentUserTraining].dateCompleted = new Date().getTime();
+  this.utIdHash[this.currentUserTraining].status = 'completed';
+  this.userTrainingService.saveUserTraining(this.utIdHash[this.currentUserTraining]);
+  this.commentService.saveTrainingComment(comment);
+}
+
+ratingChanged(event) {
+  this.rating = event;
+}
+
+processAssessmentResult(event: string) {
+
+  this.markAsComplete(event);
+
+  this.trainingIsVisible = false;
+}
 }

@@ -72,7 +72,7 @@ export class UserService {
           this.logLoginEvent();
           if (this.authenticatedUser.userType === 'supervisor') {
             this.teamId = this.authenticatedUser.uid;
-            this.loadData(this.teamId);
+            this.loadData(this.teamId, null);
           }
 
         },
@@ -128,7 +128,7 @@ export class UserService {
                 }
                 this.authenticatedUserBS$.next(this.authenticatedUser);
                 this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
-                this.loadData(data._id);
+                this.loadData(data._id, null);
               });
 
             }
@@ -175,7 +175,7 @@ export class UserService {
       })
     }
   */
-  loadData(teamId) {
+  loadData(teamId, userIdToSelect) {
     this.getTeam$(teamId).subscribe((userList) => {
       if (!userList) {
         return;
@@ -202,6 +202,9 @@ export class UserService {
 
       console.log('UserService:loadData', userList, this.authenticatedUser._id, this.myTeamIdHash);
       this.myTeamIdHashBS$.next(this.myTeamIdHash);
+      if (userIdToSelect) {
+        this.selectUser(userIdToSelect);
+      }
     });
 
   }
@@ -224,13 +227,13 @@ export class UserService {
       this.myTeamBS$.next(this.myTeam);
       */
 
-      this.loadData(this.authenticatedUser._id);
+      this.loadData(this.authenticatedUser._id, data._id);
     })
   }
 
   deleteUser(id: string) {
     this.deleteUser$(id).subscribe(data => {
-      this.loadData(this.teamId);
+      this.loadData(this.teamId, null);
     });
   }
 
@@ -254,13 +257,13 @@ export class UserService {
     this.action = 'save';
     this.putUser$(user).subscribe((updatedUser) => {
       console.log('updateUser', updatedUser);
-      this.loadData(this.teamId);
+      this.loadData(this.teamId, null);
     });
   }
 
   statusCheck() {
     this.statusCheck$(this.authenticatedUser._id).subscribe(statusObj => {
-      this.loadData(this.authenticatedUser._id);
+      this.loadData(this.authenticatedUser._id, null);
     })
   }
 

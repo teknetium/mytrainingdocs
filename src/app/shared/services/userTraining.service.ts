@@ -40,6 +40,8 @@ export class UserTrainingService {
     this.getUTForUser$(id).subscribe(userTrainings => {
       console.log('userTrainingService: ', userTrainings);
       this.userTrainings$BS.next(userTrainings);
+      this.uidUTHash[id] = userTrainings;
+      this.uidUTHashBS$.next(this.uidUTHash);
     })
   }
 
@@ -148,7 +150,7 @@ export class UserTrainingService {
     return 'upToDate';
   }
 
-  resetUserTrainingStatus(tid) {
+  resetUserTrainingStatus(tid, version) {
     this.getUTForTraining$(tid).subscribe(utList => {
       for (let ut of utList) {
         // for onetime trainings, the expirationDate property holds the number of days after assignment that the training is due
@@ -156,6 +158,8 @@ export class UserTrainingService {
           ut.status = 'upToDate';
           ut.dateCompleted = 0;
           ut.dueDate = new Date().getTime() + 604800000;
+          ut.trainingVersion = version;
+          ut.assessmentResponses = [];
           this.saveUserTraining(ut);
         }
       }
@@ -209,7 +213,7 @@ export class UserTrainingService {
 
 
 
-  assignTraining(uid: string, tid: string, teamId: string) {
+  assignTraining(uid: string, tid: string, teamId: string, version: string) {
     console.log('assignTraining', teamId);
     const userTraining = <UserTrainingModel>{
       _id: String(new Date().getTime()),
@@ -217,7 +221,7 @@ export class UserTrainingService {
       uid: uid,
       teamId: teamId,
       status: 'upToDate',
-      trainingVersion: '',
+      trainingVersion: version,
       dueDate: new Date().getTime() + 1209600000,
       dateCompleted: 0,
       timeToDate: 0,

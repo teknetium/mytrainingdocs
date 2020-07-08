@@ -148,7 +148,6 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
     }
     let re = /_/g;
     return version.replace(re, '.');
-    version
   }
 
   newTraining() {
