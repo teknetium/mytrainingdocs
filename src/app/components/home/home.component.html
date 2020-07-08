@@ -26,11 +26,13 @@
                 </div>
                 <div style="float:right;padding-top:7px;">
                     <div style="float:right;margin-left:15px;padding-top:4px;">
-                        <div class="pastDue" style="float:left;width:12px;height:12px;margin-right:5px;margin-top:2px;"></div>
+                        <div class="pastDue" style="float:left;width:12px;height:12px;margin-right:5px;margin-top:2px;">
+                        </div>
                         <span style="vertical-align: top;font-size:12px;">Past Due</span>
                     </div>
                     <div style="float:right;margin-left:15px;padding-top:4px;">
-                        <div class="completed" style="float:left;width:12px;height:12px;margin-right:5px;margin-top:2px;"></div>
+                        <div class="completed"
+                            style="float:left;width:12px;height:12px;margin-right:5px;margin-top:2px;"></div>
                         <span style="vertical-align: top;font-size:12px;">Completed</span>
                     </div>
                     <div style="float:right;margin-left:15px;">
@@ -52,7 +54,7 @@
                 <nz-list nzItemLayout="vertical" nzSize="small" style="width:100%;">
                     <nz-list-item *ngFor="let user of myTeam" (click)="selectUser(user._id)" class="list-item"
                         style="width:100%;cursor:pointer;">
-                        <div *ngIf="userStatHash[user._id]" style="width:100%;vertical-align: text-bottom;">
+                        <div style="width:100%;vertical-align: text-bottom;">
                             <i [ngClass]="userTypeIconHash[user.userType]"
                                 style="display:inline-block;font-size:20px;width:10%;justify-content: left;vertical-align: middle;"
                                 [ngStyle]="{'color': trainingStatusColorHash[user.trainingStatus]}">
@@ -63,24 +65,27 @@
                             </div>
                             <div
                                 style="display:inline-block;width:fit-content;width:60%;justify-content: right;vertical-align: text-bottom;">
-                                <span *ngFor="let tid of userStatHash[user._id].trainingIdList "
-                                    style="float:right;margin-left:10px;padding:5px; " nz-tooltip
-                                    [nzTooltipTitle]="teamTrainingHash[tid].title" [ngClass]="{'completed': userStatHash[user._id].tidUTHash[tid].status === 'completed', 'pastDue': userStatHash[user._id].tidUTHash[tid].status === 'pastDue'}">
-                                    <i [ngClass]="teamTrainingHash[tid].iconClass"
-                                        style="display:inline-block;font-size:22px;vertical-align: middle;"
-                                        [ngStyle]="{'color': teamTrainingHash[tid].iconColor}">
-                                    </i>
-                                    <i *ngIf="teamTrainingHash[tid].type === 'recurring'" class="fad fa-award"
-                                        style="font-size:14px;vertical-align: super;top:-3px;margin-left:3px;">
-                                    </i>
-                                    <!--
+                                <div *ngFor="let ut of uidUTHash[user._id]">
+                                    <span *ngIf="teamTrainingHash[ut.tid]"
+                                        style="float:right;margin-left:10px;padding:5px; " nz-tooltip
+                                        [nzTooltipTitle]="teamTrainingHash[ut.tid].title"
+                                        [ngClass]="{'completed': ut.status === 'completed', 'pastDue': ut.status === 'pastDue'}">
+                                        <i [ngClass]="teamTrainingHash[ut.tid].iconClass"
+                                            style="display:inline-block;font-size:22px;vertical-align: middle;"
+                                            [ngStyle]="{'color': teamTrainingHash[ut.tid].iconColor}">
+                                        </i>
+                                        <i *ngIf="teamTrainingHash[ut.tid].type === 'recurring'" class="fad fa-award"
+                                            style="font-size:14px;vertical-align: super;top:-3px;margin-left:3px;">
+                                        </i>
+                                        <!--
                                     <nz-badge
                                         *ngIf="userStatHash[user._id].tidUTHash[tid] && userStatHash[user._id].tidUTHash[tid].status !== 'upToDate'"
                                         [nzColor]="utStatusColorHash[userStatHash[user._id].tidUTHash[tid].status]"
                                         style="margin-left:3px;vertical-align: sub;top:10px;margin-left:3px;">
                                     </nz-badge>
                                     -->
-                                </span>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </nz-list-item>

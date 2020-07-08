@@ -32,13 +32,13 @@
                                     <div class="filter-item"
                                         (click)="toggleFilter('up-to-date')"
                                         [ngClass]="{'showing': showUpToDate, 'not-showing': !showUpToDate}" nz-tooltip
-                                        nzTooltipTitle="In Progress">
+                                        nzTooltipTitle="Users who have NO past due trainings">
                                         <i class="fad fa-user" style="color:#75c140"></i>
                                     </div>
                                     <div class="filter-item"
                                         (click)="toggleFilter('past-due')"
                                         [ngClass]="{'showing': showPastDue, 'not-showing': !showPastDue}" nz-tooltip
-                                        nzTooltipTitle="Users with Past Due training status">
+                                        nzTooltipTitle="Users with at least one Past Due training">
                                         <i class="fad fa-user" style="color:red;"></i>
                                     </div>
                                 </div>

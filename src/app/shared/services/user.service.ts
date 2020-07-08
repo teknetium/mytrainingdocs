@@ -72,10 +72,8 @@ export class UserService {
           this.logLoginEvent();
           if (this.authenticatedUser.userType === 'supervisor') {
             this.teamId = this.authenticatedUser.uid;
-          } else {
-            this.teamId = this.authenticatedUser.teamId;
+            this.loadData(this.teamId);
           }
-          this.loadData(this.teamId);
 
         },
         err => {
@@ -187,12 +185,14 @@ export class UserService {
       this.myTeamIdHash = {};
       for (let user of userList) {
         this.myTeamIdHash[user._id] = user;
-        this.userTrainingService.initUserTrainingsForUser(user._id);
+//        this.userTrainingService.initUserTrainingsForUser(user._id);
+
         if (user.jobTitle) {
           this.jobTitleService.addJobTitle(user.jobTitle);
         }
       }
 
+      this.userTrainingService.getUTForTeam(teamId);
 
       this.myTeamIdHash[this.authenticatedUser._id] = this.authenticatedUser;
       this.myTeam.push(this.authenticatedUser);
@@ -208,6 +208,12 @@ export class UserService {
 
   setUserStatusPastDue(uid: string) {
     this.myTeamIdHash[uid].trainingStatus = 'pastDue';
+    console.log('setUserStatusPastDue', this.myTeamIdHash[uid]);
+    this.updateUser(this.myTeamIdHash[uid], true);
+  }
+  setUserStatusUpToDate(uid: string) {
+    this.myTeamIdHash[uid].trainingStatus = 'upToDate';
+    console.log('setUserStatusUpToDate', this.myTeamIdHash[uid]);
     this.updateUser(this.myTeamIdHash[uid], true);
   }
 
@@ -249,9 +255,6 @@ export class UserService {
     this.putUser$(user).subscribe((updatedUser) => {
       console.log('updateUser', updatedUser);
       this.loadData(this.teamId);
-      if (reload) {
-        this.authenticatedUserBS$.next(updatedUser);
-      }
     });
   }
 

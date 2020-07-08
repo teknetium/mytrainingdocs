@@ -35,7 +35,7 @@
             <p>The following users are responsible for this training:</p>
             <ul style="margin-left:100px;">
                 <li *ngFor="let user of assignedToUsers">
-                    {{ myTeamHash[user].firstName }}  {{ myTeamHash[user].lastName }}
+                    {{ myTeamHash[user].firstName }} {{ myTeamHash[user].lastName }}
                 </li>
             </ul>
         </div>
@@ -76,6 +76,9 @@
 
         <div [ngClass]="{'training-header': production === 'false', 'production-training-header': production === 'true'}"
             style="position:relative;">
+            <nz-modal [(nzVisible)]="showAssessmentAlert" nzTitle="Assessment Error" nzCancelDisabled="true"  (nzOnOk)="assessmentErrorOk()">
+                <p></p>
+            </nz-modal>
             <nz-modal [(nzVisible)]="messageDialogVisible" nzTitle="Email Interest List"
                 (nzOnCancel)="handleEmailInterestListCancel()" (nzOnOk)="emailInterestList()">
                 <div style="display:block;padding-top:5px;"
@@ -473,8 +476,8 @@
                     <label style="margin-bottom: 0;font-size:12px;color:#000000;">Valid Period</label>
                 </div>
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
-                    <nz-input-number [(ngModel)]="selectedTraining.expirationDate" [nzMin]="1" [nzMax]="36"
-                        [nzStep]="1" (ngModelChange)="configChanged($event, 'expirationDate')">
+                    <nz-input-number [(ngModel)]="selectedTraining.expirationDate" [nzMin]="1" [nzMax]="36" [nzStep]="1"
+                        (ngModelChange)="configChanged($event, 'expirationDate')">
                     </nz-input-number>
                     <span style="font-size:12px;">&nbsp;Months</span>
                 </div>
@@ -484,8 +487,8 @@
                     <label style="margin-bottom: 0;font-size:12px;color:#000000;">Due Date</label>
                 </div>
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
-                    <nz-input-number [(ngModel)]="selectedTraining.expirationDate" (ngModelChange)="configChanged($event, 'expirationDate')" [nzMin]="1" [nzMax]="30"
-                        [nzStep]="1">
+                    <nz-input-number [(ngModel)]="selectedTraining.expirationDate"
+                        (ngModelChange)="configChanged($event, 'expirationDate')" [nzMin]="1" [nzMax]="30" [nzStep]="1">
                     </nz-input-number>
                     <span style="font-size:12px;">&nbsp;Days from assignment</span>
                 </div>

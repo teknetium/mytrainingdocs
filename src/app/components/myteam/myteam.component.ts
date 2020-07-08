@@ -222,7 +222,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!newUser) {
         return;
       }
-      this.trainingService.assignTrainingsForJobTitle(newUser.jobTitle, newUser._id);
+      this.trainingService.assignTrainingsForJobTitle(newUser.jobTitle, newUser._id, newUser.teamId);
     });
     this.uidUTHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUTHash => {
       if (!uidUTHash) {
@@ -237,7 +237,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.myGroup = userList;
       this.myTeam = userList;
       for (let teamMember of this.myTeam) {
-        this.uidUTHash[teamMember._id] = this.userTrainingService.getUidUTList(teamMember._id);
+//        this.uidUTHash[teamMember._id] = this.userTrainingService.getUidUTList(teamMember._id);
       }
     });
 
@@ -382,7 +382,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
         this.newTeamMember.teamAdmin = false;
         this.handleAddUser();
-        this.trainingService.assignTrainingsForJobTitle(this.newTeamMember.jobTitle, this.newTeamMember._id);
+        this.trainingService.assignTrainingsForJobTitle(this.newTeamMember.jobTitle, this.newTeamMember._id, this.newTeamMember.teamId);
         this.newUsers = [{ firstName: '', lastName: '', email: '', jobTitle: '', supervisorName: '' }];
       }
       /*
@@ -568,14 +568,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.showUserTrainingModal = false;
       return;
     }
-    this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId);
+    this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId, this.authenticatedUser._id);
     this.showUserTrainingModal = false;
     this.assignableTrainings.splice(this.assignableTrainings.indexOf(this.selectedTrainingId), 1);
     this.selectedTrainingId = null;
-    this.userTrainingService.getUTForUser$(this.userIdSelected).subscribe(utList => {
-      this.uidUTHash[this.userIdSelected] = utList;
-      //      this.filterUsers();
-    })
+    this.userTrainingService.getUTForUser(this.userIdSelected);
   }
 
   onDragStart(event) {

@@ -327,6 +327,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   iFrameBorder = 1;
   introEditorHash = {};
   introHash = {};
+  showAssessmentAlert = false;
   
   constructor(
     private trainingService: TrainingService,
@@ -832,7 +833,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       */
       for (let userId of this.assignableUsers) {
         if (this.myTeamHash[userId].jobTitle === this.selectedTraining.jobTitle) {
-          this.userTrainingService.assignTraining(userId, this.selectedTraining._id);
+          this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id);
           this.assignedFromJobTitle.push(userId);
         }
       }
@@ -842,9 +843,15 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
   }
 
+
   saveNewVersion() {
     this.introEditorHash = {};
-    if (this.selectedTraining.versions.length === 1) {
+    if (this.selectedTraining.useFinalAssessment && (this.selectedTraining.pages[this.selectedTraining.pages.length - 1].type !== 'assessment' || !this.selectedTraining.pages[this.selectedTraining.pages.length - 1].content.assessment.isFinal)) {
+      console.log('saveNewVersion...Assessment Alert');
+      this.showAssessmentAlertConfirm();
+      return;
+    }
+      if (this.selectedTraining.versions.length === 1) {
 
       this.selectedTraining.status = 'locked';
       let newTrainingVersionObj: TrainingVersion = {
@@ -866,7 +873,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       if (this.selectedTraining.jobTitle) {
         for (let userId of this.assignableUsers) {
           if (this.myTeamHash[userId].jobTitle === this.selectedTraining.jobTitle) {
-            this.userTrainingService.assignTraining(userId, this.selectedTraining._id);
+            this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id);
             this.assignedFromJobTitle.push(userId);
           }
         }
@@ -1210,7 +1217,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   confirmAssignmentToUser() {
     this.showAssignToUserDialog = false;
-    this.userTrainingService.assignTraining(this.assignToUser._id, this.selectedTraining._id);
+    this.userTrainingService.assignTraining(this.assignToUser._id, this.selectedTraining._id, this.authenticatedUser._id);
     this.userTrainingService.getUTForTraining(this.selectedTraining._id);
   }
 
@@ -1233,6 +1240,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       nzOnOk: () => this.rollback(),
       nzCancelText: 'No',
       nzOnCancel: () => console.log('Cancel')
+    });
+  }
+  showAssessmentAlertConfirm(): void {
+    this.modalService.error({
+      nzTitle: 'Assesssment Error',
+      nzContent: 'When using assessments, the last page of the training must be an assessment marked as Final.'
     });
   }
   showChangeLog(): void {

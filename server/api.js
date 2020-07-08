@@ -94,7 +94,7 @@ module.exports = function(app, config) {
 
   const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const trainingListProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
-  const userTrainingListProjection = "_id tid uid status dueDate timeToDate dateCompleted assessmentResponses trainingVersion";
+  const userTrainingListProjection = "_id tid uid teamId status dueDate timeToDate dateCompleted assessmentResponses trainingVersion";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email teamAdmin orgAdmin appAdmin teamId org supervisorId profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
@@ -531,6 +531,22 @@ module.exports = function(app, config) {
       },
     );
   });
+  app.get("/api/usertraining/teamid/:teamId", (req, res) => {
+    UserTraining.find({ teamId: req.params.teamId },
+      userTrainingListProjection, (err, userTrainings) => {
+        let userTrainingsArr = [];
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        if (userTrainings) {
+          userTrainings.forEach(userTraining => {
+            userTrainingsArr.push(userTraining);
+          });
+        }
+        res.send(userTrainingsArr);
+      },
+    );
+  });
   app.get("/api/usertraining/tid/:trainingId", (req, res) => {
     UserTraining.find({ tid: req.params.trainingId },
       userTrainingListProjection, (err, userTrainings) => {
@@ -552,6 +568,7 @@ module.exports = function(app, config) {
       _id: req.body._id,
       tid: req.body.tid,
       uid: req.body.uid,
+      teamId: req.body.teamId,
       status: req.body.status,
       dueDate: req.body.dueDate,
       dateCompleted: req.body.dateCompleted,
@@ -577,6 +594,7 @@ module.exports = function(app, config) {
       userTraining._id = req.body._id;
       userTraining.tid = req.body.tid;
       userTraining.uid = req.body.uid;
+      userTraining.teamId = req.body.teamId;
       userTraining.status = req.body.status;
       userTraining.dueDate = req.body.dueDate;
       userTraining.dateCompleted = req.body.dateCompleted;

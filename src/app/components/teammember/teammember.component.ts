@@ -126,7 +126,7 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
       this.showUserTrainingModal = false;
       return;
     }
-    this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId);
+    this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId, this.authenticatedUser._id);
     this.showUserTrainingModal = false;
     this.assignableTrainings.splice(this.assignableTrainings.indexOf(this.selectedTrainingId), 1);
     this.selectedTrainingId = null;

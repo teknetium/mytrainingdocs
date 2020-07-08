@@ -50,6 +50,7 @@ export class UserTrainingService {
       for (let userTraining of utList) {
         this.allUserTrainingHash[userTraining._id] = userTraining;
       }
+      this.uidUTHashBS$.next(this.uidUTHash);
     });
   }
 
@@ -187,18 +188,34 @@ export class UserTrainingService {
           this.uidUTHash[uid] = Object.assign([], userTrainings);
           this.uidUTHashBS$.next(this.uidUTHash);
           for (let ut of userTrainings) {
-            this.allUserTrainingHash[ut.tid] = ut;
+            this.allUserTrainingHash[ut._id] = ut;
           }
         })
+  }
+  getUTForTeam(teamId: string) {
+    this.getUTForTeam$(teamId).subscribe(userTrainings => {
+      this.uidUTHash = {};
+      for (let ut of userTrainings) {
+        if (!this.uidUTHash[ut.uid]) {
+          this.uidUTHash[ut.uid] = new Array(ut);
+        } else {
+          this.uidUTHash[ut.uid].push(ut);
+        }
+        this.allUserTrainingHash[ut._id] = ut;
+      }
+      this.uidUTHashBS$.next(this.uidUTHash);
+    })
   }
 
 
 
-  assignTraining(uid: string, tid: string) {
+  assignTraining(uid: string, tid: string, teamId: string) {
+    console.log('assignTraining', teamId);
     const userTraining = <UserTrainingModel>{
       _id: String(new Date().getTime()),
       tid: tid,
       uid: uid,
+      teamId: teamId,
       status: 'upToDate',
       trainingVersion: '',
       dueDate: new Date().getTime() + 1209600000,
@@ -336,6 +353,15 @@ export class UserTrainingService {
   getUTForUser$(uid: string): Observable<UserTrainingModel[]> {
     return this.http
       .get<UserTrainingModel[]>(`${ENV.BASE_API}usertraining/uid/${uid}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  getUTForTeam$(teamId: string): Observable<UserTrainingModel[]> {
+    return this.http
+      .get<UserTrainingModel[]>(`${ENV.BASE_API}usertraining/teamid/${teamId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
       .pipe(

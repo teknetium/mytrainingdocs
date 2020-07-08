@@ -116,19 +116,33 @@ export class HomeComponent extends BaseComponent implements OnInit {
         this.startTour();
       }
     });
+
     this.uidUTHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUTHash => {
       if (!uidUTHash) {
         return;
       }
 
+      console.log('uidUTHash', uidUTHash);
+      let now = new Date().getTime();
       this.uidUTHash = uidUTHash;
       let uidList = Object.keys(this.uidUTHash);
-      for (let uid in uidList) {
-        if (this.uidUTHash[uid].status === 'pastDue') {
-          this.userService.setUserStatusPastDue(uid);
+      if (uidList && uidList.length > 0) {
+        for (let uid in uidList) {
+          if (this.uidUTHash[uid] && this.uidUTHash[uid].length > 0) {
+            for (let ut of this.uidUTHash[uid]) {
+              if (ut.dueDate < now) {
+                this.userService.setUserStatusPastDue(ut.uid);
+                break;
+              }
+            }
+            if (this.uidUTHash[uid].status === 'pastDue') {
+              this.userService.setUserStatusPastDue(uid);
+            }
+          }
         }
       }
     });
+
     this.sessionLog$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(sessionLog => {
       if (!sessionLog) {
         return;
@@ -141,60 +155,61 @@ export class HomeComponent extends BaseComponent implements OnInit {
       }
 
 
+
       this.authenticatedUser = user;
       if (this.authenticatedUser.userType !== 'supervisor') {
         this.userService.selectAuthenticatedUser();
       }
       if (this.authenticatedUser.userType === 'supervisor') {
-
+        this.userTrainingService.getUTForTeam(this.authenticatedUser._id);
         this.userTrainingService.getUTSessionsForTeam(this.authenticatedUser._id);
-        this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamIdHash => {
-          if (!myTeamIdHash) {
-            return;
-          }
-          this.myTeamIdHash = myTeamIdHash;
-          this.onDateRangeChange(this.dateRange);
-
-          this.myTeam = Object.values(this.myTeamIdHash);
-          for (let index = 0; index < this.myTeam.length; index++) {
-            if (this.myTeam[index]._id === this.authenticatedUser._id) {
-              this.myTeam.splice(index, 1);
-            } else {
-              let userStatObj = <UserStat>{
-                uid: this.myTeam[index]._id,
-                trainingStatus: undefined,
-                upToDateCnt: 0,
-                pastDueCnt: 0,
-                completedCnt: 0,
-                trainingIdList: [],
-                tidUTHash: {}
-              }
-              this.userTrainingService.getUTForUser$(this.myTeam[index]._id).subscribe(utList => {
-                for (let ut of utList) {
-                  userStatObj.trainingIdList.push(ut.tid);
-                  userStatObj.tidUTHash[ut.tid] = ut;
-                  if (ut.status === 'upToDate') {
-                    userStatObj.upToDateCnt++;
-                  } else if (ut.status === 'completed') {
-                    userStatObj.completedCnt++;
-                  } else if (ut.status === 'pastDue') {
-                    userStatObj.pastDueCnt++;
-                  }
-                }
-                if (userStatObj.pastDueCnt > 1) {
-                  userStatObj.trainingStatus = 'pastDue'
-                }
-                this.userStatHash[userStatObj.uid] = userStatObj;
-              })
-            }
-          }
-        });
       }
     });
     this.teamTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(teamTrainingHash => {
+      if (!teamTrainingHash) {
+        return;
+      }
       this.teamTrainingHash = teamTrainingHash;
       this.trainings = Object.values(this.teamTrainingHash);
-    })
+    });
+    this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamIdHash => {
+      if (!myTeamIdHash) {
+        return;
+      }
+      this.myTeamIdHash = myTeamIdHash;
+      this.onDateRangeChange(this.dateRange);
+
+      this.myTeam = Object.values(this.myTeamIdHash);
+      for (let index = 0; index < this.myTeam.length; index++) {
+        if (this.myTeam[index]._id === this.authenticatedUser._id) {
+          this.myTeam.splice(index, 1);
+        }
+      }
+    });
+          /*
+          } else {
+          let userStatObj = <UserStat>{
+            uid: this.myTeam[index]._id,
+            trainingStatus: undefined,
+            upToDateCnt: 0,
+            pastDueCnt: 0,
+            completedCnt: 0,
+            trainingIdList: [],
+            tidUTHash: {}
+          }
+                  this.userTrainingService.getUTForUser$(this.myTeam[index]._id).subscribe(utList => {
+            for (let ut of utList) {
+              userStatObj.trainingIdList.push(ut.tid);
+              userStatObj.tidUTHash[ut.tid] = ut;
+              if (ut.status === 'pastDue') {
+                this.myTeamIdHash[ut.uid].trainingStatus = 'pastDue';
+                this.userService.updateUser(this.myTeamIdHash[ut.uid], true);
+                userStatObj.trainingStatus = 'pastDue';
+              }
+            }
+            this.userStatHash[userStatObj.uid] = userStatObj;
+          })
+          */
   }
 
   selectUser(uid: string) {

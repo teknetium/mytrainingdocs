@@ -3,6 +3,7 @@ export interface UserTrainingModel {
   tid: string,
   trainingVersion: string,
   uid: string,
+  teamId:string,
   status: 'upToDate' | 'pastDue' | 'completed',
   dueDate: number,
   dateCompleted: number,

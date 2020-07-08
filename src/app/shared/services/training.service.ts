@@ -218,11 +218,11 @@ export class TrainingService {
     return this.previousVersionBS$.asObservable();
   }
 
-  assignTrainingsForJobTitle(jobTitle: string, userId: string): void {
+  assignTrainingsForJobTitle(jobTitle: string, userId: string, teamId: string): void {
     let trainings: TrainingModel[] = Object.values(this.allTrainingHash);
     for (const training of trainings) {
       if (training.jobTitle === jobTitle) {
-        this.userTrainingService.assignTraining(userId, training._id);
+        this.userTrainingService.assignTraining(userId, training._id, teamId);
       }
     }
   }
