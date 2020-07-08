@@ -116,6 +116,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       if (!userTrainings) {
         return;
       }
+
       let userId;
       let pastDueFound = false;
       if (userTrainings.length > 0) {
@@ -133,6 +134,8 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
         } else {
           this.userService.setUserStatusUpToDate(userId);
         }
+      } else {
+        this.userTrainings = [];
       }
     });
 

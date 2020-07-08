@@ -1,6 +1,7 @@
-<div  *ngIf="!selectedTraining" class="training-container">
+<div *ngIf="!selectedTraining" class="training-container">
   <div *ngIf="trainings && trainings.length > 0">
-    <button nz-button nzType="primary" nzShape="round" nzSize="small" (click)="createNewTraining()" style="margin:0 0 20px 0;">
+    <button nz-button nzType="primary" nzShape="round" nzSize="small" (click)="createNewTraining()"
+      style="margin:0 0 20px 0;">
       Create a New Training
     </button>
   </div>
@@ -34,11 +35,15 @@
                 nzTooltipTitle="This training is locked."></i>
             </td>
             <td style="width:3%;">
-              <i *ngIf="data.type === 'onetime'" class="fad fa-diploma"
-                style="font-size:16px;vertical-align: middle;" nz-tooltip
-                nzTooltipTitle="One Time Training"></i>
-              <i *ngIf="data.type === 'recurring'" class="fad fa-award" style="font-size:16px;vertical-align: middle;" nz-tooltip
-                nzTooltipTitle="Recurring Training"></i>
+              <div *ngIf="data.type === 'onetime'" style="border:1px solid black;border-radius: 8px;width:16px;height:16px;text-align: center;padding-top:2px;" nz-tooltip nzTooltipTitle="One Time Training">
+                <span style="font-size:10px;">1</span>
+              </div>
+<!--
+              <i *ngIf="data.type === 'onetime'" class="far fa-circle" style="font-size:16px;vertical-align: middle;"
+                nz-tooltip nzTooltipTitle="One Time Training"></i>
+                -->
+              <i *ngIf="data.type === 'recurring'" class="far fa-redo-alt" style="font-size:16px;vertical-align: middle;"
+                nz-tooltip nzTooltipTitle="Recurring Training"></i>
             </td>
             <td>
               <i [ngClass]="data.iconClass" style="font-size:22px;margin-right:10px;vertical-align: middle;"
@@ -58,20 +63,16 @@
             <td>{{ versionFormatter(data.versions[0].version) }}</td>
             <td>{{ data.dateCreated | date:'mediumDate' }}</td>
             <td>
-              <i nz-icon nzType="edit" [nzTheme]="'twotone'" class="action"
-                
-                (click)="selectTraining(data._id)" nz-tooltip nzTooltipTitle="Edit Training">
+              <i nz-icon nzType="edit" [nzTheme]="'twotone'" class="action" (click)="selectTraining(data._id)"
+                nz-tooltip nzTooltipTitle="Edit Training">
               </i>
-              <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'"
-                 class="action"
+              <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'" class="action"
                 (click)="showComments(data._id)" nz-tooltip nzTooltipTitle="View Comments">
               </i>
-              <i nz-icon nzType="file-done" [nzTheme]="'outline'"
-                 class="action" style="color:green;" (click)="showAssessmentStats(data._id)"
-                nz-tooltip nzTooltipTitle="View Assessment Stats">
+              <i nz-icon nzType="file-done" [nzTheme]="'outline'" class="action" style="color:green;"
+                (click)="showAssessmentStats(data._id)" nz-tooltip nzTooltipTitle="View Assessment Stats">
               </i>
-              <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
-                class="action" nz-popconfirm
+              <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" class="action" nz-popconfirm
                 nzPopconfirmTitle="Delete this Training?" [nzPopconfirmTrigger]="'click'"
                 [nzPopconfirmPlacement]="'top'" (nzOnConfirm)="deleteTraining(data._id)" nz-tooltip
                 nzTooltipTitle="Delete Training">
@@ -161,7 +162,8 @@
       <span style="font-size:24px;">{{ trainingIdHash[currentTrainingId].title }}</span>
     </div>
     <div *ngFor="let ut of userTrainings; index as utIndex" style="padding: 0 20px;">
-      <div *ngFor="let assessmentResponse of ut.assessmentResponses; index as assessmentResponseIndex" style="display: block;">
+      <div *ngFor="let assessmentResponse of ut.assessmentResponses; index as assessmentResponseIndex"
+        style="display: block;">
         <div style="display: inline-block;font-size:10px;">
         </div>
       </div>
@@ -169,7 +171,8 @@
       </div>
     </div>
     <div style="padding:20px;">
-      <i nz-icon nzType="frown" [nzTheme]="'twotone'" style="font-size:28px;vertical-align: baseline;margin-right:15px;">
+      <i nz-icon nzType="frown" [nzTheme]="'twotone'"
+        style="font-size:28px;vertical-align: baseline;margin-right:15px;">
       </i>
       No Assessment Data
     </div>
@@ -181,4 +184,4 @@
     </button>
   </div>
 </div>
-<app-training-viewer  *ngIf="selectedTraining" style="display:block;height:100%;width:100%;"></app-training-viewer>
+<app-training-viewer *ngIf="selectedTraining" style="display:block;height:100%;width:100%;"></app-training-viewer>

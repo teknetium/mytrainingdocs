@@ -36,7 +36,7 @@
                         <span style="vertical-align: top;font-size:12px;">Completed</span>
                     </div>
                     <div style="float:right;margin-left:15px;">
-                        <i class="fad fa-award" style="font-size:14px;vertical-align: middle;">
+                        <i class="fas fa-redo-alt" style="font-size:10px;vertical-align: middle;">
                         </i>
                         <span style="margin-left:5px;vertical-align: bottom;font-size:12px;">Recurring Training</span>
                     </div>
@@ -74,8 +74,8 @@
                                             style="display:inline-block;font-size:22px;vertical-align: middle;margin:5px 0;"
                                             [ngStyle]="{'color': teamTrainingHash[ut.tid].iconColor}">
                                         </i>
-                                        <i *ngIf="teamTrainingHash[ut.tid].type === 'recurring'" class="fad fa-award"
-                                            style="font-size:14px;vertical-align: super;top:-3px;margin-left:3px;">
+                                        <i *ngIf="teamTrainingHash[ut.tid].type === 'recurring'" class="fas fa-redo-alt"
+                                            style="font-size:10px;vertical-align: top;">
                                         </i>
                                         <!--
                                     <nz-badge
@@ -112,8 +112,8 @@
                             style="font-size:26px;vertical-align: bottom;line-height:30px;"
                             [ngStyle]="{'color': training.iconColor}">
                         </i>
-                        <i *ngIf="training.type === 'recurring'" class="fad fa-award"
-                            style="font-size:14px;vertical-align: super;margin-left:3px;">
+                        <i *ngIf="training.type === 'recurring'" class="fas fa-redo-alt"
+                            style="font-size:10px;vertical-align: top;">
                         </i>
                         <span
                             style="width: 40%;margin-left:15px;vertical-align: middle;line-height:30px;font-size:16px;">

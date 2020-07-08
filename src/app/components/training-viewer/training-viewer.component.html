@@ -76,7 +76,8 @@
 
         <div [ngClass]="{'training-header': production === 'false', 'production-training-header': production === 'true'}"
             style="position:relative;">
-            <nz-modal [(nzVisible)]="showAssessmentAlert" nzTitle="Assessment Error" nzCancelDisabled="true"  (nzOnOk)="assessmentErrorOk()">
+            <nz-modal [(nzVisible)]="showAssessmentAlert" nzTitle="Assessment Error" nzCancelDisabled="true"
+                (nzOnOk)="assessmentErrorOk()">
                 <p></p>
             </nz-modal>
             <nz-modal [(nzVisible)]="messageDialogVisible" nzTitle="Email Interest List"
@@ -141,21 +142,16 @@
                     <div style="display:inline-block;width:fit-content;">
                         <i *ngIf="selectedTraining.status === 'unlocked' && mode === 'Edit'"
                             [ngClass]="selectedTraining.iconClass" nz-tooltip nzTooltipTitle="click to change icon"
-                            style="display: inline-block;font-size:38px;cursor: pointer;margin:10px;vertical-align: middle;"
+                            style="display: inline-block;font-size:38px;cursor: pointer;vertical-align: middle;"
                             [ngStyle]="{'color': selectedTraining.iconColor}" (click)="showIconSelectModal()">
                         </i>
                         <i *ngIf="selectedTraining.status === 'locked' || mode === 'Preview'"
                             [ngClass]="selectedTraining.iconClass"
-                            style="display: inline-block;font-size:38px;margin:10px;vertical-align: middle;"
+                            style="display: inline-block;font-size:38px;vertical-align: middle;"
                             [ngStyle]="{'color': selectedTraining.iconColor}">
                         </i>
-                        <!--
-                        <i *ngIf="selectedTraining.type === 'onetime'" class="fad fa-diploma"
-                            style="font-size:14px;position:absolute;top:10px;right:-10px;">
-                        </i>
-                        -->
-                        <i *ngIf="selectedTraining.type === 'recurring'" class="fad fa-award"
-                            style="display: inline-block;top:-12px;right:5px;font-size:16px;vertical-align: super;">
+                            <i *ngIf="selectedTraining.type === 'recurring'" class="far fa-redo-alt"
+                            style="display: inline-block;font-size:12px;vertical-align: top;">
                         </i>
                     </div>
                     <div style="display: inline-block;width:fit-content;margin-left:10px;">
@@ -461,11 +457,9 @@
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
                     <nz-radio-group [(ngModel)]="selectedTraining.type" (ngModelChange)="configChanged($event, 'type')">
                         <label nz-radio-button nzValue="onetime">
-                            <i class="fad fa-diploma" style="font-size:22px;vertical-align: middle;"></i>&nbsp;&nbsp;
-                            <span style="font-size:12px;">One Time</span>
+                                One Time
                         </label>
                         <label nz-radio-button nzValue="recurring">
-                            <i class="fad fa-award" style="font-size:22px;vertical-align: middle;"></i>&nbsp;&nbsp;
                             <span style="font-size:12px;">Recurring</span>
                         </label>
                     </nz-radio-group>
