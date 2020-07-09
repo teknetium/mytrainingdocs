@@ -329,6 +329,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   introEditorHash = {};
   introHash = {};
   showAssessmentAlert = false;
+  millisecondsPerDay = 86400000;
+  notifyPeriod;
   
   constructor(
     private trainingService: TrainingService,
@@ -1134,14 +1136,18 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     //    this.trainingService.reloadAllTrainings();
   }
 
+  addItemToNotifySchedule() {
+    this.selectedTraining.notifySchedule.push(this.notifyPeriod);
+    this.notifyPeriod = 7;
+    this.saveTraining(false);
+  }
+
+  deleteNotifyScheduleItem(index) {
+    this.selectedTraining.notifySchedule.splice(index, 1);
+    this.saveTraining(false);
+  }
   configChanged(event, property) {
-    if (property === 'expirationDate') {
-      if (this.selectedTraining.type === 'onetime') {
-        this.selectedTraining.expirationDate = this.selectedTraining.expirationDate * 86400000;
-      } else if (this.selectedTraining.type === 'recurring') {
-        this.selectedTraining.expirationDate = this.selectedTraining.expirationDate * 2592000000;
-      }
-    }
+
     this.saveTraining(false);
     this.setCurrentPage(this.currentPageId, undefined);
   }

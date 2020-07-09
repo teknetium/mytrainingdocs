@@ -457,7 +457,7 @@
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
                     <nz-radio-group [(ngModel)]="selectedTraining.type" (ngModelChange)="configChanged($event, 'type')">
                         <label nz-radio-button nzValue="onetime">
-                                One-Time
+                            <span style="font-size:12px;">One-time</span>
                         </label>
                         <label nz-radio-button nzValue="recurring">
                             <span style="font-size:12px;">Recurring</span>
@@ -563,8 +563,8 @@
                 </div>
             </div>
             -->
-            <div class="config-page-row">
-                <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
+            <div class="config-page-row" style="margin-top:20px;">
+                <div style="width:35%;text-align: right;float:left;padding-right:10px;">
                     <label style="margin-bottom: 0;font-size:12px;color:#000000;">Interest List</label>
                 </div>
                 <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
@@ -582,7 +582,34 @@
                         <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-popconfirm
                             nzPopconfirmTitle="Delete this email address?" [nzPopconfirmTrigger]="'click'"
                             [nzPopconfirmPlacement]="'right'" (nzOnConfirm)="deleteInterestListItem(i)"
-                            style="font-size:14px;vertical-align: baseline; margin-left:10px;"></i>
+                            style="font-size:14px;vertical-align: baseline; margin-left:10px;cursor:pointer;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="config-page-row" style="margin-top:20px;">
+                <div style="width:35%;text-align: right;float:left;padding-right:10px;">
+                    <label style="margin-bottom: 0;font-size:12px;color:#000000;">Notify Schedule</label>
+                </div>
+                <div style="width:60%;text-align: left;display:inline-block;padding-left:10px;">
+                    <div>
+                        <div style="width:80%;text-align: left;display:inline-block;">
+                            <nz-input-number nzSize="small" nzId="notifyDays" class="foo" style="font-size:12px;"
+                                [(ngModel)]="notifyPeriod" [nzMin]="1" [nzMax]="90" [nzStep]="1"
+                                (ngModelChange)="configChanged($event, 'notifySchedule')">
+                            </nz-input-number>
+                            <button nz-button nzType="primary" nzShape="round" nzSize="small" (click)="addItemToNotifySchedule()"
+                                style="margin-left:10px;">
+                                Add to Schedule
+                            </button>
+                        </div>
+                    </div>
+            
+                    <div style="display:block;padding-top:5px;" *ngFor="let notifyDays of selectedTraining.notifySchedule; index as i">
+                        <span style="vertical-align: middle;">{{ notifyDays }}</span><span style="font-size:12px;color:#bbbbbb;">&nbsp;&nbsp;days before due date</span>
+                        <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-popconfirm
+                            nzPopconfirmTitle="Delete this entry?" [nzPopconfirmTrigger]="'click'"
+                            [nzPopconfirmPlacement]="'right'" (nzOnConfirm)="deleteNotifyScheduleItem(i)"
+                            style="font-size:14px;vertical-align: baseline; margin-left:10px;cursor:pointer;"></i>
                     </div>
                 </div>
             </div>
