@@ -99,14 +99,10 @@
                                 <div style="">
                                     <div class="filter-item"
                                         (click)="toggleFilter('onetime')" [ngClass]="{'showing': showOnetime, 'not-showing': !showOnetime}" nz-tooltip
-                                        nzTooltipTitle="Onetime Trainings">
-                                                                    <span style="position:relative;margin-right:-5px;">
-                                                                        <i class="far fa-circle" style="vertical-align: middle;"></i>
-                                                                        <span style="font-size:10px;position:absolute;left:6px;top:6px;font-weight:500;">1</span>&nbsp;&nbsp;
-                                                                    </span>
-                                    <!--
-                                        <i class="fad fa-diploma" style="color:black"></i>
-                                        -->
+                                        nzTooltipTitle="One-time Trainings" style="padding-top:5px;">
+                                        <div style="border:1px solid black;border-radius: 8px;width:16px;height:16px;text-align: center;">
+                                            <span style="font-size:10px;vertical-align: top;">1</span>
+                                        </div>
                                     </div>
                                     <div  class="filter-item" (click)="toggleFilter('recurring')"
                                         [ngClass]="{'showing': showRecurring, 'not-showing': !showRecurring}" nz-tooltip

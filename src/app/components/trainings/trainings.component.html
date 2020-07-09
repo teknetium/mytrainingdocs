@@ -35,13 +35,9 @@
                 nzTooltipTitle="This training is locked."></i>
             </td>
             <td style="width:3%;">
-              <div *ngIf="data.type === 'onetime'" style="border:1px solid black;border-radius: 8px;width:16px;height:16px;text-align: center;padding-top:2px;" nz-tooltip nzTooltipTitle="One Time Training">
+              <div *ngIf="data.type === 'onetime'" style="border:1px solid black;border-radius: 8px;width:16px;height:16px;text-align: center;padding-top:2px;" nz-tooltip nzTooltipTitle="One-Time Training">
                 <span style="font-size:10px;">1</span>
               </div>
-<!--
-              <i *ngIf="data.type === 'onetime'" class="far fa-circle" style="font-size:16px;vertical-align: middle;"
-                nz-tooltip nzTooltipTitle="One Time Training"></i>
-                -->
               <i *ngIf="data.type === 'recurring'" class="far fa-redo-alt" style="font-size:16px;vertical-align: middle;"
                 nz-tooltip nzTooltipTitle="Recurring Training"></i>
             </td>

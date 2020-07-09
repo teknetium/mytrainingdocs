@@ -64,7 +64,7 @@
                                 {{ user.firstName }} {{ user.lastName }}
                             </div>
                             <div
-                                style="display:inline-block;width:fit-content;width:60%;justify-content: right;vertical-align: text-bottom;">
+                                style="display:inline-block;width:fit-content;width:60%;justify-content: right;vertical-align: middle;">
                                 <div *ngFor="let ut of uidUTHash[user._id]">
                                     <span *ngIf="teamTrainingHash[ut.tid]"
                                         style="float:right;margin-left:10px;" nz-tooltip
@@ -77,13 +77,6 @@
                                         <i *ngIf="teamTrainingHash[ut.tid].type === 'recurring'" class="fas fa-redo-alt"
                                             style="font-size:10px;vertical-align: top;">
                                         </i>
-                                        <!--
-                                    <nz-badge
-                                        *ngIf="userStatHash[user._id].tidUTHash[tid] && userStatHash[user._id].tidUTHash[tid].status !== 'upToDate'"
-                                        [nzColor]="utStatusColorHash[userStatHash[user._id].tidUTHash[tid].status]"
-                                        style="margin-left:3px;vertical-align: sub;top:10px;margin-left:3px;">
-                                    </nz-badge>
-                                    -->
                                     </span>
                                 </div>
                             </div>
