@@ -95,7 +95,7 @@ module.exports = function(app, config) {
   const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const trainingListProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const userTrainingListProjection = "_id tid uid teamId status dueDate timeToDate dateCompleted assessmentResponses trainingVersion";
-  const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email teamAdmin orgAdmin appAdmin teamId org supervisorId profilePicUrl settings";
+  const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email teamAdmin orgAdmin appAdmin teamId org supervisorId directReports profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const docProjection = '_id productId productVersion author featureName sections images';
@@ -791,6 +791,7 @@ module.exports = function(app, config) {
         jobTitle: req.body.jobTitle,
         profilePicUrl: req.body.profilePicUrl,
         supervisorId: req.body.supervisorId,
+        directReports: req.body.directReports,
         settings: req.body.settings,
       });
 //      user.save((err2) => {
@@ -825,6 +826,7 @@ module.exports = function(app, config) {
       user.jobTitle = req.body.jobTitle;
       user.profilePicUrl = req.body.profilePicUrl;
       user.supervisorId = req.body.supervisorId;
+      user.directReports = req.body.directReports;
       user.settings = req.body.settings;
       user._id = req.body._id;
 

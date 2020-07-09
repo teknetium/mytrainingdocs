@@ -143,7 +143,7 @@
                             </div>
                         </div>
                         <div style="cursor:pointer;width:100%;">
-                            <div *ngFor="let user of myGroup"
+                            <div *ngFor="let user of myTeam"
                                 [ngClass]="{'displayNone': (!showUpToDate && user.trainingStatus === 'upToDate') || (!showPastDue && user.trainingStatus === 'pastDue') || (!showIndividualContributors && user.userType === 'individualContributor') || (!showSupervisors && user.userType === 'supervisor') || (!showVolunteers && user.userType === 'volunteer') || (!showCustomers && user.userType === 'customer')}"
                                 style="width:100%;">
                                 <div *ngIf="user._id !== authenticatedUser._id" class="user-button"
@@ -263,7 +263,7 @@
             </div>
         </div>
         <nz-modal [(nzVisible)]="showNewUserModal" nzTitle="Team Member Registration" (nzOnCancel)="handleCancel()"
-            (nzOnOk)="handleAddUser()">
+            (nzOnOk)="handleAddUser(true)">
             <div style="padding:20px;color:#000000;">
                 <p style="font-size:16px;">
                     An email will be sent to the team member being registered in order for them to complete the
@@ -436,7 +436,7 @@
                 <button nz-button nzSize="small" nzShape="round" (click)="handleCancel()" nzType="default"
                     style="margin: 10px;display:inline-block;">Cancel
                 </button>
-                <button *ngIf="newUser" nz-button nzSize="small" nzShape="round" (click)="handleAddUser()"
+                <button *ngIf="newUser" nz-button nzSize="small" nzShape="round" (click)="handleAddUser(true)"
                     nzType="primary" style="margin: 10px;display:inline-block;">Add Person
                 </button>
                 <button *ngIf="!newUser" nz-button nzSize="small" nzShape="round" (click)="handleUpdateUser()"

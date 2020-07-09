@@ -29,8 +29,8 @@ export class UserService {
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
   private newUserBS$ = new BehaviorSubject<UserModel>(null);
   private allOrgUserHash: UserIdHash = {};
-  private myTeam: UserModel[];
-  private myOrgUsers: UserModel[];
+  private myTeam: UserModel[] = [];
+  private myOrgUsers: UserModel[] = [];
   private statusObj;
 
   userTypeIconHash = {
@@ -47,6 +47,25 @@ export class UserService {
   private teamId;
 
   authProfile: Auth0ProfileModel;
+  batchCount = 0;
+  org = '';
+  newUserHash = {};
+  fullNameHash = {};
+  newUserIds = [];
+  supervisorName: string;
+  supervisorObj: UserModel;
+  newUserList: UserModel[] = [];
+
+  newTeamMember = <UserModel>{
+    userType: 'individualContributor',
+    _id: undefined,
+    firstName: '',
+    lastName: '',
+    email: '',
+    org: '',
+    directReports: [],
+  };
+
 
   constructor(
     private http: HttpClient,
@@ -104,10 +123,11 @@ export class UserService {
                 orgAdmin: false,
                 appAdmin: false,
                 userStatus: 'new-supervisor-without-team',
-                trainingStatus: 'upToDate',
+                trainingStatus: 'none',
                 jobTitle: '',
                 profilePicUrl: '',
                 supervisorId: null,
+                directReports: [],
                 settings: {
                   foo: 'test',
                   showPageInfo: true,
@@ -180,33 +200,34 @@ export class UserService {
       if (!userList) {
         return;
       }
-      console.log('UserService    loadData', userList);
       this.myTeam = userList;
       this.myTeamIdHash = {};
+      this.allOrgUserHash = {};
       for (let user of userList) {
         this.myTeamIdHash[user._id] = user;
-//        this.userTrainingService.initUserTrainingsForUser(user._id);
-
+        this.myOrgUsers.push(user);
+        this.allOrgUserHash[user._id] = user;
         if (user.jobTitle) {
           this.jobTitleService.addJobTitle(user.jobTitle);
         }
       }
+//        this.userTrainingService.initUserTrainingsForUser(user._id);
 
-      this.userTrainingService.getUTForTeam(teamId);
+      this.userTrainingService.getUTForTeam(this.teamId);
 
       this.myTeamIdHash[this.authenticatedUser._id] = this.authenticatedUser;
       this.myTeam.push(this.authenticatedUser);
+      this.myOrgUsers.push(this.authenticatedUser);
+      this.allOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
       this.myTeamBS$.next(this.myTeam);
 
       //      this.myTeamCntBS$.next(Object.keys(this.myTeamIdHash).length);
 
-      console.log('UserService:loadData', userList, this.authenticatedUser._id, this.myTeamIdHash);
       this.myTeamIdHashBS$.next(this.myTeamIdHash);
       if (userIdToSelect) {
         this.selectUser(userIdToSelect);
       }
     });
-
   }
 
   setUserStatusPastDue(uid: string) {
@@ -220,14 +241,57 @@ export class UserService {
     this.updateUser(this.myTeamIdHash[uid], true);
   }
 
-  createNewUser(user: UserModel) {
+  createNewUsersFromBatch(userData) {
+    this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
+    this.fullNameHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
+
+    this.batchCount = userData.length;
+    for (let user of userData) {
+      this.newTeamMember.userType = 'individualContributor';
+      this.newTeamMember._id = String(new Date().getTime());
+      this.newTeamMember.firstName = user.firstName;
+      this.newTeamMember.lastName = user.lastName;
+      this.newTeamMember.email = user.email;
+      this.newTeamMember.jobTitle = user.jobTitle;
+      this.newTeamMember.teamAdmin = false;
+      this.newUserHash[this.newTeamMember._id] = user;
+      this.newUserIds.push(this.newTeamMember._id);
+      this.postUser$(this.newTeamMember).subscribe(newUser => {
+        this.newUserList.push(newUser);
+        this.fullNameHash[newUser.firstName + ' ' + newUser.lastName] = newUser;
+        this.allOrgUserHash[newUser._id] = newUser;
+        if (this.newUserList.length === this.batchCount) {
+          for (let nUser of this.newUserList) {
+            this.fullNameHash[this.newUserHash[nUser._id].supervisorName].directReports.push(nUser._id);
+            this.fullNameHash[this.newUserHash[nUser._id].supervisorName].userType = 'supervisor';
+            nUser.supervisorId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
+            nUser.teamId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
+          }
+          let saveCnt = 0;
+          for (let nUser of this.newUserList) {
+            this.putUser$(nUser).subscribe(user => {
+              saveCnt++;
+              if (saveCnt === this.newUserList.length) {
+                this.loadData(this.authenticatedUser._id, null);
+              }
+            })
+          }
+          
+        }
+      })
+    }
+  }
+
+  createNewUser(user: UserModel, reload: boolean) {
     this.postUser$(user).subscribe(data => {
       /*
       this.myTeam.push(data);
       this.myTeamBS$.next(this.myTeam);
       */
 
-      this.loadData(this.authenticatedUser._id, data._id);
+      if (reload) {
+        this.loadData(this.authenticatedUser._id, data._id);
+      }
     })
   }
 

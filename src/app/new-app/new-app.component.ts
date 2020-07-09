@@ -462,9 +462,9 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   }
 
   saveName() {
-    console.log('saveName', this.authenticatedUser);
     this.userService.updateUser(this.authenticatedUser, true);
     this.showNewUserModal = false;
+    this.login();
   }
 
   startTour() {

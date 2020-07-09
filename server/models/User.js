@@ -25,6 +25,7 @@ const userSchema = new Schema({
   trainingStatus: { type: String, required: false },
   profilePicUrl: { type: String, required: false },
   supervisorId: { type: String, required: false },
+  directReports: { type: [String], required: false },
   settings: { type: Object, required: false }
 });
 

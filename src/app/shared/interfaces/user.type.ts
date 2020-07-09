@@ -11,10 +11,11 @@ export interface UserModel {
   appAdmin: boolean,
   orgAdmin: boolean,
   userStatus: 'pending' | 'active' | 'new-supervisor-including-team' | 'new-supervisor-without-team' | 'new-user',
-  trainingStatus: 'upToDate' | 'pastDue',
+  trainingStatus: 'upToDate' | 'pastDue' | 'none',
   jobTitle: string,
   profilePicUrl: string,
   supervisorId: string,
+  directReports: string[],
   settings: object
 }
 

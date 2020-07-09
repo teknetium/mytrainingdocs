@@ -109,7 +109,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   */
   userTrainingStatusColorHash = {
     upToDate: '#52c41a',
-    pastDue: 'red'
+    pastDue: 'red',
+    none: 'black'
   }
   includeNewSupervisorsTeam = true;
   isNewSupervisorPanelOpen = false;
@@ -147,9 +148,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     userType: 'individualContributor',
     uid: '',
     userStatus: 'pending',
-    trainingStatus: 'upToDate',
+    trainingStatus: 'none',
     profilePicUrl: '',
     supervisorId: null,
+    directReports: [],
     settings: {},
     jobTitle: ''
   }
@@ -190,6 +192,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   newWidth;
   resizeBarColor;
   dragging;
+  bulkUploadCount = 0;
+  fullNameHash = {};
+  newUserHash = {};
+  newUserIds = [];
+  org;
+  teamId;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -235,8 +243,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
       this.myGroup = userList;
       this.myTeam = userList;
+      let teamIdHash = {};
       for (let teamMember of this.myTeam) {
-//        this.uidUTHash[teamMember._id] = this.userTrainingService.getUidUTList(teamMember._id);
+        teamIdHash[teamMember._id] = teamMember;
       }
     });
 
@@ -284,6 +293,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
 
       this.authenticatedUser = user;
+      this.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
+      this.teamId = this.authenticatedUser._id;
       this.authenticatedUserFullName = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
       this.importer.setCustomer({
         userId: this.authenticatedUser._id,
@@ -312,9 +323,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           }
         }
       })
-      this.newTeamMember.teamId = this.authenticatedUser.uid;
-      this.newTeamMember.supervisorId = this.authenticatedUser.uid;
-      this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
     })
 
     this.jobTitles$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(jobTitles => {
@@ -364,44 +372,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.results = JSON.stringify(results.validData, null, 2);
 
       this.newUsers = JSON.parse(this.results);
-      let supervisorName: string;
-      for (let user of this.newUsers) {
-        this.newTeamMember._id = String(new Date().getTime());
-        this.newTeamMember.firstName = user.firstName;
-        this.newTeamMember.lastName = user.lastName;
-        this.newTeamMember.email = user.email;
-        this.newTeamMember.jobTitle = user.jobTitle;
-        if (user.supervisorName !== this.authenticatedUserFullName) {
-          this.usersNotOnMyTeam.push(this.newTeamMember._id);
-        }
-        //        this.newTeamMember.supervisorId = undefined;
-        //        this.newTeamMember.teamId = undefined;
-        this.supervisorHash[this.newTeamMember._id] = user.supervisorName;
-        this.userNameHash[this.newTeamMember.firstName + ' ' + this.newTeamMember.lastName] = this.newTeamMember._id;
-
-        this.newTeamMember.teamAdmin = false;
-        this.handleAddUser();
-        this.trainingService.assignTrainingsForJobTitle(this.newTeamMember.jobTitle, this.newTeamMember._id, this.newTeamMember.teamId);
-        this.newUsers = [{ firstName: '', lastName: '', email: '', jobTitle: '', supervisorName: '' }];
-      }
-      /*
-      do {
-        for (let uid of this.usersNotOnMyTeam) {
-          let userObj = this.myTeamIdHash[uid];
-          if (!userObj) {
-  
-          }
-        }
-      } while (this.usersNotOnMyTeam.length > 0)
-      */
-      /*
-            // emulate a server call, replace the timeout with an XHR request
-            setTimeout(() => {
-              this.importer.displaySuccess("Success!");
-              this.results = JSON.stringify(results.validData, null, 2);
-              
-            }, 500);
-      */
+      this.userService.createNewUsersFromBatch(this.newUsers);
+      
+//        this.trainingService.assignTrainingsForJobTitle(this.newTeamMember.jobTitle, this.newTeamMember._id, this.newTeamMember.teamId);
+//        this.newUsers = [{ firstName: '', lastName: '', email: '', jobTitle: '', supervisorName: '' }];
     } catch (e) {
       console.info(e || "window close");
     }
@@ -466,9 +440,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   addUser() {
     this.newUser = true;
     this.newTeamMember._id = String(new Date().getTime());
+    this.newTeamMember.org = this.org;
     this.newTeamMember.firstName = '';
     this.newTeamMember.lastName = '';
     this.newTeamMember.email = '';
+    this.newTeamMember.teamId = this.teamId;
     this.newTeamMember.teamAdmin = false;
     this.newTeamMember.settings = {
       themeColor: {
@@ -491,11 +467,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.userPanelVisible = false;
   }
 
-  handleAddUser() {
+  handleAddUser(reload: boolean) {
     this.newUser = false;
-    console.log('handleAddUser', this.newTeamMember);
+    this.newTeamMember.supervisorId = this.authenticatedUser._id;
+
     //    this.userService.updateUser(this.authenticatedUser, false);
-    this.userService.createNewUser(this.newTeamMember);
+    this.userService.createNewUser(this.newTeamMember, reload);
 
     if (this.newTeamMember.jobTitle) {
       this.jobTitleService.addJobTitle(this.newTeamMember.jobTitle);
