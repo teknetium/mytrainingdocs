@@ -8,7 +8,7 @@ import { UserTrainingService } from '../../shared/services/userTraining.service'
 import { UserTrainingModel, UidUTHash } from '../../shared/interfaces/userTraining.type';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
 import { Observable, BehaviorSubject, Subscription, defer } from 'rxjs';
-import { UserModel, UserIdHash } from '../../shared/interfaces/user.type';
+import { UserModel, UserIdHash, OrgChartNode } from '../../shared/interfaces/user.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
 import { JobTitleService } from '../../shared/services/jobtitle.service';
@@ -118,6 +118,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   assignableTrainings: TrainingModel[] = [];
   showUserTrainingModal = false;
 
+  myOrgChartData$: Observable<OrgChartNode[]>;
   userTrainings$: Observable<UserTrainingModel[]>;
   selectedUser$: Observable<UserModel>;
   newUser$: Observable<UserModel>;
@@ -198,6 +199,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   newUserIds = [];
   org;
   teamId;
+  nodes: OrgChartNode[];
+  chartOrientation = 'vertical';
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -211,6 +214,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private router: Router
   ) {
     super();
+    this.myOrgChartData$ = this.userService.getMyOrgStream();
     this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
     this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.myTeam$ = this.userService.getMyTeamStream();
@@ -236,6 +240,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         return;
       }
       this.uidUTHash = uidUTHash;
+    });
+    this.myOrgChartData$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(nodes => {
+      if (!nodes) {
+        return;
+      }
+      console.log('org Chart nodes', nodes);
+      this.nodes = nodes;
     });
     this.myTeam$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
       if (!userList) {
@@ -440,12 +451,21 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   addUser() {
     this.newUser = true;
     this.newTeamMember._id = String(new Date().getTime());
+    this.newTeamMember.uid = ''
     this.newTeamMember.org = this.org;
     this.newTeamMember.firstName = '';
     this.newTeamMember.lastName = '';
     this.newTeamMember.email = '';
+    this.newTeamMember.jobTitle = '';
     this.newTeamMember.teamId = this.teamId;
     this.newTeamMember.teamAdmin = false;
+    this.newTeamMember.userStatus = 'pending';
+    this.newTeamMember.trainingStatus = 'none';
+    this.newTeamMember.teamAdmin = false;
+    this.newTeamMember.orgAdmin = false;
+    this.newTeamMember.appAdmin = false;
+    this.newTeamMember.profilePicUrl = '';
+    this.newTeamMember.directReports = [];
     this.newTeamMember.settings = {
       themeColor: {
         name: 'grey',

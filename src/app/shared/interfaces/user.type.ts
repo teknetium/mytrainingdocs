@@ -23,6 +23,14 @@ export interface UserIdHash {
   [indexer: string]: UserModel;
 } 
 
+export interface OrgChartNode {
+  name: string,
+  cssClass: string,
+  image: string,
+  title: string,
+  childs: OrgChartNode []
+}
+
 
 export class UserSessionModel {
   constructor(

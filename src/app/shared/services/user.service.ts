@@ -5,7 +5,7 @@ import { UserTrainingService } from './userTraining.service';
 import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { UserModel, UserIdHash } from '../interfaces/user.type';
+import { UserModel, UserIdHash, OrgChartNode } from '../interfaces/user.type';
 import { Auth0ProfileModel } from '../interfaces/auth0Profile.type';
 import { Router } from '@angular/router';
 import { EventModel } from '../interfaces/event.type';
@@ -22,6 +22,7 @@ export class UserService {
   private authenticatedUser: UserModel;
 
   // Writable streams
+  private myOrgBS$ = new BehaviorSubject<OrgChartNode[]>(null);
   private authenticatedUserBS$ = new BehaviorSubject<UserModel>(null);
   private myTeamIdHashBS$ = new BehaviorSubject<UserIdHash>(null);
   private myTeamBS$ = new BehaviorSubject<UserModel[]>([]);
@@ -50,7 +51,7 @@ export class UserService {
   batchCount = 0;
   org = '';
   newUserHash = {};
-  fullNameHash = {};
+  fullNameHash = <UserModel>{};
   newUserIds = [];
   supervisorName: string;
   supervisorObj: UserModel;
@@ -65,6 +66,9 @@ export class UserService {
     org: '',
     directReports: [],
   };
+
+  nodes: any = [];
+  userNode: OrgChartNode;
 
 
   constructor(
@@ -91,6 +95,7 @@ export class UserService {
           this.logLoginEvent();
           if (this.authenticatedUser.userType === 'supervisor') {
             this.teamId = this.authenticatedUser.uid;
+            this.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
             this.loadData(this.teamId, null);
           }
 
@@ -142,6 +147,7 @@ export class UserService {
 
               this.postUser$(this.authenticatedUser).subscribe((data) => {
                 this.authenticatedUser = data;
+                this.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
                 //                this.getAllOrgUsers();
                 if (this.authenticatedUser.jobTitle) {
                   this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
@@ -150,7 +156,6 @@ export class UserService {
                 this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
                 this.loadData(data._id, null);
               });
-
             }
           )
         });
@@ -196,22 +201,27 @@ export class UserService {
     }
   */
   loadData(teamId, userIdToSelect) {
-    this.getTeam$(teamId).subscribe((userList) => {
+//    this.getTeam$(teamId).subscribe((userList) => {
+    this.getOrg$(this.org).subscribe(userList => {
+
       if (!userList) {
         return;
       }
-      this.myTeam = userList;
+      this.myTeam = [];
       this.myTeamIdHash = {};
       this.allOrgUserHash = {};
       for (let user of userList) {
-        this.myTeamIdHash[user._id] = user;
+        if (user.teamId === this.authenticatedUser._id) {
+          this.myTeamIdHash[user._id] = user;
+          this.myTeam.push(user);
+        }
         this.myOrgUsers.push(user);
         this.allOrgUserHash[user._id] = user;
         if (user.jobTitle) {
           this.jobTitleService.addJobTitle(user.jobTitle);
         }
       }
-//        this.userTrainingService.initUserTrainingsForUser(user._id);
+      //        this.userTrainingService.initUserTrainingsForUser(user._id);
 
       this.userTrainingService.getUTForTeam(this.teamId);
 
@@ -227,8 +237,38 @@ export class UserService {
       if (userIdToSelect) {
         this.selectUser(userIdToSelect);
       }
+
+      this.nodes = [];
+      let rootNode: OrgChartNode = {
+        name: this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName,
+        cssClass: '',
+        image: '',
+        title: this.authenticatedUser.jobTitle,
+        childs: []
+      }
+      for (let dR of this.authenticatedUser.directReports) {
+        rootNode.childs.push(this.buildUserNode(dR));
+      }
+      this.nodes.push(rootNode);
+      this.myOrgBS$.next(this.nodes);
     });
   }
+
+  buildUserNode(userId): OrgChartNode {
+    let user = this.allOrgUserHash[userId];
+    let userNode = <OrgChartNode>{};
+    userNode.name = user.firstName + ' ' + user.lastName;
+    userNode.cssClass = '';
+    userNode.image = '';
+    userNode.title = user.jobTitle;
+    userNode.childs = [];
+
+    for (let dR of user.directReports) {
+      userNode.childs.push(this.buildUserNode(dR));
+    }
+    return userNode;
+  }
+
 
   setUserStatusPastDue(uid: string) {
     this.myTeamIdHash[uid].trainingStatus = 'pastDue';
@@ -268,7 +308,8 @@ export class UserService {
             nUser.teamId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
           }
           let saveCnt = 0;
-          for (let nUser of this.newUserList) {
+          let allUsers = Object.values(this.fullNameHash);
+          for (let nUser of allUsers) {
             this.putUser$(nUser).subscribe(user => {
               saveCnt++;
               if (saveCnt === this.newUserList.length) {
@@ -276,7 +317,7 @@ export class UserService {
               }
             })
           }
-          
+
         }
       })
     }
@@ -284,10 +325,8 @@ export class UserService {
 
   createNewUser(user: UserModel, reload: boolean) {
     this.postUser$(user).subscribe(data => {
-      /*
-      this.myTeam.push(data);
-      this.myTeamBS$.next(this.myTeam);
-      */
+      this.authenticatedUser.directReports.push(data._id);
+      this.updateUser(this.authenticatedUser, true);
 
       if (reload) {
         this.loadData(this.authenticatedUser._id, data._id);
@@ -337,6 +376,10 @@ export class UserService {
 
   getMyTeamCntStream(): Observable<number> {
     return this.myTeamCntBS$.asObservable();
+  }
+
+  getMyOrgStream(): Observable<OrgChartNode[]> {
+    return this.myOrgBS$.asObservable();
   }
 
   getMyTeamStream(): Observable<UserModel[]> {
@@ -420,7 +463,7 @@ export class UserService {
 
   getTeam$(teamId: string): Observable<UserModel[]> {
     return this.http
-      .get<UserModel>(`${ENV.BASE_API}users/${teamId}`, {
+      .get<UserModel[]>(`${ENV.BASE_API}users/${teamId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
@@ -430,7 +473,7 @@ export class UserService {
 
   getOrg$(org: string): Observable<UserModel[]> {
     return this.http
-      .get<UserModel>(`${ENV.BASE_API}users/org/${org}`, {
+      .get<UserModel[]>(`${ENV.BASE_API}users/org/${org}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

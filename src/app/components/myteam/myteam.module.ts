@@ -5,6 +5,8 @@ import { NzTagModule, NzToolTipModule, NzTabsModule, NzIconModule, NzModalModule
 import { MyteamComponent } from './myteam.component';
 import { UserTrainingsModule } from '../user-trainings/user-trainings.module';
 import { MyteamRoutingModule } from './myteam-routing.module';
+import { NgxOrgChartModule } from 'ngx-org-chart';
+
 
 
 
@@ -34,7 +36,8 @@ import { MyteamRoutingModule } from './myteam-routing.module';
     MyteamRoutingModule,
     NzDrawerModule,
     NzTreeModule,
-    NzBadgeModule
+    NzBadgeModule,
+    NgxOrgChartModule
   ],
   exports: [
     MyteamComponent,
