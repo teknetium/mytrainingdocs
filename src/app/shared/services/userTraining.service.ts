@@ -56,6 +56,18 @@ export class UserTrainingService {
     });
   }
 
+  updateUTVersion(uid: string, tid: string, newVersion:string) {
+    let utList = this.uidUTHash[uid];
+    for (let ut of utList) {
+      if (ut.tid === tid) {
+        if (ut.status !== 'completed') {
+          ut.trainingVersion = newVersion;
+          this.saveUserTraining(ut);
+        }
+      }
+    }
+  }
+
   getSessionLogStream(): Observable<UTSession[]> {
     return this.sessionLogBS$.asObservable();
   }

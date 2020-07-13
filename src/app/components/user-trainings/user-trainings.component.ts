@@ -121,26 +121,26 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       let userId;
       let pastDueFound = false;
       this.userTrainings = userTrainings;
-      /*
+
       if (userTrainings.length > 0) {
         userId = userTrainings[0].uid;
         this.userTrainings = userTrainings;
         for (let userTraining of userTrainings) {
           this.utIdHash[userTraining._id] = userTraining;
-          if (userTraining.status === 'pastDue') {
-            pastDueFound = true;
-            break;
-          }
+//          if (userTraining.status === 'pastDue') {
+//            pastDueFound = true;
+//            break;
+//          }
         }
-        if (pastDueFound) {
-          this.userService.setUserStatusPastDue(userId);
-        } else {
-          this.userService.setUserStatusUpToDate(userId);
-        }
+//        if (pastDueFound) {
+//          this.userService.setUserStatusPastDue(userId);
+//        } else {
+//          this.userService.setUserStatusUpToDate(userId);
+//        }
       } else {
         this.userTrainings = [];
       }
-      */
+
     });
 
     this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
@@ -182,7 +182,8 @@ versionFormatter(version) {
   return version.replace(re, '.');
 }
 
-viewTraining(utid, tid, version) {
+  viewTraining(utid, tid, version) {
+    console.log('utIdHash ', this.utIdHash);
   if (this.logSession === 'on') {
     if (this.selectedUser.userType === 'supervisor') {
       if (!this.selectedUser.teamId) {

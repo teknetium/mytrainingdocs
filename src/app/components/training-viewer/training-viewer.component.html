@@ -622,7 +622,7 @@
                             <div [ngClass]="{'page-content': (mode === 'Edit' && selectedTraining.status === 'unlocked' && production === 'false')}"
                                 style="text-align:center;">
                                 <p *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
-                                    nz-typography nzEditable [(nzContent)]="page.title"
+                                    nz-typography nzEditable [(nzContent)]="page.title" (nzContentChange)="saveTraining(false)"
                                     style="font-style:italic;display:inline-block;font-size:30px;color:#000000;width:50%;margin-bottom:20px;">
                                 </p>
                                 <p *ngIf="production === 'true' || selectedTraining.status === 'locked' || mode === 'Preview'"

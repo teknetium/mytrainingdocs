@@ -209,7 +209,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   reportChain: string[] = [];
   orgNodeHash = {};
   uidReportChainHash = {};
-  rootNodeUid;
   orgChartHeight;
 
   constructor(
@@ -382,7 +381,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.orgChartFontSize -= 2;
   }
 
-  selectReportChainItem(uid, index) {
+  selectReportChainItem(uid) {
     this.reportChain = this.uidReportChainHash[uid];
     this.userService.buildOrgChart(uid, true);
   }

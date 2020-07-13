@@ -847,9 +847,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       }
     }
     if (this.changeLevel === 'major') {
-      this.resetTrainingStatus();
+      this.resetTrainingStatus(newVersion);
     }
 
+    for (let user of this.assignedToUsers) {
+      this.userTrainingService.updateUTVersion(user, this.selectedTraining._id, newVersion);
+    }
   }
 
 
@@ -918,8 +921,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
 
-  resetTrainingStatus() {
-    this.userTrainingService.resetUserTrainingStatus(this.selectedTraining._id, this.selectedTraining.versions[0].version);
+  resetTrainingStatus(version:string) {
+    this.userTrainingService.resetUserTrainingStatus(this.selectedTraining._id, version);
     this.subject = 'Urgent: Must retake a training'
     this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated and you are required to retake it.";
     for (let user of this.assignedToUsers) {

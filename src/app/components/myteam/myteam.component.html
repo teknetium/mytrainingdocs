@@ -228,9 +228,9 @@
                                 </label>
                             </nz-radio-group>
                             <div style="float:left;margin-left:200px;">
-                                <div *ngFor="let userId of reportChain" style="width:fit-content;margin-bottom:5px;padding:10px 4px;border:1px solid #999999;border-radius:4px;font-size:10px;" (click)="selectReportChainItem(userId, reportChainIndex)" class="report-chain">
+                                <div *ngFor="let userId of reportChain" style="width:fit-content;margin-bottom:5px;padding:10px 4px;border:1px solid #999999;border-radius:4px;font-size:10px;" (click)="selectReportChainItem(userId)" class="report-chain">
                                     <span
-                                        style="">{{myOrgUserHash[userId].firstName}}&nbsp;{{myOrgUserHash[userId].lastName}} {{reportChainIndex}}</span>
+                                        style="">{{myOrgUserHash[userId].firstName}}&nbsp;{{myOrgUserHash[userId].lastName}}</span>
                                 </div>
                             </div>
                             <div style="margin-bottom:20px;float:right;">
