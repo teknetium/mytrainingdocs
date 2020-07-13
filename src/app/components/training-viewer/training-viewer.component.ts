@@ -585,6 +585,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     });
 
     this.myTeamHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamHash => {
+      console.log('myTeamHash$  ', myTeamHash);
       this.myTeamHash = myTeamHash;
     })
 

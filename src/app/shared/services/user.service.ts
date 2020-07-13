@@ -340,6 +340,7 @@ export class UserService {
       this.newTeamMember.lastName = user.lastName;
       this.newTeamMember.email = user.email;
       this.newTeamMember.jobTitle = user.jobTitle;
+      this.newTeamMember.trainingStatus = 'none';
       this.newTeamMember.teamAdmin = false;
       this.newUserHash[this.newTeamMember._id] = user;
       this.newUserIds.push(this.newTeamMember._id);

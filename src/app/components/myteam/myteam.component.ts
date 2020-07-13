@@ -210,6 +210,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   orgNodeHash = {};
   uidReportChainHash = {};
   rootNodeUid;
+  orgChartHeight;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -238,6 +239,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.contentHeight = Math.floor((window.innerHeight - (.3 * window.innerHeight)) * .90);
+    this.contentWidth = Math.floor(window.innerWidth * .9);
     FlatfileImporter.setVersion(2);
     this.initializeImporter();
     this.newUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(newUser => {
@@ -276,6 +279,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.nodes = nodes;
     });
     this.myTeam$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
+      console.log('myTeam$  ', userList);
       if (!userList) {
         return;
       }

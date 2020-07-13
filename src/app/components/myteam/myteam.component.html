@@ -167,7 +167,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -217,7 +216,7 @@
                             <app-user-trainings mode="admin" logSession="off"></app-user-trainings>
                         </div>
                     </nz-collapse-panel>
-                    <nz-collapse-panel [nzHeader]="orgChart" style="height:50%;">
+                    <nz-collapse-panel [nzHeader]="orgChart">
                         <div style="display:block;width:100%;height:100%;border-bottom:1px solid #bbbbbb;">
                             <nz-radio-group [(ngModel)]="chartOrientation"
                                 style="float:left;margin-bottom:20px;margin-right:40px;">
@@ -246,7 +245,7 @@
                             </div>
                             <div style="clear:both;"></div>
                         </div>
-                        <div style="overflow: scroll;padding-top:20px;height:600px;width:100%;">
+                        <div style="overflow: scroll;padding-top:20px;width:100%;" [ngStyle]="{'height.px': contentHeight}">
                             <div style="width:fit-content;height: fit-content;">
                                 <ngx-org-chart [nodes]="nodes" [direction]="chartOrientation"
                                     (itemClick)="selectNode($event)" [ngStyle]="{'font-size.px': orgChartFontSize}">
