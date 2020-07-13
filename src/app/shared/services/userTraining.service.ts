@@ -98,6 +98,7 @@ export class UserTrainingService {
       stopTime: 0
     };
     this.utSessionHash[tid] = session;
+    console.log('startSession ', session);
   }
 
   stopSession(ut: UserTrainingModel) {
@@ -175,7 +176,6 @@ export class UserTrainingService {
   getUTForTraining(tid: string) {
     let uids: string[] = [];
     this.getUTForTraining$(tid).subscribe(uts => {
-      console.log('UserTrainingService:getUTForTraining', uts);
       if (uts.length > 0) {
         for (let ut of uts) {
           uids.push(ut.uid);
@@ -185,16 +185,16 @@ export class UserTrainingService {
       this.usersBS$.next(uids);
     })
   }
-  
+
   getUTForUser(uid: string) {
-        this.getUTForUser$(uid).subscribe(userTrainings => {
-          this.userTrainings$BS.next(userTrainings);
-          this.uidUTHash[uid] = Object.assign([], userTrainings);
-          this.uidUTHashBS$.next(this.uidUTHash);
-          for (let ut of userTrainings) {
-            this.allUserTrainingHash[ut._id] = ut;
-          }
-        })
+    this.getUTForUser$(uid).subscribe(userTrainings => {
+      this.userTrainings$BS.next(userTrainings);
+      this.uidUTHash[uid] = Object.assign([], userTrainings);
+      this.uidUTHashBS$.next(this.uidUTHash);
+      for (let ut of userTrainings) {
+        this.allUserTrainingHash[ut._id] = ut;
+      }
+    })
   }
   getUTForTeam(teamId: string) {
     this.getUTForTeam$(teamId).subscribe(userTrainings => {
@@ -229,8 +229,8 @@ export class UserTrainingService {
     };
     this.postUserTraining$(userTraining).subscribe(userTraining => {
       this.getUTForUser$(uid).subscribe(userTrainings => {
-        console.log('userTrainingService: ', userTrainings);
-                this.userTrainings$BS.next(userTrainings);
+        console.log('userTrainingService: assignTraining', userTrainings);
+        this.userTrainings$BS.next(userTrainings);
         this.uidUTHash[uid] = userTrainings;
         this.uidUTHashBS$.next(this.uidUTHash);
         this.allUserTrainingHash[userTraining._id] = userTraining;
@@ -241,7 +241,7 @@ export class UserTrainingService {
   saveUserTraining(ut: UserTrainingModel): void {
     this.updateUserTraining$(ut).subscribe(userTraining => {
       console.log('saveUserTraining', userTraining);
-  
+
       this.getUTForUser$(userTraining.uid).subscribe(userTrainings => {
         this.uidUTHash[userTraining.uid] = userTrainings;
         this.uidUTHashBS$.next(this.uidUTHash);
@@ -397,7 +397,7 @@ export class UserTrainingService {
       })
       .pipe(
         catchError((error) => this._handleError(error))
-      );    
+      );
   }
   getUserTraining$(id: string): Observable<UserTrainingModel[]> {
     return this.http

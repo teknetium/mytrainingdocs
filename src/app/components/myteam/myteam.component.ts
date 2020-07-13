@@ -46,7 +46,7 @@ import FlatfileImporter from "flatfile-csv-importer";
         'opacity': '1'
       })),
       state('out', style({
-        'opacity': '0'  
+        'opacity': '0'
       })),
       transition('in => out', [
         animate('400ms')
@@ -55,7 +55,7 @@ import FlatfileImporter from "flatfile-csv-importer";
         animate('400ms')
       ])
     ]),
-     trigger('switchUserToggle', [
+    trigger('switchUserToggle', [
       // ...
       state('', style({
         'visibility': 'hidden',
@@ -119,6 +119,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   showUserTrainingModal = false;
 
   myOrgChartData$: Observable<OrgChartNode[]>;
+  myOrgUserHash$: Observable<UserIdHash>;
   userTrainings$: Observable<UserTrainingModel[]>;
   selectedUser$: Observable<UserModel>;
   newUser$: Observable<UserModel>;
@@ -126,6 +127,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   selectedUserId: string;
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
+  myOrgUserHash = {};
   myTeamIdHash: UserIdHash;
   myTeam$: Observable<UserModel[]>;
   myTeam: UserModel[] = [];
@@ -133,6 +135,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   jobTitles$: Observable<string[]>;
   jobTitles: string[] = [];
   options: string[];
+  uidReportChainHash$: Observable<UserIdHash>;
   myTeamIdHash$: Observable<UserIdHash>;
   showNewUserModal = false;
   supervisorSelected = false;
@@ -171,6 +174,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   userNameHash = {};
   authenticatedUserFullName;
   usersNotOnMyTeam: string[] = [];
+  showNone = true;
   showUpToDate = true;
   showPastDue = true;
   showIndividualContributors = true;
@@ -201,6 +205,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   teamId;
   nodes: OrgChartNode[];
   chartOrientation = 'vertical';
+  orgChartFontSize = 14;
+  reportChain: string[] = [];
+  orgNodeHash = {};
+  uidReportChainHash = {};
+  rootNodeUid;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -214,7 +223,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private router: Router
   ) {
     super();
+    this.uidReportChainHash$ = this.userService.getUIDReportChainHashStream();
     this.myOrgChartData$ = this.userService.getMyOrgStream();
+    this.myOrgUserHash$ = this.userService.getOrgHashStream();
     this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
     this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.myTeam$ = this.userService.getMyTeamStream();
@@ -233,7 +244,22 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!newUser) {
         return;
       }
+      console.log('MyTeamComponent:newUser$.subscribe: ', newUser);
       this.trainingService.assignTrainingsForJobTitle(newUser.jobTitle, newUser._id, newUser.teamId);
+    });
+
+    this.myOrgUserHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgUserHash => {
+      if (!orgUserHash) {
+        return;
+      }
+      this.myOrgUserHash = orgUserHash;
+    });
+    this.uidReportChainHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidReportChainHash => {
+      if (!uidReportChainHash) {
+        return;
+      }
+      console.log('uidReportChainHash', uidReportChainHash);
+      this.uidReportChainHash = uidReportChainHash;
     });
     this.uidUTHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUTHash => {
       if (!uidUTHash) {
@@ -246,6 +272,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         return;
       }
       console.log('org Chart nodes', nodes);
+      this
       this.nodes = nodes;
     });
     this.myTeam$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
@@ -275,27 +302,30 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.userIdSelected = user._id;
       this.selectedUser = user;
       this.trainingService.selectTraining(null);
-      this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
-        if (!userTrainings) {
-          return;
-        }
-        this.assignableTrainings = [];
-        let tids = [];
-        for (let ut of userTrainings) {
-          tids.push(ut.tid);
-        }
-        for (let training of this.teamTrainings) {
-          if (tids.includes(training._id)) {
-            continue;
-          } else {
-            if (training.versions.length < 2) {
-              continue;
-            }
-            this.assignableTrainings.push(training);
-          }
-        }
+    });
 
-      });
+    this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
+      if (!userTrainings) {
+        return;
+      }
+      this.assignableTrainings = [];
+      let tids = [];
+      let pastDueFound = false;
+      for (let ut of userTrainings) {
+        tids.push(ut.tid);
+      }
+
+      for (let training of this.teamTrainings) {
+        if (tids.includes(training._id)) {
+          continue;
+        } else {
+          if (training.versions.length < 2) {
+            continue;
+          }
+          this.assignableTrainings.push(training);
+        }
+      }
+
     });
 
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
@@ -341,6 +371,23 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.matchingJobTitles = this.jobTitles;
     })
   }
+  increaseFontSize() {
+    this.orgChartFontSize += 2;
+  }
+  decreaseFontSize() {
+    this.orgChartFontSize -= 2;
+  }
+
+  selectReportChainItem(uid, index) {
+    this.reportChain = this.uidReportChainHash[uid];
+    this.userService.buildOrgChart(uid, true);
+  }
+
+  selectNode(event) {
+    this.reportChain = Object.assign([], this.uidReportChainHash[event.extra.uid]);
+    this.userService.buildOrgChart(event.extra.uid, true);
+    console.log('selectNode', event);
+  }
 
   toggleFilter(filter: string) {
     this.myTeamFiltered = [];
@@ -348,6 +395,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.showUpToDate = !this.showUpToDate;
     } else if (filter === 'past-due') {
       this.showPastDue = !this.showPastDue;
+    } else if (filter === 'none') {
+      this.showNone = !this.showNone;
     } else if (filter === 'individual-contributor') {
       this.showIndividualContributors = !this.showIndividualContributors;
     } else if (filter === 'supervisor') {
@@ -372,21 +421,16 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   async launchImporter() {
     try {
-      /*
-      Observable.defer(this.importer.requestDataFromUser().subscribe(results => {
-  
-      }))
-      */
+
       let results = await this.importer.requestDataFromUser();
       this.importer.displayLoader();
-      this.importer.displaySuccess("Success!");
-      this.results = JSON.stringify(results.validData, null, 2);
+        this.importer.displaySuccess("Success!");
+        this.results = JSON.stringify(results.validData, null, 2);
 
-      this.newUsers = JSON.parse(this.results);
-      this.userService.createNewUsersFromBatch(this.newUsers);
-      
-//        this.trainingService.assignTrainingsForJobTitle(this.newTeamMember.jobTitle, this.newTeamMember._id, this.newTeamMember.teamId);
-//        this.newUsers = [{ firstName: '', lastName: '', email: '', jobTitle: '', supervisorName: '' }];
+        this.newUsers = JSON.parse(this.results);
+        this.userService.createNewUsersFromBatch(this.newUsers);
+      //        this.trainingService.assignTrainingsForJobTitle(this.newTeamMember.jobTitle, this.newTeamMember._id, this.newTeamMember.teamId);
+      //        this.newUsers = [{ firstName: '', lastName: '', email: '', jobTitle: '', supervisorName: '' }];
     } catch (e) {
       console.info(e || "window close");
     }
@@ -563,11 +607,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.showUserTrainingModal = false;
       return;
     }
-    this.userTrainingService.assignTraining(this.userIdSelected,
-      this.selectedTrainingId,
-      this.authenticatedUser._id,
-      this.allTrainingIdHash[this.selectedTrainingId].versions[0].version);
-    
+    this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version);
+
+    if (this.selectedUser.trainingStatus === 'none') {
+      this.selectedUser.trainingStatus = 'upToDate';
+      this.userService.updateUser(this.selectedUser, true);
+    }
+
     this.showUserTrainingModal = false;
     this.assignableTrainings.splice(this.assignableTrainings.indexOf(this.selectedTrainingId), 1);
     this.selectedTrainingId = null;

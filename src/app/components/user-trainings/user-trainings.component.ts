@@ -114,11 +114,14 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
 
     this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
       if (!userTrainings) {
+        this.userTrainings = [];
         return;
       }
 
       let userId;
       let pastDueFound = false;
+      this.userTrainings = userTrainings;
+      /*
       if (userTrainings.length > 0) {
         userId = userTrainings[0].uid;
         this.userTrainings = userTrainings;
@@ -137,6 +140,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       } else {
         this.userTrainings = [];
       }
+      */
     });
 
     this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
@@ -198,23 +202,29 @@ viewTraining(utid, tid, version) {
 
 confirmDeleteUserTraining(ut) {
   this.userTrainingService.deleteUserTraining(ut._id, ut.uid);
-  this.userTrainingService.selectUser(ut.uid);
 
   let anotherPastDueFound = false;
-  if ((this.userTrainings && this.userTrainings.length > 0) && (this.userTrainings[0].uid === ut.uid)) {
-    for (let userTraining of this.userTrainings) {
-      if (userTraining._id !== ut._id) {
-        if (userTraining.status === 'pastDue') {
-          anotherPastDueFound = true;
-          break;
+  if (this.userTrainings && this.userTrainings.length > 1) {
+    if (this.userTrainings[0].uid === ut.uid) {
+      for (let userTraining of this.userTrainings) {
+        if (userTraining._id !== ut._id) {
+          if (userTraining.status === 'pastDue') {
+            anotherPastDueFound = true;
+            break;
+          }
         }
       }
+      if (anotherPastDueFound) {
+        this.userService.setUserStatusPastDue(ut.uid);
+      } else {
+        this.userService.setUserStatusUpToDate(ut.uid);
+      }
+      this.userTrainingService.selectUser(ut.uid);
     }
-    if (anotherPastDueFound) {
-      this.userService.setUserStatusPastDue(ut.uid);
-    } else {
-      this.userService.setUserStatusUpToDate(ut.uid);
-    }
+  } else {
+    this.selectedUser.trainingStatus = 'none';
+    this.userService.updateUser(this.selectedUser, true);
+    this.userService.selectUser(this.selectedUser._id);
   }
 
   this.trainingIsVisible = false;

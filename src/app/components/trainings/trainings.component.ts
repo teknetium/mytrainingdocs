@@ -117,9 +117,11 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
       this.teamTrainingHash = teamTrainingHash;
       this.trainings = Object.values(this.teamTrainingHash);
     })
+    /*
     this.userTrainingForTid$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uts => {
       this.userTrainings = uts;
     })
+    */
   }
 
   ngAfterViewInit() {

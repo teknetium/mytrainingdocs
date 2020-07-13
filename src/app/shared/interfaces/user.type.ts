@@ -27,6 +27,7 @@ export interface OrgChartNode {
   name: string,
   cssClass: string,
   image: string,
+  extra: {uid:string, reportChain:string[]}
   title: string,
   childs: OrgChartNode []
 }

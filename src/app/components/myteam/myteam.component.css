@@ -52,9 +52,10 @@
     overflow:auto;
     white-space: nowrap;
     border-top:1px solid #dddddd;
+    padding-right:5px;
 }
 .user-button:hover {
-    background-color: #f1f1f1   ;
+    color:blue;
 }
 
 .selected-training {
@@ -73,7 +74,6 @@
 .user-selected {
     background-color: #e0eafd;
     color:blue;
-    font-weight: 500;
 }
 
 .legend {
@@ -186,4 +186,16 @@
 
 .pastDue {
     border-bottom: 2px solid red;
+}
+
+.org-chart-node {
+    white-space: nowrap;
+}
+
+.report-chain {
+    cursor: pointer;
+}
+
+.report-chain:hover {
+    background-color: #f1f1f1;
 }

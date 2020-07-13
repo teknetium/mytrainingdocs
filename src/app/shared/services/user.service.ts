@@ -23,15 +23,16 @@ export class UserService {
 
   // Writable streams
   private myOrgBS$ = new BehaviorSubject<OrgChartNode[]>(null);
+  private uidReportChainHashBS$ = new BehaviorSubject<UserIdHash>(null);
   private authenticatedUserBS$ = new BehaviorSubject<UserModel>(null);
   private myTeamIdHashBS$ = new BehaviorSubject<UserIdHash>(null);
+  private myOrgHashBS$ = new BehaviorSubject<UserIdHash>(null);
   private myTeamBS$ = new BehaviorSubject<UserModel[]>([]);
   private myTeamCntBS$ = new BehaviorSubject<number>(0);
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
   private newUserBS$ = new BehaviorSubject<UserModel>(null);
   private allOrgUserHash: UserIdHash = {};
   private myTeam: UserModel[] = [];
-  private myOrgUsers: UserModel[] = [];
   private statusObj;
 
   userTypeIconHash = {
@@ -69,7 +70,7 @@ export class UserService {
 
   nodes: any = [];
   userNode: OrgChartNode;
-
+  uidReportChainHash = {};
 
   constructor(
     private http: HttpClient,
@@ -215,7 +216,6 @@ export class UserService {
           this.myTeamIdHash[user._id] = user;
           this.myTeam.push(user);
         }
-        this.myOrgUsers.push(user);
         this.allOrgUserHash[user._id] = user;
         if (user.jobTitle) {
           this.jobTitleService.addJobTitle(user.jobTitle);
@@ -227,9 +227,9 @@ export class UserService {
 
       this.myTeamIdHash[this.authenticatedUser._id] = this.authenticatedUser;
       this.myTeam.push(this.authenticatedUser);
-      this.myOrgUsers.push(this.authenticatedUser);
       this.allOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
       this.myTeamBS$.next(this.myTeam);
+      this.myOrgHashBS$.next(this.allOrgUserHash);
 
       //      this.myTeamCntBS$.next(Object.keys(this.myTeamIdHash).length);
 
@@ -239,32 +239,75 @@ export class UserService {
       }
 
       this.nodes = [];
+      let rootNode;
+      this.buildOrgChart(this.authenticatedUser._id, false);
+      /*
       let rootNode: OrgChartNode = {
         name: this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName,
         cssClass: '',
         image: '',
+        extra: {
+          uid: this.authenticatedUser._id,
+        },
         title: this.authenticatedUser.jobTitle,
         childs: []
       }
       for (let dR of this.authenticatedUser.directReports) {
         rootNode.childs.push(this.buildUserNode(dR));
       }
+      */
       this.nodes.push(rootNode);
       this.myOrgBS$.next(this.nodes);
+      this
     });
   }
 
-  buildUserNode(userId): OrgChartNode {
+  buildOrgChart(uid: string, subChart: boolean) {
+    
+    this.nodes = [];
+    let rootNode: OrgChartNode = {
+      name: this.allOrgUserHash[uid].firstName + ' ' + this.allOrgUserHash[uid].lastName,
+      cssClass: '',
+      image: '',
+      extra: {
+        uid: uid,
+        reportChain: []
+      },
+      title: this.authenticatedUser.jobTitle,
+      childs: []
+    };
+
+    let reportChain = [uid];
+
+    for (let dR of this.allOrgUserHash[uid].directReports) {
+      rootNode.childs.push(this.buildUserNode(dR, Object.assign([], reportChain)));
+    }
+
+    this.nodes.push(rootNode);
+    this.myOrgBS$.next(this.nodes);
+    if (!subChart) {
+      this.uidReportChainHashBS$.next(Object.assign({}, this.uidReportChainHash));
+    }
+  }
+
+  buildUserNode(userId, reportChain): OrgChartNode {
+    this.uidReportChainHash[userId] = reportChain;
     let user = this.allOrgUserHash[userId];
     let userNode = <OrgChartNode>{};
-    userNode.name = user.firstName + ' ' + user.lastName;
-    userNode.cssClass = '';
+//    userNode.name = user.firstName + ' ' + user.lastName;
+    userNode.name = user.firstName;
+    userNode.cssClass = 'org-chart-node';
     userNode.image = '';
-    userNode.title = user.jobTitle;
+    userNode.extra = {
+      uid: userId,
+      reportChain: reportChain
+    }
+//    userNode.title = user.jobTitle;
     userNode.childs = [];
-
+    let newReportChain = Object.assign([], reportChain);
+    newReportChain.push(userId);
     for (let dR of user.directReports) {
-      userNode.childs.push(this.buildUserNode(dR));
+      userNode.childs.push(this.buildUserNode(dR, Object.assign([], newReportChain)));
     }
     return userNode;
   }
@@ -272,12 +315,16 @@ export class UserService {
 
   setUserStatusPastDue(uid: string) {
     this.myTeamIdHash[uid].trainingStatus = 'pastDue';
-    console.log('setUserStatusPastDue', this.myTeamIdHash[uid]);
     this.updateUser(this.myTeamIdHash[uid], true);
   }
+
   setUserStatusUpToDate(uid: string) {
     this.myTeamIdHash[uid].trainingStatus = 'upToDate';
-    console.log('setUserStatusUpToDate', this.myTeamIdHash[uid]);
+    this.updateUser(this.myTeamIdHash[uid], true);
+  }
+
+  setUserStatusNone(uid: string) {
+    this.myTeamIdHash[uid].trainingStatus = 'none';
     this.updateUser(this.myTeamIdHash[uid], true);
   }
 
@@ -340,6 +387,14 @@ export class UserService {
     });
   }
 
+  getUIDReportChainHashStream(): Observable<UserIdHash> {
+    return this.uidReportChainHashBS$.asObservable();
+  }
+
+  getOrgHashStream(): Observable<UserIdHash> {
+    return this.myOrgHashBS$.asObservable();
+  }
+
   getSelectedUserStream(): Observable<UserModel> {
     return this.selectedUserBS$.asObservable();
   }
@@ -360,7 +415,7 @@ export class UserService {
     this.action = 'save';
     this.putUser$(user).subscribe((updatedUser) => {
       console.log('updateUser', updatedUser);
-      this.loadData(this.teamId, null);
+      this.loadData(this.teamId, user._id);
     });
   }
 
