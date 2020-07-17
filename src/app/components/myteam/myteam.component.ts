@@ -131,6 +131,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   authenticatedUser$: Observable<UserModel>;
   myOrgUserHash: UserIdHash = {};
   myOrgUsers: string[] = [];
+  myOrgSupervisors: string[] = [];
   myTeamIdHash: UserIdHash;
   myTeam$: Observable<UserModel[]>;
   myTeam: UserModel[] = [];
@@ -295,9 +296,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       for (let user of myOrgUserObjects) {
         this.myOrgUsers.push(user.firstName + ' ' + user.lastName);
         this.myOrgUserNameHash[user.firstName + ' ' + user.lastName] = user;
+        if (user.userType === 'supervisor') {
+          this.myOrgSupervisors.push(user.firstName + ' ' + user.lastName);
+        }
       }
       this.matchingUsers = this.myOrgUsers;
-      this.matchingSupervisors = this.myOrgUsers;
+      this.matchingSupervisors = this.myOrgSupervisors;
     });
     this.uidReportChainHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidReportChainHash => {
       if (!uidReportChainHash) {
@@ -319,7 +323,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       console.log('org Chart nodes', nodes);
       this
       this.nodes = nodes;
-      this.currentTab = 1;
     });
     this.myTeam$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
       console.log('myTeam$  ', userList);
@@ -547,7 +550,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   onSupervisorNameChange(value: string): void {
-    this.matchingSupervisors = this.myOrgUsers.filter(user => user.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+    this.matchingSupervisors = this.myOrgSupervisors.filter(user => user.toLowerCase().indexOf(value.toLowerCase()) !== -1);
     let userObj;
     if (this.myOrgUsers.indexOf(value) > -1) {
       this.invalidSupervisorName = false;
@@ -568,6 +571,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.showAddToUserListButton = false;
     this.currentTab = 0;
     this.userNameToSearchFor = '';
+    this.matchingUsers = this.myOrgUsers;
     this.selectUser(userObj._id);
   }
 
