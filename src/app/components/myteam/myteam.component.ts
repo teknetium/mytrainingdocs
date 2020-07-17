@@ -646,6 +646,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.selectedUser.supervisorId = supervisorObj._id;
       this.selectedUser.teamId = supervisorObj._id;
       supervisorObj.directReports.push(this.selectedUser._id);
+      this.authenticatedUser.directReports.splice(this.authenticatedUser.directReports.indexOf(this.selectedUser._id), 1);
+      this.userService.updateUser(this.authenticatedUser, true);
       this.userService.updateUser(supervisorObj, false);
     }
     this.userService.updateUser(this.selectedUser, false);
