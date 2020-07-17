@@ -166,6 +166,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   userIdSelected = '';
   matchingJobTitles: string[] = [];
   matchingUsers: string[] = [];
+  matchingSupervisors: string[] = [];
   uid: string;
   teamTrainings: TrainingModel[] = [];
   userPanelVisible = false;
@@ -226,9 +227,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
   myOrgUserNameHash = {};
   userNameToSearchFor: string;
+  showAddToUserListButton = false;
+  invalidSupervisorName = true;
+  supervisorName;
+  supervisorChanged = false;
 
-
-  
   constructor(
     private cd: ChangeDetectorRef,
     private authService: AuthService,
@@ -294,6 +297,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         this.myOrgUserNameHash[user.firstName + ' ' + user.lastName] = user;
       }
       this.matchingUsers = this.myOrgUsers;
+      this.matchingSupervisors = this.myOrgUsers;
     });
     this.uidReportChainHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidReportChainHash => {
       if (!uidReportChainHash) {
@@ -324,10 +328,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
       this.myGroup = userList;
       this.myTeam = userList;
+      /*
       let teamIdHash = {};
       for (let teamMember of this.myTeam) {
         teamIdHash[teamMember._id] = teamMember;
       }
+      */
     });
 
     this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamIdHash => {
@@ -344,6 +350,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
       this.userIdSelected = user._id;
       this.selectedUser = user;
+      if (user._id !== this.authenticatedUser._id) {
+        this.supervisorName = this.myOrgUserHash[user.supervisorId].firstName + ' ' + this.myOrgUserHash[user.supervisorId].lastName;
+      }
       this.trainingService.selectTraining(null);
     });
 
@@ -415,10 +424,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     })
   }
   increaseFontSize() {
-    this.orgChartFontSize += 2;
+    this.orgChartFontSize += 1;
   }
   decreaseFontSize() {
-    this.orgChartFontSize -= 2;
+    this.orgChartFontSize -= 1;
   }
 
   selectReportChainItem(uid) {
@@ -532,10 +541,34 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   onUserSearchChange(value: string): void {
     this.matchingUsers = this.myOrgUsers.filter(user => user.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+    if (this.myOrgUsers.indexOf(value) > -1) {
+      this.showAddToUserListButton = true;
+    }
+  }
+
+  onSupervisorNameChange(value: string): void {
+    this.matchingSupervisors = this.myOrgUsers.filter(user => user.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+    let userObj;
+    if (this.myOrgUsers.indexOf(value) > -1) {
+      this.invalidSupervisorName = false;
+      this.supervisorChanged = true;
+    } else {
+      this.invalidSupervisorName = true;
+    }
   }
 
   onJobTitleChange(value: string): void {
     this.matchingJobTitles = this.jobTitles.filter(jobTitle => jobTitle.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+  }
+
+  addFoundUser() {
+    let userObj = this.myOrgUserNameHash[this.userNameToSearchFor];
+    this.myTeam.push(userObj);
+    this.myTeamIdHash[userObj._id] = userObj;
+    this.showAddToUserListButton = false;
+    this.currentTab = 0;
+    this.userNameToSearchFor = '';
+    this.selectUser(userObj._id);
   }
 
   addUser() {
@@ -604,6 +637,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   handleUpdateUser() {
     this.userPanelVisible = false;
+    let supervisorObj = this.myOrgUserNameHash[this.supervisorName];
+    if (this.selectedUser.supervisorId !== supervisorObj._id) {
+      this.selectedUser.supervisorId = supervisorObj._id;
+      this.selectedUser.teamId = supervisorObj._id;
+      supervisorObj.directReports.push(this.selectedUser._id);
+      this.userService.updateUser(supervisorObj, false);
+    }
     this.userService.updateUser(this.selectedUser, false);
   }
 
