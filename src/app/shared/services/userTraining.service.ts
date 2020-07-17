@@ -29,7 +29,6 @@ export class UserTrainingService {
   private sessionLog: UTSession[] = [];
   private sessionLogBS$ = new BehaviorSubject<UTSession[]>(null);
 
-
   constructor(
     private eventService: EventService,
     private http: HttpClient,
@@ -56,7 +55,7 @@ export class UserTrainingService {
     });
   }
 
-  updateUTVersion(uid: string, tid: string, newVersion:string) {
+  updateUTVersion(uid: string, tid: string, newVersion: string) {
     let utList = this.uidUTHash[uid];
     for (let ut of utList) {
       if (ut.tid === tid) {

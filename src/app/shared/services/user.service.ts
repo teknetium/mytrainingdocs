@@ -5,7 +5,7 @@ import { UserTrainingService } from './userTraining.service';
 import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { UserModel, UserIdHash, OrgChartNode } from '../interfaces/user.type';
+import { UserModel, UserIdHash, OrgChartNode, UserBatchData, BuildOrgProgress } from '../interfaces/user.type';
 import { Auth0ProfileModel } from '../interfaces/auth0Profile.type';
 import { Router } from '@angular/router';
 import { EventModel } from '../interfaces/event.type';
@@ -23,6 +23,7 @@ export class UserService {
 
   // Writable streams
   private myOrgBS$ = new BehaviorSubject<OrgChartNode[]>(null);
+  private buildOrgProgressBS$ = new BehaviorSubject<BuildOrgProgress>(null);
   private uidReportChainHashBS$ = new BehaviorSubject<UserIdHash>(null);
   private authenticatedUserBS$ = new BehaviorSubject<UserModel>(null);
   private myTeamIdHashBS$ = new BehaviorSubject<UserIdHash>(null);
@@ -71,6 +72,17 @@ export class UserService {
   nodes: any = [];
   userNode: OrgChartNode;
   uidReportChainHash = {};
+  newUserIndex = 0;
+  newUserData: UserBatchData[];
+  newUser: UserBatchData;
+
+  orgProgress: BuildOrgProgress = {
+    usersAdded: 0,
+    usersProcessed: 0,
+    usersTotal: 0,
+    description: '',
+    supervisorMatchFail: []
+  }
 
   constructor(
     private http: HttpClient,
@@ -138,10 +150,10 @@ export class UserService {
                   foo: 'test',
                   showPageInfo: true,
                   themeColor: {
-                    name: 'grey',
+                    name: 'orange ',
+                    bgColor: 'orange',
                     primary: 'white',
-                    secondary: '#999999',
-                    bgColor: '#e9e9e9',
+                    secondary: '#c54f0a',
                   }
                 }
               }
@@ -267,13 +279,13 @@ export class UserService {
     this.nodes = [];
     let rootNode: OrgChartNode = {
       name: this.allOrgUserHash[uid].firstName + ' ' + this.allOrgUserHash[uid].lastName,
-      cssClass: '',
+      cssClass: 'org-chart-top',
       image: '',
       extra: {
         uid: uid,
         reportChain: []
       },
-      title: this.authenticatedUser.jobTitle,
+      title: this.allOrgUserHash[uid].jobTitle,
       childs: []
     };
 
@@ -312,6 +324,9 @@ export class UserService {
     return userNode;
   }
 
+  getOrgProgressStream(): Observable<BuildOrgProgress> {
+    return this.buildOrgProgressBS$.asObservable();
+  }
 
   setUserStatusPastDue(uid: string) {
     this.myTeamIdHash[uid].trainingStatus = 'pastDue';
@@ -328,11 +343,112 @@ export class UserService {
     this.updateUser(this.myTeamIdHash[uid], true);
   }
 
-  createNewUsersFromBatch(userData) {
+  processNewUser(newUser:UserModel) {
+    this.newUserList.push(newUser);
+    this.fullNameHash[newUser.firstName + ' ' + newUser.lastName] = newUser;
+    this.allOrgUserHash[newUser._id] = newUser;
+
+    this.orgProgress.usersAdded++;
+    this.buildOrgProgressBS$.next(this.orgProgress);
+
+    if (this.newUserIndex < this.batchCount - 1) {
+      this.newUserIndex++;
+      this.newUser = this.newUserData[this.newUserIndex];
+
+      this.addUserFromBatch(this.newUser);
+
+    } else if (this.newUserIndex === this.batchCount - 1) {
+      this.orgProgress.description = 'Building Organization';
+      for (let nUser of this.newUserList) {
+        if (!this.fullNameHash[this.newUserHash[nUser._id].supervisorName]) {
+          this.orgProgress.supervisorMatchFail.push(this.newUserHash[nUser._id]);
+        } else {
+          this.orgProgress.usersProcessed++;
+          this.fullNameHash[this.newUserHash[nUser._id].supervisorName].directReports.push(nUser._id);
+          this.fullNameHash[this.newUserHash[nUser._id].supervisorName].userType = 'supervisor';
+          nUser.supervisorId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
+          nUser.teamId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
+        }
+        this.buildOrgProgressBS$.next(this.orgProgress);
+      }
+      let saveCnt = 0;
+      let allUsers = Object.values(this.fullNameHash);
+      for (let nUser of allUsers) {
+        this.putUser$(nUser).subscribe(user => {
+          saveCnt++;
+          if (saveCnt === this.newUserList.length) {
+            this.loadData(this.authenticatedUser._id, null);
+          }
+        })
+      }
+    }
+  }
+
+  addUserFromBatch(user) {
+    this.newTeamMember.userType = 'individualContributor';
+    this.newTeamMember._id = String(new Date().getTime());
+    this.newTeamMember.firstName = user.firstName;
+    this.newTeamMember.lastName = user.lastName;
+    this.newTeamMember.email = user.email;
+    this.newTeamMember.jobTitle = user.jobTitle;
+    this.newTeamMember.trainingStatus = 'none';
+    this.newTeamMember.teamAdmin = false;
+    this.newUserHash[this.newTeamMember._id] = user;
+    this.newUserIds.push(this.newTeamMember._id);
+
+    this.postUser$(this.newTeamMember).subscribe(newUser => {
+      this.processNewUser(newUser);
+    });    
+  }
+
+  createNewUsersFromBatch(userData: UserBatchData[]) {
     this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
     this.fullNameHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
+    this.newUserData = userData;
+    this.batchCount = this.newUserData.length;
+    this.orgProgress.usersTotal = this.batchCount;
+    this.orgProgress.description = "Creating user accounts";
+    this.buildOrgProgressBS$.next(this.orgProgress);
 
-    this.batchCount = userData.length;
+    this.newUserIndex = 0;
+    this.newUser = this.newUserData[this.newUserIndex];
+
+    this.addUserFromBatch(this.newUser);
+  }
+    /*
+    this.newTeamMember.userType = 'individualContributor';
+    this.newTeamMember._id = String(new Date().getTime());
+    this.newTeamMember.firstName = user.firstName;
+    this.newTeamMember.lastName = user.lastName;
+    this.newTeamMember.email = user.email;
+    this.newTeamMember.jobTitle = user.jobTitle;
+    this.newTeamMember.trainingStatus = 'none';
+    this.newTeamMember.teamAdmin = false;
+    this.newUserHash[this.newTeamMember._id] = user;
+    this.newUserIds.push(this.newTeamMember._id);
+
+    this.postUser$(this.newTeamMember).subscribe(newUser => {
+      this.newUserList.push(newUser);
+      this.fullNameHash[newUser.firstName + ' ' + newUser.lastName] = newUser;
+      this.allOrgUserHash[newUser._id] = newUser;
+
+      if (newUserIndex < this.batchCount - 1) {
+        newUserIndex++;
+        user = userData[newUserIndex];
+        this.newTeamMember.userType = 'individualContributor';
+        this.newTeamMember._id = String(new Date().getTime());
+        this.newTeamMember.firstName = user.firstName;
+        this.newTeamMember.lastName = user.lastName;
+        this.newTeamMember.email = user.email;
+        this.newTeamMember.jobTitle = user.jobTitle;
+        this.newTeamMember.trainingStatus = 'none';
+        this.newTeamMember.teamAdmin = false;
+        this.newUserHash[this.newTeamMember._id] = user;
+        this.newUserIds.push(this.newTeamMember._id);
+      }
+    });
+    */
+    /*
     for (let user of userData) {
       this.newTeamMember.userType = 'individualContributor';
       this.newTeamMember._id = String(new Date().getTime());
@@ -369,8 +485,8 @@ export class UserService {
         }
       })
     }
-  }
-
+    */
+    
   createNewUser(user: UserModel, reload: boolean) {
     this.postUser$(user).subscribe(data => {
       this.authenticatedUser.directReports.push(data._id);

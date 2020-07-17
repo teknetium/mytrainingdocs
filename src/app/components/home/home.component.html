@@ -1,11 +1,11 @@
 <div *ngIf="authenticatedUser && authenticatedUser.firstName !== ''"
     style="height:100%;width:100%;padding:30px;position:relative;">
-    <i nz-icon nzType="car" nzTheme="twotone"
-        style="cursor:pointer;position:absolute;top:0;left:0;font-size:20px;color:#000000;" (click)="startTour()"
-        nz-tooltip nzTooltipTitle="Tour the Page!"></i>
+<i nz-icon nzType="question-circle" nzTheme="twotone"
+    style="cursor:pointer;position:absolute;top:0;left:0;font-size:20px;color:#000000;" (click)="startTour()"
+    nz-tooltip nzTooltipTitle="A little help"></i>
     <div style="display:block;">
         <div joyrideStep="step1" title="Welcome"
-            text="Lets get started!  On this page you will find three sections that are intended to give you a very quick, high level understanding of your team and their training."
+            text="On this page you will find three sections that are intended to give you a very quick, high level understanding of your team and their training."
             style="margin-bottom:20px;display: inline-block;margin-left:20px;">
             <span style="font-weight: 200;font-size:28px;">
                 Welcome,

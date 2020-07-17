@@ -8,7 +8,7 @@ import { UserTrainingService } from '../../shared/services/userTraining.service'
 import { UserTrainingModel, UidUTHash } from '../../shared/interfaces/userTraining.type';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
 import { Observable, BehaviorSubject, Subscription, defer } from 'rxjs';
-import { UserModel, UserIdHash, OrgChartNode } from '../../shared/interfaces/user.type';
+import { UserModel, UserIdHash, OrgChartNode, BuildOrgProgress } from '../../shared/interfaces/user.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
 import { JobTitleService } from '../../shared/services/jobtitle.service';
@@ -18,6 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as cloneDeep from 'lodash/cloneDeep';
 import { BaseComponent } from '../base.component';
 import FlatfileImporter from "flatfile-csv-importer";
+import { JoyrideService } from 'ngx-joyride';
 
 @Component({
   selector: 'app-myteam',
@@ -118,6 +119,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   assignableTrainings: TrainingModel[] = [];
   showUserTrainingModal = false;
 
+  buildOrgProgress$: Observable<BuildOrgProgress>;
   myOrgChartData$: Observable<OrgChartNode[]>;
   myOrgUserHash$: Observable<UserIdHash>;
   userTrainings$: Observable<UserTrainingModel[]>;
@@ -127,7 +129,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   selectedUserId: string;
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
-  myOrgUserHash = {};
+  myOrgUserHash: UserIdHash = {};
+  myOrgUsers: string[] = [];
   myTeamIdHash: UserIdHash;
   myTeam$: Observable<UserModel[]>;
   myTeam: UserModel[] = [];
@@ -162,6 +165,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   message: MessageModel;
   userIdSelected = '';
   matchingJobTitles: string[] = [];
+  matchingUsers: string[] = [];
   uid: string;
   teamTrainings: TrainingModel[] = [];
   userPanelVisible = false;
@@ -205,12 +209,26 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   teamId;
   nodes: OrgChartNode[];
   chartOrientation = 'vertical';
-  orgChartFontSize = 14;
+  orgChartFontSize = 2;
   reportChain: string[] = [];
   orgNodeHash = {};
   uidReportChainHash = {};
   orgChartHeight;
+  currentTab = 0;
+  tourStepsHash = {};
+  bulkAdd = false;
+  orgProgress: BuildOrgProgress = {
+    usersTotal: 0,
+    usersAdded: 0,
+    description: '',
+    usersProcessed: 0,
+    supervisorMatchFail: []
+  }
+  myOrgUserNameHash = {};
+  userNameToSearchFor: string;
 
+
+  
   constructor(
     private cd: ChangeDetectorRef,
     private authService: AuthService,
@@ -219,10 +237,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private trainingService: TrainingService,
     private jobTitleService: JobTitleService,
     private userTrainingService: UserTrainingService,
+    private joyrideService: JoyrideService,
     private route: ActivatedRoute,
     private router: Router
   ) {
     super();
+    this.buildOrgProgress$ = this.userService.getOrgProgressStream();
     this.uidReportChainHash$ = this.userService.getUIDReportChainHashStream();
     this.myOrgChartData$ = this.userService.getMyOrgStream();
     this.myOrgUserHash$ = this.userService.getOrgHashStream();
@@ -238,6 +258,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.tourStepsHash['myTeam'] = ['Step1-myTeam', 'Step2-myTeam', 'Step3-myTeam', 'Step4-myTeam'];
+    this.tourStepsHash['memberDetails'] = ['Step1-memberDetails'];
+    this.tourStepsHash['orgChart'] = ['Step1-orgChart'];
+
+
     this.contentHeight = Math.floor((window.innerHeight - (.3 * window.innerHeight)) * .90);
     this.contentWidth = Math.floor(window.innerWidth * .9);
     FlatfileImporter.setVersion(2);
@@ -249,12 +274,26 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       console.log('MyTeamComponent:newUser$.subscribe: ', newUser);
       this.trainingService.assignTrainingsForJobTitle(newUser.jobTitle, newUser._id, newUser.teamId);
     });
+    this.buildOrgProgress$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgProgress => {
+      if (!orgProgress) {
+        return;
+      }
+      this.bulkAdd = true;
+      console.log('Org Progress', orgProgress);
+      this.orgProgress = orgProgress;
+    });
 
     this.myOrgUserHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgUserHash => {
       if (!orgUserHash) {
         return;
       }
       this.myOrgUserHash = orgUserHash;
+      let myOrgUserObjects = Object.values(this.myOrgUserHash);
+      for (let user of myOrgUserObjects) {
+        this.myOrgUsers.push(user.firstName + ' ' + user.lastName);
+        this.myOrgUserNameHash[user.firstName + ' ' + user.lastName] = user;
+      }
+      this.matchingUsers = this.myOrgUsers;
     });
     this.uidReportChainHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidReportChainHash => {
       if (!uidReportChainHash) {
@@ -276,6 +315,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       console.log('org Chart nodes', nodes);
       this
       this.nodes = nodes;
+      this.currentTab = 1;
     });
     this.myTeam$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
       console.log('myTeam$  ', userList);
@@ -427,11 +467,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
       let results = await this.importer.requestDataFromUser();
       this.importer.displayLoader();
-        this.importer.displaySuccess("Success!");
-        this.results = JSON.stringify(results.validData, null, 2);
+      this.importer.displaySuccess("Success!");
+      this.results = JSON.stringify(results.validData, null, 2);
 
-        this.newUsers = JSON.parse(this.results);
-        this.userService.createNewUsersFromBatch(this.newUsers);
+      this.newUsers = JSON.parse(this.results);
+      this.userService.createNewUsersFromBatch(this.newUsers);
       //        this.trainingService.assignTrainingsForJobTitle(this.newTeamMember.jobTitle, this.newTeamMember._id, this.newTeamMember.teamId);
       //        this.newUsers = [{ firstName: '', lastName: '', email: '', jobTitle: '', supervisorName: '' }];
     } catch (e) {
@@ -490,8 +530,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     //    this.userService.updateUser(this.authenticatedUser, false);
   }
 
+  onUserSearchChange(value: string): void {
+    this.matchingUsers = this.myOrgUsers.filter(user => user.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+  }
+
   onJobTitleChange(value: string): void {
-    console.log('onJobTitleChange', this.jobTitles);
     this.matchingJobTitles = this.jobTitles.filter(jobTitle => jobTitle.toLowerCase().indexOf(value.toLowerCase()) !== -1);
   }
 
@@ -643,5 +686,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   allowDrop(event) {
     event.preventDefault();
   }
+
+  startTour(section) {
+    let steps = this.tourStepsHash[section];
+    this.joyrideService.startTour({ steps: steps });
+  }
+
 
 }

@@ -21,7 +21,15 @@ export interface UserModel {
 
 export interface UserIdHash {
   [indexer: string]: UserModel;
-} 
+}
+
+export interface UserBatchData {
+  firstName: string,
+  lastName: string,
+  email: string,
+  jobTitle: string,
+  supervisorName: string
+}
 
 export interface OrgChartNode {
   name: string,
@@ -32,6 +40,13 @@ export interface OrgChartNode {
   childs: OrgChartNode []
 }
 
+export interface BuildOrgProgress {
+  usersAdded: number,
+  usersProcessed: number,
+  usersTotal: number,
+  description: string,
+  supervisorMatchFail: UserBatchData[],
+}
 
 export class UserSessionModel {
   constructor(

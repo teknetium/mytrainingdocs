@@ -188,8 +188,15 @@
     border-bottom: 2px solid red;
 }
 
+.org-chart-top {
+    font-size: 14px;
+    background-color: red;
+}
+
 .org-chart-node {
     white-space: nowrap;
+    color:blue !important;
+    background-color: #f1f1f1 !important;
 }
 
 .report-chain {

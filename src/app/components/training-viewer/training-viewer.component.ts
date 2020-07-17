@@ -318,7 +318,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
   embeddedPageDialogIsVisible = false;
   tourModalIsVisible = false;
-  startTour$: Observable<string>;
+  //  startTour$: Observable<string>;
   viewingArchiveVersion = false;
   currentAssessmentId = null;
   editor;
@@ -331,7 +331,13 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   showAssessmentAlert = false;
   millisecondsPerDay = 86400000;
   notifyPeriod;
-  
+
+  tourStepsHash = {};
+  //    header: ,
+  //    page-navigation: { steps: ['Step1-header', 'Step2-header', 'Step3-header', 'Step4-header', 'Step5-header', 'Step6-header', 'Step7-header', 'Step8-header', 'Step9-header'] },
+
+
+
   constructor(
     private trainingService: TrainingService,
     private modalService: NzModalService,
@@ -348,7 +354,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     private message: NzMessageService,
     private authService: AuthService) {
     super();
-    this.startTour$ = this.eventService.getStartTourStream();
+    //    this.startTour$ = this.eventService.getStartTourStream();
     this.assessmentItems$ = this.trainingService.getAssessmentItemStream();
     this.jobTitles$ = this.jobTitleService.getJobTitleStream();
     this.categories$ = this.trainingService.getCategoryStream();
@@ -368,11 +374,14 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.tourStepsHash['header'] = ['Step1-header', 'Step2-header', 'Step3-header', 'Step4-header', 'Step5-header', 'Step6-header', 'Step7-header', 'Step8-header', 'Step9-header'];
+    this.tourStepsHash['page-navigation'] = ['Step1-pn', 'Step2-pn', 'Step3-pn', 'Step4-pn', 'Step5-pn', 'Step6-pn', 'Step7-pn', 'Step8-pn', 'Step9-pn'];
+    this.tourStepsHash['training-intro'] = ['Step1-header', 'Step2-header', 'Step3-header', 'Step4-header', 'Step5-header', 'Step6-header', 'Step7-header', 'Step8-header', 'Step9-header'];
 
     console.log('ngOnInit');
 
     if (this.production === 'true') {
-//      this.iFrameBorder = 0;
+      //      this.iFrameBorder = 0;
       this.percentageOfBrowserHeight = .35;
     }
     this.browserInnerHeight = window.innerHeight;
@@ -403,12 +412,13 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.currentVersionIndex = 0;
     this.mode = 'Edit';
     this.currentTraining = null;
-
-    this.startTour$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(data => {
-      if (data == 'trainings') {
-        this.tourModalIsVisible = true;
-      }
-    });
+    /*
+        this.startTour$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(data => {
+          if (data == 'trainings') {
+            this.tourModalIsVisible = true;
+          }
+        });
+        */
     this.jobTitles$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(jobTitles => {
       this.jobTitles = jobTitles;
       this.matchingJobTitles = this.jobTitles;
@@ -654,7 +664,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       }
     }
     */
-  
+
   hideEditor(event) {
     event.preventDefault();
     this.introEditorHash[this.currentPageId] = false;
@@ -666,7 +676,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.introEditorHash[pageId] = action;
   }
 
-  getFroalaOptions(pageId: string):Object  {
+  getFroalaOptions(pageId: string): Object {
     return new Object({
       placeholderText: 'Edit Your Content Here!',
       immediateAngularModelUpdate: true,
@@ -825,26 +835,28 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
     this.lockTrainingModalIsVisible = false;
 
-    if (this.selectedTraining.jobTitle !== this.previousVersion.jobTitle) {
-      /*
-            for (let userId of this.assignedToUsers) {
-              if (this.myTeamHash[userId].jobTitle === this.trainingArchiveList[0].jobTitle) {
-                this.userTrainingService.deleteUserTrainingByTidUid(this.selectedTraining._id, userId);
-                this.removedFromJobTitle.push(userId);
-              }
+    /*
+          for (let userId of this.assignedToUsers) {
+            if (this.myTeamHash[userId].jobTitle === this.trainingArchiveList[0].jobTitle) {
+              this.userTrainingService.deleteUserTrainingByTidUid(this.selectedTraining._id, userId);
+              this.removedFromJobTitle.push(userId);
             }
-      */
-      for (let userId of this.assignableUsers) {
-        if (this.myTeamHash[userId].jobTitle === this.selectedTraining.jobTitle) {
-          if (this.selectedTraining.versions.length > 1) {
-            this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, this.selectedTraining.versions[0].version);
-            this.assignedFromJobTitle.push(userId);
           }
+    */
+    for (let userId of this.assignableUsers) {
+      if (this.myTeamHash[userId].jobTitle === this.selectedTraining.jobTitle) {
+        if (this.selectedTraining.versions.length > 1) {
+          if (this.myTeamHash[userId].trainingStatus === 'none') {
+            this.myTeamHash[userId].trainingStatus = 'upToDate';
+            this.userService.updateUser(this.myTeamHash[userId], true);
+          }
+          this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, newVersion);
+          this.assignedFromJobTitle.push(userId);
         }
       }
-      if (this.assignedFromJobTitle.length > 0) {
-        this.assignedFromJobTitleDialogIsVisible = true;
-      }
+    }
+    if (this.assignedFromJobTitle.length > 0) {
+      this.assignedFromJobTitleDialogIsVisible = true;
     }
     if (this.changeLevel === 'major') {
       this.resetTrainingStatus(newVersion);
@@ -863,7 +875,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       this.showAssessmentAlertConfirm();
       return;
     }
-      if (this.selectedTraining.versions.length === 1) {
+    if (this.selectedTraining.versions.length === 1) {
 
       this.selectedTraining.status = 'locked';
       let newTrainingVersionObj: TrainingVersion = {
@@ -921,7 +933,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
 
-  resetTrainingStatus(version:string) {
+  resetTrainingStatus(version: string) {
     this.userTrainingService.resetUserTrainingStatus(this.selectedTraining._id, version);
     this.subject = 'Urgent: Must retake a training'
     this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated and you are required to retake it.";
@@ -1039,8 +1051,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       this.currentPage.content.text = '';
       this.introHash[this.currentPageId] = 'no';
     }
-//    this.setCurrentPage(newPage._id, undefined);
-//    this.cd.detectChanges();
+    //    this.setCurrentPage(newPage._id, undefined);
+    //    this.cd.detectChanges();
   }
 
   buildPageHashes() {
@@ -1081,11 +1093,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
   }
 
-  startTour() {
-    this.joyrideService.startTour(
-      { steps: ['viewerStep1', 'viewerStep2', 'viewerStep3'] }
-    );
-
+  startTour(section) {
+    let steps = this.tourStepsHash[section];
+    this.joyrideService.startTour({ steps: steps });
   }
 
   playVideo() {
@@ -1478,21 +1488,21 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
 
   }
-/*
-  createEmbeddedPage() {
-    this.addNewPage('url');
-    this.embeddedPageDialogIsVisible = true;
-  }
-
-  createAssessment() {
-    this.addNewPage('assessment');
-  }
-
-  createHTMLPage() {
-    this.addNewPage('text');
-    this.saveTraining(false);
-  }
-  */
+  /*
+    createEmbeddedPage() {
+      this.addNewPage('url');
+      this.embeddedPageDialogIsVisible = true;
+    }
+  
+    createAssessment() {
+      this.addNewPage('assessment');
+    }
+  
+    createHTMLPage() {
+      this.addNewPage('text');
+      this.saveTraining(false);
+    }
+    */
 
 
   addNewQuestion() {

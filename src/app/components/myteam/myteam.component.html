@@ -2,13 +2,21 @@
     <div class="my-team" style="height:100%;">
         <div *ngIf="myTeam && myTeam.length > 0" style="height:95%;" (drop)="drop($event)"
             (dragover)="allowDrop($event)">
-            <div class="team-container" [ngStyle]="{'width.%': teamContainerWidth}">
-                <div class="direct-report-container">
+            <div class="team-container" [ngStyle]="{'width.%': teamContainerWidth}" style="position: relative;">
+                <i nz-icon nzType="question-circle" nzTheme="twotone"
+                    style="cursor:pointer;position:absolute;top:0;left:0;font-size:20px;color:#000000;"
+                    (click)="startTour('myTeam')" nz-tooltip nzTooltipTitle="A little help"
+                    text="This page is packed full of exciting features.  Let's go through them..."></i>
+                <div class="direct-report-container" joyrideStep="Step1-myTeam" stepPosition="right"
+                    title="Team Members" text="This section contains 3 functional areas to help you manage your team.">
                     <div>
                         <span style="font-size:24px;">Team Members</span>
                         <hr style="margin-bottom:10px 0;">
                     </div>
-                    <div style="display:block;margin-bottom:20px;">
+
+                    <div style="display:block;margin-bottom:20px;" joyrideStep="Step2-myTeam" stepPosition="right"
+                        title="Add Users"
+                        text="Add users one at a time or use our bulk add facility to add your entire team or organization with just a couple of clicks.">
                         <button nz-button nzShape="round" nzSize="small" (click)="addUser()" nzType="primary"
                             style="float:left;">
                             <i nz-icon nzType="user-add" [nzTheme]="'outline'"
@@ -21,9 +29,15 @@
                         </button>
                         <div style="clear:both;"> </div>
                     </div>
+                <div style="display:block;margin-bottom:20px;">
+                    <input style="display:inline-block;color:#000000;margin-bottom:0;font-size:14px;width:100%;" nz-input placeholder="User Search"
+                        [(ngModel)]="userNameToSearchFor" nzSize="small" (ngModelChange)="onUserSearchChange($event)"
+                        [nzAutocomplete]="autoUserSearch"/>
+                    <nz-autocomplete [nzDataSource]="matchingUsers" #autoUserSearch></nz-autocomplete>
+                </div>
                     <div>
-                        <hr style="margin-bottom:5px;">
-                        <div style="text-align: center;">
+                        <div style="text-align: center;" joyrideStep="Step3-myTeam" stepPosition="right" title="Filters"
+                            text="These filters control which users show up in the list and which trainings show up for each user.">
                             <span style="font-size:20px;margin-bottom:40px;">Filters</span>&nbsp;&nbsp;
                             <span style="font-size:10px;">(Click to toggle)</span>
                             <div style="display: flex;justify-content:space-between;margin:20px 0;font-size:16px;">
@@ -45,11 +59,6 @@
                                     </div>
                                 </div>
                                 <div style="">
-                                    <!--
-                                    <div style="display:block;">
-                                        <span style="font-size:12px;">User Type</span>
-                                    </div>
-                                    -->
                                     <div class="filter-item" (click)="toggleFilter('individual-contributor')"
                                         [ngClass]="{'showing': showIndividualContributors, 'not-showing': !showIndividualContributors}"
                                         nz-tooltip nzTooltipTitle="Individual Contributors">
@@ -107,22 +116,12 @@
                                             style="color:black;font-size:14px;vertical-align: middle;"></i>
                                     </div>
                                 </div>
-                                <!--
-                                <div style="display:block;width:100%;text-align: center;margin-top:10px;">
-                                    <span style="display:block;font-size:12px;">Trainings</span>
-                                    <div *ngFor="let training of teamTrainings" (click)="toggleFilter(training._id)"
-                                        style="margin-right:1px;cursor:pointer;display:inline-block;padding:2px;border-radius:4px;border:1px solid #bbbbbb;">
-                                        <i [ngClass]="training.iconClass" style="display:inline-block;font-size:16px;"
-                                            [ngStyle]="{'color': training.iconColor}">
-                                        </i>
-                                    </div>
-                                    <div style="clear:both;"></div>
-                                </div>
-                                -->
                             </div>
                         </div>
                     </div>
-                    <div style="background-color: white;text-align:left;">
+                    <div style="background-color: white;text-align:left;" joyrideStep="Step4-myTeam"
+                        stepPosition="right" title="Team Members"
+                        text="This is the list of people in your team.  Selecting an entry from this list loads that persons information into the Member Details section on the right.">
                         <div *ngIf="authenticatedUser$ | async as user" class='user-button' style="font-size:20px;"
                             (click)="selectUser(user._id)"
                             [ngClass]="{'user-selected': selectedUser._id === user._id }">
@@ -183,26 +182,15 @@
                     <hr style="margin-bottom:10px 0;">
                 </div>
                 -->
-                <nz-collapse style="">
-                    <nz-collapse-panel [nzHeader]="memberDetails" style="margin-bottom:5px;">
-                        <div style="width:100%;height:40px;">
-                            <button nz-button nzType="primary" nzShape="round" nzSize="small"
-                                (click)="showUserTrainingModal = true" style="margin-right:10px;">
-                                Assign a Training
-                            </button>
-                            <button nz-button nzType="primary" nzShape="round" nzSize="small" style="margin-right:10px;"
-                                (click)="editUser()">
-                                Edit Profile
-                            </button>
-                            <button nz-button nzType="primary" nzShape="round" nzSize="small" style="margin-right:10px;"
-                                nz-popconfirm nzPopconfirmTitle="Delete this user?"
-                                (nzOnConfirm)="confirmDelete(selectedUser)">
-                                Delete User
-                            </button>
-                            <div style="clear:both;"></div>
-                        </div>
-                        <!--
-                            <div class="" style="width:100%;text-align: center;background-color: #e0eafd;">
+                <nz-tabset [nzSelectedIndex]="currentTab">
+                    <nz-tab nzTitle="Member Details">
+                        <div joyrideStep="Step1-memberDetails" stepPosition="left" title="Member Details"
+                            style="position: relative;"
+                            text="This is where the rubber hits the road!  Assign trainings, update profile information, set due dates, etc...">
+                            <i nz-icon nzType="question-circle" nzTheme="twotone"
+                                style="cursor:pointer;position:absolute;top:0;left:0;font-size:20px;color:#000000;"
+                                (click)="startTour('memberDetails')" nz-tooltip nzTooltipTitle="A little help"></i>
+                            <div class="" style="width:100%;text-align: center;">
                                 <i [ngClass]="userTypeIconHash[selectedUser.userType]" style="font-size:20px;"
                                     [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser.trainingStatus]}"
                                     nz-tooltip [nzTooltipTitle]=""></i>&nbsp;
@@ -211,49 +199,98 @@
                                     {{selectedUser.lastName}}</span>
 
                             </div>
+                            <div style="width:100%;height:40px;">
+                                <button nz-button nzType="primary" nzShape="round" nzSize="small"
+                                    (click)="showUserTrainingModal = true" style="margin-right:10px;">
+                                    Assign a Training
+                                </button>
+                                <button nz-button nzType="primary" nzShape="round" nzSize="small"
+                                    style="margin-right:10px;" (click)="editUser()">
+                                    Edit Profile
+                                </button>
+                                <button nz-button nzType="primary" nzShape="round" nzSize="small"
+                                    style="margin-right:10px;" nz-popconfirm nzPopconfirmTitle="Delete this user?"
+                                    (nzOnConfirm)="confirmDelete(selectedUser)">
+                                    Delete User
+                                </button>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <!--
                             -->
-                        <div style="width:100%;text-align: left;background-color: white;">
-                            <app-user-trainings mode="admin" logSession="off"></app-user-trainings>
+                            <div style="width:100%;text-align: left;background-color: white;">
+                                <app-user-trainings mode="admin" logSession="off"></app-user-trainings>
+                            </div>
                         </div>
-                    </nz-collapse-panel>
-                    <nz-collapse-panel [nzHeader]="orgChart">
-                        <div style="display:block;width:100%;height:100%;border-bottom:1px solid #bbbbbb;">
-                            <nz-radio-group [(ngModel)]="chartOrientation"
-                                style="float:left;margin-bottom:20px;margin-right:40px;">
-                                <label nz-radio-button nzValue="vertical">
-                                    <span style="font-size:12px;">Vertical</span>
-                                </label>
-                                <label nz-radio-button nzValue="horizontal">
-                                    <span style="font-size:12px;">Horizontal</span>
-                                </label>
-                            </nz-radio-group>
-                            <div style="float:left;margin-left:200px;">
-                                <div *ngFor="let userId of reportChain" style="width:fit-content;margin-bottom:5px;padding:10px 4px;border:1px solid #999999;border-radius:4px;font-size:10px;" (click)="selectReportChainItem(userId)" class="report-chain">
-                                    <span
-                                        style="">{{myOrgUserHash[userId].firstName}}&nbsp;{{myOrgUserHash[userId].lastName}}</span>
+                    </nz-tab>
+                    <nz-tab nzTitle="Org Chart" joyrideStep="Step1-orgChart" stepPosition="top" title="Org Chart"
+                        text="If you have a large organization, you are going to love this feature.  Don't be shy...click around and see what there is to see.">
+                        <div style="position: relative;">
+                            <i nz-icon nzType="question-circle" nzTheme="twotone"
+                                style="cursor:pointer;position:absolute;top:-30px;left:0;font-size:20px;color:#000000;"
+                                (click)="startTour('orgChart')" nz-tooltip nzTooltipTitle="A little help"></i>
+                            <div *ngIf="bulkAdd" style="width:100%;text-align: center;">
+                                <div style="float:left;">
+                                    <nz-progress
+                                        [nzPercent]="(orgProgress.usersAdded / orgProgress.usersTotal) * 100"
+                                        nzType="circle" [nzWidth]="40" style="display:block;margin-right:10px;"></nz-progress>
+                                        <span style="display:block;font-size:10px;">{{ orgProgress.usersAdded }}&nbsp;Users Added</span>
+                                </div>
+                                <div *ngIf="orgProgress.supervisorMatchFail.length > 0" style="float:left;">
+                                    <nz-progress
+                                        [nzPercent]="(orgProgress.supervisorMatchFail.length / orgProgress.usersTotal) * 100"
+                                        nzType="circle" [nzWidth]="40" nzStatus="exception" style="float:left;margin-right:10px;"></nz-progress>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+
+                            <div style="display:block;width:100%;border-bottom:1px solid #bbbbbb;">
+                                <div style="margin-top:20px;">
+                                    <nz-radio-group [(ngModel)]="chartOrientation" nzSize="small"
+                                        style="float:left;margin-bottom:20px;margin-right:40px;">
+                                        <label nz-radio-button nzValue="vertical">
+                                            <span style="font-size:12px;">Vertical</span>
+                                        </label>
+                                        <label nz-radio-button nzValue="horizontal">
+                                            <span style="font-size:12px;">Horizontal</span>
+                                        </label>
+                                    </nz-radio-group>
+                                    <div style="margin-bottom:20px;float:right;padding-top:10px;">
+                                        <i nz-icon nzType="zoom-out" nzTheme="outline"
+                                            style="font-size:24px;cursor:pointer;color:#999999;"
+                                            (click)="decreaseFontSize()" nz-tooltip nzTooltipTitle="Zoom Out"></i>
+                                        <i nz-icon nzType="zoom-in" nzTheme="outline"
+                                            style="font-size:24px;margin-left:10px;cursor:pointer;color:#999999;"
+                                            (click)="increaseFontSize()" nz-tooltip nzTooltipTitle="Zoom In"></i>
+                                    </div>
+                                    <div style="clear:both;"></div>
                                 </div>
                             </div>
-                            <div style="margin-bottom:20px;float:right;">
-                                <button nz-button nzType="default" (click)="decreaseFontSize()" nz-tooltip
-                                    nzTooltipTitle="Decrease Text Size">
-                                    <i class="far fa-chevron-down" style="font-size:18px;"></i>
-                                </button>
-                                <button nz-button nzType="default" (click)="increaseFontSize()" nz-tooltip
-                                    nzTooltipTitle="Increase Text Size">
-                                    <i class="far fa-chevron-up" style="font-size:18px;"></i>
-                                </button>
+                            <div style="overflow: scroll;padding-top:20px;width:100%;height:100%;">
+                                <div *ngIf="reportChain && reportChain.length > 0"
+                                    style="float:left;border-right: 1px solid #bbbbbb;margin-right:20px;">
+                                    <span
+                                        style="display: block;font-size:18px;font-weight: 300;margin:0 10px 10px 0;">Reporting
+                                        Chain</span>
+                                    <div *ngFor="let userId of reportChain"
+                                        style="width:fit-content;margin-bottom:5px;padding:5px 4px;border:1px solid #999999;border-radius:4px;font-size:10px;"
+                                        (click)="selectReportChainItem(userId)" class="report-chain">
+                                        <span
+                                            style="">{{myOrgUserHash[userId].firstName}}&nbsp;{{myOrgUserHash[userId].lastName}}</span>
+                                    </div>
+                                </div>
+                                <div style="display:inline-block;">
+                                    <div style="width:fit-content;height: fit-content;">
+                                        <ngx-org-chart [nodes]="nodes" [direction]="chartOrientation"
+                                            (itemClick)="selectNode($event)"
+                                            [ngStyle]="{'font-size.px': orgChartFontSize}">
+                                        </ngx-org-chart>
+                                    </div>
+                                </div>
                             </div>
-                            <div style="clear:both;"></div>
                         </div>
-                        <div style="overflow: scroll;padding-top:20px;width:100%;" [ngStyle]="{'height.px': contentHeight}">
-                            <div style="width:fit-content;height: fit-content;">
-                                <ngx-org-chart [nodes]="nodes" [direction]="chartOrientation"
-                                    (itemClick)="selectNode($event)" [ngStyle]="{'font-size.px': orgChartFontSize}">
-                                </ngx-org-chart>
-                            </div>
-                        </div>
-                    </nz-collapse-panel>
-                </nz-collapse>
+                    </nz-tab>
+                </nz-tabset>
+                <!--
                 <ng-template #memberDetails>
                     <span style="float:left;font-size:18px;">Member Details</span>
                     <span style="float:right;padding-right:40%;">
@@ -269,6 +306,7 @@
                 <ng-template #orgChart>
                     <span style="font-size:18px;">Org Chart</span>
                 </ng-template>
+                -->
                 <nz-modal [nzVisible]="showUserTrainingModal" nzTitle="Assign Training To User"
                     [nzCancelDisabled]="assignableTrainings.length === 0" (nzOnCancel)="handleCancelUserTraining()"
                     [nzOkDisabled]="!selectedTrainingId" (nzOnOk)="handleAssignUserTraining()"
