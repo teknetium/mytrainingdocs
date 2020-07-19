@@ -12,7 +12,7 @@ import { UserModel, UserIdHash, OrgChartNode, BuildOrgProgress } from '../../sha
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
 import { JobTitleService } from '../../shared/services/jobtitle.service';
-import { MessageModel } from '../../shared/interfaces/message.type';
+import { MessageModel, TemplateMessageModel } from '../../shared/interfaces/message.type';
 import { takeUntil, filter } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as cloneDeep from 'lodash/cloneDeep';
@@ -122,6 +122,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   buildOrgProgress$: Observable<BuildOrgProgress>;
   myOrgChartData$: Observable<OrgChartNode[]>;
   myOrgUserHash$: Observable<UserIdHash>;
+  myOrgUserList$: Observable<UserModel[]>;
   userTrainings$: Observable<UserTrainingModel[]>;
   selectedUser$: Observable<UserModel>;
   newUser$: Observable<UserModel>;
@@ -163,7 +164,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     settings: {},
     jobTitle: ''
   }
-  message: MessageModel;
+  message: TemplateMessageModel;
   userIdSelected = '';
   matchingJobTitles: string[] = [];
   matchingUsers: string[] = [];
@@ -180,6 +181,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   userNameHash = {};
   authenticatedUserFullName;
   usersNotOnMyTeam: string[] = [];
+  showBulkAddFail = true;
   showNone = true;
   showUpToDate = true;
   showPastDue = true;
@@ -232,6 +234,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   invalidSupervisorName = true;
   supervisorName;
   supervisorChanged = false;
+  showSupervisorAssignmentDialog = false;
+  supervisorMatchFails: string[] = [];
+  supervisorsFixedCnt = 0;
+  bulkAddFail = false;
+  myOrgUsers$: Observable<string[]>;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -246,6 +253,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private router: Router
   ) {
     super();
+    this.myOrgUsers$ = this.userService.getMyOrgUserNameListStream();
     this.buildOrgProgress$ = this.userService.getOrgProgressStream();
     this.uidReportChainHash$ = this.userService.getUIDReportChainHashStream();
     this.myOrgChartData$ = this.userService.getMyOrgStream();
@@ -275,7 +283,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!newUser) {
         return;
       }
-      console.log('MyTeamComponent:newUser$.subscribe: ', newUser);
+
+
       this.trainingService.assignTrainingsForJobTitle(newUser.jobTitle, newUser._id, newUser.teamId);
     });
     this.buildOrgProgress$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgProgress => {
@@ -285,6 +294,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.bulkAdd = true;
       console.log('Org Progress', orgProgress);
       this.orgProgress = orgProgress;
+      if (orgProgress.usersProcessed === orgProgress.usersTotal && orgProgress.supervisorMatchFail.length > 0) {
+        this.supervisorMatchFails = orgProgress.supervisorMatchFail;
+      }
     });
 
     this.myOrgUserHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgUserHash => {
@@ -293,21 +305,34 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
       this.myOrgUserHash = orgUserHash;
       let myOrgUserObjects = Object.values(this.myOrgUserHash);
+      this.myOrgSupervisors = [];
+      let bulkAddFailFound = false;
       for (let user of myOrgUserObjects) {
-        this.myOrgUsers.push(user.firstName + ' ' + user.lastName);
         this.myOrgUserNameHash[user.firstName + ' ' + user.lastName] = user;
+        if (user.userStatus === 'bulk-add-fail') {
+          bulkAddFailFound = true;
+          this.bulkAddFail = true;
+        }
         if (user.userType === 'supervisor') {
           this.myOrgSupervisors.push(user.firstName + ' ' + user.lastName);
         }
       }
-      this.matchingUsers = this.myOrgUsers;
+      if (!bulkAddFailFound) {
+        this.showBulkAddFail = false;
+      }
       this.matchingSupervisors = this.myOrgSupervisors;
+    });
+    this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgUsers => {
+      if (!myOrgUsers) {
+        return;
+      }
+      this.myOrgUsers = myOrgUsers;
+      this.matchingUsers = this.myOrgUsers;
     });
     this.uidReportChainHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidReportChainHash => {
       if (!uidReportChainHash) {
         return;
       }
-      console.log('uidReportChainHash', uidReportChainHash);
       this.uidReportChainHash = uidReportChainHash;
     });
     this.uidUTHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUTHash => {
@@ -320,8 +345,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!nodes) {
         return;
       }
-      console.log('org Chart nodes', nodes);
-      this
       this.nodes = nodes;
     });
     this.myTeam$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
@@ -353,9 +376,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
       this.userIdSelected = user._id;
       this.selectedUser = user;
-      if (user._id !== this.authenticatedUser._id) {
+      if ((user.supervisorId && this.myOrgUserHash[user.supervisorId]) && (user._id !== this.authenticatedUser._id)) {
         this.supervisorName = this.myOrgUserHash[user.supervisorId].firstName + ' ' + this.myOrgUserHash[user.supervisorId].lastName;
       }
+      this.reportChain = Object.assign([], this.uidReportChainHash[this.selectedUser._id]);
       this.trainingService.selectTraining(null);
     });
 
@@ -426,6 +450,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.matchingJobTitles = this.jobTitles;
     })
   }
+
   increaseFontSize() {
     this.orgChartFontSize += 1;
   }
@@ -470,7 +495,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.showOnetime = !this.showOnetime;
     } else if (filter === 'recurring') {
       this.showRecurring = !this.showRecurring;
+    } else if (filter === 'bulk-add-fail') {
+      this.showBulkAddFail = !this.showBulkAddFail;
     }
+
 
   }
 
@@ -552,7 +580,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   onSupervisorNameChange(value: string): void {
     this.matchingSupervisors = this.myOrgSupervisors.filter(user => user.toLowerCase().indexOf(value.toLowerCase()) !== -1);
     let userObj;
-    if (this.myOrgUsers.indexOf(value) > -1) {
+    if (this.myOrgSupervisors.indexOf(value) > -1) {
       this.invalidSupervisorName = false;
       this.supervisorChanged = true;
     } else {
@@ -627,13 +655,15 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.options = [];
 
     let url = 'https://mytrainingdocs.com/signup/' + this.newTeamMember.email;
-    this.message = <MessageModel>{
+    this.message = <TemplateMessageModel>{
       to: this.newTeamMember.email,
       from: this.authenticatedUser.email,
-      subject: 'Please Register',
-      html: 'Please <a href="' + url + '">register</a>'
+      templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
+      dynamicTemplateData: {
+        email: this.newTeamMember.email
+      },
     }
-    this.mailService.sendMessage(this.message);
+    this.mailService.sendTemplateMessage(this.message);
     this.userPanelVisible = false;
     this.selectUser(this.newTeamMember._id);
     //    this.cd.detectChanges();
@@ -643,6 +673,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.userPanelVisible = false;
     let supervisorObj = this.myOrgUserNameHash[this.supervisorName];
     if (this.selectedUser.supervisorId !== supervisorObj._id) {
+      if (this.selectedUser.userStatus === 'bulk-add-fail') {
+        this.selectedUser.userStatus = 'active';
+      }
       this.selectedUser.supervisorId = supervisorObj._id;
       this.selectedUser.teamId = supervisorObj._id;
       supervisorObj.directReports.push(this.selectedUser._id);
@@ -654,6 +687,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   selectUser(userId) {
+    console.log('selectUser', userId);
     this.userService.selectUser(userId);
   }
 

@@ -17,7 +17,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { merge, take } from 'rxjs/operators';
 import { SendmailService } from '../../shared/services/sendmail.service';
 import { EventService } from '../../shared/services/event.service';
-import { MessageModel } from '../../shared/interfaces/message.type';
+import { MessageModel, TemplateMessageModel } from '../../shared/interfaces/message.type';
 import { NzMessageService } from 'ng-zorro-antd';
 import * as cloneDeep from 'lodash/cloneDeep';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -938,27 +938,31 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.subject = 'Urgent: Must retake a training'
     this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated and you are required to retake it.";
     for (let user of this.assignedToUsers) {
-      let msg = <MessageModel>{
+      let msg = <TemplateMessageModel>{
         to: this.myTeamHash[user].email,
         from: this.authenticatedUser.email,
-        subject: this.subject,
-        text: this.messageBody
+        templateId: 'd-b4679d4de1fb41e18d1e2487995f9bdf',
+        dynamicTemplateData: {
+          firstName: this.myTeamHash[user].firstName,
+          trainingTitle: this.selectedTraining.title,
+        }
       }
-      this.mailService.sendMessage(msg);
+      this.mailService.sendTemplateMessage(msg);
     }
   }
 
   sendNotifications() {
-    this.subject = 'The Content of a Training has changed!'
-    this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated.  Please review the training.";
     for (let user of this.assignedToUsers) {
-      let msg = <MessageModel>{
+      let msg = <TemplateMessageModel>{
         to: this.myTeamHash[user].email,
         from: this.authenticatedUser.email,
-        subject: this.subject,
-        text: this.messageBody
+        templateId: 'd-3d4ee355e8164a999bbd8a4dd3d106dc',
+        dynamicTemplateData: {
+          firstName: this.myTeamHash[user].firstName,
+          trainingTitle: this.selectedTraining.title,
+        }
       }
-      this.mailService.sendMessage(msg);
+      this.mailService.sendTemplateMessage(msg);
     }
   }
 

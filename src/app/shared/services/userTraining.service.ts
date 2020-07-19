@@ -150,7 +150,7 @@ export class UserTrainingService {
     }
     return utList;
   }
-
+/*
   getStatusForUser(uid: string): string {
     this.getUTForUser$(uid).subscribe(userTrainings => {
       for (let ut of userTrainings) {
@@ -161,7 +161,7 @@ export class UserTrainingService {
     })
     return 'upToDate';
   }
-
+*/
   resetUserTrainingStatus(tid, version) {
     this.getUTForTraining$(tid).subscribe(utList => {
       for (let ut of utList) {

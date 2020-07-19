@@ -22,6 +22,7 @@ export class UserService {
   private authenticatedUser: UserModel;
 
   // Writable streams
+  private myOrgUserNameListBS$ = new BehaviorSubject<string[]>([]);
   private myOrgBS$ = new BehaviorSubject<OrgChartNode[]>(null);
   private buildOrgProgressBS$ = new BehaviorSubject<BuildOrgProgress>(null);
   private uidReportChainHashBS$ = new BehaviorSubject<UserIdHash>(null);
@@ -83,6 +84,7 @@ export class UserService {
     description: '',
     supervisorMatchFail: []
   }
+  myOrgUserNames = [];
 
   constructor(
     private http: HttpClient,
@@ -140,7 +142,7 @@ export class UserService {
                 teamAdmin: false,
                 orgAdmin: false,
                 appAdmin: false,
-                userStatus: 'new-supervisor-without-team',
+                userStatus: 'active',
                 trainingStatus: 'none',
                 jobTitle: '',
                 profilePicUrl: '',
@@ -223,7 +225,9 @@ export class UserService {
       this.myTeam = [];
       this.myTeamIdHash = {};
       this.allOrgUserHash = {};
+      this.myOrgUserNames = [];
       for (let user of userList) {
+        this.myOrgUserNames.push(user.firstName + ' ' + user.lastName);
         if (user.teamId === this.authenticatedUser._id) {
           this.myTeamIdHash[user._id] = user;
           this.myTeam.push(user);
@@ -243,6 +247,8 @@ export class UserService {
       this.myTeamBS$.next(this.myTeam);
       this.myOrgHashBS$.next(this.allOrgUserHash);
 
+      this.myOrgUserNameListBS$.next(this.myOrgUserNames);
+
       //      this.myTeamCntBS$.next(Object.keys(this.myTeamIdHash).length);
 
       this.myTeamIdHashBS$.next(this.myTeamIdHash);
@@ -253,21 +259,6 @@ export class UserService {
       this.nodes = [];
       let rootNode;
       this.buildOrgChart(this.authenticatedUser._id, false);
-      /*
-      let rootNode: OrgChartNode = {
-        name: this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName,
-        cssClass: '',
-        image: '',
-        extra: {
-          uid: this.authenticatedUser._id,
-        },
-        title: this.authenticatedUser.jobTitle,
-        childs: []
-      }
-      for (let dR of this.authenticatedUser.directReports) {
-        rootNode.childs.push(this.buildUserNode(dR));
-      }
-      */
       this.nodes.push(rootNode);
       this.myOrgBS$.next(this.nodes);
       this
@@ -275,7 +266,9 @@ export class UserService {
   }
 
   buildOrgChart(uid: string, subChart: boolean) {
-    
+    if (!this.allOrgUserHash[uid]) {
+      return;
+    }
     this.nodes = [];
     let rootNode: OrgChartNode = {
       name: this.allOrgUserHash[uid].firstName + ' ' + this.allOrgUserHash[uid].lastName,
@@ -330,17 +323,17 @@ export class UserService {
 
   setUserStatusPastDue(uid: string) {
     this.myTeamIdHash[uid].trainingStatus = 'pastDue';
-    this.updateUser(this.myTeamIdHash[uid], true);
+    this.updateUser(this.myTeamIdHash[uid], false);
   }
 
   setUserStatusUpToDate(uid: string) {
     this.myTeamIdHash[uid].trainingStatus = 'upToDate';
-    this.updateUser(this.myTeamIdHash[uid], true);
+    this.updateUser(this.myTeamIdHash[uid], false);
   }
 
   setUserStatusNone(uid: string) {
     this.myTeamIdHash[uid].trainingStatus = 'none';
-    this.updateUser(this.myTeamIdHash[uid], true);
+    this.updateUser(this.myTeamIdHash[uid], false);
   }
 
   processNewUser(newUser:UserModel) {
@@ -361,14 +354,18 @@ export class UserService {
       this.orgProgress.description = 'Building Organization';
       for (let nUser of this.newUserList) {
         if (!this.fullNameHash[this.newUserHash[nUser._id].supervisorName]) {
-          this.orgProgress.supervisorMatchFail.push(this.newUserHash[nUser._id]);
+          this.orgProgress.supervisorMatchFail.push(nUser._id);
+          nUser.userStatus = 'bulk-add-fail';
+          nUser.supervisorId = this.authenticatedUser._id;
+          nUser.teamId = this.authenticatedUser._id;
+          this.authenticatedUser.directReports.push(nUser._id);
         } else {
-          this.orgProgress.usersProcessed++;
           this.fullNameHash[this.newUserHash[nUser._id].supervisorName].directReports.push(nUser._id);
           this.fullNameHash[this.newUserHash[nUser._id].supervisorName].userType = 'supervisor';
           nUser.supervisorId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
           nUser.teamId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
         }
+        this.orgProgress.usersProcessed++;
         this.buildOrgProgressBS$.next(this.orgProgress);
       }
       let saveCnt = 0;
@@ -397,6 +394,7 @@ export class UserService {
     this.newUserIds.push(this.newTeamMember._id);
 
     this.postUser$(this.newTeamMember).subscribe(newUser => {
+      this.newUserBS$.next(newUser);
       this.processNewUser(newUser);
     });    
   }
@@ -415,77 +413,6 @@ export class UserService {
 
     this.addUserFromBatch(this.newUser);
   }
-    /*
-    this.newTeamMember.userType = 'individualContributor';
-    this.newTeamMember._id = String(new Date().getTime());
-    this.newTeamMember.firstName = user.firstName;
-    this.newTeamMember.lastName = user.lastName;
-    this.newTeamMember.email = user.email;
-    this.newTeamMember.jobTitle = user.jobTitle;
-    this.newTeamMember.trainingStatus = 'none';
-    this.newTeamMember.teamAdmin = false;
-    this.newUserHash[this.newTeamMember._id] = user;
-    this.newUserIds.push(this.newTeamMember._id);
-
-    this.postUser$(this.newTeamMember).subscribe(newUser => {
-      this.newUserList.push(newUser);
-      this.fullNameHash[newUser.firstName + ' ' + newUser.lastName] = newUser;
-      this.allOrgUserHash[newUser._id] = newUser;
-
-      if (newUserIndex < this.batchCount - 1) {
-        newUserIndex++;
-        user = userData[newUserIndex];
-        this.newTeamMember.userType = 'individualContributor';
-        this.newTeamMember._id = String(new Date().getTime());
-        this.newTeamMember.firstName = user.firstName;
-        this.newTeamMember.lastName = user.lastName;
-        this.newTeamMember.email = user.email;
-        this.newTeamMember.jobTitle = user.jobTitle;
-        this.newTeamMember.trainingStatus = 'none';
-        this.newTeamMember.teamAdmin = false;
-        this.newUserHash[this.newTeamMember._id] = user;
-        this.newUserIds.push(this.newTeamMember._id);
-      }
-    });
-    */
-    /*
-    for (let user of userData) {
-      this.newTeamMember.userType = 'individualContributor';
-      this.newTeamMember._id = String(new Date().getTime());
-      this.newTeamMember.firstName = user.firstName;
-      this.newTeamMember.lastName = user.lastName;
-      this.newTeamMember.email = user.email;
-      this.newTeamMember.jobTitle = user.jobTitle;
-      this.newTeamMember.trainingStatus = 'none';
-      this.newTeamMember.teamAdmin = false;
-      this.newUserHash[this.newTeamMember._id] = user;
-      this.newUserIds.push(this.newTeamMember._id);
-      this.postUser$(this.newTeamMember).subscribe(newUser => {
-        this.newUserList.push(newUser);
-        this.fullNameHash[newUser.firstName + ' ' + newUser.lastName] = newUser;
-        this.allOrgUserHash[newUser._id] = newUser;
-        if (this.newUserList.length === this.batchCount) {
-          for (let nUser of this.newUserList) {
-            this.fullNameHash[this.newUserHash[nUser._id].supervisorName].directReports.push(nUser._id);
-            this.fullNameHash[this.newUserHash[nUser._id].supervisorName].userType = 'supervisor';
-            nUser.supervisorId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
-            nUser.teamId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
-          }
-          let saveCnt = 0;
-          let allUsers = Object.values(this.fullNameHash);
-          for (let nUser of allUsers) {
-            this.putUser$(nUser).subscribe(user => {
-              saveCnt++;
-              if (saveCnt === this.newUserList.length) {
-                this.loadData(this.authenticatedUser._id, null);
-              }
-            })
-          }
-
-        }
-      })
-    }
-    */
     
   createNewUser(user: UserModel, reload: boolean) {
     this.postUser$(user).subscribe(data => {
@@ -526,13 +453,16 @@ export class UserService {
     } else {
       this.selectedUserBS$.next(this.myTeamIdHash[uid]);
     }
+    this.buildOrgChart(uid, true);
   }
 
   updateUser(user: UserModel, reload: boolean) {
     this.action = 'save';
     this.putUser$(user).subscribe((updatedUser) => {
       console.log('updateUser', updatedUser);
-      this.loadData(this.teamId, user._id);
+      if (reload) {
+        this.loadData(this.teamId, user._id);
+      }
     });
   }
 
@@ -540,6 +470,10 @@ export class UserService {
     this.statusCheck$(this.authenticatedUser._id).subscribe(statusObj => {
       this.loadData(this.authenticatedUser._id, null);
     })
+  }
+
+  getMyOrgUserNameListStream(): Observable<string[]> {
+    return this.myOrgUserNameListBS$.asObservable();
   }
 
   getMyTeamIdHashStream(): Observable<UserIdHash> {

@@ -119,6 +119,15 @@ module.exports = function(app, config) {
     };
     sgMail.send(msg);
   });
+  app.post("/api/sendmail/template", (req, res) => {
+    const msg = {
+      to: req.body.to,
+      from: req.body.from,
+      templateId: req.body.templateId,
+      dynamicTemplateData: req.body.dynamicTemplateData
+    };
+    sgMail.send(msg);
+  });
 
   app.get("/api/icons/:searchStr", (req, res) => {
     matchingIcons = [];

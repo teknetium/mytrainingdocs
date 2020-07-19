@@ -10,7 +10,7 @@ export interface UserModel {
   teamAdmin: boolean,
   appAdmin: boolean,
   orgAdmin: boolean,
-  userStatus: 'pending' | 'active' | 'new-supervisor-including-team' | 'new-supervisor-without-team' | 'new-user',
+  userStatus: 'pending' | 'active' | 'bulk-add-fail',
   trainingStatus: 'upToDate' | 'pastDue' | 'none',
   jobTitle: string,
   profilePicUrl: string,
@@ -45,7 +45,7 @@ export interface BuildOrgProgress {
   usersProcessed: number,
   usersTotal: number,
   description: string,
-  supervisorMatchFail: UserBatchData[],
+  supervisorMatchFail: string[],
 }
 
 export class UserSessionModel {

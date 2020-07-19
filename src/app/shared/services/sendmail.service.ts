@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MessageModel } from '../interfaces/message.type';
+import { MessageModel, TemplateMessageModel } from '../interfaces/message.type';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';
@@ -23,10 +23,25 @@ export class SendmailService {
     })
 
   }
+  sendTemplateMessage(msg: TemplateMessageModel) {
+    this.postTemplateMessage$(msg).subscribe(item => {
+      console.log('sendmailService', msg);
+    })
+
+  }
 
   postMessage$(msg: MessageModel): Observable<any> {
     return this.http
       .post<MessageModel>(`${ENV.BASE_API}sendmail`, msg, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  postTemplateMessage$(msg: TemplateMessageModel): Observable<any> {
+    return this.http
+      .post<MessageModel>(`${ENV.BASE_API}sendmail/template`, msg, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

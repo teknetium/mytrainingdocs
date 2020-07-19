@@ -53,9 +53,10 @@
     white-space: nowrap;
     border-top:1px solid #dddddd;
     padding-right:5px;
+    color: #999999;
 }
 .user-button:hover {
-    color:blue;
+    color:#444444;
 }
 
 .selected-training {
@@ -71,10 +72,6 @@
     background-color: #e0eafd;
 }
 
-.user-selected {
-    background-color: #e0eafd;
-    color:blue;
-}
 
 .legend {
     font-size: 10px;
@@ -205,4 +202,15 @@
 
 .report-chain:hover {
     background-color: #f1f1f1;
+}
+
+.lbButton {
+    background-color: #f9f9f9;
+    color: #999999;
+    border-color: #888888;
+}
+
+.user-selected {
+    background-color: #f9f9f9;
+    color: #444444;
 }

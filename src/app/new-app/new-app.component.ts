@@ -314,7 +314,8 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   bannerColor = '#f1f1f1';
   pageTaskHash = {};
   userPanelVisible = false;
-
+  lName;
+  fName;
 
   constructor(
     private authService: AuthService,
@@ -462,6 +463,8 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   }
 
   saveName() {
+    this.authenticatedUser.firstName = this.fName;
+    this.authenticatedUser.lastName = this.lName;
     this.userService.updateUser(this.authenticatedUser, true);
     this.showNewUserModal = false;
     this.login();

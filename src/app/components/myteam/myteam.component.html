@@ -17,44 +17,55 @@
                     <div style="display:block;margin-bottom:20px;" joyrideStep="Step2-myTeam" stepPosition="right"
                         title="Add Users"
                         text="Add users one at a time or use our bulk add facility to add your entire team or organization with just a couple of clicks.">
-                        <button nz-button nzShape="round" nzSize="small" (click)="addUser()" nzType="primary"
-                            style="float:left;">
+                        <button nz-button nzShape="round" nzSize="small" (click)="addUser()" nzType="default"
+                            class='lbButton' style="float:left;">
                             <i nz-icon nzType="user-add" [nzTheme]="'outline'"
                                 style="display:inline-block;font-size:18px;vertical-align:baseline;"></i>Add User
                         </button>
-                        <button nz-button nzShape="round" (click)="launchImporter()" nzSize="small" nzType="primary"
-                            style="float:right;margin-right:10px;">
+                        <div *ngIf="bulkAdd" style="text-align: center;float:right;">
+                            <span style="display:inline-block;font-size:10px;">{{ orgProgress.usersAdded }}&nbsp;Users
+                                Added</span>
+                            <nz-progress [nzPercent]="(orgProgress.usersAdded / orgProgress.usersTotal) * 100"
+                                nzType="circle" [nzWidth]="30" style="display:inline-block;margin-left:10px;">
+                            </nz-progress>
+                        </div>
+                        <button *ngIf="!bulkAdd" nz-button nzShape="round" (click)="launchImporter()" nzSize="small"
+                            nzType="primary" class="lbButton" style="float:right;margin-right:10px;">
                             <i nz-icon nzType="usergroup-add" [nzTheme]="'outline'"
                                 style="display:inline-block;font-size:18px;vertical-align:baseline;"></i>Bulk Add
                         </button>
                         <div style="clear:both;"> </div>
                     </div>
                     <div style="display:block;margin-bottom:20px;">
-                        <div style="display:inline-block;width:90%;">
-                            <nz-input-group [nzPrefix]="prefixTemplateUser" [nzSuffix]="suffixIconSearch">
-                                <input
-                                    style="display:inline-block;color:#000000;margin-bottom:0;font-size:14px;width:100%;"
-                                    nz-input placeholder="User Search" [(ngModel)]="userNameToSearchFor" nzSize="small"
-                                    (ngModelChange)="onUserSearchChange($event)" [nzAutocomplete]="autoUserSearch" />
-                                <nz-autocomplete [nzDataSource]="matchingUsers" #autoUserSearch></nz-autocomplete>
-                            </nz-input-group>
-                            <ng-template #suffixIconSearch><i nz-icon nzType="search"></i></ng-template>
-                            <ng-template #prefixTemplateUser><i nz-icon nzType="user"></i></ng-template>
+                        <div style="float:left;width:85%;">
+                            <input style="color:#000000;margin-bottom:0;font-size:14px;width:100%;" nz-input
+                                placeholder="User Search" [(ngModel)]="userNameToSearchFor" nzSize="small"
+                                (ngModelChange)="onUserSearchChange($event)" [nzAutocomplete]="autoUserSearch" />
+                            <nz-autocomplete [nzDataSource]="matchingUsers" #autoUserSearch></nz-autocomplete>
                         </div>
-                        <div style="display:inline-block;width:10%;vertical-align: middle;">
-                            <button nz-button nzShape="circle" [disabled]="!showAddToUserListButton"
-                                (click)="addFoundUser()" nzType="primary" style="display:inline-block;">
-                                <i nz-icon nzType="user-add" [nzTheme]="'outline'"
-                                    style="font-size:18px;vertical-align:baseline;"></i>
-                            </button>
-                        </div>
+                        <button nz-button nzShape="circle" [disabled]="!showAddToUserListButton"
+                            (click)="addFoundUser()" style="float:right;vertical-align: middle;margin-top:2px;">
+                            <i nz-icon nzType="user-add" [nzTheme]="'outline'"
+                                style="font-size:18px;vertical-align:baseline;"></i>
+                        </button>
+                        <div style="clear:both;"></div>
                     </div>
                     <div>
                         <div style="text-align: center;" joyrideStep="Step3-myTeam" stepPosition="right" title="Filters"
                             text="These filters control which users show up in the list and which trainings show up for each user.">
-                            <span style="font-size:20px;margin-bottom:40px;">Filters</span>&nbsp;&nbsp;
-                            <span style="font-size:10px;">(Click to toggle)</span>
-                            <div style="display: flex;justify-content:space-between;margin:20px 0;font-size:16px;">
+                                <span style="font-size:20px;margin-bottom:40px;">Filters</span>&nbsp;&nbsp;
+                                <span style="font-size:10px;">(click to toggle)</span>
+                                <div *ngIf="bulkAddFail" style="text-align: center;width:100%;">
+                                    <div class="filter-item" (click)="toggleFilter('bulk-add-fail')"
+                                        [ngClass]="{'showing': showBulkAddFail, 'not-showing': !showBulkAddFail}"
+                                        nz-tooltip nzTooltipTitle="" style="width:100%;padding:10px 0;">
+                                        <i nz-icon nzType="usergroup-add" [nzTheme]="'outline'"
+                                            style="color:red;font-size:20px;" nz-tooltip
+                                            nzTooltipTitle="Show only users that failed during the Bulk Add process."></i>
+                                            <span style="font-size:10px;">(show only)</span>
+                                    </div>
+                                </div>
+                            <div style="clear:both;display: flex;justify-content:space-between;margin:20px 0;font-size:16px;">
                                 <div style="">
                                     <div class="filter-item" (click)="toggleFilter('none')"
                                         [ngClass]="{'showing': showNone, 'not-showing': !showNone}" nz-tooltip
@@ -154,12 +165,15 @@
                         </div>
                         <div style="cursor:pointer;width:100%;">
                             <div *ngFor="let user of myTeam"
-                                [ngClass]="{'displayNone': (!showUpToDate && user.trainingStatus === 'upToDate') || (!showPastDue && user.trainingStatus === 'pastDue') || (!showNone && user.trainingStatus === 'none') || (!showIndividualContributors && user.userType === 'individualContributor') || (!showSupervisors && user.userType === 'supervisor') || (!showVolunteers && user.userType === 'volunteer') || (!showCustomers && user.userType === 'customer')}"
+                                [ngClass]="{'displayNone': (showBulkAddFail && user.userStatus !== 'bulk-add-fail') || (!showUpToDate && user.trainingStatus === 'upToDate') || (!showPastDue && user.trainingStatus === 'pastDue') || (!showNone && user.trainingStatus === 'none') || (!showIndividualContributors && user.userType === 'individualContributor') || (!showSupervisors && user.userType === 'supervisor') || (!showVolunteers && user.userType === 'volunteer') || (!showCustomers && user.userType === 'customer')}"
                                 style="width:100%;">
                                 <div *ngIf="user._id !== authenticatedUser._id" class="user-button"
                                     [ngClass]="{'user-selected': selectedUser._id === user._id}"
                                     (click)="selectUser(user._id)" style="width:100%;">
-                                    <i [ngClass]="userTypeIconHash[user.userType]"
+                                    <i *ngIf="user.userStatus === 'bulk-add-fail'" nz-icon nzType="usergroup-add"
+                                        [nzTheme]="'outline'" style="color:red;margin:5px 4px 0 10px;float:left;font-size:20px;"></i>
+                                    <i *ngIf="user.userStatus !== 'bulk-add-fail'"
+                                        [ngClass]="userTypeIconHash[user.userType]"
                                         [ngStyle]="{'color': userTrainingStatusColorHash[user.trainingStatus]}"
                                         style="margin:5px 4px 0 10px;float:left;"></i>&nbsp;
                                     <span style="float:left;margin:2px 4px 0 0;">{{ user.firstName }}
@@ -190,12 +204,6 @@
                     style="cursor:grabbing;position:absolute;top:50%;right:-6px;color:black;font-size:24px;"></i>
             </div>
             <div class="my-team-rightside" [ngStyle]="{'width.%': 99 - teamContainerWidth}" style="position:relative;">
-                <!--
-                <div style="text-align: center;">
-                    <span style="font-size:24px;display:inline-block;">Member Details</span>
-                    <hr style="margin-bottom:10px 0;">
-                </div>
-                -->
                 <nz-tabset [nzSelectedIndex]="currentTab">
                     <nz-tab nzTitle="Member Details">
                         <div joyrideStep="Step1-memberDetails" stepPosition="left" title="Member Details"
@@ -209,20 +217,20 @@
                                     [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser.trainingStatus]}"
                                     nz-tooltip [nzTooltipTitle]=""></i>&nbsp;
                                 <span
-                                    style="display:inline-block;margin-left:10px;font-size:26px;font-weight: 300;color:blue;margin:10px 0;">{{selectedUser.firstName}}
+                                    style="display:inline-block;margin-left:10px;font-size:26px;font-weight: 300;color:#444444;margin:10px 0;">{{selectedUser.firstName}}
                                     {{selectedUser.lastName}}</span>
 
                             </div>
-                            <div style="width:100%;height:40px;">
-                                <button nz-button nzType="primary" nzShape="round" nzSize="small"
+                            <div style="width:100%;height:40px;text-align: center;">
+                                <button nz-button nzType="primary" nzShape="round" nzSize="small" class="lbButton"
                                     (click)="showUserTrainingModal = true" style="margin-right:10px;">
                                     Assign a Training
                                 </button>
-                                <button nz-button nzType="primary" nzShape="round" nzSize="small"
+                                <button nz-button nzType="primary" nzShape="round" nzSize="small" class="lbButton"
                                     style="margin-right:10px;" (click)="editUser()">
                                     Edit Profile
                                 </button>
-                                <button nz-button nzType="primary" nzShape="round" nzSize="small"
+                                <button nz-button nzType="primary" nzShape="round" nzSize="small" class="lbButton"
                                     style="margin-right:10px;" nz-popconfirm nzPopconfirmTitle="Delete this user?"
                                     (nzOnConfirm)="confirmDelete(selectedUser)">
                                     Delete User
@@ -242,22 +250,6 @@
                             <i nz-icon nzType="question-circle" nzTheme="twotone"
                                 style="cursor:pointer;position:absolute;top:-30px;left:0;font-size:20px;color:#000000;"
                                 (click)="startTour('orgChart')" nz-tooltip nzTooltipTitle="A little help"></i>
-                            <div *ngIf="bulkAdd" style="width:100%;text-align: center;">
-                                <div style="float:left;">
-                                    <nz-progress [nzPercent]="(orgProgress.usersAdded / orgProgress.usersTotal) * 100"
-                                        nzType="circle" [nzWidth]="40" style="display:block;margin-right:10px;">
-                                    </nz-progress>
-                                    <span style="display:block;font-size:10px;">{{ orgProgress.usersAdded }}&nbsp;Users
-                                        Added</span>
-                                </div>
-                                <div *ngIf="orgProgress.supervisorMatchFail.length > 0" style="float:left;">
-                                    <nz-progress
-                                        [nzPercent]="(orgProgress.supervisorMatchFail.length / orgProgress.usersTotal) * 100"
-                                        nzType="circle" [nzWidth]="40" nzStatus="exception"
-                                        style="float:left;margin-right:10px;"></nz-progress>
-                                </div>
-                                <div style="clear:both;"></div>
-                            </div>
 
                             <div style="display:block;width:100%;border-bottom:1px solid #bbbbbb;">
                                 <div style="margin-top:20px;">
@@ -489,9 +481,9 @@
                         </label>
                     </div>
                     <div style="display:inline-block;width:70%;margin-left:20px;">
-                        <input style="margin-bottom:2px;"
-                            nz-input placeholder="Supervisor Name" [(ngModel)]="supervisorName" nzSize="small"
-                            (ngModelChange)="onSupervisorNameChange($event)" [nzAutocomplete]="autoSupervisor" />
+                        <input style="margin-bottom:2px;" nz-input placeholder="Supervisor Name"
+                            [(ngModel)]="supervisorName" nzSize="small" (ngModelChange)="onSupervisorNameChange($event)"
+                            [nzAutocomplete]="autoSupervisor" />
                         <nz-autocomplete [nzDataSource]="matchingSupervisors" #autoSupervisor></nz-autocomplete>
                         <!--
                         <input nz-input nzSize="small" type="text" placeholder="Supervisor" ngDefaultControl
@@ -555,9 +547,37 @@
                             nzType="primary" style="margin: 10px;display:inline-block;">Add Person
                         </button>
                         <button *ngIf="!newUser" nz-button nzSize="small" nzShape="round" (click)="handleUpdateUser()"
-                            nzType="primary" style="margin: 10px;display:inline-block;" [disabled]="invalidSupervisorName">Update User
+                            nzType="primary" style="margin: 10px;display:inline-block;"
+                            [disabled]="invalidSupervisorName">Update User
                         </button>
                     </div>
                 </div>
             </div>
         </nz-drawer>
+        <!--
+        <nz-modal [(nzVisible)]="showSupervisorAssignmentDialog" nzCancelDisabled="true" [nzOkDisabled]="supervisorsFixedCnt < supervisorMatchFails.length"
+            nzTitle="Supervisor Match Failed" (nzOnOk)="handleOk()">
+            <div>
+                <div *ngFor="let userId of supervisorMatchFails">
+                    <div>
+                        <div style="float:left;">
+                            {{myOrgUserHash[userId].firstName}} &nbsp; {{myOrgUserHash[userId].lastName}}
+                        </div>
+                        <div style="float:left;">
+                            <input style="margin-bottom:2px;" nz-input placeholder="Supervisor Name"
+                                [(ngModel)]="supervisorName" nzSize="small"
+                                (ngModelChange)="onSupervisorNameChange($event)" [nzAutocomplete]="autoSupervisor" />
+                            <nz-autocomplete [nzDataSource]="matchingSupervisors" #autoSupervisor></nz-autocomplete>
+                            <button nz-button nzSize="small" nzShape="round"
+                                (click)="fixSupervisor(userId)" nzType="primary" style="float:left;"
+                                [disabled]="invalidSupervisorName">Update User
+                            </button>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+            </div>
+        </nz-modal>
+        -->
+    </div>
+</div>
