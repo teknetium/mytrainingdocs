@@ -579,6 +579,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       } else if (file.mimeType.includes('application') || file.mimeType.includes('image')) {
         newContent.type = 'file';
         this.safeUrlHash[file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + file.fileStackId));
+      } else if (file.mimeType.includes('audio')) {
+        newContent.type = 'audio';
+        this.safeUrlHash[file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + file.fileStackId));
+      } else if (file.mimeType.includes('text')) {
+        newContent.type = 'text';
+        this.safeUrlHash[file.fileStackUrl] = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(file.fileStackUrl));
       }
 
       this.currentPage.title = file.name;
@@ -769,8 +775,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       this.fileService.openAudioPicker(page);
     } else if (type === 'image') {
       this.fileService.openImagePicker(page);
-    } else if (type === 'text') {
-      this.fileService.openTextPicker(page);
     } else if (type === 'all') {
       this.fileService.openAllPicker(page);
     }
@@ -1020,17 +1024,14 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.currentPageId = newPage._id;
     this.buildPageHashes();
     if (pageType === 'file') {
-      if (contentType === 'text') {
-        this.openPicker('text', this.currentPage);
-      }
       if (contentType === 'file') {
         this.openPicker('doc', this.currentPage);
       }
       if (contentType === 'video') {
         this.openPicker('video', this.currentPage);
       }
-      if (contentType === 'video') {
-        this.openPicker('video', this.currentPage);
+      if (contentType === 'image') {
+        this.openPicker('image', this.currentPage);
       }
       this.introHash[this.currentPageId] = 'yes';
     } else if (pageType === 'url') {

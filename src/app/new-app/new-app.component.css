@@ -82,11 +82,10 @@ nz-footer {
 }
 
 .current-task {
-  color:white;
+
 }
 
 .task {
 }
 .task:hover {
-  color:white;
 }

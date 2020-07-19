@@ -378,8 +378,10 @@
                     <ul nz-menu nzSelectable>
                         <li nz-submenu nzTitle="Upload a FIle" nzIcon="file-text">
                             <ul nz-menu nzSelectable>
+                                <!--
                                 <li nz-menu-item (click)="addNewPage('file', 'text')">Text File
                                 </li>
+                                -->
                                 <li nz-menu-item (click)="addNewPage('file', 'file')">Document File
                                     (.doc,
                                     .docx,
@@ -388,8 +390,10 @@
                                     .ai, .pdf, .ps)</li>
                                 <li nz-menu-item (click)="addNewPage('file', 'video')">Video File
                                 </li>
+                                <!--
                                 <li nz-menu-item (click)="addNewPage('file', 'audio')">Audio File
                                 </li>
+                                -->
                                 <li nz-menu-item (click)="addNewPage('file', 'image')">Image File
                                 </li>
                             </ul>
@@ -804,6 +808,13 @@
                                                 [width]="contentWidth" [height]="900" [frameBorder]="iFrameBorder">
                                             </iframe>
                                         </div>
+                                        <div *ngIf="page.content && page.content.type === 'text'"
+                                            style="position:relative;text-align: center;width:100%;height:900px;">
+                                            <iframe *ngIf="page.content && page.content.file" [ngStyle]="{'width.px':contentWidth}" style=""
+                                                [src]="safeUrlHash[page.content.file.fileStackUrl]" allowfullscreen [width]="contentWidth" [height]="900"
+                                                [frameBorder]="iFrameBorder">
+                                            </iframe>
+                                        </div>
                                         <div *ngIf="page.content && page.content.type === 'assessment'">
                                             <div style="text-align: center;width:100%;height:900px;">
                                                 <div style="height:60%;display:inline-block;border:1px solid #dddddd;border-radius:5px;"
@@ -1115,7 +1126,7 @@
                                             </div>
                                         </div>
                                         <div *ngIf="page.content && page.content.type === 'html'"
-                                            style="text-align: center;width:100%;height:900px;">
+                                            style="text-align:left;width:100%;height:900px;">
                                             <div *ngIf="production === 'false' && selectedTraining.status === 'unlocked' && mode === 'Edit'"
                                                 [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight - 400}"
                                                 style="display: inline-block;">

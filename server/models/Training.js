@@ -24,7 +24,7 @@ const assessmentSchema = new Schema({
 })
 const contentSchema = new Schema({
   _id: { type: String, required: true },
-  type: { type: String, required: true },
+  type: { type: String, required: false },
   file: {
     _id: { type: String },
     name: { type: String },

@@ -40,12 +40,14 @@
                     All Trainings
                 </a>
             </li>
+            <!--
             <li 
                 nz-menu-item nzMatchRouter>
                 <a routerLink="/docs" routerLinkActive="active-link">
                     Docs
                 </a>
             </li>
+            -->
             <li nz-menu-item class="navbar-rhs">
                 <span class=" pointer" nz-dropdown [nzDropdownMenu]="profile" [nzTrigger]="'click'"
                     [nzPlacement]="'bottomRight'">
@@ -196,31 +198,31 @@
             <div [@showVideo]="isVideoOpen ? 'open' : 'closed'"
                 style="position: absolute;top:-100%; left: 0;right:0;height:100%;z-index:10;background-color:rgba(0,0,0,0.7);text-align: center;">
                 <div
-                    style="height:fit-content;width:fit-content;z-index:10;display:inline-block;border:1px solid #000000;margin-top:100px;background-color: #2b303a;">
-                    <div style="display:block;color:white;width:100%;padding:10px;border-bottom:1px solid #53535e;">
+                    style="height:fit-content;width:fit-content;z-index:10;display:inline-block;margin-top:100px;background-color: #f5f5f5;">
+                    <div style="display:block;width:100%;padding:10px;">
                         <span style="font-size:18px;">Task Tutorials</span>
                         <i nz-icon nzType="close-circle" [nzTheme]="'outline'" (click)="isVideoOpen = false"
-                            style="font-size:20px;font-weight: 200;cursor:pointer;float:right;color:#dddddd;"></i>
+                            style="font-size:20px;font-weight: 200;cursor:pointer;float:right;"></i>
                     </div>
                     <div *ngIf="authenticatedUser$ | async as user"
                         style="text-align: left;float:left;min-width:300px;max-height:500px;overflow:scroll;">
-                        <ul *ngFor="let pageName of pageNames" style="list-style-type: none;">
-                            <div style="text-align: center;font-size:16px;">
-                                <span>{{aboutThisPageHash[pageName].title}}</span>
-                            </div>
-                            <li *ngFor="let taskName of pageTaskHash[pageName]; index as i"
-                                style="padding:15px;border-bottom:1px solid #53535e;" (click)="playTaskVideo(taskName)"
-                                [ngClass]="{'current-task': taskName === currentTask}" class="task">
-                                <div
-                                    *ngIf="aboutThisPageHash[pageName].taskHash[taskName].userType.includes(user.userType)">
-                                    <i nz-icon nzType="youtube" [nzTheme]="'outline'" nz-tooltip
-                                        nzTooltipTitle="Play the task How-To video"
-                                        style="cursor:pointer;font-size:24px;vertical-align: top;color:#52c41a;"></i>
-                                    &nbsp;&nbsp;
-                                    <span>{{aboutThisPageHash[pageName].taskHash[taskName].desc}}</span>
+                        <nz-collapse nzBordered="true" nzAccordion="true">
+                            <nz-collapse-panel *ngFor="let pageName of pageNames" [nzHeader]="aboutThisPageHash[pageName].title"
+                                [nzActive]="currentPage === pageName" style="">
+                                <div *ngFor="let taskName of pageTaskHash[pageName]; index as i"
+                                    style="padding:5px;" (click)="playTaskVideo(taskName)"
+                                    [ngClass]="{'current-task': taskName === currentTask}" class="task">
+                                    <div
+                                        *ngIf="aboutThisPageHash[pageName].taskHash[taskName].userType.includes(user.userType)">
+                                        <i nz-icon nzType="youtube" [nzTheme]="'outline'" nz-tooltip
+                                            nzTooltipTitle="Play the task How-To video"
+                                            style="cursor:pointer;font-size:24px;vertical-align: top;color:#52c41a;"></i>
+                                        &nbsp;&nbsp;
+                                        <span>{{aboutThisPageHash[pageName].taskHash[taskName].desc}}</span>
+                                    </div>
                                 </div>
-                            </li>
-                        </ul>
+                            </nz-collapse-panel>
+                        </nz-collapse>
                     </div>
                     <div *ngIf="aboutThisPageHash[currentPage] && aboutThisPageHash[currentPage].taskHash[currentTask]"
                         style="text-align: center;float:right;">
@@ -284,7 +286,8 @@
                 <br>
                 <p>
                     <span style="color:#000000;">
-                        <i nz-icon nzType="question-circle" nzTheme="twotone" style="margin-left:30px;font-size:20px;"></i>
+                        <i nz-icon nzType="question-circle" nzTheme="twotone"
+                            style="margin-left:30px;font-size:20px;"></i>
                         &nbsp;&nbsp;
                         Gives you a tour of the page
                         <br>
@@ -308,7 +311,8 @@
                         ngDefaultControl [(ngModel)]="fName">
                 </div>
                 <div style="display:block;margin-bottom:10px;width:100%;">
-                    <label style="display:inline-block;text-align: right;width:20%;padding-right:10px;">Last Name</label>
+                    <label style="display:inline-block;text-align: right;width:20%;padding-right:10px;">Last
+                        Name</label>
                     <input style="display:inline-block;width:80%;" nz-input type="text" placeholder="Last Name"
                         ngDefaultControl [(ngModel)]="lName">
                 </div>

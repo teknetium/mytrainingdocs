@@ -108,11 +108,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       title: 'Home',
       visible: true,
       intro: `Here you will find information on your team members, your team's trainings, and training sessions.`,
-      tourSteps: {
-        steps: [
-          'step1', 'step2', 'step3'
-        ]
-      },
       taskHash: {
         gettingStartedSupervisor: {
           userType: ['supervisor'],
@@ -121,43 +116,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
           mimeType: 'video/mpeg',
           poster: './assets/images/logo/logo.png'
         }
-        /*
-        executeTraining: {
-          userType: ['supervisor', 'individualContributor'],
-          desc: 'Take Your Training',
-          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
-          mimeType: 'video/quicktime',
-          poster: './assets/images/logo/logo.png'
-        },
-        addTeamMember: {
-          userType: ['supervisor'],
-          desc: 'Add a New Team Member',
-          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
-          mimeType: 'video/quicktime',
-          poster: './assets/images/logo/logo.png'
-        },
-        manageUserTrainings: {
-          userType: ['supervisor'],
-          desc: 'Add / Remove Trainings from Team Members',
-          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
-          mimeType: 'video/quicktime',
-          poster: './assets/images/logo/logo.png'
-        },
-        manageTrainings: {
-          userType: ['supervisor'],
-          desc: 'Create/Edit Trainings',
-          url: 'https://cdn.filestackcontent.com/oNn7wEGNS1Kxj7c1Mgpf',
-          mimeType: 'video/quicktime',
-          poster: './assets/images/logo/logo.png'
-        },
-        assignToUsers: {
-          userType: ['supervisor'],
-          desc: 'Assign Trainings to Team Members',
-          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
-          mimeType: 'video/quicktime',
-          poster: './assets/images/logo/logo.png'
-        }
-        */
       },
     },
     mytrainings: {
@@ -165,11 +123,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       visible: true,
       intro: `Here you will find the trainings for which you are responsible.
        `,
-      tourSteps: {
-        steps: [
-          'step1', 'step2', 'step3'
-        ]
-      },
       taskHash: {
         executeTraining: {
           userType: ['supervisor', 'individualContributor'],
@@ -185,15 +138,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       visible: true,
       intro: `Here is where you manage your team.  Add new members, assign trainings, update
       profile info, etc.`,
-      tourSteps: {
-        steps: [
-          'step1', 'step2', 'step3'
-        ]
-      },
       taskHash: {
         addTeamMember: {
           userType: ['supervisor'],
-          desc: 'Add a New Team Member',
+          desc: 'Adding Team Members',
           url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
@@ -208,17 +156,9 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       },
     },
     trainings: {
-      title: 'Trainings',
+      title: 'All Trainings',
       visible: true,
       intro: 'Introduction to the page.',
-      tourSteps: [
-        {
-          steps: ['step1', 'step2', 'step3']
-        },
-        {
-          viewerSteps: ['viewerStep1', 'viewerStep2', 'viewerStep3']
-        }
-      ],
       taskHash: {
         manageTrainings: {
           userType: ['supervisor'],
@@ -234,13 +174,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
           mimeType: 'video/quicktime',
           poster: './assets/images/logo/logo.png'
         },
-        assignToUsers: {
-          userType: ['supervisor'],
-          desc: 'Assign Trainings to Team Members',
-          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
-          mimeType: 'video/quicktime',
-          poster: './assets/images/logo/logo.png'
-        }
       }
     }
   }

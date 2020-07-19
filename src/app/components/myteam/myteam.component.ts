@@ -376,7 +376,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
       this.userIdSelected = user._id;
       this.selectedUser = user;
-      if ((user.supervisorId && this.myOrgUserHash[user.supervisorId]) && (user._id !== this.authenticatedUser._id)) {
+      if ((user.supervisorId && this.myOrgUserHash[user.supervisorId]) && (this.authenticatedUser && user._id !== this.authenticatedUser._id)) {
         this.supervisorName = this.myOrgUserHash[user.supervisorId].firstName + ' ' + this.myOrgUserHash[user.supervisorId].lastName;
       }
       this.reportChain = Object.assign([], this.uidReportChainHash[this.selectedUser._id]);
@@ -471,6 +471,15 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   toggleFilter(filter: string) {
     this.myTeamFiltered = [];
+
+    if (filter === 'bulk-add-fail') {
+      this.showBulkAddFail = !this.showBulkAddFail;
+    }
+
+    if (this.showBulkAddFail) {
+      return;
+    }
+
     if (filter === 'up-to-date') {
       this.showUpToDate = !this.showUpToDate;
     } else if (filter === 'past-due') {
@@ -495,10 +504,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.showOnetime = !this.showOnetime;
     } else if (filter === 'recurring') {
       this.showRecurring = !this.showRecurring;
-    } else if (filter === 'bulk-add-fail') {
-      this.showBulkAddFail = !this.showBulkAddFail;
     }
-
 
   }
 
