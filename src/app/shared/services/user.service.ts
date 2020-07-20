@@ -85,6 +85,7 @@ export class UserService {
     supervisorMatchFail: []
   }
   myOrgUserNames = [];
+  reportChainNodeHash = {};
 
   constructor(
     private http: HttpClient,
@@ -276,13 +277,15 @@ export class UserService {
       image: '',
       extra: {
         uid: uid,
-        reportChain: []
+        reportChain: [],
+        peopleCnt: 0,
       },
       title: this.allOrgUserHash[uid].jobTitle,
       childs: []
     };
 
     let reportChain = [uid];
+    this.reportChainNodeHash[uid] = rootNode;
 
     for (let dR of this.allOrgUserHash[uid].directReports) {
       rootNode.childs.push(this.buildUserNode(dR, Object.assign([], reportChain)));
@@ -305,13 +308,22 @@ export class UserService {
     userNode.image = '';
     userNode.extra = {
       uid: userId,
-      reportChain: reportChain
+      reportChain: reportChain,
+      peopleCnt: 0
     }
+
+    this.reportChainNodeHash[userId] = userNode;
 //    userNode.title = user.jobTitle;
+    
+    for (let uid of reportChain) {
+      this.reportChainNodeHash[uid].extra.peopleCnt++;
+    }
+
     userNode.childs = [];
     let newReportChain = Object.assign([], reportChain);
     newReportChain.push(userId);
     for (let dR of user.directReports) {
+      userNode.extra.peopleCnt++;
       userNode.childs.push(this.buildUserNode(dR, Object.assign([], newReportChain)));
     }
     return userNode;
@@ -390,6 +402,7 @@ export class UserService {
     this.newTeamMember.jobTitle = user.jobTitle;
     this.newTeamMember.trainingStatus = 'none';
     this.newTeamMember.teamAdmin = false;
+    this.newTeamMember.userStatus = 'pending';
     this.newUserHash[this.newTeamMember._id] = user;
     this.newUserIds.push(this.newTeamMember._id);
 

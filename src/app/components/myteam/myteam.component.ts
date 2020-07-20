@@ -239,6 +239,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   supervisorsFixedCnt = 0;
   bulkAddFail = false;
   myOrgUsers$: Observable<string[]>;
+  reportChainWidth = 0;
+  orgChartWidth = 100;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -345,7 +347,45 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!nodes) {
         return;
       }
+      if (this.reportChain && this.reportChain.length === 0) {
+        this.reportChainWidth = 0;
+        this.orgChartWidth = 100;
+      } else {
+        this.reportChainWidth = 16;
+        this.orgChartWidth = 83;
+      }
+
       this.nodes = nodes;
+      let peopleCnt = this.nodes[0].extra.peopleCnt;
+      if (peopleCnt < 13) {
+        this.orgChartFontSize = 14;
+      } else if (peopleCnt < 16) {
+        this.orgChartFontSize = 13;
+      } else if (peopleCnt < 19) {
+        this.orgChartFontSize = 12;
+      } else if (peopleCnt < 22) {
+        this.orgChartFontSize = 11;
+      } else if (peopleCnt < 25) {
+        this.orgChartFontSize = 10;
+      } else if (peopleCnt < 28) {
+        this.orgChartFontSize = 9;
+      } else if (peopleCnt < 31) {
+        this.orgChartFontSize = 7;
+      } else if (peopleCnt < 34) {
+        this.orgChartFontSize = 7;
+      } else if (peopleCnt < 37) {
+        this.orgChartFontSize = 6;
+      } else if (peopleCnt < 40) {
+        this.orgChartFontSize = 5;
+      } else if (peopleCnt < 43) {
+        this.orgChartFontSize = 3;
+      } else if (peopleCnt < 55) {
+        this.orgChartFontSize = 3;
+      } else if (peopleCnt < 58) {
+        this.orgChartFontSize = 2;
+      } else {
+        this.orgChartFontSize = 2;
+      }
     });
     this.myTeam$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
       console.log('myTeam$  ', userList);
@@ -380,6 +420,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         this.supervisorName = this.myOrgUserHash[user.supervisorId].firstName + ' ' + this.myOrgUserHash[user.supervisorId].lastName;
       }
       this.reportChain = Object.assign([], this.uidReportChainHash[this.selectedUser._id]);
+      if (this.reportChain && this.reportChain.length === 0) {
+        this.reportChainWidth = 0;
+        this.orgChartWidth = 100;
+      } else {
+        this.reportChainWidth = 16;
+        this.orgChartWidth = 83;
+      }
       this.trainingService.selectTraining(null);
     });
 
@@ -460,6 +507,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   selectReportChainItem(uid) {
     this.reportChain = this.uidReportChainHash[uid];
+    if (this.reportChain && this.reportChain.length < 1) {
+      this.reportChain = null;
+    }
     this.userService.buildOrgChart(uid, true);
   }
 

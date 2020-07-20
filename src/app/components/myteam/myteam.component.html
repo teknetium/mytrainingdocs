@@ -289,8 +289,8 @@
                                 </div>
                             </div>
                             <div style="overflow: scroll;padding-top:20px;width:100%;height:100%;">
-                                <div *ngIf="reportChain && reportChain.length > 0"
-                                    style="float:left;border-right: 1px solid #bbbbbb;margin-right:20px;">
+                                <div *ngIf="reportChain && reportChain.length > 0" [ngStyle]="{'width.%': reportChainWidth}"
+                                    style="float:left;border-right: 1px solid #bbbbbb;">
                                     <span
                                         style="display: block;font-size:18px;font-weight: 300;margin:0 10px 10px 0;">Reporting
                                         Chain</span>
@@ -301,8 +301,12 @@
                                             style="">{{myOrgUserHash[userId].firstName}}&nbsp;{{myOrgUserHash[userId].lastName}}</span>
                                     </div>
                                 </div>
-                                <div style="display:inline-block;">
-                                    <div style="width:fit-content;height: fit-content;">
+                                <div style="float:left;" [ngStyle]="{'width.%': orgChartWidth}">
+                                    <!--
+                                    <span *ngIf="nodes">{{orgChartFontSize}} - {{nodes[0].extra.peopleCnt}} - {{orgChartWidth}}</span>
+                                    -->
+                                    <div style="width:100%;height: fit-content;position:relative;">
+                                        <span style="position:absolute;top:0;left:15px;font-size:18px;font-weight: 300;margin:0 10px 10px 0;">{{nodes[0].name}}</span>
                                         <ngx-org-chart [nodes]="nodes" [direction]="chartOrientation"
                                             (itemClick)="selectNode($event)"
                                             [ngStyle]="{'font-size.px': orgChartFontSize}">
@@ -313,23 +317,6 @@
                         </div>
                     </nz-tab>
                 </nz-tabset>
-                <!--
-                <ng-template #memberDetails>
-                    <span style="float:left;font-size:18px;">Member Details</span>
-                    <span style="float:right;padding-right:40%;">
-                        <i [ngClass]="userTypeIconHash[selectedUser.userType]" style="font-size:20px;"
-                            [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser.trainingStatus]}" nz-tooltip
-                            [nzTooltipTitle]=""></i>&nbsp;
-                        <span
-                            style="margin-left:10px;font-size:18px;font-weight: 300;color:blue;margin:10px 0;">{{selectedUser.firstName}}
-                            {{selectedUser.lastName}}</span>
-                    </span>
-                    <div style="clear:both;"></div>
-                </ng-template>
-                <ng-template #orgChart>
-                    <span style="font-size:18px;">Org Chart</span>
-                </ng-template>
-                -->
                 <nz-modal [nzVisible]="showUserTrainingModal" nzTitle="Assign Training To User"
                     [nzCancelDisabled]="assignableTrainings.length === 0" (nzOnCancel)="handleCancelUserTraining()"
                     [nzOkDisabled]="!selectedTrainingId" (nzOnOk)="handleAssignUserTraining()"
@@ -352,17 +339,6 @@
                                 style="padding:10px 20px;width:100%;"
                                 [ngClass]="{'selected-training': selectedTrainingId === training._id}"
                                 (click)="selectedTrainingId = training._id">
-                                <!--
-                                                            <i *ngIf="allTrainingIdHash[training._id].status === 'unlocked'" nz-icon
-                                                                nzType="unlock" [nzTheme]="'twotone'"
-                                                                style="margin-right:10px;display:inline-block;font-size:12px;vertical-align: middle;"
-                                                                [nzTwotoneColor]="'#52c41a'"></i>
-                                                            <i *ngIf="allTrainingIdHash[training._id].status === 'locked'" nz-icon
-                                                                nzType="lock" [nzTheme]="'twotone'"
-                                                                style="margin-right:10px;display:inline-block;font-size:12px;vertical-align: middle;"
-                                                                [nzTwotoneColor]="'red'"></i>
-                                                                -->
-
                                 <i [ngClass]="allTrainingIdHash[training._id].iconClass"
                                     style="display:inline-block;font-size:20px;margin-right:10px;vertical-align: middle;"
                                     [ngStyle]="{'color': allTrainingIdHash[training._id].iconColor}">
@@ -569,30 +545,5 @@
                 </div>
             </div>
         </nz-drawer>
-        <!--
-        <nz-modal [(nzVisible)]="showSupervisorAssignmentDialog" nzCancelDisabled="true" [nzOkDisabled]="supervisorsFixedCnt < supervisorMatchFails.length"
-            nzTitle="Supervisor Match Failed" (nzOnOk)="handleOk()">
-            <div>
-                <div *ngFor="let userId of supervisorMatchFails">
-                    <div>
-                        <div style="float:left;">
-                            {{myOrgUserHash[userId].firstName}} &nbsp; {{myOrgUserHash[userId].lastName}}
-                        </div>
-                        <div style="float:left;">
-                            <input style="margin-bottom:2px;" nz-input placeholder="Supervisor Name"
-                                [(ngModel)]="supervisorName" nzSize="small"
-                                (ngModelChange)="onSupervisorNameChange($event)" [nzAutocomplete]="autoSupervisor" />
-                            <nz-autocomplete [nzDataSource]="matchingSupervisors" #autoSupervisor></nz-autocomplete>
-                            <button nz-button nzSize="small" nzShape="round"
-                                (click)="fixSupervisor(userId)" nzType="primary" style="float:left;"
-                                [disabled]="invalidSupervisorName">Update User
-                            </button>
-                        </div>
-                        <div style="clear: both;"></div>
-                    </div>
-                </div>
-            </div>
-        </nz-modal>
-        -->
     </div>
 </div>
