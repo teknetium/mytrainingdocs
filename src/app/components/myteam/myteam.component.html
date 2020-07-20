@@ -8,7 +8,7 @@
                     (click)="startTour('myTeam')" nz-tooltip nzTooltipTitle="A little help"
                     text="This page is packed full of exciting features.  Let's go through them..."></i>
                 <div class="direct-report-container" joyrideStep="Step1-myTeam" stepPosition="right"
-                    title="Team Members" text="This section contains 3 functional areas to help you manage your team.">
+                    title="Team Members" text="This section contains 4 functional areas to help you manage your team.">
                     <div>
                         <span style="font-size:24px;">Team Members</span>
                         <hr style="margin-bottom:10px 0;">
@@ -49,22 +49,24 @@
                             <div style="clear:both;"></div>
                         </div>
                     </div>
-                    <div style="display:block;margin-bottom:20px;">
+                    <div style="display:block;margin-bottom:20px;" joyrideStep="Step3-myTeam" stepPosition="right" title="User Search"
+                            text="Search for a user in your organization.">
                         <div style="float:left;width:85%;">
                             <input style="color:#000000;margin-bottom:0;font-size:14px;width:100%;" nz-input
                                 placeholder="User Search" [(ngModel)]="userNameToSearchFor" nzSize="small"
                                 (ngModelChange)="onUserSearchChange($event)" [nzAutocomplete]="autoUserSearch" />
                             <nz-autocomplete [nzDataSource]="matchingUsers" #autoUserSearch></nz-autocomplete>
                         </div>
-                        <button nz-button nzShape="circle" [disabled]="!showAddToUserListButton"
+                        <button nz-button nzShape="circle" [disabled]="!showAddToUserListButton" nz-tooltip
+                                        nzTooltipTitle="View this User"
                             (click)="addFoundUser()" style="float:right;vertical-align: middle;margin-top:2px;">
-                            <i nz-icon nzType="user-add" [nzTheme]="'outline'"
+                            <i nz-icon nzType="eye" [nzTheme]="'outline'"
                                 style="font-size:18px;vertical-align:baseline;"></i>
                         </button>
                         <div style="clear:both;"></div>
                     </div>
                     <div>
-                        <div style="text-align: center;" joyrideStep="Step3-myTeam" stepPosition="right" title="Filters"
+                        <div style="text-align: center;" joyrideStep="Step4-myTeam" stepPosition="right" title="Filters"
                             text="These filters control which users show up in the list and which trainings show up for each user.">
                             <span style="font-size:20px;margin-bottom:40px;">Filters</span>&nbsp;&nbsp;
                             <span style="font-size:10px;">(click to toggle)</span>
@@ -158,9 +160,9 @@
                             </div>
                         </div>
                     </div>
-                    <div style="background-color: white;text-align:left;" joyrideStep="Step4-myTeam"
+                    <div style="background-color: white;text-align:left;" joyrideStep="Step5-myTeam"
                         stepPosition="right" title="Team Members"
-                        text="This is the list of people in your team.  Selecting an entry from this list loads that persons information into the Member Details section on the right.">
+                        text="This is the list of people in your team.  Selecting an entry from this list loads that persons information into the Member Details section on the right.  That person is also selected in the org chart.">
                         <div *ngIf="authenticatedUser$ | async as user" class='user-button' style="font-size:20px;"
                             (click)="selectUser(user._id)"
                             [ngClass]="{'user-selected': selectedUser._id === user._id }">
