@@ -49,8 +49,8 @@
                             <div style="clear:both;"></div>
                         </div>
                     </div>
-                    <div style="display:block;margin-bottom:20px;" joyrideStep="Step3-myTeam" stepPosition="right" title="User Search"
-                            text="Search for a user in your organization.">
+                    <div style="display:block;margin-bottom:20px;" joyrideStep="Step3-myTeam" stepPosition="right"
+                        title="User Search" text="Search for a user in your organization.">
                         <div style="float:left;width:85%;">
                             <input style="color:#000000;margin-bottom:0;font-size:14px;width:100%;" nz-input
                                 placeholder="User Search" [(ngModel)]="userNameToSearchFor" nzSize="small"
@@ -58,8 +58,8 @@
                             <nz-autocomplete [nzDataSource]="matchingUsers" #autoUserSearch></nz-autocomplete>
                         </div>
                         <button nz-button nzShape="circle" [disabled]="!showAddToUserListButton" nz-tooltip
-                                        nzTooltipTitle="View this User"
-                            (click)="addFoundUser()" style="float:right;vertical-align: middle;margin-top:2px;">
+                            nzTooltipTitle="View this User" (click)="addFoundUser()"
+                            style="float:right;vertical-align: middle;margin-top:2px;">
                             <i nz-icon nzType="eye" [nzTheme]="'outline'"
                                 style="font-size:18px;vertical-align:baseline;"></i>
                         </button>
@@ -234,11 +234,26 @@
                                     [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser.trainingStatus]}"
                                     nz-tooltip [nzTooltipTitle]=""></i>&nbsp;
                                 <span
-                                    style="display:inline-block;margin-left:10px;font-size:26px;font-weight: 300;color:#444444;margin:10px 0;">{{selectedUser.firstName}}
-                                    {{selectedUser.lastName}}</span>
+                                    style="display:inline-block;font-size:26px;font-weight: 300;margin:10px 0 20px 0;color:#444444;"
+                                    >{{selectedUser.firstName}}
+                                    {{selectedUser.lastName}}
+                                    </span>
+                                    <button nz-button nzType="default" nzShape="circle" nz-dropdown [nzDropdownMenu]="userActionMenu" style="vertical-align: text-bottom;margin-left:10px;">
+                                        <i nz-icon nzType="more"></i>
+                                        </button>
 
-                            </div>
-                            <div style="width:100%;height:40px;text-align: center;">
+                                <nz-dropdown-menu #userActionMenu="nzDropdownMenu">
+                                    <ul nz-menu>
+                                        <li nz-menu-item (click)="showUserTrainingModal = true">Assign a Training</li>
+                                        <li nz-menu-item (click)="editUser()">Edit Profile</li>
+                                        <li *ngIf="selectedUser.userStatus === 'pending'" nz-menu-item (click)="sendRegistrationMsg(selectedUser.email, authenticatedUser.email)">Resend Registration Email</li>
+                                        <li nz-menu-item nz-popconfirm nzPopconfirmTitle="Delete this user?"
+                                            (nzOnConfirm)="confirmDelete(selectedUser)">
+                                            Delete User
+                                        </li>
+                                    </ul>
+                                </nz-dropdown-menu>
+                                <!--
                                 <button nz-button nzType="primary" nzShape="round" nzSize="small" class="lbButton"
                                     (click)="showUserTrainingModal = true" style="margin-right:10px;">
                                     Assign a Training
@@ -247,12 +262,18 @@
                                     style="margin-right:10px;" (click)="editUser()">
                                     Edit Profile
                                 </button>
+                                <button *ngIf="selectedUser.userStatus === 'pending'" nz-button nzType="primary"
+                                    nzShape="round" nzSize="small" class="lbButton" style="margin-right:10px;"
+                                    (click)="editUser()">
+                                    Resend
+                                </button>
                                 <button nz-button nzType="primary" nzShape="round" nzSize="small" class="lbButton"
                                     style="margin-right:10px;" nz-popconfirm nzPopconfirmTitle="Delete this user?"
                                     (nzOnConfirm)="confirmDelete(selectedUser)">
                                     Delete User
                                 </button>
                                 <div style="clear:both;"></div>
+                                -->
                             </div>
                             <!--
                             -->
@@ -291,7 +312,8 @@
                                 </div>
                             </div>
                             <div style="overflow: scroll;padding-top:20px;width:100%;height:100%;">
-                                <div *ngIf="reportChain && reportChain.length > 0" [ngStyle]="{'width.%': reportChainWidth}"
+                                <div *ngIf="reportChain && reportChain.length > 0"
+                                    [ngStyle]="{'width.%': reportChainWidth}"
                                     style="float:left;border-right: 1px solid #bbbbbb;">
                                     <span
                                         style="display: block;font-size:18px;font-weight: 300;margin:0 10px 10px 0;">Reporting
@@ -308,7 +330,8 @@
                                     <span *ngIf="nodes">{{orgChartFontSize}} - {{nodes[0].extra.peopleCnt}} - {{orgChartWidth}}</span>
                                     -->
                                     <div style="width:100%;height: fit-content;position:relative;">
-                                        <span style="position:absolute;top:0;left:15px;font-size:18px;font-weight: 300;margin:0 10px 10px 0;">{{nodes[0].name}}</span>
+                                        <span
+                                            style="position:absolute;top:0;left:15px;font-size:18px;font-weight: 300;margin:0 10px 10px 0;">{{nodes[0].name}}</span>
                                         <ngx-org-chart [nodes]="nodes" [direction]="chartOrientation"
                                             (itemClick)="selectNode($event)"
                                             [ngStyle]="{'font-size.px': orgChartFontSize}">

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { UserTrainingService } from './userTraining.service';
+import { SendmailService } from './sendmail.service';
 import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
@@ -11,6 +12,7 @@ import { Router } from '@angular/router';
 import { EventModel } from '../interfaces/event.type';
 import { EventService } from './event.service';
 import { JobTitleService } from './jobtitle.service';
+import { TemplateMessageModel } from '../../shared/interfaces/message.type';
 
 
 @Injectable({
@@ -92,6 +94,7 @@ export class UserService {
     private auth: AuthService,
     private jobTitleService: JobTitleService,
     private userTrainingService: UserTrainingService,
+    private sendmailService: SendmailService,
     private router: Router,
     private eventService: EventService,
   ) {
@@ -217,7 +220,7 @@ export class UserService {
     }
   */
   loadData(teamId, userIdToSelect) {
-//    this.getTeam$(teamId).subscribe((userList) => {
+    //    this.getTeam$(teamId).subscribe((userList) => {
     this.getOrg$(this.org).subscribe(userList => {
 
       if (!userList) {
@@ -302,7 +305,7 @@ export class UserService {
     this.uidReportChainHash[userId] = reportChain;
     let user = this.allOrgUserHash[userId];
     let userNode = <OrgChartNode>{};
-//    userNode.name = user.firstName + ' ' + user.lastName;
+    //    userNode.name = user.firstName + ' ' + user.lastName;
     userNode.name = user.firstName;
     userNode.cssClass = 'org-chart-node';
     userNode.image = '';
@@ -313,8 +316,8 @@ export class UserService {
     }
 
     this.reportChainNodeHash[userId] = userNode;
-//    userNode.title = user.jobTitle;
-    
+    //    userNode.title = user.jobTitle;
+
     for (let uid of reportChain) {
       this.reportChainNodeHash[uid].extra.peopleCnt++;
     }
@@ -348,7 +351,7 @@ export class UserService {
     this.updateUser(this.myTeamIdHash[uid], false);
   }
 
-  processNewUser(newUser:UserModel) {
+  processNewUser(newUser: UserModel) {
     this.newUserList.push(newUser);
     this.fullNameHash[newUser.firstName + ' ' + newUser.lastName] = newUser;
     this.allOrgUserHash[newUser._id] = newUser;
@@ -403,13 +406,24 @@ export class UserService {
     this.newTeamMember.trainingStatus = 'none';
     this.newTeamMember.teamAdmin = false;
     this.newTeamMember.userStatus = 'pending';
+    this.newTeamMember.settings = {
+      foo: 'test',
+      showPageInfo: true,
+      themeColor: {
+        name: 'orange ',
+        bgColor: 'orange',
+        primary: 'white',
+        secondary: '#c54f0a',
+      }
+    }
     this.newUserHash[this.newTeamMember._id] = user;
     this.newUserIds.push(this.newTeamMember._id);
 
     this.postUser$(this.newTeamMember).subscribe(newUser => {
+
       this.newUserBS$.next(newUser);
       this.processNewUser(newUser);
-    });    
+    });
   }
 
   createNewUsersFromBatch(userData: UserBatchData[]) {
@@ -426,7 +440,7 @@ export class UserService {
 
     this.addUserFromBatch(this.newUser);
   }
-    
+
   createNewUser(user: UserModel, reload: boolean) {
     this.postUser$(user).subscribe(data => {
       this.authenticatedUser.directReports.push(data._id);

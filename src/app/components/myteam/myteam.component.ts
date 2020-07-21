@@ -285,6 +285,15 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!newUser) {
         return;
       }
+      let message = <TemplateMessageModel>{
+        to: newUser.email,
+        from: this.authenticatedUser.email,
+        templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
+        dynamicTemplateData: {
+          email: newUser.email
+        },
+      }
+      this.mailService.sendTemplateMessage(message);
 
 
       this.trainingService.assignTrainingsForJobTitle(newUser.jobTitle, newUser._id, newUser.teamId);
@@ -710,19 +719,23 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
     this.options = [];
 
-    let url = 'https://mytrainingdocs.com/signup/' + this.newTeamMember.email;
-    this.message = <TemplateMessageModel>{
-      to: this.newTeamMember.email,
-      from: this.authenticatedUser.email,
-      templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
-      dynamicTemplateData: {
-        email: this.newTeamMember.email
-      },
-    }
-    this.mailService.sendTemplateMessage(this.message);
+//    let url = 'https://mytrainingdocs.com/signup/' + this.newTeamMember.email;
+    this.sendRegistrationMsg(this.newTeamMember.email, this.authenticatedUser.email);
     this.userPanelVisible = false;
     this.selectUser(this.newTeamMember._id);
     //    this.cd.detectChanges();
+  }
+
+  sendRegistrationMsg(toAddr, fromAddr) {
+    this.message = <TemplateMessageModel>{
+      to: toAddr,
+      from: fromAddr,
+      templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
+      dynamicTemplateData: {
+        email: toAddr
+      },
+    }
+    this.mailService.sendTemplateMessage(this.message);
   }
 
   handleUpdateUser() {
