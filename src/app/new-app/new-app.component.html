@@ -149,6 +149,13 @@
             </li>
             -->
         </ul>
+        <!--
+        <nz-alert nzType="error" [nzMessage]="currentHttpError" nzBanner="true"></nz-alert>
+        -->
+    <ng-template #httpError >
+
+    </ng-template>
+        
     </nz-header>
     <nz-content class="inner-content">
         <div *ngIf="(authenticatedUser && authenticatedUser.firstName !== '') && aboutThisPageHash[currentPage]">
@@ -207,10 +214,11 @@
                     <div *ngIf="authenticatedUser$ | async as user"
                         style="text-align: left;float:left;min-width:300px;max-height:500px;overflow:scroll;">
                         <nz-collapse nzBordered="true" nzAccordion="true">
-                            <nz-collapse-panel *ngFor="let pageName of pageNames" [nzHeader]="aboutThisPageHash[pageName].title"
-                                [nzActive]="currentPage === pageName" style="">
-                                <div *ngFor="let taskName of pageTaskHash[pageName]; index as i"
-                                    style="padding:5px;" (click)="playTaskVideo(taskName)"
+                            <nz-collapse-panel *ngFor="let pageName of pageNames"
+                                [nzHeader]="aboutThisPageHash[pageName].title" [nzActive]="currentPage === pageName"
+                                style="">
+                                <div *ngFor="let taskName of pageTaskHash[pageName]; index as i" style="padding:5px;"
+                                    (click)="playTaskVideo(taskName)"
                                     [ngClass]="{'current-task': taskName === currentTask}" class="task">
                                     <div
                                         *ngIf="aboutThisPageHash[pageName].taskHash[taskName].userType.includes(user.userType)">
@@ -359,8 +367,21 @@
                     </label>
                 </div>
                 <div style="display:inline-block;width:70%;margin-left:20px;">
+                    <!--
                     <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl
                         [(ngModel)]="authenticatedUser.email" style="margin-bottom:2px;">
+                        -->
+                        <nz-input-group [nzSuffix]="suffixTemplate">
+                            <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl [(ngModel)]="currentEmail"
+                                (ngModelChange)="checkUniqueEmail($event)" style="margin-bottom:2px;" (keydown.enter)="checkUniqueEmail($event)"
+                                (blur)="checkUniqueEmail($event)">
+                        </nz-input-group>
+                        <ng-template #suffixTemplate>
+                            <i *ngIf="!emailUnique" nz-icon nz-tooltip nzTooltipTitle="Extra information" nzType="close-circle"
+                                [nzTheme]="'twotone'" nzTwotoneColor="red"></i>
+                            <i *ngIf="emailUnique" nz-icon nz-tooltip nzTooltipTitle="Extra information" nzType="check-circle"
+                                [nzTheme]="'twotone'" nzTwotoneColor="#46bc16"></i>
+                        </ng-template>
                 </div>
             </div>
             <!--
@@ -385,7 +406,7 @@
                         style="margin: 10px;display:inline-block;">Cancel
                     </button>
                     <button *ngIf="authenticatedUser" nz-button nzSize="small" nzShape="round"
-                        (click)="handleUpdateUser()" nzType="primary" style="margin: 10px;display:inline-block;">Update
+                        (click)="handleUpdateUser()" [disabled]="!emailUnique" nzType="primary" style="margin: 10px;display:inline-block;">Update
                         User
                     </button>
                 </div>

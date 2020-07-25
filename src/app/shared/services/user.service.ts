@@ -6,13 +6,14 @@ import { SendmailService } from './sendmail.service';
 import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { UserModel, UserIdHash, OrgChartNode, UserBatchData, BuildOrgProgress } from '../interfaces/user.type';
+import { UserModel, UserFail, UserIdHash, OrgChartNode, UserBatchData, BuildOrgProgress } from '../interfaces/user.type';
 import { Auth0ProfileModel } from '../interfaces/auth0Profile.type';
 import { Router } from '@angular/router';
 import { EventModel } from '../interfaces/event.type';
 import { EventService } from './event.service';
 import { JobTitleService } from './jobtitle.service';
 import { TemplateMessageModel } from '../../shared/interfaces/message.type';
+import * as cloneDeep from 'lodash/cloneDeep';
 
 
 @Injectable({
@@ -24,6 +25,7 @@ export class UserService {
   private authenticatedUser: UserModel;
 
   // Writable streams
+  private httpErrorBS$ = new BehaviorSubject<HttpErrorResponse>(null);
   private myOrgUserNameListBS$ = new BehaviorSubject<string[]>([]);
   private myOrgBS$ = new BehaviorSubject<OrgChartNode[]>(null);
   private buildOrgProgressBS$ = new BehaviorSubject<BuildOrgProgress>(null);
@@ -38,6 +40,7 @@ export class UserService {
   private allOrgUserHash: UserIdHash = {};
   private myTeam: UserModel[] = [];
   private statusObj;
+  private userFailBS$ = new BehaviorSubject<UserFail>(null);
 
   userTypeIconHash = {
     supervisor: 'fad fa-user-tie',
@@ -72,12 +75,16 @@ export class UserService {
     directReports: [],
   };
 
+  userFails: UserFail[] = [];
+
   nodes: any = [];
   userNode: OrgChartNode;
   uidReportChainHash = {};
-  newUserIndex = 0;
-  newUserData: UserBatchData[];
-  newUser: UserBatchData;
+  newBatchUserIndex = 0;
+  newBatchUserData: UserBatchData[];
+  newBatchUser: UserBatchData;
+  batchUserAddedBS$ = new BehaviorSubject<UserModel>(null);
+  batchUserFailedBS$ = new BehaviorSubject<UserBatchData>(null);
 
   orgProgress: BuildOrgProgress = {
     usersAdded: 0,
@@ -88,6 +95,7 @@ export class UserService {
   }
   myOrgUserNames = [];
   reportChainNodeHash = {};
+  myTeamIdIndexHash = {};
 
   constructor(
     private http: HttpClient,
@@ -104,6 +112,8 @@ export class UserService {
     this.authenticatedUserProfile$.subscribe((profile) => {
       this.getUserByUid(profile.uid).subscribe(
         user => {
+
+          // This is the uid field is the user id from Auth0.  This is set for the initial supervisor registrant 
           this.authenticatedUser = user;
           //          this.getAllOrgUsers();
           if (this.authenticatedUser.jobTitle) {
@@ -111,22 +121,20 @@ export class UserService {
           }
           this.authenticatedUserBS$.next(this.authenticatedUser);
           this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
-          this.logLoginEvent();
           if (this.authenticatedUser.userType === 'supervisor') {
+//            this.org = this.authenticatedUser.org;
             this.teamId = this.authenticatedUser.uid;
-            this.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
-            this.loadData(this.teamId, null);
+            this.loadData(this.authenticatedUser.org, null);
           }
-
         },
         err => {
           this.getUserByEmail(profile.email).subscribe(
             res => {
               res.uid = profile.uid;
               res.userStatus = 'active';
-              this.updateUser(res, true);
+              res.emailVerified = true;
+              this.updateUser(res, false);
               this.authenticatedUser = res;
-              //              this.getAllOrgUsers();
               if (this.authenticatedUser.jobTitle) {
                 this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
               }
@@ -141,8 +149,9 @@ export class UserService {
                 firstName: '',
                 lastName: '',
                 email: profile.email,
+                emailVerified: false,
                 teamId: null,
-                org: profile.email.substring(profile.email.indexOf('@' + 1)),
+                org: profile.email.substring(profile.email.indexOf('@') + 1),
                 teamAdmin: false,
                 orgAdmin: false,
                 appAdmin: false,
@@ -166,19 +175,41 @@ export class UserService {
 
               this.postUser$(this.authenticatedUser).subscribe((data) => {
                 this.authenticatedUser = data;
-                this.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
-                //                this.getAllOrgUsers();
                 if (this.authenticatedUser.jobTitle) {
                   this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
                 }
                 this.authenticatedUserBS$.next(this.authenticatedUser);
                 this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
-                this.loadData(data._id, null);
+                this.loadData(this.authenticatedUser.org, null);
               });
             }
           )
         });
     });
+  }
+
+  sendVerifyEmailMsg(toAddr, uid) {
+    let message = <TemplateMessageModel>{
+      to: toAddr,
+      from: 'support@mytrainingdocs.com',
+      templateId: 'd-5559cf461838417887b8ffd247983c92',
+      dynamicTemplateData: {
+        uid: uid
+      },
+    }
+    this.sendmailService.sendTemplateMessage(message);
+  }
+
+  sendRegistrationMsg(toAddr, fromAddr) {
+    let message = <TemplateMessageModel>{
+      to: toAddr,
+      from: fromAddr,
+      templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
+      dynamicTemplateData: {
+        email: toAddr
+      },
+    }
+    this.sendmailService.sendTemplateMessage(message);
   }
 
   logLoginEvent() {
@@ -219,22 +250,33 @@ export class UserService {
       })
     }
   */
-  loadData(teamId, userIdToSelect) {
+  loadData(org, userIdToSelect) {
     //    this.getTeam$(teamId).subscribe((userList) => {
-    this.getOrg$(this.org).subscribe(userList => {
+    this.getOrg$(org).subscribe(userList => {
+      console.log('loadData : users returned from getOrg$', userList);
 
       if (!userList) {
-        return;
+        userList = [];
       }
+
+      userList = userList.concat(this.newUserList);
+      console.log('loadData : after merging with this.newUserLst', userList);      
+
       this.myTeam = [];
       this.myTeamIdHash = {};
       this.allOrgUserHash = {};
       this.myOrgUserNames = [];
+
+      let index = 0;
       for (let user of userList) {
-        this.myOrgUserNames.push(user.firstName + ' ' + user.lastName);
+        let fullName = user.firstName + ' ' + user.lastName;
+        this.myOrgUserNames.push(fullName);
         if (user.teamId === this.authenticatedUser._id) {
           this.myTeamIdHash[user._id] = user;
-          this.myTeam.push(user);
+          if (!this.myTeam.includes(user)) {
+            this.myTeamIdIndexHash[user._id] = index++;
+            this.myTeam.push(user);
+          }
         }
         this.allOrgUserHash[user._id] = user;
         if (user.jobTitle) {
@@ -302,18 +344,25 @@ export class UserService {
   }
 
   buildUserNode(userId, reportChain): OrgChartNode {
+    console.log('BuildUserNode', this.allOrgUserHash);
     this.uidReportChainHash[userId] = reportChain;
     let user = this.allOrgUserHash[userId];
-    let userNode = <OrgChartNode>{};
-    //    userNode.name = user.firstName + ' ' + user.lastName;
-    userNode.name = user.firstName;
-    userNode.cssClass = 'org-chart-node';
-    userNode.image = '';
-    userNode.extra = {
-      uid: userId,
-      reportChain: reportChain,
-      peopleCnt: 0
+    if (!user) {
+      console.log('buildUserNode ', userId, this.allOrgUserHash);
     }
+    let userNode = <OrgChartNode>{
+      name: user.firstName,
+      cssClass: 'org-chart-node',
+      image: '',
+      title: '',
+      extra: {
+        uid: userId,
+        reportChain: reportChain,
+        peopleCnt: 0
+      },
+      childs: []
+    }
+
 
     this.reportChainNodeHash[userId] = userNode;
     //    userNode.title = user.jobTitle;
@@ -332,12 +381,21 @@ export class UserService {
     return userNode;
   }
 
+  getHttpErrorStream(): Observable<HttpErrorResponse> {
+    return this.httpErrorBS$.asObservable();
+  }
+
+  getUserFailStream(): Observable<UserFail> {
+    return this.userFailBS$.asObservable();
+  }
+
   getOrgProgressStream(): Observable<BuildOrgProgress> {
     return this.buildOrgProgressBS$.asObservable();
   }
 
   setUserStatusPastDue(uid: string) {
     this.myTeamIdHash[uid].trainingStatus = 'pastDue';
+//    this.myTeam[]
     this.updateUser(this.myTeamIdHash[uid], false);
   }
 
@@ -351,94 +409,74 @@ export class UserService {
     this.updateUser(this.myTeamIdHash[uid], false);
   }
 
-  processNewUser(newUser: UserModel) {
-    this.newUserList.push(newUser);
-    this.fullNameHash[newUser.firstName + ' ' + newUser.lastName] = newUser;
-    this.allOrgUserHash[newUser._id] = newUser;
+  createNewUsersFromBatch(batchUsers: UserBatchData[]) {
 
-    this.orgProgress.usersAdded++;
-    this.buildOrgProgressBS$.next(this.orgProgress);
-
-    if (this.newUserIndex < this.batchCount - 1) {
-      this.newUserIndex++;
-      this.newUser = this.newUserData[this.newUserIndex];
-
-      this.addUserFromBatch(this.newUser);
-
-    } else if (this.newUserIndex === this.batchCount - 1) {
-      this.orgProgress.description = 'Building Organization';
-      for (let nUser of this.newUserList) {
-        if (!this.fullNameHash[this.newUserHash[nUser._id].supervisorName]) {
-          this.orgProgress.supervisorMatchFail.push(nUser._id);
-          nUser.userStatus = 'bulk-add-fail';
-          nUser.supervisorId = this.authenticatedUser._id;
-          nUser.teamId = this.authenticatedUser._id;
-          this.authenticatedUser.directReports.push(nUser._id);
-        } else {
-          this.fullNameHash[this.newUserHash[nUser._id].supervisorName].directReports.push(nUser._id);
-          this.fullNameHash[this.newUserHash[nUser._id].supervisorName].userType = 'supervisor';
-          nUser.supervisorId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
-          nUser.teamId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
-        }
-        this.orgProgress.usersProcessed++;
-        this.buildOrgProgressBS$.next(this.orgProgress);
-      }
-      let saveCnt = 0;
-      let allUsers = Object.values(this.fullNameHash);
-      for (let nUser of allUsers) {
-        this.putUser$(nUser).subscribe(user => {
-          saveCnt++;
-          if (saveCnt === this.newUserList.length) {
-            this.loadData(this.authenticatedUser._id, null);
-          }
-        })
-      }
-    }
-  }
-
-  addUserFromBatch(user) {
-    this.newTeamMember.userType = 'individualContributor';
-    this.newTeamMember._id = String(new Date().getTime());
-    this.newTeamMember.firstName = user.firstName;
-    this.newTeamMember.lastName = user.lastName;
-    this.newTeamMember.email = user.email;
-    this.newTeamMember.jobTitle = user.jobTitle;
-    this.newTeamMember.trainingStatus = 'none';
-    this.newTeamMember.teamAdmin = false;
-    this.newTeamMember.userStatus = 'pending';
-    this.newTeamMember.settings = {
-      foo: 'test',
-      showPageInfo: true,
-      themeColor: {
-        name: 'orange ',
-        bgColor: 'orange',
-        primary: 'white',
-        secondary: '#c54f0a',
-      }
-    }
-    this.newUserHash[this.newTeamMember._id] = user;
-    this.newUserIds.push(this.newTeamMember._id);
-
-    this.postUser$(this.newTeamMember).subscribe(newUser => {
-
-      this.newUserBS$.next(newUser);
-      this.processNewUser(newUser);
-    });
-  }
-
-  createNewUsersFromBatch(userData: UserBatchData[]) {
-    this.newTeamMember.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
+    let emailList = [];
+    let batchUserFails: UserBatchData[] = [];
+    let supervisorMatchFail = [];
+    this.newTeamMember.org = this.authenticatedUser.org;
     this.fullNameHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
-    this.newUserData = userData;
-    this.batchCount = this.newUserData.length;
-    this.orgProgress.usersTotal = this.batchCount;
-    this.orgProgress.description = "Creating user accounts";
-    this.buildOrgProgressBS$.next(this.orgProgress);
-
-    this.newUserIndex = 0;
-    this.newUser = this.newUserData[this.newUserIndex];
-
-    this.addUserFromBatch(this.newUser);
+    let batchCnt = 1;
+    let _id = String(new Date().getTime());
+    for (let batchUser of batchUsers) {
+      if (emailList.includes(batchUser.email)) {
+        batchUserFails.push(batchUser);
+        continue;
+      }
+      emailList.push(batchUser.email);
+      this.newTeamMember = cloneDeep(this.newTeamMember);
+      this.newTeamMember.userType = 'individualContributor';
+      this.newTeamMember._id = String(_id + '-' + batchCnt++);
+      this.newTeamMember.firstName = batchUser.firstName;
+      this.newTeamMember.lastName = batchUser.lastName;
+      this.newTeamMember.email = batchUser.email;
+      this.newTeamMember.jobTitle = batchUser.jobTitle;
+      this.newTeamMember.trainingStatus = 'none';
+      this.newTeamMember.teamAdmin = false;
+      this.newTeamMember.userStatus = 'pending';
+      this.newTeamMember.settings = {
+        foo: 'test',
+        showPageInfo: true,
+        themeColor: {
+          name: 'orange ',
+          bgColor: 'orange',
+          primary: 'white',
+          secondary: '#c54f0a',
+        }
+      }
+      this.newUserHash[this.newTeamMember._id] = batchUser;
+      this.newUserIds.push(this.newTeamMember._id);
+      this.newUserList.push(this.newTeamMember);
+      this.fullNameHash[this.newTeamMember.firstName + ' ' + this.newTeamMember.lastName] = this.newTeamMember;
+      this.allOrgUserHash[this.newTeamMember._id] = this.newTeamMember;
+      console.log('add user ', this.newTeamMember.firstName + ' ' + this.newTeamMember.lastName);
+    }
+    for (let nUser of this.newUserList) {
+      if (!this.fullNameHash[this.newUserHash[nUser._id].supervisorName]) {
+        supervisorMatchFail.push(nUser._id);
+        nUser.supervisorId = this.authenticatedUser._id;
+        nUser.teamId = this.authenticatedUser._id;
+        this.authenticatedUser.directReports.push(nUser._id);
+      } else {
+        this.fullNameHash[this.newUserHash[nUser._id].supervisorName].directReports.push(nUser._id);
+        this.fullNameHash[this.newUserHash[nUser._id].supervisorName].userType = 'supervisor';
+        nUser.supervisorId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
+        nUser.teamId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
+      }
+    }
+    let dbCnt = 0;
+    for (let user of this.newUserList) {
+      this.postUser$(user).subscribe(user => {
+        dbCnt++;
+        if (dbCnt === this.newUserList.length) {
+          this.newUserList = [];
+          this.loadData(this.authenticatedUser.org, null);
+        }
+      }, err => {
+          
+      });
+    }
+    this.updateUser(this.authenticatedUser, false);
   }
 
   createNewUser(user: UserModel, reload: boolean) {
@@ -446,9 +484,25 @@ export class UserService {
       this.authenticatedUser.directReports.push(data._id);
       this.updateUser(this.authenticatedUser, true);
 
+      if (data.jobTitle) {
+        this.jobTitleService.addJobTitle(data.jobTitle);
+      }
+
+      this.sendRegistrationMsg(data.email, this.authenticatedUser.email);
+
       if (reload) {
         this.loadData(this.authenticatedUser._id, data._id);
       }
+    },
+      err => {
+        console.log('postUser$ ', err);
+        let userFail = {
+          user: user,
+          errorType: 'http',
+          message: err
+        }
+
+        this.userFailBS$.next(userFail);
     })
   }
 
@@ -647,8 +701,10 @@ export class UserService {
   }
 
   private _handleError(err: HttpErrorResponse | any): Observable<any> {
-    const errorMsg = err.message || 'Error: Unable to complete request.';
-    if (err.message && err.message.indexOf('No JWT present') > -1) {
+    const errorMsg = err.error.message || 'Error: Unable to complete request.';
+    console.log("_handleError", err);
+    this.httpErrorBS$.next(err);
+    if (err.error.message && err.error.message.indexOf('No JWT present') > -1) {
       this.auth.login();
     }
     return ObservableThrowError(errorMsg);

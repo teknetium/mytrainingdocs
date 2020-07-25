@@ -1,3 +1,5 @@
+import { HttpErrorResponse } from '@angular/common/http';
+
 export interface UserModel {
   _id: string,
   uid: string,
@@ -5,6 +7,7 @@ export interface UserModel {
   firstName: string,
   lastName: string,
   email: string,
+  emailVerified: boolean,
   org: string,
   teamId: string,
   teamAdmin: boolean,
@@ -29,6 +32,12 @@ export interface UserBatchData {
   email: string,
   jobTitle: string,
   supervisorName: string
+}
+
+export interface UserFail {
+  user: UserModel,
+  errorType: string,
+  message: string
 }
 
 export interface OrgChartNode {

@@ -22,6 +22,7 @@ import { SettingsModule } from './components/settings/settings.module';
 import { JoyrideModule } from 'ngx-joyride';
 import { LandingpageModule } from './components/landingpage/landingpage.module';
 import { DocsModule } from './components/docs/docs.module';
+import { VerifyEmailModule } from './components/verify-email/verify-email.module';
 
 
 const ngZorroConfig: NzConfig = {
@@ -49,6 +50,7 @@ registerLocaleData(en);
         VgOverlayPlayModule,
         SettingsModule,
         LandingpageModule,
+        VerifyEmailModule,
         DocsModule
     ],
     providers: [

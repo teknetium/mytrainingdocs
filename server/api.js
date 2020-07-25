@@ -95,7 +95,7 @@ module.exports = function(app, config) {
   const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const trainingListProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const userTrainingListProjection = "_id tid uid teamId status dueDate timeToDate dateCompleted assessmentResponses trainingVersion";
-  const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email teamAdmin orgAdmin appAdmin teamId org supervisorId directReports profilePicUrl settings";
+  const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email emailVerified teamAdmin orgAdmin appAdmin teamId org supervisorId directReports profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const docProjection = '_id productId productVersion author featureName sections images';
@@ -127,6 +127,21 @@ module.exports = function(app, config) {
       dynamicTemplateData: req.body.dynamicTemplateData
     };
     sgMail.send(msg);
+  });
+
+  app.get("/api/verifyemail/:uid", (req, res) => {
+    User.findById(req.params.uid, userListProjection, (err, user) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      user.emailVerified = true;
+      user.save(err2 => {
+        if (err2) {
+          return res.status(500).send({ message: err2.message });
+        }
+        res.send(user);
+      });
+    });
   });
 
   app.get("/api/icons/:searchStr", (req, res) => {
@@ -744,7 +759,7 @@ module.exports = function(app, config) {
         return res.status(500).send({message: err.message});
       }
       if (!user) {
-        return res.status(400).send({message: "User not found."});
+        return res.status(400).send({ message: "User not found - id : " + req.params.id });
       }
       res.send(user);
     });
@@ -756,7 +771,7 @@ module.exports = function(app, config) {
         return res.status(500).send({ message: err.message });
       }
       if (!user) {
-        return res.status(400).send({ message: "User not found." });
+        return res.status(400).send({ message: "User not found - Email : " + req.params.email });
       }
       res.send(user);
     });
@@ -768,7 +783,7 @@ module.exports = function(app, config) {
         return res.status(500).send({ message: err.message });
       }
       if (!user) {
-        return res.status(400).send({ message: "User not found." }); 
+        return res.status(400).send({ message: "User not found - UID : " + req.params.uid }); 
       }
       res.send(user);
     });
@@ -790,6 +805,7 @@ module.exports = function(app, config) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
+        emailVerified: req.body.emailVerified,
         teamAdmin: req.body.teamAdmin,
         orgAdmin: req.body.orgAdmin,
         appAdmin: req.body.appAdmin,
@@ -827,6 +843,7 @@ module.exports = function(app, config) {
       user.firstName = req.body.firstName;
       user.lastName = req.body.lastName;
       user.email = req.body.email;
+      user.emailVerified = req.body.emailVerified;
       user.teamAdmin = req.body.teamAdmin,
       user.orgAdmin = req.body.orgAdmin,
       user.appAdmin = req.body.appAdmin,

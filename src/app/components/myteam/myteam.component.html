@@ -70,6 +70,7 @@
                             text="These filters control which users show up in the list and which trainings show up for each user.">
                             <span style="font-size:20px;margin-bottom:40px;">Filters</span>&nbsp;&nbsp;
                             <span style="font-size:10px;">(click to toggle)</span>
+                            <!--
                             <div *ngIf="bulkAddFail" style="text-align: center;width:100%;">
                                 <div class="filter-item" (click)="toggleFilter('bulk-add-fail')"
                                     [ngClass]="{'showing': showBulkAddFail, 'not-showing': !showBulkAddFail}" nz-tooltip
@@ -80,62 +81,63 @@
                                     <span style="font-size:10px;">(show only)</span>
                                 </div>
                             </div>
+                            -->
                             <div
                                 style="clear:both;display: flex;justify-content:space-between;margin:20px 0;font-size:16px;">
                                 <div style="">
                                     <div class="filter-item" (click)="toggleFilter('none')"
-                                        [ngClass]="{'showing': showNone, 'not-showing': !showNone || showBulkAddFail}"
-                                        nz-tooltip nzTooltipTitle="Users who have NO assigned trainings">
+                                        [ngClass]="{'showing': showNone, 'not-showing': !showNone}" nz-tooltip
+                                        nzTooltipTitle="Users who have NO assigned trainings">
                                         <i class="fad fa-user" style="color:black;"></i>
                                     </div>
                                     <div class="filter-item" (click)="toggleFilter('up-to-date')"
-                                        [ngClass]="{'showing': showUpToDate, 'not-showing': !showUpToDate || showBulkAddFail}"
-                                        nz-tooltip nzTooltipTitle="Users who have NO past due trainings">
+                                        [ngClass]="{'showing': showUpToDate, 'not-showing': !showUpToDate}" nz-tooltip
+                                        nzTooltipTitle="Users who have NO past due trainings">
                                         <i class="fad fa-user" style="color:#75c140"></i>
                                     </div>
                                     <div class="filter-item" (click)="toggleFilter('past-due')"
-                                        [ngClass]="{'showing': showPastDue, 'not-showing': !showPastDue || showBulkAddFail}"
-                                        nz-tooltip nzTooltipTitle="Users with at least one Past Due training">
+                                        [ngClass]="{'showing': showPastDue, 'not-showing': !showPastDue}" nz-tooltip
+                                        nzTooltipTitle="Users with at least one Past Due training">
                                         <i class="fad fa-user" style="color:red;"></i>
                                     </div>
                                 </div>
                                 <div style="">
                                     <div class="filter-item" (click)="toggleFilter('individual-contributor')"
-                                        [ngClass]="{'showing': showIndividualContributors, 'not-showing': !showIndividualContributors || showBulkAddFail}"
+                                        [ngClass]="{'showing': showIndividualContributors, 'not-showing': !showIndividualContributors}"
                                         nz-tooltip nzTooltipTitle="Individual Contributors">
                                         <i class="fad fa-user" style="color:#000000"></i>
                                     </div>
                                     <div class="filter-item" (click)="toggleFilter('supervisor')"
-                                        [ngClass]="{'showing': showSupervisors, 'not-showing': !showSupervisors || showBulkAddFail}"
+                                        [ngClass]="{'showing': showSupervisors, 'not-showing': !showSupervisors}"
                                         nz-tooltip nzTooltipTitle="Supervisors">
                                         <i class="fad fa-user-tie" style="color:#000000;"></i>
                                     </div>
                                     <div class="filter-item" (click)="toggleFilter('volunteer')"
-                                        [ngClass]="{'showing': showVolunteers, 'not-showing': !showVolunteers || showBulkAddFail}"
+                                        [ngClass]="{'showing': showVolunteers, 'not-showing': !showVolunteers}"
                                         nz-tooltip nzTooltipTitle="Volunteers">
                                         <i class="fad fa-user-cowboy" style="color:#000000;"></i>
                                     </div>
                                     <div class="filter-item" (click)="toggleFilter('customer')"
-                                        [ngClass]="{'showing': showCustomers, 'not-showing': !showCustomers || showBulkAddFail}"
-                                        nz-tooltip nzTooltipTitle="Customers">
+                                        [ngClass]="{'showing': showCustomers, 'not-showing': !showCustomers}" nz-tooltip
+                                        nzTooltipTitle="Customers">
                                         <i class="fad fa-user-crown" style="color:#000000;"></i>
                                     </div>
                                 </div>
                                 <div style="">
                                     <div class="filter-item" (click)="toggleFilter('trainingUpToDate')"
-                                        [ngClass]="{'showing': showUpToDateTrainings, 'not-showing': !showUpToDateTrainings || showBulkAddFail}"
+                                        [ngClass]="{'showing': showUpToDateTrainings, 'not-showing': !showUpToDateTrainings}"
                                         nz-tooltip nzTooltipTitle="In Progress Trainings">
                                         <i nz-icon nzType="smile" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
                                             style="vertical-align: middle;"></i>
                                     </div>
                                     <div class="filter-item" (click)="toggleFilter('trainingCompleted')"
-                                        [ngClass]="{'showing': showCompletedTrainings, 'not-showing': !showCompletedTrainings || showBulkAddFail}"
+                                        [ngClass]="{'showing': showCompletedTrainings, 'not-showing': !showCompletedTrainings}"
                                         nz-tooltip nzTooltipTitle="Completed Trainings">
                                         <i nz-icon nzType="check-circle" [nzTheme]="'twotone'"
                                             [nzTwotoneColor]="'#4891f7'" style="vertical-align: middle;"></i>
                                     </div>
                                     <div class="filter-item" (click)="toggleFilter('trainingPastDue')"
-                                        [ngClass]="{'showing': showPastDueTrainings, 'not-showing': !showPastDueTrainings || showBulkAddFail}"
+                                        [ngClass]="{'showing': showPastDueTrainings, 'not-showing': !showPastDueTrainings}"
                                         nz-tooltip nzTooltipTitle="Past Due Trainings">
                                         <i nz-icon nzType="exclamation-circle" [nzTheme]="'twotone'"
                                             [nzTwotoneColor]="'red'" style="vertical-align: middle;"></i>
@@ -143,16 +145,16 @@
                                 </div>
                                 <div style="">
                                     <div class="filter-item" (click)="toggleFilter('onetime')"
-                                        [ngClass]="{'showing': showOnetime, 'not-showing': !showOnetime || showBulkAddFail}"
-                                        nz-tooltip nzTooltipTitle="One-time Trainings" style="padding-top:5px;">
+                                        [ngClass]="{'showing': showOnetime, 'not-showing': !showOnetime}" nz-tooltip
+                                        nzTooltipTitle="One-time Trainings" style="padding-top:5px;">
                                         <div
                                             style="border:1px solid black;border-radius: 8px;width:16px;height:16px;text-align: center;">
                                             <span style="font-size:10px;vertical-align: top;">1</span>
                                         </div>
                                     </div>
                                     <div class="filter-item" (click)="toggleFilter('recurring')"
-                                        [ngClass]="{'showing': showRecurring, 'not-showing': !showRecurring || showBulkAddFail}"
-                                        nz-tooltip nzTooltipTitle="Recurring Trainings">
+                                        [ngClass]="{'showing': showRecurring, 'not-showing': !showRecurring}" nz-tooltip
+                                        nzTooltipTitle="Recurring Trainings">
                                         <i class="far fa-redo-alt"
                                             style="color:black;font-size:14px;vertical-align: middle;"></i>
                                     </div>
@@ -181,22 +183,24 @@
                         </div>
                         <div style="cursor:pointer;width:100%;">
                             <div *ngFor="let user of myTeam"
-                                [ngClass]="{'displayNone': (showBulkAddFail && user.userStatus !== 'bulk-add-fail') || (!showUpToDate && user.trainingStatus === 'upToDate') || (!showPastDue && user.trainingStatus === 'pastDue') || (!showNone && user.trainingStatus === 'none') || (!showIndividualContributors && user.userType === 'individualContributor') || (!showSupervisors && user.userType === 'supervisor') || (!showVolunteers && user.userType === 'volunteer') || (!showCustomers && user.userType === 'customer')}"
+                                [ngClass]="{'displayNone': (!showUpToDate && user.trainingStatus === 'upToDate') || (!showPastDue && user.trainingStatus === 'pastDue') || (!showNone && user.trainingStatus === 'none') || (!showIndividualContributors && user.userType === 'individualContributor') || (!showSupervisors && user.userType === 'supervisor') || (!showVolunteers && user.userType === 'volunteer') || (!showCustomers && user.userType === 'customer')}"
                                 style="width:100%;">
                                 <div *ngIf="user._id !== authenticatedUser._id" class="user-button"
                                     [ngClass]="{'user-selected': selectedUser._id === user._id}"
                                     (click)="selectUser(user._id)" style="width:100%;">
-                                    <i *ngIf="user.userStatus === 'bulk-add-fail'" nz-icon nzType="usergroup-add"
-                                        [nzTheme]="'outline'"
-                                        style="color:red;margin:5px 4px 0 10px;float:left;font-size:20px;"></i>
-                                    <i *ngIf="user.userStatus !== 'bulk-add-fail'"
-                                        [ngClass]="userTypeIconHash[user.userType]"
+                                    <i [ngClass]="userTypeIconHash[user.userType]"
                                         [ngStyle]="{'color': userTrainingStatusColorHash[user.trainingStatus]}"
                                         style="margin:5px 4px 0 10px;float:left;"></i>&nbsp;
                                     <span style="float:left;margin:2px 4px 0 0;">{{ user.firstName }}
                                         {{ user.lastName }}</span>&nbsp;
                                     <nz-badge *ngIf="user.teamAdmin === true" nzColor="purple" nz-tooltip
                                         nzTooltipTitle="Admin User" style="float:left;margin:2px 4px 0 0;"></nz-badge>
+                                    <nz-badge *ngIf="user.userStatus === 'bulk-add-fail'" nzColor="red" nz-tooltip
+                                        nzTooltipTitle="Invalid Supervisor Name" style="float:left;margin:2px 4px 0 0;">
+                                    </nz-badge>
+                                    <nz-badge *ngIf="user.emailVerified === false" nzColor="blue" nz-tooltip
+                                        nzTooltipTitle="Email Unverified" style="float:left;margin:2px 4px 0 0;">
+                                    </nz-badge>
                                     <nz-badge *ngIf="user.userStatus === 'pending'" nzColor="gold" nz-tooltip
                                         nzTooltipTitle="User Account Pending" style="float:left;margin:2px 4px 0 0;;">
                                     </nz-badge>
@@ -234,19 +238,23 @@
                                     [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser.trainingStatus]}"
                                     nz-tooltip [nzTooltipTitle]=""></i>&nbsp;
                                 <span
-                                    style="display:inline-block;font-size:26px;font-weight: 300;margin:10px 0 20px 0;color:#444444;"
-                                    >{{selectedUser.firstName}}
+                                    style="display:inline-block;font-size:26px;font-weight: 300;margin:10px 0 20px 0;color:#444444;">{{selectedUser.firstName}}
                                     {{selectedUser.lastName}}
-                                    </span>
-                                    <button nz-button nzType="default" nzShape="circle" nz-dropdown [nzDropdownMenu]="userActionMenu" style="vertical-align: text-bottom;margin-left:10px;">
-                                        <i nz-icon nzType="more"></i>
-                                        </button>
+                                </span>
+                                <button nz-button nzType="default" nzShape="circle" nz-dropdown
+                                    [nzDropdownMenu]="userActionMenu"
+                                    style="vertical-align: text-bottom;margin-left:10px;">
+                                    <i nz-icon nzType="more"></i>
+                                </button>
 
                                 <nz-dropdown-menu #userActionMenu="nzDropdownMenu">
                                     <ul nz-menu>
-                                        <li nz-menu-item (click)="showUserTrainingModal = true">Assign a Training</li>
+                                        <li [nzDisabled]="assignableTrainings.length === 0" nz-menu-item
+                                            (click)="showUserTrainingModal = true">Assign a Training</li>
                                         <li nz-menu-item (click)="editUser()">Edit Profile</li>
-                                        <li *ngIf="selectedUser.userStatus === 'pending'" nz-menu-item (click)="sendRegistrationMsg(selectedUser.email, authenticatedUser.email)">Resend Registration Email</li>
+                                        <li [nzDisabled]="selectedUser.userStatus !== 'pending'" nz-menu-item
+                                            (click)="sendRegistrationMsg(selectedUser.email, authenticatedUser.email)">
+                                            Resend Registration Email</li>
                                         <li nz-menu-item nz-popconfirm nzPopconfirmTitle="Delete this user?"
                                             (nzOnConfirm)="confirmDelete(selectedUser)">
                                             Delete User
@@ -286,9 +294,10 @@
                         text="If you have a large organization, you are going to love this feature.  Don't be shy...click around and see what there is to see.">
                         <div style="position: relative;">
                             <i nz-icon nzType="question-circle" nzTheme="twotone"
-                                style="cursor:pointer;position:absolute;top:-30px;left:0;font-size:20px;color:#000000;"
+                                style="cursor:pointer;position:absolute;top:0;left:0;font-size:20px;color:#000000;"
                                 (click)="startTour('orgChart')" nz-tooltip nzTooltipTitle="A little help"></i>
 
+                            <!--
                             <div style="display:block;width:100%;border-bottom:1px solid #bbbbbb;">
                                 <div style="margin-top:20px;">
                                     <nz-radio-group [(ngModel)]="chartOrientation" nzSize="small"
@@ -311,31 +320,47 @@
                                     <div style="clear:both;"></div>
                                 </div>
                             </div>
-                            <div style="overflow: scroll;padding-top:20px;width:100%;height:100%;">
+                                    -->
+                            <div style="padding-top:20px;width:100%;height:100%;">
                                 <div *ngIf="reportChain && reportChain.length > 0"
-                                    [ngStyle]="{'width.%': reportChainWidth}"
-                                    style="float:left;border-right: 1px solid #bbbbbb;">
-                                    <span
-                                        style="display: block;font-size:18px;font-weight: 300;margin:0 10px 10px 0;">Reporting
-                                        Chain</span>
-                                    <div *ngFor="let userId of reportChain"
-                                        style="width:fit-content;margin-bottom:5px;padding:5px 4px;border:1px solid #999999;border-radius:4px;font-size:10px;"
-                                        (click)="selectReportChainItem(userId)" class="report-chain">
+                                    style="position:relative;display:block;text-align: center;width:100%;border-bottom:1px solid #dddddd;">
+                                    <div style="margin-bottom:10px;display:inline-block;">
                                         <span
-                                            style="">{{myOrgUserHash[userId].firstName}}&nbsp;{{myOrgUserHash[userId].lastName}}</span>
+                                            style="display: block;font-size:14px;font-weight: 300;margin:0 10px 10px 0;">Reporting
+                                            Chain</span>
+                                        <div *ngFor="let userId of reportChain"
+                                            style="display:block;width:fit-content;margin-bottom:5px;padding:5px 4px;border:1px solid #999999;border-radius:4px;font-size:10px;"
+                                            (click)="selectReportChainItem(userId)" class="report-chain">
+                                            <span
+                                                style="">{{myOrgUserHash[userId].firstName}}&nbsp;{{myOrgUserHash[userId].lastName}}</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div style="float:left;" [ngStyle]="{'width.%': orgChartWidth}">
-                                    <!--
-                                    <span *ngIf="nodes">{{orgChartFontSize}} - {{nodes[0].extra.peopleCnt}} - {{orgChartWidth}}</span>
-                                    -->
-                                    <div style="width:100%;height: fit-content;position:relative;">
-                                        <span
-                                            style="position:absolute;top:0;left:15px;font-size:18px;font-weight: 300;margin:0 10px 10px 0;">{{nodes[0].name}}</span>
-                                        <ngx-org-chart [nodes]="nodes" [direction]="chartOrientation"
-                                            (itemClick)="selectNode($event)"
-                                            [ngStyle]="{'font-size.px': orgChartFontSize}">
-                                        </ngx-org-chart>
+                                <div style="position:relative;">
+                                    <span *ngIf="nodes && nodes.length > 0"
+                                        style="position:absolute;top:10px;left:0;font-size:18px;font-weight: 300;margin:0 10px 10px 0;">{{nodes[0].name}}</span>
+                                    <div style="position:absolute;top:10px;right:0;">
+                                        <i nz-icon nzType="zoom-out" nzTheme="outline"
+                                            style="font-size:20px;cursor:pointer;color:#999999;"
+                                            (click)="decreaseFontSize()" nz-tooltip nzTooltipTitle="Zoom Out"></i>
+                                        <i nz-icon nzType="zoom-in" nzTheme="outline"
+                                            style="font-size:20px;margin-left:10px;cursor:pointer;color:#999999;"
+                                            (click)="increaseFontSize()" nz-tooltip nzTooltipTitle="Zoom In"></i>
+                                    </div>
+                                    <div
+                                        style="overflow: scroll;display:block;text-align: center;width:100%;padding-top:20px;">
+                                        <!--
+                                        <span *ngIf="nodes">{{orgChartFontSize}} - {{nodes[0].extra.peopleCnt}} -
+                                            {{orgChartWidth}} - {{orgChartContainerSize}} -
+                                            {{peopleCntArrayIndex}}</span>
+                                            -->
+                                        <div style="width:fit-content;min-width:100%;padding-top:30px;">
+                                            <ngx-org-chart [nodes]="nodes" [direction]="chartOrientation"
+                                                (itemClick)="selectNode($event)"
+                                                style="width:fit-content;height: fit-content;"
+                                                [ngStyle]="{'font-size.px': orgChartFontSize}">
+                                            </ngx-org-chart>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -375,6 +400,7 @@
                         </div>
                     </div>
                 </nz-modal>
+                <!--
                 <nz-modal [(nzVisible)]="showNewUserModal" nzTitle="Team Member Registration"
                     (nzOnCancel)="handleCancel()" (nzOnOk)="handleAddUser(true)">
                     <div style="padding:20px;color:#000000;">
@@ -438,6 +464,7 @@
                         Admin
                         Access</label>
                 </nz-modal>
+                -->
             </div>
         </div>
         <nz-drawer [nzClosable]="false" [nzMaskClosable]="true" [nzVisible]="userPanelVisible" nzPlacement="right"
@@ -465,15 +492,25 @@
                             [(ngModel)]="selectedUser.lastName" style="margin-bottom:2px;">
                     </div>
                 </div>
-                <div style="display:block;width:90%;">
+                <div *ngIf="newUser" style="display:block;width:90%;">
                     <div style="display:inline-block;width:25%;text-align: right;">
                         <label style="font-size:14px;color:#000000;">
                             Email
                         </label>
                     </div>
                     <div style="display:inline-block;width:70%;margin-left:20px;">
-                        <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl
-                            [(ngModel)]="selectedUser.email" style="margin-bottom:2px;">
+                        <nz-input-group [nzSuffix]="suffixTemplate">
+                            <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl
+                                [(ngModel)]="selectedUser.email" (ngModelChange)="checkUniqueEmail($event)"
+                                style="margin-bottom:2px;" (keydown.enter)="checkUniqueEmail($event)"
+                                (blur)="checkUniqueEmail($event)">
+                        </nz-input-group>
+                        <ng-template #suffixTemplate>
+                            <i *ngIf="!emailUnique" nz-icon nz-tooltip nzTooltipTitle="Extra information"
+                                nzType="close-circle" [nzTheme]="'twotone'" nzTwotoneColor="red"></i>
+                            <i *ngIf="emailUnique" nz-icon nz-tooltip nzTooltipTitle="Extra information"
+                                nzType="check-circle" [nzTheme]="'twotone'" nzTwotoneColor="#46bc16"></i>
+                        </ng-template>
                     </div>
                 </div>
                 <div style="display:block;width:90%;">
@@ -560,7 +597,8 @@
                             style="margin: 10px;display:inline-block;">Cancel
                         </button>
                         <button *ngIf="newUser" nz-button nzSize="small" nzShape="round" (click)="handleAddUser(true)"
-                            nzType="primary" style="margin: 10px;display:inline-block;">Add Person
+                            nzType="primary" style="margin: 10px;display:inline-block;" [disabled]="!emailUnique">Add
+                            Person
                         </button>
                         <button *ngIf="!newUser" nz-button nzSize="small" nzShape="round" (click)="handleUpdateUser()"
                             nzType="primary" style="margin: 10px;display:inline-block;"

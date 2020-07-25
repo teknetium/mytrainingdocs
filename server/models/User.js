@@ -15,6 +15,7 @@ const userSchema = new Schema({
   firstName: { type: String, required: false },
   lastName: { type: String, required: false },
   email: { type: String, required: true },
+  emailVerified: { type: Boolean, required: false },
   teamId: { type: String, required: false },
   org: { type: String, required: true },
   teamAdmin: { type: Boolean, required: false },

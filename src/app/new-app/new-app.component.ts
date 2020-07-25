@@ -20,6 +20,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../components/base.component';
 import { JoyrideService } from 'ngx-joyride';
+import { HttpErrorResponse } from '@angular/common/http';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 
 export interface Task {
@@ -216,6 +218,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
   fileIdToDelete: string;
 
+  httpErrors$: Observable<HttpErrorResponse>;
   userTrainings$: Observable<UserTrainingModel[]>;
   myTrainingIdHash$: Observable<TrainingIdHash>;
   teamTrainingCnt$: Observable<number>;
@@ -249,6 +252,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   userPanelVisible = false;
   lName;
   fName;
+  httpErrors = [];
+  currentHttpError;
+  emailUnique = true;
+  currentEmail;
 
   constructor(
     private authService: AuthService,
@@ -258,11 +265,13 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     private router: Router,
     private joyrideService: JoyrideService,
     private eventService: EventService,
+    private messageService: NzMessageService,
     private notificationService: NotificationService,
     private zorroNotificationService: NzNotificationService,
     private sanitizer: DomSanitizer
   ) {
     super();
+    this.httpErrors$ = this.userService.getHttpErrorStream();
     //    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
     this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
@@ -298,29 +307,20 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       if (!user) {
         return;
       }
-      this.userService.selectUser(user._id);
+//      this.userService.selectUser(user._id);
 
       this.authenticatedUser = user;
+      this.currentEmail = this.authenticatedUser.email;
       if (this.authenticatedUser.firstName === '') {
         this.firstTimer = true;
         this.showNewUserModal = true;
         //        this.playTaskVideo('gettingStarted');
       }
       this.authenticatedUser = user;
-      this.userTrainingService.initUserTrainingsForUser(user._id);
-      this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(teamIdHash => {
-        if (!teamIdHash) {
-          return;
-        }
-        let myTeamIds = Object.keys(teamIdHash);
-        if (myTeamIds) {
-          // Subtract 1 for the supervisor
-          this.myTeamCnt = myTeamIds.length - 1;
-        }
-      });
-      this.teamTrainingCnt$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(cnt => {
-        this.teamTrainingCnt = cnt;
-      });
+//      this.userTrainingService.initUserTrainingsForUser(user._id);
+//      this.teamTrainingCnt$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(cnt => {
+//        this.teamTrainingCnt = cnt;
+//      });
       /*
       this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
         if (uidUserTrainingHash[this.authenticatedUser._id]) {
@@ -331,6 +331,26 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       */
     })
 
+    this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(teamIdHash => {
+      if (!teamIdHash) {
+        return;
+      }
+      let myTeamIds = Object.keys(teamIdHash);
+      if (myTeamIds) {
+        // Subtract 1 for the supervisor
+        this.myTeamCnt = myTeamIds.length - 1;
+      }
+    });
+
+    this.httpErrors$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(err => {
+      if (!err) {
+        return;
+      }
+
+      this.currentHttpError = err.error.message;
+      this.messageService.error('HTTP Error: ' + this.currentHttpError, { nzDuration: 5000});
+      this.httpErrors.push(this.currentHttpError);
+    })
 
     this.taskBS$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(task => {
       if (!task) {
@@ -340,6 +360,24 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       this.showTaskVideoModal = true;
     })
   };
+
+  checkUniqueEmail(data) {
+    if (this.currentEmail.email === this.authenticatedUser.email) {
+      this.emailUnique = true;
+      return;
+    }
+    console.log('checkUniqueEmail', data);
+    this.userService.getUserByEmail(this.currentEmail.email).subscribe(user => {
+      this.emailUnique = false;
+    },
+      err => {
+        this.emailUnique = true;
+      })
+  }
+
+  setAlertErrorMessage(message) {
+
+  }
 
   closeTaskVideoModal() {
     this.showTaskVideoModal = false;
@@ -430,6 +468,11 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
   handleUpdateUser() {
     this.userPanelVisible = false;
+    if (this.currentEmail !== this.authenticatedUser.email) {
+      this.authenticatedUser.email = this.currentEmail;
+      this.authenticatedUser.emailVerified = false;
+      this.userService.sendVerifyEmailMsg(this.currentEmail, this.authenticatedUser._id);
+    }
     this.userService.updateUser(this.authenticatedUser, true);
   }
 }

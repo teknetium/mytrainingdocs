@@ -222,9 +222,9 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
         this.userTrainingService.selectUser(ut.uid);
       }
     } else {
-      this.selectedUser.trainingStatus = 'none';
-      this.userService.updateUser(this.selectedUser, true);
-      this.userService.selectUser(this.selectedUser._id);
+      this.userService.setUserStatusNone(ut.uid);
+      this.userService.updateUser(this.selectedUser, false);
+//      this.userService.selectUser(this.selectedUser._id);
     }
 
     this.trainingIsVisible = false;

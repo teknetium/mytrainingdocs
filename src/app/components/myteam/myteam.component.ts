@@ -8,7 +8,7 @@ import { UserTrainingService } from '../../shared/services/userTraining.service'
 import { UserTrainingModel, UidUTHash } from '../../shared/interfaces/userTraining.type';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
 import { Observable, BehaviorSubject, Subscription, defer } from 'rxjs';
-import { UserModel, UserIdHash, OrgChartNode, BuildOrgProgress } from '../../shared/interfaces/user.type';
+import { UserModel, UserFail, UserIdHash, OrgChartNode, BuildOrgProgress } from '../../shared/interfaces/user.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
 import { JobTitleService } from '../../shared/services/jobtitle.service';
@@ -90,6 +90,15 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.browserInnerWidth = window.innerWidth;
     this.contentHeight = Math.floor(window.innerHeight * .9);
     this.contentWidth = Math.floor(window.innerWidth * .9);
+    this.orgChartWidth = window.innerWidth - (window.innerWidth * this.teamContainerWidth / 100);
+    if (this.orgChartWidth < 800) {
+      this.orgChartContainerSize = 'small';
+    } else if (this.orgChartWidth < 900) {
+      this.orgChartContainerSize = 'medium';
+    } else {
+      this.orgChartContainerSize = 'large';
+    }
+    this.peopleCntArray = this.peopleCntHash[this.orgChartContainerSize];
   }
 
   private importer: FlatfileImporter;
@@ -151,6 +160,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     firstName: '',
     lastName: '',
     email: '',
+    emailVerified: false,
     teamAdmin: false,
     appAdmin: false,
     orgAdmin: false,
@@ -181,7 +191,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   userNameHash = {};
   authenticatedUserFullName;
   usersNotOnMyTeam: string[] = [];
-  showBulkAddFail = true;
   showNone = true;
   showUpToDate = true;
   showPastDue = true;
@@ -211,7 +220,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   newUserIds = [];
   org;
   teamId;
-  nodes: OrgChartNode[];
+  nodes: OrgChartNode[] = [];
   chartOrientation = 'vertical';
   orgChartFontSize = 2;
   reportChain: string[] = [];
@@ -240,7 +249,18 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   bulkAddFail = false;
   myOrgUsers$: Observable<string[]>;
   reportChainWidth = 0;
-  orgChartWidth = 100;
+  orgChartWidth = 0;
+  emailUnique = false;
+  userFail$: Observable<UserFail>;
+  orgChartContainerSize: 'small' | 'medium' | 'large';
+  peopleCntArray = [];
+  peopleCntArrayIndex;
+  peopleCntHash = {
+    small: [3, 8, 13, 18, 23, 28, 33, 38, 43, 45],
+    medium: [3, 8, 13, 18, 23, 28, 33, 38, 43, 48],
+    large: [8, 13, 18, 23, 28, 33, 38, 43, 48, 53]
+  }
+
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -255,6 +275,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private router: Router
   ) {
     super();
+    this.userFail$ = this.userService.getUserFailStream();
     this.myOrgUsers$ = this.userService.getMyOrgUserNameListStream();
     this.buildOrgProgress$ = this.userService.getOrgProgressStream();
     this.uidReportChainHash$ = this.userService.getUIDReportChainHashStream();
@@ -279,8 +300,18 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
     this.contentHeight = Math.floor((window.innerHeight - (.3 * window.innerHeight)) * .90);
     this.contentWidth = Math.floor(window.innerWidth * .9);
+    this.orgChartWidth = window.innerWidth - (window.innerWidth * this.teamContainerWidth / 100);
+    if (this.orgChartWidth < 800) {
+      this.orgChartContainerSize = 'small';
+    } else if (this.orgChartWidth < 900) {
+      this.orgChartContainerSize = 'medium';
+    } else {
+      this.orgChartContainerSize = 'large';
+    }
+    this.peopleCntArray = this.peopleCntHash[this.orgChartContainerSize];
     FlatfileImporter.setVersion(2);
     this.initializeImporter();
+    /*
     this.newUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(newUser => {
       if (!newUser) {
         return;
@@ -298,6 +329,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
       this.trainingService.assignTrainingsForJobTitle(newUser.jobTitle, newUser._id, newUser.teamId);
     });
+    */
     this.buildOrgProgress$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgProgress => {
       if (!orgProgress) {
         return;
@@ -328,9 +360,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           this.myOrgSupervisors.push(user.firstName + ' ' + user.lastName);
         }
       }
-      if (!bulkAddFailFound) {
-        this.showBulkAddFail = false;
-      }
       this.matchingSupervisors = this.myOrgSupervisors;
     });
     this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgUsers => {
@@ -356,43 +385,41 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!nodes) {
         return;
       }
-      if (this.reportChain && this.reportChain.length === 0) {
-        this.reportChainWidth = 0;
-        this.orgChartWidth = 100;
-      } else {
-        this.reportChainWidth = 16;
-        this.orgChartWidth = 83;
-      }
 
       this.nodes = nodes;
       let peopleCnt = this.nodes[0].extra.peopleCnt;
-      if (peopleCnt < 13) {
-        this.orgChartFontSize = 14;
-      } else if (peopleCnt < 16) {
-        this.orgChartFontSize = 13;
-      } else if (peopleCnt < 19) {
+      if (peopleCnt < this.peopleCntArray[0]) {
+        this.peopleCntArrayIndex = 0;
         this.orgChartFontSize = 12;
-      } else if (peopleCnt < 22) {
+      } else if (peopleCnt < this.peopleCntArray[1]) {
+        this.peopleCntArrayIndex = 1;
         this.orgChartFontSize = 11;
-      } else if (peopleCnt < 25) {
+      } else if (peopleCnt < this.peopleCntArray[2]) {
+        this.peopleCntArrayIndex = 2;
         this.orgChartFontSize = 10;
-      } else if (peopleCnt < 28) {
+      } else if (peopleCnt < this.peopleCntArray[3]) {
+        this.peopleCntArrayIndex = 3;
         this.orgChartFontSize = 9;
-      } else if (peopleCnt < 31) {
+      } else if (peopleCnt < this.peopleCntArray[4]) {
+        this.peopleCntArrayIndex = 4;
+        this.orgChartFontSize = 8;
+      } else if (peopleCnt < this.peopleCntArray[5]) {
+        this.peopleCntArrayIndex = 5;
         this.orgChartFontSize = 7;
-      } else if (peopleCnt < 34) {
-        this.orgChartFontSize = 7;
-      } else if (peopleCnt < 37) {
+      } else if (peopleCnt < this.peopleCntArray[6]) {
+        this.peopleCntArrayIndex = 6;
         this.orgChartFontSize = 6;
-      } else if (peopleCnt < 40) {
+      } else if (peopleCnt < this.peopleCntArray[7]) {
+        this.peopleCntArrayIndex = 7;
         this.orgChartFontSize = 5;
-      } else if (peopleCnt < 43) {
+      } else if (peopleCnt < this.peopleCntArray[8]) {
+        this.peopleCntArrayIndex = 8;
+        this.orgChartFontSize = 4;
+      } else if (peopleCnt < this.peopleCntArray[9]) {
+        this.peopleCntArrayIndex = 9;
         this.orgChartFontSize = 3;
-      } else if (peopleCnt < 55) {
-        this.orgChartFontSize = 3;
-      } else if (peopleCnt < 58) {
-        this.orgChartFontSize = 2;
       } else {
+        this.peopleCntArrayIndex = 10;
         this.orgChartFontSize = 2;
       }
     });
@@ -429,13 +456,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         this.supervisorName = this.myOrgUserHash[user.supervisorId].firstName + ' ' + this.myOrgUserHash[user.supervisorId].lastName;
       }
       this.reportChain = Object.assign([], this.uidReportChainHash[this.selectedUser._id]);
-      if (this.reportChain && this.reportChain.length === 0) {
-        this.reportChainWidth = 0;
-        this.orgChartWidth = 100;
-      } else {
-        this.reportChainWidth = 16;
-        this.orgChartWidth = 83;
-      }
       this.trainingService.selectTraining(null);
     });
 
@@ -505,6 +525,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.jobTitles = jobTitles;
       this.matchingJobTitles = this.jobTitles;
     })
+
+    this.userFail$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userFail => {
+      
+    })
   }
 
   increaseFontSize() {
@@ -512,6 +536,20 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
   decreaseFontSize() {
     this.orgChartFontSize -= 1;
+  }
+
+  checkUniqueEmail(data) {
+    if (!this.selectedUser.email || this.selectedUser.email === '') {
+      this.emailUnique = false;
+      return;
+    }
+    console.log('checkUniqueEmail', data);
+    this.userService.getUserByEmail(this.selectedUser.email).subscribe(user => {
+      this.emailUnique = false;
+    },
+      err => {
+        this.emailUnique = true;
+    })
   }
 
   selectReportChainItem(uid) {
@@ -530,14 +568,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   toggleFilter(filter: string) {
     this.myTeamFiltered = [];
-
-    if (filter === 'bulk-add-fail') {
-      this.showBulkAddFail = !this.showBulkAddFail;
-    }
-
-    if (this.showBulkAddFail) {
-      return;
-    }
 
     if (filter === 'up-to-date') {
       this.showUpToDate = !this.showUpToDate;
@@ -676,8 +706,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.newTeamMember.firstName = '';
     this.newTeamMember.lastName = '';
     this.newTeamMember.email = '';
+    this.newTeamMember.emailVerified = false;
     this.newTeamMember.jobTitle = '';
     this.newTeamMember.teamId = this.teamId;
+    this.newTeamMember.supervisorId = this.authenticatedUser._id;
     this.newTeamMember.teamAdmin = false;
     this.newTeamMember.userStatus = 'pending';
     this.newTeamMember.trainingStatus = 'none';
@@ -694,6 +726,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         bgColor: '#e9e9e9',
       }
     };
+    this.supervisorName = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
     this.selectedUser = this.newTeamMember;
     this.userPanelVisible = true;
     this.options = [];
@@ -704,39 +737,18 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.userService.selectUser(this.authenticatedUser._id);
       this.newUser = false;
     }
+    this.emailUnique = false;
     this.userPanelVisible = false;
   }
 
   handleAddUser(reload: boolean) {
     this.newUser = false;
-    this.newTeamMember.supervisorId = this.authenticatedUser._id;
 
-    //    this.userService.updateUser(this.authenticatedUser, false);
     this.userService.createNewUser(this.newTeamMember, reload);
 
-    if (this.newTeamMember.jobTitle) {
-      this.jobTitleService.addJobTitle(this.newTeamMember.jobTitle);
-    }
-    this.options = [];
-
-//    let url = 'https://mytrainingdocs.com/signup/' + this.newTeamMember.email;
-    this.sendRegistrationMsg(this.newTeamMember.email, this.authenticatedUser.email);
     this.userPanelVisible = false;
-    this.selectUser(this.newTeamMember._id);
-    //    this.cd.detectChanges();
   }
 
-  sendRegistrationMsg(toAddr, fromAddr) {
-    this.message = <TemplateMessageModel>{
-      to: toAddr,
-      from: fromAddr,
-      templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
-      dynamicTemplateData: {
-        email: toAddr
-      },
-    }
-    this.mailService.sendTemplateMessage(this.message);
-  }
 
   handleUpdateUser() {
     this.userPanelVisible = false;
@@ -749,7 +761,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.selectedUser.teamId = supervisorObj._id;
       supervisorObj.directReports.push(this.selectedUser._id);
       this.authenticatedUser.directReports.splice(this.authenticatedUser.directReports.indexOf(this.selectedUser._id), 1);
-      this.userService.updateUser(this.authenticatedUser, true);
+      this.userService.updateUser(this.authenticatedUser, false);
       this.userService.updateUser(supervisorObj, false);
     }
     this.userService.updateUser(this.selectedUser, false);
@@ -806,7 +818,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
     if (this.selectedUser.trainingStatus === 'none') {
       this.selectedUser.trainingStatus = 'upToDate';
-      this.userService.updateUser(this.selectedUser, true);
+      this.userService.updateUser(this.selectedUser, false);
     }
 
     this.showUserTrainingModal = false;
@@ -823,6 +835,15 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   onDrag(event) {
     this.newWidth = Math.floor((event.clientX / window.innerWidth) * 100);
     this.teamContainerWidth = this.newWidth;
+    this.orgChartWidth = window.innerWidth - (window.innerWidth * this.teamContainerWidth / 100);
+    if (this.orgChartWidth < 800) {
+      this.orgChartContainerSize = 'small';
+    } else if (this.orgChartWidth < 900) {
+      this.orgChartContainerSize = 'medium';
+    } else {
+      this.orgChartContainerSize = 'large';
+    }
+    this.peopleCntArray = this.peopleCntHash[this.orgChartContainerSize];
   }
 
   onDragEnd(event) {
