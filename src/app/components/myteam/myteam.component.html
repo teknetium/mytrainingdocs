@@ -251,11 +251,11 @@
                                     <ul nz-menu>
                                         <li [nzDisabled]="assignableTrainings.length === 0" nz-menu-item
                                             (click)="showUserTrainingModal = true">Assign a Training</li>
-                                        <li nz-menu-item (click)="editUser()">Edit Profile</li>
-                                        <li [nzDisabled]="selectedUser.userStatus !== 'pending'" nz-menu-item
+                                        <li *ngIf="selectedUser._id !== authenticatedUser._id" nz-menu-item (click)="editUser()">Edit Profile</li>
+                                        <li *ngIf="selectedUser._id !== authenticatedUser._id" [nzDisabled]="selectedUser.userStatus !== 'pending'" nz-menu-item
                                             (click)="sendRegistrationMsg(selectedUser.email, authenticatedUser.email)">
                                             Resend Registration Email</li>
-                                        <li nz-menu-item nz-popconfirm nzPopconfirmTitle="Delete this user?"
+                                        <li *ngIf="selectedUser._id !== authenticatedUser._id" nz-menu-item nz-popconfirm nzPopconfirmTitle="Delete this user?"
                                             (nzOnConfirm)="confirmDelete(selectedUser)">
                                             Delete User
                                         </li>
@@ -296,31 +296,6 @@
                             <i nz-icon nzType="question-circle" nzTheme="twotone"
                                 style="cursor:pointer;position:absolute;top:0;left:0;font-size:20px;color:#000000;"
                                 (click)="startTour('orgChart')" nz-tooltip nzTooltipTitle="A little help"></i>
-
-                            <!--
-                            <div style="display:block;width:100%;border-bottom:1px solid #bbbbbb;">
-                                <div style="margin-top:20px;">
-                                    <nz-radio-group [(ngModel)]="chartOrientation" nzSize="small"
-                                        style="float:left;margin-bottom:20px;margin-right:40px;">
-                                        <label nz-radio-button nzValue="vertical">
-                                            <span style="font-size:12px;">Vertical</span>
-                                        </label>
-                                        <label nz-radio-button nzValue="horizontal">
-                                            <span style="font-size:12px;">Horizontal</span>
-                                        </label>
-                                    </nz-radio-group>
-                                    <div style="margin-bottom:20px;float:right;padding-top:10px;">
-                                        <i nz-icon nzType="zoom-out" nzTheme="outline"
-                                            style="font-size:24px;cursor:pointer;color:#999999;"
-                                            (click)="decreaseFontSize()" nz-tooltip nzTooltipTitle="Zoom Out"></i>
-                                        <i nz-icon nzType="zoom-in" nzTheme="outline"
-                                            style="font-size:24px;margin-left:10px;cursor:pointer;color:#999999;"
-                                            (click)="increaseFontSize()" nz-tooltip nzTooltipTitle="Zoom In"></i>
-                                    </div>
-                                    <div style="clear:both;"></div>
-                                </div>
-                            </div>
-                                    -->
                             <div style="padding-top:20px;width:100%;height:100%;">
                                 <div *ngIf="reportChain && reportChain.length > 0"
                                     style="position:relative;display:block;text-align: center;width:100%;border-bottom:1px solid #dddddd;">
@@ -400,71 +375,6 @@
                         </div>
                     </div>
                 </nz-modal>
-                <!--
-                <nz-modal [(nzVisible)]="showNewUserModal" nzTitle="Team Member Registration"
-                    (nzOnCancel)="handleCancel()" (nzOnOk)="handleAddUser(true)">
-                    <div style="padding:20px;color:#000000;">
-                        <p style="font-size:16px;">
-                            An email will be sent to the team member being registered in order for them to complete the
-                            registration
-                            process.
-                        </p>
-
-                    </div>
-                    <div style="z-index: 1000;background-color: white;">
-                        <input nz-input nzSize="small" type="text" placeholder="First Name" ngDefaultControl
-                            [(ngModel)]="newTeamMember.firstName" style="margin-bottom:10px;">
-                        <input nz-input nzSize="small" type="text" placeholder="Last Name" ngDefaultControl
-                            [(ngModel)]="newTeamMember.lastName" style="margin-bottom:10px;">
-                        <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl
-                            [(ngModel)]="newTeamMember.email" style="margin-bottom:20px;">
-                        <input nz-input nzSize="small" type="text" placeholder="Job Title" ngDefaultControl
-                            [(ngModel)]="newTeamMember.jobTitle" style="display:inline-block;margin-bottom:20px;"
-                            (input)="onInput($event.target?.value)" [nzAutocomplete]="auto">
-                        <nz-autocomplete nzBackfill #auto>
-                            <nz-auto-option *ngFor="let option of options" [nzValue]="option">
-                                {{ option }}
-                            </nz-auto-option>
-                        </nz-autocomplete>
-                        <span style="margin-right:20px;float:left;">User Type</span>
-                        <nz-radio-group ngDefaultControl [(ngModel)]="newTeamMember.userType"
-                            style="margin-bottom:20px;">
-                            <label nz-radio nzValue="individualContributor" (click)="newSupervisorSelected(false)"
-                                style="display:block;font-size:28px;">
-                                <i class="fad fa-user" style="vertical-align: bottom;"></i>
-                                <span style="margin-left:10px;font-size:14px;">Individual Contributor</span>
-                            </label>
-                            <label nz-radio nzValue="supervisor" (click)="newSupervisorSelected(true)"
-                                style="display:block;font-size:28px;">
-                                <i class="fad fa-user-tie" style="vertical-align: bottom;"></i>
-                                <span style="margin-left:10px;font-size:14px;">Supervisor</span>
-
-                            </label>
-                            <label nz-radio nzValue="volunteer" (click)="newSupervisorSelected(false)"
-                                style="display:block;font-size:28px;">
-                                <i class="fad fa-user-cowboy" style="vertical-align: bottom;"></i>
-                                <span style="margin-left:10px;font-size:14px;">Volunteer</span>
-
-                            </label>
-                            <label nz-radio nzValue="customer" (click)="newSupervisorSelected(false)"
-                                style="display:block;font-size:28px;">
-                                <i class="fad fa-user-crown" style="vertical-align: bottom;"></i>
-                                <span style="margin-left:10px;  font-size:14px;">Customer</span>
-
-                            </label>
-                        </nz-radio-group>
-                    </div>
-                    <div [@supervisorSignupToggle]="isNewSupervisorPanelOpen ? 'open' : 'closed'"
-                        style="z-index: -1;height:50px;overflow: hidden;padding-left:30px;">
-                        <label nz-checkbox ngDefaultControl [(ngModel)]="includeNewSupervisorsTeam">Have this supervisor
-                            register their team</label>
-                    </div>
-                    <label nz-checkbox ngDefaultControl [(ngModel)]="newTeamMember.teamAdmin" nz-tooltip
-                        nzTooltipTitle="Give this person the ability to create, update, delete trainings.">Training
-                        Admin
-                        Access</label>
-                </nz-modal>
-                -->
             </div>
         </div>
         <nz-drawer [nzClosable]="false" [nzMaskClosable]="true" [nzVisible]="userPanelVisible" nzPlacement="right"

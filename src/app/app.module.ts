@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgZorroAntdModule, NZ_I18N, en_US, NzBadgeModule, NzConfig, NZ_CONFIG } from 'ng-zorro-antd';
-import { registerLocaleData } from '@angular/common';
+import { registerLocaleData,  } from '@angular/common';
 import en from '@angular/common/locales/en';
 
 import { AuthGuard } from './shared/guard/auth.guard';
@@ -54,6 +54,7 @@ registerLocaleData(en);
         DocsModule
     ],
     providers: [
+//        { provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true },
         { 
             provide: NZ_I18N,
             useValue: en_US, 

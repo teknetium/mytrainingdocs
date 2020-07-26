@@ -482,17 +482,30 @@ export class UserService {
   createNewUser(user: UserModel, reload: boolean) {
     this.postUser$(user).subscribe(data => {
       this.authenticatedUser.directReports.push(data._id);
-      this.updateUser(this.authenticatedUser, true);
+      let fullName = user.firstName + ' ' + user.lastName;
+      this.myOrgUserNames.push(fullName);
+      this.myOrgUserNameListBS$.next(this.myOrgUserNames);
+      this.allOrgUserHash[user._id] = user;
+      this.myTeamIdHash[user._id] = user;
+      if (!this.myTeam.includes(user)) {
+        this.myTeam.push(user);
+      }
+      this.myTeamBS$.next(this.myTeam);
+      this.myOrgHashBS$.next(this.allOrgUserHash);
+      this.myTeamIdHashBS$.next(this.myTeamIdHash);
+      this.updateUser(this.authenticatedUser, false);
 
+      this.buildOrgChart(this.authenticatedUser._id, false);
       if (data.jobTitle) {
         this.jobTitleService.addJobTitle(data.jobTitle);
       }
 
       this.sendRegistrationMsg(data.email, this.authenticatedUser.email);
-
+/*
       if (reload) {
         this.loadData(this.authenticatedUser._id, data._id);
       }
+      */
     },
       err => {
         console.log('postUser$ ', err);
@@ -508,7 +521,18 @@ export class UserService {
 
   deleteUser(id: string) {
     this.deleteUser$(id).subscribe(data => {
-      this.loadData(this.teamId, null);
+      let deletedUser = this.allOrgUserHash[id];
+      this.allOrgUserHash[deletedUser.supervisorId].directReports.splice(this.allOrgUserHash[deletedUser.supervisorId].directReports.indexOf(id, 1));
+      delete this.allOrgUserHash[id];
+      delete this.myTeamIdHash[id];
+      this.myTeam.splice(this.myTeam.indexOf(deletedUser), 1);
+      this.myOrgUserNames.splice(this.myOrgUserNames.indexOf(deletedUser.firstName + ' ' + deletedUser.lastName));
+
+      this.myTeamBS$.next(this.myTeam);
+      this.myOrgUserNameListBS$.next(this.myOrgUserNames);
+      this.myTeamIdHashBS$.next(this.myTeamIdHash);
+      this.myOrgHashBS$.next(this.allOrgUserHash);
+//      this.loadData(this.teamId, null);
     });
   }
 
@@ -703,7 +727,7 @@ export class UserService {
   private _handleError(err: HttpErrorResponse | any): Observable<any> {
     const errorMsg = err.error.message || 'Error: Unable to complete request.';
     console.log("_handleError", err);
-    this.httpErrorBS$.next(err);
+//    this.httpErrorBS$.next(err);
     if (err.error.message && err.error.message.indexOf('No JWT present') > -1) {
       this.auth.login();
     }
