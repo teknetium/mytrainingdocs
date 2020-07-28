@@ -8,10 +8,11 @@ import { UserTrainingService } from '../../shared/services/userTraining.service'
 import { UserTrainingModel, UidUTHash } from '../../shared/interfaces/userTraining.type';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
 import { Observable, BehaviorSubject, Subscription, defer } from 'rxjs';
-import { UserModel, UserFail, UserIdHash, OrgChartNode, BuildOrgProgress } from '../../shared/interfaces/user.type';
+import { UserModel, UserFail, UserIdHash, OrgChartNode, BuildOrgProgress, UserBatchData } from '../../shared/interfaces/user.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
 import { JobTitleService } from '../../shared/services/jobtitle.service';
+import { UserBulkAddService } from '../../shared/services/userBulkAdd.service';
 import { MessageModel, TemplateMessageModel } from '../../shared/interfaces/message.type';
 import { takeUntil, filter } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,6 +20,7 @@ import * as cloneDeep from 'lodash/cloneDeep';
 import { BaseComponent } from '../base.component';
 import FlatfileImporter from "flatfile-csv-importer";
 import { JoyrideService } from 'ngx-joyride';
+import { UserBulkAddModel } from 'src/app/shared/interfaces/userBulkAdd.type';
 
 @Component({
   selector: 'app-myteam',
@@ -260,7 +262,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     medium: [3, 8, 13, 18, 23, 28, 33, 38, 43, 48],
     large: [8, 13, 18, 23, 28, 33, 38, 43, 48, 53]
   }
-
+  batchFails$: Observable<UserBatchData[]>;
+  batchFails = [];
+  batchUsers$: Observable<UserBulkAddModel[]>;
+  batchUsers: UserBulkAddModel[];
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -268,6 +273,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private userService: UserService,
     private mailService: SendmailService,
     private trainingService: TrainingService,
+    private userBulkAddService: UserBulkAddService,
     private jobTitleService: JobTitleService,
     private userTrainingService: UserTrainingService,
     private joyrideService: JoyrideService,
@@ -275,6 +281,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private router: Router
   ) {
     super();
+    this.batchUsers$ = this.userBulkAddService.getUserBulkAddStream();
+    this.batchFails$ = this.userService.getBatchUserFailsStream();
     this.userFail$ = this.userService.getUserFailStream();
     this.myOrgUsers$ = this.userService.getMyOrgUserNameListStream();
     this.buildOrgProgress$ = this.userService.getOrgProgressStream();
@@ -330,6 +338,21 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.trainingService.assignTrainingsForJobTitle(newUser.jobTitle, newUser._id, newUser.teamId);
     });
     */
+    this.batchUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(users => {
+      if (!users) {
+        return;
+      }
+      this.batchUsers = users;
+    });
+
+    this.batchFails$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(failList => {
+      if (!failList) {
+        return;
+      }
+
+      this.batchFails = failList;
+    });
+
     this.buildOrgProgress$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgProgress => {
       if (!orgProgress) {
         return;
@@ -385,6 +408,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!nodes) {
         return;
       }
+
+      // this next bit of code tries to set the org chart font size to a reasponable value for the
+      // number of people in the chart
 
       this.nodes = nodes;
       let peopleCnt = this.nodes[0].extra.peopleCnt;
@@ -496,7 +522,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         userId: this.authenticatedUser._id,
         name: this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName
       });
-
+      
+      this.userBulkAddService.getUsersBulkAdd$(this.authenticatedUser.org).subscribe(bulkAddUsers => {
+        if (!bulkAddUsers) {
+          return;
+        }
+        this.batchUsers = bulkAddUsers;
+      })
 
       this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
         this.uid = params.get('uid');
@@ -802,7 +834,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   confirmDelete(user: UserModel) {
     if (user._id === this.authenticatedUser._id) {
-
+      return;
     }
     this.userService.deleteUser(user._id);
     this.userTrainingService.deleteUTForUser(user._id);

@@ -377,10 +377,8 @@
                                 (blur)="checkUniqueEmail($event)">
                         </nz-input-group>
                         <ng-template #suffixTemplate>
-                            <i *ngIf="!emailUnique" nz-icon nz-tooltip nzTooltipTitle="Extra information" nzType="close-circle"
-                                [nzTheme]="'twotone'" nzTwotoneColor="red"></i>
-                            <i *ngIf="emailUnique" nz-icon nz-tooltip nzTooltipTitle="Extra information" nzType="check-circle"
-                                [nzTheme]="'twotone'" nzTwotoneColor="#46bc16"></i>
+                            <span *ngIf="!emailUnique" style="font-size:10px;">email taken</span>
+                            <span *ngIf="emailUnique" style="font-size:10px;">email available</span>
                         </ng-template>
                 </div>
             </div>

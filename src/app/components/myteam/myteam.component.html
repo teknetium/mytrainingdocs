@@ -251,11 +251,14 @@
                                     <ul nz-menu>
                                         <li [nzDisabled]="assignableTrainings.length === 0" nz-menu-item
                                             (click)="showUserTrainingModal = true">Assign a Training</li>
-                                        <li *ngIf="selectedUser._id !== authenticatedUser._id" nz-menu-item (click)="editUser()">Edit Profile</li>
-                                        <li *ngIf="selectedUser._id !== authenticatedUser._id" [nzDisabled]="selectedUser.userStatus !== 'pending'" nz-menu-item
+                                        <li *ngIf="selectedUser._id !== authenticatedUser._id" nz-menu-item
+                                            (click)="editUser()">Edit Profile</li>
+                                        <li *ngIf="selectedUser._id !== authenticatedUser._id"
+                                            [nzDisabled]="selectedUser.userStatus !== 'pending'" nz-menu-item
                                             (click)="sendRegistrationMsg(selectedUser.email, authenticatedUser.email)">
                                             Resend Registration Email</li>
-                                        <li *ngIf="selectedUser._id !== authenticatedUser._id" nz-menu-item nz-popconfirm nzPopconfirmTitle="Delete this user?"
+                                        <li *ngIf="selectedUser._id !== authenticatedUser._id" nz-menu-item
+                                            nz-popconfirm nzPopconfirmTitle="Delete this user?"
                                             (nzOnConfirm)="confirmDelete(selectedUser)">
                                             Delete User
                                         </li>
@@ -340,6 +343,48 @@
                                 </div>
                             </div>
                         </div>
+                    </nz-tab>
+                    <nz-tab *ngIf="batchUsers.length > 0" [nzTitle]="bulkFailTemplate">
+                        <div style="padding:20px;">
+                            <div style="display:block;margin-bottom:30px;">
+                                The following is a list of users that failed during the Bulk Add process due to a
+                                duplicate email.
+                            </div>
+                            <div style="display:block;padding:20px;width:100%">
+                                <nz-table #basicTable [nzData]="batchUsers" nzShowPagination="false" [nzPageSize]="50" [nzScroll]="{ y: '500px' }">
+                                    <thead style="background-color: #f5f5f5;">
+                                        <tr style="background-color: #f5f5f5;">
+                                            <th nzWidth="50px" style="background-color: #f5f5f5;">Status</th>
+                                            <th nzWidth="120px" style="background-color: #f5f5f5;">Name</th>
+                                            <th nzWidth="120px" style="background-color: #f5f5f5;">Email</th>
+                                            <th nzWidth="120px" style="background-color: #f5f5f5;">Job Title</th>
+                                            <th nzWidth="120px" style="background-color: #f5f5f5;">Supervisor's Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let data of basicTable.data" style="font-size: 12px;">
+                                            <td *ngIf="data.status === 'success'"><i nz-icon nzType="check-circle" [nzTheme]="'twotone'"
+                                                    [nzTwotoneColor]="'#52c41a'"></i></td>
+                                            <td *ngIf="data.status === 'fail'"><i nz-icon nzType="close-circle" [nzTheme]="'twotone'"
+                                                    [nzTwotoneColor]="'red'"></i></td>
+                                            <td>{{data.firstName}} {{data.lastName}}</td>
+                                            <td>{{data.email}}</td>
+                                            <td>{{data.jobTitle}}</td>
+                                            <td>{{data.supervisorName}}</td>
+                                        </tr>
+                                    </tbody>
+                                </nz-table>
+                                <!--
+
+                                <div *ngFor="let user of batchFails" style="display:block;padding:5px;border-top:1px solid #bbbbbb;margin-bottom:3px;">
+                                    {{user.firstName}} {{user.lastName}} &nbsp;&nbsp;&nbsp;&nbsp;{{user.email}} &nbsp;&nbsp;&nbsp;&nbsp;{{user.jobTitle}} &nbsp;&nbsp;&nbsp;&nbsp;{{ user.supervisorName}}
+                                </div>
+                                -->
+                            </div>
+                        </div>
+                        <ng-template #bulkFailTemplate>
+                            <span style="">Bulk Add Results</span>
+                        </ng-template>
                     </nz-tab>
                 </nz-tabset>
                 <nz-modal [nzVisible]="showUserTrainingModal" nzTitle="Assign Training To User"

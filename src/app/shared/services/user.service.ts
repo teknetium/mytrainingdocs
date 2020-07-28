@@ -10,8 +10,10 @@ import { UserModel, UserFail, UserIdHash, OrgChartNode, UserBatchData, BuildOrgP
 import { Auth0ProfileModel } from '../interfaces/auth0Profile.type';
 import { Router } from '@angular/router';
 import { EventModel } from '../interfaces/event.type';
+import { UserBulkAddModel } from '../interfaces/userBulkAdd.type';
 import { EventService } from './event.service';
 import { JobTitleService } from './jobtitle.service';
+import { UserBulkAddService } from './userBulkAdd.service';
 import { TemplateMessageModel } from '../../shared/interfaces/message.type';
 import * as cloneDeep from 'lodash/cloneDeep';
 
@@ -26,6 +28,7 @@ export class UserService {
 
   // Writable streams
   private httpErrorBS$ = new BehaviorSubject<HttpErrorResponse>(null);
+  private batchFailsBS$ = new BehaviorSubject<UserBatchData[]>([]);
   private myOrgUserNameListBS$ = new BehaviorSubject<string[]>([]);
   private myOrgBS$ = new BehaviorSubject<OrgChartNode[]>(null);
   private buildOrgProgressBS$ = new BehaviorSubject<BuildOrgProgress>(null);
@@ -101,6 +104,7 @@ export class UserService {
     private http: HttpClient,
     private auth: AuthService,
     private jobTitleService: JobTitleService,
+    private userBulkAddService: UserBulkAddService,
     private userTrainingService: UserTrainingService,
     private sendmailService: SendmailService,
     private router: Router,
@@ -110,8 +114,7 @@ export class UserService {
 
     this.authenticatedUserProfile$ = this.auth.getAuthenticatedUserProfileStream();
     this.authenticatedUserProfile$.subscribe((profile) => {
-      this.getUserByUid(profile.uid).subscribe(
-        user => {
+      this.getUserByUid(profile.uid).subscribe(user => {
 
           // This is the uid field is the user id from Auth0.  This is set for the initial supervisor registrant 
           this.authenticatedUser = user;
@@ -389,6 +392,10 @@ export class UserService {
     return this.userFailBS$.asObservable();
   }
 
+  getBatchUserFailsStream(): Observable<UserBatchData[]> {
+    return this.batchFailsBS$.asObservable();
+  }
+
   getOrgProgressStream(): Observable<BuildOrgProgress> {
     return this.buildOrgProgressBS$.asObservable();
   }
@@ -410,7 +417,7 @@ export class UserService {
   }
 
   createNewUsersFromBatch(batchUsers: UserBatchData[]) {
-
+    let bulkAddUser;
     let emailList = [];
     let batchUserFails: UserBatchData[] = [];
     let supervisorMatchFail = [];
@@ -419,8 +426,21 @@ export class UserService {
     let batchCnt = 1;
     let _id = String(new Date().getTime());
     for (let batchUser of batchUsers) {
+      bulkAddUser = <UserBulkAddModel>{
+        _id: String(new Date().getTime()),
+        status: 'success',
+        org: this.authenticatedUser.org,
+        firstName: batchUser.firstName,
+        lastName: batchUser.lastName,
+        email: batchUser.email,
+        jobTitle: batchUser.jobTitle,
+        supervisorName: batchUser.supervisorName,
+        supervisorId: ''
+      }
       if (emailList.includes(batchUser.email)) {
         batchUserFails.push(batchUser);
+        bulkAddUser.status = 'fail';
+        this.userBulkAddService.saveBulkAddUser(bulkAddUser);
         continue;
       }
       emailList.push(batchUser.email);
@@ -449,8 +469,10 @@ export class UserService {
       this.newUserList.push(this.newTeamMember);
       this.fullNameHash[this.newTeamMember.firstName + ' ' + this.newTeamMember.lastName] = this.newTeamMember;
       this.allOrgUserHash[this.newTeamMember._id] = this.newTeamMember;
-      console.log('add user ', this.newTeamMember.firstName + ' ' + this.newTeamMember.lastName);
+      this.userBulkAddService.saveBulkAddUser(bulkAddUser);
     }
+
+    
     for (let nUser of this.newUserList) {
       if (!this.fullNameHash[this.newUserHash[nUser._id].supervisorName]) {
         supervisorMatchFail.push(nUser._id);
@@ -463,6 +485,10 @@ export class UserService {
         nUser.supervisorId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
         nUser.teamId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
       }
+    }
+
+    if (batchUserFails.length > 0) {
+      this.batchFailsBS$.next(batchUserFails);
     }
     let dbCnt = 0;
     for (let user of this.newUserList) {
