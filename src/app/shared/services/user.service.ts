@@ -10,10 +10,8 @@ import { UserModel, UserFail, UserIdHash, OrgChartNode, UserBatchData, BuildOrgP
 import { Auth0ProfileModel } from '../interfaces/auth0Profile.type';
 import { Router } from '@angular/router';
 import { EventModel } from '../interfaces/event.type';
-import { UserBulkAddModel } from '../interfaces/userBulkAdd.type';
 import { EventService } from './event.service';
 import { JobTitleService } from './jobtitle.service';
-import { UserBulkAddService } from './userBulkAdd.service';
 import { TemplateMessageModel } from '../../shared/interfaces/message.type';
 import * as cloneDeep from 'lodash/cloneDeep';
 
@@ -31,6 +29,8 @@ export class UserService {
   private batchFailsBS$ = new BehaviorSubject<UserBatchData[]>([]);
   private myOrgUserNameListBS$ = new BehaviorSubject<string[]>([]);
   private myOrgBS$ = new BehaviorSubject<OrgChartNode[]>(null);
+  private supervisorsBS$ = new BehaviorSubject<OrgChartNode[][][]>(null);
+  private directReportsBS$ = new BehaviorSubject<OrgChartNode[][][][]>(null);
   private buildOrgProgressBS$ = new BehaviorSubject<BuildOrgProgress>(null);
   private uidReportChainHashBS$ = new BehaviorSubject<UserIdHash>(null);
   private authenticatedUserBS$ = new BehaviorSubject<UserModel>(null);
@@ -99,12 +99,16 @@ export class UserService {
   myOrgUserNames = [];
   reportChainNodeHash = {};
   myTeamIdIndexHash = {};
+  directReports: OrgChartNode[][][][] = [[[[]]]];
+  supervisors: OrgChartNode[][][] = [[[]]];
+  supervisorUids: string[][][] = [[[]]];
+  levelIndex = [];
+  uidLevelIndexHash = {};
 
   constructor(
     private http: HttpClient,
     private auth: AuthService,
     private jobTitleService: JobTitleService,
-    private userBulkAddService: UserBulkAddService,
     private userTrainingService: UserTrainingService,
     private sendmailService: SendmailService,
     private router: Router,
@@ -116,20 +120,20 @@ export class UserService {
     this.authenticatedUserProfile$.subscribe((profile) => {
       this.getUserByUid(profile.uid).subscribe(user => {
 
-          // This is the uid field is the user id from Auth0.  This is set for the initial supervisor registrant 
-          this.authenticatedUser = user;
-          //          this.getAllOrgUsers();
-          if (this.authenticatedUser.jobTitle) {
-            this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
-          }
-          this.authenticatedUserBS$.next(this.authenticatedUser);
-          this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
-          if (this.authenticatedUser.userType === 'supervisor') {
-//            this.org = this.authenticatedUser.org;
-            this.teamId = this.authenticatedUser.uid;
-            this.loadData(this.authenticatedUser.org, null);
-          }
-        },
+        // This is the uid field is the user id from Auth0.  This is set for the initial supervisor registrant 
+        this.authenticatedUser = user;
+        //          this.getAllOrgUsers();
+        if (this.authenticatedUser.jobTitle) {
+          this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
+        }
+        this.authenticatedUserBS$.next(this.authenticatedUser);
+        this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
+        if (this.authenticatedUser.userType === 'supervisor') {
+          //            this.org = this.authenticatedUser.org;
+          this.teamId = this.authenticatedUser.uid;
+          this.loadData(this.authenticatedUser.org, null);
+        }
+      },
         err => {
           this.getUserByEmail(profile.email).subscribe(
             res => {
@@ -263,9 +267,10 @@ export class UserService {
       }
 
       userList = userList.concat(this.newUserList);
-      console.log('loadData : after merging with this.newUserLst', userList);      
+      console.log('loadData : after merging with this.newUserLst', userList);
 
       this.myTeam = [];
+      this.supervisorUids = [[[]]];
       this.myTeamIdHash = {};
       this.allOrgUserHash = {};
       this.myOrgUserNames = [];
@@ -309,6 +314,7 @@ export class UserService {
       let rootNode;
       this.buildOrgChart(this.authenticatedUser._id, false);
       this.nodes.push(rootNode);
+      this.directReportsBS$.next(this.directReports);
       this.myOrgBS$.next(this.nodes);
       this
     });
@@ -320,7 +326,9 @@ export class UserService {
     }
     this.nodes = [];
     let rootNode: OrgChartNode = {
-      name: this.allOrgUserHash[uid].firstName + ' ' + this.allOrgUserHash[uid].lastName,
+      _id: this.authenticatedUser._id,
+      fName: this.allOrgUserHash[uid].firstName,
+      lName: this.allOrgUserHash[uid].lastName,
       cssClass: 'org-chart-top',
       image: '',
       extra: {
@@ -329,14 +337,29 @@ export class UserService {
         peopleCnt: 0,
       },
       title: this.allOrgUserHash[uid].jobTitle,
-      childs: []
+      childs: [],
+      level: 0,
     };
 
+    let orgLevel = 0;
+    this.levelIndex[orgLevel] = 0;
     let reportChain = [uid];
     this.reportChainNodeHash[uid] = rootNode;
-
-    for (let dR of this.allOrgUserHash[uid].directReports) {
-      rootNode.childs.push(this.buildUserNode(dR, Object.assign([], reportChain)));
+//    this.supervisors[orgLevel][0].push(rootNode);
+    this.supervisors[orgLevel] = [];
+    this.supervisors[orgLevel][0] = [];
+    for (let i = 0; i < this.allOrgUserHash[uid].directReports.length; i++) {
+      let levelIndexArray: number[] = Object.assign([], this.levelIndex);
+      let orgTree: OrgChartNode[][][] = cloneDeep(this.supervisors);
+      this.directReports.push(orgTree);
+      //    for (let dR of this.allOrgUserHash[uid].directReports) {
+      let node = this.buildUserNode(this.allOrgUserHash[uid].directReports[i], Object.assign([], reportChain), orgLevel, i, levelIndexArray, orgTree);
+      rootNode.childs.push(node);
+      if (!orgTree[orgLevel][levelIndexArray[orgLevel]]) {
+        orgTree[orgLevel][levelIndexArray[orgLevel]] = [];
+      }
+      orgTree[orgLevel][levelIndexArray[orgLevel]].push(node);
+      levelIndexArray[orgLevel] = levelIndexArray[orgLevel] + 1;
     }
 
     this.nodes.push(rootNode);
@@ -346,15 +369,17 @@ export class UserService {
     }
   }
 
-  buildUserNode(userId, reportChain): OrgChartNode {
-    console.log('BuildUserNode', this.allOrgUserHash);
+  buildUserNode(userId: string, reportChain: string[], level: number, myLevelIndex: number, levelIndexArray: number[], orgTree: OrgChartNode[][][]): OrgChartNode {
     this.uidReportChainHash[userId] = reportChain;
     let user = this.allOrgUserHash[userId];
+
     if (!user) {
       console.log('buildUserNode ', userId, this.allOrgUserHash);
     }
     let userNode = <OrgChartNode>{
-      name: user.firstName,
+      _id: user._id,
+      fName: user.firstName,
+      lName: user.lastName,
       cssClass: 'org-chart-node',
       image: '',
       title: '',
@@ -363,23 +388,39 @@ export class UserService {
         reportChain: reportChain,
         peopleCnt: 0
       },
-      childs: []
+      childs: [],
     }
 
-
     this.reportChainNodeHash[userId] = userNode;
-    //    userNode.title = user.jobTitle;
+    userNode.title = user.jobTitle;
 
     for (let uid of reportChain) {
       this.reportChainNodeHash[uid].extra.peopleCnt++;
     }
 
+
+    level++;
+    if (!levelIndexArray[level]) {
+      levelIndexArray[level] = 0;
+    }
     userNode.childs = [];
     let newReportChain = Object.assign([], reportChain);
     newReportChain.push(userId);
-    for (let dR of user.directReports) {
+    if (!orgTree[level]) {
+      orgTree[level] = [];
+    }
+
+    for (let i = 0; i < user.directReports.length; i++) {
       userNode.extra.peopleCnt++;
-      userNode.childs.push(this.buildUserNode(dR, Object.assign([], newReportChain)));
+//      userNode.level = myLevelIndex;
+
+      let node = this.buildUserNode(user.directReports[i], Object.assign([], newReportChain), level, levelIndexArray[level], levelIndexArray, orgTree);
+      userNode.childs.push(node);
+      if (!orgTree[level][myLevelIndex]) {
+        orgTree[level][myLevelIndex] = [];
+      }
+      orgTree[level][myLevelIndex].push(node);
+      levelIndexArray[level] = levelIndexArray[level] + 1;
     }
     return userNode;
   }
@@ -402,7 +443,7 @@ export class UserService {
 
   setUserStatusPastDue(uid: string) {
     this.myTeamIdHash[uid].trainingStatus = 'pastDue';
-//    this.myTeam[]
+    //    this.myTeam[]
     this.updateUser(this.myTeamIdHash[uid], false);
   }
 
@@ -416,44 +457,33 @@ export class UserService {
     this.updateUser(this.myTeamIdHash[uid], false);
   }
 
-  createNewUsersFromBatch(batchUsers: UserBatchData[]) {
-    let bulkAddUser;
+  createNewUsersFromBatch(batchUsers: UserBatchData[], testing: boolean) {
     let emailList = [];
-    let batchUserFails: UserBatchData[] = [];
     let supervisorMatchFail = [];
     this.newTeamMember.org = this.authenticatedUser.org;
     this.fullNameHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
     let batchCnt = 1;
     let _id = String(new Date().getTime());
     for (let batchUser of batchUsers) {
-      bulkAddUser = <UserBulkAddModel>{
-        _id: String(new Date().getTime()),
-        status: 'success',
-        org: this.authenticatedUser.org,
-        firstName: batchUser.firstName,
-        lastName: batchUser.lastName,
-        email: batchUser.email,
-        jobTitle: batchUser.jobTitle,
-        supervisorName: batchUser.supervisorName,
-        supervisorId: ''
-      }
-      if (emailList.includes(batchUser.email)) {
-        batchUserFails.push(batchUser);
-        bulkAddUser.status = 'fail';
-        this.userBulkAddService.saveBulkAddUser(bulkAddUser);
-        continue;
-      }
-      emailList.push(batchUser.email);
       this.newTeamMember = cloneDeep(this.newTeamMember);
       this.newTeamMember.userType = 'individualContributor';
       this.newTeamMember._id = String(_id + '-' + batchCnt++);
       this.newTeamMember.firstName = batchUser.firstName;
       this.newTeamMember.lastName = batchUser.lastName;
-      this.newTeamMember.email = batchUser.email;
+      if (emailList.includes(batchUser.email)) {
+        this.newTeamMember.email = this.newTeamMember._id;
+        this.newTeamMember.userStatus = 'duplicate-email';
+      } else {
+        this.newTeamMember.email = batchUser.email;
+        if (!testing) {
+          this.sendRegistrationMsg(this.newTeamMember.email, this.authenticatedUser.email);
+        }
+        this.newTeamMember.userStatus = 'pending';
+        emailList.push(batchUser.email);
+      }
       this.newTeamMember.jobTitle = batchUser.jobTitle;
       this.newTeamMember.trainingStatus = 'none';
       this.newTeamMember.teamAdmin = false;
-      this.newTeamMember.userStatus = 'pending';
       this.newTeamMember.settings = {
         foo: 'test',
         showPageInfo: true,
@@ -469,10 +499,9 @@ export class UserService {
       this.newUserList.push(this.newTeamMember);
       this.fullNameHash[this.newTeamMember.firstName + ' ' + this.newTeamMember.lastName] = this.newTeamMember;
       this.allOrgUserHash[this.newTeamMember._id] = this.newTeamMember;
-      this.userBulkAddService.saveBulkAddUser(bulkAddUser);
     }
 
-    
+
     for (let nUser of this.newUserList) {
       if (!this.fullNameHash[this.newUserHash[nUser._id].supervisorName]) {
         supervisorMatchFail.push(nUser._id);
@@ -487,21 +516,33 @@ export class UserService {
       }
     }
 
-    if (batchUserFails.length > 0) {
-      this.batchFailsBS$.next(batchUserFails);
-    }
     let dbCnt = 0;
-    for (let user of this.newUserList) {
-      this.postUser$(user).subscribe(user => {
-        dbCnt++;
-        if (dbCnt === this.newUserList.length) {
-          this.newUserList = [];
+    let batchUserAddedCount = 0;
+    let startIndex = 0;
+    let chunckSize = 100;
+    while (startIndex < this.newUserList.length) {
+      let tmpArray = Object.assign([], this.newUserList.slice(startIndex, startIndex + chunckSize));
+      startIndex += chunckSize;
+      this.postBulkUsers$(tmpArray).subscribe(users => {
+        batchUserAddedCount += users.length;
+        if (batchUserAddedCount === this.newUserList.length) {
           this.loadData(this.authenticatedUser.org, null);
         }
-      }, err => {
-          
       });
     }
+    /*
+        for (let user of this.newUserList) {
+          this.postBulkUser$(user).subscribe(user => {
+            dbCnt++;
+            if (dbCnt === this.newUserList.length) {
+              this.newUserList = [];
+              this.loadData(this.authenticatedUser.org, null);
+            }
+          }, err => {
+              
+          });
+        }
+        */
     this.updateUser(this.authenticatedUser, false);
   }
 
@@ -527,11 +568,11 @@ export class UserService {
       }
 
       this.sendRegistrationMsg(data.email, this.authenticatedUser.email);
-/*
-      if (reload) {
-        this.loadData(this.authenticatedUser._id, data._id);
-      }
-      */
+      /*
+            if (reload) {
+              this.loadData(this.authenticatedUser._id, data._id);
+            }
+            */
     },
       err => {
         console.log('postUser$ ', err);
@@ -542,7 +583,7 @@ export class UserService {
         }
 
         this.userFailBS$.next(userFail);
-    })
+      })
   }
 
   deleteUser(id: string) {
@@ -558,7 +599,7 @@ export class UserService {
       this.myOrgUserNameListBS$.next(this.myOrgUserNames);
       this.myTeamIdHashBS$.next(this.myTeamIdHash);
       this.myOrgHashBS$.next(this.allOrgUserHash);
-//      this.loadData(this.teamId, null);
+      //      this.loadData(this.teamId, null);
     });
   }
 
@@ -584,7 +625,7 @@ export class UserService {
     } else {
       this.selectedUserBS$.next(this.myTeamIdHash[uid]);
     }
-    this.buildOrgChart(uid, true);
+    //    this.buildOrgChart(uid, true);
   }
 
   updateUser(user: UserModel, reload: boolean) {
@@ -615,6 +656,10 @@ export class UserService {
     return this.myTeamCntBS$.asObservable();
   }
 
+  getDirectReportsStream(): Observable<OrgChartNode[][][][]> {
+    return this.directReportsBS$.asObservable();
+  }
+
   getMyOrgStream(): Observable<OrgChartNode[]> {
     return this.myOrgBS$.asObservable();
   }
@@ -639,6 +684,16 @@ export class UserService {
   postUser$(user: UserModel): Observable<UserModel> {
     return this.http
       .post<UserModel>(`${ENV.BASE_API}user/new/`, user, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+
+  }
+  postBulkUsers$(users: UserModel[]): Observable<UserModel[]> {
+    return this.http
+      .post<UserModel[]>(`${ENV.BASE_API}user/bulknew/`, users, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
       .pipe(
@@ -753,7 +808,7 @@ export class UserService {
   private _handleError(err: HttpErrorResponse | any): Observable<any> {
     const errorMsg = err.error.message || 'Error: Unable to complete request.';
     console.log("_handleError", err);
-//    this.httpErrorBS$.next(err);
+    //    this.httpErrorBS$.next(err);
     if (err.error.message && err.error.message.indexOf('No JWT present') > -1) {
       this.auth.login();
     }

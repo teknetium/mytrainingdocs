@@ -11,7 +11,6 @@ const Training = require("./models/Training");
 const TrainingArchive = require("./models/TrainingArchive");
 const UserTraining = require("./models/UserTraining");
 const User = require("./models/User");
-const UserBulkAdd = require("./models/UserBulkAdd");
 const Assessment = require("./models/Assessment");
 const Event = require("./models/Event");
 const Comment = require("./models/Comment");
@@ -97,7 +96,6 @@ module.exports = function(app, config) {
   const trainingListProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const userTrainingListProjection = "_id tid uid teamId status dueDate timeToDate dateCompleted assessmentResponses trainingVersion";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email emailVerified teamAdmin orgAdmin appAdmin teamId org supervisorId directReports profilePicUrl settings";
-  const userBulkAddProjection = "_id org status jobTitle firstName lastName email supervisorId supervisorName";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const docProjection = '_id productId productVersion author featureName sections images';
@@ -723,57 +721,6 @@ module.exports = function(app, config) {
   });
 
   //
-  // User Bulk Add 
-  //
-  app.get("/api/userbulkadd/:org", (req, res) => {
-    UserBulkAdd.find({ org: req.params.org },
-      userBulkAddProjection, (err, users) => {
-        let usersArr = [];
-        if (err) {
-          return res.status(500).send({ message: err.message });
-        }
-        if (users) {
-          users.forEach(user => {
-            usersArr.push(user);
-          });
-        }
-        res.send(usersArr);
-      });
-  });
-  app.get("/api/userbulkadd/:id", jwtCheck, (req, res) => {
-    UserBulkAdd.findById(req.params.id, userBulkAddProjection, (err, user) => {
-      if (err) {
-        return res.status(500).send({ message: err.message });
-      }
-      if (!user) {
-        return res.status(400).send({ message: "User not found - id : " + req.params.id });
-      }
-      res.send(user);
-    });
-  });
-  app.post("/api/userbulkadd/new", jwtCheck, (req, res) => {
-    const user = new UserBulkAdd({
-      _id: req.body._id,
-      org: req.body.org,
-      status: req.body.status,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      jobTitle: req.body.jobTitle,
-      supervisorId: req.body.supervisorId,
-      supervisorName: req.body.supervisorName,
-
-    });
-    //      user.save((err2) => {
-    UserBulkAdd.create(user, function (err2, userObj) {
-      if (err2) {
-        return res.status(500).send({ message: err2.message });
-      }
-      res.send(userObj);
-    });
-  });
-
-  //
   // User API
   //
   app.get("/api/users/:teamId", (req, res) => {
@@ -880,6 +827,16 @@ module.exports = function(app, config) {
         res.send(userObj);
       });
     });
+  });
+  app.post("/api/user/bulknew", jwtCheck, (req, res) => {
+    const users = req.body;
+
+    User.insertMany(users, { ordered: false }, (err, userIds) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      res.send(userIds);
+    })
   });
   app.put("/api/users/:id", jwtCheck, (req, res) => {
     User.findById(req.params.id, (err, user) => {

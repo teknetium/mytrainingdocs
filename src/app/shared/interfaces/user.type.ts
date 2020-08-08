@@ -13,7 +13,7 @@ export interface UserModel {
   teamAdmin: boolean,
   appAdmin: boolean,
   orgAdmin: boolean,
-  userStatus: 'pending' | 'active' | 'bulk-add-fail',
+  userStatus: 'pending' | 'active' | 'duplicate-email',
   trainingStatus: 'upToDate' | 'pastDue' | 'none',
   jobTitle: string,
   profilePicUrl: string,
@@ -41,12 +41,16 @@ export interface UserFail {
 }
 
 export interface OrgChartNode {
-  name: string,
-  cssClass: string,
-  image: string,
-  extra: {uid:string, reportChain:string[], peopleCnt: number}
-  title: string,
-  childs: OrgChartNode []
+  fName: string;
+  lName: string;
+  cssClass: string;
+  image: string;
+  extra: { uid: string, reportChain: string[], peopleCnt: number };
+  title: string;
+  childs: OrgChartNode[];
+  _id?: string;
+  level?: number;
+  parent?: OrgChartNode;
 }
 
 export interface BuildOrgProgress {

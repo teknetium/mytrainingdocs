@@ -12,7 +12,6 @@ import { UserModel, UserFail, UserIdHash, OrgChartNode, BuildOrgProgress, UserBa
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
 import { JobTitleService } from '../../shared/services/jobtitle.service';
-import { UserBulkAddService } from '../../shared/services/userBulkAdd.service';
 import { MessageModel, TemplateMessageModel } from '../../shared/interfaces/message.type';
 import { takeUntil, filter } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,7 +19,6 @@ import * as cloneDeep from 'lodash/cloneDeep';
 import { BaseComponent } from '../base.component';
 import FlatfileImporter from "flatfile-csv-importer";
 import { JoyrideService } from 'ngx-joyride';
-import { UserBulkAddModel } from 'src/app/shared/interfaces/userBulkAdd.type';
 
 @Component({
   selector: 'app-myteam',
@@ -188,7 +186,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   selectedTrainingId = null;
   allTrainingIdHash$: Observable<TrainingIdHash>;
   allTrainingIdHash: TrainingIdHash = {};
-  newUsers: [{ firstName: string, lastName: string, email: string, jobTitle: string, supervisorName }];
+  newUsers: UserBatchData[] = [];
   supervisorHash = {};
   userNameHash = {};
   authenticatedUserFullName;
@@ -223,6 +221,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   org;
   teamId;
   nodes: OrgChartNode[] = [];
+  directReports: OrgChartNode[][][][];
+  directReports$: Observable<OrgChartNode[][][][]>;
   chartOrientation = 'vertical';
   orgChartFontSize = 2;
   reportChain: string[] = [];
@@ -264,8 +264,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
   batchFails$: Observable<UserBatchData[]>;
   batchFails = [];
-  batchUsers$: Observable<UserBulkAddModel[]>;
-  batchUsers: UserBulkAddModel[];
+  orgSize = 100;
+  usersPerTeam = 5;
+  currentHoverUid = '';
+  currentHoverReportChain = [];
+  allActive = false;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -273,7 +276,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private userService: UserService,
     private mailService: SendmailService,
     private trainingService: TrainingService,
-    private userBulkAddService: UserBulkAddService,
     private jobTitleService: JobTitleService,
     private userTrainingService: UserTrainingService,
     private joyrideService: JoyrideService,
@@ -281,7 +283,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private router: Router
   ) {
     super();
-    this.batchUsers$ = this.userBulkAddService.getUserBulkAddStream();
+    this.directReports$ = this.userService.getDirectReportsStream();
     this.batchFails$ = this.userService.getBatchUserFailsStream();
     this.userFail$ = this.userService.getUserFailStream();
     this.myOrgUsers$ = this.userService.getMyOrgUserNameListStream();
@@ -338,19 +340,20 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.trainingService.assignTrainingsForJobTitle(newUser.jobTitle, newUser._id, newUser.teamId);
     });
     */
-    this.batchUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(users => {
-      if (!users) {
-        return;
-      }
-      this.batchUsers = users;
-    });
-
     this.batchFails$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(failList => {
       if (!failList) {
         return;
       }
 
       this.batchFails = failList;
+    });
+    this.directReports$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(directReports => {
+      if (!directReports) {
+        return;
+      }
+
+      this.directReports = directReports;
+      console.log('supervisors', this.directReports);
     });
 
     this.buildOrgProgress$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgProgress => {
@@ -375,7 +378,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       let bulkAddFailFound = false;
       for (let user of myOrgUserObjects) {
         this.myOrgUserNameHash[user.firstName + ' ' + user.lastName] = user;
-        if (user.userStatus === 'bulk-add-fail') {
+        if (user.userStatus === 'duplicate-email') {
           bulkAddFailFound = true;
           this.bulkAddFail = true;
         }
@@ -523,12 +526,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         name: this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName
       });
       
-      this.userBulkAddService.getUsersBulkAdd$(this.authenticatedUser.org).subscribe(bulkAddUsers => {
-        if (!bulkAddUsers) {
-          return;
-        }
-        this.batchUsers = bulkAddUsers;
-      })
 
       this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
         this.uid = params.get('uid');
@@ -563,11 +560,53 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     })
   }
 
+  testBulkAdd() {
+    let base = String(new Date().getTime());
+    let currentSupervisor = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
+    let supervisorCnt = 1;
+    for (let i = 1; i < this.orgSize; i++) {
+      let user: UserBatchData = {
+        firstName: 'first-' + i,
+        lastName: 'last-' + i,
+        email: 'email' + i + '@test.com',
+        jobTitle: 'jobTitle' + i % 10,
+        supervisorName: currentSupervisor
+      }
+      if (i % this.usersPerTeam === 0) {
+        supervisorCnt++;
+        currentSupervisor = 'first-' + i + ' ' + 'last-' + i;
+      }
+      this.newUsers.push(cloneDeep(user));
+    }
+    console.log('New Users ', this.newUsers);
+    this.userService.createNewUsersFromBatch(this.newUsers, true);
+    }
+
   increaseFontSize() {
     this.orgChartFontSize += 1;
   }
   decreaseFontSize() {
     this.orgChartFontSize -= 1;
+  }
+  
+  setHoverData(node: OrgChartNode) {
+    if (!node) {
+      this.currentHoverUid = '';
+      this.currentHoverReportChain = [];
+      return;
+    }
+    this.currentHoverUid = node.extra.uid;
+    this.currentHoverReportChain = node.extra.reportChain;
+  }
+
+  setAuthenticatedUserHover(allActive: boolean) {
+    if (allActive) {
+      this.currentHoverUid = this.authenticatedUser._id;
+      this.allActive = true;
+    } else {
+      this.currentHoverUid = '';
+      this.allActive = false;
+    }
   }
 
   checkUniqueEmail(data) {
@@ -638,7 +677,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.results = JSON.stringify(results.validData, null, 2);
 
       this.newUsers = JSON.parse(this.results);
-      this.userService.createNewUsersFromBatch(this.newUsers);
+      this.userService.createNewUsersFromBatch(this.newUsers, false);
       //        this.trainingService.assignTrainingsForJobTitle(this.newTeamMember.jobTitle, this.newTeamMember._id, this.newTeamMember.teamId);
       //        this.newUsers = [{ firstName: '', lastName: '', email: '', jobTitle: '', supervisorName: '' }];
     } catch (e) {
@@ -786,9 +825,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.userPanelVisible = false;
     let supervisorObj = this.myOrgUserNameHash[this.supervisorName];
     if (this.selectedUser.supervisorId !== supervisorObj._id) {
-      if (this.selectedUser.userStatus === 'bulk-add-fail') {
-        this.selectedUser.userStatus = 'active';
-      }
       this.selectedUser.supervisorId = supervisorObj._id;
       this.selectedUser.teamId = supervisorObj._id;
       supervisorObj.directReports.push(this.selectedUser._id);
@@ -801,6 +837,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   selectUser(userId) {
     console.log('selectUser', userId);
+
     this.userService.selectUser(userId);
   }
 
