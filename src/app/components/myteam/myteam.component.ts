@@ -120,7 +120,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   userTrainingStatusColorHash = {
     upToDate: '#52c41a',
     pastDue: 'red',
-    none: 'black'
+    none: '#aaaaaa'
   }
   includeNewSupervisorsTeam = true;
   isNewSupervisorPanelOpen = false;
@@ -268,7 +268,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   usersPerTeam = 5;
   currentHoverUid = '';
   currentHoverReportChain = [];
+  currentSelectedReportChain = [];
   allActive = false;
+  orgChartNodeHash = {};
+  orgChartFullscreen = false;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -353,7 +356,21 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
 
       this.directReports = directReports;
-      console.log('supervisors', this.directReports);
+      for (let dr of this.directReports) {
+        if (dr) {
+          for (let level of dr) {
+            if (level) {
+              for (let team of level) {
+                if (team) {
+                  for (let node of team) {
+                    this.orgChartNodeHash[node.extra.uid] = node;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     });
 
     this.buildOrgProgress$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgProgress => {
@@ -480,12 +497,17 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         return;
       }
       this.userIdSelected = user._id;
+
       this.selectedUser = user;
       if ((user.supervisorId && this.myOrgUserHash[user.supervisorId]) && (this.authenticatedUser && user._id !== this.authenticatedUser._id)) {
         this.supervisorName = this.myOrgUserHash[user.supervisorId].firstName + ' ' + this.myOrgUserHash[user.supervisorId].lastName;
       }
       this.reportChain = Object.assign([], this.uidReportChainHash[this.selectedUser._id]);
       this.trainingService.selectTraining(null);
+      if (this.orgChartNodeHash[this.userIdSelected]) {
+        this.currentSelectedReportChain = this.orgChartNodeHash[this.userIdSelected].extra.reportChain;
+      }
+      this.userService.buildOrgChart(this.authenticatedUser._id, false);
     });
 
     this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
@@ -525,7 +547,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         userId: this.authenticatedUser._id,
         name: this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName
       });
-      
+
 
       this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
         this.uid = params.get('uid');
@@ -556,7 +578,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     })
 
     this.userFail$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userFail => {
-      
+
     })
   }
 
@@ -580,7 +602,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
     console.log('New Users ', this.newUsers);
     this.userService.createNewUsersFromBatch(this.newUsers, true);
-    }
+  }
 
   increaseFontSize() {
     this.orgChartFontSize += 1;
@@ -588,15 +610,15 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   decreaseFontSize() {
     this.orgChartFontSize -= 1;
   }
-  
-  setHoverData(node: OrgChartNode) {
-    if (!node) {
+
+  setHoverData(uid: string) {
+    if (!uid) {
       this.currentHoverUid = '';
       this.currentHoverReportChain = [];
       return;
     }
-    this.currentHoverUid = node.extra.uid;
-    this.currentHoverReportChain = node.extra.reportChain;
+    this.currentHoverUid = uid;
+    this.currentHoverReportChain = this.orgChartNodeHash[uid].extra.reportChain;
   }
 
   setAuthenticatedUserHover(allActive: boolean) {
@@ -620,7 +642,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     },
       err => {
         this.emailUnique = true;
-    })
+      })
   }
 
   selectReportChainItem(uid) {
@@ -823,21 +845,41 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   handleUpdateUser() {
     this.userPanelVisible = false;
-    let supervisorObj = this.myOrgUserNameHash[this.supervisorName];
-    if (this.selectedUser.supervisorId !== supervisorObj._id) {
-      this.selectedUser.supervisorId = supervisorObj._id;
-      this.selectedUser.teamId = supervisorObj._id;
-      supervisorObj.directReports.push(this.selectedUser._id);
-      this.authenticatedUser.directReports.splice(this.authenticatedUser.directReports.indexOf(this.selectedUser._id), 1);
-      this.userService.updateUser(this.authenticatedUser, false);
-      this.userService.updateUser(supervisorObj, false);
+    let newSupervisorObj = this.myOrgUserNameHash[this.supervisorName];
+    let currentSupervisorObj = this.myOrgUserHash[this.selectedUser.supervisorId];
+    if (this.selectedUser.supervisorId !== newSupervisorObj._id) {
+      this.selectedUser.supervisorId = newSupervisorObj._id;
+      this.selectedUser.teamId = newSupervisorObj._id;
+      newSupervisorObj.directReports.push(this.selectedUser._id);
+      currentSupervisorObj.directReports.splice(currentSupervisorObj.directReports.indexOf(this.selectedUser._id), 1);
+      this.myTeam.splice(this.myTeam.indexOf(this.selectedUser), 1);
+      this.userService.updateUser(currentSupervisorObj, false);
+      this.userService.updateUser(newSupervisorObj, false);
+      if (newSupervisorObj._id === this.authenticatedUser._id) {
+        this.myTeam.push(newSupervisorObj);
+      }
     }
     this.userService.updateUser(this.selectedUser, false);
+    this.userService.buildOrgChart(this.authenticatedUser._id, false);
+  }
+
+  isFirst(index) {
+    if (index === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isLast(list, index) {
+    if (index === list.length - 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   selectUser(userId) {
-    console.log('selectUser', userId);
-
     this.userService.selectUser(userId);
   }
 

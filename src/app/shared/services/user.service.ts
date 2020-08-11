@@ -266,8 +266,8 @@ export class UserService {
         userList = [];
       }
 
-      userList = userList.concat(this.newUserList);
-      console.log('loadData : after merging with this.newUserLst', userList);
+//      userList = userList.concat(this.newUserList);
+//      console.log('loadData : after merging with this.newUserLst', userList);
 
       this.myTeam = [];
       this.supervisorUids = [[[]]];
@@ -312,9 +312,9 @@ export class UserService {
 
       this.nodes = [];
       let rootNode;
+      this.directReports = [[[[]]]];
       this.buildOrgChart(this.authenticatedUser._id, false);
       this.nodes.push(rootNode);
-      this.directReportsBS$.next(this.directReports);
       this.myOrgBS$.next(this.nodes);
       this
     });
@@ -324,6 +324,7 @@ export class UserService {
     if (!this.allOrgUserHash[uid]) {
       return;
     }
+    this.directReports = [[[[]]]];
     this.nodes = [];
     let rootNode: OrgChartNode = {
       _id: this.authenticatedUser._id,
@@ -345,14 +346,13 @@ export class UserService {
     this.levelIndex[orgLevel] = 0;
     let reportChain = [uid];
     this.reportChainNodeHash[uid] = rootNode;
-//    this.supervisors[orgLevel][0].push(rootNode);
+
     this.supervisors[orgLevel] = [];
     this.supervisors[orgLevel][0] = [];
     for (let i = 0; i < this.allOrgUserHash[uid].directReports.length; i++) {
       let levelIndexArray: number[] = Object.assign([], this.levelIndex);
       let orgTree: OrgChartNode[][][] = cloneDeep(this.supervisors);
       this.directReports.push(orgTree);
-      //    for (let dR of this.allOrgUserHash[uid].directReports) {
       let node = this.buildUserNode(this.allOrgUserHash[uid].directReports[i], Object.assign([], reportChain), orgLevel, i, levelIndexArray, orgTree);
       rootNode.childs.push(node);
       if (!orgTree[orgLevel][levelIndexArray[orgLevel]]) {
@@ -367,6 +367,7 @@ export class UserService {
     if (!subChart) {
       this.uidReportChainHashBS$.next(Object.assign({}, this.uidReportChainHash));
     }
+    this.directReportsBS$.next(this.directReports);
   }
 
   buildUserNode(userId: string, reportChain: string[], level: number, myLevelIndex: number, levelIndexArray: number[], orgTree: OrgChartNode[][][]): OrgChartNode {
@@ -412,7 +413,7 @@ export class UserService {
 
     for (let i = 0; i < user.directReports.length; i++) {
       userNode.extra.peopleCnt++;
-//      userNode.level = myLevelIndex;
+      //      userNode.level = myLevelIndex;
 
       let node = this.buildUserNode(user.directReports[i], Object.assign([], newReportChain), level, levelIndexArray[level], levelIndexArray, orgTree);
       userNode.childs.push(node);
@@ -623,7 +624,7 @@ export class UserService {
     if (!uid) {
       this.selectedUserBS$.next(null);
     } else {
-      this.selectedUserBS$.next(this.myTeamIdHash[uid]);
+      this.selectedUserBS$.next(this.allOrgUserHash[uid]);
     }
     //    this.buildOrgChart(uid, true);
   }
@@ -631,7 +632,7 @@ export class UserService {
   updateUser(user: UserModel, reload: boolean) {
     this.action = 'save';
     this.putUser$(user).subscribe((updatedUser) => {
-      console.log('updateUser', updatedUser);
+      this.buildOrgChart(this.authenticatedUser._id, false);
       if (reload) {
         this.loadData(this.teamId, user._id);
       }

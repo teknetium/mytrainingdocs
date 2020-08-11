@@ -53,13 +53,9 @@
     border-bottom:1px solid #dddddd;
     color: #999999;
 }
-.user-button:hover {
-    color:#444444;
-    background-color: #f9f9f9;
-}
 
 .selected-training {
-    background-color: #dddddd;
+    background-color: #f7f7f7;
 }
 
 
@@ -68,7 +64,7 @@
     margin-top:2px;
 }
 .all-training-list-entry:hover {
-    background-color: #e0eafd;
+    background-color: #f7f7f7;
 }
 
 
@@ -195,13 +191,28 @@
     background-color: #f1f1f1 !important;
 }
 
-.active-node {
-    background-color: #eeeeee !important;
+.fullscreen {
+    position: fixed !important;
+    background-color: white;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    width:100%;
+    height:100%;
+}
+
+.hover-node {
+    background-color: #fdfbe1 !important;
     opacity: 1.0 !important;
 }
 
 .inactive-node {
     background-color: white;
+}
+
+.selected-node {
+    background-color: #e0f4ff;
 }
 
 .report-chain {
@@ -219,6 +230,6 @@
 }
 
 .user-selected {
-    background-color: #f9f9f9;
+    background-color: #e0f4ff;
     color: #444444;
 }
