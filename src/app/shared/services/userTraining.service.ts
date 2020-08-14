@@ -37,15 +37,17 @@ export class UserTrainingService {
 
   selectUser(id) {
     this.getUTForUser$(id).subscribe(userTrainings => {
-      console.log('userTrainingService: ', userTrainings);
       this.userTrainings$BS.next(userTrainings);
       this.uidUTHash[id] = userTrainings;
-      this.uidUTHashBS$.next(this.uidUTHash);
+//      this.uidUTHashBS$.next(this.uidUTHash);
     })
   }
 
   initUserTrainingsForUser(uid) {
     let now = new Date().getTime();
+    if (this.uidUTHash[uid]) {
+      return;
+    }
     this.getUTForUser$(uid).subscribe(utList => {
       this.uidUTHash[uid] = utList;
       for (let userTraining of utList) {
@@ -71,7 +73,7 @@ export class UserTrainingService {
     return this.sessionLogBS$.asObservable();
   }
 
-  getUidUTHashStream() {
+  getUidUTHashStream(): Observable<UidUTHash> {
     return this.uidUTHashBS$.asObservable();
   }
 
@@ -295,9 +297,9 @@ export class UserTrainingService {
           this.deleteUserTraining(ut._id, uid);
           utList.splice(utList.indexOf(ut), 1);
           this.uidUTHash[uid] = utList;
-          this.uidUTHashBS$.next(this.uidUTHash);
         }
       }
+      this.uidUTHashBS$.next(this.uidUTHash);
     })
   }
 

@@ -1,578 +1,536 @@
 <div *ngIf="authenticatedUser" style="height:100%;">
-    <div class="my-team" style="height:100%;">
-        <div *ngIf="myTeam && myTeam.length > 0" style="height:95%;" (drop)="drop($event)"
-            (dragover)="allowDrop($event)">
-            <div class="team-container" [ngStyle]="{'width.%': teamContainerWidth}" style="position: relative;">
-                <i nz-icon nzType="question-circle" nzTheme="twotone"
-                    style="cursor:pointer;position:absolute;top:0;left:0;font-size:20px;color:#000000;"
-                    (click)="startTour('myTeam')" nz-tooltip nzTooltipTitle="A little help"
-                    text="This page is packed full of exciting features.  Let's go through them..."></i>
-                <div class="direct-report-container" joyrideStep="Step1-myTeam" stepPosition="right"
-                    title="Team Members" text="This section contains 4 functional areas to help you manage your team.">
-                    <div>
-                        <span style="font-size:24px;">Team Members</span>
-                        <hr style="margin-bottom:10px 0;">
+    <div style="position:relative;width:100%;">
+        <div
+            style="margin-left:-20px;margin-top:-20px;margin-right:-20px;padding:0 20px;margin-bottom: 30px;background-color: #f9f9f9;border:1px solid #dddddd;padding:10px;">
+            <div>
+                <div style="float:left;">
+                    <button nz-button nzShape="round" (click)="launchImporter()" nzType="primary"
+                        style="float:left;margin-right:10px;">
+                        Add Users
+                    </button>
+                </div>
+                <div style="float:right;margin-left:30%;">
+                    <nz-radio-group [(ngModel)]="showOrgChart" (ngModelChange)="toggleMainView($event)">
+                        <label nz-radio-button nzValue="true" nz-tooltip nzTooltipTitle="Org Chart"><i nz-icon
+                                nzType="apartment" nzTheme="outline" style="font-size:18px;"></i></label>
+                        <label nz-radio-button nzValue="false" nz-tooltip nzTooltipTitle="List"><i nz-icon
+                                nzType="unordered-list" nzTheme="outline" style="font-size:18px;"></i></label>
+                    </nz-radio-group>
+                </div>
+                <div style="float:right;" joyrideStep="Step3-myTeam" stepPosition="right" title="User Search"
+                    text="Search for a user in your organization.">
+                    <div style="float:left;width:400px;">
+                        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                            <input type="text" nzSize="small" nz-input placeholder="input search text"
+                                [(ngModel)]="userNameToSearchFor" (ngModelChange)="onUserSearchChange($event)"
+                                [nzAutocomplete]="autoUserSearch" />
+                        </nz-input-group>
+                        <nz-autocomplete [nzDataSource]="matchingUsers" #autoUserSearch></nz-autocomplete>
+                        <ng-template #suffixIconButton>
+                            <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+                        </ng-template>
                     </div>
-
-                    <div style="display:block;margin-bottom:20px;" joyrideStep="Step2-myTeam" stepPosition="right"
-                        title="Add Users"
-                        text="Add users one at a time or use our bulk add facility to add your entire team or organization with just a couple of clicks.">
-                        <button nz-button nzShape="round" nzSize="small" (click)="addUser()" nzType="default"
-                            class='lbButton' style="float:left;">
-                            <i nz-icon nzType="user-add" [nzTheme]="'outline'"
-                                style="display:inline-block;font-size:18px;vertical-align:baseline;"></i>Add User
-                        </button>
-                        <button nz-button nzShape="round" (click)="launchImporter()" nzSize="small" nzType="primary"
-                            class="lbButton" style="float:right;margin-right:10px;">
-                            <i nz-icon nzType="usergroup-add" [nzTheme]="'outline'"
-                                style="display:inline-block;font-size:18px;vertical-align:baseline;"></i>Bulk Add
-                        </button>
-                        <div style="clear:both;"> </div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div *ngIf="showOrgChart !== 'true'" style="padding:20px;">
+            <div style="width:100%;margin-bottom: 5px;height:45px;">
+                <div style="float:left;">
+                    <nz-radio-group [(ngModel)]="showTeam" (ngModelChange)="toggleListView($event)">
+                        <label nz-radio-button nzValue="false">My Org</label>
+                        <label nz-radio-button nzValue="true">My Team</label>
+                    </nz-radio-group>
+                </div>
+                <span style="float:right;line-height: 45px;vertical-align: baseline;">1 - {{userList.length}}</span>
+                <div style="clear:both;"></div>
+            </div>
+            <nz-table #nestedTable [nzData]="userList" nzPageSize="10000" nzShowRowSelection="true"
+                nzShowPagination="false" nzSize="small" [nzScroll]="{ y: '450px' }"
+                style="width:100%;background-color: #fafafa;font-size:12px;font-size:12px;display:inline-block;margin-bottom:20px;">
+                <thead nzSingleSort>
+                    <tr style="background-color: #fafafa;">
                         <!--
-                        <div>
-                            <nz-input-number style="float:left;margin-right:10px;" [(ngModel)]="orgSize" [nzMin]="100"
-                                [nzMax]="10000" [nzStep]="50">
-                            </nz-input-number>
-                            <nz-input-number style="float:left;margin-right:10px;" [(ngModel)]="usersPerTeam"
-                                [nzMin]="1" [nzMax]="20" [nzStep]="1">
-                            </nz-input-number>
-                            <button nz-button nzShape="round" (click)="testBulkAdd()" nzSize="small" nzType="primary"
-                                style="float:left;margin-right:10px;">run</button>
-                        </div>
+                    <th nzShowExpand></th>
+                    -->
+                        <th nzShowSort [nzFilters]="listOfTrainingStatus"
+                            (nzFilterChange)="filter($event, searchAddress)" nzShowFilter style="width:10%;">Training
+                            Status</th>
+                        <th nzShowSort style="width:25%;">Name</th>
+                        <th nzShowSort style="width:15%;">User Type</th>
+                        <th nzShowSort style="width:10%;"> Job Title</th>
+                        <th nzShowSort style="width:25%;">Trainings</th>
+                        <!--
+                        <th style="width:15%;text-align: center;">Actions</th>
                         -->
-
-                        <div *ngIf="bulkAdd" style="margin:10px 0;">
-                            <div style="float:left;width:50%;">
-                                <nz-progress [nzPercent]="(orgProgress.usersAdded / orgProgress.usersTotal) * 100"
-                                    nzType="circle" [nzWidth]="30" style="float:left;">
-                                </nz-progress>
-                                <span
-                                    style="display: inline-block;font-size:18px;">{{ orgProgress.usersAdded }}</span>&nbsp;
-                                <span style="display: inline-block;font-size:10px;">Users Added</span>
-                            </div>
-                            <div style="float:right;width:50%;">
-                                <nz-progress
-                                    [nzPercent]="(orgProgress.supervisorMatchFail.length / orgProgress.usersTotal) * 100"
-                                    nzType="circle" [nzWidth]="30" nzStatus="exception" style="float:left;">
-                                </nz-progress>
-                                <span
-                                    style="display: inline-block;font-size:18px;">{{ orgProgress.supervisorMatchFail.length }}</span>&nbsp;
-                                <span style="display: inline-block;font-size:10px;">Processing Failure</span>
-                            </div>
-                            <div style="clear:both;"></div>
-                        </div>
-                    </div>
-                    <div style="display:block;margin-bottom:20px;padding-right:10px;" joyrideStep="Step3-myTeam"
-                        stepPosition="right" title="User Search" text="Search for a user in your organization.">
-                        <div style="float:left;width:85%;">
-                            <input style="color:#000000;margin-bottom:0;font-size:14px;width:100%;" nz-input
-                                placeholder="User Search" [(ngModel)]="userNameToSearchFor" nzSize="small"
-                                (ngModelChange)="onUserSearchChange($event)" [nzAutocomplete]="autoUserSearch" />
-                            <nz-autocomplete [nzDataSource]="matchingUsers" #autoUserSearch></nz-autocomplete>
-                        </div>
-                        <button nz-button nzShape="circle" [disabled]="!showAddToUserListButton" nz-tooltip
-                            nzTooltipTitle="View this User" (click)="addFoundUser()"
-                            style="float:right;vertical-align: middle;margin-top:2px;">
-                            <i nz-icon nzType="eye" [nzTheme]="'outline'"
-                                style="font-size:18px;vertical-align:baseline;"></i>
-                        </button>
-                        <div style="clear:both;"></div>
-                    </div>
-                    <div>
-                        <div style="padding-right:10px;text-align: center;" joyrideStep="Step4-myTeam"
-                            stepPosition="right" title="Filters"
-                            text="These filters control which users show up in the list and which trainings show up for each user.">
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-template ngFor let-data [ngForOf]="nestedTable.data" let-i="index">
+                        <tr style="font-size:12px;background-color: white;line-height:10px;"
+                            (mouseenter)="hoverUid = data._id" (mouseleave)="hoverUid = null"
+                            [ngClass]="{'row-selected': rowSelected === i}" (click)="selectUser(data._id, i)">
+                            <!--
+                        <td nzShowExpand [(nzExpand)]="data.expand"></td>
+                        -->
+                            <td (click)="selectUser(data._id, i)" [ngClass]="{'row-selected': rowSelected === i}"
+                                style="width:10%;">
+                                <i [ngClass]="userTypeIconHash[data.userType]"
+                                    style="font-size:18px;display:inline-block;"
+                                    [ngStyle]="{'color': userTrainingStatusColorHash[data.trainingStatus], 'font-size.px': iconFontSize}"
+                                    nz-tooltip [nzTooltipTitle]=""></i>
+                            </td>
+                            <td (click)="selectUser(data._id, i)" [ngClass]="{'row-selected': rowSelected === i}"
+                                style="width:25%;">
+                                {{data.firstName}} {{data.lastName}}
+                            </td>
+                            <td (click)="selectUser(data._id, i)" [ngClass]="{'row-selected': rowSelected === i}"
+                                style="width:15%;">
+                                {{data.userType}}
+                            </td>
+                            <td (click)="selectUser(data._id, i)" [ngClass]="{'row-selected': rowSelected === i}"
+                                style="width:10%;">
+                                {{data.jobTitle}}
+                            </td>
+                            <td (click)="selectUser(data._id, i)" [ngClass]="{'row-selected': rowSelected === i}"
+                                style="width:25%;">
+                                <div *ngFor="let ut of uidUTHash[data._id]" style="float:right;margin-left:10px;">
+                                    <i [ngClass]="allTrainingIdHash[ut.tid].iconClass"
+                                        style="font-size:20px;text-align: center;vertical-align: middle;" nz-tooltip
+                                        [nzTooltipTitle]="allTrainingIdHash[ut.tid].title"
+                                        [ngStyle]="{'color': allTrainingIdHash[ut.tid].iconColor}">
+                                    </i>
+                                </div>
+                            </td>
+                            <!--
+                            <td (click)="selectUser(data._id, i)" [ngClass]="{'row-selected': rowSelected === i}"
+                                style="width:15%;">
+                                <div *ngIf="data._id === hoverUid || rowSelected === i" style="float:right;">
+                                    <i nz-icon nzType="edit" [nzTheme]="'twotone'" class="action" (click)="editUser()"
+                                        nz-tooltip nzTooltipTitle="Edit Profile">
+                                    </i>
+                                    <i nz-icon nzType="plus-circle" [nzTheme]="'twotone'" class="action"
+                                        (click)="showUserTrainingModal = true" nz-tooltip
+                                        nzTooltipTitle="Assign a Training">
+                                    </i>
+                                    <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
+                                        class="action" nz-popconfirm nzPopconfirmTitle="Delete this Training?"
+                                        [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'top'"
+                                        (nzOnConfirm)="deleteTraining(data._id)" nz-tooltip
+                                        nzTooltipTitle="Delete User">
+                                    </i>
+                                </div>
+                            </td>
+                            -->
+                        </tr>
+                        <!--
+                        <tr [nzExpand]="data.expand" style="background-color: #fffcf1;border:1px solid #e7c076">
+                            <td
+                                style="border-top:1px solid #e7c076;border-left:1px solid #e7c076;border-bottom:1px solid #e7c076;">
+                            </td>
+                            <td colspan="8"
+                                style="border-top:1px solid #e7c076;border-right:1px solid #e7c076;border-bottom:1px solid #e7c076;padding-right:10px;">
+                                <app-user-trainings logSession="off" production="off" [uid]="data._id" mode="admin">
+                                </app-user-trainings>
+                            </td>
+                        </tr>
+                        -->
+                    </ng-template>
+                </tbody>
+            </nz-table>
+        </div>
+        <div *ngIf="showOrgChart === 'true'" style="position: relative;">
+            <i nz-icon nzType="question-circle" nzTheme="twotone"
+                style="cursor:pointer;position:fixed;top:140px;left:20;font-size:20px;color:#000000;"
+                (click)="startTour('orgChart')" nz-tooltip nzTooltipTitle="A little help"></i>
+            <!--
+        <i *ngIf="orgChartFullscreen" nz-icon nzType="zoom-in" nzTheme="outline"
+            style="cursor:pointer;position:absolute;top:20px;right:50px;font-size:20px;color:#000000;"
+            (click)="zoomIn()"></i>
+        <i *ngIf="orgChartFullscreen" nz-icon nzType="zoom-out" nzTheme="outline"
+            style="cursor:pointer;position:absolute;top:20px;right:80px;font-size:20px;color:#000000;"
+            (click)="zoomOut()"></i>
+            -->
+            <!--
+        <div style="display: flex;justify-content:space-between;width:100%;margin-bottom:20px;">
+            <div style="width:33%;padding-right:10px;text-align: center;" joyrideStep="Step4-myTeam"
+                stepPosition="right" title="Filters"
+                text="These filters control which users show up in the list and which trainings show up for each user.">
+                < !--
                             <span style="font-size:20px;margin-bottom:40px;">Filters</span>&nbsp;&nbsp;
                             <span style="font-size:10px;">(click to toggle)</span>
-                            <!--
-                            <div *ngIf="bulkAddFail" style="text-align: center;width:100%;">
-                                <div class="filter-item" (click)="toggleFilter('bulk-add-fail')"
-                                    [ngClass]="{'showing': showBulkAddFail, 'not-showing': !showBulkAddFail}" nz-tooltip
-                                    nzTooltipTitle="" style="width:100%;padding:10px 0;">
-                                    <i nz-icon nzType="usergroup-add" [nzTheme]="'outline'"
-                                        style="color:red;font-size:20px;" nz-tooltip
-                                        nzTooltipTitle="Show only users that failed during the Bulk Add process."></i>
-                                    <span style="font-size:10px;">(show only)</span>
-                                </div>
-                            </div>
-                            -->
+                            -- >
+                <div style="clear:both;display: flex;justify-content:space-between;margin:20px 0;font-size:16px;">
+                    <div style="">
+                        <div class="filter-item" (click)="toggleFilter('none')"
+                            [ngClass]="{'showing': showNone, 'not-showing': !showNone}" nz-tooltip
+                            nzTooltipTitle="Users who have NO assigned trainings">
+                            <i class="fad fa-user" style="color:#aaaaaa;"></i>
+                        </div>
+                        <div class="filter-item" (click)="toggleFilter('up-to-date')"
+                            [ngClass]="{'showing': showUpToDate, 'not-showing': !showUpToDate}" nz-tooltip
+                            nzTooltipTitle="Users who have NO past due trainings">
+                            <i class="fad fa-user" style="color:#75c140"></i>
+                        </div>
+                        <div class="filter-item" (click)="toggleFilter('past-due')"
+                            [ngClass]="{'showing': showPastDue, 'not-showing': !showPastDue}" nz-tooltip
+                            nzTooltipTitle="Users with at least one Past Due training">
+                            <i class="fad fa-user" style="color:red;"></i>
+                        </div>
+                    </div>
+                    <div style="">
+                        <div class="filter-item" (click)="toggleFilter('individual-contributor')"
+                            [ngClass]="{'showing': showIndividualContributors, 'not-showing': !showIndividualContributors}"
+                            nz-tooltip nzTooltipTitle="Individual Contributors">
+                            <i class="fad fa-user" style="color:#000000"></i>
+                        </div>
+                        <div class="filter-item" (click)="toggleFilter('supervisor')"
+                            [ngClass]="{'showing': showSupervisors, 'not-showing': !showSupervisors}" nz-tooltip
+                            nzTooltipTitle="Supervisors">
+                            <i class="fad fa-user-tie" style="color:#000000;"></i>
+                        </div>
+                        <div class="filter-item" (click)="toggleFilter('volunteer')"
+                            [ngClass]="{'showing': showVolunteers, 'not-showing': !showVolunteers}" nz-tooltip
+                            nzTooltipTitle="Volunteers">
+                            <i class="fad fa-user-cowboy" style="color:#000000;"></i>
+                        </div>
+                        <div class="filter-item" (click)="toggleFilter('customer')"
+                            [ngClass]="{'showing': showCustomers, 'not-showing': !showCustomers}" nz-tooltip
+                            nzTooltipTitle="Customers">
+                            <i class="fad fa-user-crown" style="color:#000000;"></i>
+                        </div>
+                    </div>
+                    <div style="">
+                        <div class="filter-item" (click)="toggleFilter('trainingUpToDate')"
+                            [ngClass]="{'showing': showUpToDateTrainings, 'not-showing': !showUpToDateTrainings}"
+                            nz-tooltip nzTooltipTitle="In Progress Trainings">
+                            <i nz-icon nzType="smile" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+                                style="vertical-align: middle;"></i>
+                        </div>
+                        <div class="filter-item" (click)="toggleFilter('trainingCompleted')"
+                            [ngClass]="{'showing': showCompletedTrainings, 'not-showing': !showCompletedTrainings}"
+                            nz-tooltip nzTooltipTitle="Completed Trainings">
+                            <i nz-icon nzType="check-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#4891f7'"
+                                style="vertical-align: middle;"></i>
+                        </div>
+                        <div class="filter-item" (click)="toggleFilter('trainingPastDue')"
+                            [ngClass]="{'showing': showPastDueTrainings, 'not-showing': !showPastDueTrainings}"
+                            nz-tooltip nzTooltipTitle="Past Due Trainings">
+                            <i nz-icon nzType="exclamation-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
+                                style="vertical-align: middle;"></i>
+                        </div>
+                    </div>
+                    <div style="">
+                        <div class="filter-item" (click)="toggleFilter('onetime')"
+                            [ngClass]="{'showing': showOnetime, 'not-showing': !showOnetime}" nz-tooltip
+                            nzTooltipTitle="One-time Trainings" style="padding-top:5px;">
                             <div
-                                style="clear:both;display: flex;justify-content:space-between;margin:20px 0;font-size:16px;">
-                                <div style="">
-                                    <div class="filter-item" (click)="toggleFilter('none')"
-                                        [ngClass]="{'showing': showNone, 'not-showing': !showNone}" nz-tooltip
-                                        nzTooltipTitle="Users who have NO assigned trainings">
-                                        <i class="fad fa-user" style="color:#aaaaaa;"></i>
-                                    </div>
-                                    <div class="filter-item" (click)="toggleFilter('up-to-date')"
-                                        [ngClass]="{'showing': showUpToDate, 'not-showing': !showUpToDate}" nz-tooltip
-                                        nzTooltipTitle="Users who have NO past due trainings">
-                                        <i class="fad fa-user" style="color:#75c140"></i>
-                                    </div>
-                                    <div class="filter-item" (click)="toggleFilter('past-due')"
-                                        [ngClass]="{'showing': showPastDue, 'not-showing': !showPastDue}" nz-tooltip
-                                        nzTooltipTitle="Users with at least one Past Due training">
-                                        <i class="fad fa-user" style="color:red;"></i>
-                                    </div>
-                                </div>
-                                <div style="">
-                                    <div class="filter-item" (click)="toggleFilter('individual-contributor')"
-                                        [ngClass]="{'showing': showIndividualContributors, 'not-showing': !showIndividualContributors}"
-                                        nz-tooltip nzTooltipTitle="Individual Contributors">
-                                        <i class="fad fa-user" style="color:#000000"></i>
-                                    </div>
-                                    <div class="filter-item" (click)="toggleFilter('supervisor')"
-                                        [ngClass]="{'showing': showSupervisors, 'not-showing': !showSupervisors}"
-                                        nz-tooltip nzTooltipTitle="Supervisors">
-                                        <i class="fad fa-user-tie" style="color:#000000;"></i>
-                                    </div>
-                                    <div class="filter-item" (click)="toggleFilter('volunteer')"
-                                        [ngClass]="{'showing': showVolunteers, 'not-showing': !showVolunteers}"
-                                        nz-tooltip nzTooltipTitle="Volunteers">
-                                        <i class="fad fa-user-cowboy" style="color:#000000;"></i>
-                                    </div>
-                                    <div class="filter-item" (click)="toggleFilter('customer')"
-                                        [ngClass]="{'showing': showCustomers, 'not-showing': !showCustomers}" nz-tooltip
-                                        nzTooltipTitle="Customers">
-                                        <i class="fad fa-user-crown" style="color:#000000;"></i>
-                                    </div>
-                                </div>
-                                <div style="">
-                                    <div class="filter-item" (click)="toggleFilter('trainingUpToDate')"
-                                        [ngClass]="{'showing': showUpToDateTrainings, 'not-showing': !showUpToDateTrainings}"
-                                        nz-tooltip nzTooltipTitle="In Progress Trainings">
-                                        <i nz-icon nzType="smile" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-                                            style="vertical-align: middle;"></i>
-                                    </div>
-                                    <div class="filter-item" (click)="toggleFilter('trainingCompleted')"
-                                        [ngClass]="{'showing': showCompletedTrainings, 'not-showing': !showCompletedTrainings}"
-                                        nz-tooltip nzTooltipTitle="Completed Trainings">
-                                        <i nz-icon nzType="check-circle" [nzTheme]="'twotone'"
-                                            [nzTwotoneColor]="'#4891f7'" style="vertical-align: middle;"></i>
-                                    </div>
-                                    <div class="filter-item" (click)="toggleFilter('trainingPastDue')"
-                                        [ngClass]="{'showing': showPastDueTrainings, 'not-showing': !showPastDueTrainings}"
-                                        nz-tooltip nzTooltipTitle="Past Due Trainings">
-                                        <i nz-icon nzType="exclamation-circle" [nzTheme]="'twotone'"
-                                            [nzTwotoneColor]="'red'" style="vertical-align: middle;"></i>
-                                    </div>
-                                </div>
-                                <div style="">
-                                    <div class="filter-item" (click)="toggleFilter('onetime')"
-                                        [ngClass]="{'showing': showOnetime, 'not-showing': !showOnetime}" nz-tooltip
-                                        nzTooltipTitle="One-time Trainings" style="padding-top:5px;">
-                                        <div
-                                            style="border:1px solid black;border-radius: 8px;width:16px;height:16px;text-align: center;">
-                                            <span style="font-size:10px;vertical-align: top;">1</span>
-                                        </div>
-                                    </div>
-                                    <div class="filter-item" (click)="toggleFilter('recurring')"
-                                        [ngClass]="{'showing': showRecurring, 'not-showing': !showRecurring}" nz-tooltip
-                                        nzTooltipTitle="Recurring Trainings">
-                                        <i class="far fa-redo-alt"
-                                            style="color:black;font-size:14px;vertical-align: middle;"></i>
-                                    </div>
-                                </div>
+                                style="border:1px solid black;border-radius: 8px;width:16px;height:16px;text-align: center;">
+                                <span style="font-size:10px;vertical-align: top;">1</span>
                             </div>
                         </div>
-                    </div>
-                    <div *ngIf="selectedUser" style="background-color: white;text-align:left;"
-                        joyrideStep="Step5-myTeam" stepPosition="right" title="Team Members"
-                        text="This is the list of people in your team.  Selecting an entry from this list loads that persons information into the Member Details section on the right.  That person is also selected in the org chart.">
-                        <div *ngIf="authenticatedUser$ | async as user" class='user-button'
-                            style="font-size:20px;width:100%;border-top:1px solid #dddddd;padding-right:5px;"
-                            (click)="selectUser(user._id)"
-                            [ngClass]="{'user-selected': selectedUser._id === user._id }">
-                            <i [ngClass]="userTypeIconHash[user.userType]"
-                                [ngStyle]="{'color': userTrainingStatusColorHash[user.trainingStatus]}" nz-tooltip
-                                [nzTooltipTitle]="" style="font-size:24px;"></i>&nbsp;
-                            <span style="display:inline-block;">{{ user.firstName }} {{ user.lastName }} </span>&nbsp;
-                            <div *ngFor="let ut of uidUTHash[user._id]" style="float:right;margin-left:3px;" nz-tooltip
-                                [nzTooltipTitle]="allTrainingIdHash[ut.tid].title"
-                                [ngClass]="{'displayNone': (!showUpToDateTrainings && ut.status === 'upToDate') || (!showCompletedTrainings && ut.status === 'completed') || (!showPastDueTrainings && ut.status === 'pastDue') || (!showOnetime && allTrainingIdHash[ut.tid].type === 'onetime') || (!showRecurring && allTrainingIdHash[ut.tid].type === 'recurring')}">
-                                <i [ngClass]="allTrainingIdHash[ut.tid].iconClass"
-                                    style="font-size:16px;text-align: center;vertical-align: middle;"
-                                    [ngStyle]="{'color': allTrainingIdHash[ut.tid].iconColor}">
-                                </i>
-                            </div>
-                        </div>
-                        <div style="cursor:pointer;width:100%;padding-left:10px;">
-                            <div *ngFor="let user of myTeam; index as i"
-                                [ngClass]="{'displayNone': (!showUpToDate && user.trainingStatus === 'upToDate') || (!showPastDue && user.trainingStatus === 'pastDue') || (!showNone && user.trainingStatus === 'none') || (!showIndividualContributors && user.userType === 'individualContributor') || (!showSupervisors && user.userType === 'supervisor') || (!showVolunteers && user.userType === 'volunteer') || (!showCustomers && user.userType === 'customer')}"
-                                style="width:100%;">
-                                <div *ngIf="user._id !== authenticatedUser._id" class="user-button"
-                                    [ngClass]="{'user-selected': selectedUser._id === user._id, 'hover-node': user._id === currentHoverUid}"
-                                    (mouseenter)="setHoverData(user._id)" (mouseleave)="setHoverData(null)"
-                                    (click)="selectUser(user._id)" style="width:100%;" style="padding-right:5px;">
-                                    <i [ngClass]="userTypeIconHash[user.userType]"
-                                        [ngStyle]="{'color': userTrainingStatusColorHash[user.trainingStatus]}"
-                                        style="margin-right:4px;float:left;font-size:20px;vertical-align: middle;"></i>&nbsp;
-                                    <span style="float:left;margin:2px 4px 0 0;">{{ user.firstName }}
-                                        {{ user.lastName }}</span>&nbsp;
-                                    <nz-badge *ngIf="user.teamAdmin === true" nzColor="purple" nz-tooltip
-                                        nzTooltipTitle="Admin User" style="float:left;margin:2px 4px 0 0;"></nz-badge>
-                                    <nz-badge *ngIf="user.userStatus === 'bulk-add-fail'" nzColor="red" nz-tooltip
-                                        nzTooltipTitle="Invalid Supervisor Name" style="float:left;margin:2px 4px 0 0;">
-                                    </nz-badge>
-                                    <nz-badge *ngIf="user.emailVerified === false" nzColor="blue" nz-tooltip
-                                        nzTooltipTitle="Email Unverified" style="float:left;margin:2px 4px 0 0;">
-                                    </nz-badge>
-                                    <nz-badge *ngIf="user.userStatus === 'pending'" nzColor="gold" nz-tooltip
-                                        nzTooltipTitle="User Account Pending" style="float:left;margin:2px 4px 0 0;;">
-                                    </nz-badge>
-                                    <div *ngFor="let ut of uidUTHash[user._id]" style="float:right;margin-left:5px;"
-                                        [ngClass]="{'displayNone': (!showUpToDateTrainings && ut.status === 'upToDate') || (!showCompletedTrainings && ut.status === 'completed') || (!showPastDueTrainings && ut.status === 'pastDue') || (!showOnetime && allTrainingIdHash[ut.tid].type === 'onetime') || (!showRecurring && allTrainingIdHash[ut.tid].type === 'recurring') }">
-                                        <i [ngClass]="allTrainingIdHash[ut.tid].iconClass"
-                                            style="font-size:16px;text-align: center;vertical-align: middle;" nz-tooltip
-                                            [nzTooltipTitle]="allTrainingIdHash[ut.tid].title"
-                                            [ngStyle]="{'color': allTrainingIdHash[ut.tid].iconColor}">
-                                        </i>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="filter-item" (click)="toggleFilter('recurring')"
+                            [ngClass]="{'showing': showRecurring, 'not-showing': !showRecurring}" nz-tooltip
+                            nzTooltipTitle="Recurring Trainings">
+                            <i class="far fa-redo-alt" style="color:black;font-size:14px;vertical-align: middle;"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div style="position:relative;cursor:grabbing;width:1px;float:left;height:100%;color:#dddddd;border:1px solid #dddddd;"
-                [ngStyle]="{'background-color': resizeBarColor}" draggable="true" (dragstart)="onDragStart($event)"
-                (drag)="onDrag($event)" (dragend)="onDragEnd($event)">
-                <i class="fas fa-grip-lines-vertical"
-                    style="cursor:grabbing;position:absolute;top:50%;right:-6px;color:black;font-size:24px;"></i>
+            -->
+            <!--
+            <button nz-button nzShape="circle" [disabled]="!showAddToUserListButton" nz-tooltip
+                nzTooltipTitle="View this User" (click)="addFoundUser()"
+                style="float:right;vertical-align: middle;margin-top:2px;">
+                <i nz-icon nzType="eye" [nzTheme]="'outline'" style="font-size:18px;vertical-align:baseline;"></i>
+            </button>
+            <div style="margin-right:20px;">
+                <nz-radio-group [(ngModel)]="showOrgChart" [nzButtonStyle]="'outline'">
+                    <label nz-radio-button nzValue="true">Show Org Chart</label>
+                    <label nz-radio-button nzValue="false">Hide Org Chart</label>
+                </nz-radio-group>
             </div>
-            <div class="my-team-rightside" [ngStyle]="{'width.%': 99 - teamContainerWidth}" style="position:relative;">
-                <!--
-                <nz-tabset [nzSelectedIndex]="currentTab">
-                    <nz-tab nzTitle="Member Details">
-                        -->
-                <div *ngIf="selectedUser" joyrideStep="Step1-memberDetails" stepPosition="left" title="Member Details"
-                    style="position: relative;"
-                    text="This is where the rubber hits the road!  Assign trainings, update profile information, set due dates, etc...">
-                    <i nz-icon nzType="question-circle" nzTheme="twotone"
-                        style="cursor:pointer;position:absolute;top:0;left:0;font-size:20px;color:#000000;"
-                        (click)="startTour('memberDetails')" nz-tooltip nzTooltipTitle="A little help"></i>
-                    <div class="" style="width:100%;text-align: center;">
-                        <i [ngClass]="userTypeIconHash[selectedUser.userType]" style="font-size:20px;"
-                            [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser.trainingStatus]}" nz-tooltip
-                            [nzTooltipTitle]=""></i>&nbsp;
-                        <span
-                            style="display:inline-block;font-size:26px;font-weight: 300;margin:10px 0 20px 0;color:#444444;">{{selectedUser.firstName}}
-                            {{selectedUser.lastName}}
-                        </span>
-                        <button nz-button nzType="default" nzShape="circle" nz-dropdown
-                            [nzDropdownMenu]="userActionMenu" style="vertical-align: text-bottom;margin-left:10px;">
-                            <i nz-icon nzType="more"></i>
-                        </button>
-
-                        <nz-dropdown-menu #userActionMenu="nzDropdownMenu">
-                            <ul nz-menu>
-                                <li [nzDisabled]="assignableTrainings.length === 0" nz-menu-item
-                                    (click)="showUserTrainingModal = true">Assign a Training</li>
-                                <li *ngIf="selectedUser._id !== authenticatedUser._id" nz-menu-item
-                                    (click)="editUser()">Edit Profile</li>
-                                <li *ngIf="selectedUser._id !== authenticatedUser._id"
-                                    [nzDisabled]="selectedUser.userStatus !== 'pending'" nz-menu-item
-                                    (click)="sendRegistrationMsg(selectedUser.email, authenticatedUser.email)">
-                                    Resend Registration Email</li>
-                                <li *ngIf="selectedUser._id !== authenticatedUser._id" nz-menu-item nz-popconfirm
-                                    nzPopconfirmTitle="Delete this user?" (nzOnConfirm)="confirmDelete(selectedUser)">
-                                    Delete User
-                                </li>
-                            </ul>
-                        </nz-dropdown-menu>
-                        <!--
-                                <button nz-button nzType="primary" nzShape="round" nzSize="small" class="lbButton"
-                                    (click)="showUserTrainingModal = true" style="margin-right:10px;">
-                                    Assign a Training
-                                </button>
-                                <button nz-button nzType="primary" nzShape="round" nzSize="small" class="lbButton"
-                                    style="margin-right:10px;" (click)="editUser()">
-                                    Edit Profile
-                                </button>
-                                <button *ngIf="selectedUser.userStatus === 'pending'" nz-button nzType="primary"
-                                    nzShape="round" nzSize="small" class="lbButton" style="margin-right:10px;"
-                                    (click)="editUser()">
-                                    Resend
-                                </button>
-                                <button nz-button nzType="primary" nzShape="round" nzSize="small" class="lbButton"
-                                    style="margin-right:10px;" nz-popconfirm nzPopconfirmTitle="Delete this user?"
-                                    (nzOnConfirm)="confirmDelete(selectedUser)">
-                                    Delete User
-                                </button>
-                                <div style="clear:both;"></div>
-                                -->
-                    </div>
-                    <!--
-                            -->
-                    <div style="width:100%;text-align: left;background-color: white;">
-                        <app-user-trainings mode="admin" logSession="off"></app-user-trainings>
-                    </div>
+        </div>
+            -->
+            <div style="text-align: center;width:100%;overflow: scroll;position:relative;margin-top:20px;">
+                <div style="position:fixed;top:130px;right:20px;text-align: center;font-size:24px;margin-bottom:20px;"
+                    joyrideStep="Step1-orgChart" stepPosition="top" title="Org Chart"
+                    text="If you have a large organization, you are going to love this feature.  Don't be shy...click around and see what there is to see.">
+                    <i nz-icon nzType="zoom-in" nzTheme="outline"
+                        style="cursor:pointer;float:right;font-size:20px;color:#aaaaaa;margin-top:10px"
+                        (click)="zoomIn()" nz-tooltip nzTooltipTitle="Zoom In"></i>
+                    <i nz-icon nzType="zoom-out" nzTheme="outline"
+                        style="cursor:pointer;float:right;font-size:20px;color:#aaaaaa;margin-top:10px;margin-right:20px;"
+                        nz-tooltip nzTooltipTitle="Zoom Out" (click)="zoomOut()"></i>
                 </div>
-                <!--
-                    </nz-tab>
-                    <nz-tab nzTitle="Org Chart" joyrideStep="Step1-orgChart" stepPosition="top" title="Org Chart"
-                        text="If you have a large organization, you are going to love this feature.  Don't be shy...click around and see what there is to see.">
-                        -->
-                <hr>
-                <div style="position: relative;z-index: 100;" [ngClass]="{'fullscreen': orgChartFullscreen}">
-                    <i *ngIf="!orgChartFullscreen" nz-icon nzType="question-circle" nzTheme="twotone"
-                        style="cursor:pointer;position:absolute;top:0;left:0;font-size:20px;color:#000000;"
-                        (click)="startTour('orgChart')" nz-tooltip nzTooltipTitle="A little help"></i>
-                    <i *ngIf="!orgChartFullscreen" nz-icon nzType="fullscreen" nzTheme="outline"
-                        style="cursor:pointer;position:absolute;top:0;right:0;font-size:20px;color:#000000;"
-                        (click)="orgChartFullscreen = true" nz-tooltip nzTooltipTitle="Fullscreen"></i>
-                    <i *ngIf="orgChartFullscreen" nz-icon nzType="fullscreen-exit" nzTheme="outline"
-                        style="cursor:pointer;position:absolute;top:20px;right:20px;font-size:20px;color:#000000;"
-                        (click)="orgChartFullscreen = false" nz-tooltip nzTooltipTitle="Exit Fullscreen"></i>
-                    <div style="text-align: center;font-size:24px;margin-top:20px;" joyrideStep="Step1-orgChart"
-                        stepPosition="top" title="Org Chart"
-                        text="If you have a large organization, you are going to love this feature.  Don't be shy...click around and see what there is to see.">
-                        Org Chart
+                <div
+                    style="background-color:white;width:fit-content;height:50%;display:inline-block;white-space: nowrap;">
+                    <div style="text-align: center;margin-bottom:20px;">
+                        <div style="display:inline-block;padding:5px;position:relative"
+                            (mouseenter)="setAuthenticatedUserHover(true)"
+                            (mouseleave)="setAuthenticatedUserHover(false)" class="inactive-node"
+                            (click)="selectUser(authenticatedUser._id)"
+                            [ngClass]="{'selected-node': userIdSelected === authenticatedUser._id,'hover-node': currentHoverUid}">
+                            <i [ngClass]="userTypeIconHash[authenticatedUser.userType]" style="display:inline-block;"
+                                [ngStyle]="{'color': userTrainingStatusColorHash[authenticatedUser.trainingStatus], 'font-size.px': iconFontSize}"
+                                nz-tooltip [nzTooltipTitle]=""></i>
+                            <span style="display:block;" [ngStyle]="{'font-size.px': textFontSize}">
+                                {{authenticatedUser.firstName}}<br>{{authenticatedUser.lastName}}
+                            </span>
+                            <div class="org-chart-vert-connector-bottom">
+                            </div>
+                        </div>
                     </div>
-                    <div style="text-align: center;width:100%;overflow: scroll;">
-                        <div
-                            style="padding-top:20px;width:fit-content;height:100%;display:inline-block;white-space: nowrap;">
-                            <div style="text-align: center;margin-bottom:20px;">
-                                <div style="display:inline-block;padding:5px;position:relative"
-                                    (mouseenter)="setAuthenticatedUserHover(true)"
-                                    (mouseleave)="setAuthenticatedUserHover(false)" class="inactive-node"
-                                    [ngClass]="{'hover-node': currentHoverUid}">
-                                    <i [ngClass]="userTypeIconHash[selectedUser.userType]"
+                    <div style="display:block;background-color:white;">
+                        <div *ngFor="let dr of authenticatedUser.directReports; let drIndex = index"
+                            style="display:inline-block;vertical-align: top;width:fit-content;position:relative;">
+                            <div class="org-chart-vert-connector">
+                            </div>
+                            <div *ngIf="!isLast(authenticatedUser.directReports, drIndex)"
+                                class="org-chart-horizontal-connector-right">
+                            </div>
+                            <div *ngIf="drIndex !== 0" class="org-chart-horizontal-connector-left">
+                            </div>
+                            <div style="display:inline-block;text-align: center;">
+                                <div (mouseenter)="setHoverData(dr)" (mouseleave)="setHoverData(null)"
+                                    class="inactive-node org-chart-node" (click)="selectUser(dr)"
+                                    [ngStyle]="{'padding.px': orgChartPadding}"
+                                    [ngClass]="{'selected-node': userIdSelected === dr, 'hover-node': allActive || dr === currentHoverUid || orgChartNodeHash[dr].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr), 'displayNone': (!showUpToDate && myOrgUserHash[dr].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr].userType === 'customer')}">
+                                    <i [ngClass]="userTypeIconHash[myOrgUserHash[dr].userType]"
                                         style="font-size:18px;display:inline-block;"
-                                        [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser.trainingStatus]}"
+                                        [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr].trainingStatus], 'font-size.px': iconFontSize}"
                                         nz-tooltip [nzTooltipTitle]=""></i>
-                                    <span style="font-size:8px;display:block;">
-                                        {{selectedUser.firstName}}<br>{{selectedUser.lastName}}
+                                    <span style="display:block;" [ngStyle]="{'font-size.px': textFontSize}">
+                                        {{orgChartNodeHash[dr].fName}}<br>{{orgChartNodeHash[dr].lName}}
                                     </span>
-                                    <div *ngIf="selectedUser.userType === 'supervisor'"
-                                        style="position:absolute;bottom:-10px;left:0;height:10px;width:50%;border-right:1px solid #aaaaaa;">
+                                    <div *ngIf="myOrgUserHash[dr].userType === 'supervisor'"
+                                        class="org-chart-vert-connector-bottom">
                                     </div>
                                 </div>
-                            </div>
-                            <div style="display:block;">
-                                <div *ngFor="let dr of selectedUser.directReports; let drIndex = index"
-                                    style="display:inline-block;vertical-align: top;width:fit-content;position:relative;">
-                                    <div
-                                        style="position:absolute;top:-10px;left:0;height:10px;width:50%;border-right:1px solid #aaaaaa;">
-                                    </div>
-                                    <div *ngIf="!isLast(selectedUser.directReports, drIndex)"
-                                        style="position:absolute;top:-10px;left:50%;height:10px;width:50%;border-top:1px solid #aaaaaa;">
-                                    </div>
-                                    <div *ngIf="drIndex !== 0"
-                                        style="position:absolute;top:-10px;left:-1px;z-index:11;height:10px;width:50%;border-top:1px solid #aaaaaa;background-color: white;">
-                                    </div>
-                                    <div style="display:inline-block;text-align: center;">
-                                        <div style="padding:5px;display:inline-block;width:fit-content;margin-bottom:20px;position:relative;"
-                                            (mouseenter)="setHoverData(dr)" (mouseleave)="setHoverData(null)"
-                                            class="inactive-node" (click)="selectUser(dr)"
-                                            [ngClass]="{ 'hover-node': allActive || dr === currentHoverUid || orgChartNodeHash[dr].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr), 'displayNone': (!showUpToDate && myOrgUserHash[dr].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr].userType === 'customer')}">
-                                            <i [ngClass]="userTypeIconHash[myOrgUserHash[dr].userType]"
-                                                style="font-size:18px;display:inline-block;"
-                                                [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr].trainingStatus]}"
-                                                nz-tooltip [nzTooltipTitle]=""></i>
-                                            <span style="font-size:8px;display:block;">
-                                                {{orgChartNodeHash[dr].fName}}<br>{{orgChartNodeHash[dr].lName}}
-                                            </span>
-                                            <div *ngIf="myOrgUserHash[dr].userType === 'supervisor'"
-                                                style="position:absolute;bottom:-10px;left:0;height:10px;width:50%;border-right:1px solid #aaaaaa;">
-                                            </div>
+                                <div style="display:block;">
+                                    <div *ngFor="let dr2 of myOrgUserHash[dr].directReports; let dr2Index = index"
+                                        style="display:inline-block;vertical-align: top;width:fit-content;position:relative;">
+                                        <div class="org-chart-vert-connector">
                                         </div>
-                                        <div style="display:block;">
-                                            <div *ngFor="let dr2 of myOrgUserHash[dr].directReports; let dr2Index = index"
-                                                style="display:inline-block;vertical-align: top;width:fit-content;position:relative;">
-                                                <div
-                                                    style="position:absolute;top:-10px;left:0;height:10px;width:50%;border-right:1px solid #aaaaaa;">
+                                        <div *ngIf="!isLast(myOrgUserHash[dr].directReports, dr2Index)"
+                                            class="org-chart-horizontal-connector-right">
+                                        </div>
+                                        <div *ngIf="dr2Index > 0" class="org-chart-horizontal-connector-left">
+                                        </div>
+                                        <div style="display:inline-block;text-align: center;">
+                                            <div (mouseenter)="setHoverData(dr2)" (mouseleave)="setHoverData(null)"
+                                                [ngStyle]="{'padding.px': orgChartPadding}"
+                                                class="inactive-node org-chart-node" (click)="selectUser(dr2)"
+                                                [ngClass]="{'selected-node': userIdSelected === dr2, 'hover-node': allActive || dr2 === currentHoverUid || orgChartNodeHash[dr2].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2), 'displayNone': (!showUpToDate && myOrgUserHash[dr2].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr2].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr2].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr2].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr2].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr2].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr2].userType === 'customer')}">
+                                                <i [ngClass]="userTypeIconHash[myOrgUserHash[dr2].userType]"
+                                                    style="display:inline-block;"
+                                                    [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr2].trainingStatus], 'font-size.px': iconFontSize}"
+                                                    nz-tooltip [nzTooltipTitle]=""></i>
+                                                <span style="display:block;" [ngStyle]="{'font-size.px': textFontSize}">
+                                                    {{orgChartNodeHash[dr2].fName}}<br>{{orgChartNodeHash[dr2].lName}}
+                                                </span>
+                                                <div *ngIf="myOrgUserHash[dr2].userType === 'supervisor'"
+                                                    class="org-chart-vert-connector-bottom">
                                                 </div>
-                                                <div *ngIf="!isLast(myOrgUserHash[dr].directReports, dr2Index)"
-                                                    style="position:absolute;top:-10px;left:50%;height:10px;width:50%;border-top:1px solid #aaaaaa;">
-                                                </div>
-                                                <div *ngIf="dr2Index > 0"
-                                                    style="position:absolute;top:-10px;left:-1px;z-index:11;height:10px;width:50%;border-top:1px solid #aaaaaa;background-color: white;">
-                                                </div>
-                                                <div style="display:inline-block;text-align: center;">
-                                                    <div style="text-align: center;padding:5px;display:inline-block;width:fit-content;margin-bottom:20px;position:relative;"
-                                                        (mouseenter)="setHoverData(dr2)"
-                                                        (mouseleave)="setHoverData(null)" class="inactive-node"
-                                                        (click)="selectUser(dr2)"
-                                                        [ngClass]="{ 'hover-node': allActive || dr2 === currentHoverUid || orgChartNodeHash[dr2].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2), 'displayNone': (!showUpToDate && myOrgUserHash[dr2].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr2].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr2].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr2].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr2].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr2].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr2].userType === 'customer')}">
-                                                        <i [ngClass]="userTypeIconHash[myOrgUserHash[dr2].userType]"
-                                                            style="font-size:18px;display:inline-block;"
-                                                            [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr2].trainingStatus]}"
-                                                            nz-tooltip [nzTooltipTitle]=""></i>
-                                                        <span style="font-size:8px;display:block;">
-                                                            {{orgChartNodeHash[dr2].fName}}<br>{{orgChartNodeHash[dr2].lName}}
-                                                        </span>
-                                                        <div *ngIf="myOrgUserHash[dr2].userType === 'supervisor'"
-                                                            style="position:absolute;bottom:-10px;left:0;height:10px;width:50%;border-right:1px solid #aaaaaa;">
-                                                        </div>
+                                            </div>
+                                            <div style="display:block;">
+                                                <div *ngFor="let dr3 of myOrgUserHash[dr2].directReports; let dr3Index = index"
+                                                    style="display:inline-block;vertical-align: top;width:fit-content;position:relative;">
+                                                    <div class="org-chart-vert-connector">
                                                     </div>
-                                                    <div style="display:block;">
-                                                        <div *ngFor="let dr3 of myOrgUserHash[dr2].directReports; let dr3Index = index"
-                                                            style="display:inline-block;vertical-align: top;width:fit-content;position:relative;">
-                                                            <div
-                                                                style="position:absolute;top:-10px;left:0;height:10px;width:50%;border-right:1px solid #aaaaaa;">
+                                                    <div *ngIf="!isLast(myOrgUserHash[dr2].directReports, dr3Index)"
+                                                        class="org-chart-horizontal-connector-right">
+                                                    </div>
+                                                    <div *ngIf="dr3Index !== 0"
+                                                        class="org-chart-horizontal-connector-left">
+                                                    </div>
+                                                    <div
+                                                        style="display:inline-block;text-align: center;position:relative;">
+                                                        <div (mouseenter)="setHoverData(dr3)"
+                                                            [ngStyle]="{'padding.px': orgChartPadding}"
+                                                            (mouseleave)="setHoverData(null)"
+                                                            class="inactive-node org-chart-node"
+                                                            (click)="selectUser(dr3)"
+                                                            [ngClass]="{'selected-node': userIdSelected === dr3,  'hover-node': allActive || dr3 === currentHoverUid || orgChartNodeHash[dr3].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr3), 'displayNone': (!showUpToDate && myOrgUserHash[dr3].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr3].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr3].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr3].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr3].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr3].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr3].userType === 'customer')}">
+                                                            <i [ngClass]="userTypeIconHash[myOrgUserHash[dr3].userType]"
+                                                                style="display:inline-block;"
+                                                                [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr3].trainingStatus], 'font-size.px': iconFontSize}"
+                                                                nz-tooltip [nzTooltipTitle]=""></i>
+                                                            <span style="display:block;"
+                                                                [ngStyle]="{'font-size.px': textFontSize}">
+                                                                {{orgChartNodeHash[dr3].fName}}<br>{{orgChartNodeHash[dr3].lName}}
+                                                            </span>
+                                                            <div *ngIf="myOrgUserHash[dr3].userType === 'supervisor'"
+                                                                class="org-chart-vert-connector-bottom">
                                                             </div>
-                                                            <div *ngIf="!isLast(myOrgUserHash[dr2].directReports, dr3Index)"
-                                                                style="position:absolute;top:-10px;left:50%;height:10px;width:50%;border-top:1px solid #aaaaaa;">
-                                                            </div>
-                                                            <div *ngIf="dr3Index !== 0"
-                                                                style="position:absolute;top:-10px;left:-1px;z-index:11;height:10px;width:50%;border-top:1px solid #aaaaaa;background-color: white;">
-                                                            </div>
-                                                            <div
-                                                                style="display:inline-block;text-align: center;position:relative;">
-                                                                <div style="text-align: center;padding:5px;display:inline-block;width:fit-content;margin-bottom:20px;position:relative;"
-                                                                    (mouseenter)="setHoverData(dr3)"
-                                                                    (mouseleave)="setHoverData(null)"
-                                                                    class="inactive-node" (click)="selectUser(dr3)"
-                                                                    [ngClass]="{ 'hover-node': allActive || dr3 === currentHoverUid || orgChartNodeHash[dr3].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr3), 'displayNone': (!showUpToDate && myOrgUserHash[dr3].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr3].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr3].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr3].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr3].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr3].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr3].userType === 'customer')}">
-                                                                    <i [ngClass]="userTypeIconHash[myOrgUserHash[dr3].userType]"
-                                                                        style="font-size:18px;display:inline-block;"
-                                                                        [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr3].trainingStatus]}"
-                                                                        nz-tooltip [nzTooltipTitle]=""></i>
-                                                                    <span style="font-size:8px;display:block;">
-                                                                        {{orgChartNodeHash[dr3].fName}}<br>{{orgChartNodeHash[dr3].lName}}
-                                                                    </span>
-                                                                    <div *ngIf="myOrgUserHash[dr3].userType === 'supervisor'"
-                                                                        style="position:absolute;bottom:-10px;left:0;height:10px;width:50%;border-right:1px solid #aaaaaa;">
-                                                                    </div>
+                                                        </div>
+                                                        <div style="display:block;">
+                                                            <div *ngFor="let dr4 of myOrgUserHash[dr3].directReports; let dr4Index = index"
+                                                                style="display:inline-block;vertical-align: top;width:fit-content;position:relative;">
+                                                                <div class="org-chart-vert-connector">
                                                                 </div>
-                                                                <div style="display:block;">
-                                                                    <div *ngFor="let dr4 of myOrgUserHash[dr3].directReports; let dr4Index = index"
-                                                                        style="display:inline-block;vertical-align: top;width:fit-content;position:relative;">
-                                                                        <div
-                                                                            style="position:absolute;top:-10px;left:0;height:10px;width:50%;border-right:1px solid #aaaaaa;">
+                                                                <div *ngIf="!isLast(myOrgUserHash[dr3].directReports, dr4Index)"
+                                                                    class="org-chart-horizontal-connector-right">
+                                                                </div>
+                                                                <div *ngIf="dr4Index !== 0"
+                                                                    class="org-chart-horizontal-connector-left">
+                                                                </div>
+                                                                <div
+                                                                    style="display:inline-block;text-align: center;position:relative;">
+                                                                    <div (mouseenter)="setHoverData(dr4)"
+                                                                        [ngStyle]="{'padding.px': orgChartPadding}"
+                                                                        (mouseleave)="setHoverData(null)"
+                                                                        class="inactive-node org-chart-node"
+                                                                        (click)="selectUser(dr4)"
+                                                                        [ngClass]="{'selected-node': userIdSelected === dr4,  'hover-node': allActive || dr4 === currentHoverUid || orgChartNodeHash[dr4].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr4), 'displayNone': (!showUpToDate && myOrgUserHash[dr4].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr4].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr4].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr4].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr4].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr4].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr4].userType === 'customer')}">
+                                                                        <i [ngClass]="userTypeIconHash[myOrgUserHash[dr4].userType]"
+                                                                            style="display:inline-block;"
+                                                                            [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr4].trainingStatus], 'font-size.px': iconFontSize}"
+                                                                            nz-tooltip [nzTooltipTitle]=""></i>
+                                                                        <span style="display:block;"
+                                                                            [ngStyle]="{'font-size.px': textFontSize}">
+                                                                            {{orgChartNodeHash[dr4].fName}}<br>{{orgChartNodeHash[dr4].lName}}
+                                                                        </span>
+                                                                        <div *ngIf="myOrgUserHash[dr4].userType === 'supervisor'"
+                                                                            class="org-chart-vert-connector-bottom">
                                                                         </div>
-                                                                        <div *ngIf="!isLast(myOrgUserHash[dr3].directReports, dr4Index)"
-                                                                            style="position:absolute;top:-10px;left:50%;height:10px;width:50%;border-top:1px solid #aaaaaa;">
-                                                                        </div>
-                                                                        <div *ngIf="dr4Index !== 0"
-                                                                            style="position:absolute;top:-10px;left:-1px;z-index:11;height:10px;width:50%;border-top:1px solid #aaaaaa;background-color: white;">
-                                                                        </div>
-                                                                        <div
-                                                                            style="display:inline-block;text-align: center;position:relative;">
-                                                                            <div style="text-align: center;padding:5px;display:inline-block;width:fit-content;margin-bottom:20px;position:relative;"
-                                                                                (mouseenter)="setHoverData(dr4)"
-                                                                                (mouseleave)="setHoverData(null)"
-                                                                                class="inactive-node"
-                                                                                (click)="selectUser(dr4)"
-                                                                                [ngClass]="{ 'hover-node': allActive || dr4 === currentHoverUid || orgChartNodeHash[dr4].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr4), 'displayNone': (!showUpToDate && myOrgUserHash[dr4].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr4].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr4].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr4].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr4].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr4].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr4].userType === 'customer')}">
-                                                                                <i [ngClass]="userTypeIconHash[myOrgUserHash[dr4].userType]"
-                                                                                    style="font-size:18px;display:inline-block;"
-                                                                                    [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr4].trainingStatus]}"
-                                                                                    nz-tooltip [nzTooltipTitle]=""></i>
-                                                                                <span
-                                                                                    style="font-size:8px;display:block;">
-                                                                                    {{orgChartNodeHash[dr4].fName}}<br>{{orgChartNodeHash[dr4].lName}}
-                                                                                </span>
-                                                                                <div *ngIf="myOrgUserHash[dr4].userType === 'supervisor'"
-                                                                                    style="position:absolute;bottom:-10px;left:0;height:10px;width:50%;border-right:1px solid #aaaaaa;">
-                                                                                </div>
+                                                                    </div>
+                                                                    <div style="display:block;">
+                                                                        <div *ngFor="let dr5 of myOrgUserHash[dr4].directReports; let dr5Index = index"
+                                                                            style="display:inline-block;vertical-align: top;width:fit-content;position:relative;">
+                                                                            <div class="org-chart-vert-connector">
                                                                             </div>
-                                                                            <div style="display:block;">
-                                                                                <div *ngFor="let dr5 of myOrgUserHash[dr4].directReports; let dr5Index = index"
-                                                                                    style="display:inline-block;vertical-align: top;width:fit-content;position:relative;">
-                                                                                    <div
-                                                                                        style="position:absolute;top:-10px;left:0;height:10px;width:50%;border-right:1px solid #aaaaaa;">
+                                                                            <div *ngIf="!isLast(myOrgUserHash[dr4].directReports, dr5Index)"
+                                                                                class="org-chart-horizontal-connector-right">
+                                                                            </div>
+                                                                            <div *ngIf="dr5Index !== 0"
+                                                                                class="org-chart-horizontal-connector-left">
+                                                                            </div>
+                                                                            <div
+                                                                                style="display:inline-block;text-align: center;">
+                                                                                <div (mouseenter)="setHoverData(dr5)"
+                                                                                    [ngStyle]="{'padding.px': orgChartPadding}"
+                                                                                    (mouseleave)="setHoverData(null)"
+                                                                                    class="inactive-node org-chart-node"
+                                                                                    (click)="selectUser(dr5)"
+                                                                                    [ngClass]="{ 'selected-node': userIdSelected === dr5, 'hover-node': allActive || dr5 === currentHoverUid || orgChartNodeHash[dr5].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr5), 'displayNone': (!showUpToDate && myOrgUserHash[dr5].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr5].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr5].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr5].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr5].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr5].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr5].userType === 'customer')}">
+                                                                                    <i [ngClass]="userTypeIconHash[myOrgUserHash[dr5].userType]"
+                                                                                        style="display:inline-block;"
+                                                                                        [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr5].trainingStatus], 'font-size.px': iconFontSize}"
+                                                                                        nz-tooltip
+                                                                                        [nzTooltipTitle]=""></i>
+                                                                                    <span style="display:block;"
+                                                                                        [ngStyle]="{'font-size.px': textFontSize}">
+                                                                                        {{orgChartNodeHash[dr5].fName}}<br>{{orgChartNodeHash[dr5].lName}}
+                                                                                    </span>
+                                                                                    <div *ngIf="myOrgUserHash[dr5].userType === 'supervisor'"
+                                                                                        class="org-chart-vert-connector-bottom">
                                                                                     </div>
-                                                                                    <div *ngIf="!isLast(myOrgUserHash[dr4].directReports, dr5Index)"
-                                                                                        style="position:absolute;top:-10px;left:50%;height:10px;width:50%;border-top:1px solid #aaaaaa;">
-                                                                                    </div>
-                                                                                    <div *ngIf="dr5Index !== 0"
-                                                                                        style="position:absolute;top:-10px;left:-1px;z-index:11;height:10px;width:50%;border-top:1px solid #aaaaaa;background-color: white;">
-                                                                                    </div>
-                                                                                    <div
-                                                                                        style="display:inline-block;text-align: center;">
-                                                                                        <div style="text-align: center;padding:5px;display:inline-block;width:fit-content;margin-bottom:20px;position:relative;"
-                                                                                            (mouseenter)="setHoverData(dr5)"
-                                                                                            (mouseleave)="setHoverData(null)"
-                                                                                            class="inactive-node"
-                                                                                            (click)="selectUser(dr5)"
-                                                                                            [ngClass]="{ 'hover-node': allActive || dr5 === currentHoverUid || orgChartNodeHash[dr5].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr5), 'displayNone': (!showUpToDate && myOrgUserHash[dr5].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr5].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr5].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr5].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr5].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr5].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr5].userType === 'customer')}">
-                                                                                            <i [ngClass]="userTypeIconHash[myOrgUserHash[dr5].userType]"
-                                                                                                style="font-size:18px;display:inline-block;"
-                                                                                                [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr5].trainingStatus]}"
-                                                                                                nz-tooltip
-                                                                                                [nzTooltipTitle]=""></i>
-                                                                                            <span
-                                                                                                style="font-size:8px;display:block;">
-                                                                                                {{orgChartNodeHash[dr5].fName}}<br>{{orgChartNodeHash[dr5].lName}}
-                                                                                            </span>
-                                                                                            <div *ngIf="myOrgUserHash[dr5].userType === 'supervisor'"
-                                                                                                style="position:absolute;bottom:-10px;left:0;height:10px;width:50%;border-right:1px solid #aaaaaa;">
-                                                                                            </div>
+                                                                                </div>
+                                                                                <div style="display:block;">
+                                                                                    <div *ngFor="let dr6 of myOrgUserHash[dr5].directReports"
+                                                                                        style="display:inline-block;vertical-align: top;width:fit-content;">
+                                                                                        <div
+                                                                                            class="org-chart-vert-connector">
                                                                                         </div>
-                                                                                        <div style="display:block;">
-                                                                                            <div *ngFor="let dr6 of myOrgUserHash[dr5].directReports"
-                                                                                                style="display:inline-block;vertical-align: top;width:fit-content;">
-                                                                                                <div
-                                                                                                    style="display:inline-block;text-align: center;position:relative;">
-                                                                                                    <div style="text-align: center;padding:5px;display:inline-block;width:fit-content;margin-bottom:20px;position:relative;"
-                                                                                                        (mouseenter)="setHoverData(dr6)"
-                                                                                                        (mouseleave)="setHoverData(null)"
-                                                                                                        class="inactive-node"
-                                                                                                        (click)="selectUser(dr6)"
-                                                                                                        [ngClass]="{ 'hover-node': allActive || dr6 === currentHoverUid || orgChartNodeHash[dr6].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr6), 'displayNone': (!showUpToDate && myOrgUserHash[dr6].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr6].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr6].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr6].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr6].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr6].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr6].userType === 'customer')}">
-                                                                                                        <i [ngClass]="userTypeIconHash[myOrgUserHash[dr6].userType]"
-                                                                                                            style="font-size:18px;display:inline-block;"
-                                                                                                            [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr6].trainingStatus]}"
-                                                                                                            nz-tooltip
-                                                                                                            [nzTooltipTitle]=""></i>
-                                                                                                        <span
-                                                                                                            style="font-size:8px;display:block;">
-                                                                                                            {{orgChartNodeHash[dr6].fName}}<br>{{orgChartNodeHash[dr6].lName}}
-                                                                                                        </span>
-                                                                                                        <div *ngIf="myOrgUserHash[dr6].userType === 'supervisor'"
-                                                                                                            style="position:absolute;bottom:-10px;left:0;height:10px;width:50%;border-right:1px solid #aaaaaa;">
-                                                                                                        </div>
+                                                                                        <div *ngIf="!isLast(myOrgUserHash[dr5].directReports, dr6Index)"
+                                                                                            class="org-chart-horizontal-connector-right">
+                                                                                        </div>
+                                                                                        <div *ngIf="dr6Index !== 0"
+                                                                                            class="org-chart-horizontal-connector-left">
+                                                                                        </div>
+                                                                                        <div
+                                                                                            style="display:inline-block;text-align: center;position:relative;">
+                                                                                            <div (mouseenter)="setHoverData(dr6)"
+                                                                                                [ngStyle]="{'padding.px': orgChartPadding}"
+                                                                                                (mouseleave)="setHoverData(null)"
+                                                                                                class="inactive-node org-chart-node"
+                                                                                                (click)="selectUser(dr6)"
+                                                                                                [ngClass]="{'selected-node': userIdSelected === dr6,  'hover-node': allActive || dr6 === currentHoverUid || orgChartNodeHash[dr6].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr6), 'displayNone': (!showUpToDate && myOrgUserHash[dr6].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr6].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr6].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr6].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr6].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr6].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr6].userType === 'customer')}">
+                                                                                                <i [ngClass]="userTypeIconHash[myOrgUserHash[dr6].userType]"
+                                                                                                    style="display:inline-block;"
+                                                                                                    [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr6].trainingStatus], 'font-size.px': iconFontSize}"
+                                                                                                    nz-tooltip
+                                                                                                    [nzTooltipTitle]=""></i>
+                                                                                                <span
+                                                                                                    style="display:block;"
+                                                                                                    [ngStyle]="{'font-size.px': textFontSize}">
+                                                                                                    {{orgChartNodeHash[dr6].fName}}<br>{{orgChartNodeHash[dr6].lName}}
+                                                                                                </span>
+                                                                                                <div *ngIf="myOrgUserHash[dr6].userType === 'supervisor'"
+                                                                                                    class="org-chart-vert-connector-bottom">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div style="display:block;">
+                                                                                                <div *ngFor="let dr7 of myOrgUserHash[dr6].directReports"
+                                                                                                    style="display:inline-block;vertical-align: top;width:fit-content;">
+                                                                                                    <div
+                                                                                                        class="org-chart-vert-connector">
+                                                                                                    </div>
+                                                                                                    <div *ngIf="!isLast(myOrgUserHash[dr6].directReports, dr7Index)"
+                                                                                                        class="org-chart-horizontal-connector-right">
+                                                                                                    </div>
+                                                                                                    <div *ngIf="dr7Index !== 0"
+                                                                                                        class="org-chart-horizontal-connector-left">
                                                                                                     </div>
                                                                                                     <div
-                                                                                                        style="display:block;">
-                                                                                                        <div *ngFor="let dr7 of myOrgUserHash[dr6].directReports"
-                                                                                                            style="display:inline-block;vertical-align: top;width:fit-content;">
-                                                                                                            <div
-                                                                                                                style="display:inline-block;text-align: center;">
-                                                                                                                <div style="text-align: center;padding:5px;display:inline-block;width:fit-content;margin-bottom:20px;position:relative;"
-                                                                                                                    (mouseenter)="setHoverData(dr7)"
-                                                                                                                    (mouseleave)="setHoverData(null)"
-                                                                                                                    class="inactive-node"
-                                                                                                                    (click)="selectUser(dr7)"
-                                                                                                                    [ngClass]="{ 'hover-node': allActive || dr7 === currentHoverUid || orgChartNodeHash[dr7].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr7), 'displayNone': (!showUpToDate && myOrgUserHash[dr7].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr7].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr7].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr7].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr7].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr7].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr7].userType === 'customer')}">
-                                                                                                                    <i [ngClass]="userTypeIconHash[myOrgUserHash[dr7].userType]"
-                                                                                                                        style="font-size:18px;display:inline-block;"
-                                                                                                                        [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr7].trainingStatus]}"
-                                                                                                                        nz-tooltip
-                                                                                                                        [nzTooltipTitle]=""></i>
-                                                                                                                    <span
-                                                                                                                        style="font-size:8px;display:block;">
-                                                                                                                        {{orgChartNodeHash[dr7].fName}}<br>{{orgChartNodeHash[dr7].lName}}
-                                                                                                                    </span>
-                                                                                                                    <div *ngIf="myOrgUserHash[dr7].userType === 'supervisor'"
-                                                                                                                        style="position:absolute;bottom:-10px;left:0;height:10px;width:50%;border-right:1px solid #aaaaaa;">
-                                                                                                                    </div>
-                                                                                                                </div>
+                                                                                                        style="display:inline-block;text-align: center;">
+                                                                                                        <div (mouseenter)="setHoverData(dr7)"
+                                                                                                            [ngStyle]="{'padding.px': orgChartPadding}"
+                                                                                                            (mouseleave)="setHoverData(null)"
+                                                                                                            class="inactive-node org-chart-node"
+                                                                                                            (click)="selectUser(dr7)"
+                                                                                                            [ngClass]="{'selected-node': userIdSelected === dr7,  'hover-node': allActive || dr7 === currentHoverUid || orgChartNodeHash[dr7].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr7), 'displayNone': (!showUpToDate && myOrgUserHash[dr7].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr7].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr7].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr7].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr7].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr7].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr7].userType === 'customer')}">
+                                                                                                            <i [ngClass]="userTypeIconHash[myOrgUserHash[dr7].userType]"
+                                                                                                                style="display:inline-block;"
+                                                                                                                [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr7].trainingStatus], 'font-size.px': iconFontSize}"
+                                                                                                                nz-tooltip
+                                                                                                                [nzTooltipTitle]=""></i>
+                                                                                                            <span
+                                                                                                                style="display:block;"
+                                                                                                                [ngStyle]="{'font-size.px': textFontSize}">
+                                                                                                                {{orgChartNodeHash[dr7].fName}}<br>{{orgChartNodeHash[dr7].lName}}
+                                                                                                            </span>
+                                                                                                            <div *ngIf="myOrgUserHash[dr7].userType === 'supervisor'"
+                                                                                                                class="org-chart-vert-connector-bottom">
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div
+                                                                                                            style="display:block;">
+                                                                                                            <div *ngFor="let dr8 of myOrgUserHash[dr7].directReports"
+                                                                                                                style="display:inline-block;vertical-align: top;width:fit-content;">
                                                                                                                 <div
-                                                                                                                    style="display:block;">
-                                                                                                                    <div *ngFor="let dr8 of myOrgUserHash[dr7].directReports"
-                                                                                                                        style="display:inline-block;vertical-align: top;width:fit-content;">
-                                                                                                                        <div
-                                                                                                                            style="display:inline-block;text-align: center;">
-                                                                                                                            <div style="text-align: center;padding:5px;display:inline-block;width:fit-content;margin-bottom:20px;position:relative;"
-                                                                                                                                (mouseenter)="setHoverData(dr8)"
-                                                                                                                                (mouseleave)="setHoverData(null)"
-                                                                                                                                class="inactive-node"
-                                                                                                                                (click)="selectUser(dr8)"
-                                                                                                                                [ngClass]="{ 'hover-node': allActive || dr8 === currentHoverUid || orgChartNodeHash[dr8].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr8), 'displayNone': (!showUpToDate && myOrgUserHash[dr8].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr8].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr8].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr8].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr8].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr8].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr8].userType === 'customer')}">
-                                                                                                                                <i [ngClass]="userTypeIconHash[myOrgUserHash[dr8].userType]"
-                                                                                                                                    style="font-size:18px;display:inline-block;"
-                                                                                                                                    [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr8].trainingStatus]}"
-                                                                                                                                    nz-tooltip
-                                                                                                                                    [nzTooltipTitle]=""></i>
-                                                                                                                                <span
-                                                                                                                                    style="font-size:8px;display:block;">
-                                                                                                                                    {{orgChartNodeHash[dr8].fName}}<br>{{orgChartNodeHash[dr8].lName}}
-                                                                                                                                </span>
-                                                                                                                            </div>
-                                                                                                                        </div>
+                                                                                                                    class="org-chart-vert-connector">
+                                                                                                                </div>
+                                                                                                                <div *ngIf="!isLast(myOrgUserHash[dr7].directReports, dr8Index)"
+                                                                                                                    class="org-chart-horizontal-connector-right">
+                                                                                                                </div>
+                                                                                                                <div *ngIf="dr8Index !== 0"
+                                                                                                                    class="org-chart-horizontal-connector-left">
+                                                                                                                </div>
+                                                                                                                <div (drop)="drop($event)"
+                                                                                                                    (dragover)="allowDrop($event)"
+                                                                                                                    style="display:inline-block;text-align: center;">
+                                                                                                                    <div draggable="true"
+                                                                                                                        (dragstart)="onDragStart($event)"
+                                                                                                                        (drag)="onDrag($event)"
+                                                                                                                        (dragend)="onDragEnd($event)"
+                                                                                                                        (mouseenter)="setHoverData(dr8)"
+                                                                                                                        [ngStyle]="{'padding.px': orgChartPadding}"
+                                                                                                                        (mouseleave)="setHoverData(null)"
+                                                                                                                        class="inactive-node org-chart-node"
+                                                                                                                        (click)="selectUser(dr8)"
+                                                                                                                        [ngClass]="{ 'selected-node': userIdSelected === dr8, 'hover-node': allActive || dr8 === currentHoverUid || orgChartNodeHash[dr8].extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr8), 'displayNone': (!showUpToDate && myOrgUserHash[dr8].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr8].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr8].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr8].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr8].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr8].userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr8].userType === 'customer')}">
+                                                                                                                        <i [ngClass]="userTypeIconHash[myOrgUserHash[dr8].userType]"
+                                                                                                                            style="display:inline-block;"
+                                                                                                                            [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr8].trainingStatus], 'font-size.px': iconFontSize}"
+                                                                                                                            nz-tooltip
+                                                                                                                            [nzTooltipTitle]=""></i>
+                                                                                                                        <span
+                                                                                                                            style="display:block;"
+                                                                                                                            [ngStyle]="{'font-size.px': textFontSize}">
+                                                                                                                            {{orgChartNodeHash[dr8].fName}}<br>{{orgChartNodeHash[dr8].lName}}
+                                                                                                                        </span>
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </div>
@@ -596,70 +554,50 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--
-                            <div *ngFor="let dr of directReports; index as levelIndex;" style="display:inline-block;vertical-align: top;width:fit-content;margin-left:10px;">
-                                <div *ngFor="let level of dr; index as levelIndex;"
-                                    style="display:block;text-align: center;">
-                                    <div
-                                        style="display:inline-block;justify-content: center;align-items: center;width:fit-content;">
-                                        <div *ngFor="let teams of level"
-                                            style="width:fit-content;display: inline-block;margin-left:10px;">
-                                            <div *ngFor="let node of teams" style="display:inline-block;">
-                                                <div style="text-align: center;padding:5px;"
-                                                    (mouseenter)="setHoverData(node.extra.uid)" (mouseleave)="setHoverData(null)"
-                                                    class="inactive-node" (click)="selectUser(node.extra.uid)"
-                                                    [ngClass]="{ 'hover-node': allActive || node.extra.uid === currentHoverUid || node.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(node.extra.uid), 'displayNone': (!showUpToDate && myOrgUserHash[node.extra.uid].trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[node.extra.uid].trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[node.extra.uid].trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[node.extra.uid].userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[node.extra.uid].userType === 'supervisor') || (!showVolunteers && myOrgUserHash[node.extra.uid].userType === 'volunteer') || (!showCustomers && myOrgUserHash[node.extra.uid].userType === 'customer')}">
-                                                    <i [ngClass]="userTypeIconHash[myOrgUserHash[node.extra.uid].userType]"
-                                                        style="font-size:18px;display:inline-block;"
-                                                        [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[node.extra.uid].trainingStatus]}"
-                                                        nz-tooltip [nzTooltipTitle]=""></i>
-                                                    <span style="font-size:8px;display:block;">
-                                                        {{node.fName}}<br>{{node.lName}}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            -->
                         </div>
                     </div>
                 </div>
-                <nz-modal [nzVisible]="showUserTrainingModal" nzTitle="Assign Training To User"
-                    [nzCancelDisabled]="assignableTrainings.length === 0" (nzOnCancel)="handleCancelUserTraining()"
-                    [nzOkDisabled]="!selectedTrainingId" (nzOnOk)="handleAssignUserTraining()"
-                    style="width:500px;padding:10px;float:left;">
-                    <div>
-                        <div style="background-color:white;display:inline-block;width:100%;">
-                            <div *ngIf="teamTrainings.length === 0">
-                                You have not created any trainings yet!<br> Head over to the <span
-                                    style="color:blue;">All
-                                    Trainings</span> page to create your
-                                trainings.
-                            </div>
-                            <div *ngIf="teamTrainings.length > 0 && assignableTrainings.length === 0">
-                                You have already assigned all trainings to this user!
-                            </div>
-                            <div *ngIf="assignableTrainings.length > 0">
-                                Select the training you would like to assign to this user.
-                            </div>
-                            <div *ngFor="let training of assignableTrainings" class="all-training-list-entry"
-                                style="padding:10px 20px;width:100%;"
-                                [ngClass]="{'selected-training': selectedTrainingId === training._id}"
-                                (click)="selectedTrainingId = training._id">
-                                <i [ngClass]="allTrainingIdHash[training._id].iconClass"
-                                    style="display:inline-block;font-size:20px;margin-right:10px;vertical-align: middle;"
-                                    [ngStyle]="{'color': allTrainingIdHash[training._id].iconColor}">
-                                </i>
-                                <div style="display:inline-block;font-size:14px;">
-                                    {{ training.title }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </nz-modal>
             </div>
+        </div>
+        <div style="padding:20px;">
+            <nz-card style="" [nzActions]="[actionEdit, actionAssign, actionResend, actionDelete]">
+                <nz-card-meta [nzTitle]="cardTitle">
+                </nz-card-meta>
+
+                <div *ngIf="selectedUser" joyrideStep="Step1-memberDetails" stepPosition="left" title="Member Details"
+                    style="position: relative;display:block;"
+                    text="This is where the rubber hits the road!  Assign trainings, update profile information, set due dates, etc...">
+                    <div style="width:100%;text-align: left;background-color: white;">
+                        <app-user-trainings mode="admin" logSession="off"></app-user-trainings>
+                    </div>
+                </div>
+            </nz-card>
+            <ng-template #cardTitle>
+                <div class="" style="width:100%;text-align: center;">
+                    <i [ngClass]="userTypeIconHash[selectedUser.userType]" style="font-size:20px;"
+                        [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser.trainingStatus]}" nz-tooltip
+                        [nzTooltipTitle]=""></i>&nbsp;
+                    <span
+                        style="display:inline-block;font-size:26px;font-weight: 300;margin:10px 0 20px 0;color:#444444;">{{selectedUser.firstName}}
+                        {{selectedUser.lastName}}
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template #actionAssign>
+                <i nz-icon nzType="plus-circle" (click)="showUserTrainingModal = true" nz-tooltip
+                    nzTooltipTitle="Assign a New Training" style="color:blue;"></i>
+            </ng-template>
+            <ng-template #actionEdit>
+                <i nz-icon nzType="edit" (click)="editUser()" nz-tooltip nzTooltipTitle="Edit Users Profile"
+                    style="color:blue;"></i>
+            </ng-template>
+            <ng-template #actionDelete>
+                <i nz-icon nzType="delete" nz-popconfirm nzPopconfirmTitle="Delete this user?" style="color:red;"
+                    (nzOnConfirm)="confirmDelete(selectedUser)" nz-tooltip nzTooltipTitle="Delete this User"></i>
+            </ng-template>
+            <ng-template #actionResend>
+                <i nz-icon nzType="redo" nz-tooltip nzTooltipTitle="Resend Registration Email" style="color:blue;"></i>
+            </ng-template>
         </div>
         <nz-drawer [nzClosable]="false" [nzMaskClosable]="true" [nzVisible]="userPanelVisible" nzPlacement="right"
             nzTitle="User Profile" [nzWidth]="700">
@@ -733,10 +671,6 @@
                             [nzAutocomplete]="autoSupervisor" />
                         <nz-autocomplete [nzDataSource]="matchingSupervisors" #autoSupervisor>
                         </nz-autocomplete>
-                        <!--
-                        <input nz-input nzSize="small" type="text" placeholder="Supervisor" ngDefaultControl
-                            [(ngModel)]="selectedUser.supervisor" style="margin-bottom:2px;">
-                            -->
                     </div>
                 </div>
                 <div style="display:block;margin-top:10px;width:90%;">
@@ -804,5 +738,153 @@
                 </div>
             </div>
         </nz-drawer>
+        <nz-modal [nzVisible]="showUserTrainingModal" nzTitle="Assign Training To User"
+            [nzCancelDisabled]="assignableTrainings.length === 0" (nzOnCancel)="handleCancelUserTraining()"
+            [nzOkDisabled]="!selectedTrainingId" (nzOnOk)="handleAssignUserTraining()"
+            style="width:500px;padding:10px;float:left;">
+            <div>
+                <div style="background-color:white;display:inline-block;width:100%;">
+                    <div *ngIf="teamTrainings.length === 0">
+                        You have not created any trainings yet!<br> Head over to the <span style="color:blue;">All
+                            Trainings</span> page to create your
+                        trainings.
+                    </div>
+                    <div *ngIf="teamTrainings.length > 0 && assignableTrainings.length === 0">
+                        You have already assigned all trainings to this user!
+                    </div>
+                    <div *ngIf="assignableTrainings.length > 0">
+                        Select the training you would like to assign to this user.
+                    </div>
+                    <div *ngFor="let training of assignableTrainings" class="all-training-list-entry"
+                        style="padding:10px 20px;width:100%;"
+                        [ngClass]="{'selected-training': selectedTrainingId === training._id}"
+                        (click)="selectedTrainingId = training._id">
+                        <i [ngClass]="allTrainingIdHash[training._id].iconClass"
+                            style="display:inline-block;font-size:20px;margin-right:10px;vertical-align: middle;"
+                            [ngStyle]="{'color': allTrainingIdHash[training._id].iconColor}">
+                        </i>
+                        <div style="display:inline-block;font-size:14px;">
+                            {{ training.title }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nz-modal>
+        <!--
+    <div class="my-team" style="height:50%;">
+        <div *ngIf="myTeam && myTeam.length > 0" style="height:100%;">
+            <div class="team-container"
+                style="width:30%;height:100%;position: relative;border-right:1px solid #dddddd;">
+                <i nz-icon nzType="question-circle" nzTheme="twotone"
+                    style="cursor:pointer;position:absolute;top:0;left:0;font-size:20px;color:#000000;"
+                    (click)="startTour('myTeam')" nz-tooltip nzTooltipTitle="A little help"
+                    text="This page is packed full of exciting features.  Let's go through them..."></i>
+                <div class="direct-report-container" joyrideStep="Step1-myTeam" stepPosition="right"
+                    title="Team Members" text="This section contains 4 functional areas to help you manage your team.">
+                    <div>
+                        <span style="font-size:24px;">Team Members</span>
+                    </div>
+                    <div>
+                    </div>
+                    <div *ngIf="selectedUser" style="background-color: white;text-align:left;"
+                        joyrideStep="Step5-myTeam" stepPosition="right" title="Team Members"
+                        text="This is the list of people in your team.  Selecting an entry from this list loads that persons information into the Member Details section on the right.  That person is also selected in the org chart.">
+                        <div *ngIf="authenticatedUser$ | async as user" class='user-button'
+                            style="font-size:20px;width:100%;border-top:1px solid #dddddd;padding-right:5px;"
+                            (click)="selectUser(user._id)"
+                            [ngClass]="{'user-selected': selectedUser._id === user._id }">
+                            <i [ngClass]="userTypeIconHash[user.userType]"
+                                [ngStyle]="{'color': userTrainingStatusColorHash[user.trainingStatus]}" nz-tooltip
+                                [nzTooltipTitle]="" style="font-size:24px;"></i>&nbsp;
+                            <span style="display:inline-block;">{{ user.firstName }} {{ user.lastName }} </span>&nbsp;
+                            <div *ngFor="let ut of uidUTHash[user._id]" style="float:right;margin-left:3px;" nz-tooltip
+                                [nzTooltipTitle]="allTrainingIdHash[ut.tid].title"
+                                [ngClass]="{'displayNone': (!showUpToDateTrainings && ut.status === 'upToDate') || (!showCompletedTrainings && ut.status === 'completed') || (!showPastDueTrainings && ut.status === 'pastDue') || (!showOnetime && allTrainingIdHash[ut.tid].type === 'onetime') || (!showRecurring && allTrainingIdHash[ut.tid].type === 'recurring')}">
+                                <i [ngClass]="allTrainingIdHash[ut.tid].iconClass"
+                                    style="font-size:16px;text-align: center;vertical-align: middle;"
+                                    [ngStyle]="{'color': allTrainingIdHash[ut.tid].iconColor}">
+                                </i>
+                            </div>
+                        </div>
+                        <div style="cursor:pointer;width:100%;padding-left:10px;">
+                            <div *ngFor="let user of myTeam; index as i"
+                                [ngClass]="{'displayNone': (!showUpToDate && user.trainingStatus === 'upToDate') || (!showPastDue && user.trainingStatus === 'pastDue') || (!showNone && user.trainingStatus === 'none') || (!showIndividualContributors && user.userType === 'individualContributor') || (!showSupervisors && user.userType === 'supervisor') || (!showVolunteers && user.userType === 'volunteer') || (!showCustomers && user.userType === 'customer')}"
+                                style="width:100%;">
+                                <div *ngIf="user._id !== authenticatedUser._id" class="user-button"
+                                    [ngClass]="{'user-selected': selectedUser._id === user._id}"
+                                    (mouseenter)="setHoverData(user._id)" (mouseleave)="setHoverData(null)"
+                                    (click)="selectUser(user._id)" style="width:100%;" style="padding-right:5px;">
+                                    <i [ngClass]="userTypeIconHash[user.userType]"
+                                        [ngStyle]="{'color': userTrainingStatusColorHash[user.trainingStatus]}"
+                                        style="margin-right:4px;float:left;font-size:20px;vertical-align: middle;"></i>&nbsp;
+                                    <span style="float:left;margin:2px 4px 0 0;">{{ user.firstName }}
+                                        {{ user.lastName }}</span>&nbsp;
+                                    <nz-badge *ngIf="user.teamAdmin === true" nzColor="purple" nz-tooltip
+                                        nzTooltipTitle="Admin User" style="float:left;margin:2px 4px 0 0;"></nz-badge>
+                                    <nz-badge *ngIf="user.userStatus === 'duplicate-email'" nzColor="red" nz-tooltip
+                                        nzTooltipTitle="Duplicate Email Address" style="float:left;margin:2px 4px 0 0;">
+                                    </nz-badge>
+                                    <nz-badge *ngIf="user.emailVerified === false" nzColor="blue" nz-tooltip
+                                        nzTooltipTitle="Email Unverified" style="float:left;margin:2px 4px 0 0;">
+                                    </nz-badge>
+                                    <nz-badge *ngIf="user.userStatus === 'pending'" nzColor="gold" nz-tooltip
+                                        nzTooltipTitle="User Account Pending" style="float:left;margin:2px 4px 0 0;;">
+                                    </nz-badge>
+                                    <div *ngFor="let ut of uidUTHash[user._id]" style="float:right;margin-left:5px;"
+                                        [ngClass]="{'displayNone': (!showUpToDateTrainings && ut.status === 'upToDate') || (!showCompletedTrainings && ut.status === 'completed') || (!showPastDueTrainings && ut.status === 'pastDue') || (!showOnetime && allTrainingIdHash[ut.tid].type === 'onetime') || (!showRecurring && allTrainingIdHash[ut.tid].type === 'recurring') }">
+                                        <i [ngClass]="allTrainingIdHash[ut.tid].iconClass"
+                                            style="font-size:16px;text-align: center;vertical-align: middle;" nz-tooltip
+                                            [nzTooltipTitle]="allTrainingIdHash[ut.tid].title"
+                                            [ngStyle]="{'color': allTrainingIdHash[ut.tid].iconColor}">
+                                        </i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="my-team-rightside" style="position:relative;width:69%;height:100%;">
+                <div style="text-align: center;">
+                    <button nz-button nzType="default" nzShape="round" nzSize="small"
+                        (click)="showUserTrainingModal = true" style="margin-right:10px;" [disabled]="!selectedUser">
+                        Assign a Training
+                    </button>
+                    <button nz-button nzType="default" nzShape="round" nzSize="small" style="margin-right:10px;"
+                        (click)="editUser()">
+                        Edit Profile
+                    </button>
+                    <button *ngIf="selectedUser.userStatus === 'pending'" nzSize="small" nz-button nzType="default"
+                        nzShape="round" style="margin-right:10px;" (click)="editUser()">
+                        Resend
+                    </button>
+                    <button nz-button nzType="default" nzShape="round" nzSize="small" style="margin-right:10px;"
+                        nz-popconfirm nzPopconfirmTitle="Delete this user?" (nzOnConfirm)="confirmDelete(selectedUser)">
+                        Delete User
+                    </button>
+                </div>
+                <div *ngIf="selectedUser" joyrideStep="Step1-memberDetails" stepPosition="left" title="Member Details"
+                    style="position: relative;"
+                    text="This is where the rubber hits the road!  Assign trainings, update profile information, set due dates, etc...">
+                    <i nz-icon nzType="question-circle" nzTheme="twotone"
+                        style="cursor:pointer;position:absolute;top:0;left:0;font-size:20px;color:#000000;"
+                        (click)="startTour('memberDetails')" nz-tooltip nzTooltipTitle="A little help"></i>
+                    <div class="" style="width:100%;text-align: center;">
+                        <i [ngClass]="userTypeIconHash[selectedUser.userType]" style="font-size:20px;"
+                            [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser.trainingStatus]}" nz-tooltip
+                            [nzTooltipTitle]=""></i>&nbsp;
+                        <span
+                            style="display:inline-block;font-size:26px;font-weight: 300;margin:10px 0 20px 0;color:#444444;">{{selectedUser.firstName}}
+                            {{selectedUser.lastName}}
+                        </span>
+                    </div>
+                    <div style="width:100%;text-align: left;background-color: white;">
+                        <app-user-trainings mode="admin" logSession="off"></app-user-trainings>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    -->
     </div>
 </div>

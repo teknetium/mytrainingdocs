@@ -37,11 +37,13 @@ export class UserService {
   private myTeamIdHashBS$ = new BehaviorSubject<UserIdHash>(null);
   private myOrgHashBS$ = new BehaviorSubject<UserIdHash>(null);
   private myTeamBS$ = new BehaviorSubject<UserModel[]>([]);
+  private myOrgUsersBS$ = new BehaviorSubject<UserModel[]>([]);
   private myTeamCntBS$ = new BehaviorSubject<number>(0);
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
   private newUserBS$ = new BehaviorSubject<UserModel>(null);
   private allOrgUserHash: UserIdHash = {};
   private myTeam: UserModel[] = [];
+  private myOrgUsers: UserModel[];
   private statusObj;
   private userFailBS$ = new BehaviorSubject<UserFail>(null);
 
@@ -274,6 +276,8 @@ export class UserService {
       this.myTeamIdHash = {};
       this.allOrgUserHash = {};
       this.myOrgUserNames = [];
+      this.myOrgUsers = userList;
+      this.myOrgUsersBS$.next(this.myOrgUsers);
 
       let index = 0;
       for (let user of userList) {
@@ -296,7 +300,7 @@ export class UserService {
       this.userTrainingService.getUTForTeam(this.teamId);
 
       this.myTeamIdHash[this.authenticatedUser._id] = this.authenticatedUser;
-      this.myTeam.push(this.authenticatedUser);
+//      this.myTeam.push(this.authenticatedUser);
       this.allOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
       this.myTeamBS$.next(this.myTeam);
       this.myOrgHashBS$.next(this.allOrgUserHash);
@@ -443,19 +447,19 @@ export class UserService {
   }
 
   setUserStatusPastDue(uid: string) {
-    this.myTeamIdHash[uid].trainingStatus = 'pastDue';
+    this.allOrgUserHash[uid].trainingStatus = 'pastDue';
     //    this.myTeam[]
-    this.updateUser(this.myTeamIdHash[uid], false);
+    this.updateUser(this.allOrgUserHash[uid], false);
   }
 
   setUserStatusUpToDate(uid: string) {
-    this.myTeamIdHash[uid].trainingStatus = 'upToDate';
-    this.updateUser(this.myTeamIdHash[uid], false);
+    this.allOrgUserHash[uid].trainingStatus = 'upToDate';
+    this.updateUser(this.allOrgUserHash[uid], false);
   }
 
   setUserStatusNone(uid: string) {
-    this.myTeamIdHash[uid].trainingStatus = 'none';
-    this.updateUser(this.myTeamIdHash[uid], false);
+    this.allOrgUserHash[uid].trainingStatus = 'none';
+    this.updateUser(this.allOrgUserHash[uid], false);
   }
 
   createNewUsersFromBatch(batchUsers: UserBatchData[], testing: boolean) {
@@ -610,6 +614,10 @@ export class UserService {
 
   getOrgHashStream(): Observable<UserIdHash> {
     return this.myOrgHashBS$.asObservable();
+  }
+
+  getMyOrgUsersStream(): Observable<UserModel[]> {
+    return this.myOrgUsersBS$.asObservable();
   }
 
   getSelectedUserStream(): Observable<UserModel> {

@@ -6,7 +6,7 @@ import { TrainingService } from '../../shared/services/training.service';
 import { CommentService } from '../../shared/services/comment.service';
 import { UserService } from '../../shared/services/user.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
-import { UserTrainingModel, UserTrainingHash, UidUserTrainingHash, AssessmentResponse } from 'src/app/shared/interfaces/userTraining.type';
+import { UserTrainingModel, UidUTHash, UserTrainingHash, UidUserTrainingHash, AssessmentResponse } from 'src/app/shared/interfaces/userTraining.type';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
 
@@ -39,7 +39,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   };
 
   //  userTrainingHash$: Observable<UserTrainingHash>;
-  uidUserTrainingHash$: Observable<UidUserTrainingHash>;
+  uidUTHash$: Observable<UidUTHash>;
   userTrainings$: Observable<UserTrainingModel[]>;
   userTrainingCompleted$: Observable<UserTrainingModel>;
   userTrainings: UserTrainingModel[];
@@ -49,10 +49,13 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   selectedUser: UserModel;
   selectedTraining$: Observable<TrainingModel>;
   selectedTraining: TrainingModel;
+  uidUTHash: UidUTHash;
+  myOrgUsers
 
   @Input() mode = '';
   @Input() logSession = 'off';
   @Input() production = 'off';
+  @Input() uid = null;
 
   currentUserTraining: string;
   currentTrainingId;
@@ -74,7 +77,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     super();
     this.userTrainingCompleted$ = this.userTrainingService.getUserTrainingCompletedStream();
     this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
-    //    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
+    this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
@@ -96,6 +99,8 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       }
     })
     */
+    
+    
     this.selectedTraining$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(selectedTraining => {
       if (!selectedTraining) {
         this.currentUserTraining = '';
@@ -110,6 +115,14 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       }
 
       this.trainingIdHash = trainingIdHash;
+    })
+    this.uidUTHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUTHash => {
+      if (!uidUTHash) {
+        return;
+      }
+
+      this.uidUTHash = uidUTHash;
+      console.log('uidUTHash$ ', this.uidUTHash);
     })
 
     this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
@@ -143,12 +156,13 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     });
 
     this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
-      console.log('UserTraining:selectedUser$', user);
+      console.log('UserTraining:COmponent - selectedUser$', user);
       if (!user) {
         return;
       }
       //      this.userTrainings = [];
       this.selectedUser = user;
+      this.uid = user._id;
       this.userTrainingService.selectUser(user._id);
 
     });

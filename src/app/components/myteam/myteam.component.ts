@@ -19,6 +19,9 @@ import * as cloneDeep from 'lodash/cloneDeep';
 import { BaseComponent } from '../base.component';
 import FlatfileImporter from "flatfile-csv-importer";
 import { JoyrideService } from 'ngx-joyride';
+import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
+import * as names from '../../../assets/names.json';
+
 
 @Component({
   selector: 'app-myteam',
@@ -91,6 +94,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.contentHeight = Math.floor(window.innerHeight * .9);
     this.contentWidth = Math.floor(window.innerWidth * .9);
     this.orgChartWidth = window.innerWidth - (window.innerWidth * this.teamContainerWidth / 100);
+    /*
     if (this.orgChartWidth < 800) {
       this.orgChartContainerSize = 'small';
     } else if (this.orgChartWidth < 900) {
@@ -99,6 +103,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.orgChartContainerSize = 'large';
     }
     this.peopleCntArray = this.peopleCntHash[this.orgChartContainerSize];
+    */
   }
 
   private importer: FlatfileImporter;
@@ -120,7 +125,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   userTrainingStatusColorHash = {
     upToDate: '#52c41a',
     pastDue: 'red',
-    none: '#aaaaaa'
+    none: 'black'
   }
   includeNewSupervisorsTeam = true;
   isNewSupervisorPanelOpen = false;
@@ -140,6 +145,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
   myOrgUserHash: UserIdHash = {};
+  myOrgUserObjs: UserModel[];
   myOrgUsers: string[] = [];
   myOrgSupervisors: string[] = [];
   myTeamIdHash: UserIdHash;
@@ -254,6 +260,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   orgChartWidth = 0;
   emailUnique = false;
   userFail$: Observable<UserFail>;
+  /*
   orgChartContainerSize: 'small' | 'medium' | 'large';
   peopleCntArray = [];
   peopleCntArrayIndex;
@@ -262,6 +269,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     medium: [3, 8, 13, 18, 23, 28, 33, 38, 43, 48],
     large: [8, 13, 18, 23, 28, 33, 38, 43, 48, 53]
   }
+  */
   batchFails$: Observable<UserBatchData[]>;
   batchFails = [];
   orgSize = 100;
@@ -272,6 +280,219 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   allActive = false;
   orgChartNodeHash = {};
   orgChartFullscreen = false;
+  iconFontSize = 18;
+  textFontSize = 8;
+  orgChartPadding = 3;
+  showOrgChart = 'true';
+  userTrainings: UserTrainingModel[];
+  listOfTrainingStatus = [{ text: 'No Trainings', value: 'none' }, { text: 'Past Due', value: 'pastDue' }, { text: 'In Progress', value: 'upToDate' }];
+  hoverUid;
+  rowSelected = 0;
+  showTeam = 'false';
+  userList: UserModel[];
+
+  nameList = [
+    "Lakendra Englert  ",
+    "Lily Rivera  ",
+    "Hertha Mumper  ",
+    "Claris Murdock  ",
+    "Hedy Thiem  ",
+    "Shirleen Elamin  ",
+    "Kizzy Kerley  ",
+    "Kacy Dorough  ",
+    "Brunilda Amick  ",
+    "Samatha Stigall  ",
+    "Latoria Beam  ",
+    "Carolyn Hibbs  ",
+    "Darrel Poitras  ",
+    "Mariela Consolini  ",
+    "Yong Auerbach  ",
+    "Deana Depalma  ",
+    "Dian Eppler  ",
+    "Marcellus Mcgary  ",
+    "Marybelle Mikelson  ",
+    "Carolee Ishee  ",
+    "Glenna Esquer  ",
+    "Lilia Straub  ",
+    "Claude Quiroz  ",
+    "Dorthea Bradsher  ",
+    "Danyel Raminez  ",
+    "Homer Poppe  ",
+    "Carmon Seyler  ",
+    "Ivey Houchin  ",
+    "Emilia Dittmar  ",
+    "Beatris Callihan  ",
+    "Elma Lauritsen  ",
+    "Miguelina Levitt  ",
+    "Dorris Inskeep  ",
+    "Amada Pascarelli  ",
+    "Kris Gulino  ",
+    "Sanjuanita Rehberg  ",
+    "Terri Quinteros  ",
+    "Khalilah James  ",
+    "Arthur Alberts  ",
+    "Polly Diggs  ",
+    "Tennille Thies  ",
+    "Hilary Meltzer  ",
+    "Danilo Charbonneau  ",
+    "Ramonita Estrella  ",
+    "Jeanna Wilburn  ",
+    "Maxima Majka  ",
+    "Tyrone Grosvenor  ",
+    "Terrilyn Morissette  ",
+    "Janie Duford  ",
+    "Vannessa Goe",
+    "Arielle Rudder  ",
+    "Shawanna Lamore  ",
+    "Wilbur Flick  ",
+    "Blake Fred  ",
+    "Tresa Shuck  ",
+    "Meridith Younkin  ",
+    "Malena Malatesta  ",
+    "Genie Dionne  ",
+    "Lucia Stouffer  ",
+    "Moises Gerke  ",
+    "Bunny Bortz  ",
+    "Tilda Germany  ",
+    "Isis Au  ",
+    "Lourdes Kraushaar  ",
+    "Roseanne Mccollister  ",
+    "Kathi Yan  ",
+    "Abbey Angle  ",
+    "Julissa Wehner  ",
+    "Amira Keely  ",
+    "Melony Leamon  ",
+    "Sheryl Kugler  ",
+    "Debrah Mailman  ",
+    "Ilona Mcnabb  ",
+    "Hollie Connolly  ",
+    "Candance Billington  ",
+    "Trinidad Rackley  ",
+    "Jacinta Foster  ",
+    "Corine Moffett  ",
+    "Erlene Grimmer  ",
+    "Shelia Acquaviva  ",
+    "Elli Hersh  ",
+    "Kerstin Belisle  ",
+    "Rolf Dingess  ",
+    "Kacie Casella  ",
+    "Hee Rippey  ",
+    "Silas Bonnett  ",
+    "Davis Papas  ",
+    "Marianne Truman  ",
+    "Huey Ramsay  ",
+    "Janene Dorantes  ",
+    "Patricia Archambeault  ",
+    "Hailey Wimmer  ",
+    "Ellen Izzi  ",
+    "Blossom Giles  ",
+    "Maribel Freiberg  ",
+    "Summer Cue  ",
+    "Laquanda Bellefeuille  ",
+    "Silvia Dohrmann  ",
+    "Luvenia Hulme  ",
+    "Luana Chow ",
+    "Karren Disney  ",
+    "Rolanda Hurlbert  ",
+    "Shameka Hobson  ",
+    "Carolyn Macinnis  ",
+    "Natashia Kamen  ",
+    "Veronique Denny  ",
+    "Ellsworth Mader  ",
+    "Dustin Mcfarren  ",
+    "Allena Figueredo  ",
+    "Twila Staggers  ",
+    "Chin Labriola  ",
+    "Vera Bachelder  ",
+    "Cathy Reidhead  ",
+    "Sherryl Heishman  ",
+    "German Byrnes  ",
+    "Maira Blish  ",
+    "Shonna Pellerin  ",
+    "Russell Vogus  ",
+    "Fairy Acosta  ",
+    "Daniela Holcomb  ",
+    "Patria Hom  ",
+    "Dannette Coffin  ",
+    "Annabel Alvarado  ",
+    "Chong Mcgilvray  ",
+    "Gloria Augustin  ",
+    "Lissa Sassman  ",
+    "Maragaret Palmatier  ",
+    "Kandace Kahl  ",
+    "Lisbeth Mattinson  ",
+    "Tabitha Hayashi  ",
+    "Jacquelin Hobaugh  ",
+    "Renate Lavelle  ",
+    "Krystina Gregerson  ",
+    "Loida Gunnell  ",
+    "Norine Stocks  ",
+    "Percy Stops  ",
+    "Dona Bullis  ",
+    "Bette Matteson  ",
+    "Nia Marriner  ",
+    "Sherise Janelle  ",
+    "Darcel Chastain  ",
+    "Georgene Lague  ",
+    "Naoma Escareno  ",
+    "Emeline Greenwalt  ",
+    "Sherice Tamayo  ",
+    "Jong Bushell  ",
+    "Deane Dagenais  ",
+    "Raisa Fadden  ",
+    "Winifred Froman  ",
+    "Anastacia Volkert  ",
+    "Philip Miguel  ",
+    "Samatha Tebbs  ",
+    "Qiana Kozel  ",
+    "Valentina Woodburn  ",
+    "Melony Kilburn  ",
+    "Katia Waldrop  ",
+    "Winona Curren  ",
+    "Ollie Segawa  ",
+    "Roberta Rutigliano  ",
+    "Gracia Kilkenny  ",
+    "Darby Soukup  ",
+    "Lena Toothaker  ",
+    "Inell Frahm  ",
+    "Antone Tooker  ",
+    "Pamelia Pickford  ",
+    "Iluminada Barber  ",
+    "Lilla Delorey  ",
+    "Renae Reina  ",
+    "Nereida Fallin  ",
+    "Xiao Gumbs  ",
+    "Abe Rodenberg  ",
+    "Willy Mcanally  ",
+    "Ena Bohn  ",
+    "Shaniqua Ceasar  ",
+    "Edmond Suen  ",
+    "Reatha Foos  ",
+    "Santa Kaya  ",
+    "Easter Doolittle  ",
+    "Candice Fleischmann  ",
+    "Sharilyn Wolters  ",
+    "Marcelina Loe  ",
+    "Jani Grissom  ",
+    "Nikia Abbey  ",
+    "Milagro Northcutt  ",
+    "Gwenda Carra  ",
+    "Kathern Letsinger  ",
+    "Christena Mcsherry  ",
+    "Annelle Easterwood  ",
+    "Vincenza Greer  ",
+    "Nohemi Milo  ",
+    "Agueda Kroenke  ",
+    "Leisa Heald  ",
+    "Deana Pariseau  ",
+    "Kenny Maltby  ",
+    "Johnette Saxton  ",
+    "Teodora Rado  ",
+    "Jennefer Radice  ",
+    "Linette Fruchter  ",
+    "Margarita Blough  ",
+    "Enoch Ruano  "];
+  
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -306,6 +527,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.userList = [];
     this.tourStepsHash['myTeam'] = ['Step1-myTeam', 'Step2-myTeam', 'Step3-myTeam', 'Step4-myTeam', 'Step5-myTeam'];
     this.tourStepsHash['memberDetails'] = ['Step1-memberDetails'];
     this.tourStepsHash['orgChart'] = ['Step1-orgChart'];
@@ -314,6 +537,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.contentHeight = Math.floor((window.innerHeight - (.3 * window.innerHeight)) * .90);
     this.contentWidth = Math.floor(window.innerWidth * .9);
     this.orgChartWidth = window.innerWidth - (window.innerWidth * this.teamContainerWidth / 100);
+    /*
     if (this.orgChartWidth < 800) {
       this.orgChartContainerSize = 'small';
     } else if (this.orgChartWidth < 900) {
@@ -322,6 +546,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.orgChartContainerSize = 'large';
     }
     this.peopleCntArray = this.peopleCntHash[this.orgChartContainerSize];
+    */
     FlatfileImporter.setVersion(2);
     this.initializeImporter();
     /*
@@ -390,10 +615,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         return;
       }
       this.myOrgUserHash = orgUserHash;
-      let myOrgUserObjects = Object.values(this.myOrgUserHash);
+      this.myOrgUserObjs = Object.values(this.myOrgUserHash);
+      this.userList = this.myOrgUserObjs;
       this.myOrgSupervisors = [];
       let bulkAddFailFound = false;
-      for (let user of myOrgUserObjects) {
+      for (let user of this.myOrgUserObjs) {
         this.myOrgUserNameHash[user.firstName + ' ' + user.lastName] = user;
         if (user.userStatus === 'duplicate-email') {
           bulkAddFailFound = true;
@@ -433,6 +659,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       // number of people in the chart
 
       this.nodes = nodes;
+      /*
       let peopleCnt = this.nodes[0].extra.peopleCnt;
       if (peopleCnt < this.peopleCntArray[0]) {
         this.peopleCntArrayIndex = 0;
@@ -468,20 +695,21 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         this.peopleCntArrayIndex = 10;
         this.orgChartFontSize = 2;
       }
+      */
     });
     this.myTeam$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
       console.log('myTeam$  ', userList);
       if (!userList) {
         return;
       }
-      this.myGroup = userList;
+//      this.myGroup = userList;
       this.myTeam = userList;
-      /*
       let teamIdHash = {};
+
       for (let teamMember of this.myTeam) {
-        teamIdHash[teamMember._id] = teamMember;
+        this.userTrainingService.initUserTrainingsForUser(teamMember._id);
       }
-      */
+
     });
 
     this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamIdHash => {
@@ -507,7 +735,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (this.orgChartNodeHash[this.userIdSelected]) {
         this.currentSelectedReportChain = this.orgChartNodeHash[this.userIdSelected].extra.reportChain;
       }
-      this.userService.buildOrgChart(this.authenticatedUser._id, false);
+      if (this.authenticatedUser) {
+        this.userService.buildOrgChart(this.authenticatedUser._id, false);
+      }
     });
 
     this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
@@ -582,21 +812,93 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     })
   }
 
+  zoomIn() {
+    this.iconFontSize += 1;
+    this.textFontSize += 1;
+    this.orgChartPadding += 1;
+  }
+
+  zoomOut() {
+    this.iconFontSize -= 1;
+    this.textFontSize -= 1;
+    this.orgChartPadding -= 1;
+  }
+  /*
+  filter(listOfSearchName: string[], searchAddress: string): void {
+    console.log(listOfSearchName, searchAddress);
+    this.listOfTrainingStatus = listOfSearchName;
+    this.searchAddress = searchAddress;
+    this.search();
+  }
+
+  search(): void {
+    const filterFunc = (item: { name: string; age: number; address: string }) =>
+      (this.searchAddress ? item.address.indexOf(this.searchAddress) !== -1 : true) &&
+      (this.listOfSearchName.length ? this.listOfSearchName.some(name => item.name.indexOf(name) !== -1) : true);
+    const data = this.listOfData.filter(item => filterFunc(item));
+    if (this.sortName && this.sortValue) {
+      this.listOfDisplayData = data.sort((a, b) =>
+        this.sortValue === 'ascend'
+          ? a[this.sortName!] > b[this.sortName!]
+            ? 1
+            : -1
+          : b[this.sortName!] > a[this.sortName!]
+            ? 1
+            : -1
+      );
+    } else {
+      this.listOfDisplayData = data;
+    }
+  }
+  */
+  
+  toggleMainView(showOrg) {
+    if (showOrg === 'false') {
+      this.rowSelected = this.userList.indexOf(this.selectedUser, 0);
+    }
+  }
+  toggleListView(showTeam) {
+    if (showTeam === 'true') {
+      this.userList = this.myTeam;
+      this.selectUser(this.userList[0]._id, 0);
+    } else {
+      this.userList = this.myOrgUserObjs;
+      this.rowSelected = this.userList.indexOf(this.selectedUser, 0);
+    }
+  }
+
   testBulkAdd() {
+    let supervisors: string[][] = [[]];
     let base = String(new Date().getTime());
     let currentSupervisor = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
     let supervisorCnt = 1;
-    for (let i = 1; i < this.orgSize; i++) {
+    let level = 1;
+    supervisors[0][0] = currentSupervisor;
+    for (let i = 0; i < this.orgSize; i++) {
+      let name = this.nameList[i]
+      let nameParts = name.trim().split(' ');
       let user: UserBatchData = {
-        firstName: 'first-' + i,
-        lastName: 'last-' + i,
-        email: 'email' + i + '@test.com',
+        firstName: nameParts[0],
+        lastName: nameParts[1],
+        email: nameParts[0] + '.' + nameParts[1] + '@test.com',
         jobTitle: 'jobTitle' + i % 10,
         supervisorName: currentSupervisor
       }
+      if (i < this.usersPerTeam) {
+        supervisors[level].push(this.nameList[i]);
+        user.supervisorName = currentSupervisor;
+      } else if (i < this.usersPerTeam * this.usersPerTeam) {
+
+        if (i % this.usersPerTeam === 0) {
+          currentSupervisor = this.nameList[i];
+        }
+        level = 2;
+        supervisors[level].push(this.nameList[i]);
+        user.supervisorName = currentSupervisor;
+      } else {}
       if (i % this.usersPerTeam === 0) {
         supervisorCnt++;
-        currentSupervisor = 'first-' + i + ' ' + 'last-' + i;
+        currentSupervisor = 'fName' + i + ' ' + 'last-' + i;
       }
       this.newUsers.push(cloneDeep(user));
     }
@@ -609,6 +911,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
   decreaseFontSize() {
     this.orgChartFontSize -= 1;
+  }
+  showOrgChartFunc(value) {
+    this.showOrgChart = value;
   }
 
   setHoverData(uid: string) {
@@ -655,8 +960,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   selectNode(event) {
     this.reportChain = Object.assign([], this.uidReportChainHash[event.extra.uid]);
-    this.userService.buildOrgChart(event.extra.uid, true);
-    console.log('selectNode', event);
+//    this.userService.buildOrgChart(event.extra.uid, true);
+//    console.log('selectNode', event);
   }
 
   toggleFilter(filter: string) {
@@ -760,8 +1065,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   onUserSearchChange(value: string): void {
     this.matchingUsers = this.myOrgUsers.filter(user => user.toLowerCase().indexOf(value.toLowerCase()) !== -1);
-    if (this.myOrgUsers.indexOf(value) > -1) {
-      this.showAddToUserListButton = true;
+    let index = this.myOrgUsers.indexOf(value);
+    if (index > -1) {
+      this.selectUser(this.myOrgUserNameHash[value]._id, index);
+//      this.showAddToUserListButton = true;
     }
   }
 
@@ -779,7 +1086,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   onJobTitleChange(value: string): void {
     this.matchingJobTitles = this.jobTitles.filter(jobTitle => jobTitle.toLowerCase().indexOf(value.toLowerCase()) !== -1);
   }
-
+/*
   addFoundUser() {
     let userObj = this.myOrgUserNameHash[this.userNameToSearchFor];
     this.myTeam.push(userObj);
@@ -788,8 +1095,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.currentTab = 0;
     this.userNameToSearchFor = '';
     this.matchingUsers = this.myOrgUsers;
-    this.selectUser(userObj._id);
+    this.selectUser(userObj._id, -1);
   }
+  */
 
   addUser() {
     this.newUser = true;
@@ -879,12 +1187,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
   }
 
-  selectUser(userId) {
+  selectUser(userId, i) {
     this.userService.selectUser(userId);
+    this.rowSelected = i;
   }
 
   selectSupervisor() {
-    this.selectUser(null);
+    this.selectUser(null, -1);
     this.supervisorSelected = true;
   }
 
@@ -947,6 +1256,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.newWidth = Math.floor((event.clientX / window.innerWidth) * 100);
     this.teamContainerWidth = this.newWidth;
     this.orgChartWidth = window.innerWidth - (window.innerWidth * this.teamContainerWidth / 100);
+    /*
     if (this.orgChartWidth < 800) {
       this.orgChartContainerSize = 'small';
     } else if (this.orgChartWidth < 900) {
@@ -955,6 +1265,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.orgChartContainerSize = 'large';
     }
     this.peopleCntArray = this.peopleCntHash[this.orgChartContainerSize];
+    */
   }
 
   onDragEnd(event) {

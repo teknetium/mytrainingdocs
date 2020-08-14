@@ -1,8 +1,7 @@
-<div style="width:100%;height:100%;display:block;"
-    >
+<div style="width:100%;height:100%;display:block;">
     <!--
     <div *ngIf="useBanner === 'yes'" class="my-team-header">
     </div>
     -->
-    <app-user-trainings logSession="on" production="on"></app-user-trainings>
+    <app-user-trainings logSession="on" production="on" [uid]="authenticatedUser?._id"></app-user-trainings>
 </div>

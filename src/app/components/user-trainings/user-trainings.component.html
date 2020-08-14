@@ -1,6 +1,6 @@
 <div style="width:100%;height:fit-content;font-size:12px;">
-    <nz-table *ngIf="userTrainings?.length > 0" nzSize="small" nzBordered="false" nzShowPagination="false"
-        [nzData]="userTrainings" style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
+    <nz-table *ngIf="uidUTHash[uid]?.length > 0" nzSize="small" nzBordered="false" nzShowPagination="false"
+        [nzData]="uidUTHash[uid]" style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
         <thead>
             <tr style="font-size:12px;">
                 <th>Status</th>
@@ -13,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let userTraining of userTrainings"
+            <tr *ngFor="let userTraining of uidUTHash[uid]"
                 style="cursor: pointer;font-size:12px;background-color: white;line-height:10px;">
                 <td style="width:7%;" nz-tooltip [nzTooltipTitle]="statusIconHash[userTraining.status].desc">
                     <i nz-icon [nzType]="statusIconHash[userTraining.status].icon" [nzTheme]="'twotone'"
