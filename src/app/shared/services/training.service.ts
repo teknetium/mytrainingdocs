@@ -283,9 +283,12 @@ export class TrainingService {
   }
 
   selectTrainingForProduction(tid: string, version: string) {
+    console.log('selectTrainingForProduction ', version);
     this.getTrainingArchive$(tid + '-' + version).subscribe(trainingArchive => {
-      trainingArchive._id = trainingArchive._id.substring(0, trainingArchive._id.indexOf('-'));
-      this.selectedTrainingBS$.next(trainingArchive);
+      if (trainingArchive) {
+        trainingArchive._id = trainingArchive?._id.substring(0, trainingArchive?._id.indexOf('-'));
+        this.selectedTrainingBS$.next(trainingArchive);
+      }
     })
   }
 

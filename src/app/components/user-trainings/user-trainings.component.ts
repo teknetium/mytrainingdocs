@@ -9,6 +9,9 @@ import { UserTrainingService } from '../../shared/services/userTraining.service'
 import { UserTrainingModel, UidUTHash, UserTrainingHash, UidUserTrainingHash, AssessmentResponse } from 'src/app/shared/interfaces/userTraining.type';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
+import { FileService } from '../../shared/services/file.service';
+import { FileModel, FilePlusModel } from 'src/app/shared/interfaces/file.type';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 
 @Component({
@@ -65,13 +68,19 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   comment = '';
   rating = 0;
   teamId;
-
+  fileUploaded$: Observable<FilePlusModel>;
+  userTrainingPendingCertImage: UserTrainingModel = null;
+  viewCertImage = false;
+  previewBase = 'https://cdn.filestackcontent.com/preview=css:"https://cdn.filestackcontent.com/jtNVfsaDTieo28ZL7hkr"/';
+  certImageUrl
 
   constructor(
     private userService: UserService,
+    private fileService: FileService,
     private userTrainingService: UserTrainingService,
     private trainingService: TrainingService,
     private commentService: CommentService,
+    private sanitizer: DomSanitizer,
     private cd: ChangeDetectorRef,
   ) {
     super();
@@ -80,6 +89,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
+    this.fileUploaded$ = this.fileService.getUploadedFileStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
   }
 
@@ -99,8 +109,23 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       }
     })
     */
-    
-    
+    this.fileUploaded$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(filePlus => {
+      if (!filePlus) {
+        return;
+      }
+      if (this.userTrainingPendingCertImage) {
+        this.userTrainingPendingCertImage.certImage = {
+          name: filePlus.name,
+          fileStackId: filePlus.fileStackId,
+          fileStackUrl: filePlus.fileStackUrl,
+          mimeType: filePlus.mimeType,
+          dateUploaded: filePlus.dateUploaded,
+        };
+        this.userTrainingPendingCertImage.status = 'upToDate';
+        this.userTrainingService.saveUserTraining(this.userTrainingPendingCertImage);
+      }
+    });
+
     this.selectedTraining$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(selectedTraining => {
       if (!selectedTraining) {
         this.currentUserTraining = '';
@@ -181,18 +206,29 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     */
   }
 
+  uploadCertImage(userTraining) {
+    this.userTrainingPendingCertImage = userTraining;
+    this.fileService.openImagePicker(null);
+  }
+
   timeFormat(ms): string {
     let m = String(Math.floor(ms / 60000)).padStart(2, '0');
     let s = String(Math.floor(((ms % 3600000) % 60000) / 1000)).padStart(2, '0');
     return m + ':' + s;
   }
 
-  versionFormatter(version) {
+  versionFormatter(version: string): string {
     if (!version) {
       return;
     }
     let re = /_/g;
+    let formattedVersion = version.replace(re, '.');
     return version.replace(re, '.');
+  }
+
+  viewCertImageFunc(userTraining) {
+    this.viewCertImage = true;
+    this.certImageUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + userTraining.certImage.fileStackId))
   }
 
   viewTraining(utid, tid, version) {
@@ -238,7 +274,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     } else {
       this.userService.setUserStatusNone(ut.uid);
       this.userService.updateUser(this.selectedUser, false);
-//      this.userService.selectUser(this.selectedUser._id);
+      //      this.userService.selectUser(this.selectedUser._id);
     }
 
     this.trainingIsVisible = false;
@@ -251,6 +287,10 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   markAsComplete(utid: string) {
     this.currentUserTraining = utid;
     this.markCompletedModalIsVisible = true;
+  }
+
+  closeCertImage() {
+    this.viewCertImage = false;
   }
 
   updateDueDate(event, ut) {
@@ -299,7 +339,12 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     this.trainingIsVisible = false;
     this.markCompletedModalIsVisible = false;
     this.utIdHash[this.currentUserTraining].dateCompleted = new Date().getTime();
+    if (this.trainingIdHash[this.utIdHash[this.currentUserTraining].tid].type === 'recurring') {
+      // the expiration date in the training holds the number of months that the cert is good for.  2592000000 is the number of ms in one month
+      this.utIdHash[this.currentUserTraining].dueDate = this.utIdHash[this.currentUserTraining].dateCompleted + (2592000000 * this.trainingIdHash[this.utIdHash[this.currentUserTraining].tid].expirationDate);
+    }
     this.utIdHash[this.currentUserTraining].status = 'completed';
+
     this.userTrainingService.saveUserTraining(this.utIdHash[this.currentUserTraining]);
     this.commentService.saveTrainingComment(comment);
   }

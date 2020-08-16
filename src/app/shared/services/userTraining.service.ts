@@ -227,7 +227,7 @@ export class UserTrainingService {
 
 
   assignTraining(uid: string, tid: string, teamId: string, version: string) {
-    console.log('assignTraining', teamId);
+    console.log('assignTraining ---------------', teamId, version);
     const userTraining = <UserTrainingModel>{
       _id: String(new Date().getTime()),
       tid: tid,
@@ -238,7 +238,8 @@ export class UserTrainingService {
       dueDate: new Date().getTime() + 1209600000,
       dateCompleted: 0,
       timeToDate: 0,
-      assessmentResponses: []
+      assessmentResponses: [],
+      certImage: null
     };
     this.postUserTraining$(userTraining).subscribe(userTraining => {
       this.getUTForUser$(uid).subscribe(userTrainings => {

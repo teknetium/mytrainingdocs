@@ -8,7 +8,14 @@ export interface UserTrainingModel {
   dueDate: number,
   dateCompleted: number,
   timeToDate: number,
-  assessmentResponses: AssessmentResponse[]
+  assessmentResponses: AssessmentResponse[],
+  certImage: {
+    name: string,
+    mimeType: string,
+    fileStackId: string,
+    fileStackUrl: string,
+    dateUploaded: number
+  },
 }
 
 export interface AssessmentResponse {

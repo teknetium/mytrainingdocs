@@ -65,9 +65,6 @@
               <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'" class="action"
                 (click)="showComments(data._id)" nz-tooltip nzTooltipTitle="View Comments">
               </i>
-              <i nz-icon nzType="file-done" [nzTheme]="'outline'" class="action" style="color:green;"
-                (click)="showAssessmentStats(data._id)" nz-tooltip nzTooltipTitle="View Assessment Stats">
-              </i>
               <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" class="action" nz-popconfirm
                 nzPopconfirmTitle="Delete this Training?" [nzPopconfirmTrigger]="'click'"
                 [nzPopconfirmPlacement]="'top'" (nzOnConfirm)="deleteTraining(data._id)" nz-tooltip

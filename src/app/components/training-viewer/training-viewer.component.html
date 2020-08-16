@@ -35,7 +35,7 @@
             <p>The following users are responsible for this training:</p>
             <ul style="margin-left:100px;">
                 <li *ngFor="let user of assignedToUsers">
-                    {{ myTeamHash[user].firstName }} {{ myTeamHash[user].lastName }}
+                    {{ myTeamHash[user]?.firstName }} {{ myTeamHash[user]?.lastName }}
                 </li>
             </ul>
         </div>

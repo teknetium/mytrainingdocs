@@ -94,7 +94,7 @@ module.exports = function(app, config) {
 
   const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const trainingListProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
-  const userTrainingListProjection = "_id tid uid teamId status dueDate timeToDate dateCompleted assessmentResponses trainingVersion";
+  const userTrainingListProjection = "_id tid uid teamId status dueDate timeToDate dateCompleted assessmentResponses trainingVersion certImage";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email emailVerified teamAdmin orgAdmin appAdmin teamId org supervisorId directReports profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
@@ -598,7 +598,8 @@ module.exports = function(app, config) {
       dateCompleted: req.body.dateCompleted,
       timeToDate: req.body.timeToDate,
       assessmentResponses: req.body.assessmentResponses,
-      trainingVersion: req.body.trainingVersion
+      trainingVersion: req.body.trainingVersion,
+      certImage: req.body.certImage
     });
     UserTraining.create(userTraining, function (err, userTrainingObj) {
       if (err) {
@@ -625,6 +626,7 @@ module.exports = function(app, config) {
       userTraining.assessmentResponses = req.body.assessmentResponses;
       userTraining.trainingVersion = req.body.trainingVersion;
       userTraining.timeToDate = req.body.timeToDate;
+      userTraining.certImage = req.body.certImage;
 
       userTraining.save(err2 => {
         if (err) {
