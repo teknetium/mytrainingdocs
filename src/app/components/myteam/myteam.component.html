@@ -1,7 +1,7 @@
 <div *ngIf="authenticatedUser" style="height:100%;">
     <div style="position:relative;width:100%;">
         <div
-            style="margin-left:-20px;margin-top:-20px;margin-right:-20px;padding:0 20px;margin-bottom: 30px;background-color: #f9f9f9;border:1px solid #dddddd;padding:10px;">
+            style="margin-left:-20px;margin-top:-20px;margin-right:-20px;padding:0 20px;margin-bottom: 30px;background-color: #f1f1f1;border:1px solid #dddddd;padding:10px;">
             <div>
                 <div style="float:left;">
                     <button nz-button nzShape="round" (click)="launchImporter()" nzType="primary"
@@ -34,32 +34,30 @@
                 <div style="clear:both;"></div>
             </div>
         </div>
-        <div *ngIf="showOrgChart !== 'true'" style="padding:20px;">
+        <div *ngIf="showOrgChart !== 'true' " style="padding:20px;">
             <div style="width:100%;margin-bottom: 5px;height:45px;">
-                <div style="float:left;">
-                    <nz-radio-group [(ngModel)]="showTeam" (ngModelChange)="toggleListView($event)">
-                        <label nz-radio-button nzValue="false">My Org</label>
-                        <label nz-radio-button nzValue="true">My Team</label>
-                    </nz-radio-group>
-                </div>
-                <span style="float:right;line-height: 45px;vertical-align: baseline;">1 - {{userList.length}}</span>
+                <span style="float:right;line-height: 45px;vertical-align: baseline;">1 -
+                    {{userListDisplay.length}}</span>
                 <div style="clear:both;"></div>
             </div>
-            <nz-table #nestedTable [nzData]="userList" nzPageSize="10000" nzShowRowSelection="true"
+            <nz-table #nestedTable [nzData]="userListDisplay" nzPageSize="10000" nzShowRowSelection="true"
                 nzShowPagination="false" nzSize="small" [nzScroll]="{ y: '450px' }"
                 style="width:100%;background-color: #fafafa;font-size:12px;font-size:12px;display:inline-block;margin-bottom:20px;">
-                <thead nzSingleSort>
+                <thead (nzSortChange)="sort($event)" nzSingleSort>
                     <tr style="background-color: #fafafa;">
                         <!--
                     <th nzShowExpand></th>
                     -->
-                        <th nzShowSort [nzFilters]="listOfTrainingStatus"
-                            (nzFilterChange)="filter($event, searchAddress)" nzShowFilter style="width:10%;">Training
+                        <th nzShowSort nzSortKey="trainingStatus" [nzFilters]="listOfTrainingStatus"
+                            (nzFilterChange)="filterTrainingStatus($event)" nzShowFilter style="width:10%;">Training
                             Status</th>
-                        <th nzShowSort style="width:25%;">Name</th>
-                        <th nzShowSort style="width:15%;">User Type</th>
-                        <th nzShowSort style="width:10%;"> Job Title</th>
-                        <th nzShowSort style="width:25%;">Trainings</th>
+                        <th nzShowSort nzSortKey="lastName" style="width:17%;">Name</th>
+                        <th nzShowSort nzSortKey="supervisorId" style="width:17%;" [nzFilters]="listOfSupervisors"
+                            (nzFilterChange)="filterMyTeam($event)" nzShowFilter>Supervisor</th>
+                        <th nzShowSort nzSortKey="userType" [nzFilters]="listOfUserTypes"
+                            (nzFilterChange)="filterUserType($event)" nzShowFilter style="width:15%;">User Type</th>
+                        <th nzShowSort nzSortKey="jobTitle" style="width:10%;"> Job Title</th>
+                        <th style="width:15%;">Trainings</th>
                         <!--
                         <th style="width:15%;text-align: center;">Actions</th>
                         -->
@@ -81,8 +79,11 @@
                                     nz-tooltip [nzTooltipTitle]=""></i>
                             </td>
                             <td (click)="selectUser(data._id, i)" [ngClass]="{'row-selected': rowSelected === i}"
-                                style="width:25%;">
+                                style="width:17%;">
                                 {{data.firstName}} {{data.lastName}}
+                            </td>
+                            <td (click)="selectUser(data._id, i)" [ngClass]="{'row-selected': rowSelected === i}" style="width:17%;">
+                                {{myOrgUserHash[data.supervisorId]?.firstName}} {{myOrgUserHash[data.supervisorId]?.lastName}}
                             </td>
                             <td (click)="selectUser(data._id, i)" [ngClass]="{'row-selected': rowSelected === i}"
                                 style="width:15%;">
@@ -93,7 +94,7 @@
                                 {{data.jobTitle}}
                             </td>
                             <td (click)="selectUser(data._id, i)" [ngClass]="{'row-selected': rowSelected === i}"
-                                style="width:25%;">
+                                style="width:15%;">
                                 <div *ngFor="let ut of uidUTHash[data._id]" style="float:right;margin-left:10px;">
                                     <i [ngClass]="allTrainingIdHash[ut.tid].iconClass"
                                         style="font-size:20px;text-align: center;vertical-align: middle;" nz-tooltip
@@ -252,7 +253,51 @@
             </div>
         </div>
             -->
-            <div style="text-align: center;width:100%;overflow: scroll;position:relative;margin-top:20px;">
+            <!--
+            <div style="position:fixed;top:140px;left:60px;font-size:16px;width:fit-content;">
+                <div style="display:inline-block;margin-right:30px;">
+                    <div class="filter-item" (click)="toggleFilter('none')"
+                        [ngClass]="{'showing': showNone, 'not-showing': !showNone}" nz-tooltip
+                        nzTooltipTitle="Users who have NO assigned trainings">
+                        <i class="fad fa-user" style="color:#aaaaaa;"></i>
+                    </div>
+                    <div class="filter-item" (click)="toggleFilter('up-to-date')"
+                        [ngClass]="{'showing': showUpToDate, 'not-showing': !showUpToDate}" nz-tooltip
+                        nzTooltipTitle="Users who have NO past due trainings">
+                        <i class="fad fa-user" style="color:#75c140"></i>
+                    </div>
+                    <div class="filter-item" (click)="toggleFilter('past-due')"
+                        [ngClass]="{'showing': showPastDue, 'not-showing': !showPastDue}" nz-tooltip
+                        nzTooltipTitle="Users with at least one Past Due training">
+                        <i class="fad fa-user" style="color:red;"></i>
+                    </div>
+                </div>
+                <div style="display:inline-block;margin-right:30px;">
+                    <div class="filter-item" (click)="toggleFilter('individual-contributor')"
+                        [ngClass]="{'showing': showIndividualContributors, 'not-showing': !showIndividualContributors}"
+                        nz-tooltip nzTooltipTitle="Individual Contributors">
+                        <i class="fad fa-user" style="color:#000000"></i>
+                    </div>
+                    <div class="filter-item" (click)="toggleFilter('supervisor')"
+                        [ngClass]="{'showing': showSupervisors, 'not-showing': !showSupervisors}" nz-tooltip
+                        nzTooltipTitle="Supervisors">
+                        <i class="fad fa-user-tie" style="color:#000000;"></i>
+                    </div>
+                    <div class="filter-item" (click)="toggleFilter('volunteer')"
+                        [ngClass]="{'showing': showVolunteers, 'not-showing': !showVolunteers}" nz-tooltip
+                        nzTooltipTitle="Volunteers">
+                        <i class="fad fa-user-cowboy" style="color:#000000;"></i>
+                    </div>
+                    <div class="filter-item" (click)="toggleFilter('customer')"
+                        [ngClass]="{'showing': showCustomers, 'not-showing': !showCustomers}" nz-tooltip
+                        nzTooltipTitle="Customers">
+                        <i class="fad fa-user-crown" style="color:#000000;"></i>
+                    </div>
+                </div>
+            </div>
+-->
+
+            <div style="text-align: center;width:100%;overflow: scroll;position:relative;margin-top:40px;">
                 <div style="position:fixed;top:130px;right:20px;text-align: center;font-size:24px;margin-bottom:20px;"
                     joyrideStep="Step1-orgChart" stepPosition="top" title="Org Chart"
                     text="If you have a large organization, you are going to love this feature.  Don't be shy...click around and see what there is to see.">
@@ -770,7 +815,9 @@
                 </div>
             </div>
         </nz-modal>
-        <!--
+    </div>
+</div>
+<!--
     <div class="my-team" style="height:50%;">
         <div *ngIf="myTeam && myTeam.length > 0" style="height:100%;">
             <div class="team-container"
@@ -886,5 +933,3 @@
         </div>
     </div>
     -->
-    </div>
-</div>

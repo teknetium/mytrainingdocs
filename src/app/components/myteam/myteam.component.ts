@@ -20,7 +20,7 @@ import { BaseComponent } from '../base.component';
 import FlatfileImporter from "flatfile-csv-importer";
 import { JoyrideService } from 'ngx-joyride';
 import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
-import * as names from '../../../assets/names.json';
+// import * as names from '../../../assets/names.json';
 
 
 @Component({
@@ -151,7 +151,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   myTeamIdHash: UserIdHash;
   myTeam$: Observable<UserModel[]>;
   myTeam: UserModel[] = [];
-  myTeamFiltered: UserModel[] = [];
   jobTitles$: Observable<string[]>;
   jobTitles: string[] = [];
   options: string[];
@@ -285,11 +284,19 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   orgChartPadding = 3;
   showOrgChart = 'true';
   userTrainings: UserTrainingModel[];
+  listOfSupervisors = [];
   listOfTrainingStatus = [{ text: 'No Trainings', value: 'none' }, { text: 'Past Due', value: 'pastDue' }, { text: 'In Progress', value: 'upToDate' }];
+  listOfUserTypes = [{ text: 'Individual Contributor', value: 'individualContributor' }, { text: 'Supervisor', value: 'supervisor' }, { text: 'Volunteer', value: 'volunteer' }, { text: 'Customer', value: 'customer ' }];
+  listOfSearchTrainingStatus: string[] = [];
+  listOfSearchUserTypes: string[] = [];
+  listOfSearchSupervisors: string[] = [];
+  userListDisplay: UserModel[];
   hoverUid;
   rowSelected = 0;
   showTeam = 'false';
   userList: UserModel[];
+  sortName: string | null = null;
+  sortValue: string | null = null;
 
   nameList = [
     "Lakendra Englert  ",
@@ -617,10 +624,20 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.myOrgUserHash = orgUserHash;
       this.myOrgUserObjs = Object.values(this.myOrgUserHash);
       this.userList = this.myOrgUserObjs;
+      this.userListDisplay = [...this.userList];
       this.myOrgSupervisors = [];
       let bulkAddFailFound = false;
+      let listOfSupervisorIds = [];
       for (let user of this.myOrgUserObjs) {
+        if (!user.supervisorId) {
+          continue;
+        }
         this.myOrgUserNameHash[user.firstName + ' ' + user.lastName] = user;
+        if (listOfSupervisorIds.indexOf(user.supervisorId) < 0) {
+          this.listOfSupervisors.push({ text: this.myOrgUserHash[user.supervisorId]?.firstName + ' ' + this.myOrgUserHash[user.supervisorId]?.lastName, value: user.supervisorId });
+          listOfSupervisorIds.push(user.supervisorId);
+        }
+//        this.supervisorIdNameHash[user.supervisorId]
         if (user.userStatus === 'duplicate-email') {
           bulkAddFailFound = true;
           this.bulkAddFail = true;
@@ -629,6 +646,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           this.myOrgSupervisors.push(user.firstName + ' ' + user.lastName);
         }
       }
+      console.log('listOfSupervisors', this.listOfSupervisors);
       this.matchingSupervisors = this.myOrgSupervisors;
     });
     this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgUsers => {
@@ -823,21 +841,37 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.textFontSize -= 1;
     this.orgChartPadding -= 1;
   }
-  /*
-  filter(listOfSearchName: string[], searchAddress: string): void {
-    console.log(listOfSearchName, searchAddress);
-    this.listOfTrainingStatus = listOfSearchName;
-    this.searchAddress = searchAddress;
+
+  filterMyTeam(listOfSupervisors) {
+    this.listOfSearchSupervisors = listOfSupervisors;
+    this.search();
+  }
+
+  filterTrainingStatus(listOfSearchTrainingStatus: string[]): void {
+    this.listOfSearchTrainingStatus = listOfSearchTrainingStatus;
+    this.search();
+  }
+
+  filterUserType(listOfSearchUserTypes: string[]): void {
+    this.listOfSearchUserTypes = listOfSearchUserTypes;
+    this.search();
+    this.rowSelected = this.userListDisplay.indexOf(this.selectedUser, 0);
+  }
+  sort(sort: { key: string; value: string }): void {
+    this.sortName = sort.key;
+    this.sortValue = sort.value;
     this.search();
   }
 
   search(): void {
-    const filterFunc = (item: { name: string; age: number; address: string }) =>
-      (this.searchAddress ? item.address.indexOf(this.searchAddress) !== -1 : true) &&
-      (this.listOfSearchName.length ? this.listOfSearchName.some(name => item.name.indexOf(name) !== -1) : true);
-    const data = this.listOfData.filter(item => filterFunc(item));
+    const filterFunc = (item: UserModel) =>
+      (this.listOfSearchTrainingStatus.length ? this.listOfSearchTrainingStatus.some(trainingStatus => item.trainingStatus === trainingStatus) : true) &&
+      (this.listOfSearchUserTypes.length ? this.listOfSearchUserTypes.some(userType => item.userType === userType) : true) &&
+      (this.listOfSearchSupervisors.length ? this.listOfSearchSupervisors.some(supervisorId => item.supervisorId === supervisorId) : true)
+    const data = this.userList.filter(item => filterFunc(item));
+
     if (this.sortName && this.sortValue) {
-      this.listOfDisplayData = data.sort((a, b) =>
+      this.userListDisplay = data.sort((a, b) =>
         this.sortValue === 'ascend'
           ? a[this.sortName!] > b[this.sortName!]
             ? 1
@@ -847,23 +881,16 @@ export class MyteamComponent extends BaseComponent implements OnInit {
             : -1
       );
     } else {
-      this.listOfDisplayData = data;
+      this.userListDisplay = data;
     }
+
+    
+    this.userListDisplay = data;
   }
-  */
-  
+
   toggleMainView(showOrg) {
     if (showOrg === 'false') {
-      this.rowSelected = this.userList.indexOf(this.selectedUser, 0);
-    }
-  }
-  toggleListView(showTeam) {
-    if (showTeam === 'true') {
-      this.userList = this.myTeam;
-      this.selectUser(this.userList[0]._id, 0);
-    } else {
-      this.userList = this.myOrgUserObjs;
-      this.rowSelected = this.userList.indexOf(this.selectedUser, 0);
+      this.rowSelected = this.userListDisplay.indexOf(this.selectedUser, 0);
     }
   }
 
@@ -965,7 +992,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   toggleFilter(filter: string) {
-    this.myTeamFiltered = [];
 
     if (filter === 'up-to-date') {
       this.showUpToDate = !this.showUpToDate;
