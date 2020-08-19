@@ -158,7 +158,7 @@ export class UserService {
                 firstName: '',
                 lastName: '',
                 email: profile.email,
-                emailVerified: false,
+                emailVerified: true,
                 teamId: null,
                 org: profile.email.substring(profile.email.indexOf('@') + 1),
                 teamAdmin: false,
@@ -430,6 +430,14 @@ export class UserService {
     return userNode;
   }
 
+  /*
+  deleteAllUsers() {
+    this.deleteAll$().subscribe(user => {
+
+    })
+  }
+  */
+
   getHttpErrorStream(): Observable<HttpErrorResponse> {
     return this.httpErrorBS$.asObservable();
   }
@@ -628,6 +636,23 @@ export class UserService {
     this.selectedUserBS$.next(this.authenticatedUser);
   }
 
+  /*
+  deleteOrgUsers() {
+    let orgUserCnt = this.myOrgUsers.length;
+    for (let user of this.myOrgUsers) {
+      if (user._id === this.authenticatedUser._id) {
+        continue;
+      }
+      this.deleteUser(user._id).subscribe(data => {
+        orgUserCnt--;
+        if (orgUserCnt === 0) {
+          this.loadData(this.org, this.authenticatedUser._id);
+        }
+      })
+    }
+  }
+  */
+
   selectUser(uid: string) {
     if (!uid) {
       this.selectedUserBS$.next(null);
@@ -645,6 +670,21 @@ export class UserService {
         this.loadData(this.teamId, user._id);
       }
     });
+  }
+
+  getEmailForUser(uid: string): string {
+    if (this.allOrgUserHash[uid].emailVerified) {
+      return this.allOrgUserHash[uid].email;
+    } else {
+      return null;
+    }
+  }
+  getSupervisorEmailForUser(uid: string): string {
+    if (this.allOrgUserHash[this.allOrgUserHash[uid].supervisorId]?.emailVerified) {
+      return this.allOrgUserHash[this.allOrgUserHash[uid].supervisorId].email;
+    } else {
+      return null;
+    }
   }
 
   statusCheck() {
@@ -813,6 +853,18 @@ export class UserService {
       );
 
   }
+  /*
+  deleteAll$(): Observable<{}> {
+    return this.http
+      .delete(`${ENV.BASE_API}users/all`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+
+  }
+  */
 
   private _handleError(err: HttpErrorResponse | any): Observable<any> {
     const errorMsg = err.error.message || 'Error: Unable to complete request.';

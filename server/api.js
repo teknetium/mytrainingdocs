@@ -892,6 +892,15 @@ module.exports = function(app, config) {
       });
     });
   });
+  
+  app.delete("/api/users/all", jwtCheck, (req, res) => {
+    User.db.dropCollection('users', function (err, result) {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+    });
+  });
+  
 
   //
   // ASSESSMENT methods

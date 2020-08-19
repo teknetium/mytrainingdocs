@@ -45,6 +45,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
   trainingIdHash: TrainingIdHash;
   trainingSelected: TrainingModel;
   trainings: TrainingModel[] = [];
+  trainingsDisplay: TrainingModel[] = [];
   myTeamIdHash$: Observable<UserIdHash>;
   myTeamIdHash: UserIdHash;
   selectedTrainingId = null;
@@ -109,6 +110,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
             })
           }
         }
+        this.trainingsDisplay = this.trainings;
       } else {
         this.trainings = [];
       }
@@ -116,6 +118,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
     this.teamTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(teamTrainingHash => {
       this.teamTrainingHash = teamTrainingHash;
       this.trainings = Object.values(this.teamTrainingHash);
+      this.trainingsDisplay = this.trainings;
     })
     /*
     this.userTrainingForTid$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uts => {
@@ -142,7 +145,6 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
     this.trainingService.deleteTraining(tid);
     this.trainingService.selectTraining(null);
   }
-
 
   versionFormatter(version) {
     if (!version) {

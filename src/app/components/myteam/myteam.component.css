@@ -201,8 +201,8 @@
 }
 
 .hover-node {
-    background-color: #e0f4ff !important;
-    opacity: 1.0 !important;
+    background: rgba(175, 188, 248, .7) !important;
+    border:2px solid #afbcf8 !important;
 }
 
 .inactive-node {
@@ -210,7 +210,7 @@
 }
 
 .selected-node {
-    border: 2px solid blue;
+    border: 2px solid blue !important;
 }
 
 .report-chain {
@@ -275,6 +275,14 @@
     color:black !important;
     cursor: pointer;
 }
+.maxlevel-node {
+    text-align: center;
+    display:inline-block;
+    width:fit-content;
+    margin-bottom:20px;
+    position:relative;
+    cursor: pointer;
+}
 .action {
     font-size:16px;
     margin-right:10px;
@@ -286,4 +294,9 @@
     background-color: #e0f4ff;
     color: blue;
     font-size:18px;
+}
+
+.ic-level {
+    max-width:100px;
+    overflow-x: scroll;
 }

@@ -12,6 +12,8 @@ import { BaseComponent } from '../base.component';
 import { FileService } from '../../shared/services/file.service';
 import { FileModel, FilePlusModel } from 'src/app/shared/interfaces/file.type';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SendmailService } from '../../shared/services/sendmail.service';
+import { MessageModel, TemplateMessageModel } from '../../shared/interfaces/message.type';
 
 
 @Component({
@@ -38,10 +40,17 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       icon: 'check-circle',
       color: '#4891f7',
       desc: 'Completed'
-    }
+    }, 
+    pendingCertUpload: {
+      icon: 'exclamation-circle',
+      color: 'gold',
+      desc: 'Pending Certificate Verification'
+    }, 
   };
 
   //  userTrainingHash$: Observable<UserTrainingHash>;
+  authenticatedUser$: Observable<UserModel>;
+  authenticatedUser: UserModel;
   uidUTHash$: Observable<UidUTHash>;
   userTrainings$: Observable<UserTrainingModel[]>;
   userTrainingCompleted$: Observable<UserTrainingModel>;
@@ -80,10 +89,12 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     private userTrainingService: UserTrainingService,
     private trainingService: TrainingService,
     private commentService: CommentService,
+    private mailService: SendmailService,
     private sanitizer: DomSanitizer,
     private cd: ChangeDetectorRef,
   ) {
     super();
+    this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.userTrainingCompleted$ = this.userTrainingService.getUserTrainingCompletedStream();
     this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
     this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
@@ -109,6 +120,13 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       }
     })
     */
+    this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
+      if (!user) {
+        return;
+      }
+      this.authenticatedUser = user;
+    });
+
     this.fileUploaded$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(filePlus => {
       if (!filePlus) {
         return;
@@ -338,12 +356,39 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     }
     this.trainingIsVisible = false;
     this.markCompletedModalIsVisible = false;
-    this.utIdHash[this.currentUserTraining].dateCompleted = new Date().getTime();
     if (this.trainingIdHash[this.utIdHash[this.currentUserTraining].tid].type === 'recurring') {
+      this.utIdHash[this.currentUserTraining].status = 'pendingCertUpload';
+      let msg = <TemplateMessageModel>{
+        to: this.authenticatedUser.email,
+        from: 'support@mytrainingdocs.com',
+        templateId: 'd-ad3c80c12a634f1dbd0c0fd9844fca77',
+        dynamicTemplateData: {
+          trainingTitle: this.selectedTraining.title
+        }
+      }
+      this.mailService.sendTemplateMessage(msg);
+      let supervisorEmail: string = this.userService.getSupervisorEmailForUser(this.utIdHash[this.currentUserTraining].uid);
+      if (supervisorEmail) {
+        let msg2 = <TemplateMessageModel>{
+          to: supervisorEmail,
+          from: 'support@mytrainingdocs.com',
+          templateId: 'd-ab1da847977d4959a2d2c8b58a498ce0',
+          dynamicTemplateData: {
+            trainingTitle: this.selectedTraining.title,
+            teamMember: this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName,
+            uid: this.utIdHash[this.currentUserTraining].uid
+          }
+        }
+        this.mailService.sendTemplateMessage(msg2);
+      }
+
+      this.utIdHash[this.currentUserTraining].status = 'pendingCertUpload';
       // the expiration date in the training holds the number of months that the cert is good for.  2592000000 is the number of ms in one month
-      this.utIdHash[this.currentUserTraining].dueDate = this.utIdHash[this.currentUserTraining].dateCompleted + (2592000000 * this.trainingIdHash[this.utIdHash[this.currentUserTraining].tid].expirationDate);
+//      this.utIdHash[this.currentUserTraining].dueDate = this.utIdHash[this.currentUserTraining].dateCompleted + (2592000000 * this.trainingIdHash[this.utIdHash[this.currentUserTraining].tid].expirationDate);
+    } else {
+      this.utIdHash[this.currentUserTraining].dateCompleted = new Date().getTime();
+      this.utIdHash[this.currentUserTraining].status = 'completed';
     }
-    this.utIdHash[this.currentUserTraining].status = 'completed';
 
     this.userTrainingService.saveUserTraining(this.utIdHash[this.currentUserTraining]);
     this.commentService.saveTrainingComment(comment);

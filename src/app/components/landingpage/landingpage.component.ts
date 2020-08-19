@@ -27,7 +27,7 @@ export class LandingpageComponent implements OnInit {
       focus: false,
       title: 'Safe & Secure',
       class: 'fal fa-shield-check text-yellow bg-yellow-opacity',
-      blurb: 'Your training content is safe and secure in our training repository which you, and only you can access from any where at any time.',
+      blurb: 'We have partnered with an industry leading content management company to ensure that your training content is safe and secure and available 24x7.',
       learnMore: ''
     },
     {
@@ -41,7 +41,7 @@ export class LandingpageComponent implements OnInit {
       focus: false,
       title: 'Saves Time & Resources',
       class: 'fal fa-clock text-blue bg-blue-opacity',
-      blurb: 'Your entire team and all of your training content will be up and running in less than 30 minutes!',
+      blurb: '',
       learnMore: ''
     },
     {
@@ -77,7 +77,7 @@ export class LandingpageComponent implements OnInit {
       focus: false,
       title: 'Fast, Easy Deployment',
       class: 'fal fa-shipping-fast orange',
-      blurb: 'Our unique deployment model has each manager responsible for the setup of their team and their trainings, all in less than 30 minutes!',
+      blurb: 'Deploy to your individual team or your entire organization in a matter of minutes, not weeks!',
       learnMore: ''
     }
     /*
@@ -95,13 +95,13 @@ export class LandingpageComponent implements OnInit {
     {
       active: false,
       question: 'What types of content does myTrainingdocs support?',
-      answer: `myTrainingdocs supports all common document, image, video, and audio formats.  It also supports
-      the embedding of extenal websites.`
+      answer: `myTrainingdocs supports all common document, image, and video formats.  It also supports
+      the embedding of extenal websites as well as the in-app creation of HTML documents.`
     },
     {
       active: false,
       question: 'Where does myTrainingdocs store my content?',
-      answer: `myTrainingdocs stores all uploaded documents, video, audio, and images in our private, secure
+      answer: `myTrainingdocs stores all uploaded documents, video, and images in our private, secure
       cloud based repository.`
     },
     {
@@ -164,9 +164,9 @@ export class LandingpageComponent implements OnInit {
   currentHowMsg: string;
   sub1: Subscription;
   explainerUrl = 'https://cdn.filestackcontent.com/kiKtqljARoygXbEeCN6V';
-  step1Url = 'https://cdn.filestackcontent.com/FQvfclWnRHyku9t3rKw3';
-  step2Url = 'https://cdn.filestackcontent.com/VtSeKZ5cRgSyD0ci7llL';
-  step3Url = 'https://cdn.filestackcontent.com/fpj1JwxTnOmIzTgLAW4Q';
+  step1Url = 'https://cdn.filestackcontent.com/';
+  step2Url = 'https://cdn.filestackcontent.com/';
+  step3Url = 'https://cdn.filestackcontent.com/';
   currentVideo;
   showYouTubeIcon = true;
 

@@ -5,20 +5,20 @@
       Create a New Training
     </button>
   </div>
-  <div *ngIf="trainings && trainings.length > 0" style="display:block;">
-    <nz-table #nestedTable [nzData]="trainings" nzSize="small" [nzShowPagination]="false"
+  <div *ngIf="trainingsDisplay?.length > 0" style="display:block;">
+    <nz-table #nestedTable [nzData]="trainingsDisplay" nzSize="small" [nzShowPagination]="false"
       style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
-      <thead nzSingleSort>
+      <thead >
         <tr>
           <th nzShowExpand></th>
-          <th nzShowSort>State</th>
-          <th nzShowSort>Type</th>
-          <th nzShowSort>Title</th>
-          <th nzShowSort>Category</th>
-          <th nzShowSort>Subcategory</th>
-          <th nzShowSort>Rating</th>
+          <th >State</th>
+          <th >Type</th>
+          <th >Title</th>
+          <th >Category</th>
+          <th >Subcategory</th>
+          <th >Rating</th>
           <th>Version</th>
-          <th nzShowSort>Date Created</th>
+          <th >Date Created</th>
           <th>Actions</th>
         </tr>
       </thead>

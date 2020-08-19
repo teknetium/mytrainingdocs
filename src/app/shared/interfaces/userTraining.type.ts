@@ -4,7 +4,7 @@ export interface UserTrainingModel {
   trainingVersion: string,
   uid: string,
   teamId:string,
-  status: 'upToDate' | 'pastDue' | 'completed',
+  status: 'upToDate' | 'pastDue' | 'completed' | 'pendingCertUpload',
   dueDate: number,
   dateCompleted: number,
   timeToDate: number,

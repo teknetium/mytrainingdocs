@@ -66,7 +66,7 @@
                         <i nz-icon [nzType]="'play-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
                             style="font-size:18px;"></i>
                     </div>
-                    <div *ngIf="trainingIdHash[userTraining.tid].type === 'recurring' && userTraining.status === 'completed' && !userTraining.certImage"
+                    <div *ngIf="userTraining.status === 'pendingCertUpload'"
                         class="action">
                         <i nz-icon nzType="upload" [nzTheme]="'outline'" class="action" style="font-size:18px;"
                             (click)="uploadCertImage(userTraining)" nz-tooltip
@@ -99,9 +99,10 @@
         <span style="font-size:16px;display:block;font-weight:300;">
             No trainings have been assigned to this user.</span>
     </div>
-    <nz-modal [(nzVisible)]="markCompletedModalIsVisible" nzTitle="Mark this Training as Completed" nzWidth="800"
+    <nz-modal [(nzVisible)]="markCompletedModalIsVisible" nzTitle="Congratulations!" nzWidth="800"
         (nzOnCancel)="handleMarkAsCompletedCancel()" (nzOnOk)="markTrainingAsComplete(selectedTraining)"
         nzCancelDisabled="true" [nzOkDisabled]="rating === 0 || comment === ''" style="width:800px;">
+        Congratulations on successfully completing this training.
         <span style="display:block;">Rate this Training</span>
         <nz-rate style="display:block;margin-bottom:20px;" [(ngModel)]="rating" ngDefaultControl
             (ngModelChange)="ratingChanged($event)" nzAllowHalf class="small"></nz-rate>

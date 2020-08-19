@@ -20,7 +20,9 @@ import { BaseComponent } from '../base.component';
 import FlatfileImporter from "flatfile-csv-importer";
 import { JoyrideService } from 'ngx-joyride';
 import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
+import { stringify } from 'querystring';
 // import * as names from '../../../assets/names.json';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 
 @Component({
@@ -109,7 +111,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   private importer: FlatfileImporter;
 
   userTypeIconHash = {
-    individualContributor: 'fad fa-fw fa-user',
+    individualContributor: 'fas fa-fw fa-user',
     supervisor: 'fad fa-fw fa-user-tie',
     volunteer: 'fad fa-fw fa-user-cowboy',
     customer: 'fad fa-fw fa-user-crown',
@@ -281,7 +283,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   orgChartFullscreen = false;
   iconFontSize = 18;
   textFontSize = 8;
-  orgChartPadding = 3;
+  orgChartPadding = 0;
   showOrgChart = 'true';
   userTrainings: UserTrainingModel[];
   listOfSupervisors = [];
@@ -498,8 +500,219 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     "Jennefer Radice  ",
     "Linette Fruchter  ",
     "Margarita Blough  ",
-    "Enoch Ruano  "];
-  
+    "Enoch Ruano  ",
+    "Nubia Gurney  ",
+    "Julissa Bischof  ",
+    "Robyn Guajardo  ",
+    "Lynsey Skillings  ",
+    "Stefania Engelking  ",
+    "Berry Casto  ",
+    "Maxie Slape  ",
+    "Chau Turcios  ",
+    "Garret Milan  ",
+    "Elden Minier  ",
+    "Kristin Morse  ",
+    "Un Sim  ",
+    "Zaida Dingus  ",
+    "Rosella Auston  ",
+    "Janee Tiernan  ",
+    "Modesta Garriott  ",
+    "Marget Henault  ",
+    "Newton Eisner  ",
+    "Caitlyn Belisle  ",
+    "Genevieve Gooch  ",
+    "Sabrina Hesse  ",
+    "Darci Vanalstyne  ",
+    "Etsuko Kerekes  ",
+    "Forrest Vann  ",
+    "Chanda Prescott  ",
+    "Tiffaney Marton  ",
+    "Jade Flippin  ",
+    "Cortney Sutterfield  ",
+    "Beryl Baltz  ",
+    "Nu Peguero  ",
+    "Johnna Mcelveen  ",
+    "Mickey Canfield  ",
+    "Christa Quackenbush  ",
+    "Lauryn Smartt  ",
+    "Doloris Artrip  ",
+    "Neoma Reulet  ",
+    "Hye Kutz  ",
+    "Shalanda Deems  ",
+    "Lela Declue  ",
+    "Magdalena Vasquez  ",
+    "Nova Swinehart  ",
+    "Tajuana Leinen  ",
+    "Aracely Cusack  ",
+    "Melaine Weisberg  ",
+    "Cruz Thompkins  ",
+    "Rubin Madding  ",
+    "Lara Peil  ",
+    "Tracee Padula  ",
+    "Eunice Istre  ",
+    "Candida Rancourt ",
+    "Sheena Heth  ",
+    "Keva Mayle  ",
+    "Johanne Hornung  ",
+    "Buford Emily  ",
+    "Arlinda Elza  ",
+    "Maureen Franke  ",
+    "Verlene Dundas  ",
+    "Leanna Duhe  ",
+    "Stormy Dunlop  ",
+    "Jennine Then  ",
+    "Sherwood Stokely  ",
+    "Vicki Sidwell  ",
+    "Teena Bame  ",
+    "Nita Imler  ",
+    "Nana Fitting  ",
+    "Samantha Haas  ",
+    "Lakiesha Lopresti  ",
+    "Jonah Ecklund  ",
+    "Nilda Crossett  ",
+    "Yang Moisan  ",
+    "Arielle Gatlin  ",
+    "Donna Priestly  ",
+    "Geri Harshman  ",
+    "Azucena Zuk  ",
+    "Sanda Bonneau  ",
+    "Ji Goers  ",
+    "Gigi Toenjes  ",
+    "Shawanda Hafley  ",
+    "Felisha Caplinger  ",
+    "Carole Alex  ",
+    "Everette Maize  ",
+    "Augustine Reuben  ",
+    "Todd Manges  ",
+    "Landon Welles  ",
+    "Lana Hadnot  ",
+    "Ida Hasse  ",
+    "Tomeka Nickols  ",
+    "Felicitas Braswell  ",
+    "Shemeka Dixion  ",
+    "Charita Corker  ",
+    "Nakita Stiverson  ",
+    "Regenia Berthiaume  ",
+    "Kristina Drain  ",
+    "Qiana Mauk  ",
+    "Darcie Due  ",
+    "Deetta Rosenbloom  ",
+    "Aron Slocum  ",
+    "Griselda Colvard  ",
+    "Rosa Pesqueira  ",
+    "James Slevin  ",
+    "Thad Maser  ",
+    "Ginger Carvajal  ",
+    "Armanda Hauck  ",
+    "Jess Morain  ",
+    "Tu Carbonneau  ",
+    "Carla Camper  ",
+    "Devora Lorch  ",
+    "Catarina Cieslak  ",
+    "Caleb Theel  ",
+    "Jeffrey Booth  ",
+    "Dewey Thatcher  ",
+    "Ross Christo  ",
+    "Berna Gravely  ",
+    "Keitha Mraz  ",
+    "Mark Jessop  ",
+    "Yolando Mccullum  ",
+    "Kanisha Bristow  ",
+    "Paz Artiaga  ",
+    "Maybell Lynes  ",
+    "Vannessa Broussard  ",
+    "Shawnda Lindquist  ",
+    "Joana Kohut  ",
+    "Dalila Stanbery  ",
+    "Gertie Hageman  ",
+    "Jeraldine Baskins  ",
+    "Sylvie Harkleroad  ",
+    "Tabitha Hinrichs  ",
+    "Johna Hammer  ",
+    "Bertha Schendel  ",
+    "Merri Rosso  ",
+    "Aletha Zehner  ",
+    "Charlette Yamaguchi  ",
+    "Tom Carollo  ",
+    "Noella Scherf  ",
+    "Anton Loveland  ",
+    "Lou Heaton  ",
+    "Sharmaine Ocana  ",
+    "Rolanda Deshong  ",
+    "Zachery Bell  ",
+    "Jolynn Givens  ",
+    "Dina Slay  ",
+    "Antony Negley  ",
+    "Drew Barrick  ",
+    "Rochel Freyer  ",
+    "Lacie Hallberg  ",
+    "Arlinda Scaglione  ",
+    "Aleta Chenier  ",
+    "Inell Rehm  ",
+    "Marivel Polhemus  ",
+    "Norene Quail  ",
+    "Willy Hults  ",
+    "Jasper Shope  ",
+    "Tamie Gutter  ",
+    "Alfreda Berlanga  ",
+    "Bettie Haverland  ",
+    "Angella Faye  ",
+    "Christi Gholston  ",
+    "Elsy Couturier  ",
+    "Scotty Markel  ",
+    "Elke Weisner  ",
+    "Vernita Ledet  ",
+    "Arlena Elzy  ",
+    "Hermine Keagle  ",
+    "Rosenda Devries  ",
+    "Vania Marcos  ",
+    "Marietta Lofland  ",
+    "Reginia Kovach  ",
+    "Pa Humphery  ",
+    "Miki Norton  ",
+    "Kit Gatlin  ",
+    "Marget Cliff  ",
+    "Yetta Havard  ",
+    "Caron Yun  ",
+    "Sharyn Benford  ",
+    "Tiffanie Pleas  ",
+    "Tonja Hague  ",
+    "Benito Slade  ",
+    "Melodi Heger  ",
+    "Una Houtz  ",
+    "Lorina Leedom  ",
+    "Ingeborg Telles  ",
+    "Florencio Bucklin  ",
+    "Retha Lieb  ",
+    "Chasidy Toy  ",
+    "Lashandra Rumbaugh  ",
+    "Ariane Muncie  ",
+    "Vince Barile  ",
+    "Lianne Kidder  ",
+    "Burton Wait  ",
+    "Ocie Ruiz  ",
+    "Kimiko Mccollister  ",
+    "Tiffany Falconer  ",
+    "Glen Rinaldo  ",
+    "Barb Rhoten  ",
+    "Genevie Neidig  ",
+    "Miles Soto  ",
+    "Myriam Lauderdale  ",
+    "Dovie Allsop  ",
+    "Michal Sher  ",
+    "Delicia Grissett "];
+
+  orgJobTitles = [];
+  testNodes = <{ firstName: string, lastName: string, email: string, jobTitle: string, supervisorName: string, drList: any[] }[]>[];
+  maxLevel = 5;
+  maxLevelSummary = false;
+  includeFullName = true;
+  useMaxWidth = true;
+  test = true;
+  userMin = 2;
+  userMax = 6;
+  uidUTStatHash = {};
+  usersCSV = '';
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -510,6 +723,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private jobTitleService: JobTitleService,
     private userTrainingService: UserTrainingService,
     private joyrideService: JoyrideService,
+    private messageService: NzMessageService,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -535,6 +749,22 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
 
+    for (let i = 0; i < this.maxLevel; i++) {
+      if (i === this.maxLevel - 1) {
+        this.orgJobTitles[i] = [
+          'lifeguard',
+          'front desk',
+          'programmer',
+          'admin',
+          'coordinator',
+          'project manager'
+        ];
+      } else {
+        this.orgJobTitles[i] = ['foo'];
+      }
+    }
+
+
     this.userList = [];
     this.tourStepsHash['myTeam'] = ['Step1-myTeam', 'Step2-myTeam', 'Step3-myTeam', 'Step4-myTeam', 'Step5-myTeam'];
     this.tourStepsHash['memberDetails'] = ['Step1-memberDetails'];
@@ -544,37 +774,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.contentHeight = Math.floor((window.innerHeight - (.3 * window.innerHeight)) * .90);
     this.contentWidth = Math.floor(window.innerWidth * .9);
     this.orgChartWidth = window.innerWidth - (window.innerWidth * this.teamContainerWidth / 100);
-    /*
-    if (this.orgChartWidth < 800) {
-      this.orgChartContainerSize = 'small';
-    } else if (this.orgChartWidth < 900) {
-      this.orgChartContainerSize = 'medium';
-    } else {
-      this.orgChartContainerSize = 'large';
-    }
-    this.peopleCntArray = this.peopleCntHash[this.orgChartContainerSize];
-    */
     FlatfileImporter.setVersion(2);
     this.initializeImporter();
-    /*
-    this.newUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(newUser => {
-      if (!newUser) {
-        return;
-      }
-      let message = <TemplateMessageModel>{
-        to: newUser.email,
-        from: this.authenticatedUser.email,
-        templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
-        dynamicTemplateData: {
-          email: newUser.email
-        },
-      }
-      this.mailService.sendTemplateMessage(message);
-
-
-      this.trainingService.assignTrainingsForJobTitle(newUser.jobTitle, newUser._id, newUser.teamId);
-    });
-    */
     this.batchFails$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(failList => {
       if (!failList) {
         return;
@@ -637,7 +838,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           this.listOfSupervisors.push({ text: this.myOrgUserHash[user.supervisorId]?.firstName + ' ' + this.myOrgUserHash[user.supervisorId]?.lastName, value: user.supervisorId });
           listOfSupervisorIds.push(user.supervisorId);
         }
-//        this.supervisorIdNameHash[user.supervisorId]
+        //        this.supervisorIdNameHash[user.supervisorId]
         if (user.userStatus === 'duplicate-email') {
           bulkAddFailFound = true;
           this.bulkAddFail = true;
@@ -667,6 +868,16 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         return;
       }
       this.uidUTHash = uidUTHash;
+      /*
+      let uids = Object.keys(this.uidUTHash);
+      for (let uid of uids) {
+        let userTrainings = this.uidUTHash[uid];
+        let uidUTStat = { none: 0, upToDate: 0, pastDue: 0 };
+        for (let ut of userTrainings) {
+          if (ut.status)
+        }
+      }
+      */
     });
     this.myOrgChartData$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(nodes => {
       if (!nodes) {
@@ -677,50 +888,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       // number of people in the chart
 
       this.nodes = nodes;
-      /*
-      let peopleCnt = this.nodes[0].extra.peopleCnt;
-      if (peopleCnt < this.peopleCntArray[0]) {
-        this.peopleCntArrayIndex = 0;
-        this.orgChartFontSize = 12;
-      } else if (peopleCnt < this.peopleCntArray[1]) {
-        this.peopleCntArrayIndex = 1;
-        this.orgChartFontSize = 11;
-      } else if (peopleCnt < this.peopleCntArray[2]) {
-        this.peopleCntArrayIndex = 2;
-        this.orgChartFontSize = 10;
-      } else if (peopleCnt < this.peopleCntArray[3]) {
-        this.peopleCntArrayIndex = 3;
-        this.orgChartFontSize = 9;
-      } else if (peopleCnt < this.peopleCntArray[4]) {
-        this.peopleCntArrayIndex = 4;
-        this.orgChartFontSize = 8;
-      } else if (peopleCnt < this.peopleCntArray[5]) {
-        this.peopleCntArrayIndex = 5;
-        this.orgChartFontSize = 7;
-      } else if (peopleCnt < this.peopleCntArray[6]) {
-        this.peopleCntArrayIndex = 6;
-        this.orgChartFontSize = 6;
-      } else if (peopleCnt < this.peopleCntArray[7]) {
-        this.peopleCntArrayIndex = 7;
-        this.orgChartFontSize = 5;
-      } else if (peopleCnt < this.peopleCntArray[8]) {
-        this.peopleCntArrayIndex = 8;
-        this.orgChartFontSize = 4;
-      } else if (peopleCnt < this.peopleCntArray[9]) {
-        this.peopleCntArrayIndex = 9;
-        this.orgChartFontSize = 3;
-      } else {
-        this.peopleCntArrayIndex = 10;
-        this.orgChartFontSize = 2;
-      }
-      */
     });
     this.myTeam$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
       console.log('myTeam$  ', userList);
       if (!userList) {
         return;
       }
-//      this.myGroup = userList;
+      //      this.myGroup = userList;
       this.myTeam = userList;
       let teamIdHash = {};
 
@@ -830,16 +1004,38 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     })
   }
 
+  resendRegistrationMsg(to: string, from: string) {
+    this.userService.sendRegistrationMsg(to, from);
+    let msg = 'Registration messasge resent.';
+    this.createBasicMessage(msg);
+  }
+
+  createBasicMessage(msg: string) {
+    this.messageService.info(msg);
+  }
+
+  createCSV() {
+    for (let user of this.newUsers) {
+      this.usersCSV += user.firstName + ',' + user.lastName + ',' + user.email + ',' + user.jobTitle + ',' + user.supervisorName + '\n';
+    }
+  }
+
   zoomIn() {
     this.iconFontSize += 1;
     this.textFontSize += 1;
-    this.orgChartPadding += 1;
+//    this.orgChartPadding += 1;
   }
 
   zoomOut() {
-    this.iconFontSize -= 1;
-    this.textFontSize -= 1;
-    this.orgChartPadding -= 1;
+    if (this.iconFontSize > 2) {
+      this.iconFontSize -= 1;
+    }
+    if (this.textFontSize > 2) {
+      this.textFontSize -= 1;
+    }
+//    if (this.orgChartPadding > 0) {
+//      this.orgChartPadding -= 1;
+//    }
   }
 
   filterMyTeam(listOfSupervisors) {
@@ -884,8 +1080,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.userListDisplay = data;
     }
 
-    
-    this.userListDisplay = data;
+
+//    this.userListDisplay = data;
   }
 
   toggleMainView(showOrg) {
@@ -894,45 +1090,105 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
   }
 
-  testBulkAdd() {
-    let supervisors: string[][] = [[]];
-    let base = String(new Date().getTime());
-    let currentSupervisor = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
-    let supervisorCnt = 1;
-    let level = 1;
-    supervisors[0][0] = currentSupervisor;
-    for (let i = 0; i < this.orgSize; i++) {
-      let name = this.nameList[i]
-      let nameParts = name.trim().split(' ');
-      let user: UserBatchData = {
-        firstName: nameParts[0],
-        lastName: nameParts[1],
-        email: nameParts[0] + '.' + nameParts[1] + '@test.com',
-        jobTitle: 'jobTitle' + i % 10,
-        supervisorName: currentSupervisor
-      }
-      if (i < this.usersPerTeam) {
-        supervisors[level].push(this.nameList[i]);
-        user.supervisorName = currentSupervisor;
-      } else if (i < this.usersPerTeam * this.usersPerTeam) {
+  deleteAllUsers() {
 
-        if (i % this.usersPerTeam === 0) {
-          currentSupervisor = this.nameList[i];
-        }
-        level = 2;
-        supervisors[level].push(this.nameList[i]);
-        user.supervisorName = currentSupervisor;
-      } else {}
-      if (i % this.usersPerTeam === 0) {
-        supervisorCnt++;
-        currentSupervisor = 'fName' + i + ' ' + 'last-' + i;
-      }
-      this.newUsers.push(cloneDeep(user));
+  }
+
+  testBulkAdd() {
+    let currentSupervisorName = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
+    let supervisorCnt = 1;
+    let name: string = this.getTestUser();
+    let fullName: string[] = name.trim().split(' ');
+    let level = 1;
+    let jobTitleIndex = 0;
+    let node = {
+      firstName: fullName[0],
+      lastName: fullName[1],
+      email: 'greg@test.com',
+      jobTitle: this.orgJobTitles[level][jobTitleIndex],
+      supervisorName: currentSupervisorName,
+      drList: []
     }
-    console.log('New Users ', this.newUsers);
+
+    let teamSize = Math.floor(this.randn_bm(this.userMin, this.userMax, 1));
+    if (teamSize > 9) {
+      teamSize = 9;
+    }
+    for (let i = 0; i < teamSize; i++) {
+      let childNode = this.buildNode(currentSupervisorName, level);
+      node.drList.push(childNode);
+      this.testNodes.push(childNode);
+    }
+
+    this.testNodes.push(node);
+    this.newUsers = this.testNodes;
+
     this.userService.createNewUsersFromBatch(this.newUsers, true);
   }
 
+
+  buildNode(supervisorName: string, level: number): { firstName: string, lastName: string, email: string, jobTitle: string, supervisorName: string, drList: any[] } {
+    let name: string;
+    if (this.nameList.length === 0) {
+      name = String(new Date().getTime()) + ' ' + String(new Date().getTime());
+    } else {
+      name = this.getTestUser();
+    }
+
+    let fullName: string[] = name.trim().split(' ');
+    let jobTitle: string;
+
+    let jobTitleIndex = 0;
+    if (level === 5) {
+      jobTitleIndex = Math.floor(Math.random() * Math.floor(this.orgJobTitles.length));
+    }
+    let node = {
+      firstName: fullName[0],
+      lastName: fullName[1],
+      email: 'greg@test.com',
+      jobTitle: this.orgJobTitles[level][jobTitleIndex],
+      supervisorName: supervisorName,
+      drList: []
+    }
+    level++;
+    if (level < this.maxLevel) {
+      if (Math.random() < .7) {
+        node.drList = [];
+        let teamSize = Math.floor(this.randn_bm(this.userMin, this.userMax, 1));
+
+        if (teamSize > 6) {
+          teamSize = 6;
+        }
+        for (let i = 0; i < teamSize; i++) {
+          let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], level);
+          node.drList.push(childNode);
+          this.testNodes.push(childNode);
+        }
+      }
+    }
+    return node;
+  }
+
+  getTestUser(): string {
+    let nameListSize = this.nameList.length;
+    let index = Math.floor(Math.random() * Math.floor(nameListSize));
+    let names: string[] = this.nameList.splice(index, 1);
+    return names[0];
+  }
+
+  randn_bm = (min: number, max: number, skew: number): number => {
+    var u = 0, v = 0;
+    while (u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+    while (v === 0) v = Math.random();
+    let num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+
+    num = num / 10.0 + 0.5; // Translate to 0 -> 1
+    if (num > 1 || num < 0) num = this.randn_bm(min, max, skew); // resample between 0 and 1 if out of range
+    num = Math.pow(num, skew); // Skew
+    num *= max - min; // Stretch to fill range
+    num += min; // offset to min
+    return num;
+  }
   increaseFontSize() {
     this.orgChartFontSize += 1;
   }
@@ -987,8 +1243,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   selectNode(event) {
     this.reportChain = Object.assign([], this.uidReportChainHash[event.extra.uid]);
-//    this.userService.buildOrgChart(event.extra.uid, true);
-//    console.log('selectNode', event);
+    //    this.userService.buildOrgChart(event.extra.uid, true);
+    //    console.log('selectNode', event);
   }
 
   toggleFilter(filter: string) {
@@ -1094,7 +1350,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     let index = this.myOrgUsers.indexOf(value);
     if (index > -1) {
       this.selectUser(this.myOrgUserNameHash[value]._id, index);
-//      this.showAddToUserListButton = true;
+      //      this.showAddToUserListButton = true;
     }
   }
 
@@ -1112,18 +1368,18 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   onJobTitleChange(value: string): void {
     this.matchingJobTitles = this.jobTitles.filter(jobTitle => jobTitle.toLowerCase().indexOf(value.toLowerCase()) !== -1);
   }
-/*
-  addFoundUser() {
-    let userObj = this.myOrgUserNameHash[this.userNameToSearchFor];
-    this.myTeam.push(userObj);
-    this.myTeamIdHash[userObj._id] = userObj;
-    this.showAddToUserListButton = false;
-    this.currentTab = 0;
-    this.userNameToSearchFor = '';
-    this.matchingUsers = this.myOrgUsers;
-    this.selectUser(userObj._id, -1);
-  }
-  */
+  /*
+    addFoundUser() {
+      let userObj = this.myOrgUserNameHash[this.userNameToSearchFor];
+      this.myTeam.push(userObj);
+      this.myTeamIdHash[userObj._id] = userObj;
+      this.showAddToUserListButton = false;
+      this.currentTab = 0;
+      this.userNameToSearchFor = '';
+      this.matchingUsers = this.myOrgUsers;
+      this.selectUser(userObj._id, -1);
+    }
+    */
 
   addUser() {
     this.newUser = true;

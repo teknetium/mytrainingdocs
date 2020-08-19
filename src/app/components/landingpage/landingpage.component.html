@@ -196,33 +196,6 @@
                     <source [src]="step2Url" type="video/mp4">
                   </video>
                 </vg-player>
-                <vg-player *ngIf="currentVideo === step3Url" (onPlayerReady)="onPlayerReady($event)">
-
-                  <vg-controls>
-                    <vg-play-pause></vg-play-pause>
-                    <vg-playback-button></vg-playback-button>
-
-                    <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-
-                    <vg-scrub-bar>
-                      <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                      <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-                    </vg-scrub-bar>
-
-                    <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
-                    <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-
-                    <vg-track-selector></vg-track-selector>
-                    <vg-mute></vg-mute>
-                    <vg-volume></vg-volume>
-
-                    <vg-fullscreen></vg-fullscreen>
-                  </vg-controls>
-
-                  <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
-                    <source [src]="step3Url" type="video/mp4">
-                  </video>
-                </vg-player>
               </div>
             </div>
             <div style="display:block;width:100%">
@@ -241,20 +214,22 @@
                     <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('step1')">
                       <img width="200" src="../../../assets/images/step1.png">
                     </div>
-                    <span style="display:block;color:white;font-size:12px;">Step1 - Screencast</span>
+                    <span style="display:block;color:white;font-size:12px;">Onboarding Screencast</span>
                   </div>
                   <div>
                     <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('step2')">
                       <img width="200" src="../../../assets/images/step2.png">
                     </div>
-                    <span style="display:block;color:white;font-size:12px;">Step2 - Screencast</span>
+                    <span style="display:block;color:white;font-size:12px;">Training Screencast</span>
                   </div>
+                  <!--
                   <div>
                     <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('step3')">
                       <img width="200" src="../../../assets/images/step3.png">
                     </div>
                     <span style="display:block;color:white;font-size:12px;">Step3 - Screencast</span>
                   </div>
+                  -->
                 </div>
               </div>
               <!--
