@@ -363,7 +363,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
         from: 'support@mytrainingdocs.com',
         templateId: 'd-ad3c80c12a634f1dbd0c0fd9844fca77',
         dynamicTemplateData: {
-          trainingTitle: this.selectedTraining.title
+          trainingTitle: this.trainingIdHash[this.currentTrainingId].title
         }
       }
       this.mailService.sendTemplateMessage(msg);

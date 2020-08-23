@@ -104,7 +104,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   page$ = new BehaviorSubject<Page>(null);
-  trainingIsDirty$: Observable<boolean>;
+//  trainingIsDirty$: Observable<boolean>;
   isAuthenticated$: Observable<boolean>;
   isIconSelectModalVisible = false;
   selectedTraining$: Observable<TrainingModel>;
@@ -116,6 +116,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   safeFileUrl: SafeResourceUrl;
   myTeamHash$: Observable<UserIdHash>;
   myTeamHash: UserIdHash;
+  myOrgHash$: Observable<UserIdHash>;
+  myOrgHash: UserIdHash;
   usersAffected: UserModel[] = [];
   teamMembers: UserModel[] = [];
   users$: Observable<string[]>;
@@ -363,13 +365,14 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.myTeamHash$ = this.userService.getMyTeamIdHashStream();
+    this.myOrgHash$ = this.userService.getOrgHashStream();
     //    this.newVersion$ = this.fileService.getNewVersionStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
     this.selectedTrainingVersions$ = this.trainingService.getSelectedTrainingVersionsStream();
     this.safeFileUrl$ = this.fileService.getSafeFileUrlStream();
     this.users$ = this.userTrainingService.getUsersForTrainingStream();
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
-    this.trainingIsDirty$ = this.trainingService.getTrainingIsDirtyStream();
+//    this.trainingIsDirty$ = this.trainingService.getTrainingIsDirtyStream();
 
   }
 
@@ -601,8 +604,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     });
 
     this.myTeamHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamHash => {
-      console.log('myTeamHash$  ', myTeamHash);
       this.myTeamHash = myTeamHash;
+    })
+
+    this.myOrgHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgHash => {
+      console.log('myOrgHash$  ', myOrgHash);
+      this.myOrgHash = myOrgHash;
     })
 
     this.users$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
@@ -610,10 +617,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         return;
       }
       this.assignableUsers = [];
-      if (this.myTeamHash) {
+      if (this.myOrgHash) {
         this.assignedToUsers = userList;
-        let teamMemberIds = Object.keys(this.myTeamHash);
-        for (let userId of teamMemberIds) {
+        let userIds = Object.keys(this.myOrgHash);
+        for (let userId of userIds) {
           if (this.assignedToUsers.includes(userId)) {
             continue;
           } else {
@@ -848,11 +855,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
           }
     */
     for (let userId of this.assignableUsers) {
-      if (this.myTeamHash[userId].jobTitle === this.selectedTraining.jobTitle) {
+      if (this.myOrgHash[userId].jobTitle === this.selectedTraining.jobTitle) {
         if (this.selectedTraining.versions.length > 1) {
-          if (this.myTeamHash[userId].trainingStatus === 'none') {
-            this.myTeamHash[userId].trainingStatus = 'upToDate';
-            this.userService.updateUser(this.myTeamHash[userId], true);
+          if (this.myOrgHash[userId].trainingStatus === 'none') {
+            this.myOrgHash[userId].trainingStatus = 'upToDate';
+            this.userService.updateUser(this.myOrgHash[userId], false);
           }
           this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, newVersion);
           this.assignedFromJobTitle.push(userId);
@@ -900,7 +907,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       this.trainingService.selectTrainingVersion(this.trainingClone);
       if (this.selectedTraining.jobTitle) {
         for (let userId of this.assignableUsers) {
-          if (this.myTeamHash[userId].jobTitle === this.selectedTraining.jobTitle) {
+          if (this.myOrgHash[userId].jobTitle === this.selectedTraining.jobTitle) {
+            if (this.myOrgHash[userId].trainingStatus === 'none') {
+              this.myOrgHash[userId].trainingStatus = 'upToDate';
+              this.userService.updateUser(this.myOrgHash[userId], false);
+            }
             this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, '1_0_0');
             this.assignedFromJobTitle.push(userId);
           }
@@ -943,11 +954,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated and you are required to retake it.";
     for (let user of this.assignedToUsers) {
       let msg = <TemplateMessageModel>{
-        to: this.myTeamHash[user].email,
+        to: this.myOrgHash[user].email,
         from: this.authenticatedUser.email,
         templateId: 'd-b4679d4de1fb41e18d1e2487995f9bdf',
         dynamicTemplateData: {
-          firstName: this.myTeamHash[user].firstName,
+          firstName: this.myOrgHash[user].firstName,
           trainingTitle: this.selectedTraining.title,
         }
       }
@@ -958,11 +969,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   sendNotifications() {
     for (let user of this.assignedToUsers) {
       let msg = <TemplateMessageModel>{
-        to: this.myTeamHash[user].email,
+        to: this.myOrgHash[user].email,
         from: this.authenticatedUser.email,
         templateId: 'd-3d4ee355e8164a999bbd8a4dd3d106dc',
         dynamicTemplateData: {
-          firstName: this.myTeamHash[user].firstName,
+          firstName: this.myOrgHash[user].firstName,
           trainingTitle: this.selectedTraining.title,
         }
       }
@@ -1256,7 +1267,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   selectTeamMemberToAssign(uid: string) {
-    this.assignToUser = this.myTeamHash[uid];
+    this.assignToUser = this.myOrgHash[uid];
     this.currentSelectedUserToAssign = uid;
   }
 
@@ -1297,7 +1308,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.usersAffected = [];
     this.userTrainingService.getUTForTraining$(this.selectedTraining._id).pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
       for (let ut of userTrainings) {
-        this.usersAffected.push(this.myTeamHash[ut.uid]);
+        this.usersAffected.push(this.myOrgHash[ut.uid]);
       }
       if (this.usersAffected.length > 0) {
         this.showConfirmDeleteTrainingWithAffectedUsers = true;

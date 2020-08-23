@@ -360,11 +360,11 @@ export class TrainingService {
       iconColor: '#ff0000',
       iconSource: 'fontawesome',
       pages: [page],
-      interestList: [],
+      interestList: [this.authenticatedUser.email],
       shared: false,
       isDirty: false,
       useFinalAssessment: false,
-      notifySchedule: [],
+      notifySchedule: [7, 30],
       expirationDate: 0
     };
 

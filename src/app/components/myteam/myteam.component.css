@@ -201,16 +201,17 @@
 }
 
 .hover-node {
-    background: rgba(175, 188, 248, .7) !important;
+    background: rgba(0,0,255, .2) !important;
     border:2px solid #afbcf8 !important;
 }
 
 .inactive-node {
-    border: 2px solid  white;
+    border: 2px solid  white !important;
 }
 
 .selected-node {
     border: 2px solid blue !important;
+    background: rgba(0, 0, 255, .2);
 }
 
 .report-chain {
@@ -274,12 +275,12 @@
     position:relative;
     color:black !important;
     cursor: pointer;
+    border: 2px solid white;
 }
 .maxlevel-node {
     text-align: center;
     display:inline-block;
     width:fit-content;
-    margin-bottom:20px;
     position:relative;
     cursor: pointer;
 }
@@ -299,4 +300,10 @@
 .ic-level {
     max-width:100px;
     overflow-x: scroll;
+}
+
+.card-action {
+}
+.card-action:hover {
+    background-color: #e9e9e9;
 }
