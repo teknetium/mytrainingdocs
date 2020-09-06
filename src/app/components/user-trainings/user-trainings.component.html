@@ -15,9 +15,9 @@
         <tbody>
             <tr *ngFor="let userTraining of uidUTHash[uid]"
                 style="cursor: pointer;font-size:12px;background-color: white;line-height:10px;">
-                <td style="width:7%;" nz-tooltip [nzTooltipTitle]="statusIconHash[userTraining.status].desc">
-                    <i nz-icon [nzType]="statusIconHash[userTraining.status].icon" [nzTheme]="'twotone'"
-                        [nzTwotoneColor]="statusIconHash[userTraining.status].color" style="font-size:18px;"></i>
+                <td style="width:7%;" nz-tooltip [nzTooltipTitle]="statusIconHash[userTraining?.status]?.desc">
+                    <i nz-icon [nzType]="statusIconHash[userTraining?.status]?.icon" [nzTheme]="'twotone'"
+                        [nzTwotoneColor]="statusIconHash[userTraining?.status]?.color" style="font-size:18px;"></i>
                 </td>
                 <td style="">
                     <!--
@@ -30,20 +30,20 @@
                         style="margin-right:5px;display:inline-block;font-size:12px;vertical-align: middle;"
                         [nzTwotoneColor]="'red'"></i>
                         -->
-                    <i [ngClass]="(trainingIdHash$ | async)[userTraining.tid].iconClass"
+                    <i [ngClass]="(trainingIdHash$ | async)[userTraining?.tid]?.iconClass"
                         style="font-size:24px;vertical-align: middle;"
-                        [ngStyle]="{'color': trainingIdHash[userTraining.tid].iconColor}">
+                        [ngStyle]="{'color': trainingIdHash[userTraining?.tid]?.iconColor}">
                     </i>
-                    <i *ngIf="trainingIdHash[userTraining.tid].type === 'recurring'" class="fas fa-redo-alt"
+                    <i *ngIf="trainingIdHash[userTraining?.tid].type === 'recurring'" class="fas fa-redo-alt"
                         style="font-size:10px;vertical-align: top;">
                     </i>
-                    <span style="margin-left:10px;">{{ trainingIdHash[userTraining.tid].title }}</span>
+                    <span style="margin-left:10px;">{{ trainingIdHash[userTraining?.tid]?.title }}</span>
                 </td>
                 <td style="">
-                    {{ versionFormatter(userTraining.trainingVersion) }}
+                    {{ versionFormatter(userTraining?.trainingVersion) }}
                 </td>
                 <td style="width:9%;">
-                    {{ timeFormat(userTraining.timeToDate) }}
+                    {{ timeFormat(userTraining?.timeToDate) }}
                 </td>
                 <td *ngIf="mode === 'admin'" style="width:15%;">
                     <nz-date-picker nzFormat="MM-dd-yyyy" nzSize="small" ngDefaultControl
@@ -51,12 +51,12 @@
                     </nz-date-picker>
                 </td>
                 <td *ngIf="mode !== 'admin'" style="width:15%;">
-                    {{ userTraining.dueDate | date:'mediumDate'}}
+                    {{ userTraining?.dueDate | date:'mediumDate'}}
                 </td>
                 <td *ngIf="userTraining.dateCompleted > 0" style="width:15%;">
-                    {{ userTraining.dateCompleted | date:'mediumDate'}}
+                    {{ userTraining?.dateCompleted | date:'mediumDate'}}
                 </td>
-                <td *ngIf="userTraining.dateCompleted === 0" style="width:15%;">
+                <td *ngIf="userTraining?.dateCompleted === 0" style="width:15%;">
                     &nbsp;&nbsp;
                 </td>
                 <td style="width:13%;">
@@ -78,8 +78,8 @@
                             nzTooltipTitle="View Certificate Image">
                         </i>
                     </div>
-                    <div *ngIf="!trainingIdHash[userTraining.tid].useFinalAssessment && (userTraining.status !== 'completed' && userTraining.status !== 'pendingCertUpload')"
-                        class="action" (click)="markAsComplete(userTraining._id)" nz-tooltip
+                    <div *ngIf="!trainingIdHash[userTraining?.tid]?.useFinalAssessment && (userTraining?.status !== 'completed' && userTraining?.status !== 'pendingCertUpload')"
+                        class="action" (click)="markAsComplete(userTraining?._id)" nz-tooltip
                         nzTooltipTitle="Mark as Complete">
                         <i nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#4891f7'"
                             style="font-size:18px;"></i>

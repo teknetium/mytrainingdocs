@@ -202,6 +202,8 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       console.log('UserTraining:COmponent - selectedUser$', user);
       if (!user) {
+        this.userTrainingService.selectUser(null);
+        this.uid = null;
         return;
       }
       //      this.userTrainings = [];

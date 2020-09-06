@@ -152,7 +152,7 @@
                     <ng-template ngFor let-data [ngForOf]="nestedTable.data" let-i="index">
                         <tr style="font-size:12px;background-color: white;line-height:10px;"
                             (mouseenter)="hoverUid = data._id" (mouseleave)="hoverUid = null"
-                            [ngClass]="{'row-selected': rowSelected === i}" (click)="selectUser(data._id, i)">
+                            [ngClass]="{'row-selected': rowSelected === i}" >
                             <!--
                         <td nzShowExpand [(nzExpand)]="data.expand"></td>
                         -->
@@ -573,17 +573,20 @@
         <div [@userDetailSlide]="userDetailIsVisible ? 'open' : 'closed'" class="member-detail-card"
             style="position:absolute;bottom:-20px;left:0;width:100%;z-index: 11;">
             <div class="my-card-header">
-                <i [ngClass]="userTypeIconHash[selectedUser.userType]" style="font-size:18px;"
-                    [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser.trainingStatus]}" nz-tooltip
+                <i [ngClass]="userTypeIconHash[selectedUser?.userType]" style="font-size:18px;"
+                    [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser?.trainingStatus]}" nz-tooltip
                     [nzTooltipTitle]=""></i>&nbsp;
-                <span
-                    style="display:inline-block;font-size:18px;font-weight: 500;color:#444444;margin-bottom:10px;">{{selectedUser.firstName}}
-                    {{selectedUser.lastName}}
+                <span *ngIf="selectedUser"
+                    style="display:inline-block;font-size:18px;font-weight: 500;color:#444444;margin-bottom:10px;">{{selectedUser?.firstName}}
+                    {{selectedUser?.lastName}}
+                </span>
+                <span *ngIf="!selectedUser"
+                    style="display:inline-block;font-size:18px;font-weight: 500;color:#444444;margin-bottom:10px;">No User Selected
                 </span>
                 <i nz-icon nzType="menu-fold" style="font-size:22px;float:right;margin-right:20px;cursor:pointer;"
                     (click)="closeUserDetails()" nz-tooltip nzTooltipTitle="Hide this panel"></i>
             </div>
-            <div *ngIf="selectedUser" joyrideStep="Step1-memberDetails" stepPosition="left" title="Member Details"
+            <div joyrideStep="Step1-memberDetails" stepPosition="left" title="Member Details"
                 style="position: relative;display:block;padding:0 20px;background: rgba(253, 239, 178, 1);"
                 text="This is where the rubber hits the road!  Assign trainings, update profile information, set due dates, etc...">
                 <div
@@ -694,7 +697,7 @@
                         <nz-autocomplete [nzDataSource]="matchingJobTitles" #auto></nz-autocomplete>
                     </div>
                 </div>
-                <div *ngIf="selectedUser._id !== authenticatedUser._id" style="display:block;width:90%;">
+                <div *ngIf="selectedUser?._id !== authenticatedUser._id" style="display:block;width:90%;">
                     <div style="display:inline-block;width:25%;text-align: right;">
                         <label style="font-size:14px;color:#000000;">
                             Supervisor

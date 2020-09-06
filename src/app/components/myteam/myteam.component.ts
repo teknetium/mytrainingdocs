@@ -721,6 +721,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   isVertical = true;
   false = false;
   userDetailIsVisible = true;
+  isOrgView = true;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -915,6 +916,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.selectedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         this.userIdSelected = null;
+        this.selectedUser = null;
         return;
       }
       this.userIdSelected = user._id;
@@ -1111,15 +1113,33 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else {
       this.userListDisplay = data;
     }
-    this.selectUser(this.userIdSelected, this.userListDisplay.indexOf(this.selectedUser, 0));
+//    this.selectUser(this.userIdSelected, this.userListDisplay.indexOf(this.selectedUser, 0));
+    this.userService.selectUser(this.userIdSelected);
+    this.rowSelected = this.userListDisplay.indexOf(this.selectedUser, 0);
   }
 
   toggleMainView(showOrg) {
     if (showOrg === 'false') {
+      this.isOrgView = false;
       this.rowSelected = this.userListDisplay.indexOf(this.selectedUser, 0);
       this.resetFilters();
+      /*
+      if (this.selectedUser) {
+        this.userDetailIsVisible = true;
+      } else {
+        this.userDetailIsVisible = false;
+      }
+      */
     } else {
-      this.selectUser(this.userIdSelected, this.rowSelected);
+      this.isOrgView = true;
+      /*
+      if (this.selectedUser) {
+        this.userDetailIsVisible = true;
+      } else {
+        this.userDetailIsVisible = false;
+      }
+      */
+//      this.selectUser(this.userIdSelected, this.rowSelected);
     }
   }
 
@@ -1535,6 +1555,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     if (this.userIdSelected === userId) {
       this.userService.selectUser(null);
       this.userDetailIsVisible = false;
+      this.rowSelected = -1;
     } else {
       this.userService.selectUser(userId);
       this.rowSelected = i;

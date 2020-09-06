@@ -36,6 +36,10 @@ export class UserTrainingService {
   }
 
   selectUser(id) {
+    if (!id) {
+      this.userTrainings$BS.next(null);
+      return;
+    }
     this.getUTForUser$(id).subscribe(userTrainings => {
       this.userTrainings$BS.next(userTrainings);
       this.uidUTHash[id] = userTrainings;
