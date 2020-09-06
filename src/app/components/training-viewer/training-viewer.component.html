@@ -3,8 +3,8 @@
     <div>
         <span style="font-size:18px;font-weight: 300;">Welcome to the Training Wizard feature tour!</span>
 
-        The features of the Training Wizard have been broken down into the following 4 mini-tours?. It is recommended
-        that they be taken in order?.
+        The features of the Training Wizard have been broken down into the following 4 mini-tours. It is recommended
+        that they be taken in order.
 
         <ol>
             <li>
@@ -44,10 +44,10 @@
             <nz-radio-group [(ngModel)]="changeLevel">
                 <label nz-radio [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}" nzValue="major">Reset
                     training
-                    status for all responsible users?. </label>
+                    status for all responsible users. </label>
                 <label nz-radio [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}" nzValue="minor">Notify
                     all
-                    responsible users?.</label>
+                    responsible users.</label>
                 <label nz-radio [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}" nzValue="patch">No
                     action
                     needed?.</label>
@@ -59,7 +59,7 @@
             <textarea rows="4" nz-input [(ngModel)]="changeLog"></textarea>
             <p *ngIf="error2" style="color:red;">Please enter a description of the
                 changes
-                made?.</p>
+                made.</p>
 
         </div>
     </nz-modal>
@@ -141,7 +141,7 @@
                             style="display: inline-block;font-size:38px;cursor: pointer;vertical-align: middle;"
                             [ngStyle]="{'color': selectedTraining?.iconColor}" (click)="showIconSelectModal()"
                             joyrideStep="Step1-header" stepPosition="bottom" title="Training Icon"
-                            text="This is how you will identify this training outside of this editor?.">
+                            text="This is how you will identify this training outside of this editor.">
                         </i>
                         <i *ngIf="selectedTraining?.status === 'locked' || mode === 'Preview'"
                             [ngClass]="selectedTraining?.iconClass"
@@ -153,7 +153,7 @@
                         </i>
                     </div>
                     <div style="display: inline-block;width:fit-content;margin-left:10px;" joyrideStep="Step2-header"
-                        stepPosition="bottom" title="Training Title" text="This is title of the Training?.">
+                        stepPosition="bottom" title="Training Title" text="This is the title of the Training.">
                         <input *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit'"
                             style="display:inline-block;color:#000000;width:500px;font-size:18px;" nz-input
                             [(ngModel)]="selectedTraining.title" nzSize="default" (keydown.enter)="saveTraining(true)"
@@ -164,33 +164,38 @@
                                 style="font-size:30px;vertical-align: middle;">&nbsp;{{selectedTraining?.title}}</span>
                         </div>
                     </div>
-                    <div style="display:inline-block;font-size:12px;color:#000000;vertical-align: bottom;margin-left:10px;line-height: 30px;">
-                        <span style="display:inline-block;font-size:12px;color:#000000;">Version&nbsp;&nbsp;:&nbsp;&nbsp;</span>
-                    
+                    <div style="display:inline-block;font-size:12px;color:#000000;vertical-align: bottom;margin-left:10px;line-height: 30px;"
+                        joyrideStep="Step3-header" stepPosition="bottom" title="Training Version"
+                        text="This dropdown menu contains a listing of all versions of this training.  Selecting an item in this list, loads that version of the training in this editor.  Only the latest version is editable.">
+                        <span
+                            style="display:inline-block;font-size:12px;color:#000000;">Version&nbsp;&nbsp;:&nbsp;&nbsp;</span>
+
                         <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click" nzPlacement="bottomRight"
                             style="display:inline-block;font-size:12px;color:blue;">
                             <span style="font-size:12px;">
                                 {{ versionFormatter(selectedTraining?.versions[0]?.version)}}</span>
-                            &nbsp;&nbsp;<span *ngIf="selectedTraining?.status === 'unlocked'" style="font-size:12px;opacity:.5;">(being
+                            &nbsp;&nbsp;<span *ngIf="selectedTraining?.status === 'unlocked'"
+                                style="font-size:12px;opacity:.5;">(being
                                 edited)</span>
                             <i nz-icon nzType="down" style="margin-left:5px;font-size:12px;vertical-align: middle;"></i>
                         </a>
                         <nz-dropdown-menu #menu="nzDropdownMenu" style="z-index:100010;display:inline-block;">
                             <ul nz-menu nzSelectable>
-                                <li *ngFor="let version of selectedTrainingVersions; index as i" style="font-size:12px;" nz-menu-item
-                                    (click)="loadVersion(version, i)">
+                                <li *ngFor="let version of selectedTrainingVersions; index as i" style="font-size:12px;"
+                                    nz-menu-item (click)="loadVersion(version, i)">
                                     <span
                                         style="display:inline-block;font-size:12px;margin-right:20px;">v&nbsp;{{versionFormatter(version?.version)}}</span>
                                     &nbsp;&nbsp;<span *ngIf="" style="font-size:14px;color:#bbbbbb;">(being
                                         edited)</span>
-                                    <span style="display:inline-block;font-size:12px;">{{versionFormatter(version?.changeLog)}}</span>
+                                    <span
+                                        style="display:inline-block;font-size:12px;">{{versionFormatter(version?.changeLog)}}</span>
                                 </li>
                             </ul>
                         </nz-dropdown-menu>
                     </div>
                     <div *ngIf="mode === 'Edit'" style="display: inline-block;width:fit-content;margin-left:10px;"
-                        joyrideStep="Step3-header" stepPosition="bottom" title="Training State"
-                        text="This is the state of the training?.">
+                        joyrideStep="Step4-header" stepPosition="bottom" title="Training State"
+                        text="This is the state of the training.  Locked (read only) or Unlocked.">
                         <i *ngIf="selectedTraining?.status === 'unlocked'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
                             [nzTwotoneColor]="'#52c41a'" style="font-size:30px;vertical-align: middle;" nz-tooltip
                             nzTooltipTitle="This training is unlocked"></i>
@@ -200,9 +205,12 @@
                         </i>
                     </div>
                 </div>
-                <div style="position:absolute;left:7px;bottom:7px;">
+                <div style="position:absolute;left:7px;bottom:7px;cursor:pointer;" (click)="showTrainingConfig = true"
+                    joyrideStep="Step5-header" stepPosition="bottom" title="Config Values"
+                    text="This is a read-only view of certain training properties.  Clicking on any of these items opens the training configurator.">
                     <div style="display:inline-block;font-size:12px;color:#000000;padding:5px;">
-                        Category&nbsp;:&nbsp;<span style="color:blue;">{{selectedTraining?.category ? selectedTraining?.category : 'not set'}}</span>
+                        Category&nbsp;:&nbsp;<span
+                            style="color:blue;">{{selectedTraining?.category ? selectedTraining?.category : 'not set'}}</span>
                     </div>
                     <span style="display:inline-block;font-size:12px;" class="separator">|</span>
                     <div style="display:inline-block;font-size:12px;padding:5px;">
@@ -215,7 +223,8 @@
                         Valid Period&nbsp;:&nbsp;<span
                             style="color:blue;">{{selectedTraining?.expirationDate ? selectedTraining?.expirationDate  + ' months' : 'not set'}}</span>
                     </div>
-                    <span *ngIf="selectedTraining?.type === 'recurring'" style="display:inline-block;font-size:12px;" class="separator">|</span>
+                    <span *ngIf="selectedTraining?.type === 'recurring'" style="display:inline-block;font-size:12px;"
+                        class="separator">|</span>
                     <div style="display:inline-block;font-size:12px;color:#000000;padding:5px;">
                         Job Title&nbsp;:&nbsp;<span
                             style="color:blue;">{{selectedTraining?.jobTitle ? selectedTraining?.jobTitle : 'not set'}}</span>
@@ -242,15 +251,17 @@
                     <div style="display:inline-block;font-size:12px;color:#000000;padding:5px;">
                         <span style="display:inline-block;font-size:12px;color:#000000;">Notify Schedule
                             &nbsp;:&nbsp;</span>
-                        <a nz-dropdown [nzDropdownMenu]="notifyScheduleMenu" nzTrigger="hover" nzPlacement="bottomCenter"
-                            style="display:inline-block;font-size:12px;color:blue;">
+                        <a nz-dropdown [nzDropdownMenu]="notifyScheduleMenu" nzTrigger="hover"
+                            nzPlacement="bottomCenter" style="display:inline-block;font-size:12px;color:blue;">
                             <i nz-icon nzType="down" style="margin-left:5px;font-size:12px;vertical-align: middle;"></i>
                         </a>
-                        <nz-dropdown-menu #notifyScheduleMenu="nzDropdownMenu" style="z-index:100010;display:inline-block;">
+                        <nz-dropdown-menu #notifyScheduleMenu="nzDropdownMenu"
+                            style="z-index:100010;display:inline-block;">
                             <ul nz-menu>
                                 <li *ngFor="let notifyDate of selectedTraining?.notifySchedule; index as i"
                                     style="font-size:12px;" nz-menu-item>
-                                    <span style="display:inline-block;font-size:12px;margin-right:20px;">{{notifyDate}} days prior to due date</span>
+                                    <span style="display:inline-block;font-size:12px;margin-right:20px;">{{notifyDate}}
+                                        days prior to due date</span>
                                 </li>
                             </ul>
                         </nz-dropdown-menu>
@@ -261,7 +272,7 @@
                     <!--
                     <div *ngIf="mode === 'Edit' && selectedTraining?.status === 'unlocked'" style="display:inline-block;" joyrideStep="Step4-header"
                         stepPosition="bottom" title="Training Version"
-                        text="This drop-down menu contains a list of all previous version of this training?.  Selecting an item from this list loads that exact version!  Very powerful?.">
+                        text="This drop-down menu contains a list of all previous version of this training?.  Selecting an item from this list loads that exact version!  Very powerful.">
                         <span
                             style="display:inline-block;font-size:12px;color:#000000;">Version&nbsp;:&nbsp;</span>
 
@@ -291,8 +302,8 @@
                     </div>
                     -->
                     <div *ngIf="selectedTraining?.status === 'unlocked'" style="width:fit-content;display:inline-block;"
-                        joyrideStep="Step5-header" stepPosition="bottom" title="Mode"
-                        text="This drop-down menu allows you to switch between Editing the training and Previewing your changes?.">
+                        joyrideStep="Step6-header" stepPosition="bottom" title="Mode"
+                        text="This drop-down menu allows you to switch between Editing the training and Previewing your changes.">
                         <span
                             style="display:inline-block;font-size:12px;color:#000000;">Mode&nbsp;&nbsp;:&nbsp;&nbsp;</span>
                         <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click" [nzPlacement]="'bottomRight'"
@@ -319,9 +330,9 @@
                         </button>
                         <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit'" nz-button
                             nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Save As New Version"
-                            class="header-icon" (click)="saveNewVersion()" joyrideStep="Step6-header"
+                            class="header-icon" (click)="saveNewVersion()" joyrideStep="Step7-header"
                             stepPosition="bottom" title="Save a new version"
-                            text="Create a new version of this training?.  For versions after 1?.0?.0, you will be asked to indicate the significance of changes made to the training?.">
+                            text="Create a new version of this training.  For versions after 1.0.0, you will be asked to indicate the significance of the changes you have made to the training.">
                             <i nz-icon nzType="lock" theme="twotone" [nzTwotoneColor]="'blue'"
                                 style="vertical-align: top;">
                             </i>
@@ -337,9 +348,9 @@
                         -->
                         <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit'" nz-button
                             nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Configure Training"
-                            class="header-icon" (click)="showTrainingConfig = true" joyrideStep="Step7-header"
+                            class="header-icon" (click)="showTrainingConfig = true" joyrideStep="Step8-header"
                             stepPosition="bottom" title="Training Configuration"
-                            text="Selecting this button opens the training configuraton panel?. This is where you set a variety of training properties?.">
+                            text="Selecting this button opens the training configuraton panel. This is where you set a variety of training properties.">
                             <i nz-icon nzType="setting" theme="twotone" [nzTwotoneColor]="'blue'"
                                 style="vertical-align: top;">
                             </i>
@@ -347,8 +358,8 @@
                         <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit'" nz-button
                             nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Discard Changes"
                             style="color:blue;" class="header-icon" (click)="showRollbackConfirm()"
-                            joyrideStep="Step8-header" stepPosition="bottom" title="Discard Current Changes"
-                            text="Selecting this button discards all changes made since unlocking this training?.">
+                            joyrideStep="Step9-header" stepPosition="bottom" title="Discard Current Changes"
+                            text="Selecting this button discards all changes made since unlocking this training.">
                             <i nz-icon nzType="rollback" theme="outline" style="vertical-align: top;">
                             </i>
                         </button>
@@ -358,8 +369,9 @@
                             <i nz-icon nzType="bug" [nzTheme]="'twotone'" style="vertical-align: top;"></i>
                         </button>
                         <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Close Training"
-                            class="header-icon" (click)="closeViewer()" joyrideStep="Step9-header" stepPosition="bottom"
-                            title="Close Training" text="Selecting this button closes the training?.">
+                            class="header-icon" (click)="closeViewer()" joyrideStep="Step10-header"
+                            stepPosition="bottom" title="Close Training"
+                            text="Selecting this button closes the training.">
                             <i nz-icon nzType="close" theme="outline" style="vertical-align: top;color:red;">
                             </i>
                         </button>
@@ -447,7 +459,9 @@
                 </div>
             </div>
         </div>
-        <div style="height:fit-content;;background-color: white;border-bottom:1px solid #5488ee;position:relative;">
+        <div style="height:fit-content;background-color: white;border-bottom:1px solid #5488ee;position:relative;"
+            joyrideStep="Step1-pn" stepPosition="bottom" title="Training Pages"
+            text="This is the trainings Table of Contents.  Here you will find all of the pages that makeup this training.">
             <i *ngIf="production === 'false' && selectedTraining?.status === 'unlocked' && mode === 'Edit'" nz-icon
                 nzType="question-circle" theme="twotone"
                 style="font-size:20px;position:absolute;top:10px;left:10px;cursor:pointer;"
@@ -462,7 +476,8 @@
                 </button>
                 -->
                 <button nz-button [nzSize]="'small'" nzType="primary" nzShape="round" nz-dropdown
-                    [nzDropdownMenu]="newPageMenu">
+                    [nzDropdownMenu]="newPageMenu" joyrideStep="Step2-pn" stepPosition="bottom" title="Add New Page"
+                    text="This dropdown lets you add new pages to your training.">
                     <span style="font-size:12px;">Add New Page</span>
                     <i nz-icon nzType="down"></i></button>
                 <nz-dropdown-menu #newPageMenu="nzDropdownMenu">
@@ -474,11 +489,11 @@
                                 </li>
                                 -->
                                 <li nz-menu-item (click)="addNewPage('file', 'file')">Document File
-                                    (?.doc,
-                                    ?.docx,
-                                    ?.ppt, ?.pptx,
-                                    ?.xls, ?.xlsx,
-                                    ?.ai, ?.pdf, ?.ps)</li>
+                                    (.doc,
+                                    .docx,
+                                    .ppt, .pptx,
+                                    .xls, .xlsx,
+                                    .ai, .pdf, .ps)</li>
                                 <li nz-menu-item (click)="addNewPage('file', 'video')">Video File
                                 </li>
                                 <!--
@@ -507,18 +522,21 @@
                 </nz-dropdown-menu>
                 <button *ngIf="currentPage" nz-button [nzSize]="'small'" nzType="primary"
                     [disabled]="isFirstPage(currentPage?._id)" nzShape="round" class="header-icon"
-                    (click)="movePageUp(currentPage)">
+                    (click)="movePageUp(currentPage)" joyrideStep="Step3-pn" stepPosition="bottom"
+                    title="Move Page Left" text="This button moves the currently selected page to the left.">
                     <span style="font-size:12px;">Move Page Left</span>
                 </button>
                 <button *ngIf="currentPage" nz-button [nzSize]="'small'" nzType="primary"
                     [disabled]="isLastPage(currentPage?._id)" nzShape="round" class="header-icon"
-                    (click)="movePageDown(currentPage)">
+                    (click)="movePageDown(currentPage)" joyrideStep="Step4-pn" stepPosition="bottom"
+                    title="Move Page Right" text="This button moves the currently selected page to the right.">
                     <span style="font-size:12px;">Move Page Right</span>
                 </button>
                 <button nz-button nzDanger [nzSize]="'small'" nzType="default" nzDanger nzShape="round"
                     class="header-icon" style="color:red;" nz-popconfirm nzPopconfirmTitle="Delete this Page?"
-                    [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'left'"
-                    (nzOnConfirm)="confirmDeletePage()">
+                    [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'left'" (nzOnConfirm)="confirmDeletePage()"
+                    joyrideStep="Step5-pn" stepPosition="bottom" title="Delete Page"
+                    text="This button deletes the currently selected page.">
                     <span style="font-size:12px;">Delete Page</span>
                 </button>
             </div>
@@ -746,7 +764,9 @@
                 </div>
             </div>
         </nz-drawer>
-        <div class="main-content-container" [ngStyle]="{'height.px':browserInnerHeight - 250}">
+        <div class="main-content-container" [ngStyle]="{'height.px':browserInnerHeight - 250}"
+            joyrideStep="Step1-content" stepPosition="top" title="Training Content"
+            text="This is where the main content of the training resides.  Each page provides you an introduction section where you can introduce and give context for the training content.">
             <div class="main-content">
                 <div class="page-container">
                     <div *ngFor="let page of selectedTraining?.pages; index as pageIndex">
@@ -788,7 +808,7 @@
 
                                         <div style="cursor:pointer;display:block;width:100%;padding-top:10px;">
                                             <nz-alert *ngIf="badUrl" nzType="error" nzCloseable="true"
-                                                nzMessage="URL format error?.  URL's must use HTTPS!" nzShowIcon
+                                                nzMessage="URL format error.  URL's must use HTTPS!" nzShowIcon
                                                 style="margin:10px 0;">
                                             </nz-alert>
 
@@ -1105,7 +1125,7 @@
                                                                             <nz-alert
                                                                                 *ngIf="page?.content?.assessment?.isFinal"
                                                                                 nzType="success"
-                                                                                nzMessage="Congratulations, you have passed this trainings final assessment!  This training will be marked as completed?."
+                                                                                nzMessage="Congratulations, you have passed this trainings final assessment!  This training will be marked as completed."
                                                                                 nzShowIcon>
                                                                             </nz-alert>
                                                                             <nz-alert

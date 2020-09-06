@@ -377,9 +377,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.tourStepsHash['header'] = ['Step1-header', 'Step2-header', 'Step3-header', 'Step4-header', 'Step5-header', 'Step6-header', 'Step7-header', 'Step8-header', 'Step9-header'];
-    this.tourStepsHash['page-navigation'] = ['Step1-pn', 'Step2-pn', 'Step3-pn', 'Step4-pn', 'Step5-pn', 'Step6-pn', 'Step7-pn', 'Step8-pn', 'Step9-pn'];
-    this.tourStepsHash['training-intro'] = ['Step1-header', 'Step2-header', 'Step3-header', 'Step4-header', 'Step5-header', 'Step6-header', 'Step7-header', 'Step8-header', 'Step9-header'];
+    this.tourStepsHash['header'] = ['Step1-header', 'Step2-header', 'Step3-header', 'Step4-header', 'Step5-header', 'Step6-header', 'Step7-header', 'Step8-header', 'Step9-header', 'Step10-header'];
+    this.tourStepsHash['page-navigation'] = ['Step1-pn', 'Step2-pn', 'Step3-pn', 'Step4-pn', 'Step5-pn'];
+    this.tourStepsHash['training-intro'] = ['Step1-content'];
 
     console.log('ngOnInit');
 

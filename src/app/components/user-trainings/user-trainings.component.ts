@@ -81,7 +81,8 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   userTrainingPendingCertImage: UserTrainingModel = null;
   viewCertImage = false;
   previewBase = 'https://cdn.filestackcontent.com/preview=css:"https://cdn.filestackcontent.com/jtNVfsaDTieo28ZL7hkr"/';
-  certImageUrl
+  certImageUrl;
+  certificateModalVisible = false;
 
   constructor(
     private userService: UserService,
@@ -246,6 +247,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
 
   viewCertImageFunc(userTraining) {
     this.viewCertImage = true;
+    this.certificateModalVisible = true;
     this.certImageUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.previewBase + userTraining.certImage.fileStackId))
   }
 

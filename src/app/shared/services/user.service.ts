@@ -162,8 +162,8 @@ export class UserService {
                 teamId: null,
                 org: profile.email.substring(profile.email.indexOf('@') + 1),
                 teamAdmin: false,
-                orgAdmin: false,
-                appAdmin: false,
+                orgAdmin: true,
+                appAdmin: true,
                 userStatus: 'active',
                 trainingStatus: 'none',
                 jobTitle: '',
@@ -173,6 +173,7 @@ export class UserService {
                 settings: {
                   foo: 'test',
                   showPageInfo: true,
+                  showCSV: false,
                   themeColor: {
                     name: 'orange ',
                     bgColor: 'orange',
@@ -220,7 +221,7 @@ export class UserService {
     }
     this.sendmailService.sendTemplateMessage(message);
   }
-
+/*
   logLoginEvent() {
     let now = new Date().getTime();
     let loginEvent = <EventModel>{
@@ -241,8 +242,8 @@ export class UserService {
     }
 
     this.eventService.addEvent(loginEvent);
-
   }
+  */
   /*
     getAllOrgUsers() {
       this.getOrg$(this.authenticatedUser.org).subscribe(userList => {
@@ -295,19 +296,15 @@ export class UserService {
           this.jobTitleService.addJobTitle(user.jobTitle);
         }
       }
-      //        this.userTrainingService.initUserTrainingsForUser(user._id);
 
       this.userTrainingService.getUTForTeam(this.teamId);
 
       this.myTeamIdHash[this.authenticatedUser._id] = this.authenticatedUser;
-//      this.myTeam.push(this.authenticatedUser);
       this.allOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
       this.myTeamBS$.next(this.myTeam);
       this.myOrgHashBS$.next(this.allOrgUserHash);
 
       this.myOrgUserNameListBS$.next(this.myOrgUserNames);
-
-      //      this.myTeamCntBS$.next(Object.keys(this.myTeamIdHash).length);
 
       this.myTeamIdHashBS$.next(this.myTeamIdHash);
       if (userIdToSelect) {
@@ -500,6 +497,7 @@ export class UserService {
       this.newTeamMember.settings = {
         foo: 'test',
         showPageInfo: true,
+        showCSV: false,
         themeColor: {
           name: 'orange ',
           bgColor: 'orange',

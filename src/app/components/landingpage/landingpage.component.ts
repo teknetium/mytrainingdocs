@@ -39,9 +39,9 @@ export class LandingpageComponent implements OnInit {
     },
     {
       focus: false,
-      title: 'Saves Time & Resources',
-      class: 'fal fa-clock text-blue bg-blue-opacity',
-      blurb: '',
+      title: 'Interactive Org Chart',
+      class: 'fal fa-sitemap text-blue bg-blue-opacity',
+      blurb: 'Understand your entire organization\'s training status at a glance.  Interact with users directly in the chart.',
       learnMore: ''
     },
     {

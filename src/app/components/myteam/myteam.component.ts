@@ -31,13 +31,13 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   styleUrls: ['./myteam.component.css'],
   // changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger('supervisorSignupToggle', [
+    trigger('userDetailSlide', [
       // ...
       state('closed', style({
-        'height': '0'
+        'margin-left': '-110%'
       })),
       state('open', style({
-        'height': '50px',
+        'margin-left': '0',
       })),
       transition('open => closed', [
         animate('300ms')
@@ -143,7 +143,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   selectedUser$: Observable<UserModel>;
   newUser$: Observable<UserModel>;
   selectedUser: UserModel;
-  selectedUserId: string;
+  //  selectedUserId: string;
   authenticatedUser: UserModel;
   authenticatedUser$: Observable<UserModel>;
   myOrgUserHash: UserIdHash = {};
@@ -281,8 +281,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   allActive = false;
   orgChartNodeHash = {};
   orgChartFullscreen = false;
-  iconFontSize = 18;
-  textFontSize = 8;
+  iconFontSize = 16;
+  textFontSize = 6;
   orgChartPadding = 1;
   showOrgChart = 'true';
   userTrainings: UserTrainingModel[];
@@ -705,17 +705,22 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   orgJobTitles = [];
   testNodes = <{ firstName: string, lastName: string, email: string, jobTitle: string, supervisorName: string, drList: any[] }[]>[];
   maxLevel = 5;
-  maxLevelSummary = false;
+
+  maxLevelSummary = true;
   includeFullName = false;
   useMaxWidth = true;
   test = false;
-  userMin = 2;
-  userMax = 6;
-  maxLevelUserMin = 4;
+  userMin = 5;
+  userMax = 9;
+  maxLevelUserMin = 3;
   maxLevelUserMax = 20;
   uidUTStatHash = {};
   usersCSV = '';
   bottomLevelWidth = 6;
+  chartOrientationIsVertical = 'true';
+  isVertical = true;
+  false = false;
+  userDetailIsVisible = true;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -752,20 +757,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
 
-    for (let i = 0; i < this.maxLevel; i++) {
-      if (i === this.maxLevel - 1) {
-        this.orgJobTitles[i] = [
-          'lifeguard',
-          'front desk',
-          'programmer',
-          'admin',
-          'coordinator',
-          'project manager'
-        ];
-      } else {
-        this.orgJobTitles[i] = ['foo'];
-      }
-    }
+    this.orgJobTitles = [
+      'lifeguard',
+      'front desk',
+      'programmer',
+      'admin',
+      'coordinator',
+      'project manager'
+    ];
 
 
     this.userList = [];
@@ -838,7 +837,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         }
         this.myOrgUserNameHash[user.firstName + ' ' + user.lastName] = user;
         if (listOfSupervisorIds.indexOf(user.supervisorId) < 0) {
-//          this.listOfSupervisors.push({ text: this.myOrgUserHash[user.supervisorId]?.firstName + ' ' + this.myOrgUserHash[user.supervisorId]?.lastName, value: user.supervisorId });
+          //          this.listOfSupervisors.push({ text: this.myOrgUserHash[user.supervisorId]?.firstName + ' ' + this.myOrgUserHash[user.supervisorId]?.lastName, value: user.supervisorId });
           listOfSupervisorIds.push(user.supervisorId);
         }
         //        this.supervisorIdNameHash[user.supervisorId]
@@ -1015,6 +1014,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.createBasicMessage(msg);
   }
 
+  closeUserDetails() {
+    this.userDetailIsVisible = false;
+  }
+
+  openUserDetails() {
+    this.userDetailIsVisible = true;
+  }
+
   createBasicMessage(msg: string) {
     this.messageService.info(msg);
   }
@@ -1042,12 +1049,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     //      this.orgChartPadding -= 1;
     //    }
   }
-/*
-  filterMyTeam(listOfSupervisors) {
-    this.listOfSearchSupervisors = listOfSupervisors;
-    this.search();
-  }
-*/
+  /*
+    filterMyTeam(listOfSupervisors) {
+      this.listOfSearchSupervisors = listOfSupervisors;
+      this.search();
+    }
+  */
   resetFilters(): void {
     this.listOfJobTitles = [];
     for (let jobTitle of this.jobTitles) {
@@ -1104,12 +1111,23 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else {
       this.userListDisplay = data;
     }
+    this.selectUser(this.userIdSelected, this.userListDisplay.indexOf(this.selectedUser, 0));
   }
 
   toggleMainView(showOrg) {
     if (showOrg === 'false') {
       this.rowSelected = this.userListDisplay.indexOf(this.selectedUser, 0);
       this.resetFilters();
+    } else {
+      this.selectUser(this.userIdSelected, this.rowSelected);
+    }
+  }
+
+  toggleOrientation(vertical) {
+    if (vertical === 'true') {
+      this.isVertical = true;
+    } else {
+      this.isVertical = false;
     }
   }
 
@@ -1128,18 +1146,21 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       firstName: fullName[0],
       lastName: fullName[1],
       email: 'greg@test.com',
-      jobTitle: this.orgJobTitles[level][jobTitleIndex],
+      jobTitle: 'Manager',
       supervisorName: currentSupervisorName,
       drList: []
     }
 
-    let teamSize = Math.floor(this.randn_bm(this.userMin, this.userMax, 1));
-    if (teamSize > 9) {
-      teamSize = 9;
-    }
+    let teamSize = Math.floor(this.randn_bm(this.userMin, this.userMax, 2));
     for (let i = 0; i < teamSize; i++) {
       let childNode = this.buildNode(currentSupervisorName, level);
-      node.drList.push(childNode);
+      if (childNode.drList.length === 0) {
+        node.drList.push(childNode);
+        console.log('Node ', node);
+      } else {
+        node.drList.unshift(childNode);
+        console.log('Node ', node);
+      }
       this.testNodes.push(childNode);
     }
 
@@ -1169,7 +1190,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       firstName: fullName[0],
       lastName: fullName[1],
       email: 'greg@test.com',
-      jobTitle: this.orgJobTitles[level][jobTitleIndex],
+      jobTitle: this.orgJobTitles[jobTitleIndex],
       supervisorName: supervisorName,
       drList: []
     }
@@ -1177,21 +1198,29 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     if (level < this.maxLevel - 1) {
       if (Math.random() < .7) {
         node.drList = [];
-        let teamSize = Math.floor(this.randn_bm(this.userMin, this.userMax, 1));
+        node.jobTitle = 'Manager';
+        let teamSize = Math.floor(this.randn_bm(this.userMin, this.userMax, 2));
 
         for (let i = 0; i < teamSize; i++) {
           let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], level);
-          node.drList.push(childNode);
+          if (childNode.drList.length === 0) {
+            node.drList.push(childNode);
+            console.log('Node ', level, node);
+          } else {
+            node.drList.unshift(childNode);
+            console.log('Node ', level, node);
+          }
           this.testNodes.push(childNode);
         }
       }
     } else if (level === this.maxLevel - 1) {
       node.drList = [];
-      let teamSize = Math.floor(this.randn_bm(this.maxLevelUserMin, this.maxLevelUserMax, 1));
-
+      let teamSize = Math.floor(this.randn_bm(this.maxLevelUserMin, this.maxLevelUserMax, 2));
+      console.log('team size', teamSize, level);
       for (let i = 0; i < teamSize; i++) {
         let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], level);
         node.drList.push(childNode);
+        console.log('Node ', node);
         this.testNodes.push(childNode);
       }
     }
@@ -1375,8 +1404,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   onUserSearchChange(value: string): void {
-    this.matchingUsers = this.myOrgUsers.filter(user => user.toLowerCase().indexOf(value.toLowerCase()) !== -1);
-    let index = this.myOrgUsers.indexOf(value);
+    let userNameList: string[] = [];
+    for (let user of this.userListDisplay) {
+      userNameList.push(user.firstName + ' ' + user.lastName);
+    }
+    this.matchingUsers = userNameList.filter(user => user.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+    let index = userNameList.indexOf(value);
     if (index > -1) {
       this.selectUser(this.myOrgUserNameHash[value]._id, index);
       //      this.showAddToUserListButton = true;
@@ -1499,8 +1532,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   selectUser(userId, i) {
-    this.userService.selectUser(userId);
-    this.rowSelected = i;
+    if (this.userIdSelected === userId) {
+      this.userService.selectUser(null);
+      this.userDetailIsVisible = false;
+    } else {
+      this.userService.selectUser(userId);
+      this.rowSelected = i;
+      this.userDetailIsVisible = true;
+    }
   }
 
   selectSupervisor() {

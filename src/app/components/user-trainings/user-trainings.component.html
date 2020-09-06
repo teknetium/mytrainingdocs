@@ -66,8 +66,7 @@
                         <i nz-icon [nzType]="'play-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
                             style="font-size:18px;"></i>
                     </div>
-                    <div *ngIf="userTraining.status === 'pendingCertUpload' && mode === 'admin'"
-                        class="action">
+                    <div *ngIf="userTraining.status === 'pendingCertUpload' && mode === 'admin'" class="action">
                         <i nz-icon nzType="upload" [nzTheme]="'outline'" class="action" style="font-size:18px;"
                             (click)="uploadCertImage(userTraining)" nz-tooltip
                             nzTooltipTitle="Upload Certificate Image">
@@ -75,7 +74,8 @@
                     </div>
                     <div *ngIf="userTraining.certImage" class="action">
                         <i class="fad fa-eye action" style="font-size:18px;color:blue;vertical-align: middle;"
-                            (click)="viewCertImageFunc(userTraining)" nz-tooltip nzTooltipTitle="View Certificate Image">
+                            (click)="viewCertImageFunc(userTraining)" nz-tooltip
+                            nzTooltipTitle="View Certificate Image">
                         </i>
                     </div>
                     <div *ngIf="!trainingIdHash[userTraining.tid].useFinalAssessment && (userTraining.status !== 'completed' && userTraining.status !== 'pendingCertUpload')"
@@ -115,11 +115,11 @@
         (assessmentResult)="processAssessmentResult($event)" [currentUT]="utIdHash[currentUserTraining]">
     </app-training-viewer>
 </div>
-<div *ngIf="viewCertImage" style="width:100%;padding:50px;border:1px solid #aaaaaa;position:relative;">
-    <i nz-icon nzType="close" [nzTheme]="'outline'" style="font-size:18px;position:absolute;top:10px;right:10px;cursor: pointer;"
-    (click)="closeCertImage()"></i>
-    <iframe style="width:100%;"
-        [src]="certImageUrl" allowfullscreen width="100%" height="800" frameBorder="2">
-    </iframe>
+<nz-modal [(nzVisible)]="certificateModalVisible" nzTitle="Certificate" nzWidth="900"
+    (nzOnOk)="certificateModalVisible = false" nzCancelDisabled="true" style="width:900px;">
+    <div *ngIf="certImageUrl" style="width:100%;padding:50px;border:1px solid #aaaaaa;position:relative;">
+        <iframe style="width:100%;" [src]="certImageUrl" allowfullscreen width="100%" height="800" frameBorder="2">
+        </iframe>
 
-</div>
+    </div>
+</nz-modal>

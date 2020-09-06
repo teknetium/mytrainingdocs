@@ -210,10 +210,14 @@
 }
 
 .selected-node {
-    border: 2px solid blue !important;
-    background: rgba(0, 0, 255, .2);
+    border: 2px solid #eaab10 !important;
+    background: rgba(253, 239, 178, 1) !important;
 }
 
+ul.ant-card-actions {
+    border: 1px solid #eaab10 !important;
+    background: rgba(253, 239, 178, 1) !important;
+}
 .report-chain {
     cursor: pointer;
 }
@@ -271,7 +275,14 @@
     text-align: center;
     display:inline-block;
     width:fit-content;
-    margin-bottom:20px;
+    position:relative;
+    color:black !important;
+    cursor: pointer;
+    border: 2px solid white;
+}
+.org-chart-node-horizontal {
+    display:inline-block;
+    height:fit-content;
     position:relative;
     color:black !important;
     cursor: pointer;
@@ -303,7 +314,43 @@
 }
 
 .card-action {
+    padding:0 20px;
+    text-align: center;
+    width:25%;
+    display:inline-block;
 }
-.card-action:hover {
-    background-color: #e9e9e9;
+.my-action:hover {
+    background: rgba(227, 157, 16, .4);
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.my-card-header {
+    padding-top:20px;
+    background: rgba(253, 239, 178, 1);
+    width:100%;
+    text-align: center;
+}
+.member-detail-card {
+    border: 1px solid #eaab10;
+}
+
+.my-card-footer {
+    padding:5px 0;
+    background: rgba(253, 239, 178, 1);
+    width:100%;
+}
+
+.my-action {
+    padding:0 10px;
+    display:inline-block;
+}
+
+.inline-block {
+    display: inline-block !important;
+
+}
+
+.block {
+    display: block !important;
 }

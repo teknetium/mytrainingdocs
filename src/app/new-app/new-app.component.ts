@@ -438,7 +438,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.authenticatedUser.lastName = this.lName;
     this.userService.updateUser(this.authenticatedUser, true);
     this.showNewUserModal = false;
-    this.login();
+//    this.login();
   }
 
   startTour() {
