@@ -497,7 +497,7 @@ export class UserService {
       this.newTeamMember.settings = {
         foo: 'test',
         showPageInfo: true,
-        showCSV: false,
+        showCSV: true,
         themeColor: {
           name: 'orange ',
           bgColor: 'orange',

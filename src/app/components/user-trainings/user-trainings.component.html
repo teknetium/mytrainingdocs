@@ -46,15 +46,15 @@
                     {{ timeFormat(userTraining?.timeToDate) }}
                 </td>
                 <td *ngIf="mode === 'admin'" style="width:15%;">
-                    <nz-date-picker nzFormat="MM-dd-yyyy" nzSize="small" ngDefaultControl
+                    <nz-date-picker nzFormat="MMM d, y" nzSize="small" ngDefaultControl
                         [ngModel]="userTraining.dueDate" (ngModelChange)="updateDueDate($event, userTraining)">
                     </nz-date-picker>
                 </td>
                 <td *ngIf="mode !== 'admin'" style="width:15%;">
-                    {{ userTraining?.dueDate | date:'mediumDate'}}
+                    {{ userTraining?.dueDate | date}}
                 </td>
                 <td *ngIf="userTraining.dateCompleted > 0" style="width:15%;">
-                    {{ userTraining?.dateCompleted | date:'mediumDate'}}
+                    {{ userTraining?.dateCompleted | date}}
                 </td>
                 <td *ngIf="userTraining?.dateCompleted === 0" style="width:15%;">
                     &nbsp;&nbsp;

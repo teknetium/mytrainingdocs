@@ -85,38 +85,43 @@
                 -->
             <div *ngIf="showOrgChart === 'true'" style="position:relative;z-index:1;">
                 <i class="fas fa-user"
-                    style="cursor:pointer;position:absolute;top:20px;left:0;font-size:16px;color:#000000;z-index:1;display:inline-block;"
+                    style="position:absolute;top:20px;left:0;font-size:16px;color:#000000;z-index:1;display:inline-block;"
                     nz-tooltip [nzTooltipTitle]=""></i>
                 <span style="position:absolute;top:20px;left:25px;font-size:10px;">Individual Contributor</span>
                 <i class="fas fa-user-tie"
-                    style="cursor:pointer;position:absolute;top:45px;left:0;font-size:16px;color:#000000;z-index:1;display:inline-block;"
+                    style="position:absolute;top:40px;left:0;font-size:16px;color:#000000;z-index:1;display:inline-block;"
                     nz-tooltip [nzTooltipTitle]=""></i>
-                <span style="position:absolute;top:45px;left:25px;font-size:10px;">Supervisor</span>
+                <span style="position:absolute;top:40px;left:25px;font-size:10px;">Supervisor</span>
                 <i class="fas fa-user-crown"
-                    style="cursor:pointer;position:absolute;top:70px;left:0;font-size:16px;color:#000000;z-index:1;display:inline-block;"
+                    style="position:absolute;top:60px;left:0;font-size:16px;color:#000000;z-index:1;display:inline-block;"
                     nz-tooltip [nzTooltipTitle]=""></i>
-                <span style="position:absolute;top:70px;left:25px;font-size:10px;">Customer</span>
+                <span style="position:absolute;top:60px;left:25px;font-size:10px;">Customer</span>
                 <i class="fas fa-user-cowboy"
-                    style="cursor:pointer;position:absolute;top:95px;left:0;font-size:16px;color:#000000;z-index:1;display:inline-block;"
+                    style="position:absolute;top:80px;left:0;font-size:16px;color:#000000;z-index:1;display:inline-block;"
                     nz-tooltip [nzTooltipTitle]=""></i>
-                <span style="position:absolute;top:95px;left:25px;font-size:10px;">Volunteer</span>
-                
+                <span style="position:absolute;top:80px;left:25px;font-size:10px;">Volunteer</span>
+
                 <i class="fas fa-circle"
-                    style="cursor:pointer;position:absolute;top:20px;left:170px;font-size:12px;color:#000000;z-index:1;display:inline-block;line-height:18px;"
+                    style="position:absolute;top:20px;left:150px;font-size:12px;color:#000000;z-index:1;display:inline-block;line-height:18px;"
                     nz-tooltip [nzTooltipTitle]=""></i>
-                <span style="position:absolute;top:20px;left:195px;font-size:10px;">No Trainings Assigned</span>
+                <span style="position:absolute;top:20px;left:170px;font-size:10px;">No Trainings Assigned</span>
                 <i class="fas fa-circle"
-                    style="cursor:pointer;position:absolute;top:45px;left:170px;font-size:12px;color:#46bd15;z-index:1;display:inline-block;line-height:18px;"
+                    style="position:absolute;top:40px;left:150px;font-size:12px;color:#46bd15;z-index:1;display:inline-block;line-height:18px;"
                     nz-tooltip [nzTooltipTitle]=""></i>
-                <span style="position:absolute;top:45px;left:195px;font-size:10px;">All Traingings are Up To Date</span>
+                <span style="position:absolute;top:40px;left:170px;font-size:10px;">All Traingings are Up To Date</span>
                 <i class="fas fa-circle"
-                    style="cursor:pointer;position:absolute;top:70px;left:170px;font-size:12px;color:red;z-index:1;display:inline-block;line-height:18px;"
+                    style="position:absolute;top:60px;left:150px;font-size:12px;color:red;z-index:1;display:inline-block;line-height:18px;"
                     nz-tooltip [nzTooltipTitle]=""></i>
-                <span style="position:absolute;top:70px;left:195px;font-size:10px;">At Least One Trainging is Past Due</span>
+                <span style="position:absolute;top:60px;left:170px;font-size:10px;">At Least One Trainging is Past
+                    Due</span>
                 <label nz-checkbox ngDefaultControl [(ngModel)]="includeFullName"
-                    style="cursor:pointer;position:absolute;top:20px;left:350px;font-size:12px;color:#000000;z-index:1;"
+                    style="cursor:pointer;position:absolute;top:30px;left:770px;font-size:12px;color:#000000;z-index:1;"
                     nz-tooltip nzTooltipTitle="">Show Names for Individual Contributors
                 </label>
+                    <nz-select ngDefaultControl nzMode="tags" nzSize="small" nzPlaceHolder="Job Titles to Highlight" [(ngModel)]="listOfFilterJobTitles" (ngModelChange)="orgChartFilterChanged($event)"
+                    style="position:absolute;top:20px;left:350px;width:400px;">
+                        <nz-option *ngFor="let jobTitle of listOfJobTitles" [nzLabel]="jobTitle.text" [nzValue]="jobTitle.value"></nz-option>
+                    </nz-select>
             </div>
         </div>
         <div *ngIf="showOrgChart !== 'true'" style="padding-top:20px;">
@@ -152,7 +157,7 @@
                     <ng-template ngFor let-data [ngForOf]="nestedTable.data" let-i="index">
                         <tr style="font-size:12px;background-color: white;line-height:10px;"
                             (mouseenter)="hoverUid = data._id" (mouseleave)="hoverUid = null"
-                            [ngClass]="{'row-selected': rowSelected === i}" >
+                            [ngClass]="{'row-selected': rowSelected === i}">
                             <!--
                         <td nzShowExpand [(nzExpand)]="data.expand"></td>
                         -->
@@ -216,7 +221,7 @@
                             </div>
                         </div>
                     </div>
-                    <div style="background-color:white;" [ngClass]="{'inline-block': !isVertical, 'block': isVertical}">
+                    <div style="background-color:white;display:block;">
                         <div *ngFor="let dr of authenticatedUser.directReports; let drIndex = index"
                             style="vertical-align: top;width:fit-content;position:relative;"
                             [ngClass]="{'inline-block': isVertical, 'block': !isVertical}">
@@ -231,9 +236,9 @@
                             </div>
                             <div style="text-align: center;">
                                 <div (mouseenter)="setHoverData(dr)" (mouseleave)="setHoverData(null)"
-                                    (click)="selectUser(dr)" style="margin-bottom:20px;"
+                                    (click)="selectUser(dr)" class="org-chart-node"
                                     [ngStyle]="{'padding.px': orgChartPadding}"
-                                    [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': userIdSelected === dr, 'hover-node': userIdSelected !== dr && allActive || dr === currentHoverUid || orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr), 'displayNone': (!showUpToDate && myOrgUserHash[dr]?.trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr]?.trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr]?.trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr]?.userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr]?.userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr]?.userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr]?.userType === 'customer')}">
+                                    [ngClass]="{'displayNone': (myOrgUserHash[dr]?.userType === 'individualContributor' && currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr]?.jobTitle)), 'supervisor-node': myOrgUserHash[dr]?.userType === 'supervisor','selected-node': userIdSelected === dr, 'hover-node': userIdSelected !== dr && allActive || dr === currentHoverUid || orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr)}">
                                     <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]" style="font-size:18px;"
                                         [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr]?.trainingStatus]}"></i>
                                     <span
@@ -246,7 +251,7 @@
                                         class="org-chart-vert-connector-bottom">
                                     </div>
                                 </div>
-                                <div [ngClass]="{'inline-block': !isVertical, 'block': isVertical}">
+                                <div style="display:block;">
                                     <div *ngFor="let dr2 of myOrgUserHash[dr]?.directReports; let dr2Index = index"
                                         style="vertical-align: top;width:fit-content;position:relative;"
                                         [ngClass]="{'inline-block': isVertical, 'block': !isVertical}">
@@ -261,9 +266,9 @@
                                         </div>
                                         <div style="text-align: center;">
                                             <div (mouseenter)="setHoverData(dr2)" (mouseleave)="setHoverData(null)"
-                                                [ngStyle]="{'padding.px': orgChartPadding}" style="margin-bottom:20px;"
+                                                [ngStyle]="{'padding.px': orgChartPadding}" class="org-chart-node"
                                                 (click)="selectUser(dr2)"
-                                                [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': userIdSelected === dr2, 'hover-node': userIdSelected !== dr2 && allActive || dr2 === currentHoverUid || orgChartNodeHash[dr2]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2), 'displayNone': (!showUpToDate && myOrgUserHash[dr2]?.trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr2]?.trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr2]?.trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr2]?.userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr2]?.userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr2]?.userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr2]?.userType === 'customer')}">
+                                                [ngClass]="{ 'displayNone': (myOrgUserHash[dr2]?.userType === 'individualContributor' && currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr2]?.jobTitle)), 'supervisor-node': myOrgUserHash[dr2]?.userType === 'supervisor','selected-node': userIdSelected === dr2, 'hover-node': userIdSelected !== dr2 && allActive || dr2 === currentHoverUid || orgChartNodeHash[dr2]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2)}">
                                                 <i [ngClass]="userTypeIconHash[myOrgUserHash[dr2]?.userType]"
                                                     style="font-size:18px;"
                                                     [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr2]?.trainingStatus]}"></i>
@@ -277,11 +282,11 @@
                                                     class="org-chart-vert-connector-bottom">
                                                 </div>
                                             </div>
-                                            <div [ngClass]="{'inline-block': !isVertical, 'block': isVertical}">
+                                            <div style="display:block;">
                                                 <div *ngFor="let dr3 of myOrgUserHash[dr2]?.directReports; let dr3Index = index"
-                                                    style="vertical-align: top;position:relative;"
-                                                    [ngClass]="{'inline-block': (isVertical && myOrgUserHash[dr3]?.userType === 'supervisor') || myOrgUserHash[dr3]?.userType !== 'supervisor', 'block': (!isVertical && myOrgUserHash[dr3]?.userType === 'supervisor') || myOrgUserHash[dr3]?.userType !== 'supervisor'}">
-                                                    <div *ngIf="isVertical && myOrgUserHash[dr3]?.userType === 'supervisor'"
+                                                    style="vertical-align: top;position:relative;display:inline-block;"
+                                                    [ngClass]="{}">
+                                                    <div 
                                                         style="position:relative;">
                                                         <div class="org-chart-vert-connector">
                                                         </div>
@@ -293,10 +298,10 @@
                                                         </div>
                                                     </div>
                                                     <div style="text-align: center;">
-                                                        <div (mouseenter)="setHoverData(dr3)"
-                                                            [ngStyle]="{'padding.px': orgChartPadding}"
+                                                        <div (mouseenter)="setHoverData(dr3)" style=""
+                                                            [ngStyle]="{'padding.px': orgChartPadding}" class="org-chart-node"
                                                             (mouseleave)="setHoverData(null)" (click)="selectUser(dr3)"
-                                                            [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': userIdSelected === dr3,  'hover-node': userIdSelected !== dr3 && allActive || dr3 === currentHoverUid || orgChartNodeHash[dr3]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr3), 'displayNone': (!showUpToDate && myOrgUserHash[dr3]?.trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr3]?.trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr3]?.trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr3]?.userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr3]?.userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr3]?.userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr3]?.userType === 'customer')}">
+                                                            [ngClass]="{'displayNone': (myOrgUserHash[dr3]?.userType === 'individualContributor' && currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr3]?.jobTitle)),'supervisor-node': myOrgUserHash[dr3]?.userType === 'supervisor','selected-node': userIdSelected === dr3, 'hover-node': userIdSelected !== dr3 && allActive || dr3 === currentHoverUid || orgChartNodeHash[dr3]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr3)}">
                                                             <i *ngIf="myOrgUserHash[dr3]?.userType !== 'supervisor'"
                                                                 [ngClass]="userTypeIconHash[myOrgUserHash[dr3]?.userType]"
                                                                 style="font-size: 14px;"
@@ -315,14 +320,12 @@
                                                                 class="org-chart-vert-connector-bottom">
                                                             </div>
                                                         </div>
-                                                        <div [ngClass]="{'inline-block': !isVertical, 'block': isVertical}"
-                                                            style="margin-top:10px;">
+                                                        <div style="display:block;">
                                                             <div *ngFor="let dr4 of myOrgUserHash[dr3]?.directReports; let dr4Index = index"
                                                                 style="vertical-align: top;position:relative;"
-                                                                [ngClass]="{'inline-block': (isVertical && myOrgUserHash[dr4]?.userType === 'supervisor') || myOrgUserHash[dr4]?.userType !== 'supervisor', 'block': (!isVertical && myOrgUserHash[dr4]?.userType === 'supervisor') || myOrgUserHash[dr4]?.userType !== 'supervisor'}">
-                                                                <div *ngIf="isVertical && myOrgUserHash[dr4]?.userType === 'supervisor'"
-                                                                    style="position:relative;">
-                                                                    <div *ngIf="" class="org-chart-vert-connector">
+                                                                [ngClass]="{'inline-block': maxLevel === 6, 'block': maxLevel === 5}">
+                                                                <div *ngIf="maxLevel === 6" style="position:relative;">
+                                                                    <div class="org-chart-vert-connector">
                                                                     </div>
                                                                     <div *ngIf="!isLast(myOrgUserHash[dr3]?.directReports, dr4Index)"
                                                                         class="org-chart-horizontal-connector-right">
@@ -332,11 +335,11 @@
                                                                     </div>
                                                                 </div>
                                                                 <div style="text-align: center;">
-                                                                    <div (mouseenter)="setHoverData(dr4)"
+                                                                    <div (mouseenter)="setHoverData(dr4)" 
                                                                         [ngStyle]="{'padding.px': orgChartPadding}"
-                                                                        (mouseleave)="setHoverData(null)"
+                                                                        (mouseleave)="setHoverData(null)" class="org-chart-node"
                                                                         (click)="selectUser(dr4)"
-                                                                        [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': userIdSelected === dr4, 'maxlevel-node': maxLevel === 5, 'hover-node': userIdSelected !== dr4 && allActive || dr4 === currentHoverUid || orgChartNodeHash[dr4]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr4), 'displayNone': (!showUpToDate && myOrgUserHash[dr4]?.trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr4]?.trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr4]?.trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr4]?.userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr4]?.userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr4]?.userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr4]?.userType === 'customer')}">
+                                                                        [ngClass]="{'displayNone': (myOrgUserHash[dr4]?.userType === 'individualContributor' && currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr4]?.jobTitle)), 'supervisor-node': myOrgUserHash[dr4]?.userType === 'supervisor','selected-node': userIdSelected === dr4, 'hover-node': userIdSelected !== dr4 && allActive || dr4 === currentHoverUid || orgChartNodeHash[dr4]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr4)}">
                                                                         <i *ngIf="myOrgUserHash[dr4]?.userType !== 'supervisor'"
                                                                             [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
                                                                             style="font-size: 14px;"
@@ -355,16 +358,15 @@
                                                                             class="org-chart-vert-connector-bottom">
                                                                         </div>
                                                                     </div>
-                                                                    <div
-                                                                        [ngClass]="{'inline-block': !isVertical, 'block': isVertical}">
+                                                                    <div style="display:block;">
                                                                         <div *ngFor="let dr5 of myOrgUserHash[dr4]?.directReports; let dr5Index = index"
-                                                                            style="vertical-align: top;width:fit-content;position:relative;"
-                                                                            [ngClass]="{'inline-block': (isVertical && myOrgUserHash[dr5]?.userType === 'supervisor') || myOrgUserHash[dr5]?.userType !== 'supervisor', 'block': (!isVertical && myOrgUserHash[dr5]?.userType === 'supervisor') || myOrgUserHash[dr5]?.userType !== 'supervisor'}">
-                                                                            <div *ngIf="isVertical && myOrgUserHash[dr5]?.userType === 'supervisor'"
+                                                                            style="vertical-align: top;position:relative;"
+                                                                            [ngClass]="{'inline-block': maxLevel < 6, 'block': maxLevel === 6}">
+                                                                            <div *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor'"
                                                                                 style="position:relative;">
                                                                                 <div class="org-chart-vert-connector">
                                                                                 </div>
-                                                                                <div *ngIf="!isLast(myOrgUserHash[dr4]?.directReports, dr5Index)"
+                                                                                <div *ngIf="!isLast(myOrgUserHash[dr3]?.directReports, dr5Index)"
                                                                                     class="org-chart-horizontal-connector-right">
                                                                                 </div>
                                                                                 <div *ngIf="dr5Index !== 0"
@@ -375,11 +377,11 @@
                                                                                 <div (mouseenter)="setHoverData(dr5)"
                                                                                     [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                     (mouseleave)="setHoverData(null)"
-                                                                                    (click)="selectUser(dr5)"
-                                                                                    [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': userIdSelected === dr5, 'hover-node': userIdSelected !== dr5 && allActive || dr5 === currentHoverUid || orgChartNodeHash[dr5]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr5), 'displayNone': (!showUpToDate && myOrgUserHash[dr5]?.trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr5]?.trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr5]?.trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr5]?.userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr5]?.userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr5]?.userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr5]?.userType === 'customer')}">
+                                                                                    (click)="selectUser(dr5)" class="org-chart-node"
+                                                                                    [ngClass]="{'displayNone': (myOrgUserHash[dr5]?.userType === 'individualContributor' && currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr5]?.jobTitle)),'selected-node': userIdSelected === dr5, 'hover-node': userIdSelected !== dr5 && allActive || dr5 === currentHoverUid || orgChartNodeHash[dr5]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr5)}">
                                                                                     <i *ngIf="myOrgUserHash[dr5]?.userType !== 'supervisor'"
                                                                                         [ngClass]="userTypeIconHash[myOrgUserHash[dr5]?.userType]"
-                                                                                        style=""
+                                                                                        style="font-size: 14px;"
                                                                                         [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr5]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
                                                                                     <i *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor'"
                                                                                         [ngClass]="userTypeIconHash[myOrgUserHash[dr5]?.userType]"
@@ -397,28 +399,36 @@
                                                                                 </div>
                                                                                 <div
                                                                                     [ngClass]="{'inline-block': !isVertical, 'block': isVertical}">
-                                                                                    <div *ngFor="let dr6 of myOrgUserHash[dr5]?.directReports"
+                                                                                    <div *ngFor="let dr6 of myOrgUserHash[dr5]?.directReports; let dr6Index = index"
                                                                                         style="vertical-align: top;width:fit-content;"
-                                                                                        [ngClass]="{'inline-block': (isVertical && myOrgUserHash[dr6]?.userType === 'supervisor') || myOrgUserHash[dr6]?.userType !== 'supervisor', 'block': (!isVertical && myOrgUserHash[dr6]?.userType === 'supervisor') || myOrgUserHash[dr6]?.userType !== 'supervisor'}">
+                                                                                        [ngClass]="{'inline-block': maxLevel < 7, 'block': maxLevel === 7}">
+                                                                                        <div *ngIf="isVertical && myOrgUserHash[dr6]?.userType === 'supervisor'"
+                                                                                            style="position:relative;">
+                                                                                            <div
+                                                                                                class="org-chart-vert-connector">
+                                                                                            </div>
+                                                                                            <div *ngIf="!isLast(myOrgUserHash[dr5]?.directReports, dr6Index)"
+                                                                                                class="org-chart-horizontal-connector-right">
+                                                                                            </div>
+                                                                                            <div *ngIf="dr6Index !== 0"
+                                                                                                class="org-chart-horizontal-connector-left">
+                                                                                            </div>
+                                                                                        </div>
                                                                                         <div
-                                                                                            class="org-chart-vert-connector">
-                                                                                        </div>
-                                                                                        <div *ngIf="!isLast(myOrgUserHash[dr5]?.directReports, dr6Index)"
-                                                                                            class="org-chart-horizontal-connector-right">
-                                                                                        </div>
-                                                                                        <div *ngIf="dr6Index !== 0"
-                                                                                            class="org-chart-horizontal-connector-left">
-                                                                                        </div>
-                                                                                        <div
-                                                                                            style="text-align: center;position:relative;">
-                                                                                            <div (mouseenter)="setHoverData(dr6)"
+                                                                                            style="text-align: center;">
+                                                                                            <div (mouseenter)="setHoverData(dr5)"
                                                                                                 [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                 (mouseleave)="setHoverData(null)"
                                                                                                 (click)="selectUser(dr6)"
-                                                                                                [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': userIdSelected === dr6,  'hover-node': userIdSelected !== dr6 && allActive || dr6 === currentHoverUid || orgChartNodeHash[dr6]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr6), 'displayNone': (!showUpToDate && myOrgUserHash[dr6]?.trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr6]?.trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr6]?.trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr6]?.userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr6]?.userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr6]?.userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr6]?.userType === 'customer')}">
-                                                                                                <i [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
+                                                                                                [ngClass]="{'displayNone': (myOrgUserHash[dr6]?.userType === 'individualContributor' && currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr6]?.jobTitle)),'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': userIdSelected === dr6, 'hover-node': userIdSelected !== dr6 && allActive || dr6 === currentHoverUid || orgChartNodeHash[dr6]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr6)}">
+                                                                                                <i *ngIf="myOrgUserHash[dr6]?.userType !== 'supervisor'"
+                                                                                                    [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
                                                                                                     style=""
                                                                                                     [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr6]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
+                                                                                                <i *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor'"
+                                                                                                    [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
+                                                                                                    style="font-size: 18px;"
+                                                                                                    [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr6]?.trainingStatus]}"></i>
                                                                                                 <span
                                                                                                     *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor' || myOrgUserHash[dr6]?.userType === 'individualContributor' && includeFullName"
                                                                                                     [ngClass]="{'inline-block': !isVertical, 'block': isVertical}"
@@ -449,7 +459,7 @@
                                                                                                             [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                             (mouseleave)="setHoverData(null)"
                                                                                                             (click)="selectUser(dr7)"
-                                                                                                            [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': userIdSelected === dr7,  'hover-node': userIdSelected !== dr7 && allActive || dr7 === currentHoverUid || orgChartNodeHash[dr7]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr7), 'displayNone': (!showUpToDate && myOrgUserHash[dr7]?.trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr7]?.trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr7]?.trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr7]?.userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr7]?.userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr7]?.userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr7]?.userType === 'customer')}">
+                                                                                                            [ngClass]="{'displayNone': (myOrgUserHash[dr7]?.userType === 'individualContributor' && currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr7]?.jobTitle)),'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': userIdSelected === dr7,  'hover-node': userIdSelected !== dr7 && allActive || dr7 === currentHoverUid || orgChartNodeHash[dr7]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr7)}">
                                                                                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr7]?.userType]"
                                                                                                                 style=""
                                                                                                                 [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr7]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
@@ -481,16 +491,11 @@
                                                                                                                     (dragover)="allowDrop($event)"
                                                                                                                     style="text-align: center;">
                                                                                                                     <div draggable="true"
-                                                                                                                        [nzPopoverTitle]="titleTemplate8"
-                                                                                                                        [nzPopoverContent]="contentTemplate8"
-                                                                                                                        (dragstart)="onDragStart($event)"
-                                                                                                                        (drag)="onDrag($event)"
-                                                                                                                        (dragend)="onDragEnd($event)"
                                                                                                                         (mouseenter)="setHoverData(dr8)"
                                                                                                                         [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                                         (mouseleave)="setHoverData(null)"
                                                                                                                         (click)="selectUser(dr8)"
-                                                                                                                        [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical, 'selected-node': userIdSelected === dr8, 'hover-node': userIdSelected !== dr8 && allActive || dr8 === currentHoverUid || orgChartNodeHash[dr8]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr8), 'displayNone': (!showUpToDate && myOrgUserHash[dr8]?.trainingStatus === 'upToDate') || (!showPastDue && myOrgUserHash[dr8]?.trainingStatus === 'pastDue') || (!showNone && myOrgUserHash[dr8]?.trainingStatus === 'none') || (!showIndividualContributors && myOrgUserHash[dr8]?.userType === 'individualContributor') || (!showSupervisors && myOrgUserHash[dr8]?.userType === 'supervisor') || (!showVolunteers && myOrgUserHash[dr8]?.userType === 'volunteer') || (!showCustomers && myOrgUserHash[dr8]?.userType === 'customer')}">
+                                                                                                                        [ngClass]="{'displayNone': (myOrgUserHash[dr8]?.userType === 'individualContributor' && currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr8]?.jobTitle)),'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical, 'selected-node': userIdSelected === dr8, 'hover-node': userIdSelected !== dr8 && allActive || dr8 === currentHoverUid || orgChartNodeHash[dr8]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr8)}">
                                                                                                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr8]?.userType]"
                                                                                                                             style=""
                                                                                                                             [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr8]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
@@ -528,6 +533,7 @@
                 </div>
             </div>
         </div>
+        <!--
         <ng-template #titleTemplate let-dr>
             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr2]?.userType]" style="display:inline-block;"
                 [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr2]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
@@ -565,23 +571,25 @@
                 </i>
             </div>
         </ng-template>
-
+-->
         <div style="position:absolute;left:0;bottom:0;">
             <i nz-icon nzType="menu-unfold" style="font-size:32px;cursor:pointer;" (click)="openUserDetails()"
                 nz-tooltip nzTooltipTitle="Show the User Detail panel"></i>
         </div>
         <div [@userDetailSlide]="userDetailIsVisible ? 'open' : 'closed'" class="member-detail-card"
-            style="position:absolute;bottom:-20px;left:0;width:100%;z-index: 11;">
+            style="position:absolute;bottom:-40px;left:0;width:100%;z-index: 11;">
             <div class="my-card-header">
                 <i [ngClass]="userTypeIconHash[selectedUser?.userType]" style="font-size:18px;"
                     [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser?.trainingStatus]}" nz-tooltip
                     [nzTooltipTitle]=""></i>&nbsp;
                 <span *ngIf="selectedUser"
-                    style="display:inline-block;font-size:18px;font-weight: 500;color:#444444;margin-bottom:10px;">{{selectedUser?.firstName}}
-                    {{selectedUser?.lastName}}
+                    style="display:inline-block;font-size:18px;font-weight: 500;color:black;margin-bottom:10px;">{{selectedUser?.firstName}}
+                    {{selectedUser?.lastName}}&nbsp;&nbsp;
                 </span>
+                <span *ngIf="selectedUser" style="display:inline-block;font-size:16px;font-weight: 300;color:#444444;margin-bottom:10px;">({{selectedUser?.jobTitle}})</span>
                 <span *ngIf="!selectedUser"
-                    style="display:inline-block;font-size:18px;font-weight: 500;color:#444444;margin-bottom:10px;">No User Selected
+                    style="display:inline-block;font-size:18px;font-weight: 500;color:#444444;margin-bottom:10px;">No
+                    User Selected
                 </span>
                 <i nz-icon nzType="menu-fold" style="font-size:22px;float:right;margin-right:20px;cursor:pointer;"
                     (click)="closeUserDetails()" nz-tooltip nzTooltipTitle="Hide this panel"></i>
