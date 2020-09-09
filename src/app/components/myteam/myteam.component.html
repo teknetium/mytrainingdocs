@@ -298,7 +298,7 @@
                                                         </div>
                                                     </div>
                                                     <div style="text-align: center;">
-                                                        <div (mouseenter)="setHoverData(dr3)" style=""
+                                                        <div (mouseenter)="setHoverData(dr3)"
                                                             [ngStyle]="{'padding.px': orgChartPadding}" class="org-chart-node"
                                                             (mouseleave)="setHoverData(null)" (click)="selectUser(dr3)"
                                                             [ngClass]="{'displayNone': (myOrgUserHash[dr3]?.userType === 'individualContributor' && currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr3]?.jobTitle)),'supervisor-node': myOrgUserHash[dr3]?.userType === 'supervisor','selected-node': userIdSelected === dr3, 'hover-node': userIdSelected !== dr3 && allActive || dr3 === currentHoverUid || orgChartNodeHash[dr3]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr3)}">
@@ -423,7 +423,6 @@
                                                                                                 [ngClass]="{'displayNone': (myOrgUserHash[dr6]?.userType === 'individualContributor' && currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr6]?.jobTitle)),'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': userIdSelected === dr6, 'hover-node': userIdSelected !== dr6 && allActive || dr6 === currentHoverUid || orgChartNodeHash[dr6]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr6)}">
                                                                                                 <i *ngIf="myOrgUserHash[dr6]?.userType !== 'supervisor'"
                                                                                                     [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
-                                                                                                    style=""
                                                                                                     [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr6]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
                                                                                                 <i *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor'"
                                                                                                     [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
@@ -461,7 +460,6 @@
                                                                                                             (click)="selectUser(dr7)"
                                                                                                             [ngClass]="{'displayNone': (myOrgUserHash[dr7]?.userType === 'individualContributor' && currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr7]?.jobTitle)),'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': userIdSelected === dr7,  'hover-node': userIdSelected !== dr7 && allActive || dr7 === currentHoverUid || orgChartNodeHash[dr7]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr7)}">
                                                                                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr7]?.userType]"
-                                                                                                                style=""
                                                                                                                 [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr7]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
                                                                                                             <span
                                                                                                                 *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor' || myOrgUserHash[dr7]?.userType === 'individualContributor' && includeFullName"
@@ -497,7 +495,6 @@
                                                                                                                         (click)="selectUser(dr8)"
                                                                                                                         [ngClass]="{'displayNone': (myOrgUserHash[dr8]?.userType === 'individualContributor' && currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr8]?.jobTitle)),'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical, 'selected-node': userIdSelected === dr8, 'hover-node': userIdSelected !== dr8 && allActive || dr8 === currentHoverUid || orgChartNodeHash[dr8]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr8)}">
                                                                                                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr8]?.userType]"
-                                                                                                                            style=""
                                                                                                                             [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr8]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
                                                                                                                         <span
                                                                                                                             *ngIf="myOrgUserHash[dr8]?.userType === 'supervisor' || myOrgUserHash[dr8]?.userType === 'individualContributor' && includeFullName"

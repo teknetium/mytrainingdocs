@@ -5,7 +5,7 @@
             <tr style="font-size:12px;">
                 <th>Status</th>
                 <th style="padding-left:40px;">Title</th>
-                <th style="">Version</th>
+                <th>Version</th>
                 <th style="padding-left:10px;">Time (mm:ss)</th>
                 <th style="padding-left:10px;">Due Date</th>
                 <th style="padding-left:10px;">Date Completed</th>
@@ -19,7 +19,7 @@
                     <i nz-icon [nzType]="statusIconHash[userTraining?.status]?.icon" [nzTheme]="'twotone'"
                         [nzTwotoneColor]="statusIconHash[userTraining?.status]?.color" style="font-size:18px;"></i>
                 </td>
-                <td style="">
+                <td>
                     <!--
                     <i *ngIf="trainingIdHash[userTraining.tid].status === 'unlocked' && production === 'off'" nz-icon nzType="unlock"
                         [nzTheme]="'twotone'"
@@ -39,7 +39,7 @@
                     </i>
                     <span style="margin-left:10px;">{{ trainingIdHash[userTraining?.tid]?.title }}</span>
                 </td>
-                <td style="">
+                <td>
                     {{ versionFormatter(userTraining?.trainingVersion) }}
                 </td>
                 <td style="width:9%;">
