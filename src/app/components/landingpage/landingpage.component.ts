@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ScrollToAnimationEasing } from '@nicky-lenaers/ngx-scroll-to';
 import { VgAPI } from 'videogular2/compiled/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { TrainingService } from '../../shared/services/training.service';
 
 
@@ -14,13 +15,71 @@ import { TrainingService } from '../../shared/services/training.service';
   selector: 'app-landingpage',
   templateUrl: './landingpage.component.html',
   styleUrls: ['./landingpage.component.css'],
-  encapsulation: ViewEncapsulation.Emulated
+  encapsulation: ViewEncapsulation.Emulated,
+  animations: [
+    trigger('videoSlide', [
+      // ...
+      state('closed', style({
+        'margin-top': '-100%'
+      })),
+      state('open', style({
+        'margin-top': '0',
+      })),
+      transition('open => closed', [
+        animate('300ms')
+      ]),
+      transition('closed => open', [
+        animate('300ms')
+      ]),
+    ])
+  ]
 })
+  
 export class LandingpageComponent implements OnInit {
 
   vgApi: VgAPI;
   taskVideo$: Observable<SafeResourceUrl>;
   showTaskVideoModal = false;
+
+  features = [
+    {
+      name: 'Multiple Training Types',
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`
+    },
+    {
+      name: 'Training Versioning',
+      description: ''
+    },
+    {
+      name: 'Custom Notification Schedules',
+      description: ''
+    },
+    {
+      name: 'Multiple Assessments',
+      description: ''
+    },
+    {
+      name: 'Status Tracking',
+      description: ''
+    },
+    {
+      name: 'Dynamic/Interactive Org Chart',
+      description: ''
+    },
+    {
+      name: 'Multiple Assessments',
+      description: ''
+    },
+    {
+      name: 'Multiple Assessments',
+      description: ''
+    },
+    {
+      name: 'Multiple Assessments',
+      description: ''
+    },
+  ]
 
   benefits = [
     {
@@ -131,6 +190,9 @@ export class LandingpageComponent implements OnInit {
     home: {
       ngxScrollToDestination: 'home'
     },
+    features: {
+      ngxScrollToDestination: 'features'
+    },
     benefits: {
       ngxScrollToDestination: 'benefits'
     },
@@ -169,7 +231,7 @@ export class LandingpageComponent implements OnInit {
   step3Url = 'https://cdn.filestackcontent.com/';
   currentVideo;
   showYouTubeIcon = true;
-
+  explainerVidIsVisible = false;
   
   constructor(
     private auth: AuthService,

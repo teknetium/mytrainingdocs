@@ -36,10 +36,11 @@ export class MyTrainingsComponent extends BaseComponent implements OnInit {
   trainingSessionTimer: number = 0;
   userObj: UserModel;
 
+  /*
   @Input() type = 'authenticatedUser';
   @Input() mode = '';
-  @Input() useBanner = 'yes';
-
+*/
+  @Input() useBanner = 'no';
   currentUserTraining = '';
   markCompletedModalIsVisible = false;
 
@@ -60,6 +61,8 @@ export class MyTrainingsComponent extends BaseComponent implements OnInit {
         console.log('mt-training:authenticatedUser$.subscribe...null user');
         return;
       }
+
+
 
       this.userService.selectAuthenticatedUser();
     });

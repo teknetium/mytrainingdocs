@@ -1104,7 +1104,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   orgJobTitles = [];
   testNodes = <{ firstName: string, lastName: string, email: string, jobTitle: string, supervisorName: string, drList: any[] }[]>[];
-  maxLevel = 5;
+  maxLevel = 0;
 
   maxLevelSummary = true;
   includeFullName = false;
@@ -1125,6 +1125,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   listOfJobFilters: Array<{ label: string; value: string }> = [];
   listOfFilterJobTitles = [];
   currentJobTitleFilters = [];
+  maxLevel$: Observable<number>;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1140,6 +1141,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private router: Router
   ) {
     super();
+    this.maxLevel$ = this.userService.getMaxLevelStream();
     this.directReports$ = this.userService.getDirectReportsStream();
     this.batchFails$ = this.userService.getBatchUserFailsStream();
     this.userFail$ = this.userService.getUserFailStream();
@@ -1182,6 +1184,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.orgChartWidth = window.innerWidth - (window.innerWidth * this.teamContainerWidth / 100);
     FlatfileImporter.setVersion(2);
     this.initializeImporter();
+    this.maxLevel$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(maxLevel => {
+      this.maxLevel = maxLevel;
+    });
     this.batchFails$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(failList => {
       if (!failList) {
         return;
@@ -1392,10 +1397,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         let trainings = Object.values(this.allTrainingIdHash);
         this.teamTrainings = [];
         for (let training of trainings) {
-          if (training.teamId === this.authenticatedUser.uid) {
             this.teamTrainings.push(training);
-            this.showTrainingHash[training._id] = training
-          }
+            this.showTrainingHash[training._id] = training;
         }
       })
     })

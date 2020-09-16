@@ -1,5 +1,5 @@
 <div style="width:100%;height:fit-content;font-size:12px;">
-    <nz-table *ngIf="uidUTHash[uid]?.length > 0" nzSize="small" nzBordered="false" nzShowPagination="false"
+    <nz-table *ngIf="uidUTHash && uidUTHash[uid]?.length > 0" nzSize="small" nzBordered="false" nzShowPagination="false"
         [nzData]="uidUTHash[uid]" style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
         <thead>
             <tr style="font-size:12px;">
@@ -34,7 +34,7 @@
                         style="font-size:24px;vertical-align: middle;"
                         [ngStyle]="{'color': trainingIdHash[userTraining?.tid]?.iconColor}">
                     </i>
-                    <i *ngIf="trainingIdHash[userTraining?.tid].type === 'recurring'" class="fas fa-redo-alt"
+                    <i *ngIf="trainingIdHash[userTraining?.tid]?.type === 'recurring'" class="fas fa-redo-alt"
                         style="font-size:10px;vertical-align: top;">
                     </i>
                     <span style="margin-left:10px;">{{ trainingIdHash[userTraining?.tid]?.title }}</span>

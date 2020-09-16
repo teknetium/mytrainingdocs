@@ -73,6 +73,13 @@ opacity:1.0;
   display: flex !important;
 }
 
+.opaque {
+  opacity: .5;
+}
+.opaque:hover {
+  opacity: 1;
+}
+
 .how-step {
   width: 150px;
 }
@@ -189,7 +196,7 @@ button:focus {
 }
 
 .bg-light {
-  background-color: #d5d5d5;
+  background-color: #f5f5f5;
 }
 
 .text-muted {

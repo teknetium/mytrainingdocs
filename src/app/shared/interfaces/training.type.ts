@@ -11,6 +11,7 @@ export interface TrainingModel {
   status: 'locked' | 'unlocked';
   title: string;
   teamId: string;
+  org: string;
   owner: string;
   dateCreated: number;
   estimatedTimeToComplete: number;

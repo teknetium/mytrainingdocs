@@ -23,7 +23,7 @@
                     Home
                 </a>
             </li>
-            <li nz-menu-item nzMatchRouter class="nav-badge">
+            <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter class="nav-badge">
                 <a routerLink="/mytrainings" routerLinkActive="active-link">
                     My Trainings
                 </a>

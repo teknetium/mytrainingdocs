@@ -258,12 +258,12 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     if (this.logSession === 'on') {
       if (this.selectedUser.userType === 'supervisor') {
         if (!this.selectedUser.teamId) {
-          this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser._id);
+          this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser.org);
         } else {
-          this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser.teamId);
+          this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser.org);
         }
       } else {
-        this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser.teamId);
+        this.userTrainingService.startSession(utid, this.selectedUser._id, tid, this.selectedUser.org);
       }
     }
     this.currentTrainingId = tid;
@@ -349,6 +349,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     if (this.comment === '') {
       return;
     }
+    console.log("markTrainingAsComplete   xxxxxxx", this.currentUserTraining, this.utIdHash, this.trainingIdHash);
     let comment = {
       _id: String(new Date().getTime()),
       tid: this.currentTrainingId,

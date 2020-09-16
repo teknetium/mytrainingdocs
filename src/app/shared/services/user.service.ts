@@ -25,6 +25,7 @@ export class UserService {
   private authenticatedUser: UserModel;
 
   // Writable streams
+  private maxLevelBS$ = new BehaviorSubject<number>(0);
   private httpErrorBS$ = new BehaviorSubject<HttpErrorResponse>(null);
   private batchFailsBS$ = new BehaviorSubject<UserBatchData[]>([]);
   private myOrgUserNameListBS$ = new BehaviorSubject<string[]>([]);
@@ -41,9 +42,14 @@ export class UserService {
   private myTeamCntBS$ = new BehaviorSubject<number>(0);
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
   private newUserBS$ = new BehaviorSubject<UserModel>(null);
+  // allOrgUserHash contains all users matching authenticatedUser.org
   private allOrgUserHash: UserIdHash = {};
+  // myOrgUserHash contains only the users in the sub-org of authenticatedUser
+  private myOrgUserHash: UserIdHash = {};
   private myTeam: UserModel[] = [];
-  private myOrgUsers: UserModel[];
+
+  private allOrgUsers: UserModel[] = [];
+  private myOrgUsers: UserModel[] = [];
   private statusObj;
   private userFailBS$ = new BehaviorSubject<UserFail>(null);
 
@@ -106,6 +112,7 @@ export class UserService {
   supervisorUids: string[][][] = [[[]]];
   levelIndex = [];
   uidLevelIndexHash = {};
+  maxLevel = 0;
 
   constructor(
     private http: HttpClient,
@@ -130,10 +137,14 @@ export class UserService {
         }
         this.authenticatedUserBS$.next(this.authenticatedUser);
         this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
+        
         if (this.authenticatedUser.userType === 'supervisor') {
           //            this.org = this.authenticatedUser.org;
           this.teamId = this.authenticatedUser.uid;
           this.loadData(this.authenticatedUser.org, null);
+        } else if (this.authenticatedUser.userType === 'individualContributor') {
+          this.allOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
+          this.myOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
         }
       },
         err => {
@@ -262,11 +273,12 @@ export class UserService {
   */
   loadData(org, userIdToSelect) {
     //    this.getTeam$(teamId).subscribe((userList) => {
-    this.getOrg$(org).subscribe(userList => {
-      console.log('loadData : users returned from getOrg$', userList);
+    this.getOrg$(org).subscribe(allOrgUserList => {
 
-      if (!userList) {
-        userList = [];
+      if (!allOrgUserList) {
+        allOrgUserList = [];
+      } else {
+        this.allOrgUsers = allOrgUserList;
       }
 
 //      userList = userList.concat(this.newUserList);
@@ -276,12 +288,22 @@ export class UserService {
       this.supervisorUids = [[[]]];
       this.myTeamIdHash = {};
       this.allOrgUserHash = {};
+      this.myOrgUserHash = {};
       this.myOrgUserNames = [];
-      this.myOrgUsers = userList;
+
+
+      for (let user of allOrgUserList) {
+        this.allOrgUserHash[user._id] = user;
+      }
+
+      this.buildMyOrgUserList(this.authenticatedUser, allOrgUserList);
+      console.log("loadData maxLevel", this.maxLevel);
+      this.maxLevelBS$.next(this.maxLevel);
+//      this.myOrgUsers = userList;
       this.myOrgUsersBS$.next(this.myOrgUsers);
 
       let index = 0;
-      for (let user of userList) {
+      for (let user of this.myOrgUsers) {
         let fullName = user.firstName + ' ' + user.lastName;
         this.myOrgUserNames.push(fullName);
         if (user.teamId === this.authenticatedUser._id) {
@@ -291,7 +313,6 @@ export class UserService {
             this.myTeam.push(user);
           }
         }
-        this.allOrgUserHash[user._id] = user;
         if (user.jobTitle) {
           this.jobTitleService.addJobTitle(user.jobTitle);
         }
@@ -300,9 +321,9 @@ export class UserService {
       this.userTrainingService.getUTForTeam(this.teamId);
 
       this.myTeamIdHash[this.authenticatedUser._id] = this.authenticatedUser;
-      this.allOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
+//      this.allOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
       this.myTeamBS$.next(this.myTeam);
-      this.myOrgHashBS$.next(this.allOrgUserHash);
+      this.myOrgHashBS$.next(this.myOrgUserHash);
 
       this.myOrgUserNameListBS$.next(this.myOrgUserNames);
 
@@ -317,8 +338,30 @@ export class UserService {
       this.buildOrgChart(this.authenticatedUser._id, false);
       this.nodes.push(rootNode);
       this.myOrgBS$.next(this.nodes);
-      this
     });
+  }
+
+  buildMyOrgUserList(user: UserModel, allOrgUsers: UserModel[]) {
+    this.myOrgUserHash[user._id] = user;
+    this.myOrgUsers.push(user);
+    let level = 1;
+    this.addDrirectReportsToMyOrgUserHash(user, level++);
+
+  }
+
+  addDrirectReportsToMyOrgUserHash(user: UserModel, level: number) {
+    if (level > this.maxLevel) {
+      this.maxLevel = level;
+    }
+    level++
+    for (let userId of user.directReports) {
+      let drUser = this.allOrgUserHash[userId];
+      this.myOrgUserHash[drUser._id] = drUser;
+      this.myOrgUsers.push(drUser);
+      if (drUser.directReports.length > 0) {
+        this.addDrirectReportsToMyOrgUserHash(drUser, level);
+      }
+    }
   }
 
   buildOrgChart(uid: string, subChart: boolean) {
@@ -434,6 +477,10 @@ export class UserService {
     })
   }
   */
+
+  getMaxLevelStream(): Observable<number> {
+    return this.maxLevelBS$.asObservable();
+  }
 
   getHttpErrorStream(): Observable<HttpErrorResponse> {
     return this.httpErrorBS$.asObservable();
@@ -663,9 +710,9 @@ export class UserService {
   updateUser(user: UserModel, reload: boolean) {
     this.action = 'save';
     this.putUser$(user).subscribe((updatedUser) => {
-      this.buildOrgChart(this.authenticatedUser._id, false);
+//      this.buildOrgChart(this.authenticatedUser._id, false);
       if (reload) {
-        this.loadData(this.teamId, user._id);
+        this.loadData(this.authenticatedUser.org, user._id);
       }
     });
   }
@@ -810,9 +857,9 @@ export class UserService {
       );
   }
 
-  getOrg$(org: string): Observable<UserModel[]> {
+  getOrg$(uid: string): Observable<UserModel[]> {
     return this.http
-      .get<UserModel[]>(`${ENV.BASE_API}users/org/${org}`, {
+      .get<UserModel[]>(`${ENV.BASE_API}users/org/${uid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

@@ -77,12 +77,12 @@ export class TrainingService {
         this.authenticatedUser = user;
         // non-null teamId indicates an individual contributor
         if (this.authenticatedUser.userType === 'individualContributor') {
-          this.teamId = this.authenticatedUser.teamId;
+          this.teamId = this.authenticatedUser.org;
         } else if (this.authenticatedUser.userType === 'supervisor') {
-          this.teamId = this.authenticatedUser.uid;
+          this.teamId = this.authenticatedUser.org;
         }
         // load team trainings
-        this.getTrainings$(this.teamId).subscribe(teamTrainings => {
+        this.getTrainings$(this.authenticatedUser.org).subscribe(teamTrainings => {
           if (!teamTrainings) {
             teamTrainings = [];
           }
@@ -223,7 +223,7 @@ export class TrainingService {
     for (const training of trainings) {
       if (training.jobTitle === jobTitle) {
         if (training.versions.length > 1) {
-          this.userTrainingService.assignTraining(userId, training._id, teamId, training.versions[0].version);
+          this.userTrainingService.assignTraining(userId, training._id, this.authenticatedUser.org, training.versions[0].version);
         }
       }
     }
@@ -235,7 +235,7 @@ export class TrainingService {
     this.teamTrainingHash = {};
     //    this.sharedTrainingHash = {};
     //    this.systemTrainingHash = {};
-    this.getTrainings$(this.teamId).subscribe(teamTrainings => {
+    this.getTrainings$(this.authenticatedUser.org).subscribe(teamTrainings => {
       if (!teamTrainings) {
         teamTrainings = [];
       }
@@ -350,6 +350,7 @@ export class TrainingService {
       status: 'locked',
       rating: [],
       teamId: this.teamId,
+      org: this.authenticatedUser.org,
       owner: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),
       estimatedTimeToComplete: 30,
@@ -475,9 +476,9 @@ export class TrainingService {
     return `Bearer ${this.auth.accessToken}`;
   }
 
-  getTrainings$(teamId: string): Observable<TrainingModel[]> {
+  getTrainings$(org: string): Observable<TrainingModel[]> {
     return this.http
-      .get<TrainingModel[]>(`${ENV.BASE_API}trainings/${teamId}`)
+      .get<TrainingModel[]>(`${ENV.BASE_API}trainings/${org}`)
       .pipe(
         catchError((error) => this._handleError(error))
       );

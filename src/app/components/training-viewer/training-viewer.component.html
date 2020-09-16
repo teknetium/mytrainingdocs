@@ -363,9 +363,8 @@
                             <i nz-icon nzType="rollback" theme="outline" style="vertical-align: top;">
                             </i>
                         </button>
-                        <button *ngIf="authenticatedUser && authenticatedUser?.appAdmin" nz-button nzType="default"
-                            nzShape="circle" nz-tooltip nzTooltipTitle="Show Debug Info" class="header-icon"
-                            (click)="debug = !debug">
+                        <button *ngIf="authenticatedUser?.appAdmin" nz-button nzType="default" nzShape="circle"
+                            nz-tooltip nzTooltipTitle="Show Debug Info" class="header-icon" (click)="debug = !debug">
                             <i nz-icon nzType="bug" [nzTheme]="'twotone'" style="vertical-align: top;"></i>
                         </button>
                         <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Close Training"
@@ -542,14 +541,14 @@
             </div>
             <div *ngIf="production === 'true' || mode === 'Preview'"
                 style="text-align: center;padding:5px;background-color: #fefbe7;">
-                <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Previous Page"
+                <button nz-button nzType="default" nzShape="circle" 
                     class="header-icon" (click)="loadPrevPage()"
-                    [disabled]="isFirstPage(currentPage?._id) || assessmentInProgress">
+                    [disabled]="isFirstPage(currentPage._id) || assessmentInProgress">
                     <i nz-icon nzType="left" theme="outline" style="vertical-align: top;color:blue;">
                     </i>
                 </button>
-                <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Next Page"
-                    class="header-icon" (click)="loadNextPage()" [disabled]="isLastPage(currentPage?._id) || assessmentInProgress || (currentPage?.type === 'assessment' &&
+                <button nz-button nzType="default" nzShape="circle" class="header-icon" (click)="loadNextPage()"
+                    [disabled]="isLastPage(currentPage?._id) || assessmentInProgress || (currentPage?.type === 'assessment' &&
                     (assessmentStatus === 'notCompleted' || assessmentStatus === 'firstTime'))">
                     <i nz-icon nzType="right" theme="outline" style="vertical-align: top;color:blue;">
                     </i>

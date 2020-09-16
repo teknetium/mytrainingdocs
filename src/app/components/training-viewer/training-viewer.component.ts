@@ -1495,7 +1495,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     if (this.mainContentPageHash[this.currentPageId]) {
       this.currentPage = this.mainContentPageHash[this.currentPageId];
       this.currentPageIndex = parseInt(this.pageIndexHash[pageId], 10);
-      if (this.currentPage.type === 'assessment') {
+      if (this.currentPage.type === 'assessment' && this.currentPage.content.assessment) {
         let status = this.assessmentStatusHash[this.currentPage.content.assessment._id];
         if (!status) {
           this.assessmentStatusHash[this.currentPage.content.assessment._id] = 'firstTime';

@@ -118,7 +118,7 @@
   <nz-drawer [nzWidth]="600" nzTitle="Ratings & Comments" [nzClosable]="true" [nzVisible]="showCommentsPanel"
     nzPlacement="right" (nzOnClose)="showCommentsPanel = false">
     <div *ngIf="currentTrainingId" style="display: block;padding:10px;text-align: center;">
-      <i [ngClass]="trainingIdHash[currentTrainingId].iconClass"
+      <i [ngClass]="trainingIdHash[currentTrainingId]?.iconClass"
         style="font-size:24px;vertical-align:baseline;margin-right:10px;"
         [ngStyle]="{'color': trainingIdHash[currentTrainingId].iconColor}">
       </i>

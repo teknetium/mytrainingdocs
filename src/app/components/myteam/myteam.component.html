@@ -254,8 +254,8 @@
                                 <div style="display:block;">
                                     <div *ngFor="let dr2 of myOrgUserHash[dr]?.directReports; let dr2Index = index"
                                         style="vertical-align: top;width:fit-content;position:relative;"
-                                        [ngClass]="{'inline-block': isVertical, 'block': !isVertical}">
-                                        <div *ngIf="isVertical" style="position:relative;">
+                                        [ngClass]="{'inline-block': maxLevel > 2, 'block': maxLevel === 2}">
+                                        <div *ngIf="maxLevel > 2" style="position:relative;">
                                             <div class="org-chart-vert-connector">
                                             </div>
                                             <div *ngIf="!isLast(myOrgUserHash[dr]?.directReports, dr2Index)"
@@ -285,8 +285,8 @@
                                             <div style="display:block;">
                                                 <div *ngFor="let dr3 of myOrgUserHash[dr2]?.directReports; let dr3Index = index"
                                                     style="vertical-align: top;position:relative;display:inline-block;"
-                                                    [ngClass]="{}">
-                                                    <div 
+                                                    [ngClass]="{'inline-block': maxLevel > 3, 'block': maxLevel === 3}">
+                                                    <div *ngIf="maxLevel > 3"
                                                         style="position:relative;">
                                                         <div class="org-chart-vert-connector">
                                                         </div>
@@ -323,8 +323,8 @@
                                                         <div style="display:block;">
                                                             <div *ngFor="let dr4 of myOrgUserHash[dr3]?.directReports; let dr4Index = index"
                                                                 style="vertical-align: top;position:relative;"
-                                                                [ngClass]="{'inline-block': maxLevel === 6, 'block': maxLevel === 5}">
-                                                                <div *ngIf="maxLevel === 6" style="position:relative;">
+                                                                [ngClass]="{'inline-block': maxLevel > 4, 'block': maxLevel === 4}">
+                                                                <div *ngIf="maxLevel > 4" style="position:relative;">
                                                                     <div class="org-chart-vert-connector">
                                                                     </div>
                                                                     <div *ngIf="!isLast(myOrgUserHash[dr3]?.directReports, dr4Index)"
@@ -362,7 +362,7 @@
                                                                         <div *ngFor="let dr5 of myOrgUserHash[dr4]?.directReports; let dr5Index = index"
                                                                             style="vertical-align: top;position:relative;"
                                                                             [ngClass]="{'inline-block': maxLevel < 6, 'block': maxLevel === 6}">
-                                                                            <div *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor'"
+                                                                            <div *ngIf="maxLevel > 5"
                                                                                 style="position:relative;">
                                                                                 <div class="org-chart-vert-connector">
                                                                                 </div>

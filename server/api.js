@@ -92,8 +92,8 @@ module.exports = function(app, config) {
   }
 
 
-  const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
-  const trainingListProjection = "_id title versions type category subcategory owner description teamId iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
+  const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId org iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
+  const trainingListProjection = "_id title versions type category subcategory owner description teamId org iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const userTrainingListProjection = "_id tid uid teamId status dueDate timeToDate dateCompleted assessmentResponses trainingVersion certImage";
   const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email emailVerified teamAdmin orgAdmin appAdmin teamId org supervisorId directReports profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
@@ -335,8 +335,8 @@ module.exports = function(app, config) {
       },
     );
   });
-  app.get("/api/trainings/:teamId", (req, res) => {
-    Training.find({teamId: req.params.teamId},
+  app.get("/api/trainings/:org", (req, res) => {
+    Training.find({org: req.params.org},
       trainingListProjection, (err, trainings) => {
         let trainingsArr = [];
         if (err) {
@@ -360,6 +360,7 @@ module.exports = function(app, config) {
       subcategory: req.body.subcategory,
       versions: req.body.versions,
       teamId: req.body.teamId,
+      org: req.body.org,
       owner: req.body.owner,
       dateCreated: req.body.dateCreated,
       estimatedTimeToComplete: req.body.estimatedTimeToComplete,
@@ -401,6 +402,7 @@ module.exports = function(app, config) {
       training.versions = req.body.versions;
       training.title = req.body.title;
       training.teamId = req.body.teamId;
+      training.org = req.body.org;
       training.owner = req.body.owner;
       training.dateCreated = req.body.dateCreated;
       training.estimatedTimeToComplete = req.body.estimatedTimeToComplete;
@@ -473,6 +475,7 @@ module.exports = function(app, config) {
         subcategory: req.body.subcategory,
         versions: req.body.versions,
         teamId: req.body.teamId,
+        org: req.body.org,
         owner: req.body.owner,
         dateCreated: req.body.dateCreated,
         estimatedTimeToComplete: req.body.estimatedTimeToComplete,

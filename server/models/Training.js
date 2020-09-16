@@ -68,6 +68,7 @@ const trainingSchema = new Schema({
   subcategory: { type: String, required: false },
   title: { type: String, required: true },
   teamId: { type: String, required: true },
+  org: { type: String, required: true },
   owner: { type: String, required: true },
   dateCreated: { type: Number, required: true },
   estimatedTimeToComplete: { type: Number, required: true },
