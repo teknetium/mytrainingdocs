@@ -574,6 +574,8 @@ export class UserService {
       }
     }
 
+    this.updateUser(this.authenticatedUser, false);
+
     let dbCnt = 0;
     let batchUserAddedCount = 0;
     let startIndex = 0;
