@@ -361,7 +361,7 @@
                                                                     <div style="display:block;">
                                                                         <div *ngFor="let dr5 of myOrgUserHash[dr4]?.directReports; let dr5Index = index"
                                                                             style="vertical-align: top;position:relative;"
-                                                                            [ngClass]="{'inline-block': maxLevel < 6, 'block': maxLevel === 6}">
+                                                                            [ngClass]="{'inline-block': maxLevel > 5, 'block': maxLevel === 5}">
                                                                             <div *ngIf="maxLevel > 5"
                                                                                 style="position:relative;">
                                                                                 <div class="org-chart-vert-connector">

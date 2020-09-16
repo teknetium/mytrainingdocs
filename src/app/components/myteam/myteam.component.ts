@@ -1164,6 +1164,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   ngOnInit() {
 
     this.orgJobTitles = [
+      'manager',
       'lifeguard',
       'front desk',
       'programmer',
@@ -1599,7 +1600,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     let jobTitle: string;
 
     let jobTitleIndex = 0;
-    if (level === this.maxLevel - 1) {
+    if (level === this.maxLevel) {
       jobTitleIndex = Math.floor(Math.random() * Math.floor(this.orgJobTitles.length));
     }
     let node = {
@@ -1611,7 +1612,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       drList: []
     }
     level++;
-    if (level < this.maxLevel - 1) {
+    if (level < this.maxLevel) {
       if (Math.random() < .7) {
         node.drList = [];
         node.jobTitle = 'Manager';
@@ -1629,7 +1630,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           this.testNodes.push(childNode);
         }
       }
-    } else if (level === this.maxLevel - 1) {
+    } else if (level === this.maxLevel) {
       node.drList = [];
       let teamSize = Math.floor(this.randn_bm(this.maxLevelUserMin, this.maxLevelUserMax, 2));
       console.log('team size', teamSize, level);
