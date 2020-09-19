@@ -1,8 +1,26 @@
-.displayNone {
-    border: 2px solid #6518c8 !important;
-    background-color: #f7ebff;
+.highlight {
+    border: 2px solid yellowgreen !important;
+    background: rgba(255, 255, 0, .2);
     border-radius: 50%;
 }
+
+.legend-item {
+    width: 150px;
+    padding: 1px;
+}
+
+.legend-item:hover {
+    background-color: #f1f1f1;
+}
+
+.legend-item2 {
+    width: 200px;
+    padding: 1px;
+}
+.legend-item2:hover {
+    background-color: #f1f1f1;
+}
+
 
 .my-team {
     width: 100%;

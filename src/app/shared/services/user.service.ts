@@ -478,42 +478,6 @@ export class UserService {
   }
   */
 
-  getMaxLevelStream(): Observable<number> {
-    return this.maxLevelBS$.asObservable();
-  }
-
-  getHttpErrorStream(): Observable<HttpErrorResponse> {
-    return this.httpErrorBS$.asObservable();
-  }
-
-  getUserFailStream(): Observable<UserFail> {
-    return this.userFailBS$.asObservable();
-  }
-
-  getBatchUserFailsStream(): Observable<UserBatchData[]> {
-    return this.batchFailsBS$.asObservable();
-  }
-
-  getOrgProgressStream(): Observable<BuildOrgProgress> {
-    return this.buildOrgProgressBS$.asObservable();
-  }
-
-  setUserStatusPastDue(uid: string) {
-    this.allOrgUserHash[uid].trainingStatus = 'pastDue';
-    //    this.myTeam[]
-    this.updateUser(this.allOrgUserHash[uid], false);
-  }
-
-  setUserStatusUpToDate(uid: string) {
-    this.allOrgUserHash[uid].trainingStatus = 'upToDate';
-    this.updateUser(this.allOrgUserHash[uid], false);
-  }
-
-  setUserStatusNone(uid: string) {
-    this.allOrgUserHash[uid].trainingStatus = 'none';
-    this.updateUser(this.allOrgUserHash[uid], false);
-  }
-
   createNewUsersFromBatch(batchUsers: UserBatchData[], testing: boolean) {
     let emailList = [];
     let supervisorMatchFail = [];
@@ -663,7 +627,43 @@ export class UserService {
     });
   }
 
-  getUIDReportChainHashStream(): Observable<UserIdHash> {
+  getMaxLevelStream(): Observable<number> {
+    return this.maxLevelBS$.asObservable();
+  }
+
+  getHttpErrorStream(): Observable<HttpErrorResponse> {
+    return this.httpErrorBS$.asObservable();
+  }
+
+  getUserFailStream(): Observable<UserFail> {
+    return this.userFailBS$.asObservable();
+  }
+
+  getBatchUserFailsStream(): Observable<UserBatchData[]> {
+    return this.batchFailsBS$.asObservable();
+  }
+
+  getOrgProgressStream(): Observable<BuildOrgProgress> {
+    return this.buildOrgProgressBS$.asObservable();
+  }
+
+  setUserStatusPastDue(uid: string) {
+    this.allOrgUserHash[uid].trainingStatus = 'pastDue';
+    //    this.myTeam[]
+    this.updateUser(this.allOrgUserHash[uid], false);
+  }
+
+  setUserStatusUpToDate(uid: string) {
+    this.allOrgUserHash[uid].trainingStatus = 'upToDate';
+    this.updateUser(this.allOrgUserHash[uid], false);
+  }
+
+  setUserStatusNone(uid: string) {
+    this.allOrgUserHash[uid].trainingStatus = 'none';
+    this.updateUser(this.allOrgUserHash[uid], false);
+  }
+
+ getUIDReportChainHashStream(): Observable<UserIdHash> {
     return this.uidReportChainHashBS$.asObservable();
   }
 

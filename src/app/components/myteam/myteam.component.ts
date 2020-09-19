@@ -1126,6 +1126,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   listOfFilterJobTitles = [];
   currentJobTitleFilters = [];
   maxLevel$: Observable<number>;
+  currentLegendItem = '';
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -2052,5 +2053,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.joyrideService.startTour({ steps: steps });
   }
 
+  setLegendHoverItem(item) {
+    this.currentLegendItem = item;
+  }
 
 }

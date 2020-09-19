@@ -20,10 +20,10 @@ import { TrainingService } from '../../shared/services/training.service';
     trigger('videoSlide', [
       // ...
       state('closed', style({
-        'margin-top': '-100%'
+        'margin-top': '-900px'
       })),
       state('open', style({
-        'margin-top': '0',
+        'margin-top': '200px',
       })),
       transition('open => closed', [
         animate('300ms')
@@ -34,7 +34,7 @@ import { TrainingService } from '../../shared/services/training.service';
     ])
   ]
 })
-  
+
 export class LandingpageComponent implements OnInit {
 
   vgApi: VgAPI;
@@ -168,14 +168,14 @@ export class LandingpageComponent implements OnInit {
       question: 'Do I have to manage my training content locally after I have uploaded it into myTrainingdocs?',
       answer: `No, you do not need to keep your local copy.  You can download the file from the training template.`
     }
-/*
-    {
-      active: false,
-      question: 'How do I update the content of a document I have uploaded into myTrainingdocs?',
-      answer: `You simply download the document, modify it, and re-upload it.  myTrainingdocs saves
-      all old versions.`
-    } 
-    */
+    /*
+        {
+          active: false,
+          question: 'How do I update the content of a document I have uploaded into myTrainingdocs?',
+          answer: `You simply download the document, modify it, and re-upload it.  myTrainingdocs saves
+          all old versions.`
+        } 
+        */
   ];
 
   plans: string = "monthly"
@@ -226,13 +226,12 @@ export class LandingpageComponent implements OnInit {
   currentHowMsg: string;
   sub1: Subscription;
   explainerUrl = 'https://cdn.filestackcontent.com/kiKtqljARoygXbEeCN6V';
-  step1Url = 'https://cdn.filestackcontent.com/';
-  step2Url = 'https://cdn.filestackcontent.com/';
-  step3Url = 'https://cdn.filestackcontent.com/';
+  orgChartUrl = 'https://cdn.filestackcontent.com/';
+  trainingTemplateUrl = 'https://cdn.filestackcontent.com/';
   currentVideo;
   showYouTubeIcon = true;
   explainerVidIsVisible = false;
-  
+
   constructor(
     private auth: AuthService,
     private userService: UserService,
@@ -336,23 +335,17 @@ export class LandingpageComponent implements OnInit {
   }
   onPlayerReady(api: VgAPI) {
     this.vgApi = api;
-    /*
-        this.vgApi.getDefaultMedia().subscriptions.loadedMetadata.subscribe(
-          this.playVideo.bind(this)
-        );
-        */
+
+    this.vgApi.getDefaultMedia().subscriptions.ended.subscribe(() => {
+      //      this.playVideo.bind(this)
+      this.explainerVidIsVisible = false;
+    });
+
   }
 
   loadVideo(id) {
-    if (id === 'explainer') {
-      this.currentVideo = this.explainerUrl;
-    } else if (id === 'step1') {
-      this.currentVideo = this.step1Url;
-    } else if (id === 'step2') {
-      this.currentVideo = this.step2Url;
-    } else if (id === 'step3') {
-      this.currentVideo = this.step3Url;
-    }
+    this.currentVideo = id;
+    this.explainerVidIsVisible = true;    
   }
 
   playVideo() {
@@ -374,7 +367,7 @@ export class LandingpageComponent implements OnInit {
   signup() {
     this.router.navigate(['/signup-beta']);
 
-//    this.auth.signup();
+    //    this.auth.signup();
   }
   login() {
     this.auth.login();

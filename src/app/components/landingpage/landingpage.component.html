@@ -1,6 +1,9 @@
-<div [@videoSlide]="explainerVidIsVisible ? 'open' : 'closed'"
-  style="position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;font-size:16px;background:rgba(0, 0, 0, .6 );padding:20% 20%;z-index: 10000;">
-  <div style="padding:30px;background-color: black;position:relative;border:2px solid #777777;">
+<div *ngIf="explainerVidIsVisible"
+  style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0, 0, 0, .6 );z-index: 10000;text-align: center;">
+</div>
+<div style="width:100%;height:100%;text-align: center;">
+  <div [@videoSlide]="explainerVidIsVisible ? 'open' : 'closed'"
+    style="z-index: 100001;position:fixed;left:20%;padding:30px;background-color: black;border:2px solid #777777;width:60%;">
     <i nz-icon nzType="close" [nzTheme]="'outline'"
       style="cursor:pointer;position:absolute;top:5px;right:5px;font-size:20px;color:white;"
       (click)="explainerVidIsVisible = false"></i>
@@ -11,7 +14,7 @@
                 </div>
                 -->
 
-    <vg-player *ngIf="currentVideo === explainerUrl" (onPlayerReady)="onPlayerReady($event)">
+    <vg-player *ngIf="currentVideo === 'explainer'" (onPlayerReady)="onPlayerReady($event)">
       <vg-controls>
         <vg-play-pause></vg-play-pause>
         <vg-playback-button></vg-playback-button>
@@ -31,35 +34,88 @@
         <source [src]="explainerUrl" type="video/mp4">
       </video>
     </vg-player>
-  </div>
-</div>
-<div style="width:100%;">
-  <div
-    style="background: rgba(4, 23, 63, 0.9);font-size: 14px;position: fixed; top:0; left:0; height: 64px;z-index: 100;text-align: center;width:100%;">
-    <div
-      style="position: absolute;left: 10px;top: 10px;height: 44px;border-radius: 24px;padding: 5px 8px; background: rgba(255,255,255,.3); width: 180px;">
-      <img height="35" src="assets/images/logo/logo.png" (click)="hiddenSignup()">
-    </div>
+    <vg-player *ngIf="currentVideo === 'orgChart'" (onPlayerReady)="onPlayerReady($event)">
 
-    <div class="nav-link">
-      <a [ngxScrollTo]="destinations['home'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
-        [ngxScrollToEasing]="ngxScrollToEasing">
-        Home
-      </a>
-    </div>
-    <div class="nav-link">
-      <a [ngxScrollTo]="destinations['features'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
-        [ngxScrollToEasing]="ngxScrollToEasing">
-        Features
-      </a>
-    </div>
-    <div class="nav-link">
-      <a [ngxScrollTo]="destinations['benefits'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
-        [ngxScrollToEasing]="ngxScrollToEasing">
-        Benefits
-      </a>
-    </div>
-    <!--
+      <vg-controls>
+        <vg-play-pause></vg-play-pause>
+        <vg-playback-button></vg-playback-button>
+
+        <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+
+        <vg-scrub-bar>
+          <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+          <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+        </vg-scrub-bar>
+
+        <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+        <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+
+        <vg-track-selector></vg-track-selector>
+        <vg-mute></vg-mute>
+        <vg-volume></vg-volume>
+
+        <vg-fullscreen></vg-fullscreen>
+      </vg-controls>
+
+      <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
+        <source [src]="orgChartUrl" type="video/mp4">
+      </video>
+    </vg-player>
+    <vg-player *ngIf="currentVideo === 'trainingTemplate'" (onPlayerReady)="onPlayerReady($event)">
+
+      <vg-controls>
+        <vg-play-pause></vg-play-pause>
+        <vg-playback-button></vg-playback-button>
+
+        <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+
+        <vg-scrub-bar>
+          <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+          <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+        </vg-scrub-bar>
+
+        <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+        <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+
+        <vg-track-selector></vg-track-selector>
+        <vg-mute></vg-mute>
+        <vg-volume></vg-volume>
+
+        <vg-fullscreen></vg-fullscreen>
+      </vg-controls>
+
+      <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
+        <source [src]="trainingTemplateUrl" type="video/mp4">
+      </video>
+    </vg-player>
+  </div>
+  <div style="width:100%;">
+    <div
+      style="background: rgba(4, 23, 63, 0.9);font-size: 14px;position: fixed; top:0; left:0; height: 64px;z-index: 100;text-align: center;width:100%;">
+      <div
+        style="position: absolute;left: 10px;top: 10px;height: 44px;border-radius: 24px;padding: 5px 8px; background: rgba(255,255,255,.3); width: 180px;">
+        <img height="35" src="assets/images/logo/logo.png" (click)="hiddenSignup()">
+      </div>
+
+      <div class="nav-link">
+        <a [ngxScrollTo]="destinations['home'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
+          [ngxScrollToEasing]="ngxScrollToEasing">
+          Home
+        </a>
+      </div>
+      <div class="nav-link">
+        <a [ngxScrollTo]="destinations['features'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
+          [ngxScrollToEasing]="ngxScrollToEasing">
+          Features
+        </a>
+      </div>
+      <div class="nav-link">
+        <a [ngxScrollTo]="destinations['benefits'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
+          [ngxScrollToEasing]="ngxScrollToEasing">
+          Benefits
+        </a>
+      </div>
+      <!--
     <div class="nav-link">
       <a   [ngxScrollTo]="destinations['howitworks'].ngxScrollToDestination"
            [ngxScrollToDuration]="ngxScrollToDuration"
@@ -67,34 +123,34 @@
       >How It Works</a>
     </div>
     -->
-    <div class="nav-link">
-      <a [ngxScrollTo]="destinations['price'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
-        [ngxScrollToEasing]="ngxScrollToEasing">Pricing</a>
-    </div>
-    <div class="nav-link">
-      <a [ngxScrollTo]="destinations['faq'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
-        [ngxScrollToEasing]="ngxScrollToEasing">FAQ</a>
-    </div>
-    <div class="nav-link">
-      <a [ngxScrollTo]="destinations['contact'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
-        [ngxScrollToEasing]="ngxScrollToEasing">Contact Us</a>
-    </div>
+      <div class="nav-link">
+        <a [ngxScrollTo]="destinations['price'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
+          [ngxScrollToEasing]="ngxScrollToEasing">Pricing</a>
+      </div>
+      <div class="nav-link">
+        <a [ngxScrollTo]="destinations['faq'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
+          [ngxScrollToEasing]="ngxScrollToEasing">FAQ</a>
+      </div>
+      <div class="nav-link">
+        <a [ngxScrollTo]="destinations['contact'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
+          [ngxScrollToEasing]="ngxScrollToEasing">Contact Us</a>
+      </div>
 
-    <div style="width:20%;position: fixed; top:0; right:0;height: 64px;">
-      <!--
+      <div style="width:20%;position: fixed; top:0; right:0;height: 64px;">
+        <!--
       <div class="nav-link"
         style="cursor:pointer;width:10%;font-size: 14px;height: 64px;width:100px;z-index: 100;float:right;"
         (click)="signup()">
         Sign Up
       </div>
       -->
-      <div class="nav-link" style="cursor:pointer;font-size: 14px;z-index: 100;;height: 64px; float:right;"
-        (click)="login()">
-        Log In
+        <div class="nav-link" style="cursor:pointer;font-size: 14px;z-index: 100;;height: 64px; float:right;"
+          (click)="login()">
+          Log In
+        </div>
       </div>
     </div>
-  </div>
-  <!--
+    <!--
   <nz-modal [(nzVisible)]="showTaskVideoModal" nzWidth="700" nzTitle="Task Video" nzCancelDisabled="true"
     (nzOnOk)="closeTaskVideoModal()" style="background-color: #000000;">
     <div style="text-align: center;margin-top:5px;background-color: #000000;">
@@ -128,209 +184,51 @@
     </div>
   </nz-modal>
 -->
-  <!-- START HOME -->
-  <section class="section  home-half" id="home"
-    style="background-color:#f1f1f1;position: relative;overflow: hidden;padding:150px 0;">
-    <img src="assets/images/others/bb6.jpg" style="position: absolute;left: 0;top: 0;width: 100%;height: 100%;">
-    <div class="home-table">
-      <div class="home-table-center">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-lg-12">
-              <div class="text-center mx-auto" style="margin-bottom: 50px;">
-                <!--
+    <!-- START HOME -->
+    <section class="section  home-half" id="home"
+      style="background-color:#f1f1f1;position: relative;overflow: hidden;padding:150px 0;">
+      <img src="assets/images/others/bb6.jpg" style="position: absolute;left: 0;top: 0;width: 100%;height: 100%;">
+      <div class="home-table">
+        <div class="home-table-center">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-12">
+                <div class="text-center mx-auto" style="margin-bottom: 50px;">
+                  <!--
                 <div
                   style="display:inline-block;width:fit-content;margin-bottom:60px;background: rgba(255,255,255,.1);padding:10px;border-radius: 60px;">
                   <img width="100" src="../../../assets/images/rocket.png">
                   <span style="font-size:22px;color:orange;">&nbsp;&nbsp;BETA Release Coming Soon!</span>
                 </div>
                 -->
-                <!--
-                <h5 class="header_small_title"><span>New</span></h5>
-                -->
-                <div style="font-size:36px;font-weight: 200;color:white;">
-                  Training people is HARD.
+                  <div style="font-size:46px;font-weight: 200;color:white;">
+                    Training people is HARD.
+                  </div>
+                  <div style="margin-top:40px;font-size:36px;font-weight: 300;color:white;">
+                    We can help!
+                  </div>
                 </div>
-                <!--
-                  &nbsp;&nbsp;&nbsp;Tracking training status is even <span style="font-size:36px;">HARDER</span>!<br>
-                  -->
-                <div style="margin-top:40px;font-size:36px;font-weight: 300;color:white;">
-                  We can help!
-                  <!--
-                  Finally, a <span style="font-size:34px;font-weight:400;color:white;">Training Management System</span>
-                  that doesn't require a dedicated <span style="font-size:34px;font-weight: 400;color:white;">Training
-                    Organization!</span>
-                  Finally, a Training
-                  Management System designed for <span style="font-size:40px;font-weight: 500;color:white;">YOUR
-                    TEAM!</span>
-                    -->
-                </div>
-                <!--
-                <p class="header_subtitle pt-4 mx-auto"
-                  style="color:#bbbbbb !important;font-size:22px !important;font-weight: 300;"><b>SIMPLE</b> to setup,
-                  <b>EASY</b> to use, and
-                  <b>SCALES</b> to large organizations.</p>
-                  -->
               </div>
-            </div>
-            <div
-              style="cursor:pointer;display:inline-block;margin-top:80px;background: rgba(255,255,255,.2);padding:50px;border-radius: 50%;position:relative;">
-              <i nz-icon nzType="play-circle" [nzTheme]="'twotone'" class="opaque" nzTwotoneColor="red"
-                style="position:absolute;left:40%;top:40%;cursor:pointer;text-align:center;font-size:60px;color:white;"
-                (click)="explainerVidIsVisible = true"></i>
-              <img width="300" src="../../../assets/images/howitworks.png">
-              <!--
+              <div
+                style="display:inline-block;margin-top:80px;background: rgba(255,255,255,.2);padding:20px;border-radius: 50%;position:relative;">
+                <i class="fas fa-play opaque"
+                  style="position:absolute;left:45%;top:40%;cursor:pointer;text-align:center;font-size:46px;color:red;"
+                  (click)="loadVideo('explainer')"></i>
+                <img width="300" src="../../../assets/images/howitworks.png">
+                <!--
               <img width="400" src="../../../assets/images/org-chart.png">
               <img width="400" src="../../../assets/images/training-template.png">
               -->
-            </div>
-            <!--
-                <vg-player *ngIf="currentVideo === step1Url" (onPlayerReady)="onPlayerReady($event)">
-
-                  <vg-controls>
-                    <vg-play-pause></vg-play-pause>
-                    <vg-playback-button></vg-playback-button>
-
-                    <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-
-                    <vg-scrub-bar>
-                      <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                      <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-                    </vg-scrub-bar>
-
-                    <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
-                    <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-
-                    <vg-track-selector></vg-track-selector>
-                    <vg-mute></vg-mute>
-                    <vg-volume></vg-volume>
-
-                    <vg-fullscreen></vg-fullscreen>
-                  </vg-controls>
-
-                  <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
-                    <source [src]="step1Url" type="video/mp4">
-                  </video>
-                </vg-player>
-                <vg-player *ngIf="currentVideo === step2Url" (onPlayerReady)="onPlayerReady($event)">
-
-                  <vg-controls>
-                    <vg-play-pause></vg-play-pause>
-                    <vg-playback-button></vg-playback-button>
-
-                    <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-
-                    <vg-scrub-bar>
-                      <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                      <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-                    </vg-scrub-bar>
-
-                    <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
-                    <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-
-                    <vg-track-selector></vg-track-selector>
-                    <vg-mute></vg-mute>
-                    <vg-volume></vg-volume>
-
-                    <vg-fullscreen></vg-fullscreen>
-                  </vg-controls>
-
-                  <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
-                    <source [src]="step2Url" type="video/mp4">
-                  </video>
-                </vg-player>
-                </div>
               </div>
-                              -->
-
-            <!--
-            <div style="display:block;width:100%">
-              <div style="display:block;padding-top:40px;width:100%;text-align: center;">
-                <div style="display:block;width:100%;color:white;text-align: center;margin-bottom:20px;">
-                  <h2 style="color:white;">How It Works</h2>
-                </div>
-                <div style="display:flex;justify-content: space-evenly;text-align: center;">
-                  <div>
-                    <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('explainer')">
-                      <img width="200" src="../../../assets/images/explainer.png">
-                    </div>
-                    <span style="display:block;color:white;font-size:12px;">Explainer</span>
-                  </div>
-                  <div>
-                    <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('step1')">
-                      <img width="200" src="../../../assets/images/step1.png">
-                    </div>
-                    <span style="display:block;color:white;font-size:12px;">Onboarding Screencast</span>
-                  </div>
-                  <div>
-                    <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('step2')">
-                      <img width="200" src="../../../assets/images/step2.png">
-                    </div>
-                    <span style="display:block;color:white;font-size:12px;">Training Screencast</span>
-                  </div>
-                  < !--
-                  <div>
-                    <div class="box" style="display:inline-block;cursor:pointer;" (click)="loadVideo('step3')">
-                      <img width="200" src="../../../assets/images/step3.png">
-                    </div>
-                    <span style="display:block;color:white;font-size:12px;">Step3 - Screencast</span>
-                  </div>
-                  -- >
-                </div>
-              </div>
-              < !--
-              <i nz-icon nzType="unlock" [nzTheme]="'outline'" style="display:block;font-size:60px;margin-bottom:30px;"></i>
-              <div style="display:block;font-size:40px;font-weight: 300;">
-                Unlock your employees' potential!
-              </div>
-            -- >
-            </div>
+              <!--
             -->
-            <!--
-            <div style="width:100%;padding:100px;height:200px;background-color: antiquewhite;">
-              <img height="120" src="assets/images/landingpage.png">
-            </div>
-            -->
-          </div>
-
-          <!--
-          <div class="">
-            <div class="row" style="width:100%;">
-              <div class="col-lg-12 text-center">
-                <div class="text-center" style="display: inline-block;">
-                  <h3 class="mb-0 text-capitalize" style="color:cyan;"><span style="font-size:2em;">5</span>&nbsp;
-                    &nbsp;easy steps to a complete Training Management solution for your
-                    team!</h3>
-                </div>
-              </div>
-            </div>
-
-            <div class="how-container mt-4 pt-4">
-
-              <div *ngFor="let step of howItWorks; let i = index">
-                <div [id]="step.id" class="how-step" style="display: inline-block;margin-right:10px">
-                  <div class="text-center work_box mt-3 p-3">
-                    <div class="how-work-icon-container">
-                      <i *ngFor="let class of step.iconClasses;" [ngClass]="class" style="color:cyan;"></i>
-                    </div>
-                    <div class="work_content mt-4" style="color:cyan">
-                      {{step.title}}
-                    </div>
-                  </div>
-                </div>
-                <i *ngIf="i < howStepCount - 1" class="fal fa-angle-right"
-                  style="display: inline-block; color:cyan;font-size: 40px;margin-top: 50px;margin-right:10px;float: right;"></i>
-              </div>
             </div>
           </div>
-          <h3 style="text-align: center;color:cyan;margin-top:50px;">And then you are DONE!</h3>
-          -->
         </div>
       </div>
-    </div>
-  </section>
-  <!-- END HOME -->
-  <!--
+    </section>
+    <!-- END HOME -->
+    <!--
   <section class="section" id="beta">
     <div class="row">
       <div class="col-lg-12">
@@ -343,90 +241,91 @@
     </div>
   </section>
   -->
-  <section class="section" id="features">
-    <div class="container">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="text-center">
-          <h2 class="mb-0 text-capitalize"><span class="font-weight-bold">Features</span></h2>
-          <div class="main-title-border">
-            <i class="mdi mdi-atom"></i>
+    <section class="section" id="features">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="text-center">
+              <h2 class="mb-0 text-capitalize"><span class="font-weight-bold">Features</span></h2>
+              <div class="main-title-border">
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-      <div class="row" style="margin-bottom:50px;">
-        <div class="col-lg-6" style="height:fit-content;">
-          <div class="text-center" style="position:relative;">
-              <i nz-icon nzType="play-circle" [nzTheme]="'twotone'" class="opaque" nzTwotoneColor="red"
-                style="position:absolute;cursor:pointer;top:45%;left:45%;font-size:60px;color:white;display:inline-block;"
+        <div class="row">
+          <div class="col-lg-6" style="height:fit-content;">
+            <div class="text-center" style="position:relative;">
+              <i class="fas fa-play opaque"
+                style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
                 (click)="explainerVidIsVisible = true"></i>
-              <img width="400" height="400" src="../../../assets/images/org-chart.png">
+              <img width="400" src="../../../assets/images/org-chart.png">
+            </div>
+          </div>
+          <div class="col-lg-6" style="padding:60px 10px 60px 50px;">
+            <div class="text-center">
+              <h2>Interactive Organization Chart</h2>
+              <p>
+                This screencast shows the power of our dynamic, interactive Organization Chart.
+                The ability to visualize user related data across an entire organization all at once is game changing.
+              </p>
+            </div>
           </div>
         </div>
-        <div class="col-lg-6" style="padding:100px 100px;">
-          <div class="text-center">
-            <h2>Interactive Organization Chart</h2>
-            <p>
-              This screencast shows the power of our dynamic, interactive Organization Chart.  The org chart has the unique ability to convey information for your entire organization at a glance!
-            </p>
+        <hr>
+        <div class="row">
+          <div class="col-lg-6" style="padding:60px 50px 60px 10px;">
+            <div class="text-center">
+              <h2>Training Template</h2>
+              <p>
+                Our training template supports all common document formats as well as embedding external web pages and
+                creating custom HTML on the fly.
+                The template also includes an assessment wizard that makes adding assessments a breeze.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-6" style="height:fit-content;">
+            <div class="text-center" style="position:relative;">
+              <i class="fas fa-play opaque"
+                style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
+                (click)="explainerVidIsVisible = true"></i>
+              <img width="400" src="../../../assets/images/training-template.png">
+            </div>
           </div>
         </div>
       </div>
-      <hr>
+    </section>
+    <section class="section bg-light" id="benefits">
       <div class="row">
-        <div class="col-lg-6" style="padding:100px 100px;">
+        <div class="col-lg-12">
           <div class="text-center">
-            <h2>Training Template</h2>
-            <p>
-              This screencast shows the power of our training template.  It's ability to effectively present The org chart has the unique
-              ability to convey information for your entire organization at a glance!
-            </p>
-          </div>
-        </div>
-        <div class="col-lg-6" style="height:fit-content;">
-          <div class="text-center" style="position:relative;">
-            <i nz-icon nzType="play-circle" [nzTheme]="'twotone'" class="opaque" nzTwotoneColor="red"
-              style="position:absolute;cursor:pointer;top:45%;left:45%;font-size:60px;color:white;display:inline-block;"
-              (click)="explainerVidIsVisible = true"></i>
-            <img width="400" height="400" src="../../../assets/images/training-template.png">
+            <h2 class="mb-0 text-capitalize"><span class="font-weight-bold">Benefits</span></h2>
+            <div class="main-title-border">
+              <i class="mdi mdi-atom"></i>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-  <section class="section bg-light" id="benefits">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="text-center">
-          <h2 class="mb-0 text-capitalize"><span class="font-weight-bold">Benefits</span></h2>
-          <div class="main-title-border">
-            <i class="mdi mdi-atom"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div style="display: block;">
-      <div class="benefit-container">
-        <div *ngFor="let item of benefits; let i = index" class="benefit-item lan_box_ser text-center p-4 mt-3"
-          (mouseleave)="loseFocus(i)" (mouseenter)="focus(i)">
-          <div class="ser_icon">
-            <i [ngClass]="item.class"></i>
-          </div>
-          <div class="service-content mt-4" style="margin-bottom: 10px;height: 80px;">
-            <h5>{{item.title}}</h5>
-            <p class="mt-3 text-muted mb-0" style="font-size: 12px;" [innerHTML]="item.blurb"></p>
-          </div>
-          <!--
+      <div style="display: block;">
+        <div class="benefit-container">
+          <div *ngFor="let item of benefits; let i = index" class="benefit-item lan_box_ser text-center p-4 mt-3"
+            (mouseleave)="loseFocus(i)" (mouseenter)="focus(i)">
+            <div class="ser_icon">
+              <i [ngClass]="item.class"></i>
+            </div>
+            <div class="service-content mt-4" style="margin-bottom: 10px;height: 80px;">
+              <h5>{{item.title}}</h5>
+              <p class="mt-3 text-muted mb-0" style="font-size: 12px;" [innerHTML]="item.blurb"></p>
+            </div>
+            <!--
           <div>
             <button class="btn-custom btn-xs w-30 learn-more" (click)="showLearnMore(i)">learn more</button>
           </div>
           -->
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-  <!--
+    </section>
+    <!--
   <nz-drawer *ngIf="benefit$ | async as bene" nzClosable="true" [nzVisible]="visible" [nzPlacement]="placement"
     [nzTitle]="bene.title" (nzOnClose)="close()">
     <div>
@@ -439,8 +338,8 @@
     </div>
   </nz-drawer>
   -->
-  <!-- START CTA -->
-  <!--
+    <!-- START CTA -->
+    <!--
   <section class="section bg-light" style="margin-bottom: 50px;">
     <div class="container">
       <div class="row justify-content-center">
@@ -458,43 +357,43 @@
     </div>
   </section>
   -->
-  <!-- END CTA -->
-  <section class="section" id="price">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="text-center">
-            <h2 class="mb-0 text-capitalize"> <span class="font-weight-bold">Pricing</span></h2>
-            <div class="main-title-border">
-            </div>
-            <div class="m-b-10">
-              <h6>Billing Cycle</h6>
-              <nz-radio-group [(ngModel)]="plans">
-                <label nz-radio-button nzValue="monthly" (click)="planChange()">Monthly</label>
-                <label nz-radio-button nzValue="annually" (click)="planChange()">Annually</label>
-              </nz-radio-group>
+    <!-- END CTA -->
+    <section class="section" id="price">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="text-center">
+              <h2 class="mb-0 text-capitalize"> <span class="font-weight-bold">Pricing</span></h2>
+              <div class="main-title-border">
+              </div>
+              <div class="m-b-10">
+                <h6>Billing Cycle</h6>
+                <nz-radio-group [(ngModel)]="plans">
+                  <label nz-radio-button nzValue="monthly" (click)="planChange()">Monthly</label>
+                  <label nz-radio-button nzValue="annually" (click)="planChange()">Annually</label>
+                </nz-radio-group>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="row align-items-center">
-        <div class="col-md-4">
-          <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
-            <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
-              <div class="media align-items-center">
-                <nz-avatar nzIcon="user" [nzSize]="55" class="ant-avatar-blue"></nz-avatar>
-                <div class="m-l-15" style="text-align: center;">
-                  <h3 class="m-b-0">Small Team</h3>
-                  <span class="font-size-12">less than 20 users</span>
-                  <h2 class="font-weight-bold  m-b-0">
-                    ${{feesBasic}}
-                    <span class="font-size-13 font-weight-semibold">/user /{{duration}}</span>
-                  </h2>
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
+              <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
+                <div class="media align-items-center">
+                  <nz-avatar nzIcon="user" [nzSize]="55" class="ant-avatar-blue"></nz-avatar>
+                  <div class="m-l-15" style="text-align: center;">
+                    <h3 class="m-b-0">Small Team</h3>
+                    <span class="font-size-12">less than 20 users</span>
+                    <h2 class="font-weight-bold  m-b-0">
+                      ${{feesBasic}}
+                      <span class="font-size-13 font-weight-semibold">/user /{{duration}}</span>
+                    </h2>
+                  </div>
                 </div>
               </div>
-            </div>
-            <!--
+              <!--
             <div class="text-center">
               <div>
                 <a class="btn btn-custom text-white" [ngxScrollTo]="destinations['contact'].ngxScrollToDestination"
@@ -503,25 +402,25 @@
               </div>
             </div>
             -->
-          </nz-card>
-        </div>
-        <div class="col-md-4">
-          <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
-            <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
-              <div class="media align-items-center">
-                <nz-avatar nzIcon="team" [nzSize]="55" class="ant-avatar-cyan"></nz-avatar>
-                <div class="m-l-15" style="text-align: center;">
-                  <h3 class="m-b-0">Large Team</h3>
-                  <span class="font-size-12">less than 100 users</span>
-                  <h2 class="font-weight-bold  m-b-0">
-                    ${{feesStandard}}
-                    <span class="font-size-13 font-weight-semibold">/user /{{duration}}</span>
-                  </h2>
+            </nz-card>
+          </div>
+          <div class="col-md-4">
+            <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
+              <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
+                <div class="media align-items-center">
+                  <nz-avatar nzIcon="team" [nzSize]="55" class="ant-avatar-cyan"></nz-avatar>
+                  <div class="m-l-15" style="text-align: center;">
+                    <h3 class="m-b-0">Large Team</h3>
+                    <span class="font-size-12">less than 100 users</span>
+                    <h2 class="font-weight-bold  m-b-0">
+                      ${{feesStandard}}
+                      <span class="font-size-13 font-weight-semibold">/user /{{duration}}</span>
+                    </h2>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!--
+              <!--
             <div class="text-center">
               <div>
                 <a class="btn btn-custom text-white" [ngxScrollTo]="destinations['contact'].ngxScrollToDestination"
@@ -530,21 +429,21 @@
               </div>
             </div>
             -->
-          </nz-card>
-        </div>
-        <div class="col-md-4">
-          <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
-            <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
-              <div class="media align-items-center">
-                <nz-avatar nzIcon="crown" [nzSize]="55" class="ant-avatar-gold"></nz-avatar>
-                <div class="m-l-15" style="text-align: center;">
-                  <h3 class="m-b-0">Enterprise</h3>
-                  <span class="font-size-12">100 users or more</span>
-                  <h6>Contact Us for Pricing</h6>
+            </nz-card>
+          </div>
+          <div class="col-md-4">
+            <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
+              <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
+                <div class="media align-items-center">
+                  <nz-avatar nzIcon="crown" [nzSize]="55" class="ant-avatar-gold"></nz-avatar>
+                  <div class="m-l-15" style="text-align: center;">
+                    <h3 class="m-b-0">Enterprise</h3>
+                    <span class="font-size-12">100 users or more</span>
+                    <h6>Contact Us for Pricing</h6>
+                  </div>
                 </div>
               </div>
-            </div>
-            <!--
+              <!--
             <div class="text-center">
               <div>
                 <a class="btn btn-custom text-white" [ngxScrollTo]="destinations['contact'].ngxScrollToDestination"
@@ -553,51 +452,51 @@
               </div>
             </div>
             -->
-          </nz-card>
+            </nz-card>
+          </div>
         </div>
-      </div>
-      <div class="row" style="height: 0;">
-        <div class="bg-purple-opacity text-purple"
-          style="border-radius:20px;border:1px solid #595ff5;position:relative;top:-280px;width:100%;padding:10px;text-align:center;font-size:20px;">
-          <span style="font-size:16px;">All plans include</span><br>
-          <span style="font-weight: 500;font-size:20px;">Unlimited File Uploads</span><br><span
-            style="font-size:16px;">and</span><br><span style="font-weight: 500;font-size:20px;">24/7 Support</span>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- END PRICING -->
-
-
-  <!-- START FAQ -->
-  <section class="section bg-light" id="faq">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="text-center">
-            <h2 class="mb-0 text-capitalize"><span class="font-weight-bold">FAQ</span></h2>
-            <div class="main-title-border">
-              <i class="mdi mdi-atom"></i>
-            </div>
+        <div class="row" style="height: 0;">
+          <div class="bg-purple-opacity text-purple"
+            style="border-radius:20px;border:1px solid #595ff5;position:relative;top:-280px;width:100%;padding:10px;text-align:center;font-size:20px;">
+            <span style="font-size:16px;">All plans include</span><br>
+            <span style="font-weight: 500;font-size:20px;">Unlimited File Uploads</span><br><span
+              style="font-size:16px;">and</span><br><span style="font-weight: 500;font-size:20px;">24/7 Support</span>
           </div>
         </div>
       </div>
-      <nz-collapse nzAccordion>
-        <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="headerTemplate" [nzActive]="panel.active">
-          <div style="padding-left:20px;font-size: 20px;color:#000000;font-weight: 200;">{{ panel.answer }}</div>
-          <ng-template #headerTemplate>
-            <div style="color:#888888;font-size: 18px;font-weight: 200;">
-              {{ panel.question }}
-            </div>
-          </ng-template>
-        </nz-collapse-panel>
-      </nz-collapse>
-    </div>
-  </section>
-  <!-- END FAQ -->
+    </section>
+    <!-- END PRICING -->
 
-  <!-- START CTA -->
-  <!--
+
+    <!-- START FAQ -->
+    <section class="section bg-light" id="faq">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="text-center">
+              <h2 class="mb-0 text-capitalize"><span class="font-weight-bold">FAQ</span></h2>
+              <div class="main-title-border">
+                <i class="mdi mdi-atom"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <nz-collapse nzAccordion>
+          <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="headerTemplate" [nzActive]="panel.active">
+            <div style="padding-left:20px;font-size: 20px;color:#000000;font-weight: 200;">{{ panel.answer }}</div>
+            <ng-template #headerTemplate>
+              <div style="color:#888888;font-size: 18px;font-weight: 200;">
+                {{ panel.question }}
+              </div>
+            </ng-template>
+          </nz-collapse-panel>
+        </nz-collapse>
+      </div>
+    </section>
+    <!-- END FAQ -->
+
+    <!-- START CTA -->
+    <!--
   <section class="section">
     <div class="container">
       <div class="row justify-content-center">
@@ -616,72 +515,72 @@
     </div>
   </section>
   -->
-  <!-- END CTA -->
+    <!-- END CTA -->
 
-  <!-- START CONTACT -->
-  <section class="section" id="contact">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="text-center">
-            <h2 class="mb-0 text-capitalize">Get in <span class="font-weight-bold">Touch</span></h2>
-            <div class="main-title-border">
-              <i class="mdi mdi-atom"></i>
+    <!-- START CONTACT -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="text-center">
+              <h2 class="mb-0 text-capitalize">Get in <span class="font-weight-bold">Touch</span></h2>
+              <div class="main-title-border">
+                <i class="mdi mdi-atom"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4 pt-4">
+          <div class="col-lg-12">
+            <div class="contact_form">
+              <div id="message"></div>
+              <form method="post" action="" name="contact-form" id="working_form">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <div class="form-group mt-2">
+                      <input name="name" id="name" type="text" class="form-control" placeholder="Name...">
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group mt-2">
+                      <input name="email" id="email" type="email" class="form-control" placeholder="Email...">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="form-group mt-2">
+                      <input type="text" class="form-control" id="subject" placeholder="Subject...">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="form-group mt-2">
+                      <textarea name="comments" id="comments" rows="4" class="form-control"
+                        placeholder="Message..."></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12 text-center">
+                    <input type="submit" id="submit" name="send" class="submitBnt btn btn-custom" value="Send Message"
+                      disabled="true">
+                    <div id="simple-msg"></div>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
-      <div class="row mt-4 pt-4">
-        <div class="col-lg-12">
-          <div class="contact_form">
-            <div id="message"></div>
-            <form method="post" action="" name="contact-form" id="working_form">
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="form-group mt-2">
-                    <input name="name" id="name" type="text" class="form-control" placeholder="Name...">
-                  </div>
-                </div>
-                <div class="col-lg-6">
-                  <div class="form-group mt-2">
-                    <input name="email" id="email" type="email" class="form-control" placeholder="Email...">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="form-group mt-2">
-                    <input type="text" class="form-control" id="subject" placeholder="Subject...">
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="form-group mt-2">
-                    <textarea name="comments" id="comments" rows="4" class="form-control"
-                      placeholder="Message..."></textarea>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-lg-12 text-center">
-                  <input type="submit" id="submit" name="send" class="submitBnt btn btn-custom" value="Send Message"
-                    disabled="true">
-                  <div id="simple-msg"></div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- END CONTACT -->
+    </section>
+    <!-- END CONTACT -->
 
-  <!--START FOOTER-->
-  <footer class="pt-5 footer">
-    <div class="container">
-      <!--
+    <!--START FOOTER-->
+    <footer class="pt-5 footer">
+      <div class="container">
+        <!--
         <div class="row pb-4">
           <div class="col-lg-3">
             <h6 class="footer-title text-uppercase">About Pioted</h6>
@@ -718,19 +617,19 @@
         </div>
       <div class="footer-border"></div>
         -->
-      <div class="row">
-        <div class="col-sm-12" style="height: 60px;">
-          <div class="footer-alt text-center">
-            <p class="copy-rights">2020 &copy; Teknetium, LLC</p>
+        <div class="row">
+          <div class="col-sm-12" style="height: 60px;">
+            <div class="footer-alt text-center">
+              <p class="copy-rights">2020 &copy; Teknetium, LLC</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </footer>
-  <!--END FOOTER-->
+    </footer>
+    <!--END FOOTER-->
 
-  <!-- BACK TO TOP -->
-  <!--
+    <!-- BACK TO TOP -->
+    <!--
   <a href="#" class="" style="position: fixed;right:20px;bottom: 10px;font-size:40px;"> <i
       class="fad fa-chevron-square-up" style="background: rgba(50,110,246, .25) !important;"> </i> </a>
   <a [ngxScrollTo]="destinations['home'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
@@ -738,4 +637,5 @@
       style="background: rgba(50,110,246, .25) !important;"> </i></a>
       -->
 
+  </div>
 </div>
