@@ -171,7 +171,7 @@ export class UserService {
                 email: profile.email,
                 emailVerified: true,
                 teamId: null,
-                org: profile.email.substring(profile.email.indexOf('@') + 1),
+                org: profile.email.substring(profile.email.indexOf('@') + 1, profile.email.indexOf('.')),
                 teamAdmin: false,
                 orgAdmin: true,
                 appAdmin: true,

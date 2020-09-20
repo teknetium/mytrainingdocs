@@ -65,6 +65,8 @@ export class HomeComponent extends BaseComponent implements OnInit {
   myTeamIdHash: UserIdHash;
   myTeam: UserModel[] = [];
   teamTrainingHash$: Observable<TrainingIdHash>;
+  myOrgUsers$: Observable<UserModel[]>;
+  myOrgUsers: UserModel[] = [];
   teamTrainingHash = {};
   trainings: TrainingModel[];
   upToDateCnt = 0;
@@ -94,6 +96,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     private router: Router
   ) {
     super();
+    this.myOrgUsers$ = this.userService.getMyOrgUsersStream();
     this.sessionLog$ = this.userTrainingService.getSessionLogStream();
     this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
@@ -122,7 +125,6 @@ export class HomeComponent extends BaseComponent implements OnInit {
         return;
       }
 
-      console.log('uidUTHash', uidUTHash);
       let now = new Date().getTime();
       this.uidUTHash = uidUTHash;
       let uidList = Object.keys(this.uidUTHash);
@@ -148,6 +150,12 @@ export class HomeComponent extends BaseComponent implements OnInit {
         return;
       }
       this.sessionLog = sessionLog;
+    });
+    this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(users => {
+      if (!users) {
+        return;
+      }
+      this.myOrgUsers = users;
     });
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {

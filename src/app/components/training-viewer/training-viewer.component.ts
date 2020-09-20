@@ -104,7 +104,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   page$ = new BehaviorSubject<Page>(null);
-//  trainingIsDirty$: Observable<boolean>;
+  //  trainingIsDirty$: Observable<boolean>;
   isAuthenticated$: Observable<boolean>;
   isIconSelectModalVisible = false;
   selectedTraining$: Observable<TrainingModel>;
@@ -333,8 +333,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   showAssessmentAlert = false;
   millisecondsPerDay = 86400000;
   notifyPeriod;
-
+  showTrainingConfig = false;
   tourStepsHash = {};
+  showNoJobTitle = false;
+  myTeam: string[];
   //    header: ,
   //    page-navigation: { steps: ['Step1-header', 'Step2-header', 'Step3-header', 'Step4-header', 'Step5-header', 'Step6-header', 'Step7-header', 'Step8-header', 'Step9-header'] },
 
@@ -372,7 +374,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.safeFileUrl$ = this.fileService.getSafeFileUrlStream();
     this.users$ = this.userTrainingService.getUsersForTrainingStream();
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
-//    this.trainingIsDirty$ = this.trainingService.getTrainingIsDirtyStream();
+    //    this.trainingIsDirty$ = this.trainingService.getTrainingIsDirtyStream();
 
   }
 
@@ -605,6 +607,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
     this.myTeamHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamHash => {
       this.myTeamHash = myTeamHash;
+      this.myTeam = Object.keys(myTeamHash);
     })
 
     this.myOrgHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgHash => {
@@ -878,51 +881,60 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
   }
 
-
-  saveNewVersion() {
-    this.introEditorHash = {};
+  save() {
     if (this.selectedTraining.useFinalAssessment && (this.selectedTraining.pages[this.selectedTraining.pages.length - 1].type !== 'assessment' || !this.selectedTraining.pages[this.selectedTraining.pages.length - 1].content.assessment.isFinal)) {
-      console.log('saveNewVersion...Assessment Alert');
       this.showAssessmentAlertConfirm();
       return;
     }
     if (this.selectedTraining.versions.length === 1) {
-
-      this.selectedTraining.status = 'locked';
-      let newTrainingVersionObj: TrainingVersion = {
-        _id: String(new Date().getTime()),
-        version: '1_0_0',
-        pending: false,
-        changeLog: 'Create Training',
-        ownerId: this.authenticatedUser._id,
-        dateCreated: new Date().getTime(),
-        title: this.selectedTraining.title,
-        iconClass: this.selectedTraining.iconClass,
-        iconColor: this.selectedTraining.iconColor,
-      };
-      this.selectedTraining.versions.unshift(newTrainingVersionObj);
-      //      this.currentSelectedTrainingVersions.unshift(newTrainingVersionObj);
-      this.trainingClone = cloneDeep(this.selectedTraining);
-      this.trainingService.saveNewVersion(this.trainingClone);
-      this.trainingService.selectTrainingVersion(this.trainingClone);
-      if (this.selectedTraining.jobTitle) {
-        for (let userId of this.assignableUsers) {
-          if (this.myOrgHash[userId].jobTitle === this.selectedTraining.jobTitle) {
-            if (this.myOrgHash[userId].trainingStatus === 'none') {
-              this.myOrgHash[userId].trainingStatus = 'upToDate';
-              this.userService.updateUser(this.myOrgHash[userId], false);
-            }
-            this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, '1_0_0');
-            this.assignedFromJobTitle.push(userId);
-          }
-        }
-        if (this.assignedFromJobTitle.length > 0) {
-          this.assignedFromJobTitleDialogIsVisible = true;
-        }
+      if (!this.selectedTraining.jobTitle) {
+        this.showNoJobTitleConfirm();
+      } else {
+        this.saveNewVersion();
       }
     } else {
       this.lockTrainingModalIsVisible = true;
     }
+  }
+
+
+
+  saveNewVersion() {
+    this.introEditorHash = {};
+
+    this.selectedTraining.status = 'locked';
+    let newTrainingVersionObj: TrainingVersion = {
+      _id: String(new Date().getTime()),
+      version: '1_0_0',
+      pending: false,
+      changeLog: 'Create Training',
+      ownerId: this.authenticatedUser._id,
+      dateCreated: new Date().getTime(),
+      title: this.selectedTraining.title,
+      iconClass: this.selectedTraining.iconClass,
+      iconColor: this.selectedTraining.iconColor,
+    };
+    this.selectedTraining.versions.unshift(newTrainingVersionObj);
+    //      this.currentSelectedTrainingVersions.unshift(newTrainingVersionObj);
+    this.trainingClone = cloneDeep(this.selectedTraining);
+    this.trainingService.saveNewVersion(this.trainingClone);
+    this.trainingService.selectTrainingVersion(this.trainingClone);
+    if (this.selectedTraining.jobTitle) {
+      for (let userId of this.assignableUsers) {
+        if (this.myOrgHash[userId].jobTitle === this.selectedTraining.jobTitle) {
+          if (this.myOrgHash[userId].trainingStatus === 'none') {
+            this.myOrgHash[userId].trainingStatus = 'upToDate';
+            this.userService.updateUser(this.myOrgHash[userId], false);
+          }
+          this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, '1_0_0');
+          this.assignedFromJobTitle.push(userId);
+        }
+      }
+      if (this.assignedFromJobTitle.length > 0) {
+        this.assignedFromJobTitleDialogIsVisible = true;
+      }
+    }
+//    this.closeViewer();
   }
 
   createMessage(type: string, msg: string): void {
@@ -1287,6 +1299,20 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       nzOnCancel: () => console.log('Cancel')
     });
   }
+
+  showNoJobTitleConfirm(): void {
+    if (this.jobTitles.length > 0 && this.myTeam.length > 0) {
+      this.modalService.confirm({
+        nzTitle: 'No Job Title',
+        nzContent: 'You have not set the Job Title for this training.  The system cannot automatically assign this training to users without the Job Title being set.',
+        nzOnOk: () => this.saveNewVersion(),
+        nzOkText: 'Save Anyway!',
+        //        nzCancelText: 'No',
+        nzOnCancel: () => console.log('Cancel')
+      });
+    }
+  }
+
   showAssessmentAlertConfirm(): void {
     this.modalService.error({
       nzTitle: 'Assesssment Error',

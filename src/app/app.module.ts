@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgZorroAntdModule, NZ_I18N, en_US, NzBadgeModule, NzConfig, NZ_CONFIG } from 'ng-zorro-antd';
+import { NgZorroAntdModule, NZ_I18N, en_US, NzBadgeModule, NzConfig, NZ_CONFIG, NzStepsModule } from 'ng-zorro-antd';
 import { registerLocaleData,  } from '@angular/common';
 import en from '@angular/common/locales/en';
 
@@ -51,7 +51,8 @@ registerLocaleData(en);
         SettingsModule,
         LandingpageModule,
         VerifyEmailModule,
-        DocsModule
+        DocsModule,
+        NzStepsModule
     ],
     providers: [
 //        { provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true },

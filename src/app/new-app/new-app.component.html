@@ -4,17 +4,6 @@
             <div class="logo">
                 <img height="35" src="assets/images/logo/logo.png" style="margin:0 0 20px 15px;">
             </div>
-            <!--
-            <a (click)="searchToggle()">
-                <i nz-icon nzType="search" theme="outline" style="font-size:20px;margin: 0 20px;color:white;"></i>
-            </a>
-            -->
-            <!--
-            <nz-drawer [nzWidth]="380" nzTitle="Search" [nzVisible]="searchVisible" nzPlacement="left"
-                (nzOnClose)="searchToggle()">
-                <app-search></app-search>
-            </nz-drawer>
-            -->
         </div>
         <ul nz-menu nzTheme="light" nzMode="horizontal"
             [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.bgColor, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary }">
@@ -23,7 +12,8 @@
                     Home
                 </a>
             </li>
-            <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter class="nav-badge">
+            <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
+                class="nav-badge">
                 <a routerLink="/mytrainings" routerLinkActive="active-link">
                     My Trainings
                 </a>
@@ -40,18 +30,10 @@
                     All Trainings
                 </a>
             </li>
-            <!--
-            <li 
-                nz-menu-item nzMatchRouter>
-                <a routerLink="/docs" routerLinkActive="active-link">
-                    Docs
-                </a>
-            </li>
-            -->
             <li nz-menu-item class="navbar-rhs">
                 <span class=" pointer" nz-dropdown [nzDropdownMenu]="profile" [nzTrigger]="'click'"
                     [nzPlacement]="'bottomRight'">
-                    <nz-avatar [nzText]="(authenticatedUser$ | async)?.firstName"
+                    <nz-avatar [nzText]="(authenticatedUser$ | async)?.firstName.substring(0,1)"
                         [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.secondary, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary}">
                     </nz-avatar>
                 </span>
@@ -92,177 +74,18 @@
                     <i nz-icon nzType="setting" theme="outline" style="font-size:20px;color:#000000;"></i>
                 </a>
             </li>
-            <!--
-            <li nz-menu-item class="navbar-rhs" nz-tooltip nzTooltipTitle="Notifications"
-                nzTooltipPlacement="bottomLeft">
-                <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="popNotification" [nzPlacement]="'bottomRight'">
-                    <nz-badge nzDot>
-                        <i nz-icon nzType="notification" theme="outline" style="font-size:20px;color:#000000;"></i>
-                    </nz-badge>
-                </a>
-                <nz-dropdown-menu #popNotification="nzDropdownMenu">
-                    <div nz-menu class="pop-notification">
-                        <div class="p-v-15 p-h-25 border-bottom d-flex justify-content-between align-items-center">
-                            <p class="text-dark font-weight-semibold m-b-0">
-                                <i nz-icon nzType="bell" theme="outline"></i>
-                                <span class="m-l-10">Notification</span>
-                            </p>
-                            <a nz-button nz-button nzSize="small" class="p-v-5" [routerLink]="''">
-                                <small>View All</small>
-                            </a>
-                        </div>
-                        <perfect-scrollbar class="overflow-y-auto" style="max-height: 300px">
-                            <nz-list class="ant-list-item-links" [nzDataSource]="notificationList" [nzRenderItem]="item"
-                                [nzItemLayout]="'horizontal'">
-                                <ng-template #item let-item>
-                                    <nz-list-item>
-                                        <a [routerLink]="''">
-                                            <div class="d-flex">
-                                                <nz-avatar [nzIcon]="item.icon" [ngClass]="item.color"></nz-avatar>
-                                                <div class="m-l-15">
-                                                    <p class="m-b-0 text-dark">{{item.title}}</p>
-                                                    <p class="m-b-0"><small>{{item.time}} ago</small></p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </nz-list-item>
-                                </ng-template>
-                            </nz-list>
-                        </perfect-scrollbar>
-                    </div>
-                </nz-dropdown-menu>
-            </li>
-
-            <li class="navbar-rhs" nz-tooltip nzTooltipTitle="Task Tutorials" nzTooltipPlacement="bottom">
-                <a (click)="playTaskVideo(null)">
-                    <i nz-icon nzType="youtube" theme="outline" style="font-size:20px;margin:0 5px;color:#000000;"></i>
-                </a>
-                <nz-drawer *ngIf="authenticatedUser$ | async as user" [nzWidth]="300" nzTitle="App Settings"
-                    [nzClosable]="false" [nzVisible]="quickViewVisible" nzPlacement="right"
-                    (nzOnClose)="quickViewToggle()">
-                    <app-settings></app-settings>
-                </nz-drawer>
-            </li>
-            -->
-            <!--
-            <li class="navbar-rhs" nz-tooltip nzTooltipTitle="Update Training Status" nzTooltipPlacement="bottom">
-                <a (click)="runStatusCheck()">
-                    <i class="far fa-clipboard-list-check" style="font-size:20px;margin:0 5px;color:#000000;vertical-align: middle;"></i>
-                </a>
-            </li>
-            -->
         </ul>
-        <!--
-        <nz-alert nzType="error" [nzMessage]="currentHttpError" nzBanner="true"></nz-alert>
-        -->
-    <ng-template #httpError >
+        <ng-template #httpError>
 
-    </ng-template>
-        
+        </ng-template>
+
     </nz-header>
-    <nz-content class="inner-content">
+    <nz-content *ngIf="authenticatedUser$ | async as user" class="inner-content">
         <!--
-        <div *ngIf="(authenticatedUser && authenticatedUser.firstName !== '') && aboutThisPageHash[currentPage]">
-            <i *ngIf="!aboutThisPageHash[currentPage].visible" nz-icon nzType="info-circle" [nzTheme]="'twotone'"
-                (click)="aboutThisPageHash[currentPage].visible = true" nz-tooltip nzTooltipTitle="About This Page"
-                style="font-size:20px;font-weight: 500;cursor:pointer;margin-bottom:20px;"></i>
-            <div *ngIf="((authenticatedUser$ | async)?.settings.showPageInfo && aboutThisPageHash[currentPage].visible)"
-                style="padding:20px;position:relative;margin-bottom:20px;" class="about-this-page">
-                <div>
-                    <div style="text-align: center;font-size:20px;font-weight: 400;color: blue;">
-                        About This Page
-                    </div>
-                    <i nz-icon nzType="close-circle" [nzTheme]="'twotone'" [nzTwotoneColor]="'#f74848'"
-                        (click)="aboutThisPageHash[currentPage].visible = false"
-                        style="position:absolute;top:20px;right:20px;font-size:20px;font-weight: 500;cursor:pointer;"></i>
-                </div>
-                <div style="font-size:16px;font-weight: 300;padding:20px 40px">
-                    <div>
-                        {{aboutThisPageHash[currentPage].intro}}
-                    </div>
-                    <div style="margin:20px 0;color:blue;font-size:16px;">
-                        Tasks
-                    </div>
-                    <div *ngIf="authenticatedUser$ | async as user" style="margin-bottom:20px;padding-left:20px;">
-                        <ul style="list-style-type: none;">
-                            <li *ngFor="let taskName of taskNames" style="margin-bottom: 10px;">
-                                <div
-                                    *ngIf="aboutThisPageHash[currentPage].taskHash[taskName].userType.includes(user.userType)">
-                                    <i nz-icon nzType="youtube" [nzTheme]="'outline'" nz-tooltip
-                                        nzTooltipTitle="Play the task How-To video" (click)="playTaskVideo(taskName)"
-                                        style="cursor:pointer;font-size:24px;vertical-align: top;margin-left:20px;color:#52c41a;"></i>
-                                    &nbsp;&nbsp;{{aboutThisPageHash[currentPage].taskHash[taskName].desc}}
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div [@showVideo]="isVideoOpen ? 'open' : 'closed'"
-                style="position: absolute;top:-100%; left: 0;right:0;height:100%;z-index:10;background-color:rgba(0,0,0,0.7);text-align: center;">
-                <div
-                    style="height:fit-content;width:fit-content;z-index:10;display:inline-block;margin-top:100px;background-color: #f5f5f5;">
-                    <div style="display:block;width:100%;padding:10px;">
-                        <span style="font-size:18px;">Task Tutorials</span>
-                        <i nz-icon nzType="close-circle" [nzTheme]="'outline'" (click)="isVideoOpen = false"
-                            style="font-size:20px;font-weight: 200;cursor:pointer;float:right;"></i>
-                    </div>
-                    <div *ngIf="authenticatedUser$ | async as user"
-                        style="text-align: left;float:left;min-width:300px;max-height:500px;overflow:scroll;">
-                        <nz-collapse nzBordered="true" nzAccordion="true">
-                            <nz-collapse-panel *ngFor="let pageName of pageNames"
-                                [nzHeader]="aboutThisPageHash[pageName].title" [nzActive]="currentPage === pageName"
-                                style="">
-                                <div *ngFor="let taskName of pageTaskHash[pageName]; index as i" style="padding:5px;"
-                                    (click)="playTaskVideo(taskName)"
-                                    [ngClass]="{'current-task': taskName === currentTask}" class="task">
-                                    <div
-                                        *ngIf="aboutThisPageHash[pageName].taskHash[taskName].userType.includes(user.userType)">
-                                        <i nz-icon nzType="youtube" [nzTheme]="'outline'" nz-tooltip
-                                            nzTooltipTitle="Play the task How-To video"
-                                            style="cursor:pointer;font-size:24px;vertical-align: top;color:#52c41a;"></i>
-                                        &nbsp;&nbsp;
-                                        <span>{{aboutThisPageHash[pageName].taskHash[taskName].desc}}</span>
-                                    </div>
-                                </div>
-                            </nz-collapse-panel>
-                        </nz-collapse>
-                    </div>
-                    <div *ngIf="aboutThisPageHash[currentPage] && aboutThisPageHash[currentPage].taskHash[currentTask]"
-                        style="text-align: center;float:right;">
-                        <div style="background-color: #000000;width:600px;height:500px;">
-                            <vg-player (onPlayerReady)="onPlayerReady($event)">
-                                <vg-controls>
-                                    <vg-play-pause></vg-play-pause>
-                                    <vg-playback-button></vg-playback-button>
-                                    <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-
-                                    <vg-scrub-bar>
-                                        <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                                        <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-                                    </vg-scrub-bar>
-
-                                    <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
-                                    <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-
-                                    <vg-mute></vg-mute>
-                                    <vg-volume></vg-volume>
-
-                                    <vg-fullscreen></vg-fullscreen>
-                                </vg-controls>
-                                <video style="background-color: #dddddd;" [vgMedia]="media" #media id="singleVideo"
-                                    preload="none" [src]="(taskBS$ | async)?.safeUrl" crossorigin
-                                    [poster]="(taskBS$ | async)?.poster">
-                                </video>
-                            </vg-player>
-                        </div>
-                    </div>
-                    <div style="clear: both;"></div>
-                </div>
-            </div>
-            <ng-template #taskVideoTemplate>
-            </ng-template>
-        </div>
+        <nz-steps *ngIf="myTeamCnt === 0 && allTrainingCnt === 0" [nzCurrent]="currentStep" style="height:fit-content;">
+            <nz-step nzTitle="Add Users" nzDescription=""></nz-step>
+            <nz-step nzTitle="Create Trainings" nzSubtitle="" nzDescription=""> </nz-step>
+        </nz-steps>
         -->
         <router-outlet [ngStyle]="{'height.px': browserInnerHeight - 64}"></router-outlet>
         <nz-modal nzWidth="600" [(nzVisible)]="showNewUserModal" nzCancelDisabled="true" nzClosable="false"
@@ -273,23 +96,30 @@
                 </div>
                 <br>
 
-                <div style="font-size:16px;color:black;">
-                    Before we get started, you should be familiar with 2 icons that can help answer questions you might
-                    have
-                    along the way.
+                <p style="margin-bottom: 20px;color:#000000;">
+                    The following value will be used as the name of your organization.&nbsp;&nbsp;You are free to change
+                    it. &nbsp;&nbsp;It will be used by the system to
+                    identify all users in your organization.
+                </p>
+                <div style="display:block;margin-bottom:10px;width:100%;">
+                    <input style="display:inline-block;width:80%;" nz-input type="text" [placeholder]="user.org"
+                        ngDefaultControl [(ngModel)]="user.org">
                 </div>
                 <br>
+                <p style="margin-bottom: 20px;color:#000000;">
+                    Look for the following icons when you need assistance using the site.
+                </p>
                 <p>
                     <span style="color:#000000;">
                         <i nz-icon nzType="question-circle" nzTheme="twotone"
-                            style="margin-left:30px;font-size:20px;"></i>
+                            style="margin-left:30px;font-size:20px;color:#000000;vertical-align: baseline;"></i>
                         &nbsp;&nbsp;
-                        Gives you a tour of the page
+                        Gives you a quick tour
                         <br>
-                        <i nz-icon nzType="youtube" nzTheme="outline"
-                            style="margin-top:10px;color:blue;margin-left:30px;font-size:20px;"></i> &nbsp;&nbsp;
-                        Screencasts of common
-                        tasks
+                        <i nz-icon nzType="play-circle" nzTheme="twotone"
+                            style="margin-top:10px;color:blue;margin-left:30px;font-size:20px;color:#000000;vertical-align: baseline;"></i>
+                        &nbsp;&nbsp;
+                        Plays a How-To video for the current page
                         <br>
                         <br>
                         <div>
@@ -314,8 +144,8 @@
 
             </div>
         </nz-modal>
-        <nz-drawer *ngIf="authenticatedUser$ | async as user" nzWidth="500px" nzTitle="App Settings"
-            [nzClosable]="false" [nzVisible]="quickViewVisible" nzPlacement="right" (nzOnClose)="quickViewToggle()">
+        <nz-drawer nzWidth="500px" nzTitle="App Settings" [nzClosable]="false" [nzVisible]="quickViewVisible"
+            nzPlacement="right" (nzOnClose)="quickViewToggle()">
             <app-settings></app-settings>
         </nz-drawer>
     </nz-content>
@@ -354,44 +184,26 @@
                     </label>
                 </div>
                 <div style="display:inline-block;width:70%;margin-left:20px;">
-                    <!--
-                    <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl
-                        [(ngModel)]="authenticatedUser.email" style="margin-bottom:2px;">
-                        -->
-                        <nz-input-group [nzSuffix]="suffixTemplate">
-                            <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl [(ngModel)]="currentEmail"
-                                (ngModelChange)="checkUniqueEmail($event)" style="margin-bottom:2px;" (keydown.enter)="checkUniqueEmail($event)"
-                                (blur)="checkUniqueEmail($event)">
-                        </nz-input-group>
-                        <ng-template #suffixTemplate>
-                            <span *ngIf="!emailUnique" style="font-size:10px;">email taken</span>
-                            <span *ngIf="emailUnique" style="font-size:10px;">email available</span>
-                        </ng-template>
+                    <nz-input-group [nzSuffix]="suffixTemplate">
+                        <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl
+                            [(ngModel)]="currentEmail" (ngModelChange)="checkUniqueEmail($event)"
+                            style="margin-bottom:2px;" (keydown.enter)="checkUniqueEmail($event)"
+                            (blur)="checkUniqueEmail($event)">
+                    </nz-input-group>
+                    <ng-template #suffixTemplate>
+                        <span *ngIf="!emailUnique" style="font-size:10px;">email taken</span>
+                        <span *ngIf="emailUnique" style="font-size:10px;">email available</span>
+                    </ng-template>
                 </div>
             </div>
-            <!--
-            <div style="display:block;width:90%;">
-                <div style="display:inline-block;width:25%;text-align: right;">
-                    <label style="font-size:14px;color:#000000;">
-                        Job Title
-                    </label>
-                </div>
-                <div style="display:inline-block;width:70%;margin-left:20px;">
-                    <input style="margin-bottom:2px;" placeholder="Job Title" nz-input
-                        [(ngModel)]="selectedUser.jobTitle" ngDefaultControl nzSize="small"
-                        (ngModelChange)="onJobTitleChange($event)" [nzAutocomplete]="auto"
-                        (keydown.enter)="setJobTitle($event)" (blur)="setJobTitle($event)" />
-                    <nz-autocomplete [nzDataSource]="matchingJobTitles" #auto></nz-autocomplete>
-                </div>
-            </div>
-            -->
             <div style="display:block;margin-top:20px;width:90%;text-align: center;">
                 <div style="display:inline-block;width:60%;">
                     <button nz-button nzSize="small" nzShape="round" (click)="handleUpdateUserCancel()" nzType="default"
                         style="margin: 10px;display:inline-block;">Cancel
                     </button>
                     <button *ngIf="authenticatedUser" nz-button nzSize="small" nzShape="round"
-                        (click)="handleUpdateUser()" [disabled]="!emailUnique" nzType="primary" style="margin: 10px;display:inline-block;">Update
+                        (click)="handleUpdateUser()" [disabled]="!emailUnique" nzType="primary"
+                        style="margin: 10px;display:inline-block;">Update
                         User
                     </button>
                 </div>

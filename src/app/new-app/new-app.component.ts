@@ -221,13 +221,15 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   httpErrors$: Observable<HttpErrorResponse>;
   userTrainings$: Observable<UserTrainingModel[]>;
   myTrainingIdHash$: Observable<TrainingIdHash>;
+  allTrainingIdHash$: Observable<TrainingIdHash>;
+  allTrainingIdHash: TrainingIdHash = {};
   teamTrainingCnt$: Observable<number>;
   myTeamIdHash$: Observable<UserIdHash>;
   isAuthenticated$: Observable<boolean>;
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
   myTrainingCnt = 0;
-  teamTrainingCnt = 0;
+  allTrainingCnt = 0;
 
   //  list = new Array<any>([]);
   isLoggedIn = false;
@@ -256,6 +258,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   currentHttpError;
   emailUnique = true;
   currentEmail;
+  currentStep = 0;
 
   constructor(
     private authService: AuthService,
@@ -278,6 +281,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.teamTrainingCnt$ = this.trainingService.getTeamTrainingCntStream();
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
+    this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
   }
 
   ngOnInit(): void {
@@ -302,6 +306,16 @@ export class NewAppComponent extends BaseComponent implements OnInit {
           }
           this.myTrainingCnt = userTrainings.length;
         });
+    */
+    /*
+    this.allTrainingIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(allTrainingIdHash => {
+      if (!allTrainingIdHash) {
+        this.allTrainingCnt = 0;
+        return;
+      }
+      this.allTrainingIdHash = allTrainingIdHash;
+      this.allTrainingCnt = Object.keys(this.allTrainingIdHash).length;
+    });
     */
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
@@ -333,12 +347,16 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
     this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(teamIdHash => {
       if (!teamIdHash) {
+        this.myTeamCnt = 0;
         return;
       }
       let myTeamIds = Object.keys(teamIdHash);
       if (myTeamIds) {
         // Subtract 1 for the supervisor
         this.myTeamCnt = myTeamIds.length - 1;
+        if (this.myTeamCnt > 0) {
+          this.currentStep = 1;
+        }
       }
     });
 

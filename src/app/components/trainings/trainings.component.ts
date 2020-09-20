@@ -53,6 +53,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
   tid: string = null;
   selectedTraining = false;
   showAssessmentPanel = false;
+
   
   constructor(
     private trainingService: TrainingService,
@@ -155,7 +156,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
   }
 
   newTraining() {
-    this.trainingService.addNewTraining();
+    this.trainingService.addNewTraining();    
   }
   /*
   confirmDelete() {

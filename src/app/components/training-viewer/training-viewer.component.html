@@ -81,7 +81,7 @@
                 style="font-size:20px;position:absolute;top:10px;left:10px;cursor:pointer;z-index:10;"
                 (click)="startTour('header')" nz-tooltip nzTooltipTitle="A little help">
             </i>
-            <nz-modal [(nzVisible)]="showAssessmentAlert" nzTitle="Assessment Error" nzCancelDisabled="true"
+            <nz-modal [(nzVisible)]="showAssessmentAlert" nzTitle="Assessment Error  xxx" nzCancelDisabled="true"
                 (nzOnOk)="assessmentErrorOk()">
                 <p></p>
             </nz-modal>
@@ -330,7 +330,7 @@
                         </button>
                         <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit'" nz-button
                             nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Save As New Version"
-                            class="header-icon" (click)="saveNewVersion()" joyrideStep="Step7-header"
+                            class="header-icon" (click)="save()" joyrideStep="Step7-header"
                             stepPosition="bottom" title="Save a new version"
                             text="Create a new version of this training.  For versions after 1.0.0, you will be asked to indicate the significance of the changes you have made to the training.">
                             <i nz-icon nzType="lock" theme="twotone" [nzTwotoneColor]="'blue'"
@@ -580,8 +580,8 @@
                     <i *ngIf="page?.type === 'assessment'" nz-icon nzType="file-done" theme="outline"
                         style="font-size:22px;display:block;"></i>
                     <i *ngIf="page?.type === 'text'" nz-icon nzType="html5" theme="outline"
-                        style="font-size:22px;display:block;"></i>
-                    <i *ngIf="page?.type === 'training-intro'" nz-icon nzType="file" theme="outline"
+                          style="font-size:22px;display:block;"></i>
+                  <i *ngIf="page?.type === 'training-intro'" nz-icon nzType="file" theme="outline"
                         style="font-size:22px;display:block;"></i>
                     <span style="font-size:10px;">{{page?.title}}</span>
                 </div>
@@ -1271,7 +1271,7 @@
     </div>
 </div>
 <nz-modal [(nzVisible)]="assignedFromJobTitleDialogIsVisible" [nzTitle]="'Automatic Training Assignment'" nzWidth="50%"
-    nzOkDisabled="false" nzCancelDisabled="true" (nzOnOk)="assignedFromJobTitleDialogIsVisible = false">
+    nzOkDisabled="false" nzCancelDisabled="true" (nzOnOk)="closeViewer()">
     <div *ngIf="removedFromJobTitle?.length > 0" style="display:inline-block;width:80%;font-size: 16px;">
         The job title associated with this training has changed!
         This training is being removed from the following users: <br><br>
