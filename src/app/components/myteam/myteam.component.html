@@ -78,73 +78,102 @@
                     style="cursor:pointer;float:right;font-size:20px;color:#aaaaaa;margin-top:10px;margin-right:20px;"
                     nz-tooltip nzTooltipTitle="Zoom Out" (click)="zoomOut()"></i>
             </div>
-            <!--
+        </div>
+        <!--
             <i nz-icon nzType="question-circle" nzTheme="twotone"
                 style="cursor:pointer;position:absolute;top:80px;left:20;font-size:20px;color:#000000;"
                 (click)="startTour('orgChart')" nz-tooltip nzTooltipTitle="A little help"></i>
                 -->
-            <div *ngIf="showOrgChart === 'true'" style="position:relative;z-index:1;">
-                <div style="position:absolute;top:20px;left:0;">
-                    <div style="float:left;margin-right:20px;">
-                        <div class="legend-item" (mouseenter)="setLegendHoverItem('individualContributor')" (mouseleave)="setLegendHoverItem('')">
-                            <i class="fas fa-user"
-                                style="font-size:16px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"
-                                nz-tooltip [nzTooltipTitle]=""></i>
-                            <span style="font-size:10px;">Individual Contributor</span>
-                        </div>
-                        <div class="legend-item" (mouseenter)="setLegendHoverItem('supervisor')" (mouseleave)="setLegendHoverItem('')">
-                            <i class="fas fa-user-tie"
-                                style="font-size:16px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"
-                                nz-tooltip [nzTooltipTitle]=""></i>
-                            <span style="font-size:10px;">Supervisor</span>
-                        </div>
-                        <div class="legend-item" (mouseenter)="setLegendHoverItem('customer')" (mouseleave)="setLegendHoverItem('')">
-                            <i class="fas fa-user-crown"
-                                style="font-size:16px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"
-                                nz-tooltip [nzTooltipTitle]=""></i>
-                            <span style="font-size:10px;">Customer</span>
-                        </div>
-                        <div class="legend-item" (mouseenter)="setLegendHoverItem('volunteer')" (mouseleave)="setLegendHoverItem('')">
-                            <i class="fas fa-user-cowboy"
-                                style="font-size:16px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"
-                                nz-tooltip [nzTooltipTitle]=""></i>
-                            <span style="font-size:10px;">Volunteer</span>
-                        </div>
-                    </div>
-                    <div style="float:left;">
-                        <div class="legend-item2">
-                            <i class="fas fa-circle"
-                                style="font-size:12px;color:#000000;z-index:1;display:inline-block;line-height:18px;margin-right:10px;"
-                                nz-tooltip [nzTooltipTitle]=""></i>
-                            <span style="font-size:10px;">No Trainings Assigned</span>
-                        </div>
-                        <div class="legend-item2">
-                            <i class="fas fa-circle"
-                                style="font-size:12px;color:#46bd15;z-index:1;display:inline-block;line-height:18px;margin-right:10px;"
-                                nz-tooltip [nzTooltipTitle]=""></i>
-                            <span style="font-size:10px;">All Traingings are Up To
-                                Date</span>
-                        </div>
-                        <div class="legend-item2" (mouseenter)="setLegendHoverItem('pastDue')" (mouseleave)="setLegendHoverItem('')">
-                            <i class="fas fa-circle"
-                                style="font-size:12px;color:red;z-index:1;display:inline-block;line-height:18px;margin-right:10px;"
-                                nz-tooltip [nzTooltipTitle]=""></i>
-                            <span style="font-size:10px;">At Least One Trainging is
-                                Past
-                                Due</span>
-                        </div>
-                    </div>
-                    <label nz-checkbox ngDefaultControl [(ngModel)]="includeFullName"
-                        style="cursor:pointer;font-size:12px;color:#000000;z-index:1;margin-left:10px;" nz-tooltip nzTooltipTitle="">Show
-                        Names for Individual Contributors
-                    </label>
-                    <nz-select ngDefaultControl nzMode="tags" nzSize="small" nzPlaceHolder="Job Titles to Highlight"
-                        [(ngModel)]="listOfFilterJobTitles" (ngModelChange)="orgChartFilterChanged($event)"
-                        style="width:400px;">
-                        <nz-option *ngFor="let jobTitle of listOfJobTitles" [nzLabel]="jobTitle.text"
-                            [nzValue]="jobTitle.value"></nz-option>
-                    </nz-select>
+        <div *ngIf="showOrgChart === 'true'" style="position:relative;z-index:1;">
+            <div style="position:absolute;top:20px;left:0;">
+                <a nz-dropdown [nzDropdownMenu]="legendMenu" nzTrigger="hover" nzPlacement="bottomRight"
+                    style="cursor:pointer;font-size:14px;color:blue;">Legend
+                    <i nz-icon nzType="down" style="margin-left:2px;font-size:12px;vertical-align: middle;margin-right:10px;"></i>
+                </a>
+                <nz-dropdown-menu #legendMenu="nzDropdownMenu" style="z-index:100010;">
+                    <ul nz-menu nzSelectable>
+                        <li>
+                            <div class="legend-item" (mouseenter)="setLegendHoverItem('individualContributor')"
+                                (mouseleave)="setLegendHoverItem('')">
+                                <i class="fas fa-user"
+                                    style="font-size:16px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"
+                                    nz-tooltip [nzTooltipTitle]=""></i>
+                                <span style="font-size:10px;">Individual Contributor</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="legend-item" (mouseenter)="setLegendHoverItem('supervisor')"
+                                (mouseleave)="setLegendHoverItem('')">
+                                <i class="fas fa-user-tie"
+                                    style="font-size:16px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"
+                                    nz-tooltip [nzTooltipTitle]=""></i>
+                                <span style="font-size:10px;">Supervisor</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="legend-item" (mouseenter)="setLegendHoverItem('customer')"
+                                (mouseleave)="setLegendHoverItem('')">
+                                <i class="fas fa-user-crown"
+                                    style="font-size:16px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"
+                                    nz-tooltip [nzTooltipTitle]=""></i>
+                                <span style="font-size:10px;">Customer</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="legend-item" (mouseenter)="setLegendHoverItem('volunteer')"
+                                (mouseleave)="setLegendHoverItem('')">
+                                <i class="fas fa-user-cowboy"
+                                    style="font-size:16px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"
+                                    nz-tooltip [nzTooltipTitle]=""></i>
+                                <span style="font-size:10px;">Volunteer</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="legend-item2">
+                                <i class="fas fa-circle"
+                                    style="font-size:12px;color:#000000;z-index:1;display:inline-block;line-height:18px;margin-right:10px;"
+                                    nz-tooltip [nzTooltipTitle]=""></i>
+                                <span style="font-size:10px;">No Trainings Assigned</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="legend-item2">
+                                <i class="fas fa-circle"
+                                    style="font-size:12px;color:#46bd15;z-index:1;display:inline-block;line-height:18px;margin-right:10px;"
+                                    nz-tooltip [nzTooltipTitle]=""></i>
+                                <span style="font-size:10px;">All Traingings are Up To
+                                    Date</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="legend-item2" (mouseenter)="setLegendHoverItem('pastDue')"
+                                (mouseleave)="setLegendHoverItem('')">
+                                <i class="fas fa-circle"
+                                    style="font-size:12px;color:red;z-index:1;display:inline-block;line-height:18px;margin-right:10px;"
+                                    nz-tooltip [nzTooltipTitle]=""></i>
+                                <span style="font-size:10px;">At Least One Trainging is
+                                    Past
+                                    Due</span>
+                            </div>
+                        </li>
+
+                    </ul>
+                </nz-dropdown-menu>
+                <label nz-checkbox ngDefaultControl [(ngModel)]="includeFullName"
+                    style="cursor:pointer;font-size:12px;color:#000000;z-index:1;margin-left:10px;" nz-tooltip
+                    nzTooltipTitle="">Show
+                    Names for Individual Contributors
+                </label>
+                <nz-select ngDefaultControl nzMode="tags" nzSize="small" nzPlaceHolder="Job Titles to Highlight"
+                    [(ngModel)]="listOfFilterJobTitles" (ngModelChange)="orgChartFilterChanged($event)"
+                    style="width:400px;">
+                    <nz-option *ngFor="let jobTitle of listOfJobTitles" [nzLabel]="jobTitle.text"
+                        [nzValue]="jobTitle.value"></nz-option>
+                </nz-select>
+                <!--
                 </div>
+            </div>
+            -->
             </div>
         </div>
         <div *ngIf="showOrgChart !== 'true'" style="padding-top:20px;">

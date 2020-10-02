@@ -5,7 +5,7 @@
 }
 
 .legend-item {
-    width: 150px;
+    width: 100%;
     padding: 1px;
 }
 
@@ -14,7 +14,7 @@
 }
 
 .legend-item2 {
-    width: 200px;
+    width: 100%;
     padding: 1px;
 }
 .legend-item2:hover {

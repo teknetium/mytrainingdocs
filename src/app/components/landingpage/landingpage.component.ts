@@ -182,9 +182,20 @@ export class LandingpageComponent implements OnInit {
 
   duration: string = "month";
 
-  feesBasic: number = 18;
-  feesStandard: number = 15;
-
+  pricingModel = {
+    'team': {
+      monthly: 250,
+      yearly: 2500
+    },
+    'org': {
+      monthly: 750,
+      yearly: 7000
+    },
+    'enterprise': {
+      monthly: 1500,
+      yearly: 14000
+    }
+  }
 
   destinations = {
     home: {
@@ -231,6 +242,9 @@ export class LandingpageComponent implements OnInit {
   currentVideo;
   showYouTubeIcon = true;
   explainerVidIsVisible = false;
+  planSelected = false;
+  plan = '';
+
 
   constructor(
     private auth: AuthService,
@@ -318,14 +332,15 @@ export class LandingpageComponent implements OnInit {
     this.benefits[index].focus = false;
   }
 
+  selectPlan(plan: string) {
+    this.planSelected = true;
+    this.plan = plan;
+  }
+
   planChange() {
     if (this.plans == 'annually') {
-      this.feesBasic = 180;
-      this.feesStandard = 144;
       this.duration = 'year';
     } else {
-      this.feesBasic = 18;
-      this.feesStandard = 15;
       this.duration = 'month';
     }
   }
@@ -365,9 +380,7 @@ export class LandingpageComponent implements OnInit {
   }
 
   signup() {
-    this.router.navigate(['/signup-beta']);
-
-    //    this.auth.signup();
+    this.auth.signup();
   }
   login() {
     this.auth.login();

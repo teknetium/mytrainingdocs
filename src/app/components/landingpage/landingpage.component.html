@@ -90,12 +90,19 @@
       </video>
     </vg-player>
   </div>
-  <div style="width:100%;">
+  <div style="position:relative;" id="home">
+    <img src="assets/images/landing-banner.png" style="" width="100%" height="100%">
+    <div style="position:absolute;top:50%;left:20%;">
+      <i class="fas fa-play-circle opaque" style="cursor:pointer;text-align:center;font-size:44px;color:black;"
+        (click)="loadVideo('explainer')"></i>
+    </div>
+  </div>
+  <div style="width:100%;height:100%;">
     <div
-      style="background: rgba(4, 23, 63, 0.9);font-size: 14px;position: fixed; top:0; left:0; height: 64px;z-index: 100;text-align: center;width:100%;">
+      style="background-color:rgba(220, 220, 220, .7);position:fixed;top:0;left:0;right:0;font-size: 12px;height: 64px;z-index: 100;text-align: center;width:100%;">
       <div
         style="position: absolute;left: 10px;top: 10px;height: 44px;border-radius: 24px;padding: 5px 8px; background: rgba(255,255,255,.3); width: 180px;">
-        <img height="35" src="assets/images/logo/logo.png" (click)="hiddenSignup()">
+        <img height="35" src="assets/images/logo/logo.png" >
       </div>
 
       <div class="nav-link">
@@ -137,18 +144,16 @@
           [ngxScrollToEasing]="ngxScrollToEasing">Contact Us</a>
       </div>
 
-      <div style="width:20%;position: fixed; top:0; right:0;height: 64px;">
-        <!--
       <div class="nav-link"
-        style="cursor:pointer;width:10%;font-size: 14px;height: 64px;width:100px;z-index: 100;float:right;"
+        style="cursor:pointer;font-size: 12px;z-index: 100;float:right;"
         (click)="signup()">
+
         Sign Up
       </div>
-      -->
-        <div class="nav-link" style="cursor:pointer;font-size: 14px;z-index: 100;;height: 64px; float:right;"
-          (click)="login()">
-          Log In
-        </div>
+
+      <div class="nav-link" style="cursor:pointer;font-size: 12px;z-index: 100;float:right;"
+        (click)="login()">
+        Log In
       </div>
     </div>
     <!--
@@ -186,22 +191,26 @@
   </nz-modal>
 -->
     <!-- START HOME -->
-    <section class="section  home-half" id="home"
-      style="background-color:#f1f1f1;position: relative;overflow: hidden;padding:150px 0;">
-      <img src="assets/images/others/bb6.jpg" style="position: absolute;left: 0;top: 0;width: 100%;height: 100%;">
+    <!--
+    <section class="section" style="height:fit-content;position: relative;">
+  </div>
+</div>
+</div>
+-->
+    <!--
       <div class="home-table">
         <div class="home-table-center">
           <div class="container">
             <div class="row justify-content-center">
               <div class="col-lg-12">
                 <div class="text-center mx-auto" style="margin-bottom: 50px;">
-                  <!--
+                  < !--
                 <div
                   style="display:inline-block;width:fit-content;margin-bottom:60px;background: rgba(255,255,255,.1);padding:10px;border-radius: 60px;">
                   <img width="100" src="../../../assets/images/rocket.png">
                   <span style="font-size:22px;color:orange;">&nbsp;&nbsp;BETA Release Coming Soon!</span>
                 </div>
-                -->
+                -- >
                   <div style="font-size:46px;font-weight: 200;color:white;">
                     Training people is HARD.
                   </div>
@@ -216,18 +225,14 @@
                   style="position:absolute;left:45%;top:40%;cursor:pointer;text-align:center;font-size:46px;color:red;"
                   (click)="loadVideo('explainer')"></i>
                 <img width="300" src="../../../assets/images/howitworks.png">
-                <!--
-              <img width="400" src="../../../assets/images/org-chart.png">
-              <img width="400" src="../../../assets/images/training-template.png">
-              -->
               </div>
-              <!--
-            -->
             </div>
           </div>
         </div>
       </div>
     </section>
+        -->
+
     <!-- END HOME -->
     <!--
   <section class="section" id="beta">
@@ -385,15 +390,19 @@
                 <div class="media align-items-center">
                   <nz-avatar nzIcon="user" [nzSize]="55" class="ant-avatar-blue"></nz-avatar>
                   <div class="m-l-15" style="text-align: center;">
-                    <h3 class="m-b-0">Small Team</h3>
-                    <span class="font-size-12">less than 20 users</span>
+                    <h3 class="m-b-0">Team Plan</h3>
+                    <span class="font-size-12">Single Supervisor<br>&nbsp;</span>
                     <h2 class="font-weight-bold  m-b-0">
-                      ${{feesBasic}}
-                      <span class="font-size-13 font-weight-semibold">/user /{{duration}}</span>
+                      <span *ngIf="plans === 'monthly'">${{pricingModel.team.monthly}}</span>
+                      <span *ngIf="plans === 'annually'">${{pricingModel.team.yearly}}</span>
+                      <span class="font-size-13 font-weight-semibold">/{{duration}}</span>
                     </h2>
                   </div>
                 </div>
               </div>
+              <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
+                style="display: inline-block;">Select
+                Plan</button>
               <!--
             <div class="text-center">
               <div>
@@ -411,16 +420,21 @@
                 <div class="media align-items-center">
                   <nz-avatar nzIcon="team" [nzSize]="55" class="ant-avatar-cyan"></nz-avatar>
                   <div class="m-l-15" style="text-align: center;">
-                    <h3 class="m-b-0">Large Team</h3>
-                    <span class="font-size-12">less than 100 users</span>
-                    <h2 class="font-weight-bold  m-b-0">
-                      ${{feesStandard}}
-                      <span class="font-size-13 font-weight-semibold">/user /{{duration}}</span>
-                    </h2>
+                    <h3 class="m-b-0">Org Plan</h3>
+                    <span class="font-size-12">2 or more supervisors<br>
+                      < 100 users</span>
+                        <h2 class="font-weight-bold  m-b-0">
+                          <span *ngIf="plans === 'monthly'">${{pricingModel.org.monthly}}</span>
+                          <span *ngIf="plans === 'annually'">${{pricingModel.org.yearly}}</span>
+                          <span class="font-size-13 font-weight-semibold">/{{duration}}</span>
+                        </h2>
                   </div>
                 </div>
               </div>
 
+              <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
+                style="display: inline-block;">Select
+                Plan</button>
               <!--
             <div class="text-center">
               <div>
@@ -433,27 +447,26 @@
             </nz-card>
           </div>
           <div class="col-md-4">
-            <nz-card style="position:relative;border-color: #e1e1e1;min-height:450px;padding-top:30px;text-align: center;">
+            <nz-card
+              style="position:relative;border-color: #e1e1e1;min-height:450px;padding-top:30px;text-align: center;">
               <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
                 <div class="media align-items-center">
                   <nz-avatar nzIcon="crown" [nzSize]="55" class="ant-avatar-gold"></nz-avatar>
                   <div class="m-l-15" style="text-align: center;">
-                    <h3 class="m-b-0">Enterprise</h3>
-                    <span class="font-size-12">100 users or more</span>
-                    <h6>Contact Us for Pricing</h6>
+                    <h3 class="m-b-0">Enterprise Plan</h3>
+                    <span class="font-size-12">2 or more supervisors<br>
+                      > 100 users</span>
+                    <h2 class="font-weight-bold  m-b-0">
+                      <span *ngIf="plans === 'monthly'">${{pricingModel.enterprise.monthly}}</span>
+                      <span *ngIf="plans === 'annually'">${{pricingModel.enterprise.yearly}}</span>
+                      <span class="font-size-13 font-weight-semibold">/{{duration}}</span>
+                    </h2>
                   </div>
                 </div>
               </div>
-              <span style="position:absolute;bottom:20px;display: inline-block;">Select Plan</span>
-              <!--
-            <div class="text-center">
-              <div>
-                <a class="btn btn-custom text-white" [ngxScrollTo]="destinations['contact'].ngxScrollToDestination"
-                  [ngxScrollToDuration]="ngxScrollToDuration" [ngxScrollToEasing]="ngxScrollToEasing">Choose
-                  Plan</a>
-              </div>
-            </div>
-            -->
+              <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
+                style="display: inline-block;">Select
+                Plan</button>
             </nz-card>
           </div>
         </div>

@@ -21,7 +21,7 @@
     <div *ngIf="authenticatedUser?.userType === 'supervisor'">
         <div style="width:55%;display:inline-block;">
             <div style="display:block;width:100%;">
-                <nz-card style="width:100%;" nzTitle="Team Members" [nzExtra]="extraTemplate" style="border: 1px solid #bbbbbb;">
+                <nz-card style="width:100%;" nzTitle="Team Members" [nzExtra]="extraTemplate" style="border: 1px solid #dddddd;">
                     <div *ngIf="myTeam.length === 0" style="padding:40px;">
                         <span style="font-weight:200;" (click)="goTo('/myteam')">
                             You have not added any team members yet!<br>
@@ -163,7 +163,7 @@
                 -->
             </div>
             <div style="width:100%;display:block;">
-                <nz-card style="width:100%;" nzTitle="Trainings" style="border: 1px solid #bbbbbb;" joyrideStep="step3" title="Your Team's Trainings"
+                <nz-card style="width:100%;" nzTitle="Trainings" style="border: 1px solid #dddddd;" joyrideStep="step3" title="Your Team's Trainings"
                     text="This section lists all of your trainings.  Selecting a training in this section will put you directly in the training editor.">
                     <div *ngIf="trainings.length === 0" style="padding:40px">
                         <span style="font-weight:200;" (click)="goTo('/trainings')">
@@ -193,7 +193,7 @@
             </div>
         </div>
         <div style="width:40%;float:right;height:100%;text-align: center;">
-            <nz-card style="width:100%;" [nzTitle]="titleTemplate" style="border: 1px solid #bbbbbb;">
+            <nz-card style="width:100%;" [nzTitle]="titleTemplate" style="border: 1px solid #dddddd;">
 
                 <div
                     style="display:block;width:100%;padding-left:20px;padding-top:20px;text-align:left;height:85%;overflow-y: scroll;">

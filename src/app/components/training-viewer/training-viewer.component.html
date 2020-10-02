@@ -1,3 +1,4 @@
+<!--
 <nz-modal [(nzVisible)]="tourModalIsVisible" nzTitle="Training Wizard Tour" nzWidth="60%" nzOkDisabled="true"
     nzCancelDisabled="false" (nzOnCancel)="cancelTour()">
     <div>
@@ -23,6 +24,7 @@
 
     </div>
 </nz-modal>
+-->
 <div *ngIf="selectedTraining$ | async as selectedTraining" class="training-viewer">
     <nz-modal [(nzVisible)]="lockTrainingModalIsVisible" [nzTitle]="selectedTraining?.title" nzWidth="60%"
         nzOkDisabled="false" nzCancelDisabled="false" (nzOnCancel)="cancelLockTraining()"
@@ -772,7 +774,7 @@
                         <i *ngIf="production === 'false' && selectedTraining?.status === 'unlocked' && mode === 'Edit'"
                             nz-icon nzType="question-circle" theme="twotone"
                             style="font-size:20px;position:absolute;top:10px;left:10px;z-index:10;cursor:pointer;"
-                            (click)="startTour(page?.type)" nz-tooltip nzTooltipTitle="A little help">
+                            (click)="startTour('training-intro')" nz-tooltip nzTooltipTitle="A little help">
                         </i>
                         <div *ngIf="currentPageId === page?._id" class="page">
                             <div [ngClass]="{'page-content': (mode === 'Edit' && selectedTraining?.status === 'unlocked' && production === 'false')}"
@@ -1245,7 +1247,7 @@
                                             </div>
                                         </div>
                                         <div *ngIf="page?.content && page?.content?.type === 'html'"
-                                            style="text-align:left;width:100%;height:900px;">
+                                            style="text-align:center;width:100%;height:900px;">
                                             <div *ngIf="production === 'false' && selectedTraining?.status === 'unlocked' && mode === 'Edit'"
                                                 [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight - 400}"
                                                 style="display: inline-block;">
