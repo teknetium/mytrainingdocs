@@ -6,7 +6,7 @@
 
 .legend-item {
     width: 100%;
-    padding: 1px;
+    padding: 5px;
 }
 
 .legend-item:hover {
@@ -15,7 +15,7 @@
 
 .legend-item2 {
     width: 100%;
-    padding: 1px;
+    padding: 5px;
 }
 .legend-item2:hover {
     background-color: #f1f1f1;
@@ -29,6 +29,10 @@
 
 .my-team-header {
     margin-bottom: 20px;
+}
+
+.selected-status {
+	background-color: #eaf7fe;
 }
 
 .my-team-rightside {

@@ -604,11 +604,36 @@ module.exports = function(app, config) {
       trainingVersion: req.body.trainingVersion,
       certImage: req.body.certImage
     });
-    UserTraining.create(userTraining, function (err, userTrainingObj) {
+    UserTraining.findOne({ tid: req.body.tid, uid: req.body.uid },
+      userTrainingListProjection, (err1, userTrainingObj1) => {
+        if (err1) {
+          UserTraining.create(userTraining, function (err2, userTrainingObj2) {
+            if (err2) {
+              return res.status(500).send({ message: err2.message });
+            }
+            res.send(userTrainingObj2);
+          });
+        }
+        if (userTrainingObj1) {
+          res.send(userTrainingObj1);
+        } else {
+          UserTraining.create(userTraining, function (err3, userTrainingObj3) {
+            if (err3) {
+              return res.status(500).send({ message: err3.message });
+            }
+            res.send(userTrainingObj3);
+          });
+        }
+      });
+  });
+  app.post("/api/usertraining/newbulk", jwtCheck, (req, res) => {
+    let userTrainings = req.body;
+
+    UserTraining.insertMany(userTrainings, { ordered: false }, (err, uts) => {
       if (err) {
         return res.status(500).send({ message: err.message });
       }
-      res.send(userTrainingObj);
+      res.send(uts);
     });
   });
   app.put("/api/usertraining/:id", jwtCheck, (req, res) => {

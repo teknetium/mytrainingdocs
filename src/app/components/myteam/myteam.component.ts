@@ -183,6 +183,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
   message: TemplateMessageModel;
   userIdSelected = '';
+  userIdsSelected = [];
   matchingJobTitles: string[] = [];
   matchingUsers: string[] = [];
   matchingSupervisors: string[] = [];
@@ -1125,8 +1126,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   listOfJobFilters: Array<{ label: string; value: string }> = [];
   listOfFilterJobTitles = [];
   currentJobTitleFilters = [];
+  currentJobTitlesSelected = [];
   maxLevel$: Observable<number>;
   currentLegendItem = '';
+  selectionMode = 'Individual';
+  jobTitleMatchCnt = 0;
+  currentUserType = '';
+  currentTrainingSelected = '';
+  listOfTrainingTitles = [];
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1349,6 +1356,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!userTrainings) {
         return;
       }
+      if (userTrainings.length > 0 && this.myOrgUserHash[userTrainings[0].uid].trainingStatus === 'none') {
+        this.myOrgUserHash[userTrainings[0].uid].trainingStatus = 'upToDate';
+        this.userService.updateUser(this.myOrgUserHash[userTrainings[0].uid], false);
+      }
       this.assignableTrainings = [];
       let tids = [];
       let pastDueFound = false;
@@ -1398,9 +1409,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         this.allTrainingIdHash = allTrainingIdHash;
         let trainings = Object.values(this.allTrainingIdHash);
         this.teamTrainings = [];
+        this.listOfTrainingTitles = [];
         for (let training of trainings) {
-            this.teamTrainings.push(training);
-            this.showTrainingHash[training._id] = training;
+          this.listOfTrainingTitles.push({ text: training.title, value: training._id });
+          this.teamTrainings.push(training);
+          this.showTrainingHash[training._id] = training;
         }
       })
     })
@@ -1443,8 +1456,35 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   orgChartFilterChanged(filters: string[]) {
-    console.log('orgChartFilterChanged ', filters);
     this.currentJobTitleFilters = filters;
+  }
+
+  jobTitleSelectedChanged(filters: string[]) {
+    this.userIdsSelected = [];
+    this.currentJobTitlesSelected = [];
+    this.currentJobTitlesSelected = Object.assign(this.currentJobTitlesSelected, filters);
+    for (let user of this.myOrgUserObjs) {
+      if (this.currentJobTitlesSelected.includes(user.jobTitle)) {
+        this.userIdsSelected.push(user._id);
+      }
+    }
+  }
+
+  trainingSelectedChanged(training: string) {
+    console.log('training selected..', training);
+    this.userIdsSelected = [];
+    this.currentTrainingSelected = training;
+    for (let user of this.myOrgUserObjs) {
+      let tids = [];
+      if (this.uidUTHash[user._id] && this.uidUTHash[user._id].length > 0) {
+        for (let ut of this.uidUTHash[user._id]) {
+          tids.push(ut.tid);
+        }
+        if (tids.includes(training)) {
+          this.userIdsSelected.push(user._id);
+        }
+      }
+    }
   }
 
   zoomIn() {
@@ -1526,7 +1566,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else {
       this.userListDisplay = data;
     }
-//    this.selectUser(this.userIdSelected, this.userListDisplay.indexOf(this.selectedUser, 0));
+    //    this.selectUser(this.userIdSelected, this.userListDisplay.indexOf(this.selectedUser, 0));
     this.userService.selectUser(this.userIdSelected);
     this.rowSelected = this.userListDisplay.indexOf(this.selectedUser, 0);
   }
@@ -1536,7 +1576,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.isOrgView = false;
       this.rowSelected = this.userListDisplay.indexOf(this.selectedUser, 0);
       this.resetFilters();
-      } else {
+    } else {
       this.isOrgView = true;
     }
   }
@@ -1949,15 +1989,98 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
   }
 
-  selectUser(userId, i) {
-    if (this.userIdSelected === userId) {
-      this.userService.selectUser(null);
+  userTypeSelectedChanged(userType: string) {
+    this.currentUserType = userType;
+    this.userIdsSelected = [];
+    for (let user of this.myOrgUserObjs) {
+      if (this.currentUserType === user.userType) {
+        this.userIdsSelected.push(user._id);
+      }
+    }
+  }
+
+  setSelectionMode(mode: string) {
+    if (mode === 'Org') {
+      if (this.selectionMode === 'Individual' && this.userIdSelected) {
+        this.userDetailIsVisible = false;
+        this.selectUser(this.userIdSelected, -1);
+      }
+      this.currentJobTitlesSelected = [];
+      this.userIdsSelected = [];
+      this.assignableTrainings = this.teamTrainings;
+    } else if (mode === 'Individual') {
+      this.currentJobTitlesSelected = [];
+      this.userIdsSelected = [];
+    } else if (mode === 'JobTitle') {
+      if (this.selectionMode === 'Individual' && this.userIdSelected) {
+        this.userDetailIsVisible = false;
+        this.selectUser(this.userIdSelected, -1);
+      }
+      this.assignableTrainings = this.teamTrainings;
+      this.userIdsSelected = [];
+    } else if (mode === 'UserType') {
+      this.currentUserType = '';
+      this.userIdsSelected = [];
       this.userDetailIsVisible = false;
-      this.rowSelected = -1;
-    } else {
-      this.userService.selectUser(userId);
-      this.rowSelected = i;
-      this.userDetailIsVisible = true;
+      this.assignableTrainings = this.teamTrainings;
+    }
+    this.selectionMode = mode;
+  }
+
+  selectUser(userId: string, i: number) {
+    if (this.selectionMode === 'Individual') {
+      if (this.userIdSelected === userId) {
+        this.userService.selectUser(null);
+        this.userDetailIsVisible = false;
+        this.rowSelected = -1;
+      } else {
+        this.userService.selectUser(userId);
+        this.rowSelected = i;
+        this.userDetailIsVisible = true;
+      }
+    } else if (this.selectionMode === 'Org') {
+      if (this.userIdsSelected.includes(userId)) {
+        this.removeFromSelectedList(userId);
+      } else {
+        this.buildSelectedList(userId);
+      }
+    }
+  }
+
+  removeFromSelectedList(userId: string) {
+    this.userIdsSelected.splice(this.userIdsSelected.indexOf(userId), 1);
+    this.removeDirectReportsFromSelectedList(this.myOrgUserHash[userId]);
+  }
+
+  buildSelectedList(userId: string) {
+    this.userIdsSelected.push(userId);
+    this.addDirectReportsToSelectedList(this.myOrgUserHash[userId])
+  }
+
+  removeDirectReportsFromSelectedList(user: UserModel) {
+    if (!user) {
+      return;
+    }
+    for (let userId of user.directReports) {
+      let drUser = this.myOrgUserHash[userId];
+      this.userIdsSelected.splice(this.userIdsSelected.indexOf(userId), 1);
+      if (drUser.directReports.length > 0) {
+        this.removeDirectReportsFromSelectedList(drUser);
+      }
+    }
+  }
+  addDirectReportsToSelectedList(user: UserModel) {
+    if (!user) {
+      return;
+    }
+    for (let userId of user.directReports) {
+      if (!this.userIdsSelected.includes(userId)) {
+        let drUser = this.myOrgUserHash[userId];
+        this.userIdsSelected.push(userId);
+        if (drUser.directReports.length > 0) {
+          this.addDirectReportsToSelectedList(drUser);
+        }
+      }
     }
   }
 
@@ -2003,17 +2126,20 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.showUserTrainingModal = false;
       return;
     }
-    this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version);
+    if (this.selectionMode === 'Individual') {
+      this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version);
 
-    if (this.selectedUser.trainingStatus === 'none') {
-      this.selectedUser.trainingStatus = 'upToDate';
-      this.userService.updateUser(this.selectedUser, false);
+      if (this.selectedUser.trainingStatus === 'none') {
+        this.selectedUser.trainingStatus = 'upToDate';
+        this.userService.updateUser(this.selectedUser, false);
+      }
+      this.assignableTrainings.splice(this.assignableTrainings.indexOf(this.selectedTrainingId), 1);
+      this.userTrainingService.getUTForUser(this.userIdSelected);
+    } else {
+      this.userTrainingService.bulkAssignTraining(this.userIdsSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version);
     }
-
     this.showUserTrainingModal = false;
-    this.assignableTrainings.splice(this.assignableTrainings.indexOf(this.selectedTrainingId), 1);
     this.selectedTrainingId = null;
-    this.userTrainingService.getUTForUser(this.userIdSelected);
   }
 
   onDragStart(event) {

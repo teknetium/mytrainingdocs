@@ -344,12 +344,13 @@ export class UserService {
   buildMyOrgUserList(user: UserModel, allOrgUsers: UserModel[]) {
     this.myOrgUserHash[user._id] = user;
     this.myOrgUsers.push(user);
+    this.userTrainingService.initUserTrainingsForUser(user._id);
     let level = 1;
-    this.addDrirectReportsToMyOrgUserHash(user, level++);
+    this.addDirectReportsToMyOrgUserHash(user, level++);
 
   }
 
-  addDrirectReportsToMyOrgUserHash(user: UserModel, level: number) {
+  addDirectReportsToMyOrgUserHash(user: UserModel, level: number) {
     if (level > this.maxLevel) {
       this.maxLevel = level;
     }
@@ -358,8 +359,9 @@ export class UserService {
       let drUser = this.allOrgUserHash[userId];
       this.myOrgUserHash[drUser._id] = drUser;
       this.myOrgUsers.push(drUser);
+      this.userTrainingService.initUserTrainingsForUser(drUser._id);
       if (drUser.directReports.length > 0) {
-        this.addDrirectReportsToMyOrgUserHash(drUser, level);
+        this.addDirectReportsToMyOrgUserHash(drUser, level);
       }
     }
   }

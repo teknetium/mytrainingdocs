@@ -72,7 +72,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     console.log('updateUserSettings', event, property, value);
     this.authenticatedUser.settings[property] = value;
     this.userService.updateUser(this.authenticatedUser, false);
-    this.userService.selectAuthenticatedUser();
+//    this.userService.selectAuthenticatedUser();
   }
 
 }

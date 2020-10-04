@@ -71,12 +71,6 @@
                 style="position:absolute;top:70px;right:20px;text-align: center;font-size:24px;margin-bottom:20px;z-index:1;"
                 joyrideStep="Step1-orgChart" stepPosition="top" title="Org Chart"
                 text="If you have a large organization, you are going to love this feature.  Don't be shy...click around and see what there is to see.">
-                <i nz-icon nzType="zoom-in" nzTheme="outline"
-                    style="cursor:pointer;float:right;font-size:20px;color:#aaaaaa;margin-top:10px" (click)="zoomIn()"
-                    nz-tooltip nzTooltipTitle="Zoom In"></i>
-                <i nz-icon nzType="zoom-out" nzTheme="outline"
-                    style="cursor:pointer;float:right;font-size:20px;color:#aaaaaa;margin-top:10px;margin-right:20px;"
-                    nz-tooltip nzTooltipTitle="Zoom Out" (click)="zoomOut()"></i>
             </div>
         </div>
         <!--
@@ -85,12 +79,12 @@
                 (click)="startTour('orgChart')" nz-tooltip nzTooltipTitle="A little help"></i>
                 -->
         <div *ngIf="showOrgChart === 'true'" style="position:relative;z-index:1;">
-            <div style="position:absolute;top:20px;left:0;">
-                <a nz-dropdown [nzDropdownMenu]="legendMenu" nzTrigger="hover" nzPlacement="bottomRight"
-                    style="cursor:pointer;font-size:14px;color:blue;">Legend
-                    <i nz-icon nzType="down" style="margin-left:2px;font-size:12px;vertical-align: middle;margin-right:10px;"></i>
-                </a>
-                <nz-dropdown-menu #legendMenu="nzDropdownMenu" style="z-index:100010;">
+            <div style="position:absolute;top:10px;left:0;width:100%">
+                <button nz-button nz-dropdown [nzDropdownMenu]="legendMenu" nzTrigger="hover" nzPlacement="bottomRight">
+                    Legend
+                    <i nz-icon nzType="down"></i>
+                </button>
+                <nz-dropdown-menu #legendMenu="nzDropdownMenu" style="display: table-cell;z-index:100010;">
                     <ul nz-menu nzSelectable>
                         <li>
                             <div class="legend-item" (mouseenter)="setLegendHoverItem('individualContributor')"
@@ -98,7 +92,7 @@
                                 <i class="fas fa-user"
                                     style="font-size:16px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"
                                     nz-tooltip [nzTooltipTitle]=""></i>
-                                <span style="font-size:10px;">Individual Contributor</span>
+                                <span style="font-size:12px;">Individual Contributor</span>
                             </div>
                         </li>
                         <li>
@@ -107,7 +101,7 @@
                                 <i class="fas fa-user-tie"
                                     style="font-size:16px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"
                                     nz-tooltip [nzTooltipTitle]=""></i>
-                                <span style="font-size:10px;">Supervisor</span>
+                                <span style="font-size:12px;">Supervisor</span>
                             </div>
                         </li>
                         <li>
@@ -116,7 +110,7 @@
                                 <i class="fas fa-user-crown"
                                     style="font-size:16px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"
                                     nz-tooltip [nzTooltipTitle]=""></i>
-                                <span style="font-size:10px;">Customer</span>
+                                <span style="font-size:12px;">Customer</span>
                             </div>
                         </li>
                         <li>
@@ -125,7 +119,7 @@
                                 <i class="fas fa-user-cowboy"
                                     style="font-size:16px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"
                                     nz-tooltip [nzTooltipTitle]=""></i>
-                                <span style="font-size:10px;">Volunteer</span>
+                                <span style="font-size:12px;">Volunteer</span>
                             </div>
                         </li>
                         <li>
@@ -133,7 +127,7 @@
                                 <i class="fas fa-circle"
                                     style="font-size:12px;color:#000000;z-index:1;display:inline-block;line-height:18px;margin-right:10px;"
                                     nz-tooltip [nzTooltipTitle]=""></i>
-                                <span style="font-size:10px;">No Trainings Assigned</span>
+                                <span style="font-size:12px;">No Trainings Assigned</span>
                             </div>
                         </li>
                         <li>
@@ -141,7 +135,7 @@
                                 <i class="fas fa-circle"
                                     style="font-size:12px;color:#46bd15;z-index:1;display:inline-block;line-height:18px;margin-right:10px;"
                                     nz-tooltip [nzTooltipTitle]=""></i>
-                                <span style="font-size:10px;">All Traingings are Up To
+                                <span style="font-size:12px;">All Traingings are Up To
                                     Date</span>
                             </div>
                         </li>
@@ -151,7 +145,7 @@
                                 <i class="fas fa-circle"
                                     style="font-size:12px;color:red;z-index:1;display:inline-block;line-height:18px;margin-right:10px;"
                                     nz-tooltip [nzTooltipTitle]=""></i>
-                                <span style="font-size:10px;">At Least One Trainging is
+                                <span style="font-size:12px;">At Least One Trainging is
                                     Past
                                     Due</span>
                             </div>
@@ -159,21 +153,67 @@
 
                     </ul>
                 </nz-dropdown-menu>
-                <label nz-checkbox ngDefaultControl [(ngModel)]="includeFullName"
-                    style="cursor:pointer;font-size:12px;color:#000000;z-index:1;margin-left:10px;" nz-tooltip
-                    nzTooltipTitle="">Show
-                    Names for Individual Contributors
-                </label>
-                <nz-select ngDefaultControl nzMode="tags" nzSize="small" nzPlaceHolder="Job Titles to Highlight"
-                    [(ngModel)]="listOfFilterJobTitles" (ngModelChange)="orgChartFilterChanged($event)"
-                    style="width:400px;">
+                <nz-select style="width:150px;margin-left:10px;" nzPlaceHolder="Selection Mode"
+                    [(ngModel)]="selectionMode" (ngModelChange)="setSelectionMode($event)" nz-tooltip
+                    nzTooltipTitle="Selection Mode">
+                    <nz-option nzLabel="Individual" nzValue="Individual"></nz-option>
+                    <nz-option nzLabel="Org" nzValue="Org"></nz-option>
+                    <nz-option nzLabel="Job Title" nzValue="JobTitle"></nz-option>
+                    <nz-option nzLabel="User Type" nzValue="UserType"></nz-option>
+                    <nz-option nzLabel="Training" nzValue="Training"></nz-option>
+                </nz-select>
+                <nz-select *ngIf="selectionMode === 'JobTitle'" ngDefaultControl nzMode="tags"
+                    nzPlaceHolder="Select Job Titles" [(ngModel)]="currentJobTitlesSelected"
+                    (ngModelChange)="jobTitleSelectedChanged($event)" style="width:250px;margin-left:10px;">
                     <nz-option *ngFor="let jobTitle of listOfJobTitles" [nzLabel]="jobTitle.text"
                         [nzValue]="jobTitle.value"></nz-option>
                 </nz-select>
-                <!--
+                <nz-select *ngIf="selectionMode === 'Training'" ngDefaultControl nzPlaceHolder="Select a Training"
+                    [(ngModel)]="currentTrainingSelected" (ngModelChange)="trainingSelectedChanged($event)"
+                    style="width:250px;margin-left:10px;">
+                    <nz-option *ngFor="let training of listOfTrainingTitles" [nzLabel]="training.text"
+                        [nzValue]="training.value">
+                    </nz-option>
+                </nz-select>
+                <nz-radio-group *ngIf="selectionMode === 'UserType'" [(ngModel)]="currentUserType"
+                    (ngModelChange)="userTypeSelectedChanged($event)" style="margin-left:10px;">
+                    <label nz-radio-button nzValue="individualContributor" nz-tooltip
+                        nzTooltipTitle="Individual Contributor">
+                        <i class="fas fa-fw fa-user"></i>
+                    </label>
+                    <label nz-radio-button nzValue="supervisor" nz-tooltip nzTooltipTitle="Supervisor">
+                        <i class="fas fa-fw fa-user-tie"></i>
+                    </label>
+                    <label nz-radio-button nzValue="volunteer" nz-tooltip nzTooltipTitle="Volunteer">
+                        <i class="fas fa-fw fa-user-cowboy"></i>
+                    </label>
+                    <label nz-radio-button nzValue="cusotmer" nz-tooltip nzTooltipTitle="Customer">
+                        <i class="fas fa-fw fa-user-crown"></i>
+                    </label>
+                </nz-radio-group>
+                <div style="padding-top:10px;float:right;">
+                    <div *ngIf="selectionMode !== 'Individual'" class="selected-node"
+                        style="padding:0 3px;margin-left:10px;display:inline-block;">
+                        {{userIdsSelected.length}} selected
+                    </div>
+                    <button *ngIf="selectionMode !== 'Individual'" nz-button nzSize="small" nzShape="round"
+                        nzType="primary" [disabled]="userIdsSelected.length === 0"
+                        style="display:inline-block;margin-left:10px;" (click)="showUserTrainingModal = true">Assign
+                        Training</button>
+                    <label nz-checkbox ngDefaultControl [(ngModel)]="includeFullName"
+                        style="display:inline-block;cursor:pointer;font-size:12px;color:#000000;z-index:1;margin-left:10px;"
+                        nz-tooltip nzTooltipTitle="">Show
+                        Names
+                    </label>
+                    <div style="margin-left:10px;display:inline-block;">
+                        <i nz-icon nzType="zoom-in" nzTheme="outline"
+                            style="cursor:pointer;display:inline-block;font-size:20px;margin-right:10px;" (click)="zoomIn()" nz-tooltip
+                            nzTooltipTitle="Zoom In"></i>
+                        <i nz-icon nzType="zoom-out" nzTheme="outline"
+                            style="cursor:pointer;display:inline-block;font-size:20px;" nz-tooltip
+                            nzTooltipTitle="Zoom Out" (click)="zoomOut()"></i>
+                    </div>
                 </div>
-            </div>
-            -->
             </div>
         </div>
         <div *ngIf="showOrgChart !== 'true'" style="padding-top:20px;">
@@ -258,10 +298,10 @@
                 <div
                     style="background-color:white;width:fit-content;height:50%;display:inline-block;white-space: nowrap;">
                     <div style="text-align: center;margin-bottom:20px;">
-                        <div style="display:inline-block;padding:5px;position:relative;border:2px solid white;"
+                        <div style="display:inline-block;padding:5px;position:relative;border:2px solid white;cursor:pointer;"
                             (mouseenter)="setAuthenticatedUserHover(true)"
                             (mouseleave)="setAuthenticatedUserHover(false)" (click)="selectUser(authenticatedUser._id)"
-                            [ngClass]="{'selected-node': userIdSelected === authenticatedUser._id, 'hover-node': userIdSelected !== authenticatedUser._id && currentHoverUid}">
+                            [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === authenticatedUser._id) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(authenticatedUser._id)), 'hover-node': userIdSelected !== authenticatedUser._id && currentHoverUid}">
                             <i [ngClass]="userTypeIconHash[authenticatedUser.userType]" style="font-size:24px;"
                                 [ngStyle]="{'color': userTrainingStatusColorHash[authenticatedUser.trainingStatus]}"></i>
                             <span [ngClass]="{'inline-block': !isVertical, 'block': isVertical}"
@@ -290,7 +330,7 @@
                                 <div (mouseenter)="setHoverData(dr)" (mouseleave)="setHoverData(null)"
                                     (click)="selectUser(dr)" class="org-chart-node"
                                     [ngStyle]="{'padding.px': orgChartPadding}"
-                                    [ngClass]="{'supervisor-node': myOrgUserHash[dr]?.userType === 'supervisor','selected-node': userIdSelected === dr, 'hover-node': userIdSelected !== dr && allActive || dr === currentHoverUid || orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr)}">
+                                    [ngClass]="{'supervisor-node': myOrgUserHash[dr]?.userType === 'supervisor','selected-node': (selectionMode === 'Individual' && userIdSelected === dr) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr)), 'hover-node': userIdSelected !== dr && allActive || dr === currentHoverUid || orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr)}">
                                     <div
                                         [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr]?.jobTitle)) || currentLegendItem === myOrgUserHash[dr]?.userType || currentLegendItem === myOrgUserHash[dr]?.trainingStatus}">
                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
@@ -324,7 +364,7 @@
                                             <div (mouseenter)="setHoverData(dr2)" (mouseleave)="setHoverData(null)"
                                                 [ngStyle]="{'padding.px': orgChartPadding}" class="org-chart-node"
                                                 (click)="selectUser(dr2)"
-                                                [ngClass]="{'supervisor-node': myOrgUserHash[dr2]?.userType === 'supervisor','selected-node': userIdSelected === dr2, 'hover-node': userIdSelected !== dr2 && allActive || dr2 === currentHoverUid || orgChartNodeHash[dr2]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2)}">
+                                                [ngClass]="{'supervisor-node': myOrgUserHash[dr2]?.userType === 'supervisor','selected-node': (selectionMode === 'Individual' && userIdSelected === dr2) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr2)) , 'hover-node': userIdSelected !== dr2 && allActive || dr2 === currentHoverUid || orgChartNodeHash[dr2]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2)}">
                                                 <div
                                                     [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr2]?.jobTitle)) || currentLegendItem === myOrgUserHash[dr2]?.userType || currentLegendItem === myOrgUserHash[dr2]?.trainingStatus}">
                                                     <i [ngClass]="userTypeIconHash[myOrgUserHash[dr2]?.userType]"
@@ -360,7 +400,7 @@
                                                             [ngStyle]="{'padding.px': orgChartPadding}"
                                                             class="org-chart-node" (mouseleave)="setHoverData(null)"
                                                             (click)="selectUser(dr3)"
-                                                            [ngClass]="{'supervisor-node': myOrgUserHash[dr3]?.userType === 'supervisor','selected-node': userIdSelected === dr3, 'hover-node': userIdSelected !== dr3 && allActive || dr3 === currentHoverUid || orgChartNodeHash[dr3]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr3)}">
+                                                            [ngClass]="{'supervisor-node': myOrgUserHash[dr3]?.userType === 'supervisor','selected-node': (selectionMode === 'Individual' && userIdSelected === dr3) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr3)), 'hover-node': userIdSelected !== dr3 && allActive || dr3 === currentHoverUid || orgChartNodeHash[dr3]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr3)}">
                                                             <div *ngIf="myOrgUserHash[dr3]?.userType !== 'supervisor'"
                                                                 [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr3]?.jobTitle)) || currentLegendItem === myOrgUserHash[dr3]?.userType|| currentLegendItem === myOrgUserHash[dr3]?.trainingStatus}">
                                                                 <i [ngClass]="userTypeIconHash[myOrgUserHash[dr3]?.userType]"
@@ -402,7 +442,7 @@
                                                                         [ngStyle]="{'padding.px': orgChartPadding}"
                                                                         (mouseleave)="setHoverData(null)"
                                                                         class="org-chart-node" (click)="selectUser(dr4)"
-                                                                        [ngClass]="{'supervisor-node': myOrgUserHash[dr4]?.userType === 'supervisor','selected-node': userIdSelected === dr4, 'hover-node': userIdSelected !== dr4 && allActive || dr4 === currentHoverUid || orgChartNodeHash[dr4]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr4)}">
+                                                                        [ngClass]="{'supervisor-node': myOrgUserHash[dr4]?.userType === 'supervisor','selected-node': (selectionMode === 'Individual' && userIdSelected === dr4) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr4)), 'hover-node': userIdSelected !== dr4 && allActive || dr4 === currentHoverUid || orgChartNodeHash[dr4]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr4)}">
                                                                         <div *ngIf="myOrgUserHash[dr4]?.userType !== 'supervisor'"
                                                                             [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr4]?.jobTitle)) || currentLegendItem === myOrgUserHash[dr4]?.userType || currentLegendItem === myOrgUserHash[dr4]?.trainingStatus}">
                                                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
@@ -446,7 +486,7 @@
                                                                                     (mouseleave)="setHoverData(null)"
                                                                                     (click)="selectUser(dr5)"
                                                                                     class="org-chart-node"
-                                                                                    [ngClass]="{'selected-node': userIdSelected === dr5, 'hover-node': userIdSelected !== dr5 && allActive || dr5 === currentHoverUid || orgChartNodeHash[dr5]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr5)}">
+                                                                                    [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr5) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr5)), 'hover-node': userIdSelected !== dr5 && allActive || dr5 === currentHoverUid || orgChartNodeHash[dr5]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr5)}">
                                                                                     <div *ngIf="myOrgUserHash[dr5]?.userType !== 'supervisor'"
                                                                                         [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr5]?.jobTitle)) || currentLegendItem === myOrgUserHash[dr5]?.userType || currentLegendItem === myOrgUserHash[dr5]?.trainingStatus}">
                                                                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr5]?.userType]"
@@ -492,7 +532,7 @@
                                                                                                 [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                 (mouseleave)="setHoverData(null)"
                                                                                                 (click)="selectUser(dr6)"
-                                                                                                [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': userIdSelected === dr6, 'hover-node': userIdSelected !== dr6 && allActive || dr6 === currentHoverUid || orgChartNodeHash[dr6]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr6)}">
+                                                                                                [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': (selectionMode === 'Individual' && userIdSelected === dr6) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr6)), 'hover-node': userIdSelected !== dr6 && allActive || dr6 === currentHoverUid || orgChartNodeHash[dr6]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr6)}">
                                                                                                 <div *ngIf="myOrgUserHash[dr6]?.userType !== 'supervisor'"
                                                                                                     [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr6]?.jobTitle)) || currentLegendItem === myOrgUserHash[dr6]?.userType}">
                                                                                                     <i [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
@@ -534,7 +574,7 @@
                                                                                                             [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                             (mouseleave)="setHoverData(null)"
                                                                                                             (click)="selectUser(dr7)"
-                                                                                                            [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': userIdSelected === dr7,  'hover-node': userIdSelected !== dr7 && allActive || dr7 === currentHoverUid || orgChartNodeHash[dr7]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr7)}">
+                                                                                                            [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': (selectionMode === 'Individual' && userIdSelected === dr7) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr7)),  'hover-node': userIdSelected !== dr7 && allActive || dr7 === currentHoverUid || orgChartNodeHash[dr7]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr7)}">
                                                                                                             <div
                                                                                                                 [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr7]?.jobTitle)) || currentLegendItem === myOrgUserHash[dr7]?.userType}">
                                                                                                                 <i [ngClass]="userTypeIconHash[myOrgUserHash[dr7]?.userType]"
@@ -572,7 +612,7 @@
                                                                                                                         [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                                         (mouseleave)="setHoverData(null)"
                                                                                                                         (click)="selectUser(dr8)"
-                                                                                                                        [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical, 'selected-node': userIdSelected === dr8, 'hover-node': userIdSelected !== dr8 && allActive || dr8 === currentHoverUid || orgChartNodeHash[dr8]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr8)}">
+                                                                                                                        [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical, 'selected-node': (selectionMode === 'Individual' && userIdSelected === dr8) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr8)), 'hover-node': userIdSelected !== dr8 && allActive || dr8 === currentHoverUid || orgChartNodeHash[dr8]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr8)}">
                                                                                                                         <div
                                                                                                                             [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr8]?.jobTitle)) || currentLegendItem === myOrgUserHash[dr8]?.userType}">
                                                                                                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr8]?.userType]"
@@ -612,45 +652,6 @@
                 </div>
             </div>
         </div>
-        <!--
-        <ng-template #titleTemplate let-dr>
-            <i [ngClass]="userTypeIconHash[myOrgUserHash[dr2]?.userType]" style="display:inline-block;"
-                [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr2]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
-            <span
-                *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor' || myOrgUserHash[dr2]?.userType === 'individualContributor' && includeFullName"
-                style="display:block;" [ngStyle]="{'font-size.px': textFontSize}">
-                {{orgChartNodeHash[dr2]?.fName}}<br>{{orgChartNodeHash[dr2]?.lName}}
-            </span>
-        </ng-template>
-        <ng-template #contentTemplate>
-            <div *ngFor="let ut of uidUTHash[dr2]" style="float:right;margin-left:10px;">
-                <i [ngClass]="allTrainingIdHash[ut.tid]?.iconClass"
-                    style="font-size:20px;text-align: center;vertical-align: middle;" nz-tooltip
-                    [nzTooltipTitle]="allTrainingIdHash[ut.tid]?.title"
-                    [ngStyle]="{'color': allTrainingIdHash[ut.tid]?.iconColor}">
-                </i>
-            </div>
-        </ng-template>
-        <ng-template #titleTemplate8>
-            <i [ngClass]="userTypeIconHash[myOrgUserHash[dr8]?.userType]" style="display:inline-block;"
-                [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr8]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
-            <span
-                *ngIf="myOrgUserHash[dr8]?.userType === 'supervisor' || myOrgUserHash[dr8]?.userType === 'individualContributor' && includeFullName"
-                style="display:block;" [ngStyle]="{'font-size.px': textFontSize}">
-                {{orgChartNodeHash[dr8]?.fName}}<br>{{orgChartNodeHash[dr8]?.lName}}
-            </span>
-        </ng-template>
-        <ng-template #contentTemplate8>
-            <i nz-icon nzType="check"></i> Content
-            <div *ngFor="let ut of uidUTHash[dr8]" style="float:right;margin-left:10px;">
-                <i [ngClass]="allTrainingIdHash[ut.tid]?.iconClass"
-                    style="font-size:20px;text-align: center;vertical-align: middle;" nz-tooltip
-                    [nzTooltipTitle]="allTrainingIdHash[ut.tid]?.title"
-                    [ngStyle]="{'color': allTrainingIdHash[ut.tid]?.iconColor}">
-                </i>
-            </div>
-        </ng-template>
--->
         <div style="position:absolute;left:0;bottom:0;">
             <i nz-icon nzType="menu-unfold" style="font-size:32px;cursor:pointer;" (click)="openUserDetails()"
                 nz-tooltip nzTooltipTitle="Show the User Detail panel"></i>
@@ -710,21 +711,6 @@
                 </div>
             </div>
         </div>
-        <!--
-        <nz-card nzHoverable="true" [nzActions]="[actionEdit, actionAssign, actionResend, actionDelete]"
-            style="background-color: #fffbdf;border:2px solid #eaab10;padding:0 20px;position:absolute;bottom:-50px;left:0;right:0;z-index: 11;">
-            <nz-card-meta [nzTitle]="cardTitle">
-            </nz-card-meta>
-
-            <div *ngIf="selectedUser" joyrideStep="Step1-memberDetails" stepPosition="left" title="Member Details"
-                style="position: relative;display:block;border:1px solid #eaab10;"
-                text="This is where the rubber hits the road!  Assign trainings, update profile information, set due dates, etc...">
-                <div style="width:100%;text-align: left;background-color: white;">
-                    <app-user-trainings mode="admin" logSession="off"></app-user-trainings>
-                </div>
-            </div>
-        </nz-card>
-        -->
         <nz-drawer [nzClosable]="false" [nzMaskClosable]="true" [nzVisible]="userPanelVisible" nzPlacement="right"
             nzTitle="User Profile" [nzWidth]="700">
             <div *ngIf="selectedUser" style="display:block;width:100%;">
@@ -864,7 +850,7 @@
                 </div>
             </div>
         </nz-drawer>
-        <nz-modal [nzVisible]="showUserTrainingModal" nzTitle="Assign Training To User"
+        <nz-modal [nzVisible]="showUserTrainingModal" nzTitle="Assign Training"
             [nzCancelDisabled]="assignableTrainings.length === 0" (nzOnCancel)="handleCancelUserTraining()"
             [nzOkDisabled]="!selectedTrainingId" (nzOnOk)="handleAssignUserTraining()"
             style="width:500px;padding:10px;float:left;">
@@ -879,7 +865,7 @@
                         You have already assigned all trainings to this user!
                     </div>
                     <div *ngIf="assignableTrainings.length > 0">
-                        Select the training you would like to assign to this user.
+                        Select the training you would like to assign.
                     </div>
                     <div *ngFor="let training of assignableTrainings" class="all-training-list-entry"
                         style="padding:10px 20px;width:100%;"

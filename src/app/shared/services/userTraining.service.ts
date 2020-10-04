@@ -231,8 +231,7 @@ export class UserTrainingService {
 
 
   assignTraining(uid: string, tid: string, teamId: string, version: string) {
-    console.log('assignTraining ---------------', teamId, version);
-    const userTraining = <UserTrainingModel>{
+    let userTraining:UserTrainingModel = {
       _id: String(new Date().getTime()),
       tid: tid,
       uid: uid,
@@ -246,14 +245,66 @@ export class UserTrainingService {
       certImage: null
     };
     this.postUserTraining$(userTraining).subscribe(userTraining => {
-      this.getUTForUser$(uid).subscribe(userTrainings => {
+      this.getUTForUser$(userTraining.uid).subscribe(userTrainings => {
         console.log('userTrainingService: assignTraining', userTrainings);
         this.userTrainings$BS.next(userTrainings);
-        this.uidUTHash[uid] = userTrainings;
+        this.uidUTHash[userTraining.uid] = userTrainings;
         this.uidUTHashBS$.next(this.uidUTHash);
         this.allUserTrainingHash[userTraining._id] = userTraining;
       })
     })
+  }
+
+  bulkAssignTraining(uids: string[], tid: string, teamId: string, version: string) {
+    let userTrainings: UserTrainingModel[] = [];
+    let id = String(new Date().getTime());
+    let dueDate = new Date().getTime() + 1209600000;
+    let counter = 0;
+    let found = false;
+    for (let uid of uids) {
+      found = false;
+      let utList = this.uidUTHash[uid];
+      if (!utList) {
+        utList = [];
+      }
+      for (let ut of utList) {
+        if (ut.tid === tid) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        let uT: UserTrainingModel = {
+          _id: id + counter,
+          tid: tid,
+          uid: uid,
+          teamId: teamId,
+          status: 'upToDate',
+          trainingVersion: version,
+          dueDate: dueDate,
+          dateCompleted: 0,
+          timeToDate: 0,
+          assessmentResponses: [],
+          certImage: null
+        };
+        userTrainings.push(uT);
+        counter++;
+      }
+    }
+    this.postBulkUserTraining$(userTrainings).subscribe(userTrainingList => {
+      for (let ut of userTrainingList) {
+
+        if (this.uidUTHash[ut.uid]) {
+          this.uidUTHash[ut.uid].push(ut);
+        } else {
+          this.uidUTHash[ut.uid] = [ut];
+        }
+        this.userTrainings$BS.next(this.uidUTHash[ut.uid]);
+        this.allUserTrainingHash[ut._id] = ut;
+      }
+      console.log('bulk assign returns ...', userTrainingList);
+      this.uidUTHashBS$.next(this.uidUTHash);
+    });
   }
 
   saveUserTraining(ut: UserTrainingModel): void {
@@ -337,6 +388,15 @@ export class UserTrainingService {
   postUserTraining$(userTraining: UserTrainingModel): Observable<UserTrainingModel> {
     return this.http
       .post<UserTrainingModel>(`${ENV.BASE_API}usertraining/new/`, userTraining, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  postBulkUserTraining$(userTrainings: UserTrainingModel[]): Observable<UserTrainingModel[]> {
+    return this.http
+      .post<UserTrainingModel>(`${ENV.BASE_API}usertraining/newbulk/`, userTrainings, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
       .pipe(
