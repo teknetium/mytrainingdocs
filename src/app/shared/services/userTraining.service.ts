@@ -189,7 +189,24 @@ export class UserTrainingService {
       this.allUserTrainingHash
     }
   */
+  
 
+/*
+  deleteUTForTraining(tid: string) {
+    let uids: string[] = [];
+    let utIds: string[] = [];
+    this.getUTForTraining$(tid).subscribe(uts => {
+      if (uts.length > 0) {
+        for (let ut of uts) {
+          utIds.push(ut._id);
+        }
+        this.deleteUTs$(utIds);
+      }
+      this.userTrainingForTidBS$.next(uts);
+      this.usersBS$.next(uids);
+    })
+  }
+  */
   getUTForTraining(tid: string) {
     let uids: string[] = [];
     this.getUTForTraining$(tid).subscribe(uts => {

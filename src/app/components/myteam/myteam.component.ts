@@ -1128,12 +1128,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   currentJobTitleFilters = [];
   currentJobTitlesSelected = [];
   maxLevel$: Observable<number>;
-  currentLegendItem = '';
+  currentHighlightItem = '';
   selectionMode = 'Individual';
   jobTitleMatchCnt = 0;
   currentUserType = '';
   currentTrainingSelected = '';
   listOfTrainingTitles = [];
+  legendValue = null;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1429,6 +1430,72 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.userFail$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userFail => {
 
     })
+  }
+
+  setHightlightItem(item: string) {
+    console.log('setHiglightItem ', item);
+    switch (item) {
+      case 'fas fa-user':
+        this.currentHighlightItem = 'individualContributor';
+        break;
+      case 'fas fa-user-tie':
+        this.currentHighlightItem = 'supervisor';
+        break;
+      case 'Volunteer':
+        this.currentHighlightItem = 'volunteer';
+        break;
+      case 'Customer':
+        this.currentHighlightItem = 'customer';
+        break;
+      case 'Bad Email':
+        this.currentHighlightItem = 'badEmail';
+        break;
+      case 'Supervisor Not Found':
+        this.currentHighlightItem = 'supervisorNotFound';
+        break;
+      case 'User Account Pending':
+        this.currentHighlightItem = 'userAccountPending';
+        break;
+      case 'No Trainings Assigned':
+        this.currentHighlightItem = 'none';
+        break;
+      case 'All Traingings are Up To Date':
+        this.currentHighlightItem = 'upToDate';
+        break;
+      case 'At Least One Trainging is Past Due':
+        this.currentHighlightItem = 'pastDue';
+        break;
+      case 'fas fa-flower-tulip':
+        this.currentHighlightItem = 'xxx';
+        break;
+    }
+  }
+
+  getColor(item: string) {
+    switch (item) {
+      case 'Individual Contributor':
+        return 'black';
+      case 'Supervisor':
+        return 'black';
+      case 'Volunteer':
+        return 'black';
+      case 'Customer':
+        return 'black';
+      case 'Bad Email':
+        return 'red';
+      case 'Supervisor Not Found':
+        return 'red';
+      case 'User Account Pending':
+        return 'red';
+      case 'No Trainings Assigned':
+        return 'black';
+      case 'All Traingings are Up To Date':
+        return '#46bd15';
+      case 'At Least One Trainging is Past Due':
+        return 'red';
+      case 'Clear Highlight':
+        return 'orange';
+    }
   }
 
   resendRegistrationMsg(to: string, from: string) {
@@ -2121,6 +2188,29 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.userService.selectAuthenticatedUser();
   }
 
+  confirmUserTrainingDelete() {
+    for (let uid of this.userIdsSelected) {
+      let utList = this.uidUTHash[uid];
+      if (utList.length === 1) {
+        this.userService.setUserStatusNone(uid);
+      } else {
+        let anotherPastDueFound = false;
+        for (let ut of utList) {
+          if (ut.tid !== this.currentTrainingSelected && ut.status === 'pastDue') {
+            this.userService.setUserStatusPastDue(uid);
+            anotherPastDueFound = true;
+            break;
+          }
+        }
+        if (!anotherPastDueFound) {
+          this.userService.setUserStatusUpToDate(uid);
+        }
+      }
+
+      this.userTrainingService.deleteUserTrainingByTidUid(this.currentTrainingSelected, uid);
+    }
+  }
+
   handleAssignUserTraining() {
     if (!this.selectedTrainingId || this.assignableTrainings.length === 0) {
       this.showUserTrainingModal = false;
@@ -2179,8 +2269,5 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.joyrideService.startTour({ steps: steps });
   }
 
-  setLegendHoverItem(item) {
-    this.currentLegendItem = item;
-  }
 
 }

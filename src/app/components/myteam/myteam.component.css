@@ -4,6 +4,12 @@
     border-radius: 50%;
 }
 
+.no-highlight {
+    border: 2px solid white !important;
+    background: rgba(255, 255, 255, 1.0);
+    border-radius: 50%;
+}
+
 .legend-item {
     width: 100%;
     padding: 5px;
