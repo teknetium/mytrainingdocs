@@ -58,9 +58,9 @@
                 <div style="float:right;margin-left:20px;">
                     <nz-radio-group [(ngModel)]="showOrgChart" (ngModelChange)="toggleMainView($event)">
                         <label nz-radio-button nzValue="true" nz-tooltip nzTooltipTitle="Org Chart"><i nz-icon
-                                nzType="apartment" nzTheme="outline" style="font-size:18px;"></i></label>
+                                nzType="apartment" nzTheme="outline" style="font-size:16px;"></i></label>
                         <label nz-radio-button nzValue="false" nz-tooltip nzTooltipTitle="List"><i nz-icon
-                                nzType="unordered-list" nzTheme="outline" style="font-size:18px;"></i></label>
+                                nzType="unordered-list" nzTheme="outline" style="font-size:16px;"></i></label>
                     </nz-radio-group>
                 </div>
                 <div style="clear:both;"></div>
@@ -82,51 +82,54 @@
             <div style="position:absolute;top:10px;left:0;width:100%">
                 <div style="float:left;">
                     <span style="display:block;font-size:14px;font-weight:500;">Highlight</span>
-                    <nz-select [(ngModel)]="legendValue" nzPlaceHolder="Select Item To Highlight" style="width:300px;"
-                        [nzCustomTemplate]="defaultTemplate" (ngModelChange)="setHightlightItem($event)" >
-                            <nz-option nzCustomContent nzValue="fas fa-flower-tulip" nzLabel="Clear Highlight">
-                                <i class="fas fa-flower-tulip" style="font-size:12px;color:orange;z-index:1;display:inline-block;margin-right:10px;"></i>
-                                <span style="font-size:12px;">Clear Highlight</span>
-                            </nz-option>
+                    <nz-select [(ngModel)]="legendValue" nzAllowClear [nzOptionHeightPx]="600" [nzOptionOverflowSize]="600" nzPlaceHolder="Select Item To Highlight" style="width:300px;"
+                        [nzCustomTemplate]="defaultTemplate" (ngModelChange)="setHightlightItem($event)">
+                        <!--
+                        <nz-option nzCustomContent nzValue="fas fa-flower-tulip" nzLabel="Clear Highlight">
+                            <i class="fas fa-flower-tulip"
+                                style="font-size:14px;color:orange;z-index:1;display:inline-block;margin-right:10px;"></i>
+                            <span style="font-size:12px;">Clear Highlight</span>
+                        </nz-option>
+                        -->
                         <nz-option-group nzLabel="User Type">
                             <nz-option nzCustomContent nzValue="fas fa-user" nzLabel="Individual Contributor">
                                 <i class="fas fa-user"
-                                    style="font-size:12px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
+                                    style="font-size:14px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
                                 <span style="font-size:12px;">Individual Contributor</span>
                             </nz-option>
                             <nz-option nzCustomContent nzValue="fas fa-user-tie" nzLabel="Supervisor">
                                 <i class="fas fa-user-tie"
-                                    style="font-size:12px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
+                                    style="font-size:14px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
                                 <span style="font-size:12px;">Supervisor</span>
                             </nz-option>
                             <nz-option nzCustomContent nzValue="fas fa-user-cowboy" nzLabel="Volunteer">
                                 <i class="fas fa-user-cowboy"
-                                    style="font-size:12px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
+                                    style="font-size:14px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
                                 <span style="font-size:12px;">Volunteer</span>
                             </nz-option>
                             <nz-option nzCustomContent nzValue="fas fa-user-crown" nzLabel="Customer">
                                 <i class="fas fa-user-crown"
-                                    style="font-size:12px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
+                                    style="font-size:14px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
                                 <span style="font-size:12px;">Customer</span>
                             </nz-option>
                         </nz-option-group>
                         <nz-option-group nzLabel="User Data Error">
                             <nz-option nzCustomContent nzValue="fas fa-at" nzLabel="Bad Email">
                                 <i class="fas fa-at"
-                                    style="font-size:10px;color:red;z-index:1;display:inline-block;line-height:18px;margin-right:10px;">
+                                    style="font-size:14px;color:red;z-index:1;display:inline-block;line-height:18px;margin-right:10px;">
                                 </i>
                                 <span style="font-size:12px;">Bad Email</span>
                             </nz-option>
                             <nz-option nzCustomContent nzValue="fas fa-sitemap" nzLabel="Supervisor Not Found">
                                 <i class="fas fa-sitemap"
-                                    style="font-size:10px;color:red;z-index:1;display:inline-block;line-height:18px;margin-right:10px;">
+                                    style="font-size:14px;color:red;z-index:1;display:inline-block;line-height:18px;margin-right:10px;">
                                 </i>
                                 <span style="font-size:12px;">No Supervisor Found</span>
                             </nz-option>
                             <nz-option nzCustomContent nzValue="fas fa-exclamation-triangle"
                                 nzLabel="User Account Pending">
                                 <i class="fas fa-exclamation-triangle"
-                                    style="font-size:10px;color:red;z-index:1;display:inline-block;line-height:18px;margin-right:10px;">
+                                    style="font-size:14px;color:red;z-index:1;display:inline-block;line-height:18px;margin-right:10px;">
                                 </i>
                                 <span style="font-size:12px;">User Account Pending</span>
                             </nz-option>
@@ -134,31 +137,31 @@
                         <nz-option-group nzLabel="User Training Status">
                             <nz-option nzCustomContent nzValue="fas fa-circle" nzLabel="No Trainings Assigned">
                                 <i class="fas fa-circle"
-                                    style="font-size:10px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
+                                    style="font-size:14px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
                                 <span style="font-size:12px;">No Trainings Assigned</span>
                             </nz-option>
                             <nz-option nzCustomContent nzValue="fas fa-square" nzLabel="All Traingings are Up To Date">
                                 <i class="fas fa-square"
-                                    style="font-size:10px;color:#46bd15;z-index:1;display:inline-block;margin-right:10px;">
+                                    style="font-size:14px;color:#46bd15;z-index:1;display:inline-block;margin-right:10px;">
                                 </i>
                                 <span style="font-size:12px;">All Traingings are Up To Date</span>
                             </nz-option>
                             <nz-option nzCustomContent nzValue="fas fa-triangle"
-                                nzLabel="At Least One Trainging is Past Due">
+                                nzLabel="At Least One Training is Past Due">
                                 <i class="fas fa-triangle"
-                                    style="font-size:10px;color:red;z-index:1;display:inline-block;margin-right:10px;">
+                                    style="font-size:14px;color:red;z-index:1;display:inline-block;margin-right:10px;">
                                 </i>
-                                <span style="font-size:12px;">At Least One Trainging is Past Due</span>
+                                <span style="font-size:12px;">At Least One Training is Past Due</span>
                             </nz-option>
                         </nz-option-group>
                     </nz-select>
                     <ng-template #defaultTemplate let-selected> <i [ngClass]="selected.nzValue"
-                            [ngStyle]="{'color': getColor(selected.nzLabel)}" style="vertical-align: middle;"></i>
+                            [ngStyle]="{'color': getColor(selected.nzLabel)}" style="vertical-align: baseline;font-size:14px;"></i>
                         &nbsp;&nbsp;&nbsp;{{ selected.nzLabel }}</ng-template>
                 </div>
                 <div style="float:left;margin-left:10px">
                     <span style="display:block;font-size:14px;font-weight:500;">Selection Mode</span>
-                    <nz-select style="width:160px;" nzPlaceHolder="Selection Mode" [(ngModel)]="selectionMode"
+                    <nz-select style="width:160px;" nzAllowClear nzPlaceHolder="Select Mode" [(ngModel)]="selectionMode"
                         (ngModelChange)="setSelectionMode($event)">
                         <nz-option nzLabel="Individual" nzValue="Individual"></nz-option>
                         <nz-option nzLabel="Org" nzValue="Org"></nz-option>
@@ -169,27 +172,36 @@
                 </div>
                 <div *ngIf="selectionMode === 'JobTitle'" style="float:left;margin-left:10px">
                     <span style="display:block;font-size:14px;font-weight:500;">Job Titles</span>
-                    <nz-select ngDefaultControl nzMode="tags"
-                        nzPlaceHolder="Select Job Titles" [(ngModel)]="currentJobTitlesSelected"
-                        (ngModelChange)="jobTitleSelectedChanged($event)" style="width:250px;">
+                    <nz-select ngDefaultControl nzMode="tags" nzPlaceHolder="Select Job Titles"
+                        [(ngModel)]="currentJobTitlesSelected" (ngModelChange)="jobTitleSelectedChanged($event)"
+                        style="width:250px;">
                         <nz-option *ngFor="let jobTitle of listOfJobTitles" [nzLabel]="jobTitle.text"
                             [nzValue]="jobTitle.value"></nz-option>
                     </nz-select>
                 </div>
                 <div *ngIf="selectionMode === 'Training'" style="float:left;margin-left:10px">
                     <span style="display:block;font-size:14px;font-weight:500;">Trainings</span>
-                    <nz-select ngDefaultControl nzPlaceHolder="Select a Training"
-                        [(ngModel)]="currentTrainingSelected" (ngModelChange)="trainingSelectedChanged($event)"
+                    <nz-select [nzCustomTemplate]="trainingTemplate" nzAllowClear ngDefaultControl nzPlaceHolder="Select a Training"
+                        [(ngModel)]="currentTrainingSelected" nzOptionOverflowSize="600" (ngModelChange)="trainingSelectedChanged($event)"
                         style="width:250px;">
                         <nz-option *ngFor="let training of listOfTrainingTitles" [nzLabel]="training.text"
-                            [nzValue]="training.value">
+                            [nzValue]="training.value" nzCustomContent>
+                        <i [ngClass]="getSelectedTrainingIconClass(training.value)"
+                            [ngStyle]="{'color': getTrainingIconColor(training.value)}"
+                                style="font-size:16px;z-index:1;display:inline-block;line-height:18px;margin-right:10px;">
+                            </i>
+                            <span style="font-size:12px;">{{training.text}}</span>
                         </nz-option>
                     </nz-select>
+                    <ng-template #trainingTemplate let-selected> 
+                        <i [ngClass]="getSelectedTrainingIconClass(selected.nzValue)"
+                            [ngStyle]="{'color': getTrainingIconColor(selected.nzValue)}"
+                            style="vertical-align: baseline;font-size:16px;"></i>
+                        &nbsp;&nbsp;&nbsp;{{ selected.nzLabel }}</ng-template>
                 </div>
                 <div *ngIf="selectionMode === 'UserType'" style="float:left;margin-left:10px">
                     <span style="display:block;font-size:14px;font-weight:500;">User Types</span>
-                    <nz-radio-group [(ngModel)]="currentUserType"
-                        (ngModelChange)="userTypeSelectedChanged($event)">
+                    <nz-radio-group [(ngModel)]="currentUserType" (ngModelChange)="userTypeSelectedChanged($event)">
                         <label nz-radio-button nzValue="individualContributor" nz-tooltip
                             nzTooltipTitle="Individual Contributor">
                             <i class="fas fa-fw fa-user"></i>
@@ -205,14 +217,15 @@
                         </label>
                     </nz-radio-group>
                 </div>
-                <div style="padding-top:10px;float:right;">
+                <div style="padding-top:30px;float:right;">
                     <div *ngIf="selectionMode !== 'Individual'" class="selected-node"
                         style="padding:0 3px;margin-left:10px;display:inline-block;">
                         {{userIdsSelected.length}} selected
                     </div>
                     <button *ngIf="selectionMode !== 'Individual'" nz-button nzSize="small" nzShape="round"
                         nzType="primary" [disabled]="userIdsSelected.length === 0"
-                        style="display:inline-block;margin-left:10px;" (click)="showUserTrainingModal = true">Assign</button>
+                        style="display:inline-block;margin-left:10px;"
+                        (click)="showUserTrainingModal = true">Assign</button>
                     <button *ngIf="selectionMode === 'Training'" nz-button nzSize="small" nzShape="round"
                         [nzDanger]="'true'" [disabled]="userIdsSelected.length === 0"
                         style="display:inline-block;margin-left:10px;" nz-popconfirm
@@ -274,7 +287,7 @@
                             <td (click)="selectUser(data._id, i)" [ngClass]="{'row-selected': rowSelected === i}"
                                 style="width:10%;">
                                 <i [ngClass]="userTypeIconHash[data.userType]"
-                                    style="font-size:18px;display:inline-block;"
+                                    style="font-size:16px;display:inline-block;"
                                     [ngStyle]="{'color': userTrainingStatusColorHash[data.trainingStatus], 'font-size.px': iconFontSize}"
                                     nz-tooltip [nzTooltipTitle]=""></i>
                             </td>
@@ -320,8 +333,15 @@
                             (mouseenter)="setAuthenticatedUserHover(true)"
                             (mouseleave)="setAuthenticatedUserHover(false)" (click)="selectUser(authenticatedUser._id)"
                             [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === authenticatedUser._id) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(authenticatedUser._id)), 'hover-node': userIdSelected !== authenticatedUser._id && currentHoverUid}">
-                            <i [ngClass]="userTypeIconHash[authenticatedUser.userType]" style="font-size:24px;"
+
+                            <i 
+                                [ngClass]="userTypeIconHash[authenticatedUser.userType]" style="font-size:16px;"
+                                [ngStyle]="{'color': getStatusColor(authenticatedUser._id)}"></i>
+                            <!--
+                            <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[authenticatedUser._id]"
+                                [ngClass]="userTypeIconHash[authenticatedUser.userType]" style="font-size:24px;"
                                 [ngStyle]="{'color': userTrainingStatusColorHash[authenticatedUser.trainingStatus]}"></i>
+                                -->
                             <span [ngClass]="{'inline-block': !isVertical, 'block': isVertical}"
                                 [ngStyle]="{'font-size.px': textFontSize}">
                                 {{authenticatedUser.firstName}}<br>{{authenticatedUser.lastName}}
@@ -351,9 +371,16 @@
                                     [ngClass]="{'supervisor-node': myOrgUserHash[dr]?.userType === 'supervisor','selected-node': (selectionMode === 'Individual' && userIdSelected === dr) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr)), 'hover-node': userIdSelected !== dr && allActive || dr === currentHoverUid || orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr)}">
                                     <div
                                         [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr]?.userType || currentHighlightItem === myOrgUserHash[dr]?.trainingStatus}">
-                                        <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
-                                            style="font-size:18px;"
+
+                                        <i 
+                                            [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
+                                            style="font-size:16px;" [ngStyle]="{'color': getStatusColor(dr)}"></i>
+<!--
+                                        <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr] || !uidTidUTHash[dr][currentTrainingSelected]"
+                                            [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
+                                            style="font-size:16px;"
                                             [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr]?.trainingStatus]}"></i>
+                                            -->
                                     </div>
                                     <span
                                         *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || (myOrgUserHash[dr]?.userType === 'individualContributor' && includeFullName)"
@@ -385,9 +412,17 @@
                                                 [ngClass]="{'supervisor-node': myOrgUserHash[dr2]?.userType === 'supervisor','selected-node': (selectionMode === 'Individual' && userIdSelected === dr2) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr2)) , 'hover-node': userIdSelected !== dr2 && allActive || dr2 === currentHoverUid || orgChartNodeHash[dr2]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2)}">
                                                 <div
                                                     [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr2]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr2]?.userType || currentHighlightItem === myOrgUserHash[dr2]?.trainingStatus}">
-                                                    <i [ngClass]="userTypeIconHash[myOrgUserHash[dr2]?.userType]"
-                                                        style="font-size:18px;"
+
+                                                    <i 
+                                                        [ngClass]="userTypeIconHash[myOrgUserHash[dr2]?.userType]"
+                                                        style="font-size:16px;"
+                                                        [ngStyle]="{'color': getStatusColor(dr2)}"></i>
+<!--
+                                                    <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr2]"
+                                                        [ngClass]="userTypeIconHash[myOrgUserHash[dr2]?.userType]"
+                                                        style="font-size:16px;"
                                                         [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr2]?.trainingStatus]}"></i>
+                                                        -->
                                                 </div>
                                                 <span
                                                     *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor' || myOrgUserHash[dr2]?.userType === 'individualContributor' && includeFullName"
@@ -421,15 +456,29 @@
                                                             [ngClass]="{'supervisor-node': myOrgUserHash[dr3]?.userType === 'supervisor','selected-node': (selectionMode === 'Individual' && userIdSelected === dr3) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr3)), 'hover-node': userIdSelected !== dr3 && allActive || dr3 === currentHoverUid || orgChartNodeHash[dr3]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr3)}">
                                                             <div *ngIf="myOrgUserHash[dr3]?.userType !== 'supervisor'"
                                                                 [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr3]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr3]?.userType|| currentHighlightItem === myOrgUserHash[dr3]?.trainingStatus}">
-                                                                <i [ngClass]="userTypeIconHash[myOrgUserHash[dr3]?.userType]"
+                                                                <i 
+                                                                    [ngClass]="userTypeIconHash[myOrgUserHash[dr3].userType]"
+                                                                    style="font-size:14px;"
+                                                                    [ngStyle]="{'color': getStatusColor(dr3)}"></i>
+                                                                    <!--
+                                                                <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr3]"
+                                                                    [ngClass]="userTypeIconHash[myOrgUserHash[dr3]?.userType]"
                                                                     style="font-size: 14px;"
                                                                     [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr3]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
+                                                                    -->
                                                             </div>
                                                             <div *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor'"
                                                                 [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr3]?.jobTitle))|| currentHighlightItem === myOrgUserHash[dr3]?.userType|| currentHighlightItem === myOrgUserHash[dr3]?.trainingStatus}">
-                                                                <i [ngClass]="userTypeIconHash[myOrgUserHash[dr3]?.userType]"
+                                                                <i 
+                                                                    [ngClass]="userTypeIconHash[myOrgUserHash[dr3]?.userType]"
+                                                                    style="font-size:16px;"
+                                                                    [ngStyle]="{'color': getStatusColor(dr3)}"></i>
+                                                                    <!--
+                                                                <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr3]"
+                                                                    [ngClass]="userTypeIconHash[myOrgUserHash[dr3]?.userType]"
                                                                     style="font-size: 18px;"
                                                                     [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr3]?.trainingStatus]}"></i>
+                                                                    -->
                                                             </div>
                                                             <span
                                                                 *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor' || myOrgUserHash[dr3]?.userType === 'individualContributor' && includeFullName"
@@ -463,15 +512,29 @@
                                                                         [ngClass]="{'supervisor-node': myOrgUserHash[dr4]?.userType === 'supervisor','selected-node': (selectionMode === 'Individual' && userIdSelected === dr4) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr4)), 'hover-node': userIdSelected !== dr4 && allActive || dr4 === currentHoverUid || orgChartNodeHash[dr4]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr4)}">
                                                                         <div *ngIf="myOrgUserHash[dr4]?.userType !== 'supervisor'"
                                                                             [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr4]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr4]?.userType || currentHighlightItem === myOrgUserHash[dr4]?.trainingStatus}">
-                                                                            <i [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
+                                                                            <i 
+                                                                                [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
+                                                                                style="font-size:14px;"
+                                                                                [ngStyle]="{'color': getStatusColor(dr4)}"></i>
+                                                                                <!--
+                                                                            <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr4]"
+                                                                                [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
                                                                                 style="font-size: 14px;"
                                                                                 [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr4]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
+                                                                                -->
                                                                         </div>
                                                                         <div *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor'"
                                                                             [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr4]?.jobTitle))|| currentHighlightItem === myOrgUserHash[dr3]?.userType || currentHighlightItem === myOrgUserHash[dr4]?.trainingStatus}">
-                                                                            <i [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
+                                                                            <i 
+                                                                                [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
+                                                                                style="font-size:16px;"
+                                                                                [ngStyle]="{'color': getStatusColor(dr4)}"></i>
+                                                                                <!--
+                                                                            <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr4]"
+                                                                                [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
                                                                                 style="font-size: 18px;"
                                                                                 [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr4]?.trainingStatus]}"></i>
+                                                                                -->
                                                                         </div>
                                                                         <span
                                                                             *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor' || myOrgUserHash[dr4]?.userType === 'individualContributor' && includeFullName"
@@ -507,15 +570,29 @@
                                                                                     [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr5) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr5)), 'hover-node': userIdSelected !== dr5 && allActive || dr5 === currentHoverUid || orgChartNodeHash[dr5]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr5)}">
                                                                                     <div *ngIf="myOrgUserHash[dr5]?.userType !== 'supervisor'"
                                                                                         [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr5]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr5]?.userType || currentHighlightItem === myOrgUserHash[dr5]?.trainingStatus}">
-                                                                                        <i [ngClass]="userTypeIconHash[myOrgUserHash[dr5]?.userType]"
+                                                                                        <i
+                                                                                            [ngClass]="userTypeIconHash[myOrgUserHash[dr5]?.userType]"
+                                                                                            style="font-size:14px;"
+                                                                                            [ngStyle]="{'color': getStatusColor(dr5)}"></i>
+                                                                                            <!--
+                                                                                        <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr5]"
+                                                                                            [ngClass]="userTypeIconHash[myOrgUserHash[dr5]?.userType]"
                                                                                             style="font-size: 14px;"
                                                                                             [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr5]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
+                                                                                            -->
                                                                                     </div>
                                                                                     <div *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor'"
                                                                                         [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr5]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr5]?.userType || currentHighlightItem === myOrgUserHash[dr5]?.trainingStatus}">
-                                                                                        <i [ngClass]="userTypeIconHash[myOrgUserHash[dr5]?.userType]"
+                                                                                        <i 
+                                                                                            [ngClass]="userTypeIconHash[myOrgUserHash[dr5].userType]"
+                                                                                            style="font-size:16px;"
+                                                                                            [ngStyle]="{'color': getStatusColor(dr5)}"></i>
+                                                                                            <!--
+                                                                                        <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr5]"
+                                                                                            [ngClass]="userTypeIconHash[myOrgUserHash[dr5]?.userType]"
                                                                                             style="font-size: 18px;"
                                                                                             [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr5]?.trainingStatus]}"></i>
+                                                                                            -->
                                                                                     </div>
                                                                                     <span
                                                                                         *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor' || myOrgUserHash[dr5]?.userType === 'individualContributor' && includeFullName"
@@ -546,21 +623,35 @@
                                                                                         </div>
                                                                                         <div
                                                                                             style="text-align: center;">
-                                                                                            <div (mouseenter)="setHoverData(dr5)"
+                                                                                            <div (mouseenter)="setHoverData(dr6)"
                                                                                                 [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                 (mouseleave)="setHoverData(null)"
                                                                                                 (click)="selectUser(dr6)"
                                                                                                 [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': (selectionMode === 'Individual' && userIdSelected === dr6) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr6)), 'hover-node': userIdSelected !== dr6 && allActive || dr6 === currentHoverUid || orgChartNodeHash[dr6]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr6)}">
                                                                                                 <div *ngIf="myOrgUserHash[dr6]?.userType !== 'supervisor'"
                                                                                                     [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr6]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr6]?.userType}">
-                                                                                                    <i [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
+                                                                                                    <i 
+                                                                                                        [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
+                                                                                                        style="font-size:14px;"
+                                                                                                        [ngStyle]="{'color': getStatusColor(dr6)}"></i>
+                                                                                                        <!--
+                                                                                                    <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr6]"
+                                                                                                        [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
                                                                                                         [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr6]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
+                                                                                                        -->
                                                                                                 </div>
                                                                                                 <div *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor'"
                                                                                                     [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr6]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr6]?.userType}">
-                                                                                                    <i [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
+                                                                                                    <i *ngIf="selectionMode === 'Training' && (currentTrainingSelected !== '' && uidTidUTHash[dr6] && uidTidUTHash[dr6][currentTrainingSelected])"
+                                                                                                        [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
+                                                                                                        style="font-size:16px;"
+                                                                                                        [ngStyle]="{'color': getStatusColor(dr6)}"></i>
+                                                                                                        <!--                                                                                                    <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr6]"
+                                                                                                        [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
                                                                                                         style="font-size: 18px;"
                                                                                                         [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr6]?.trainingStatus]}"></i>
+                                                                                                        -->
+
                                                                                                 </div>
                                                                                                 <span
                                                                                                     *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor' || myOrgUserHash[dr6]?.userType === 'individualContributor' && includeFullName"
@@ -595,8 +686,15 @@
                                                                                                             [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': (selectionMode === 'Individual' && userIdSelected === dr7) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr7)),  'hover-node': userIdSelected !== dr7 && allActive || dr7 === currentHoverUid || orgChartNodeHash[dr7]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr7)}">
                                                                                                             <div
                                                                                                                 [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr7]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr7]?.userType}">
-                                                                                                                <i [ngClass]="userTypeIconHash[myOrgUserHash[dr7]?.userType]"
+                                                                                                                <i 
+                                                                                                                    [ngClass]="userTypeIconHash[myOrgUserHash[dr7]?.userType]"
+                                                                                                                    style="font-size:14px;"
+                                                                                                                    [ngStyle]="{'color': getStatusColor(dr7)}"></i>
+                                                                                                                    <!--
+                                                                                                                <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr7]"
+                                                                                                                    [ngClass]="userTypeIconHash[myOrgUserHash[dr7]?.userType]"
                                                                                                                     [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr7]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
+                                                                                                                    -->
                                                                                                             </div>
                                                                                                             <span
                                                                                                                 *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor' || myOrgUserHash[dr7]?.userType === 'individualContributor' && includeFullName"
@@ -633,8 +731,14 @@
                                                                                                                         [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical, 'selected-node': (selectionMode === 'Individual' && userIdSelected === dr8) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr8)), 'hover-node': userIdSelected !== dr8 && allActive || dr8 === currentHoverUid || orgChartNodeHash[dr8]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr8)}">
                                                                                                                         <div
                                                                                                                             [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr8]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr8]?.userType}">
-                                                                                                                            <i [ngClass]="userTypeIconHash[myOrgUserHash[dr8]?.userType]"
+                                                                                                                            <i 
+                                                                                                                                [ngClass]="userTypeIconHash[myOrgUserHash[dr8]?.userType]"
+                                                                                                                                [ngStyle]="{'color': getStatusColor(dr8), 'font-size.px': iconFontSize}"></i>
+                                                                                                                                <!--
+                                                                                                                            <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr8]"
+                                                                                                                                [ngClass]="userTypeIconHash[myOrgUserHash[dr8]?.userType]"
                                                                                                                                 [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr8]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
+                                                                                                                                -->
                                                                                                                         </div>
                                                                                                                         <span
                                                                                                                             *ngIf="myOrgUserHash[dr8]?.userType === 'supervisor' || myOrgUserHash[dr8]?.userType === 'individualContributor' && includeFullName"
@@ -677,17 +781,17 @@
         <div [@userDetailSlide]="userDetailIsVisible ? 'open' : 'closed'" class="member-detail-card"
             style="position:absolute;bottom:-40px;left:0;width:100%;z-index: 11;">
             <div class="my-card-header">
-                <i [ngClass]="userTypeIconHash[selectedUser?.userType]" style="font-size:18px;"
+                <i [ngClass]="userTypeIconHash[selectedUser?.userType]" style="font-size:16px;"
                     [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser?.trainingStatus]}" nz-tooltip
                     [nzTooltipTitle]=""></i>&nbsp;
                 <span *ngIf="selectedUser"
-                    style="display:inline-block;font-size:18px;font-weight: 500;color:black;margin-bottom:10px;">{{selectedUser?.firstName}}
+                    style="display:inline-block;font-size:16px;font-weight: 500;color:black;margin-bottom:10px;">{{selectedUser?.firstName}}
                     {{selectedUser?.lastName}}&nbsp;&nbsp;
                 </span>
                 <span *ngIf="selectedUser"
                     style="display:inline-block;font-size:16px;font-weight: 300;color:#444444;margin-bottom:10px;">({{selectedUser?.jobTitle}})</span>
                 <span *ngIf="!selectedUser"
-                    style="display:inline-block;font-size:18px;font-weight: 500;color:#444444;margin-bottom:10px;">No
+                    style="display:inline-block;font-size:16px;font-weight: 500;color:#444444;margin-bottom:10px;">No
                     User Selected
                 </span>
                 <i nz-icon nzType="menu-fold" style="font-size:22px;float:right;margin-right:20px;cursor:pointer;"

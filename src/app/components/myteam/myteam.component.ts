@@ -1121,7 +1121,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   chartOrientationIsVertical = 'true';
   isVertical = true;
   false = false;
-  userDetailIsVisible = true;
+  userDetailIsVisible = false;
   isOrgView = true;
   listOfJobFilters: Array<{ label: string; value: string }> = [];
   listOfFilterJobTitles = [];
@@ -1129,12 +1129,15 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   currentJobTitlesSelected = [];
   maxLevel$: Observable<number>;
   currentHighlightItem = '';
-  selectionMode = 'Individual';
+  selectionMode = null;
   jobTitleMatchCnt = 0;
   currentUserType = '';
   currentTrainingSelected = '';
   listOfTrainingTitles = [];
-  legendValue = null;
+  legendObj = {};
+  tidUTHash = {};
+  uidTidUTHash = {};
+  iconClassToColorHash = {};
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1232,7 +1235,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         return;
       }
       this.bulkAdd = true;
-      console.log('Org Progress', orgProgress);
+//      console.log('Org Progress', orgProgress);
       this.orgProgress = orgProgress;
       if (orgProgress.usersProcessed === orgProgress.usersTotal && orgProgress.supervisorMatchFail.length > 0) {
         this.supervisorMatchFails = orgProgress.supervisorMatchFail;
@@ -1310,7 +1313,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.nodes = nodes;
     });
     this.myTeam$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
-      console.log('myTeam$  ', userList);
+//      console.log('myTeam$  ', userList);
       if (!userList) {
         return;
       }
@@ -1361,21 +1364,23 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         this.myOrgUserHash[userTrainings[0].uid].trainingStatus = 'upToDate';
         this.userService.updateUser(this.myOrgUserHash[userTrainings[0].uid], false);
       }
-      this.assignableTrainings = [];
-      let tids = [];
-      let pastDueFound = false;
-      for (let ut of userTrainings) {
-        tids.push(ut.tid);
-      }
+      if (this.selectionMode === 'Individual') {
+        this.assignableTrainings = [];
+        let tids = [];
+        let pastDueFound = false;
+        for (let ut of userTrainings) {
+          tids.push(ut.tid);
+        }
 
-      for (let training of this.teamTrainings) {
-        if (tids.includes(training._id)) {
-          continue;
-        } else {
-          if (training.versions.length < 2) {
+        for (let training of this.teamTrainings) {
+          if (tids.includes(training._id)) {
             continue;
+          } else {
+            if (training.versions.length < 2) {
+              continue;
+            }
+            this.assignableTrainings.push(training);
           }
-          this.assignableTrainings.push(training);
         }
       }
 
@@ -1408,13 +1413,15 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
       this.allTrainingIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(allTrainingIdHash => {
         this.allTrainingIdHash = allTrainingIdHash;
+
         let trainings = Object.values(this.allTrainingIdHash);
         this.teamTrainings = [];
         this.listOfTrainingTitles = [];
         for (let training of trainings) {
-          this.listOfTrainingTitles.push({ text: training.title, value: training._id });
+          this.listOfTrainingTitles.push({ text: training.title, value: training._id});
+          this.iconClassToColorHash[training.iconClass] = training.iconColor;
           this.teamTrainings.push(training);
-          this.showTrainingHash[training._id] = training;
+          //          this.showTrainingHash[training._id] = training;
         }
       })
     })
@@ -1433,7 +1440,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   setHightlightItem(item: string) {
-    console.log('setHiglightItem ', item);
+//    console.log('setHiglightItem ', item);
     switch (item) {
       case 'fas fa-user':
         this.currentHighlightItem = 'individualContributor';
@@ -1456,17 +1463,17 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       case 'User Account Pending':
         this.currentHighlightItem = 'userAccountPending';
         break;
-      case 'No Trainings Assigned':
+      case 'fas fa-circle':
         this.currentHighlightItem = 'none';
         break;
-      case 'All Traingings are Up To Date':
+      case 'fas fa-square':
         this.currentHighlightItem = 'upToDate';
         break;
-      case 'At Least One Trainging is Past Due':
+      case 'fas fa-triangle':
         this.currentHighlightItem = 'pastDue';
         break;
-      case 'fas fa-flower-tulip':
-        this.currentHighlightItem = 'xxx';
+      case null:
+        this.currentHighlightItem = '';
         break;
     }
   }
@@ -1491,11 +1498,26 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         return 'black';
       case 'All Traingings are Up To Date':
         return '#46bd15';
-      case 'At Least One Trainging is Past Due':
+      case 'At Least One Training is Past Due':
         return 'red';
       case 'Clear Highlight':
         return 'orange';
     }
+  }
+  getSelectedTrainingIconClass(tid: string): string {
+//    console.log('getSelectedTrainingIconClass', tid);
+    if (!this.allTrainingIdHash[tid]) {
+      return 'fas fa-flower-tulip';
+    }
+    return this.allTrainingIdHash[tid].iconClass;
+  }
+
+  getTrainingIconColor(tid: string): string {
+//    console.log('getTrainingIconColor', tid);
+    if (!this.allTrainingIdHash[tid]) {
+      return 'orange';
+    }
+    return this.allTrainingIdHash[tid].iconColor;
   }
 
   resendRegistrationMsg(to: string, from: string) {
@@ -1538,15 +1560,20 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   trainingSelectedChanged(training: string) {
-    console.log('training selected..', training);
     this.userIdsSelected = [];
+    this.uidTidUTHash = {};
     this.currentTrainingSelected = training;
     for (let user of this.myOrgUserObjs) {
+      let tidUTHash = {};
       let tids = [];
-      if (this.uidUTHash[user._id] && this.uidUTHash[user._id].length > 0) {
-        for (let ut of this.uidUTHash[user._id]) {
+      let utList = this.uidUTHash[user._id];
+
+      if (utList) {
+        for (let ut of utList) {
+          tidUTHash[ut.tid] = cloneDeep(ut);
           tids.push(ut.tid);
         }
+        this.uidTidUTHash[user._id] = Object.assign({}, tidUTHash);
         if (tids.includes(training)) {
           this.userIdsSelected.push(user._id);
         }
@@ -1593,7 +1620,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   filterJobTitles(listOfSearchJobTitles: string[]): void {
     this.listOfSearchJobTitles = listOfSearchJobTitles;
-    console.log('filterJobTitles', this.listOfSearchJobTitles);
+//    console.log('filterJobTitles', this.listOfSearchJobTitles);
     this.search();
   }
 
@@ -1681,10 +1708,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       let childNode = this.buildNode(currentSupervisorName, level);
       if (childNode.drList.length === 0) {
         node.drList.push(childNode);
-        console.log('Node ', node);
+//        console.log('Node ', node);
       } else {
         node.drList.unshift(childNode);
-        console.log('Node ', node);
+//        console.log('Node ', node);
       }
       this.testNodes.push(childNode);
     }
@@ -1730,10 +1757,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], level);
           if (childNode.drList.length === 0) {
             node.drList.push(childNode);
-            console.log('Node ', level, node);
+//            console.log('Node ', level, node);
           } else {
             node.drList.unshift(childNode);
-            console.log('Node ', level, node);
+//            console.log('Node ', level, node);
           }
           this.testNodes.push(childNode);
         }
@@ -1741,11 +1768,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else if (level === this.maxLevel) {
       node.drList = [];
       let teamSize = Math.floor(this.randn_bm(this.maxLevelUserMin, this.maxLevelUserMax, 2));
-      console.log('team size', teamSize, level);
+//      console.log('team size', teamSize, level);
       for (let i = 0; i < teamSize; i++) {
         let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], level);
         node.drList.push(childNode);
-        console.log('Node ', node);
+//        console.log('Node ', node);
         this.testNodes.push(childNode);
       }
     }
@@ -1807,7 +1834,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.emailUnique = false;
       return;
     }
-    console.log('checkUniqueEmail', data);
+//    console.log('checkUniqueEmail', data);
     this.userService.getUserByEmail(this.selectedUser.email).subscribe(user => {
       this.emailUnique = false;
     },
@@ -2067,17 +2094,30 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   setSelectionMode(mode: string) {
+    this.currentJobTitlesSelected = [];
+    this.userIdsSelected = [];
+    this.assignableTrainings = this.teamTrainings;
+    this.currentUserType = null;
+    this.assignableTrainings = Object.assign([], this.teamTrainings);
+
+    if (mode !== 'Individual') {
+      this.userDetailIsVisible = false;
+    } else {
+      if (this.userIdSelected) {
+        this.userDetailIsVisible = true;
+      } else {
+        this.userDetailIsVisible = false;
+      }
+    }
+    this.currentTrainingSelected = null;
+    this.selectionMode = mode;
+/*
     if (mode === 'Org') {
       if (this.selectionMode === 'Individual' && this.userIdSelected) {
         this.userDetailIsVisible = false;
         this.selectUser(this.userIdSelected, -1);
       }
-      this.currentJobTitlesSelected = [];
-      this.userIdsSelected = [];
-      this.assignableTrainings = this.teamTrainings;
     } else if (mode === 'Individual') {
-      this.currentJobTitlesSelected = [];
-      this.userIdsSelected = [];
     } else if (mode === 'JobTitle') {
       if (this.selectionMode === 'Individual' && this.userIdSelected) {
         this.userDetailIsVisible = false;
@@ -2091,7 +2131,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.userDetailIsVisible = false;
       this.assignableTrainings = this.teamTrainings;
     }
-    this.selectionMode = mode;
+    */
   }
 
   selectUser(userId: string, i: number) {
@@ -2188,6 +2228,30 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.userService.selectAuthenticatedUser();
   }
 
+  getStatusColor(uid: string): string {
+  
+    if (this.selectionMode === 'Training' && this.userIdsSelected.includes(uid)) {
+      let tidUTHash = this.uidTidUTHash[uid];
+      if (tidUTHash && tidUTHash[this.currentTrainingSelected]) {
+        return this.userTrainingStatusColorHash[tidUTHash[this.currentTrainingSelected].status];
+      }
+    } else {
+      return this.userTrainingStatusColorHash[this.myOrgUserHash[uid].trainingStatus];
+    }
+  
+  /*
+    let hash1 = this.uidTidUTHash[uid];
+    //    console.log('getStatusColor  ', this.userTrainingStatusColorHash[hash1[this.currentTrainingSelected].status]);
+    if (!hash1) {
+      return 'pink';
+    }
+    if (!hash1[this.currentTrainingSelected]) {
+      return 'cyan';
+    }
+    return this.userTrainingStatusColorHash[hash1[this.currentTrainingSelected].status];
+    */
+  }
+
   confirmUserTrainingDelete() {
     for (let uid of this.userIdsSelected) {
       let utList = this.uidUTHash[uid];
@@ -2209,7 +2273,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
       this.userTrainingService.deleteUserTrainingByTidUid(this.currentTrainingSelected, uid);
     }
-  }
+    this.currentTrainingSelected = null;
+    this.userIdsSelected = [];
+}
 
   handleAssignUserTraining() {
     if (!this.selectedTrainingId || this.assignableTrainings.length === 0) {
