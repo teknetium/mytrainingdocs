@@ -17,6 +17,7 @@ const Comment = require("./models/Comment");
 const Doc = require("./models/Doc");
 const UTSession = require("./models/UTSession");
 const sgMail = require('@sendgrid/mail');
+const Org = require("./models/Org");
 
 /*
  |--------------------------------------
@@ -100,6 +101,7 @@ module.exports = function(app, config) {
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const docProjection = '_id productId productVersion author featureName sections images';
   const commentListProjection = "_id tid version author text rating date";
+  const orgListProjection = "_id domain adminId plan createDate userCount";
   const assessmentListProjection = "_id type title owner description timeLimit isFinal passingGrade items";
   const utSessionProjection = "_id utId uid tid teamId startTime stopTime";
 
@@ -1138,6 +1140,54 @@ module.exports = function(app, config) {
           return res.status(500).send({ message: err2.message });
         }
         res.status(200).send({ message: "Comment successfully deleted." });
+      });
+    });
+  });
+
+  //
+  // Org methods
+  //
+  app.get("/api/orgs/", (req, res) => {
+    Org.find({}, orgListProjection, (err, orgs) => {
+      let orgsArr = [];
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (orgs) {
+        orgs.forEach(org => {
+          orgsArr.push(org);
+        });
+      }
+      res.send(orgsArr);
+    });
+  });
+  app.post("/api/orgs/new", jwtCheck, (req, res) => {
+    const org = new Org({
+      domain: req.body.domain,
+      adminId: req.body.adminId,
+      createDate: req.body.createDate,
+      creatorId: req.body.creatorId,
+      userCount: req.body.userCount,
+      plan: req.body.plan,
+      _id: req.body._id,
+    });
+    Org.create(org, function (err, orgObj) {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      res.send(orgObj);
+    });
+  });
+  app.delete("/api/orgs/:id", jwtCheck, (req, res) => {
+    Org.findById(req.params.id, (err, org) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      org.remove(err2 => {
+        if (err2) {
+          return res.status(500).send({ message: err2.message });
+        }
+        res.status(200).send({ message: "Org successfully deleted." });
       });
     });
   });

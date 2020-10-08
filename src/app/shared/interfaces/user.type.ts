@@ -13,7 +13,7 @@ export interface UserModel {
   teamAdmin: boolean,
   appAdmin: boolean,
   orgAdmin: boolean,
-  userStatus: 'pending' | 'active' | 'duplicate-email' | 'inactive'
+  userStatus: 'pending' | 'active' | 'inactive'
   trainingStatus: 'upToDate' | 'pastDue' | 'none',
   jobTitle: string,
   profilePicUrl: string,
@@ -32,6 +32,13 @@ export interface UserBatchData {
   email: string,
   jobTitle: string,
   supervisorName: string
+}
+
+export interface UserStatus {
+  uid: string, 
+  type: 'error' | 'warning' | 'info',
+  value: 'badEmail' | 'duplicateEmail' | 'unknownSupervisor' | 'accountPending' | 'verifyEmail',
+  message?: string
 }
 
 export interface UserFail {

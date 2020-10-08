@@ -6,7 +6,7 @@ import { SendmailService } from './sendmail.service';
 import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
-import { UserModel, UserFail, UserIdHash, OrgChartNode, UserBatchData, BuildOrgProgress } from '../interfaces/user.type';
+import { UserModel, UserFail, UserIdHash, OrgChartNode, UserBatchData, BuildOrgProgress, UserStatus } from '../interfaces/user.type';
 import { Auth0ProfileModel } from '../interfaces/auth0Profile.type';
 import { Router } from '@angular/router';
 import { EventModel } from '../interfaces/event.type';
@@ -107,12 +107,15 @@ export class UserService {
   myOrgUserNames = [];
   reportChainNodeHash = {};
   myTeamIdIndexHash = {};
-  directReports: OrgChartNode[][][][] = [[[[]]]];
-  supervisors: OrgChartNode[][][] = [[[]]];
-  supervisorUids: string[][][] = [[[]]];
+  myOrgNodes: OrgChartNode[] = [];
+//  directReports: OrgChartNode[][][][] = [[[[]]]];
+//  supervisors: OrgChartNode[][][] = [[[]]];
+//  supervisorUids: string[][][] = [[[]]];
   levelIndex = [];
   uidLevelIndexHash = {};
   maxLevel = 0;
+  userStatusList: UserStatus[] = [];
+  uidStatusHash: {};
 
   constructor(
     private http: HttpClient,
@@ -285,13 +288,14 @@ export class UserService {
 //      console.log('loadData : after merging with this.newUserLst', userList);
 
       this.myTeam = [];
-      this.supervisorUids = [[[]]];
+//      this.supervisorUids = [[[]]];
       this.myTeamIdHash = {};
       this.allOrgUserHash = {};
       this.myOrgUserHash = {};
       this.myOrgUserNames = [];
 
 
+      this.myOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
       for (let user of allOrgUserList) {
         this.allOrgUserHash[user._id] = user;
       }
@@ -321,7 +325,7 @@ export class UserService {
       this.userTrainingService.getUTForTeam(this.teamId);
 
       this.myTeamIdHash[this.authenticatedUser._id] = this.authenticatedUser;
-//      this.allOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
+      this.allOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
       this.myTeamBS$.next(this.myTeam);
       this.myOrgHashBS$.next(this.myOrgUserHash);
 
@@ -334,10 +338,10 @@ export class UserService {
 
       this.nodes = [];
       let rootNode;
-      this.directReports = [[[[]]]];
+//      this.directReports = [[[[]]]];
       this.buildOrgChart(this.authenticatedUser._id, false);
       this.nodes.push(rootNode);
-      this.myOrgBS$.next(this.nodes);
+      this.myOrgBS$.next(this.myOrgNodes);
     });
   }
 
@@ -370,17 +374,17 @@ export class UserService {
     if (!this.allOrgUserHash[uid]) {
       return;
     }
-    this.directReports = [[[[]]]];
+//    this.directReports = [[[[]]]];
     this.nodes = [];
     let rootNode: OrgChartNode = {
-      _id: this.authenticatedUser._id,
+      _id: uid,
       fName: this.allOrgUserHash[uid].firstName,
       lName: this.allOrgUserHash[uid].lastName,
       cssClass: 'org-chart-top',
       image: '',
       extra: {
-        uid: uid,
-        reportChain: [],
+        uid: this.authenticatedUser._id,
+        reportChain: [this.authenticatedUser._id],
         peopleCnt: 0,
       },
       title: this.allOrgUserHash[uid].jobTitle,
@@ -388,35 +392,41 @@ export class UserService {
       level: 0,
     };
 
+    this.myOrgNodes.push(rootNode);
     let orgLevel = 0;
     this.levelIndex[orgLevel] = 0;
     let reportChain = [uid];
     this.reportChainNodeHash[uid] = rootNode;
 
-    this.supervisors[orgLevel] = [];
-    this.supervisors[orgLevel][0] = [];
+//    this.supervisors[orgLevel] = [];
+//    this.supervisors[orgLevel][0] = [];
     for (let i = 0; i < this.allOrgUserHash[uid].directReports.length; i++) {
-      let levelIndexArray: number[] = Object.assign([], this.levelIndex);
-      let orgTree: OrgChartNode[][][] = cloneDeep(this.supervisors);
-      this.directReports.push(orgTree);
-      let node = this.buildUserNode(this.allOrgUserHash[uid].directReports[i], Object.assign([], reportChain), orgLevel, i, levelIndexArray, orgTree);
+//      let levelIndexArray: number[] = Object.assign([], this.levelIndex);
+//      let orgTree: OrgChartNode[][][] = cloneDeep(this.supervisors);
+//      this.directReports.push(orgTree);
+      let node = this.buildUserNode(this.allOrgUserHash[uid].directReports[i], Object.assign([], reportChain), orgLevel);
       rootNode.childs.push(node);
+      this.myOrgNodes.push(node);
+      /*
       if (!orgTree[orgLevel][levelIndexArray[orgLevel]]) {
         orgTree[orgLevel][levelIndexArray[orgLevel]] = [];
       }
       orgTree[orgLevel][levelIndexArray[orgLevel]].push(node);
       levelIndexArray[orgLevel] = levelIndexArray[orgLevel] + 1;
+      */
     }
 
     this.nodes.push(rootNode);
-    this.myOrgBS$.next(this.nodes);
+//    this.myOrgBS$.next(this.myOrgNodes);
+    /*
     if (!subChart) {
       this.uidReportChainHashBS$.next(Object.assign({}, this.uidReportChainHash));
     }
     this.directReportsBS$.next(this.directReports);
+    */
   }
 
-  buildUserNode(userId: string, reportChain: string[], level: number, myLevelIndex: number, levelIndexArray: number[], orgTree: OrgChartNode[][][]): OrgChartNode {
+  buildUserNode(userId: string, reportChain: string[], level: number): OrgChartNode {
     this.uidReportChainHash[userId] = reportChain;
     let user = this.allOrgUserHash[userId];
 
@@ -447,27 +457,30 @@ export class UserService {
 
 
     level++;
-    if (!levelIndexArray[level]) {
-      levelIndexArray[level] = 0;
-    }
+//    if (!levelIndexArray[level]) {
+//      levelIndexArray[level] = 0;
+//    }
     userNode.childs = [];
     let newReportChain = Object.assign([], reportChain);
     newReportChain.push(userId);
-    if (!orgTree[level]) {
-      orgTree[level] = [];
-    }
+//    if (!orgTree[level]) {
+//      orgTree[level] = [];
+//    }
 
     for (let i = 0; i < user.directReports.length; i++) {
       userNode.extra.peopleCnt++;
       //      userNode.level = myLevelIndex;
 
-      let node = this.buildUserNode(user.directReports[i], Object.assign([], newReportChain), level, levelIndexArray[level], levelIndexArray, orgTree);
+      let node = this.buildUserNode(user.directReports[i], Object.assign([], newReportChain), level);
       userNode.childs.push(node);
+      this.myOrgNodes.push(node);
+      /*
       if (!orgTree[level][myLevelIndex]) {
         orgTree[level][myLevelIndex] = [];
       }
       orgTree[level][myLevelIndex].push(node);
       levelIndexArray[level] = levelIndexArray[level] + 1;
+      */
     }
     return userNode;
   }
@@ -488,18 +501,29 @@ export class UserService {
     let batchCnt = 1;
     let _id = String(new Date().getTime());
     for (let batchUser of batchUsers) {
+      let statusList: UserStatus[] = [];
       this.newTeamMember = cloneDeep(this.newTeamMember);
       this.newTeamMember.userType = 'individualContributor';
       this.newTeamMember._id = String(_id + '-' + batchCnt++);
       this.newTeamMember.firstName = batchUser.firstName;
       this.newTeamMember.lastName = batchUser.lastName;
       if (emailList.includes(batchUser.email)) {
+        let uStatus: UserStatus;
+        uStatus.uid = this.newTeamMember._id;
+        uStatus.type = 'error';
+        uStatus.value = 'duplicateEmail';
+        statusList.push(uStatus);
+//        this.uidStatusHash[uStatus.uid] = Object.assign([], statusList);
         this.newTeamMember.email = this.newTeamMember._id;
-        this.newTeamMember.userStatus = 'duplicate-email';
       } else {
         this.newTeamMember.email = batchUser.email;
         if (!testing) {
           this.sendRegistrationMsg(this.newTeamMember.email, this.authenticatedUser.email);
+          let uStatus: UserStatus;
+          uStatus.uid = this.newTeamMember._id;
+          uStatus.type = 'info';
+          uStatus.value = 'accountPending';
+          statusList.push(uStatus);
         }
         this.newTeamMember.userStatus = 'pending';
         emailList.push(batchUser.email);
@@ -508,6 +532,7 @@ export class UserService {
       this.newTeamMember.trainingStatus = 'none';
       this.newTeamMember.teamAdmin = false;
       this.newTeamMember.settings = {
+        statusList: cloneDeep(statusList),
         foo: 'test',
         showPageInfo: true,
         showCSV: true,
@@ -523,12 +548,19 @@ export class UserService {
       this.newUserList.push(this.newTeamMember);
       this.fullNameHash[this.newTeamMember.firstName + ' ' + this.newTeamMember.lastName] = this.newTeamMember;
       this.allOrgUserHash[this.newTeamMember._id] = this.newTeamMember;
+      statusList = [];
     }
 
 
     for (let nUser of this.newUserList) {
+      let uStatus: UserStatus;
       if (!this.fullNameHash[this.newUserHash[nUser._id].supervisorName]) {
+        uStatus.uid = nUser._id;
+        uStatus.type = 'error';
+        uStatus.value = 'unknownSupervisor';
+        this.uidStatusHash[uStatus.uid].push(uStatus);
         supervisorMatchFail.push(nUser._id);
+        this.uidStatusHash[nUser._id]
         nUser.supervisorId = this.authenticatedUser._id;
         nUser.teamId = this.authenticatedUser._id;
         this.authenticatedUser.directReports.push(nUser._id);

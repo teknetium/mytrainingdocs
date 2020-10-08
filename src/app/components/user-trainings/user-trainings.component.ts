@@ -28,13 +28,14 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     upToDate: {
       icon: 'smile',
       color: '#52c41a',
-      desc: 'In Progress'
+      desc: 'In Progress',
+      rgba: 'rgba(70,189,21, .3)'
     },
     pastDue: {
       icon: 'exclamation-circle',
       color: 'red',
-      desc: 'Past Due'
-
+      desc: 'Past Due',
+      rgba: 'rgba(255,0,0,.1)'
     },
     completed: {
       icon: 'check-circle',
@@ -68,6 +69,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   @Input() logSession = 'off';
   @Input() production = 'off';
   @Input() uid = null;
+  @Input() compact = 'no';
 
   currentUserTraining: string;
   currentTrainingId;
@@ -83,6 +85,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   previewBase = 'https://cdn.filestackcontent.com/preview=css:"https://cdn.filestackcontent.com/jtNVfsaDTieo28ZL7hkr"/';
   certImageUrl;
   certificateModalVisible = false;
+  tableFontSize = 12;
 
   constructor(
     private userService: UserService,
@@ -121,6 +124,10 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       }
     })
     */
+    if (this.compact === 'yes') {
+      this.uid = null;
+      this.tableFontSize = 10;
+    }
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         return;
@@ -166,7 +173,6 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       }
 
       this.uidUTHash = uidUTHash;
-      console.log('uidUTHash$ ', this.uidUTHash);
     })
 
     this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {

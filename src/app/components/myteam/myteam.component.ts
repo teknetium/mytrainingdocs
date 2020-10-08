@@ -229,8 +229,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   org;
   teamId;
   nodes: OrgChartNode[] = [];
-  directReports: OrgChartNode[][][][];
-  directReports$: Observable<OrgChartNode[][][][]>;
   chartOrientation = 'vertical';
   orgChartFontSize = 2;
   reportChain: string[] = [];
@@ -276,7 +274,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   batchFails = [];
   orgSize = 100;
   usersPerTeam = 5;
-  currentHoverUid = '';
+  currentHoverUid = null;
   currentHoverReportChain = [];
   currentSelectedReportChain = [];
   allActive = false;
@@ -1137,7 +1135,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   legendObj = {};
   tidUTHash = {};
   uidTidUTHash = {};
-  iconClassToColorHash = {};
+  highlightHash = {};
+  currentHoverUser: UserModel;
+  collapsedNodeHash = {};
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1154,7 +1154,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   ) {
     super();
     this.maxLevel$ = this.userService.getMaxLevelStream();
-    this.directReports$ = this.userService.getDirectReportsStream();
     this.batchFails$ = this.userService.getBatchUserFailsStream();
     this.userFail$ = this.userService.getUserFailStream();
     this.myOrgUsers$ = this.userService.getMyOrgUserNameListStream();
@@ -1171,6 +1170,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.newUser$ = this.userService.getNewUserStream();
     this.jobTitles$ = this.jobTitleService.getJobTitleStream();
     this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
+
+    this.userTrainingService.selectUser(null);
   }
 
   ngOnInit() {
@@ -1185,12 +1186,76 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       'project manager'
     ];
 
+    this.currentHoverUid = null;
+
 
     this.userList = [];
     this.tourStepsHash['myTeam'] = ['Step1-myTeam', 'Step2-myTeam', 'Step3-myTeam', 'Step4-myTeam', 'Step5-myTeam'];
     this.tourStepsHash['memberDetails'] = ['Step1-memberDetails'];
     this.tourStepsHash['orgChart'] = ['Step1-orgChart'];
 
+    this.highlightHash = {
+      individualContributor: {
+        value: 'individualContributor',
+        label: 'Individual Contributor',
+        icon: 'fas fa-user',
+        iconColor: 'black'
+      },
+      supervisor: {
+        value: 'supervisor',
+        label: 'Supervisor',
+        icon: 'fas fa-user-tie',
+        iconColor: 'black'
+      },
+      volunteer: {
+        value: 'volunteer',
+        label: 'Volunteer',
+        icon: 'fas fa-user-cowboy',
+        iconColor: 'black'
+      },
+      customer: {
+        value: 'customer',
+        label: 'customer',
+        icon: 'fas fa-user-crown',
+        iconColor: 'black'
+      },
+      badEmail: {
+        value: 'badEmail',
+        label: 'Bad Email',
+        icon: 'fas fa-at',
+        iconColor: 'red'
+      },
+      unknownSupervisor: {
+        value: 'unKnownSupervisor',
+        label: 'Unknown Supervisor',
+        icon: 'fas fa-user-tie',
+        iconColor: 'red'
+      },
+      accountPending: {
+        value: 'accountPending',
+        label: 'Account Pending',
+        icon: 'fas fa-exclamation-triangle',
+        iconColor: 'red'
+      },
+      none: {
+        value: 'none',
+        label: 'No Trainings Assigned',
+        icon: 'fas fa-user',
+        iconColor: 'black'
+      },
+      upToDate: {
+        value: 'upToDate',
+        label: 'All Trainings are Up To Date',
+        icon: 'fas fa-user',
+        iconColor: '#46bd15'
+      },
+      pastDue: {
+        value: 'pastDue',
+        label: 'At Least One Training is Past Due',
+        icon: 'fas fa-user',
+        iconColor: 'red'
+      }
+    }
 
     this.contentHeight = Math.floor((window.innerHeight - (.3 * window.innerHeight)) * .90);
     this.contentWidth = Math.floor(window.innerWidth * .9);
@@ -1207,35 +1272,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
       this.batchFails = failList;
     });
-    this.directReports$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(directReports => {
-      if (!directReports) {
-        return;
-      }
-
-      this.directReports = directReports;
-      for (let dr of this.directReports) {
-        if (dr) {
-          for (let level of dr) {
-            if (level) {
-              for (let team of level) {
-                if (team) {
-                  for (let node of team) {
-                    this.orgChartNodeHash[node.extra.uid] = node;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    });
 
     this.buildOrgProgress$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgProgress => {
       if (!orgProgress) {
         return;
       }
       this.bulkAdd = true;
-//      console.log('Org Progress', orgProgress);
+      //      console.log('Org Progress', orgProgress);
       this.orgProgress = orgProgress;
       if (orgProgress.usersProcessed === orgProgress.usersTotal && orgProgress.supervisorMatchFail.length > 0) {
         this.supervisorMatchFails = orgProgress.supervisorMatchFail;
@@ -1263,10 +1306,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           listOfSupervisorIds.push(user.supervisorId);
         }
         //        this.supervisorIdNameHash[user.supervisorId]
+        /*
         if (user.userStatus === 'duplicate-email') {
           bulkAddFailFound = true;
           this.bulkAddFail = true;
         }
+        */
         if (user.userType === 'supervisor') {
           this.myOrgSupervisors.push(user.firstName + ' ' + user.lastName);
         }
@@ -1311,9 +1356,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       // number of people in the chart
 
       this.nodes = nodes;
+      for (let node of this.nodes) {
+        this.orgChartNodeHash[node.extra.uid] = node;
+        this.collapsedNodeHash[node.extra.uid] = false;
+      }
+
     });
     this.myTeam$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
-//      console.log('myTeam$  ', userList);
+      //      console.log('myTeam$  ', userList);
       if (!userList) {
         return;
       }
@@ -1344,6 +1394,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
       this.selectedUser = user;
       if ((user.supervisorId && this.myOrgUserHash[user.supervisorId]) && (this.authenticatedUser && user._id !== this.authenticatedUser._id)) {
+//      if ((user.supervisorId && this.myOrgUserHash[user.supervisorId])) {
         this.supervisorName = this.myOrgUserHash[user.supervisorId].firstName + ' ' + this.myOrgUserHash[user.supervisorId].lastName;
       }
       this.reportChain = Object.assign([], this.uidReportChainHash[this.selectedUser._id]);
@@ -1406,7 +1457,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         if (!this.uid) {
           this.uid = this.authenticatedUser._id;
         }
-        this.userService.selectUser(this.uid);
+//        this.userService.selectUser(this.uid);
       });
       //      this.selectUser(this.authenticatedUser._id);
       this.assignableTrainings = [];
@@ -1418,8 +1469,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         this.teamTrainings = [];
         this.listOfTrainingTitles = [];
         for (let training of trainings) {
-          this.listOfTrainingTitles.push({ text: training.title, value: training._id});
-          this.iconClassToColorHash[training.iconClass] = training.iconColor;
+          this.listOfTrainingTitles.push({ text: training.title, value: training._id });
+          //          this.iconClassToColorHash[training.iconClass] = training.iconColor;
           this.teamTrainings.push(training);
           //          this.showTrainingHash[training._id] = training;
         }
@@ -1439,73 +1490,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     })
   }
 
-  setHightlightItem(item: string) {
-//    console.log('setHiglightItem ', item);
-    switch (item) {
-      case 'fas fa-user':
-        this.currentHighlightItem = 'individualContributor';
-        break;
-      case 'fas fa-user-tie':
-        this.currentHighlightItem = 'supervisor';
-        break;
-      case 'Volunteer':
-        this.currentHighlightItem = 'volunteer';
-        break;
-      case 'Customer':
-        this.currentHighlightItem = 'customer';
-        break;
-      case 'Bad Email':
-        this.currentHighlightItem = 'badEmail';
-        break;
-      case 'Supervisor Not Found':
-        this.currentHighlightItem = 'supervisorNotFound';
-        break;
-      case 'User Account Pending':
-        this.currentHighlightItem = 'userAccountPending';
-        break;
-      case 'fas fa-circle':
-        this.currentHighlightItem = 'none';
-        break;
-      case 'fas fa-square':
-        this.currentHighlightItem = 'upToDate';
-        break;
-      case 'fas fa-triangle':
-        this.currentHighlightItem = 'pastDue';
-        break;
-      case null:
-        this.currentHighlightItem = '';
-        break;
-    }
+  setHighlightItem(item: string) {
+    //    console.log('setHiglightItem ', item);
+    this.currentHighlightItem = item;
   }
 
-  getColor(item: string) {
-    switch (item) {
-      case 'Individual Contributor':
-        return 'black';
-      case 'Supervisor':
-        return 'black';
-      case 'Volunteer':
-        return 'black';
-      case 'Customer':
-        return 'black';
-      case 'Bad Email':
-        return 'red';
-      case 'Supervisor Not Found':
-        return 'red';
-      case 'User Account Pending':
-        return 'red';
-      case 'No Trainings Assigned':
-        return 'black';
-      case 'All Traingings are Up To Date':
-        return '#46bd15';
-      case 'At Least One Training is Past Due':
-        return 'red';
-      case 'Clear Highlight':
-        return 'orange';
-    }
-  }
   getSelectedTrainingIconClass(tid: string): string {
-//    console.log('getSelectedTrainingIconClass', tid);
+    //    console.log('getSelectedTrainingIconClass', tid);
     if (!this.allTrainingIdHash[tid]) {
       return 'fas fa-flower-tulip';
     }
@@ -1513,7 +1504,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   getTrainingIconColor(tid: string): string {
-//    console.log('getTrainingIconColor', tid);
+    //    console.log('getTrainingIconColor', tid);
     if (!this.allTrainingIdHash[tid]) {
       return 'orange';
     }
@@ -1620,7 +1611,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   filterJobTitles(listOfSearchJobTitles: string[]): void {
     this.listOfSearchJobTitles = listOfSearchJobTitles;
-//    console.log('filterJobTitles', this.listOfSearchJobTitles);
+    //    console.log('filterJobTitles', this.listOfSearchJobTitles);
     this.search();
   }
 
@@ -1708,10 +1699,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       let childNode = this.buildNode(currentSupervisorName, level);
       if (childNode.drList.length === 0) {
         node.drList.push(childNode);
-//        console.log('Node ', node);
+        //        console.log('Node ', node);
       } else {
         node.drList.unshift(childNode);
-//        console.log('Node ', node);
+        //        console.log('Node ', node);
       }
       this.testNodes.push(childNode);
     }
@@ -1757,10 +1748,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], level);
           if (childNode.drList.length === 0) {
             node.drList.push(childNode);
-//            console.log('Node ', level, node);
+            //            console.log('Node ', level, node);
           } else {
             node.drList.unshift(childNode);
-//            console.log('Node ', level, node);
+            //            console.log('Node ', level, node);
           }
           this.testNodes.push(childNode);
         }
@@ -1768,11 +1759,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else if (level === this.maxLevel) {
       node.drList = [];
       let teamSize = Math.floor(this.randn_bm(this.maxLevelUserMin, this.maxLevelUserMax, 2));
-//      console.log('team size', teamSize, level);
+      //      console.log('team size', teamSize, level);
       for (let i = 0; i < teamSize; i++) {
         let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], level);
         node.drList.push(childNode);
-//        console.log('Node ', node);
+        //        console.log('Node ', node);
         this.testNodes.push(childNode);
       }
     }
@@ -1811,14 +1802,19 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   setHoverData(uid: string) {
     if (!uid) {
-      this.currentHoverUid = '';
+      this.currentHoverUid = null;
+      this.currentHoverUser = null;
       this.currentHoverReportChain = [];
       return;
     }
     this.currentHoverUid = uid;
-    this.currentHoverReportChain = this.orgChartNodeHash[uid].extra.reportChain;
+    this.currentHoverUser = this.myOrgUserHash[uid];
+    if (this.orgChartNodeHash[uid]) {
+      this.currentHoverReportChain = this.orgChartNodeHash[uid].extra.reportChain;
+    }
   }
 
+  /*
   setAuthenticatedUserHover(allActive: boolean) {
     if (allActive) {
       this.currentHoverUid = this.authenticatedUser._id;
@@ -1828,13 +1824,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.allActive = false;
     }
   }
+  */
 
   checkUniqueEmail(data) {
     if (!this.selectedUser.email || this.selectedUser.email === '') {
       this.emailUnique = false;
       return;
     }
-//    console.log('checkUniqueEmail', data);
+    //    console.log('checkUniqueEmail', data);
     this.userService.getUserByEmail(this.selectedUser.email).subscribe(user => {
       this.emailUnique = false;
     },
@@ -2111,27 +2108,27 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
     this.currentTrainingSelected = null;
     this.selectionMode = mode;
-/*
-    if (mode === 'Org') {
-      if (this.selectionMode === 'Individual' && this.userIdSelected) {
-        this.userDetailIsVisible = false;
-        this.selectUser(this.userIdSelected, -1);
-      }
-    } else if (mode === 'Individual') {
-    } else if (mode === 'JobTitle') {
-      if (this.selectionMode === 'Individual' && this.userIdSelected) {
-        this.userDetailIsVisible = false;
-        this.selectUser(this.userIdSelected, -1);
-      }
-      this.assignableTrainings = this.teamTrainings;
-      this.userIdsSelected = [];
-    } else if (mode === 'UserType') {
-      this.currentUserType = '';
-      this.userIdsSelected = [];
-      this.userDetailIsVisible = false;
-      this.assignableTrainings = this.teamTrainings;
-    }
-    */
+    /*
+        if (mode === 'Org') {
+          if (this.selectionMode === 'Individual' && this.userIdSelected) {
+            this.userDetailIsVisible = false;
+            this.selectUser(this.userIdSelected, -1);
+          }
+        } else if (mode === 'Individual') {
+        } else if (mode === 'JobTitle') {
+          if (this.selectionMode === 'Individual' && this.userIdSelected) {
+            this.userDetailIsVisible = false;
+            this.selectUser(this.userIdSelected, -1);
+          }
+          this.assignableTrainings = this.teamTrainings;
+          this.userIdsSelected = [];
+        } else if (mode === 'UserType') {
+          this.currentUserType = '';
+          this.userIdsSelected = [];
+          this.userDetailIsVisible = false;
+          this.assignableTrainings = this.teamTrainings;
+        }
+        */
   }
 
   selectUser(userId: string, i: number) {
@@ -2229,7 +2226,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   getStatusColor(uid: string): string {
-  
+
     if (this.selectionMode === 'Training' && this.userIdsSelected.includes(uid)) {
       let tidUTHash = this.uidTidUTHash[uid];
       if (tidUTHash && tidUTHash[this.currentTrainingSelected]) {
@@ -2238,18 +2235,18 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else {
       return this.userTrainingStatusColorHash[this.myOrgUserHash[uid].trainingStatus];
     }
-  
-  /*
-    let hash1 = this.uidTidUTHash[uid];
-    //    console.log('getStatusColor  ', this.userTrainingStatusColorHash[hash1[this.currentTrainingSelected].status]);
-    if (!hash1) {
-      return 'pink';
-    }
-    if (!hash1[this.currentTrainingSelected]) {
-      return 'cyan';
-    }
-    return this.userTrainingStatusColorHash[hash1[this.currentTrainingSelected].status];
-    */
+
+    /*
+      let hash1 = this.uidTidUTHash[uid];
+      //    console.log('getStatusColor  ', this.userTrainingStatusColorHash[hash1[this.currentTrainingSelected].status]);
+      if (!hash1) {
+        return 'pink';
+      }
+      if (!hash1[this.currentTrainingSelected]) {
+        return 'cyan';
+      }
+      return this.userTrainingStatusColorHash[hash1[this.currentTrainingSelected].status];
+      */
   }
 
   confirmUserTrainingDelete() {
@@ -2275,7 +2272,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
     this.currentTrainingSelected = null;
     this.userIdsSelected = [];
-}
+  }
 
   handleAssignUserTraining() {
     if (!this.selectedTrainingId || this.assignableTrainings.length === 0) {

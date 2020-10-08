@@ -1,6 +1,24 @@
-<div style="width:100%;height:fit-content;font-size:12px;">
+<div *ngIf="compact === 'yes'">
+    <div style="padding:2px;">
+        <div *ngFor="let userTraining of uidUTHash[uid]" style="display:inline-block;margin-left:20px;border-width:0;border-bottom-width:3px;border-style:solid;padding:2px;"
+        [ngStyle]="{'border-color': statusIconHash[userTraining?.status]?.color}">
+            <i [ngClass]="(trainingIdHash$ | async)[userTraining?.tid]?.iconClass"
+                style="font-size:18px;vertical-align: middle;display:inline-block;"
+                [ngStyle]="{'color': trainingIdHash[userTraining?.tid]?.iconColor}">
+            </i>
+            <i *ngIf="trainingIdHash[userTraining?.tid]?.type === 'recurring'" class="fas fa-redo-alt"
+                style="font-size:10px;vertical-align: top;display:inline-block;">
+            </i>
+
+        </div>
+        <div *ngIf="uid && (!uidUTHash[uid] || uidUTHash[uid].length === 0)" style="padding:5px;">
+            No Trainings Assigned
+        </div>
+    </div>
+</div>
+<div *ngIf="compact === 'no'" style="width:100%;height:fit-content;font-size:12px;">
     <nz-table *ngIf="uidUTHash && uidUTHash[uid]?.length > 0" nzSize="small" nzBordered="false" nzShowPagination="false"
-        [nzData]="uidUTHash[uid]" style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
+        [nzData]="uidUTHash[uid]" style="width:100%;background-color: #fafafa;font-size:12px;">
         <thead>
             <tr style="font-size:12px;">
                 <th>Status</th>
@@ -13,7 +31,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let userTraining of uidUTHash[uid]"
+            <tr *ngFor="let userTraining of uidUTHash[uid]" [ngStyle]="{'font-size.px': tableFontSize}"
                 style="cursor: pointer;font-size:12px;background-color: white;line-height:10px;">
                 <td style="width:7%;" nz-tooltip [nzTooltipTitle]="statusIconHash[userTraining?.status]?.desc">
                     <i nz-icon [nzType]="statusIconHash[userTraining?.status]?.icon" [nzTheme]="'twotone'"
@@ -46,8 +64,8 @@
                     {{ timeFormat(userTraining?.timeToDate) }}
                 </td>
                 <td *ngIf="mode === 'admin'" style="width:15%;">
-                    <nz-date-picker nzFormat="MMM d, y" nzSize="small" ngDefaultControl
-                        [ngModel]="userTraining.dueDate" (ngModelChange)="updateDueDate($event, userTraining)">
+                    <nz-date-picker nzFormat="MMM d, y" nzSize="small" ngDefaultControl [ngModel]="userTraining.dueDate"
+                        (ngModelChange)="updateDueDate($event, userTraining)">
                     </nz-date-picker>
                 </td>
                 <td *ngIf="mode !== 'admin'" style="width:15%;">
