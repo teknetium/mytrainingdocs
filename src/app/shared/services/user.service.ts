@@ -508,10 +508,11 @@ export class UserService {
       this.newTeamMember.firstName = batchUser.firstName;
       this.newTeamMember.lastName = batchUser.lastName;
       if (emailList.includes(batchUser.email)) {
-        let uStatus: UserStatus;
-        uStatus.uid = this.newTeamMember._id;
-        uStatus.type = 'error';
-        uStatus.value = 'duplicateEmail';
+        let uStatus: UserStatus = {
+          uid: this.newTeamMember._id,
+          type: 'error',
+          value: 'duplicateEmail'
+        }
         statusList.push(uStatus);
 //        this.uidStatusHash[uStatus.uid] = Object.assign([], statusList);
         this.newTeamMember.email = this.newTeamMember._id;
@@ -519,10 +520,11 @@ export class UserService {
         this.newTeamMember.email = batchUser.email;
         if (!testing) {
           this.sendRegistrationMsg(this.newTeamMember.email, this.authenticatedUser.email);
-          let uStatus: UserStatus;
-          uStatus.uid = this.newTeamMember._id;
-          uStatus.type = 'info';
-          uStatus.value = 'accountPending';
+          let uStatus: UserStatus = {
+            uid: this.newTeamMember._id,
+            type: 'info',
+            value: 'accountPending'
+          }
           statusList.push(uStatus);
         }
         this.newTeamMember.userStatus = 'pending';

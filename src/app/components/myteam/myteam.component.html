@@ -218,7 +218,7 @@
                         </label>
                     </nz-radio-group>
                 </div>
-                <div style="padding-top:30px;float:right;">
+                <div style="padding-top:25px;float:right;">
                     <div *ngIf="selectionMode !== 'Individual'" class="selected-node"
                         style="padding:0 3px;margin-left:10px;display:inline-block;">
                         {{userIdsSelected.length}} selected
@@ -233,6 +233,10 @@
                         (nzOnConfirm)="confirmUserTrainingDelete()" nz-tooltip
                         nzTooltipTitle="Remove Training from Users">
                         <i class="fas fa-arrow-alt-from-right"></i></button>
+                    <button nz-button nzShape="circle" nzType="primary" [disabled]="collapsedNodeCnt === 0"
+                        style="display:inline-block;margin-left:10px;" (click)="expandAllNodes()" nz-tooltip
+                        nzTooltipTitle="Expand All Collapsed Nodes">
+                        <i class="fas fa-plus"></i></button>
                     <label nz-checkbox ngDefaultControl [(ngModel)]="includeFullName"
                         style="display:inline-block;cursor:pointer;font-size:12px;color:#000000;z-index:1;margin-left:10px;"
                         nz-tooltip nzTooltipTitle="">Show
@@ -355,25 +359,18 @@
 
                             <i [ngClass]="userTypeIconHash[authenticatedUser.userType]" style="font-size:16px;"
                                 [ngStyle]="{'color': getStatusColor(authenticatedUser._id)}"></i>
-                            <!--
-                            <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[authenticatedUser._id]"
-                                [ngClass]="userTypeIconHash[authenticatedUser.userType]" style="font-size:24px;"
-                                [ngStyle]="{'color': userTrainingStatusColorHash[authenticatedUser.trainingStatus]}"></i>
-                                -->
-                            <span [ngClass]="{'inline-block': !isVertical, 'block': isVertical}"
-                                [ngStyle]="{'font-size.px': textFontSize}">
+                            <span style="display: block;" [ngStyle]="{'font-size.px': textFontSize}">
                                 {{authenticatedUser.firstName}}<br>{{authenticatedUser.lastName}}
                             </span>
-                            <div *ngIf="authenticatedUser.directReports.length > 0 && isVertical"
+                            <div *ngIf="authenticatedUser.directReports.length > 0"
                                 class="org-chart-vert-connector-bottom">
                             </div>
                         </div>
                     </div>
                     <div style="background-color:white;display:block;">
                         <div *ngFor="let dr of authenticatedUser.directReports; let drIndex = index"
-                            style="vertical-align: top;width:fit-content;position:relative;"
-                            [ngClass]="{'inline-block': isVertical, 'block': !isVertical}">
-                            <div *ngIf="isVertical" style="position:relative;">
+                            style="vertical-align: top;width:fit-content;position:relative;display:inline-block;">
+                            <div style="position:relative;">
                                 <div class="org-chart-vert-connector">
                                 </div>
                                 <div *ngIf="!isLast(authenticatedUser.directReports, drIndex)"
@@ -384,35 +381,32 @@
                             </div>
                             <div style="text-align: center;">
                                 <div (mouseenter)="setHoverData(dr)" (mouseleave)="setHoverData(null)"
-                                    (click)="selectUser(dr)" class="org-chart-node"
-                                    [ngStyle]="{'padding.px': orgChartPadding}"
-                                    [ngClass]="{'supervisor-node': myOrgUserHash[dr]?.userType === 'supervisor','selected-node': (selectionMode === 'Individual' && userIdSelected === dr) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr)), 'hover-node': userIdSelected !== dr && allActive || dr === currentHoverUid || orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr)}">
-                                    <div
-                                        [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr]?.userType || currentHighlightItem === myOrgUserHash[dr]?.trainingStatus}">
+                                    class="org-chart-node" [ngStyle]="{'padding.px': orgChartPadding}"
+                                    [ngClass]="{'supervisor-node': myOrgUserHash[dr]?.userType === 'supervisor'}">
+                                    <div style="border:2px solid white;" (click)="selectUser(dr)"
+                                        [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr]?.userType || currentHighlightItem === myOrgUserHash[dr]?.trainingStatus, 'selected-node': (selectionMode === 'Individual' && userIdSelected === dr) || (selectionMode !== 'Indiviual' &&
+                                        userIdsSelected.includes(dr)), 'hover-node': userIdSelected !== dr && allActive || dr === currentHoverUid ||
+                                        orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr)}">
 
                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
                                             style="font-size:16px;" [ngStyle]="{'color': getStatusColor(dr)}"></i>
-                                        <!--
-                                        <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr] || !uidTidUTHash[dr][currentTrainingSelected]"
-                                            [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
-                                            style="font-size:16px;"
-                                            [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr]?.trainingStatus]}"></i>
-                                            -->
+                                        <span
+                                            *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || (myOrgUserHash[dr]?.userType === 'individualContributor' && includeFullName)"
+                                            [ngStyle]="{'font-size.px': textFontSize}" style="display: block;">
+                                            {{orgChartNodeHash[dr]?.fName}}<br>{{orgChartNodeHash[dr]?.lName}}
+                                        </span>
                                     </div>
-                                    <span
-                                        *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || (myOrgUserHash[dr]?.userType === 'individualContributor' && includeFullName)"
-                                        [ngStyle]="{'font-size.px': textFontSize}"
-                                        [ngClass]="{'inline-block': !isVertical, 'block': isVertical}">
-                                        {{orgChartNodeHash[dr]?.fName}}<br>{{orgChartNodeHash[dr]?.lName}}
-                                    </span>
                                     <div *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' && !(collapsedNodeHash[dr] && collapsedNodeHash[dr] === true)"
                                         class="org-chart-vert-connector-bottom">
                                     </div>
-                                    <div *ngIf="collapsedNodeHash[dr] === false && myOrgUserHash[dr]?.userType === 'supervisor' && maxLevel > 2" (click)="collapsedNodeHash[dr] = true">
+                                    <div *ngIf="collapsedNodeHash[dr] === false && myOrgUserHash[dr]?.userType === 'supervisor' && maxLevel > 2"
+                                        (click)="collapseNode(dr, true)">
                                         <i class="fal fa-minus-circle" style="font-size:12px;"></i>
                                     </div>
-                                    <div *ngIf="collapsedNodeHash[dr] === true && myOrgUserHash[dr]?.userType === 'supervisor' && maxLevel > 2" (click)="collapsedNodeHash[dr] = false">
-                                        <i class="fal fa-plus-circle" style="font-size:12px;"></i>
+                                    <div *ngIf="collapsedNodeHash[dr] === true && myOrgUserHash[dr]?.userType === 'supervisor' && maxLevel > 2"
+                                        (click)="collapseNode(dr, false)">
+                                        <i class="far fa-plus-circle"
+                                            style="margin-top:4px;font-size:16px;color:red;"></i>
                                     </div>
                                 </div>
                                 <div *ngIf="!(collapsedNodeHash[dr] && collapsedNodeHash[dr] === true)"
@@ -432,37 +426,32 @@
                                         <div style="text-align: center;">
                                             <div (mouseenter)="setHoverData(dr2)" (mouseleave)="setHoverData(null)"
                                                 [ngStyle]="{'padding.px': orgChartPadding}" class="org-chart-node"
-                                                (click)="selectUser(dr2)"
-                                                [ngClass]="{'supervisor-node': myOrgUserHash[dr2]?.userType === 'supervisor','selected-node': (selectionMode === 'Individual' && userIdSelected === dr2) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr2)) , 'hover-node': userIdSelected !== dr2 && allActive || dr2 === currentHoverUid || orgChartNodeHash[dr2]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2)}">
-                                                <div
-                                                    [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr2]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr2]?.userType || currentHighlightItem === myOrgUserHash[dr2]?.trainingStatus}">
-
+                                                [ngClass]="{'supervisor-node': myOrgUserHash[dr2]?.userType === 'supervisor'}">
+                                                <div style="border:2px solid white;" (click)="selectUser(dr2)"
+                                                    [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr2]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr2]?.userType || currentHighlightItem === myOrgUserHash[dr2]?.trainingStatus,'selected-node': (selectionMode === 'Individual' && userIdSelected === dr2) || (selectionMode !== 'Indiviual' &&
+                                                    userIdsSelected.includes(dr2)) , 'hover-node': userIdSelected !== dr2 && allActive || dr2 === currentHoverUid ||
+                                                    orgChartNodeHash[dr2]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2)}">
                                                     <i [ngClass]="userTypeIconHash[myOrgUserHash[dr2]?.userType]"
                                                         style="font-size:16px;"
                                                         [ngStyle]="{'color': getStatusColor(dr2)}"></i>
-                                                    <!--
-                                                    <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr2]"
-                                                        [ngClass]="userTypeIconHash[myOrgUserHash[dr2]?.userType]"
-                                                        style="font-size:16px;"
-                                                        [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr2]?.trainingStatus]}"></i>
-                                                        -->
+                                                    <span
+                                                        *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor' || myOrgUserHash[dr2]?.userType === 'individualContributor' && includeFullName"
+                                                        [ngStyle]="{'font-size.px': textFontSize}"
+                                                        style="display: block;">
+                                                        {{orgChartNodeHash[dr2]?.fName}}<br>{{orgChartNodeHash[dr2]?.lName}}
+                                                    </span>
                                                 </div>
-                                                <span
-                                                    *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor' || myOrgUserHash[dr2]?.userType === 'individualContributor' && includeFullName"
-                                                    [ngStyle]="{'font-size.px': textFontSize}"
-                                                    [ngClass]="{'inline-block': !isVertical, 'block': isVertical}">
-                                                    {{orgChartNodeHash[dr2]?.fName}}<br>{{orgChartNodeHash[dr2]?.lName}}
-                                                </span>
                                                 <div *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor' && !(collapsedNodeHash[dr2] && collapsedNodeHash[dr2] === true)"
                                                     class="org-chart-vert-connector-bottom">
                                                 </div>
                                                 <div *ngIf="collapsedNodeHash[dr2] === false && myOrgUserHash[dr2]?.userType === 'supervisor' && maxLevel > 3"
-                                                    (click)="collapsedNodeHash[dr2] = true">
+                                                    (click)="collapseNode(dr2, true)">
                                                     <i class="fal fa-minus-circle" style="font-size:12px;"></i>
                                                 </div>
                                                 <div *ngIf="collapsedNodeHash[dr2] === true && myOrgUserHash[dr2]?.userType === 'supervisor' && maxLevel > 3"
-                                                    (click)="collapsedNodeHash[dr2] = false ">
-                                                    <i class="fal fa-plus-circle" style="font-size:12px;"></i>
+                                                    (click)="collapseNode(dr2, false)">
+                                                    <i class="far fa-plus-circle"
+                                                        style="margin-top:4px;font-size:16px;color:red;"></i>
                                                 </div>
                                             </div>
                                             <div *ngIf="!(collapsedNodeHash[dr2] && collapsedNodeHash[dr2] === true)"
@@ -484,53 +473,38 @@
                                                         <div (mouseenter)="setHoverData(dr3)"
                                                             [ngStyle]="{'padding.px': orgChartPadding}"
                                                             class="org-chart-node" (mouseleave)="setHoverData(null)"
-                                                            (click)="selectUser(dr3)"
-                                                            [ngClass]="{'supervisor-node': myOrgUserHash[dr3]?.userType === 'supervisor','selected-node': (selectionMode === 'Individual' && userIdSelected === dr3) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr3)), 'hover-node': userIdSelected !== dr3 && allActive || dr3 === currentHoverUid || orgChartNodeHash[dr3]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr3)}">
-                                                            <div *ngIf="myOrgUserHash[dr3]?.userType !== 'supervisor'"
-                                                                [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr3]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr3]?.userType|| currentHighlightItem === myOrgUserHash[dr3]?.trainingStatus}">
-                                                                <i [ngClass]="userTypeIconHash[myOrgUserHash[dr3].userType]"
-                                                                    style="font-size:14px;"
-                                                                    [ngStyle]="{'color': getStatusColor(dr3)}"></i>
-                                                                <!--
-                                                                <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr3]"
-                                                                    [ngClass]="userTypeIconHash[myOrgUserHash[dr3]?.userType]"
-                                                                    style="font-size: 14px;"
-                                                                    [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr3]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
-                                                                    -->
-                                                            </div>
-                                                            <div *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor'"
-                                                                [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr3]?.jobTitle))|| currentHighlightItem === myOrgUserHash[dr3]?.userType|| currentHighlightItem === myOrgUserHash[dr3]?.trainingStatus}">
+                                                            [ngClass]="{'supervisor-node': myOrgUserHash[dr3]?.userType === 'supervisor'}">
+                                                            <div style="border:2px solid white;"
+                                                                (click)="selectUser(dr3)"
+                                                                [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr3]?.jobTitle))|| currentHighlightItem === myOrgUserHash[dr3]?.userType|| currentHighlightItem === myOrgUserHash[dr3]?.trainingStatus,'selected-node': (selectionMode === 'Individual' && userIdSelected === dr3) || (selectionMode !== 'Indiviual' &&
+                                                                userIdsSelected.includes(dr3)), 'hover-node': userIdSelected !== dr3 && allActive || dr3 === currentHoverUid ||
+                                                                orgChartNodeHash[dr3]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr3)}">
                                                                 <i [ngClass]="userTypeIconHash[myOrgUserHash[dr3]?.userType]"
                                                                     style="font-size:16px;"
                                                                     [ngStyle]="{'color': getStatusColor(dr3)}"></i>
-                                                                <!--
-                                                                <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr3]"
-                                                                    [ngClass]="userTypeIconHash[myOrgUserHash[dr3]?.userType]"
-                                                                    style="font-size: 18px;"
-                                                                    [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr3]?.trainingStatus]}"></i>
-                                                                    -->
+                                                                <span
+                                                                    *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor' || myOrgUserHash[dr3]?.userType === 'individualContributor' && includeFullName"
+                                                                    style="display: block;"
+                                                                    [ngStyle]="{'font-size.px': textFontSize}">
+                                                                    {{orgChartNodeHash[dr3]?.fName}}<br>{{orgChartNodeHash[dr3]?.lName}}
+                                                                </span>
                                                             </div>
-                                                            <span
-                                                                *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor' || myOrgUserHash[dr3]?.userType === 'individualContributor' && includeFullName"
-                                                                [ngClass]="{'inline-block': !isVertical, 'block': isVertical}"
-                                                                [ngStyle]="{'font-size.px': textFontSize}">
-                                                                {{orgChartNodeHash[dr3]?.fName}}<br>{{orgChartNodeHash[dr3]?.lName}}
-                                                            </span>
                                                             <div *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor' && !(collapsedNodeHash[dr3] && collapsedNodeHash[dr3] === true)"
                                                                 class="org-chart-vert-connector-bottom">
                                                             </div>
                                                             <div *ngIf="collapsedNodeHash[dr3] === false && myOrgUserHash[dr3]?.userType === 'supervisor' && maxLevel > 4"
-                                                                (click)="collapsedNodeHash[dr3] = true">
+                                                                (click)="collapseNode(dr3, true)">
                                                                 <i class="fal fa-minus-circle"
                                                                     style="font-size:12px;"></i>
                                                             </div>
                                                             <div *ngIf="collapsedNodeHash[dr3] === true && myOrgUserHash[dr3]?.userType === 'supervisor' && maxLevel > 4"
-                                                                (click)="collapsedNodeHash[dr3] = false">
-                                                                <i class="fal fa-plus-circle"
-                                                                    style="font-size:12px;"></i>
+                                                                (click)="collapseNode(dr3, false)">
+                                                                <i class="far fa-plus-circle"
+                                                                    style="margin-top:4px;font-size:16px;color:red;"></i>
                                                             </div>
                                                         </div>
-                                                        <div *ngIf="!(collapsedNodeHash[dr3] && collapsedNodeHash[dr3] === true)" style="display:block;">
+                                                        <div *ngIf="!(collapsedNodeHash[dr3] && collapsedNodeHash[dr3] === true)"
+                                                            style="display:block;">
                                                             <div *ngFor="let dr4 of myOrgUserHash[dr3]?.directReports; let dr4Index = index"
                                                                 style="vertical-align: top;position:relative;"
                                                                 [ngClass]="{'inline-block': maxLevel > 4, 'block': maxLevel === 4}">
@@ -548,53 +522,39 @@
                                                                     <div (mouseenter)="setHoverData(dr4)"
                                                                         [ngStyle]="{'padding.px': orgChartPadding}"
                                                                         (mouseleave)="setHoverData(null)"
-                                                                        class="org-chart-node" (click)="selectUser(dr4)"
-                                                                        [ngClass]="{'supervisor-node': myOrgUserHash[dr4]?.userType === 'supervisor','selected-node': (selectionMode === 'Individual' && userIdSelected === dr4) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr4)), 'hover-node': userIdSelected !== dr4 && allActive || dr4 === currentHoverUid || orgChartNodeHash[dr4]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr4)}">
-                                                                        <div *ngIf="myOrgUserHash[dr4]?.userType !== 'supervisor'"
-                                                                            [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr4]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr4]?.userType || currentHighlightItem === myOrgUserHash[dr4]?.trainingStatus}">
-                                                                            <i [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
-                                                                                style="font-size:14px;"
-                                                                                [ngStyle]="{'color': getStatusColor(dr4)}"></i>
-                                                                            <!--
-                                                                            <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr4]"
-                                                                                [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
-                                                                                style="font-size: 14px;"
-                                                                                [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr4]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
-                                                                                -->
-                                                                        </div>
-                                                                        <div *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor'"
-                                                                            [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr4]?.jobTitle))|| currentHighlightItem === myOrgUserHash[dr3]?.userType || currentHighlightItem === myOrgUserHash[dr4]?.trainingStatus}">
+                                                                        class="org-chart-node"
+                                                                        [ngClass]="{'supervisor-node': myOrgUserHash[dr4]?.userType === 'supervisor'}">
+                                                                        <div (click)="selectUser(dr4)"
+                                                                            style="border:2px solid white;"
+                                                                            [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr4]?.jobTitle))|| currentHighlightItem === myOrgUserHash[dr4]?.userType || currentHighlightItem === myOrgUserHash[dr4]?.trainingStatus,'selected-node': (selectionMode === 'Individual' && userIdSelected === dr4) || (selectionMode !== 'Indiviual' &&
+                                                                            userIdsSelected.includes(dr4)), 'hover-node': userIdSelected !== dr4 && allActive || dr4 === currentHoverUid ||
+                                                                            orgChartNodeHash[dr4]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr4)}">
                                                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
                                                                                 style="font-size:16px;"
                                                                                 [ngStyle]="{'color': getStatusColor(dr4)}"></i>
-                                                                            <!--
-                                                                            <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr4]"
-                                                                                [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
-                                                                                style="font-size: 18px;"
-                                                                                [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr4]?.trainingStatus]}"></i>
-                                                                                -->
+                                                                            <span
+                                                                                *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor' || myOrgUserHash[dr4]?.userType === 'individualContributor' && includeFullName"
+                                                                                style="display: block;"
+                                                                                [ngStyle]="{'font-size.px': textFontSize}">
+                                                                                {{orgChartNodeHash[dr4]?.fName}}<br>{{orgChartNodeHash[dr4]?.lName}}
+                                                                            </span>
                                                                         </div>
-                                                                        <span
-                                                                            *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor' || myOrgUserHash[dr4]?.userType === 'individualContributor' && includeFullName"
-                                                                            [ngClass]="{'inline-block': !isVertical, 'block': isVertical}"
-                                                                            [ngStyle]="{'font-size.px': textFontSize}">
-                                                                            {{orgChartNodeHash[dr4]?.fName}}<br>{{orgChartNodeHash[dr4]?.lName}}
-                                                                        </span>
                                                                         <div *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor' && !(collapsedNodeHash[dr4] && collapsedNodeHash[dr4] === true)"
                                                                             class="org-chart-vert-connector-bottom">
                                                                         </div>
                                                                         <div *ngIf="collapsedNodeHash[dr4] === false && myOrgUserHash[dr4]?.userType === 'supervisor' && maxLevel > 5"
-                                                                            (click)="collapsedNodeHash[dr4] = true">
+                                                                            (click)="collapseNode(dr4, true)">
                                                                             <i class="fal fa-minus-circle"
                                                                                 style="font-size:10px;"></i>
                                                                         </div>
                                                                         <div *ngIf="collapsedNodeHash[dr4] === true && myOrgUserHash[dr4]?.userType === 'supervisor' && maxLevel > 5"
-                                                                            (click)="collapsedNodeHash[dr4] = false">
-                                                                            <i class="fal fa-plus-circle"
-                                                                                style="font-size:10px;"></i>
+                                                                            (click)="collapseNode(dr4, false)">
+                                                                            <i class="far fa-plus-circle"
+                                                                                style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                         </div>
                                                                     </div>
-                                                                    <div *ngIf="!(collapsedNodeHash[dr4] && collapsedNodeHash[dr4] === true)" style="display:block;">
+                                                                    <div *ngIf="!(collapsedNodeHash[dr4] && collapsedNodeHash[dr4] === true)"
+                                                                        style="display:block;">
                                                                         <div *ngFor="let dr5 of myOrgUserHash[dr4]?.directReports; let dr5Index = index"
                                                                             style="vertical-align: top;position:relative;"
                                                                             [ngClass]="{'inline-block': maxLevel > 5, 'block': maxLevel === 5}">
@@ -602,70 +562,54 @@
                                                                                 style="position:relative;">
                                                                                 <div class="org-chart-vert-connector">
                                                                                 </div>
-                                                                                <div *ngIf="!isLast(myOrgUserHash[dr3]?.directReports, dr5Index)"
+                                                                                <div *ngIf="!isLast(myOrgUserHash[dr4]?.directReports, dr5Index)"
                                                                                     class="org-chart-horizontal-connector-right">
                                                                                 </div>
                                                                                 <div *ngIf="dr5Index !== 0"
                                                                                     class="org-chart-horizontal-connector-left">
                                                                                 </div>
                                                                             </div>
+
                                                                             <div style="text-align: center;">
                                                                                 <div (mouseenter)="setHoverData(dr5)"
                                                                                     [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                     (mouseleave)="setHoverData(null)"
-                                                                                    (click)="selectUser(dr5)"
-                                                                                    class="org-chart-node"
-                                                                                    [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr5) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr5)), 'hover-node': userIdSelected !== dr5 && allActive || dr5 === currentHoverUid || orgChartNodeHash[dr5]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr5)}">
-                                                                                    <div *ngIf="myOrgUserHash[dr5]?.userType !== 'supervisor'"
-                                                                                        [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr5]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr5]?.userType || currentHighlightItem === myOrgUserHash[dr5]?.trainingStatus}">
-                                                                                        <i [ngClass]="userTypeIconHash[myOrgUserHash[dr5]?.userType]"
-                                                                                            style="font-size:14px;"
-                                                                                            [ngStyle]="{'color': getStatusColor(dr5)}"></i>
-                                                                                        <!--
-                                                                                        <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr5]"
-                                                                                            [ngClass]="userTypeIconHash[myOrgUserHash[dr5]?.userType]"
-                                                                                            style="font-size: 14px;"
-                                                                                            [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr5]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
-                                                                                            -->
-                                                                                    </div>
-                                                                                    <div *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor'"
-                                                                                        [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr5]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr5]?.userType || currentHighlightItem === myOrgUserHash[dr5]?.trainingStatus}">
+                                                                                    class="org-chart-node">
+                                                                                    <div (click)="selectUser(dr5)"
+                                                                                        style="border:2px solid white;"
+                                                                                        [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr5]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr5]?.userType || currentHighlightItem === myOrgUserHash[dr5]?.trainingStatus, 'selected-node': (selectionMode === 'Individual' && userIdSelected === dr5) || (selectionMode !== 'Indiviual' &&
+                                                                                        userIdsSelected.includes(dr5)), 'hover-node': userIdSelected !== dr5 && allActive || dr5 === currentHoverUid ||
+                                                                                        orgChartNodeHash[dr5]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr5)}">
                                                                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr5].userType]"
                                                                                             style="font-size:16px;"
                                                                                             [ngStyle]="{'color': getStatusColor(dr5)}"></i>
-                                                                                        <!--
-                                                                                        <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr5]"
-                                                                                            [ngClass]="userTypeIconHash[myOrgUserHash[dr5]?.userType]"
-                                                                                            style="font-size: 18px;"
-                                                                                            [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr5]?.trainingStatus]}"></i>
-                                                                                            -->
+                                                                                        <span
+                                                                                            *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor' || myOrgUserHash[dr5]?.userType === 'individualContributor' && includeFullName"
+                                                                                            style="display: block;"
+                                                                                            [ngStyle]="{'font-size.px': textFontSize}">
+                                                                                            {{orgChartNodeHash[dr5]?.fName}}<br>{{orgChartNodeHash[dr5]?.lName}}
+                                                                                        </span>
                                                                                     </div>
-                                                                                    <span
-                                                                                        *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor' || myOrgUserHash[dr5]?.userType === 'individualContributor' && includeFullName"
-                                                                                        [ngClass]="{'inline-block': !isVertical, 'block': isVertical}"
-                                                                                        [ngStyle]="{'font-size.px': textFontSize}">
-                                                                                        {{orgChartNodeHash[dr5]?.fName}}<br>{{orgChartNodeHash[dr5]?.lName}}
-                                                                                    </span>
                                                                                     <div *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor' && !(collapsedNodeHash[dr5] && collapsedNodeHash[dr5] === true)"
                                                                                         class="org-chart-vert-connector-bottom">
                                                                                     </div>
-                                                                                    <div *ngIf="collapsedNodeHash[dr5] === false && myOrgUserHash[dr5]?.userType === 'supervisor' && maxLevel > 5"
-                                                                                        (click)="collapsedNodeHash[dr5] = true">
+                                                                                    <div *ngIf="collapsedNodeHash[dr5] === false && myOrgUserHash[dr5]?.userType === 'supervisor' && maxLevel > 6"
+                                                                                        (click)="collapseNode(dr5, true)">
                                                                                         <i class="fal fa-minus-circle"
                                                                                             style="font-size:10px;"></i>
                                                                                     </div>
-                                                                                    <div *ngIf="collapsedNodeHash[dr5] === true && myOrgUserHash[dr5]?.userType === 'supervisor' && maxLevel > 5"
-                                                                                        (click)="collapsedNodeHash[dr5] = false">
-                                                                                        <i class="fal fa-plus-circle"
-                                                                                            style="font-size:10px;"></i>
+                                                                                    <div *ngIf="collapsedNodeHash[dr5] === true && myOrgUserHash[dr5]?.userType === 'supervisor' && maxLevel > 6"
+                                                                                        (click)="collapseNode(dr5, false)">
+                                                                                        <i class="far fa-plus-circle"
+                                                                                            style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div *ngIf="!(collapsedNodeHash[dr5] && collapsedNodeHash[dr5] === true)"
-                                                                                    [ngClass]="{'inline-block': !isVertical, 'block': isVertical}">
+                                                                                    style="display: block;text-align: center;">
                                                                                     <div *ngFor="let dr6 of myOrgUserHash[dr5]?.directReports; let dr6Index = index"
-                                                                                        style="vertical-align: top;width:fit-content;"
-                                                                                        [ngClass]="{'inline-block': maxLevel < 7, 'block': maxLevel === 7}">
-                                                                                        <div *ngIf="isVertical && myOrgUserHash[dr6]?.userType === 'supervisor'"
+                                                                                        style="vertical-align: top;width:fit-content;display: inline-block;"
+                                                                                        [ngClass]="{'inline-block': maxLevel > 6, 'block': maxLevel === 6}">
+                                                                                        <div *ngIf="maxLevel > 6"
                                                                                             style="position:relative;">
                                                                                             <div
                                                                                                 class="org-chart-vert-connector">
@@ -682,57 +626,42 @@
                                                                                             <div (mouseenter)="setHoverData(dr6)"
                                                                                                 [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                 (mouseleave)="setHoverData(null)"
-                                                                                                (click)="selectUser(dr6)"
-                                                                                                [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': (selectionMode === 'Individual' && userIdSelected === dr6) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr6)), 'hover-node': userIdSelected !== dr6 && allActive || dr6 === currentHoverUid || orgChartNodeHash[dr6]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr6)}">
-                                                                                                <div *ngIf="myOrgUserHash[dr6]?.userType !== 'supervisor'"
-                                                                                                    [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr6]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr6]?.userType}">
+                                                                                                class="org-chart-node">
+                                                                                                <div (click)="selectUser(dr6)"
+                                                                                                    style="border:2px solid white;"
+                                                                                                    [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr6]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr6]?.userType, 'selected-node': (selectionMode === 'Individual' && userIdSelected === dr6) || (selectionMode !== 'Indiviual' &&
+                                                                                                    userIdsSelected.includes(dr6)), 'hover-node': userIdSelected !== dr6 && allActive || dr6 === currentHoverUid ||
+                                                                                                    orgChartNodeHash[dr6]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr6)}">
                                                                                                     <i [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
-                                                                                                        style="font-size:14px;"
-                                                                                                        [ngStyle]="{'color': getStatusColor(dr6)}"></i>
-                                                                                                    <!--
-                                                                                                    <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr6]"
-                                                                                                        [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
-                                                                                                        [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr6]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
-                                                                                                        -->
-                                                                                                </div>
-                                                                                                <div *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor'"
-                                                                                                    [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr6]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr6]?.userType}">
-                                                                                                    <i *ngIf="selectionMode === 'Training' && (currentTrainingSelected !== '' && uidTidUTHash[dr6] && uidTidUTHash[dr6][currentTrainingSelected])"
-                                                                                                        [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
                                                                                                         style="font-size:16px;"
                                                                                                         [ngStyle]="{'color': getStatusColor(dr6)}"></i>
-                                                                                                    <!--                                                                                                    <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr6]"
-                                                                                                        [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
-                                                                                                        style="font-size: 18px;"
-                                                                                                        [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr6]?.trainingStatus]}"></i>
-                                                                                                        -->
 
+                                                                                                    <span
+                                                                                                        *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor' || myOrgUserHash[dr6]?.userType === 'individualContributor' && includeFullName"
+                                                                                                        style="display: block;"
+                                                                                                        [ngStyle]="{'font-size.px': textFontSize}">
+                                                                                                        {{orgChartNodeHash[dr6]?.fName}}<br>{{orgChartNodeHash[dr6]?.lName}}
+                                                                                                    </span>
                                                                                                 </div>
-                                                                                                <span
-                                                                                                    *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor' || myOrgUserHash[dr6]?.userType === 'individualContributor' && includeFullName"
-                                                                                                    [ngClass]="{'inline-block': !isVertical, 'block': isVertical}"
-                                                                                                    [ngStyle]="{'font-size.px': textFontSize}">
-                                                                                                    {{orgChartNodeHash[dr6]?.fName}}<br>{{orgChartNodeHash[dr6]?.lName}}
-                                                                                                </span>
                                                                                                 <div *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor' && !(collapsedNodeHash[dr6] && collapsedNodeHash[dr6] === true)"
                                                                                                     class="org-chart-vert-connector-bottom">
                                                                                                 </div>
-                                                                                                <div *ngIf="collapsedNodeHash[dr6] === false && myOrgUserHash[dr6]?.userType === 'supervisor'"
-                                                                                                    (click)="collapsedNodeHash[dr6] = true">
+                                                                                                <div *ngIf="collapsedNodeHash[dr6] === false && myOrgUserHash[dr6]?.userType === 'supervisor' && maxLevel > 7"
+                                                                                                    (click)="collapseNode(dr6, true)">
                                                                                                     <i class="fal fa-minus-circle"
                                                                                                         style="font-size:10px;"></i>
                                                                                                 </div>
-                                                                                                <div *ngIf="collapsedNodeHash[dr6] === true && myOrgUserHash[dr6]?.userType === 'supervisor'"
-                                                                                                    (click)="collapsedNodeHash[dr6] = false">
-                                                                                                    <i class="fal fa-plus-circle"
-                                                                                                        style="font-size:10px;"></i>
+                                                                                                <div *ngIf="collapsedNodeHash[dr6] === true && myOrgUserHash[dr6]?.userType === 'supervisor' && maxLevel > 7"
+                                                                                                    (click)="collapseNode(dr6, false)">
+                                                                                                    <i class="far fa-plus-circle"
+                                                                                                        style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div
-                                                                                                [ngClass]="{'inline-block': !isVertical, 'block': isVertical}">
+                                                                                            <div *ngIf="!(collapsedNodeHash[dr6] && collapsedNodeHash[dr6] === true)"
+                                                                                                style="display: block;">
                                                                                                 <div *ngFor="let dr7 of myOrgUserHash[dr6]?.directReports"
                                                                                                     style="vertical-align: top;width:fit-content;"
-                                                                                                    [ngClass]="{'inline-block': (isVertical && myOrgUserHash[dr7]?.userType === 'supervisor') || myOrgUserHash[dr7]?.userType !== 'supervisor', 'block': (!isVertical && myOrgUserHash[dr7]?.userType === 'supervisor') || myOrgUserHash[dr7]?.userType !== 'supervisor'}">
+                                                                                                    [ngClass]="{'inline-block': maxLevel > 7, 'block': maxLevel === 7}">
                                                                                                     <div
                                                                                                         class="org-chart-vert-connector">
                                                                                                     </div>
@@ -747,44 +676,41 @@
                                                                                                         <div (mouseenter)="setHoverData(dr7)"
                                                                                                             [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                             (mouseleave)="setHoverData(null)"
-                                                                                                            (click)="selectUser(dr7)"
-                                                                                                            [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical,'selected-node': (selectionMode === 'Individual' && userIdSelected === dr7) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr7)),  'hover-node': userIdSelected !== dr7 && allActive || dr7 === currentHoverUid || orgChartNodeHash[dr7]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr7)}">
-                                                                                                            <div
-                                                                                                                [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr7]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr7]?.userType}">
+                                                                                                            class="org-chart-node">
+                                                                                                            <div (click)="selectUser(dr7)"
+                                                                                                                style="border:2px solid white;"
+                                                                                                                [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr7]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr7]?.userType, 'selected-node': (selectionMode === 'Individual' && userIdSelected === dr7) || (selectionMode !== 'Indiviual' &&
+                                                                                                                userIdsSelected.includes(dr7)), 'hover-node': userIdSelected !== dr7 && allActive || dr7 === currentHoverUid ||
+                                                                                                                orgChartNodeHash[dr7]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr7)}">
                                                                                                                 <i [ngClass]="userTypeIconHash[myOrgUserHash[dr7]?.userType]"
                                                                                                                     style="font-size:14px;"
                                                                                                                     [ngStyle]="{'color': getStatusColor(dr7)}"></i>
-                                                                                                                <!--
-                                                                                                                <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr7]"
-                                                                                                                    [ngClass]="userTypeIconHash[myOrgUserHash[dr7]?.userType]"
-                                                                                                                    [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr7]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
-                                                                                                                    -->
+                                                                                                                <span
+                                                                                                                    *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor' || myOrgUserHash[dr7]?.userType === 'individualContributor' && includeFullName"
+                                                                                                                    style="display: block;"
+                                                                                                                    [ngStyle]="{'font-size.px': textFontSize}">
+                                                                                                                    {{orgChartNodeHash[dr7]?.fName}}<br>{{orgChartNodeHash[dr7]?.lName}}
+                                                                                                                </span>
                                                                                                             </div>
-                                                                                                            <span
-                                                                                                                *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor' || myOrgUserHash[dr7]?.userType === 'individualContributor' && includeFullName"
-                                                                                                                [ngClass]="{'inline-block': !isVertical, 'block': isVertical}"
-                                                                                                                [ngStyle]="{'font-size.px': textFontSize}">
-                                                                                                                {{orgChartNodeHash[dr7]?.fName}}<br>{{orgChartNodeHash[dr7]?.lName}}
-                                                                                                            </span>
-                                                                                                            <div *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor' && isVertical"
+                                                                                                            <div *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor'"
                                                                                                                 class="org-chart-vert-connector-bottom">
                                                                                                             </div>
                                                                                                             <div *ngIf="collapsedNodeHash[dr7] === false"
-                                                                                                                (click)="collapsedNodeHash[dr7] = true">
+                                                                                                                (click)="collapseNode(dr7, true)">
                                                                                                                 <i class="fal fa-minus-circle"
                                                                                                                     style="font-size:10px;"></i>
                                                                                                             </div>
                                                                                                             <div *ngIf="collapsedNodeHash[dr7] === true"
-                                                                                                                (click)="collapsedNodeHash[dr7] = false">
-                                                                                                                <i class="fal fa-plus-circle"
-                                                                                                                    style="font-size:10px;"></i>
+                                                                                                                (click)="collapseNode(dr7, false)">
+                                                                                                                <i class="far fa-plus-circle"
+                                                                                                                    style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div
-                                                                                                            [ngClass]="{'inline-block': !isVertical, 'block': isVertical}">
+                                                                                                            style="display: block;">
                                                                                                             <div *ngFor="let dr8 of myOrgUserHash[dr7]?.directReports"
                                                                                                                 style="vertical-align: top;width:fit-content;"
-                                                                                                                [ngClass]="{'inline-block': (isVertical && myOrgUserHash[dr8]?.userType === 'supervisor') || myOrgUserHash[dr8]?.userType !== 'supervisor', 'block': (!isVertical && myOrgUserHash[dr8]?.userType === 'supervisor') || myOrgUserHash[dr8]?.userType !== 'supervisor'}">
+                                                                                                                [ngClass]="{'inline-block': maxLevel > 8, 'block': maxLevel === 8}">
                                                                                                                 <div
                                                                                                                     class="org-chart-vert-connector">
                                                                                                                 </div>
@@ -794,28 +720,23 @@
                                                                                                                 <div *ngIf="dr8Index !== 0"
                                                                                                                     class="org-chart-horizontal-connector-left">
                                                                                                                 </div>
-                                                                                                                <div (drop)="drop($event)"
-                                                                                                                    (dragover)="allowDrop($event)"
+                                                                                                                <div
                                                                                                                     style="text-align: center;">
-                                                                                                                    <div draggable="true"
-                                                                                                                        (mouseenter)="setHoverData(dr8)"
+                                                                                                                    <div (mouseenter)="setHoverData(dr8)"
                                                                                                                         [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                                         (mouseleave)="setHoverData(null)"
-                                                                                                                        (click)="selectUser(dr8)"
-                                                                                                                        [ngClass]="{'org-chart-node': isVertical, 'org-chart-node-horizontal': !isVertical, 'selected-node': (selectionMode === 'Individual' && userIdSelected === dr8) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(dr8)), 'hover-node': userIdSelected !== dr8 && allActive || dr8 === currentHoverUid || orgChartNodeHash[dr8]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr8)}">
-                                                                                                                        <div
-                                                                                                                            [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr8]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr8]?.userType}">
+                                                                                                                        class="org-chart-node">
+                                                                                                                        <div (click)="selectUser(dr8)"
+                                                                                                                            style="border:2px solid white;"
+                                                                                                                            [ngClass]="{'highlight': (currentJobTitleFilters.length > 0 && currentJobTitleFilters.includes(myOrgUserHash[dr8]?.jobTitle)) || currentHighlightItem === myOrgUserHash[dr8]?.userType, 'selected-node': (selectionMode === 'Individual' && userIdSelected === dr8) || (selectionMode !== 'Indiviual' &&
+                                                                                                                            userIdsSelected.includes(dr8)), 'hover-node': userIdSelected !== dr8 && allActive || dr8 === currentHoverUid ||
+                                                                                                                            orgChartNodeHash[dr8]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr8)}">
                                                                                                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr8]?.userType]"
                                                                                                                                 [ngStyle]="{'color': getStatusColor(dr8), 'font-size.px': iconFontSize}"></i>
-                                                                                                                            <!--
-                                                                                                                            <i *ngIf="selectionMode !== 'Training' || currentTrainingSelected === '' || !uidTidUTHash[dr8]"
-                                                                                                                                [ngClass]="userTypeIconHash[myOrgUserHash[dr8]?.userType]"
-                                                                                                                                [ngStyle]="{'color': userTrainingStatusColorHash[myOrgUserHash[dr8]?.trainingStatus], 'font-size.px': iconFontSize}"></i>
-                                                                                                                                -->
                                                                                                                         </div>
                                                                                                                         <span
                                                                                                                             *ngIf="myOrgUserHash[dr8]?.userType === 'supervisor' || myOrgUserHash[dr8]?.userType === 'individualContributor' && includeFullName"
-                                                                                                                            [ngClass]="{'inline-block': !isVertical, 'block': isVertical}"
+                                                                                                                            style="display: block;"
                                                                                                                             [ngStyle]="{'font-size.px': textFontSize}">
                                                                                                                             {{orgChartNodeHash[dr8]?.fName}}<br>{{orgChartNodeHash[dr8]?.lName}}
                                                                                                                         </span>

@@ -1138,6 +1138,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   highlightHash = {};
   currentHoverUser: UserModel;
   collapsedNodeHash = {};
+  collapsedNodeCnt = 0;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1490,6 +1491,19 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     })
   }
 
+  collapseNode(uid: string, value: boolean) {
+    this.collapsedNodeHash[uid] = value;
+    this.collapsedNodeCnt = Object.keys(this.collapsedNodeHash).length;
+  }
+
+  expandAllNodes() {
+    let keys = Object.keys(this.collapsedNodeHash);
+    for (let key of keys) {
+      this.collapsedNodeHash[key] = false;
+    }
+    this.collapsedNodeCnt = 0;
+  }
+  
   setHighlightItem(item: string) {
     //    console.log('setHiglightItem ', item);
     this.currentHighlightItem = item;
@@ -2232,7 +2246,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (tidUTHash && tidUTHash[this.currentTrainingSelected]) {
         return this.userTrainingStatusColorHash[tidUTHash[this.currentTrainingSelected].status];
       }
-    } else {
+    } else if (this.myOrgUserHash[uid]) {
       return this.userTrainingStatusColorHash[this.myOrgUserHash[uid].trainingStatus];
     }
 
