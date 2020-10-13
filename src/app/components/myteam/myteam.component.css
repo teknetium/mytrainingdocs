@@ -361,13 +361,13 @@ ul.ant-card-actions {
 }
 
 .my-card-header {
-    padding-top:20px;
+    padding-top: 10px;
     background: rgba(253, 239, 178, 1);
     width:100%;
     text-align: center;
 }
 .member-detail-card {
-    border: 1px solid #eaab10;
+    border: 2px solid #eaab10;
 }
 
 .my-card-footer {
@@ -387,4 +387,41 @@ ul.ant-card-actions {
 
 .block {
     display: block !important;
+}
+
+.onboard-panel {
+    display: inline-block;
+    border:1px solid #dddddd;
+    border-radius: 20px;
+    padding:25px;
+    height:fit-content;
+    text-align: center;
+    width:200px;
+    height:200px;
+    text-align: center;
+    background-color: white;
+    cursor: pointer;
+    margin-left:30px;
+}
+
+.onboard-panel:hover {
+    background: rgba(244,255,232, 1);
+}
+
+.legend {
+    position:fixed;
+    bottom:0;
+    right:0;
+    width:200px;
+    opacity:.3;
+    z-index: 10000;
+    color:#2d42e6;
+    background-color: #ecf2ff;
+    padding:10px;
+    border:2px solid #2d42e6;
+    border-radius: 5px;
+}
+
+.legend:hover {
+    opacity: 1;
 }

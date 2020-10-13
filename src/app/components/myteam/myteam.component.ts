@@ -178,7 +178,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     profilePicUrl: '',
     supervisorId: null,
     directReports: [],
-    settings: {},
+    settings: {
+      statusList: [],
+      showCSV: false,
+      themeColor: {}
+    },
     jobTitle: ''
   }
   message: TemplateMessageModel;
@@ -1126,19 +1130,27 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   currentJobTitleFilters = [];
   currentJobTitlesSelected = [];
   maxLevel$: Observable<number>;
-  currentHighlightItem = '';
-  selectionMode = null;
+  selectionMode = 'Individual';
   jobTitleMatchCnt = 0;
   currentUserType = '';
+  currentUserDataError = '';
+  currentUserTrainingStatus = '';
   currentTrainingSelected = '';
   listOfTrainingTitles = [];
   legendObj = {};
   tidUTHash = {};
   uidTidUTHash = {};
-  highlightHash = {};
   currentHoverUser: UserModel;
-  collapsedNodeHash = {};
-  collapsedNodeCnt = 0;
+  collapsedNodes: string[] = [];
+  uidDataErrorHash = {};
+  duplicateEmailHash = {};
+  duplicateEmails: string[] = [];
+  orgEmails: string[] = [];
+  currentDuplicateEmail;
+  currentDuplicateEmailUserId;
+  emailColor = 'red';
+  currentEmailStatus = 'bad';
+  teamOrOrg = '';
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1194,7 +1206,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.tourStepsHash['myTeam'] = ['Step1-myTeam', 'Step2-myTeam', 'Step3-myTeam', 'Step4-myTeam', 'Step5-myTeam'];
     this.tourStepsHash['memberDetails'] = ['Step1-memberDetails'];
     this.tourStepsHash['orgChart'] = ['Step1-orgChart'];
-
+/*
     this.highlightHash = {
       individualContributor: {
         value: 'individualContributor',
@@ -1257,6 +1269,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         iconColor: 'red'
       }
     }
+    */
 
     this.contentHeight = Math.floor((window.innerHeight - (.3 * window.innerHeight)) * .90);
     this.contentWidth = Math.floor(window.innerWidth * .9);
@@ -1301,6 +1314,19 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         if (!user.supervisorId) {
           continue;
         }
+
+        if (user.settings.statusList.includes('duplicateEmail')) {
+          this.duplicateEmailHash[user._id] = user.email;
+          this.duplicateEmails.push(user.email);
+        } else {
+          this.orgEmails.push(user.email);
+        }
+        if (this.duplicateEmails.length > 0) {
+          this.currentDuplicateEmail = this.duplicateEmails[0];
+          this.currentDuplicateEmailUserId = user._id;
+        }
+
+        this.uidDataErrorHash[user._id] = user.settings.statusList
         this.myOrgUserNameHash[user.firstName + ' ' + user.lastName] = user;
         if (listOfSupervisorIds.indexOf(user.supervisorId) < 0) {
           //          this.listOfSupervisors.push({ text: this.myOrgUserHash[user.supervisorId]?.firstName + ' ' + this.myOrgUserHash[user.supervisorId]?.lastName, value: user.supervisorId });
@@ -1359,7 +1385,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.nodes = nodes;
       for (let node of this.nodes) {
         this.orgChartNodeHash[node.extra.uid] = node;
-        this.collapsedNodeHash[node.extra.uid] = false;
       }
 
     });
@@ -1444,6 +1469,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
 
       this.authenticatedUser = user;
+      this.orgEmails.push(this.authenticatedUser.email);
       this.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
       this.teamId = this.authenticatedUser._id;
       this.authenticatedUserFullName = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
@@ -1491,23 +1517,25 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     })
   }
 
-  collapseNode(uid: string, value: boolean) {
-    this.collapsedNodeHash[uid] = value;
-    this.collapsedNodeCnt = Object.keys(this.collapsedNodeHash).length;
-  }
-
-  expandAllNodes() {
-    let keys = Object.keys(this.collapsedNodeHash);
-    for (let key of keys) {
-      this.collapsedNodeHash[key] = false;
+  collapseNode(uid: string, collapse: boolean) {
+    if (collapse) {
+      this.collapsedNodes.push(uid);
+    } else {
+      this.collapsedNodes.splice(this.collapsedNodes.indexOf(uid), 1);
     }
-    this.collapsedNodeCnt = 0;
   }
+/*
+  expandAllNodes() {
+    this.collapsedNodes = [];
+  }
+  */
   
+  /*
   setHighlightItem(item: string) {
     //    console.log('setHiglightItem ', item);
     this.currentHighlightItem = item;
   }
+  */
 
   getSelectedTrainingIconClass(tid: string): string {
     //    console.log('getSelectedTrainingIconClass', tid);
@@ -1675,6 +1703,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.isOrgView = false;
       this.rowSelected = this.userListDisplay.indexOf(this.selectedUser, 0);
       this.resetFilters();
+      this.selectionMode = 'Individual';
     } else {
       this.isOrgView = true;
     }
@@ -1974,6 +2003,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.matchingUsers = userNameList.filter(user => user.toLowerCase().indexOf(value.toLowerCase()) !== -1);
     let index = userNameList.indexOf(value);
     if (index > -1) {
+      this.selectionMode = 'Individual';
       this.selectUser(this.myOrgUserNameHash[value]._id, index);
       //      this.showAddToUserListButton = true;
     }
@@ -2027,6 +2057,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.newTeamMember.profilePicUrl = '';
     this.newTeamMember.directReports = [];
     this.newTeamMember.settings = {
+      statusList: [],
+      showCSV: false,
       themeColor: {
         name: 'grey',
         primary: 'white',
@@ -2101,6 +2133,58 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (this.currentUserType === user.userType) {
         this.userIdsSelected.push(user._id);
       }
+    }
+  }
+  userTrainingsStatusSelectedChanged(userTrainingStatus: string) {
+    this.currentUserTrainingStatus = userTrainingStatus;
+    this.userIdsSelected = [];
+    for (let user of this.myOrgUserObjs) {
+      if (this.currentUserTrainingStatus === user.trainingStatus) {
+        this.userIdsSelected.push(user._id);
+      }
+    }
+  }
+  userDataErrorSelectedChanged(userDataError: string) {
+
+    this.currentUserDataError = userDataError;
+    this.userIdsSelected = [];
+    for (let user of this.myOrgUserObjs) {
+
+      if (user.settings.statusList && user.settings.statusList.includes(userDataError)) {
+        this.userIdsSelected.push(user._id);
+      }
+    }
+  }
+
+  emailIsValid(email: string): boolean {
+    return /\S+@\S+\.\S+/.test(email)
+  }
+
+  setOnboardScope(value: string) {
+    this.teamOrOrg = value;
+  }
+
+  duplicateEmailChange(email: string) {
+    this.currentDuplicateEmail = email;
+    if (this.emailIsValid(email)) {
+      if (!this.orgEmails.includes(email)) {
+        this.emailColor = 'green';
+        this.currentEmailStatus = 'good';
+      } else {
+        this.emailColor = 'red';
+        this.currentEmailStatus = 'bad';
+      }
+    } 
+  }
+
+  saveCorrectedEmail() {
+    let user = this.myOrgUserHash[this.currentDuplicateEmailUserId];
+    if (this.currentEmailStatus === 'good') {
+      user.email = this.currentDuplicateEmail;
+      this.duplicateEmails.shift();
+      this.currentDuplicateEmail = this.duplicateEmails[0];
+//      this.userIdsSelected.splice(this.userIdsSelected.indexOf())
+      this.userService.updateUser(user, false);
     }
   }
 

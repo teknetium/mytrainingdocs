@@ -19,7 +19,11 @@ export interface UserModel {
   profilePicUrl: string,
   supervisorId: string,
   directReports: string[],
-  settings: object
+  settings: {
+    statusList: string[],
+    showCSV: boolean,
+    themeColor: {}
+  }
 }
 
 export interface UserIdHash {
@@ -34,12 +38,6 @@ export interface UserBatchData {
   supervisorName: string
 }
 
-export interface UserStatus {
-  uid: string, 
-  type: 'error' | 'warning' | 'info',
-  value: 'badEmail' | 'duplicateEmail' | 'unknownSupervisor' | 'accountPending' | 'verifyEmail',
-  message?: string
-}
 
 export interface UserFail {
   user: UserModel,

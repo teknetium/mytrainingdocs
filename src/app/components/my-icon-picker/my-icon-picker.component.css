@@ -4,6 +4,7 @@
 	overflow-y: scroll;
 	min-width: 100%;
 	max-height: 100%;
+	z-index: -1;
 }
 
 .icon {
@@ -38,4 +39,14 @@
 }
 .not-showing {
     border:2px solid red !important;
-} 
+}
+.color-chip {
+	width: 30px;
+	height: 30px;
+	border-radius: 5px;
+	border:2px solid #bbbbbb;
+}
+
+.color-chip:hover {
+	border:2px solid black;
+}

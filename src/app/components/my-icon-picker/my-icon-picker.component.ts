@@ -4,13 +4,34 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { AuthService } from '../../shared/services/auth.service';
 import { ENV } from '../../shared/services/env.config';
 import { throwError as ObservableThrowError } from 'rxjs';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-icon-picker',
   templateUrl: './my-icon-picker.component.html',
-  styleUrls: ['./my-icon-picker.component.css']
+  styleUrls: ['./my-icon-picker.component.css'],
+  animations: [
+    trigger('colorSlide', [
+      // ...
+      state('closed', style({
+        'height': '0',
+        'opacity': '0'
+      })),
+      state('open', style({
+        'height': '250px',
+        'opacity': '1'
+      })),
+      transition('open => closed', [
+        animate('300ms')
+      ]),
+      transition('closed => open', [
+        animate('300ms')
+      ]),
+    ]),
+  ]
 })
+
 export class MyIconPickerComponent implements OnInit, AfterViewInit {
 
   colors = {
@@ -182,8 +203,8 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   maxPadding = 20;
   minPadding = 5;
   sliderValue = 50;
-  fontSize = 36;
-  padding = 12;
+  fontSize = 20;
+  padding = 6;
   styles = [];
 
   timer1;
@@ -204,18 +225,22 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   selectedIcon: string = '';
   selectedIconIndex = -1;
   @ViewChild('iconSearch', { static: false }) iconSearch: ElementRef;
-  solid = true;
-  regular = true;
-  light = true;
-  duotone = true;
+//  solid = true;
+//  regular = true;
+//  light = true;
+//  duotone = true;
   styleStr = 'style=solid,regular,light,duotone';
   redValue = 0;
   greenValue = 0;
   blueValue = 0;
-  currentStyles = ['Solid', 'Regular', 'Light', 'Two Tone'];
+  currentColorObj: { colorName: string, colorVal: string };
+//  currentStyles = ['Solid', 'Regular', 'Light', 'Two Tone'];
   rgbArray: number[] = [];
   showColorInitModal = false;
-  currentIconSize = 50;
+  currentIconSize = 20;
+  iconStyle: string = 'solid';
+  colorArray: { colorName: string, colorVal: string }[] = [];
+  showColorPalette = false;
 
   constructor(private auth: AuthService, private http: HttpClient) {
     /*
@@ -228,17 +253,29 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
       }
     }
     */
-    this.getIcons$('searchString=*:style=solid,regular,light,duotone').subscribe(icons => {
+    this.getIcons$('searchString=*:style=' + this.iconStyle).subscribe(icons => {
       this.matchingIconsBS$.next(icons);
       this.matchingIcons = icons;
     })
 
+    let colorNames: string[] = Object.keys(this.colors);
 
+    for (let colorName of colorNames) {
+      let hexColorStr = '#';
+      for (let colorVal of this.colors[colorName]) {
+        hexColorStr += colorVal.toString(16).padStart(2, '0');
+      }
+      console.log('hex color val', hexColorStr);
+      this.colorArray.push({ colorName: colorName, colorVal: hexColorStr});
+    }
+
+    this.currentColorObj = { colorName: 'red', colorVal: '#ff0000' };
+    console.log('colorArray', this.colorArray);
   }
 
   ngOnInit() {
     this.selectedIcon = this.currentIconClass;
-    this.setIconColorString();
+    this.setIconColorString({ colorName: 'red', colorVal: '#ff0000' });
   }
 /*
   colorInitCancel() {
@@ -253,7 +290,18 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
     this.blueValue = this.rgbArray[2];
   }
 */
-  setIconColorString() {
+  
+  iconStyleChanged(style: string): void {
+    this.iconStyle = style;
+    this.styleStr = 'style=' + this.iconStyle;
+    this.searchForIcons();
+  }
+  
+  setIconColorString(color: {colorName: string, colorVal: string}) {
+    this.iconColor = color.colorVal;
+    this.currentColorObj = color;
+    this.icon.emit({ icon: this.selectedIcon, color: this.iconColor });
+        /*
     if (this.currentColor.indexOf('#') === 0) {
       this.rgbArray = this.hexToRgb(this.currentColor);
       this.redValue = this.rgbArray[0];
@@ -274,6 +322,7 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
       }
       this.iconColor = 'rgb(' + this.redValue + ', ' + this.greenValue + ', ' + this.blueValue + ')';
     }
+    */
   }
 
   colorVal(): string {
@@ -283,7 +332,7 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
     this.iconColor = 'rgb(' + this.redValue + ', ' + this.greenValue + ', ' + this.blueValue + ')';
     return this.iconColor;
   }
-
+/*
   toggleStyle(style) {
     this.currentStyles = [];
     this.styleStr = 'style=';
@@ -316,6 +365,7 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
 
     this.searchForIcons();
   }
+  */
 
   colorChange(data, color) {
     if (color === 'red') {
