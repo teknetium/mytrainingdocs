@@ -1,40 +1,22 @@
-<div *ngIf="showOrgChart === 'true'" class="legend">
-    <div style="font-size:16px;text-align: center;">
-        Legend
-    </div>
-    <div style="display:block;font-size:18px;">
-        <i class="fas fa-user"></i>
-        <span style="font-size:12px;margin-left:20px;">Individual Contributor</span>
-    </div>
-    <div style="display:block;font-size:18px;">
-        <i class="fas fa-user-tie"></i>
-        <span style="font-size:12px;margin-left:20px;">Supervisor</span>
-    </div>
-    <div style="display:block;font-size:18px;">
-        <i class="fas fa-user-cowboy"></i>
-        <span style="font-size:12px;margin-left:20px;">Volunteer</span>
-    </div>
-    <div style="display:block;font-size:18px;">
-        <i class="fas fa-user-crown"></i>
-        <span style="font-size:12px;margin-left:20px;">Customer</span>
-    </div>
-
-</div>
-<div *ngIf="authenticatedUser && myOrgUserObjs.length === 1">
+<div *ngIf="authenticatedUser && myOrgUserObjs?.length === 1">
     <div style="display:block;padding: 40px;background-color: #f9f9f9;">
-        <div style="display:inline-block;font-size:20px;">
-            I am onboarding my...
+        <h1 style="text-align: center;">I am onboarding...</h1>
+        <!--
+        <div style="display:block;text-align:center;font-size:34px;">
+            
         </div>
-        <div style="display:inline-block;margin-left:30px;">
+        -->
+        <div style="display:block;text-align: center;">
             <div style="display:flex;width:100%;height:100%;justify-content: space-around;">
-                <div class="onboard-panel" (click)="setOnboardScope('team')">
-                    <span style="font-size:24px;display:block;margin-bottom:5px;text-align: center;">Team</span>
+                <div class="onboard-panel" (click)="setOnboardScope('team')" style="float:left;">
+                    <span style="font-size:24px;display:block;margin-bottom:40px;text-align: center;">My Team</span>
                     <i class="fal fa-users" style="font-size:46px;display:block;margin-bottom:10px;"></i>
                     <i *ngIf="teamOrOrg === 'team'" class="fal fa-check"
                         style="font-size:46px;display:block;color:green;"></i>
                 </div>
-                <div class="onboard-panel" (click)="setOnboardScope('org')">
-                    <span style="font-size:24px;display:block;margin-bottom:5px;text-align: center;">Organization</span>
+                <div class="onboard-panel" (click)="setOnboardScope('org')" style="float:right;">
+                    <span style="font-size:24px;display:block;margin-bottom:40px;text-align: center;">My
+                        Organization</span>
                     <i class="fal fa-sitemap" style="font-size:46px;display:block;margin-bottom:10px;"></i>
                     <i *ngIf="teamOrOrg === 'org'" class="fal fa-check"
                         style="font-size:46px;display:block;color:green;"></i>
@@ -50,6 +32,7 @@
                     <ul>
                         <li style="font-size: 20px;">First Name</li>
                         <li style="font-size: 20px;">Last Name</li>
+                        <li style="font-size: 20px;">User Type ('individualContributor', 'supervisor', 'volunteer', 'contractor', 'customer')</li>
                         <li style="font-size: 20px;">Email Address</li>
                         <li style="font-size: 20px;">Job Title</li>
                     </ul>
@@ -120,7 +103,49 @@
         </div>
     </div>
 </div>
-<div *ngIf="authenticatedUser && myOrgUserObjs.length > 1" style="height:100%;">
+<div *ngIf="authenticatedUser && myOrgUserObjs?.length > 1" style="height:100%;">
+    <div *ngIf="showOrgChart === 'true'" class="legend">
+        <div style="font-size:16px;text-align: center;border-bottom:1px solid #2d42e6;margin-bottom:10px;padding-bottom:10px;">
+            Legend
+        </div>
+        <div style="border-bottom:1px solid #2d42e6;margin-bottom:10px;padding-bottom:10px;">
+            <div style="display:block;font-size:16px;">
+                <i class="fas fa-user"></i>
+                <span style="font-size:10px;margin-left:15px;">Individual Contributor</span>
+            </div>
+            <div style="display:block;font-size:16px;">
+                <i class="fas fa-user-tie"></i>
+                <span style="font-size:10px;margin-left:15px;">Supervisor</span>
+            </div>
+            <div style="display:block;font-size:16px;">
+                <i class="fas fa-user-cowboy"></i>
+                <span style="font-size:10px;margin-left:15px;">Volunteer</span>
+            </div>
+            <div style="display:block;font-size:16px;">
+                <i class="fas fa-user-clock"></i>
+                <span style="font-size:10px;margin-left:15px;">Contractor</span>
+            </div>
+            <div style="display:block;font-size:16px;">
+                <i class="fas fa-user-crown"></i>
+                <span style="font-size:10px;margin-left:15px;">Customer</span>
+            </div>
+        </div>
+        <div style="">
+            <div style="display:block;font-size:16px;">
+                <i class="fas fa-user" style="color:black;"></i>
+                <span style="font-size:10px;margin-left:15px;">No Trainings Assigned</span>
+            </div>
+            <div style="display:block;font-size:16px;">
+                <i class="fas fa-user" style="color:#52c41a;"></i>
+                <span style="font-size:10px;margin-left:15px;">Up To Date</span>
+            </div>
+            <div style="display:block;font-size:16px;">
+                <i class="fas fa-user" style="color:red;"></i>
+                <span style="font-size:10px;margin-left:15px;">At Least One Training Past Due</span>
+            </div>
+        </div>
+
+    </div>
     <div style="position:relative;width:100%;height:100%;">
         <div
             style="position:relative;margin-left:-20px;margin-top:-20px;margin-right:-20px;background-color: #f1f1f1;border:1px solid #dddddd;padding:10px;">
@@ -234,26 +259,26 @@
                 <div class="card-action" style="border-right:1px solid #eaab10;">
                     <div (click)="showUserTrainingModal = true" class="my-action">
                         <i nz-icon nzType="plus-circle" style="color:blue;"></i><br>
-                        <span style="color:blue;font-size:10px;">Assign a Training</span>
+                        <span style="color:blue;font-size:12px;">Assign a Training</span>
                     </div>
                 </div>
                 <div class="card-action" style="border-right:1px solid #eaab10;">
                     <div (click)="editUser()" class="my-action">
                         <i nz-icon nzType="edit" style="color:blue;"></i><br>
-                        <span style="color:blue;font-size:10px;">Edit User Profile</span>
+                        <span style="color:blue;font-size:12px;">Edit User Profile</span>
                     </div>
                 </div>
                 <div class="card-action" style="border-right:1px solid #eaab10;">
                     <div (click)="resendRegistrationMsg(selectedUser.email, authenticatedUser.email)" class="my-action">
                         <i nz-icon nzType="redo" style="color:blue;"></i><br>
-                        <span style="color:blue;font-size:10px;">Resend Registration Email</span>
+                        <span style="color:blue;font-size:12px;">Resend Registration Email</span>
                     </div>
                 </div>
                 <div class="card-action">
                     <div nz-popconfirm nzPopconfirmTitle="Delete this user?" (nzOnConfirm)="confirmDelete(selectedUser)"
                         class="my-action">
                         <i nz-icon nzType="delete" style="color:red;"></i><br>
-                        <span style="color:red;font-size:10px;">Delete this User</span>
+                        <span style="color:red;font-size:12px;">Delete this User</span>
                     </div>
                 </div>
             </div>
@@ -386,6 +411,7 @@
                             nzTooltipPlacement="bottomLeft">
                             <i class="far fa-fw fa-file-certificate" style="font-size:16px;"></i>
                         </label>
+                        <!--
                         <label nz-radio-button nzValue="UserTrainingStatus" nz-tooltip
                             nzTooltipTitle="Select by User's Training Status" nzTooltipPlacement="bottomLeft">
                             <i class="far fa-fw fa-file-check" style="font-size:16px;"></i>
@@ -394,6 +420,7 @@
                             nzTooltipTitle="Select by User Data Errors   " nzTooltipPlacement="bottomLeft">
                             <i class="far fa-fw fa-exclamation-circle" style="font-size:16px;color:red;"></i>
                         </label>
+                        -->
                     </nz-radio-group>
                     <!--
                     <nz-select style="width:250px;" nzAllowClear nzPlaceHolder="Select Mode" [(ngModel)]="selectionMode"
@@ -453,6 +480,9 @@
                         </label>
                         <label nz-radio-button nzValue="customer" nz-tooltip nzTooltipTitle="Customer">
                             <i class="fas fa-fw fa-user-crown" style="font-size:16px;"></i>
+                        </label>
+                        <label nz-radio-button nzValue="contractor" nz-tooltip nzTooltipTitle="Contractor">
+                            <i class="fas fa-fw fa-user-clock" style="font-size:16px;"></i>
                         </label>
                     </nz-radio-group>
                 </div>
@@ -656,7 +686,7 @@
                             </td>
                             <td (click)="selectUser(data._id, i)" [ngClass]="{'row-selected': rowSelected === i}"
                                 style="width:15%;">
-                                <div *ngFor="let ut of uidUTHash[data._id]" style="float:right;margin-left:10px;">
+                                <div *ngFor="let ut of uidUTHash[data._id]" style="float:left;margin-left:10px;">
                                     <i [ngClass]="allTrainingIdHash[ut.tid]?.iconClass"
                                         style="font-size:20px;text-align: center;vertical-align: middle;" nz-tooltip
                                         [nzTooltipTitle]="allTrainingIdHash[ut.tid]?.title"
@@ -1243,6 +1273,10 @@
                                 style="display:block;font-size:20px;">
                                 <i class="fad fa-user-cowboy" style="vertical-align: bottom;"></i>
                                 <span style="margin-left:10px;font-size:12px;">Volunteer</span>
+                            </label>
+                            <label nz-radio nzValue="contractor" (click)="newSupervisorSelected(false)" style="display:block;font-size:20px;">
+                                <i class="fad fa-user-hard-hat" style="vertical-align: bottom;"></i>
+                                <span style="margin-left:10px;font-size:12px;">Contractor</span>
                             </label>
                             <label nz-radio nzValue="customer" (click)="newSupervisorSelected(false)"
                                 style="display:block;font-size:20px;">

@@ -218,6 +218,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
   fileIdToDelete: string;
 
+  myDomainUser$: Observable<UserModel[]>;
   httpErrors$: Observable<HttpErrorResponse>;
   userTrainings$: Observable<UserTrainingModel[]>;
   myTrainingIdHash$: Observable<TrainingIdHash>;
@@ -281,6 +282,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.teamTrainingCnt$ = this.trainingService.getTeamTrainingCntStream();
     this.isAuthenticated$ = this.authService.getIsAuthenticatedStream();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
+    this.myDomainUser$ = this.userService.getMyDomainUsersStream();
     this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
   }
 

@@ -247,7 +247,7 @@ export class UserTrainingService {
 
 
 
-  assignTraining(uid: string, tid: string, teamId: string, version: string) {
+  assignTraining(uid: string, tid: string, teamId: string, version: string, dueDate: number) {
     let userTraining:UserTrainingModel = {
       _id: String(new Date().getTime()),
       tid: tid,
@@ -255,7 +255,7 @@ export class UserTrainingService {
       teamId: teamId,
       status: 'upToDate',
       trainingVersion: version,
-      dueDate: new Date().getTime() + 1209600000,
+      dueDate: new Date().getTime() + dueDate,
       dateCompleted: 0,
       timeToDate: 0,
       assessmentResponses: [],

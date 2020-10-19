@@ -219,11 +219,17 @@ export class TrainingService {
   }
 
   assignTrainingsForJobTitle(jobTitle: string, userId: string, teamId: string): void {
+    let dueDate: number;
     let trainings: TrainingModel[] = Object.values(this.allTrainingHash);
     for (const training of trainings) {
       if (training.jobTitle === jobTitle) {
         if (training.versions.length > 1) {
-          this.userTrainingService.assignTraining(userId, training._id, this.authenticatedUser.org, training.versions[0].version);
+          if (training.type === 'onetime') {
+            dueDate = training.expirationDate * 24 * 60 * 60 * 1000;
+          } else if (training.type === 'recurring') {
+            dueDate = training.expirationDate * 24 * 60 * 60 * 1000;
+          }
+          this.userTrainingService.assignTraining(userId, training._id, this.authenticatedUser.org, training.versions[0].version, dueDate);
         }
       }
     }
@@ -366,7 +372,7 @@ export class TrainingService {
       isDirty: false,
       useFinalAssessment: false,
       notifySchedule: [7, 30],
-      expirationDate: 0
+      expirationDate: 14
     };
 
     let newTrainingVersionObj: TrainingVersion = {

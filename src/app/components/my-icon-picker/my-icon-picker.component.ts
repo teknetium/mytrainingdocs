@@ -34,158 +34,282 @@ import { catchError } from 'rxjs/operators';
 
 export class MyIconPickerComponent implements OnInit, AfterViewInit {
 
-  colors = {
-  "aliceblue": [240, 248, 255],
-  "antiquewhite": [250, 235, 215],
-  "aqua": [0, 255, 255],
-  "aquamarine": [127, 255, 212],
-  "azure": [240, 255, 255],
-  "beige": [245, 245, 220],
-  "bisque": [255, 228, 196],
-  "black": [0, 0, 0],
-  "blanchedalmond": [255, 235, 205],
-  "blue": [0, 0, 255],
-  "blueviolet": [138, 43, 226],
-  "brown": [165, 42, 42],
-  "burlywood": [222, 184, 135],
-  "cadetblue": [95, 158, 160],
-  "chartreuse": [127, 255, 0],
-  "chocolate": [210, 105, 30],
-  "coral": [255, 127, 80],
-  "cornflowerblue": [100, 149, 237],
-  "cornsilk": [255, 248, 220],
-  "crimson": [220, 20, 60],
-  "cyan": [0, 255, 255],
-  "darkblue": [0, 0, 139],
-  "darkcyan": [0, 139, 139],
-  "darkgoldenrod": [184, 134, 11],
-  "darkgray": [169, 169, 169],
-  "darkgreen": [0, 100, 0],
-  "darkgrey": [169, 169, 169],
-  "darkkhaki": [189, 183, 107],
-  "darkmagenta": [139, 0, 139],
-  "darkolivegreen": [85, 107, 47],
-  "darkorange": [255, 140, 0],
-  "darkorchid": [153, 50, 204],
-  "darkred": [139, 0, 0],
-  "darksalmon": [233, 150, 122],
-  "darkseagreen": [143, 188, 143],
-  "darkslateblue": [72, 61, 139],
-  "darkslategray": [47, 79, 79],
-  "darkslategrey": [47, 79, 79],
-  "darkturquoise": [0, 206, 209],
-  "darkviolet": [148, 0, 211],
-  "deeppink": [255, 20, 147],
-  "deepskyblue": [0, 191, 255],
-  "dimgray": [105, 105, 105],
-  "dimgrey": [105, 105, 105],
-  "dodgerblue": [30, 144, 255],
-  "firebrick": [178, 34, 34],
-  "floralwhite": [255, 250, 240],
-  "forestgreen": [34, 139, 34],
-  "fuchsia": [255, 0, 255],
-  "gainsboro": [220, 220, 220],
-  "ghostwhite": [248, 248, 255],
-  "gold": [255, 215, 0],
-  "goldenrod": [218, 165, 32],
-  "gray": [128, 128, 128],
-  "green": [0, 128, 0],
-  "greenyellow": [173, 255, 47],
-  "grey": [128, 128, 128],
-  "honeydew": [240, 255, 240],
-  "hotpink": [255, 105, 180],
-  "indianred": [205, 92, 92],
-  "indigo": [75, 0, 130],
-  "ivory": [255, 255, 240],
-  "khaki": [240, 230, 140],
-  "lavender": [230, 230, 250],
-  "lavenderblush": [255, 240, 245],
-  "lawngreen": [124, 252, 0],
-  "lemonchiffon": [255, 250, 205],
-  "lightblue": [173, 216, 230],
-  "lightcoral": [240, 128, 128],
-  "lightcyan": [224, 255, 255],
-  "lightgoldenrodyellow": [250, 250, 210],
-  "lightgray": [211, 211, 211],
-  "lightgreen": [144, 238, 144],
-  "lightgrey": [211, 211, 211],
-  "lightpink": [255, 182, 193],
-  "lightsalmon": [255, 160, 122],
-  "lightseagreen": [32, 178, 170],
-  "lightskyblue": [135, 206, 250],
-  "lightslategray": [119, 136, 153],
-  "lightslategrey": [119, 136, 153],
-  "lightsteelblue": [176, 196, 222],
-  "lightyellow": [255, 255, 224],
-  "lime": [0, 255, 0],
-  "limegreen": [50, 205, 50],
-  "linen": [250, 240, 230],
-  "magenta": [255, 0, 255],
-  "maroon": [128, 0, 0],
-  "mediumaquamarine": [102, 205, 170],
-  "mediumblue": [0, 0, 205],
-  "mediumorchid": [186, 85, 211],
-  "mediumpurple": [147, 112, 219],
-  "mediumseagreen": [60, 179, 113],
-  "mediumslateblue": [123, 104, 238],
-  "mediumspringgreen": [0, 250, 154],
-  "mediumturquoise": [72, 209, 204],
-  "mediumvioletred": [199, 21, 133],
-  "midnightblue": [25, 25, 112],
-  "mintcream": [245, 255, 250],
-  "mistyrose": [255, 228, 225],
-  "moccasin": [255, 228, 181],
-  "navajowhite": [255, 222, 173],
-  "navy": [0, 0, 128],
-  "oldlace": [253, 245, 230],
-  "olive": [128, 128, 0],
-  "olivedrab": [107, 142, 35],
-  "orange": [255, 165, 0],
-  "orangered": [255, 69, 0],
-  "orchid": [218, 112, 214],
-  "palegoldenrod": [238, 232, 170],
-  "palegreen": [152, 251, 152],
-  "paleturquoise": [175, 238, 238],
-  "palevioletred": [219, 112, 147],
-  "papayawhip": [255, 239, 213],
-  "peachpuff": [255, 218, 185],
-  "peru": [205, 133, 63],
-  "pink": [255, 192, 203],
-  "plum": [221, 160, 221],
-  "powderblue": [176, 224, 230],
-  "purple": [128, 0, 128],
-  "red": [255, 0, 0],
-  "rosybrown": [188, 143, 143],
-  "royalblue": [65, 105, 225],
-  "saddlebrown": [139, 69, 19],
-  "salmon": [250, 128, 114],
-  "sandybrown": [244, 164, 96],
-  "seagreen": [46, 139, 87],
-  "seashell": [255, 245, 238],
-  "sienna": [160, 82, 45],
-  "silver": [192, 192, 192],
-  "skyblue": [135, 206, 235],
-  "slateblue": [106, 90, 205],
-  "slategray": [112, 128, 144],
-  "slategrey": [112, 128, 144],
-  "snow": [255, 250, 250],
-  "springgreen": [0, 255, 127],
-  "steelblue": [70, 130, 180],
-  "tan": [210, 180, 140],
-  "teal": [0, 128, 128],
-  "thistle": [216, 191, 216],
-  "tomato": [255, 99, 71],
-  "transparent": [0, 0, 0, 0],
-  "turquoise": [64, 224, 208],
-  "violet": [238, 130, 238],
-  "wheat": [245, 222, 179],
-  "white": [255, 255, 255],
-  "whitesmoke": [245, 245, 245],
-  "yellow": [255, 255, 0],
-  "yellowgreen": [154, 205, 50],
-  "rebeccapurple": [102, 51, 153]
-  }
-  
+  colors = [
+    '#f44336',
+    '#ffebee',
+    '#ffcdd2',
+    '#ef9a9a',
+    '#e57373',
+    '#ef5350',
+    '#f44336',
+    '#e53935',
+    '#d32f2f',
+    '#c62828',
+    '#b71c1c',
+    '#ff8a80',
+    '#ff5252',
+    '#ff1744',
+    '#d50000',
+    '#e91e63',
+    '#fce4ec',
+    '#f8bbd0',
+    '#f48fb1',
+    '#f06292',
+    '#ec407a',
+    '#e91e63',
+    '#d81b60',
+    '#c2185b',
+    '#ad1457',
+    '#880e4f',
+    '#ff80ab',
+    '#ff4081',
+    '#f50057',
+    '#c51162',
+    '#9c27b0',
+    '#f3e5f5',
+    '#e1bee7',
+    '#ce93d8',
+    '#ba68c8',
+    '#ab47bc',
+    '#9c27b0',
+    '#8e24aa',
+    '#7b1fa2',
+    '#6a1b9a',
+    '#4a148c',
+    '#ea80fc',
+    '#e040fb',
+    '#d500f9',
+    '#aa00ff',
+    '#673ab7',
+    '#ede7f6',
+    '#d1c4e9',
+    '#b39ddb',
+    '#9575cd',
+    '#7e57c2',
+    '#673ab7',
+    '#5e35b1',
+    '#512da8',
+    '#4527a0',
+    '#311b92',
+    '#b388ff',
+    '#7c4dff',
+    '#651fff',
+    '#6200ea',
+    '#3f51b5',
+    '#e8eaf6',
+    '#c5cae9',
+    '#9fa8da',
+    '#7986cb',
+    '#5c6bc0',
+    '#3f51b5',
+    '#3949ab',
+    '#303f9f',
+    '#283593',
+    '#1a237e',
+    '#8c9eff',
+    '#536dfe',
+    '#3d5afe',
+    '#304ffe',
+    '#2196f3',
+    '#e3f2fd',
+    '#bbdefb',
+    '#90caf9',
+    '#64b5f6',
+    '#42a5f5',
+    '#2196f3',
+    '#1e88e5',
+    '#1976d2',
+    '#1565c0',
+    '#0d47a1',
+    '#82b1ff',
+    '#448aff',
+    '#2979ff',
+    '#2962ff',
+    '#03a9f4',
+    '#e1f5fe',
+    '#b3e5fc',
+    '#81d4fa',
+    '#4fc3f7',
+    '#29b6f6',
+    '#03a9f4',
+    '#039be5',
+    '#0288d1',
+    '#0277bd',
+    '#01579b',
+    '#80d8ff',
+    '#40c4ff',
+    '#00b0ff',
+    '#0091ea',
+    '#00bcd4',
+    '#e0f7fa',
+    '#b2ebf2',
+    '#80deea',
+    '#4dd0e1',
+    '#26c6da',
+    '#00bcd4',
+    '#00acc1',
+    '#0097a7',
+    '#00838f',
+    '#006064',
+    '#84ffff',
+    '#18ffff',
+    '#00e5ff',
+    '#00b8d4',
+    '#009688',
+    '#e0f2f1',
+    '#b2dfdb',
+    '#80cbc4',
+    '#4db6ac',
+    '#26a69a',
+    '#009688',
+    '#00897b',
+    '#00796b',
+    '#00695c',
+    '#004d40',
+    '#a7ffeb',
+    '#64ffda',
+    '#1de9b6',
+    '#00bfa5',
+    '#4caf50',
+    '#e8f5e9',
+    '#c8e6c9',
+    '#a5d6a7',
+    '#81c784',
+    '#66bb6a',
+    '#4caf50',
+    '#43a047',
+    '#388e3c',
+    '#2e7d32',
+    '#1b5e20',
+    '#b9f6ca',
+    '#69f0ae',
+    '#00e676',
+    '#00c853',
+    '#8bc34a',
+    '#f1f8e9',
+    '#dcedc8',
+    '#c5e1a5',
+    '#aed581',
+    '#9ccc65',
+    '#8bc34a',
+    '#7cb342',
+    '#689f38',
+    '#558b2f',
+    '#33691e',
+    '#ccff90',
+    '#b2ff59',
+    '#76ff03',
+    '#64dd17',
+    '#cddc39',
+    '#f9fbe7',
+    '#f0f4c3',
+    '#e6ee9c',
+    '#dce775',
+    '#d4e157',
+    '#cddc39',
+    '#c0ca33',
+    '#afb42b',
+    '#9e9d24',
+    '#827717',
+    '#f4ff81',
+    '#eeff41',
+    '#c6ff00',
+    '#aeea00',
+    '#ffeb3b',
+    '#fffde7',
+    '#fff9c4',
+    '#fff59d',
+    '#fff176',
+    '#ffee58',
+    '#ffeb3b',
+    '#fdd835',
+    '#fbc02d',
+    '#f9a825',
+    '#f57f17',
+    '#ffff8d',
+    '#ffff00',
+    '#ffea00',
+    '#ffd600',
+    '#ffc107',
+    '#fff8e1',
+    '#ffecb3',
+    '#ffe082',
+    '#ffd54f',
+    '#ffca28',
+    '#ffc107',
+    '#ffb300',
+    '#ffa000',
+    '#ff8f00',
+    '#ff6f00',
+    '#ffe57f',
+    '#ffd740',
+    '#ffc400',
+    '#ffab00',
+    '#ff9800',
+    '#fff3e0',
+    '#ffe0b2',
+    '#ffcc80',
+    '#ffb74d',
+    '#ffa726',
+    '#ff9800',
+    '#fb8c00',
+    '#f57c00',
+    '#ef6c00',
+    '#e65100',
+    '#ffd180',
+    '#ffab40',
+    '#ff9100',
+    '#ff6d00',
+    '#ff5722',
+    '#fbe9e7',
+    '#ffccbc',
+    '#ffab91',
+    '#ff8a65',
+    '#ff7043',
+    '#ff5722',
+    '#f4511e',
+    '#e64a19',
+    '#d84315',
+    '#bf360c',
+    '#ff9e80',
+    '#ff6e40',
+    '#ff3d00',
+    '#dd2c00',
+    '#795548',
+    '#efebe9',
+    '#d7ccc8',
+    '#bcaaa4',
+    '#a1887f',
+    '#8d6e63',
+    '#795548',
+    '#6d4c41',
+    '#5d4037',
+    '#4e342e',
+    '#3e2723',
+    '#9e9e9e',
+    '#fafafa',
+    '#f5f5f5',
+    '#eeeeee',
+    '#e0e0e0',
+    '#bdbdbd',
+    '#9e9e9e',
+    '#757575',
+    '#616161',
+    '#424242',
+    '#212121',
+    '#607d8b',
+    '#eceff1',
+    '#cfd8dc',
+    '#b0bec5',
+    '#90a4ae',
+    '#78909c',
+    '#607d8b',
+    '#546e7a',
+    '#455a64',
+    '#37474f',
+    '#263238',
+  ];
+
   iconStyleHash = {
     solid: 'fas',
     regular: 'far',
@@ -225,16 +349,15 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   selectedIcon: string = '';
   selectedIconIndex = -1;
   @ViewChild('iconSearch', { static: false }) iconSearch: ElementRef;
-//  solid = true;
-//  regular = true;
-//  light = true;
-//  duotone = true;
-  styleStr = 'style=solid,regular,light,duotone';
+  //  solid = true;
+  //  regular = true;
+  //  light = true;
+  //  duotone = true;
+  styleStr = 'style=solid';
   redValue = 0;
   greenValue = 0;
   blueValue = 0;
-  currentColorObj: { colorName: string, colorVal: string };
-//  currentStyles = ['Solid', 'Regular', 'Light', 'Two Tone'];
+  //  currentStyles = ['Solid', 'Regular', 'Light', 'Two Tone'];
   rgbArray: number[] = [];
   showColorInitModal = false;
   currentIconSize = 20;
@@ -258,71 +381,58 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
       this.matchingIcons = icons;
     })
 
-    let colorNames: string[] = Object.keys(this.colors);
-
-    for (let colorName of colorNames) {
-      let hexColorStr = '#';
-      for (let colorVal of this.colors[colorName]) {
-        hexColorStr += colorVal.toString(16).padStart(2, '0');
-      }
-      console.log('hex color val', hexColorStr);
-      this.colorArray.push({ colorName: colorName, colorVal: hexColorStr});
-    }
-
-    this.currentColorObj = { colorName: 'red', colorVal: '#ff0000' };
-    console.log('colorArray', this.colorArray);
   }
 
   ngOnInit() {
     this.selectedIcon = this.currentIconClass;
-    this.setIconColorString({ colorName: 'red', colorVal: '#ff0000' });
+    this.setIconColorString(this.currentColor);
   }
-/*
-  colorInitCancel() {
-    this.showColorInitModal = false;
-  }
-
-  colorInitOk() {
-    this.iconColor = this.currentColor;
-    this.rgbArray = this.hexToRgb(this.currentColor);
-    this.redValue = this.rgbArray[0];
-    this.greenValue = this.rgbArray[1];
-    this.blueValue = this.rgbArray[2];
-  }
-*/
+  /*
+    colorInitCancel() {
+      this.showColorInitModal = false;
+    }
   
+    colorInitOk() {
+      this.iconColor = this.currentColor;
+      this.rgbArray = this.hexToRgb(this.currentColor);
+      this.redValue = this.rgbArray[0];
+      this.greenValue = this.rgbArray[1];
+      this.blueValue = this.rgbArray[2];
+    }
+  */
+
   iconStyleChanged(style: string): void {
     this.iconStyle = style;
     this.styleStr = 'style=' + this.iconStyle;
     this.searchForIcons();
   }
-  
-  setIconColorString(color: {colorName: string, colorVal: string}) {
-    this.iconColor = color.colorVal;
-    this.currentColorObj = color;
-    this.icon.emit({ icon: this.selectedIcon, color: this.iconColor });
-        /*
-    if (this.currentColor.indexOf('#') === 0) {
-      this.rgbArray = this.hexToRgb(this.currentColor);
-      this.redValue = this.rgbArray[0];
-      this.greenValue = this.rgbArray[1];
-      this.blueValue = this.rgbArray[2];
-      this.iconColor = '#' + this.redValue.toString(16).padStart(2, '0') + this.greenValue.toString(16).padStart(2, '0') + this.blueValue.toString(16).padStart(2, '0');
-    } else {
-      this.rgbArray = this.colors[this.currentColor];
-      if (!this.rgbArray) {
-        this.redValue = 0;
-        this.greenValue = 0;
-        this.blueValue = 0;
-      } else {
-        this.redValue = this.rgbArray[0];
-        this.greenValue = this.rgbArray[1];
-        this.blueValue = this.rgbArray[2];
 
-      }
-      this.iconColor = 'rgb(' + this.redValue + ', ' + this.greenValue + ', ' + this.blueValue + ')';
-    }
-    */
+  setIconColorString(color: string) {
+    this.iconColor = color;
+    this.currentColor = color;
+    this.icon.emit({ icon: this.selectedIcon, color: this.iconColor });
+    /*
+if (this.currentColor.indexOf('#') === 0) {
+  this.rgbArray = this.hexToRgb(this.currentColor);
+  this.redValue = this.rgbArray[0];
+  this.greenValue = this.rgbArray[1];
+  this.blueValue = this.rgbArray[2];
+  this.iconColor = '#' + this.redValue.toString(16).padStart(2, '0') + this.greenValue.toString(16).padStart(2, '0') + this.blueValue.toString(16).padStart(2, '0');
+} else {
+  this.rgbArray = this.colors[this.currentColor];
+  if (!this.rgbArray) {
+    this.redValue = 0;
+    this.greenValue = 0;
+    this.blueValue = 0;
+  } else {
+    this.redValue = this.rgbArray[0];
+    this.greenValue = this.rgbArray[1];
+    this.blueValue = this.rgbArray[2];
+
+  }
+  this.iconColor = 'rgb(' + this.redValue + ', ' + this.greenValue + ', ' + this.blueValue + ')';
+}
+*/
   }
 
   colorVal(): string {
@@ -332,40 +442,40 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
     this.iconColor = 'rgb(' + this.redValue + ', ' + this.greenValue + ', ' + this.blueValue + ')';
     return this.iconColor;
   }
-/*
-  toggleStyle(style) {
-    this.currentStyles = [];
-    this.styleStr = 'style=';
-    if (style === 'solid') {
-      this.solid = !this.solid;
-    } else if (style === 'regular') {
-      this.regular = !this.regular;
-    } else if (style === 'light') {
-      this.light = !this.light;
-    } else if (style === 'duotone') {
-      this.duotone = !this.duotone;
+  /*
+    toggleStyle(style) {
+      this.currentStyles = [];
+      this.styleStr = 'style=';
+      if (style === 'solid') {
+        this.solid = !this.solid;
+      } else if (style === 'regular') {
+        this.regular = !this.regular;
+      } else if (style === 'light') {
+        this.light = !this.light;
+      } else if (style === 'duotone') {
+        this.duotone = !this.duotone;
+      }
+  
+      if (this.solid) {
+        this.currentStyles.push('Solid');
+        this.styleStr += 'solid,';
+      }
+      if (this.regular) {
+        this.currentStyles.push('Regular');
+        this.styleStr += ',regular';
+      }
+      if (this.light) {
+        this.currentStyles.push('Light');
+        this.styleStr += ',light';
+      }
+      if (this.duotone) {
+        this.currentStyles.push('Two Tone');
+        this.styleStr += ',duotone';
+      }
+  
+      this.searchForIcons();
     }
-
-    if (this.solid) {
-      this.currentStyles.push('Solid');
-      this.styleStr += 'solid,';
-    }
-    if (this.regular) {
-      this.currentStyles.push('Regular');
-      this.styleStr += ',regular';
-    }
-    if (this.light) {
-      this.currentStyles.push('Light');
-      this.styleStr += ',light';
-    }
-    if (this.duotone) {
-      this.currentStyles.push('Two Tone');
-      this.styleStr += ',duotone';
-    }
-
-    this.searchForIcons();
-  }
-  */
+    */
 
   colorChange(data, color) {
     if (color === 'red') {
@@ -394,7 +504,7 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
     this.currentIconSize -= 10;
     this.sizeChange(this.currentIconSize);
   }
-  
+
   hexToRgb(c): number[] {
     let rgbArray = [];
     if (/^#([a-f0-9]{3}){1,2}$/.test(c)) {
@@ -409,16 +519,16 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
       return Object.assign([], rgbArray);
     }
   }
-/*
-  hex_to_RGB(hex) {
-    var m = hex.match(/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);
-    return {
-      r: parseInt(m[1], 16),
-      g: parseInt(m[2], 16),
-      b: parseInt(m[3], 16)
-    };
-  }
-  */
+  /*
+    hex_to_RGB(hex) {
+      var m = hex.match(/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i);
+      return {
+        r: parseInt(m[1], 16),
+        g: parseInt(m[2], 16),
+        b: parseInt(m[3], 16)
+      };
+    }
+    */
 
   sizeChange(val) {
     this.fontSize = this.minFontSize + Math.floor(((this.maxFontSize - this.minFontSize) * (val / 100)));

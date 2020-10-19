@@ -62,6 +62,33 @@
         <source [src]="orgChartUrl" type="video/mp4">
       </video>
     </vg-player>
+    <vg-player *ngIf="currentVideo === 'onboarding'" (onPlayerReady)="onPlayerReady($event)">
+    
+      <vg-controls>
+        <vg-play-pause></vg-play-pause>
+        <vg-playback-button></vg-playback-button>
+    
+        <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+    
+        <vg-scrub-bar>
+          <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+          <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+        </vg-scrub-bar>
+    
+        <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+        <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+    
+        <vg-track-selector></vg-track-selector>
+        <vg-mute></vg-mute>
+        <vg-volume></vg-volume>
+    
+        <vg-fullscreen></vg-fullscreen>
+      </vg-controls>
+    
+      <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
+        <source [src]="onboardingUrl" type="video/mp4">
+      </video>
+    </vg-player>
     <vg-player *ngIf="currentVideo === 'trainingTemplate'" (onPlayerReady)="onPlayerReady($event)">
 
       <vg-controls>
@@ -259,11 +286,30 @@
           </div>
         </div>
         <div class="row">
+          <div class="col-lg-6" style="padding:60px 50px 60px 10px;">
+            <div class="text-center">
+              <h2>Onboarding Your Team/Organization</h2>
+              <p>
+                With just a couple of clicks, your entire organization is onboarded.  Every person receives an email which contains a link to complete their registration.
+              </p>
+            </div>
+          </div>
           <div class="col-lg-6" style="height:fit-content;">
             <div class="text-center" style="position:relative;">
               <i class="fas fa-play opaque"
                 style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
-                (click)="explainerVidIsVisible = true"></i>
+                (click)="loadVideo('onboarding')"></i>
+              <img width="400" src="../../../assets/images/onboarding.png">
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-lg-6" style="height:fit-content;">
+            <div class="text-center" style="position:relative;">
+              <i class="fas fa-play opaque"
+                style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
+                (click)="loadVideo('orgChart')"></i>
               <img width="400" src="../../../assets/images/org-chart.png">
             </div>
           </div>

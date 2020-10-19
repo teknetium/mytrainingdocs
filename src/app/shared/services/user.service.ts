@@ -30,6 +30,7 @@ export class UserService {
   private batchFailsBS$ = new BehaviorSubject<UserBatchData[]>([]);
   private myOrgUserNameListBS$ = new BehaviorSubject<string[]>([]);
   private myOrgBS$ = new BehaviorSubject<OrgChartNode[]>(null);
+  private myDomainUsersBS$ = new BehaviorSubject<UserModel[]>(null);
   private supervisorsBS$ = new BehaviorSubject<OrgChartNode[][][]>(null);
   private directReportsBS$ = new BehaviorSubject<OrgChartNode[][][][]>(null);
   private buildOrgProgressBS$ = new BehaviorSubject<BuildOrgProgress>(null);
@@ -141,6 +142,7 @@ export class UserService {
         this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
 
         if (this.authenticatedUser.userType === 'supervisor') {
+          this.router.navigate(['/myteam']);
           //            this.org = this.authenticatedUser.org;
           this.teamId = this.authenticatedUser.uid;
           this.loadData(this.authenticatedUser.org, null);
@@ -164,6 +166,11 @@ export class UserService {
               this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
             },
             err => {
+              let domain: string = profile.email.substring(profile.email.indexOf('@') + 1, profile.email.indexOf('.'));
+              this.getAllUsersInDomain$(domain).subscribe(users => {
+                this.myDomainUsersBS$.next(users);
+              });
+
               this.authenticatedUser = <UserModel>{
                 _id: profile.uid,
                 uid: profile.uid,
@@ -173,7 +180,7 @@ export class UserService {
                 email: profile.email,
                 emailVerified: true,
                 teamId: null,
-                org: profile.email.substring(profile.email.indexOf('@') + 1, profile.email.indexOf('.')),
+                org: domain,
                 teamAdmin: false,
                 orgAdmin: true,
                 appAdmin: true,
@@ -694,6 +701,10 @@ export class UserService {
     return this.myOrgUsersBS$.asObservable();
   }
 
+  getMyDomainUsersStream(): Observable<UserModel[]> {
+    return this.myDomainUsersBS$.asObservable();
+  }
+
   getSelectedUserStream(): Observable<UserModel> {
     return this.selectedUserBS$.asObservable();
   }
@@ -878,9 +889,20 @@ export class UserService {
       );
   }
 
+
   getOrg$(uid: string): Observable<UserModel[]> {
     return this.http
       .get<UserModel[]>(`${ENV.BASE_API}users/org/${uid}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+
+  getAllUsersInDomain$(domain: string): Observable<UserModel[]> {
+    return this.http
+      .get<UserModel[]>(`${ENV.BASE_API}users/domain/${domain}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

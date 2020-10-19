@@ -10,25 +10,24 @@
     </div>
     <div style="width:100%;">
         <div style="display:block;width:100%;height:fit-content;margin-bottom:20px;text-align: center;">
-            <div style="position:relative;float:left;width:33%;height:100%;" (mouseenter)="showColorPalette = true"
-                (mouseleave)="showColorPalette = false">
+            <div style="position:relative;float:left;width:50%;height:100%;text-align: center;"
+                 (mouseenter)="showColorPalette = true" (mouseleave)="showColorPalette = false">
                 <div style="display:block;height:20%;">
                     <span style="font-size:18px;">Color</span>
                 </div>
-                <div style="width:100%;">
+                <div
+                    style="width:90%;display: inline-block;background-color: #f5f5f5;padding:5px;border:1px solid #dddddd;border-radius: 5px;">
                     <div class="color-chip" style="float:left"
-                        [ngStyle]="{'background-color': currentColorObj.colorVal}"></div>
-                    <span
-                        style="line-height:30px;font-size: 16px;float:left;margin-left:20px;">{{currentColorObj.colorName}}
-                    </span>
+                        [ngStyle]="{'background-color': currentColor}"></div>
                     <span style="float:right;margin-right:10px;">
                         <icon class="fal fa-angle-down" style="font-size:22px;line-height:30px;"></icon>
                     </span>
                 </div>
                 <div [@colorSlide]="showColorPalette ? 'open' : 'closed'"
-                    style="position:absolute;top:60px;width:100%;height:200px;overflow-y: scroll;background-color: white;z-index: 2;padding:4px;border:1px solid #bbbbbb;border-radius: 5px;">
-                    <div *ngFor="let color of colorArray" class="color-chip" style="display: inline-block;margin-right:3px;cursor: pointer;"
-                        [ngStyle]="{'background-color': color.colorVal}" (click)="setIconColorString(color)"></div>
+                    style="position:absolute;top:70px;width:100%;height:200px;overflow-y: scroll;background-color: white;z-index: 2;padding:4px;border:1px solid #bbbbbb;border-radius: 5px;">
+                    <div *ngFor="let color of colors" class="color-chip"
+                        style="display: inline-block;margin-right:3px;cursor: pointer;"
+                        [ngStyle]="{'background-color': color}" (click)="setIconColorString(color)"></div>
                 </div>
                 <div style="clear: both;"></div>
                 <!--
@@ -60,6 +59,7 @@
                 </div>
                 -->
             </div>
+            <!--
             <div style="float:left;width:33%;height:100%;">
                 <div style="display:block;height:20%;">
                     <span style="font-size:18px;">Size</span>
@@ -78,16 +78,17 @@
                             style="font-size:24px;display:inline-block;vertical-align: bottom;"></i>
                     </button>
                 </div>
-                <!--
+                < !--
                 <i class="fad fa-fw fa-user-graduate"
                     style="font-size:18px;float:left;line-height:30px;vertical-align: middle;"></i>
                 <nz-slider [nzMin]="0" [nzMax]="100" [nzStep]="5" [(ngModel)]="sliderValue" (ngModelChange)="sizeChange($event)"
                     nzTooltipVisible="never" style="display:inline-block;margin-top:-7px;width:90%;">
                 </nz-slider>
                 <i class="fad fa-fw fa-user-graduate" style="font-size:30px;float:right;vertical-align: middle;"></i>
-                -->
+                -- >
             </div>
-            <div style="float:left;width:33%;height:100%;">
+            -->
+            <div style="float:left;width:50%;height:100%;">
                 <div style="display:block;height:20%;">
                     <span style="font-size:18px;">Style</span>
                 </div>
@@ -138,12 +139,26 @@
             </div>
         </div>
         <div style="clear: both;"></div>
-        <div style="display:block;height:20px;margin-top:20px;">
+        <div style="display:block;height:20px;margin-top:20px;margin-bottom:5px;position:relative;padding:3px;">
             <span style=" font-size:14px;margin-left:10px;color:green;">{{iconName}}</span>
+            <span style=" font-size:14px;position:absolute;left:45%;color:green;">
+                <button
+                    style="display:inline-block;cursor:pointer;padding:0 2px;border-radius:4px;border:1px solid #bbbbbb;margin-right:3px;"
+                    (click)="smaller()" nz-tooltip nzTooltipTitle="Smaller">
+                    <i class="far fa-fw fa-angle-down"
+                        style="font-size:14px;display:inline-block;vertical-align: middle;"></i>
+                </button>
+                <button
+                    style="display:inline-block;cursor:pointer;padding:0 2px;border-radius:4px;border:1px solid #bbbbbb;"
+                    (click)="bigger()" nz-tooltip nzTooltipTitle="Bigger">
+                    <i class="far fa-fw fa-angle-up"
+                        style="font-size:14px;display:inline-block;vertical-align: middle;"></i>
+                </button>
+            </span>
             <span style="float:right;font-size:14px;margin-left:10px;color:green;">{{matchingIcons.length}}
                 matching icons &nbsp;&nbsp;&nbsp;</span>
         </div>
-        <div style="display:block;" [ngStyle]="{'color': iconColor,'height.px':height - 270}">
+        <div style="display:block;margin-top:5px;" [ngStyle]="{'color': iconColor,'height.px':height - 290}">
             <div class="icon-container">
                 <div *ngFor="let icon of matchingIcons$ | async; index as i" (mouseenter)="mouseEnter(i)"
                     (mouseleave)="mouseLeave(i)" (click)="selectIcon(i)" class="icon-box"

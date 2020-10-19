@@ -337,6 +337,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   tourStepsHash = {};
   showNoJobTitle = false;
   myTeam: string[];
+  newVersionActionPanelDisabled = true;
   //    header: ,
   //    page-navigation: { steps: ['Step1-header', 'Step2-header', 'Step3-header', 'Step4-header', 'Step5-header', 'Step6-header', 'Step7-header', 'Step8-header', 'Step9-header'] },
 
@@ -768,8 +769,22 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
   cancelLockTraining() {
     this.lockTrainingModalIsVisible = false;
-    this.changeLevel = '';
-    this.changeLog = '';
+    this.newVersionActionPanelDisabled = true;
+    this.changeLevel = null;
+    this.changeLog = null;
+  }
+
+  changeLogChanged(logVal: string): void {
+    this.changeLog = logVal;
+    if (this.changeLevel && this.changeLog) {
+      this.newVersionActionPanelDisabled = false;
+    }
+  }
+  changeLevelChanged(levelVal: string): void {
+    this.changeLevel = levelVal;
+    if (this.changeLevel && this.changeLog) {
+      this.newVersionActionPanelDisabled = false;
+    }
   }
 
   showVersionModal() {
@@ -800,11 +815,15 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.error1 = false;
     this.error2 = false;
 
+    this.newVersionActionPanelDisabled = false;
+
+    /*
     if (!this.changeLevel) {
       this.error1 = true;
       this.lockTrainingModalIsVisible = true;
       return;
     }
+    */
 
     const versionArray = this.currentSelectedTrainingVersions[0].version.split('_', 3);
     let majorNum = parseInt(versionArray[0], 10);
@@ -849,29 +868,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
     this.lockTrainingModalIsVisible = false;
 
-    /*
-          for (let userId of this.assignedToUsers) {
-            if (this.myTeamHash[userId].jobTitle === this.trainingArchiveList[0].jobTitle) {
-              this.userTrainingService.deleteUserTrainingByTidUid(this.selectedTraining._id, userId);
-              this.removedFromJobTitle.push(userId);
-            }
-          }
-    */
-    for (let userId of this.assignableUsers) {
-      if (this.myOrgHash[userId].jobTitle === this.selectedTraining.jobTitle) {
-        if (this.selectedTraining.versions.length > 1) {
-          if (this.myOrgHash[userId].trainingStatus === 'none') {
-            this.myOrgHash[userId].trainingStatus = 'upToDate';
-            this.userService.updateUser(this.myOrgHash[userId], false);
-          }
-          this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, newVersion);
-          this.assignedFromJobTitle.push(userId);
-        }
-      }
-    }
-    if (this.assignedFromJobTitle.length > 0) {
-      this.assignedFromJobTitleDialogIsVisible = true;
-    }
     if (this.changeLevel === 'major') {
       this.resetTrainingStatus(newVersion);
     }
@@ -897,7 +893,24 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
   }
 
+  assignTrainingDueToMatchingJobTitle(newVersion: string) {
+    for (let userId of this.assignableUsers) {
+      if (this.myOrgHash[userId].jobTitle === this.selectedTraining.jobTitle) {
+        if (this.selectedTraining.versions.length > 1) {
+          if (this.myOrgHash[userId].trainingStatus === 'none') {
+            this.myOrgHash[userId].trainingStatus = 'upToDate';
+            this.userService.updateUser(this.myOrgHash[userId], false);
+          }
+          this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, newVersion, this.selectedTraining.expirationDate );
+          this.assignedFromJobTitle.push(userId);
+        }
+      }
+    }
+    if (this.assignedFromJobTitle.length > 0) {
+      this.assignedFromJobTitleDialogIsVisible = true;
+    }
 
+  }
 
   saveNewVersion() {
     this.introEditorHash = {};
@@ -926,7 +939,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
             this.myOrgHash[userId].trainingStatus = 'upToDate';
             this.userService.updateUser(this.myOrgHash[userId], false);
           }
-          this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, '1_0_0');
+          this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, '1_0_0', this.selectedTraining.expirationDate );
           this.assignedFromJobTitle.push(userId);
         }
       }
@@ -1274,7 +1287,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   confirmAssignmentToUser() {
     this.showAssignToUserDialog = false;
-    this.userTrainingService.assignTraining(this.assignToUser._id, this.selectedTraining._id, this.authenticatedUser._id, this.selectedTraining.versions[0].version);
+    this.userTrainingService.assignTraining(this.assignToUser._id, this.selectedTraining._id, this.authenticatedUser._id, this.selectedTraining.versions[0].version, this.selectedTraining.expirationDate );
     this.userTrainingService.getUTForTraining(this.selectedTraining._id);
   }
 

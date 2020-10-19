@@ -393,15 +393,13 @@ ul.ant-card-actions {
     display: inline-block;
     border:1px solid #dddddd;
     border-radius: 20px;
-    padding:25px;
+    padding:60px 20px;
     height:fit-content;
-    text-align: center;
-    width:200px;
-    height:200px;
+    width:250px;
+    height:250px;
     text-align: center;
     background-color: white;
     cursor: pointer;
-    margin-left:30px;
 }
 
 .onboard-panel:hover {
@@ -412,7 +410,7 @@ ul.ant-card-actions {
     position:fixed;
     bottom:0;
     right:0;
-    width:200px;
+    width:fit-content;
     opacity:.3;
     z-index: 10000;
     color:#2d42e6;

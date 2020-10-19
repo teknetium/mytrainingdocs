@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export interface UserModel {
   _id: string,
   uid: string,
-  userType: 'supervisor' | 'individualContributor' | 'volunteer' | 'customer' | 'candidate',
+  userType: 'supervisor' | 'individualContributor' | 'volunteer' | 'customer' | 'contractor',
   firstName: string,
   lastName: string,
   email: string,

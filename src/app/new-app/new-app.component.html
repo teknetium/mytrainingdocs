@@ -1,5 +1,5 @@
 <nz-layout style="height:100%;">
-    <nz-header style="padding:0 !important;">
+    <nz-header style="padding:0 !important;width:100%;">
         <div style="float:left;margin-right:20px;">
             <div class="logo">
                 <img height="35" src="assets/images/logo/logo.png" style="margin:0 0 20px 15px;">
@@ -7,21 +7,22 @@
         </div>
         <ul nz-menu nzTheme="light" nzMode="horizontal"
             [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.bgColor, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary }">
+            <!--
             <li nz-menu-item nzMatchRouter>
                 <a routerLink="/home" routerLinkActive="active-link">
                     Home
                 </a>
             </li>
-            <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
-                class="nav-badge">
-                <a routerLink="/mytrainings" routerLinkActive="active-link">
-                    My Trainings
-                </a>
-            </li>
+            -->
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
                 class="nav-badge">
                 <a routerLink="/myteam" routerLinkActive="active-link">
                     My Team
+                </a>
+            </li>
+            <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter class="nav-badge">
+                <a routerLink="/mytrainings" routerLinkActive="active-link">
+                    My Trainings
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor' || (authenticatedUser$ | async)?.teamAdmin"
@@ -74,6 +75,13 @@
                     <i nz-icon nzType="setting" theme="outline" style="font-size:20px;color:#000000;"></i>
                 </a>
             </li>
+            <!--
+            <li class="navbar-rhs">
+                <a >
+                {{user.org}}
+                </a>
+            </li>
+            -->
         </ul>
         <ng-template #httpError>
 
@@ -96,10 +104,10 @@
                 </div>
                 <br>
 
+                <!--
                 <p style="margin-bottom: 20px;color:#000000;">
-                    The following value will be used as the name of your organization.&nbsp;&nbsp;You are free to change
-                    it. &nbsp;&nbsp;It will be used by the system to
-                    identify all users in your organization.
+                    Your organization name is 
+                    <span style="font-size:24px;">&nbsp;&nbsp;&nbsp;{{user.org}}</span>
                 </p>
                 <div style="display:block;margin-bottom:10px;width:100%;">
                     <input style="display:inline-block;width:80%;" nz-input type="text" [placeholder]="user.org"
@@ -126,18 +134,24 @@
                             So, let's get started! Oh, one more bit of housekeeping...
                         </div>
                     </span>
+                </p>
+                -->
 
             </div>
             <div *ngIf="authenticatedUser$ | async as user" style="background-color: white;">
-                <div style="display:block;margin-bottom:10px;width:100%;">
-                    <label style="display:inline-block;text-align: right;width:20%;padding-right:10px;">First
-                        Name</label>
+                <span style="margin-left:10%;display:block;float:left;font-size:16px;">Please give us your name...</span>
+                <div style="margin-left:10%;display:block;margin-bottom:10px;width:100%;">
+                    <!--
+                    <label style="display:inline-block;text-align: right;width:20%;padding-right:10px;"></label>
+                    -->
                     <input style="display:inline-block;width:80%;" nz-input type="text" placeholder="First Name"
                         ngDefaultControl [(ngModel)]="fName">
                 </div>
-                <div style="display:block;margin-bottom:10px;width:100%;">
+                <div style="margin-left:10%;display:block;margin-bottom:10px;width:100%;">
+                    <!--
                     <label style="display:inline-block;text-align: right;width:20%;padding-right:10px;">Last
                         Name</label>
+                        -->
                     <input style="display:inline-block;width:80%;" nz-input type="text" placeholder="Last Name"
                         ngDefaultControl [(ngModel)]="lName">
                 </div>

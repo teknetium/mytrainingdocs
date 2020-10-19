@@ -108,7 +108,7 @@ export class AuthService {
       if (profile) {
         this._setSession(authResult, profile);
         console.log('_getProfile: ', profile);
-        this.router.navigate(['/home']);
+//        this.router.navigate(['/home']);
       }
     });
   }

@@ -27,23 +27,26 @@
 -->
 <div *ngIf="selectedTraining$ | async as selectedTraining" class="training-viewer">
     <nz-modal [(nzVisible)]="lockTrainingModalIsVisible" [nzTitle]="selectedTraining?.title" nzWidth="60%"
-        nzOkDisabled="false" nzCancelDisabled="false" (nzOnCancel)="cancelLockTraining()"
+        [nzOkDisabled]="newVersionActionPanelDisabled" nzCancelDisabled="false" (nzOnCancel)="cancelLockTraining()"
         (nzOnOk)="handleLockTraining()">
         <div style="display:inline-block;width:80%;">
             <h3 nz-title>
                 What actions should be taken as a result of the changes that were made?
             </h3>
 
-            <p>The following users are responsible for this training:</p>
-            <ul style="margin-left:100px;">
-                <li *ngFor="let user of assignedToUsers">
-                    {{ myOrgHash[user]?.firstName }} {{ myOrgHash[user]?.lastName }}
-                </li>
-            </ul>
+
+            <ng-container *ngIf="assignedToUsers.length > 0">
+                <p>The following users are responsible for this training:</p>
+                <ul style="margin-left:100px;">
+                    <li *ngFor="let user of assignedToUsers">
+                        {{ myOrgHash[user]?.firstName }} {{ myOrgHash[user]?.lastName }}
+                    </li>
+                </ul>
+            </ng-container>
         </div>
         <div style="clear: both;"></div>
         <div style="display: block;">
-            <nz-radio-group [(ngModel)]="changeLevel">
+            <nz-radio-group [(ngModel)]="changeLevel" (ngModelChange)="changeLevelChanged($event)">
                 <label nz-radio [ngStyle]="{display: 'block', height: '30px',lineHeight: '30px'}" nzValue="major">Reset
                     training
                     status for all responsible users. </label>
@@ -58,7 +61,7 @@
             <p>
                 Please describe the changes you have made?.
             </p>
-            <textarea rows="4" nz-input [(ngModel)]="changeLog"></textarea>
+            <textarea rows="4" nz-input [(ngModel)]="changeLog" (ngModelChange)="changeLogChanged($event)"></textarea>
             <p *ngIf="error2" style="color:red;">Please enter a description of the
                 changes
                 made.</p>
@@ -332,8 +335,8 @@
                         </button>
                         <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit'" nz-button
                             nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Save As New Version"
-                            class="header-icon" (click)="save()" joyrideStep="Step7-header"
-                            stepPosition="bottom" title="Save a new version"
+                            class="header-icon" (click)="save()" joyrideStep="Step7-header" stepPosition="bottom"
+                            title="Save a new version"
                             text="Create a new version of this training.  For versions after 1.0.0, you will be asked to indicate the significance of the changes you have made to the training.">
                             <i nz-icon nzType="lock" theme="twotone" [nzTwotoneColor]="'blue'"
                                 style="vertical-align: top;">
@@ -543,8 +546,7 @@
             </div>
             <div *ngIf="production === 'true' || mode === 'Preview'"
                 style="text-align: center;padding:5px;background-color: #fefbe7;">
-                <button nz-button nzType="default" nzShape="circle" 
-                    class="header-icon" (click)="loadPrevPage()"
+                <button nz-button nzType="default" nzShape="circle" class="header-icon" (click)="loadPrevPage()"
                     [disabled]="isFirstPage(currentPage._id) || assessmentInProgress">
                     <i nz-icon nzType="left" theme="outline" style="vertical-align: top;color:blue;">
                     </i>
@@ -582,8 +584,8 @@
                     <i *ngIf="page?.type === 'assessment'" nz-icon nzType="file-done" theme="outline"
                         style="font-size:22px;display:block;"></i>
                     <i *ngIf="page?.type === 'text'" nz-icon nzType="html5" theme="outline"
-                          style="font-size:22px;display:block;"></i>
-                  <i *ngIf="page?.type === 'training-intro'" nz-icon nzType="file" theme="outline"
+                        style="font-size:22px;display:block;"></i>
+                    <i *ngIf="page?.type === 'training-intro'" nz-icon nzType="file" theme="outline"
                         style="font-size:22px;display:block;"></i>
                     <span style="font-size:10px;">{{page?.title}}</span>
                 </div>
@@ -1272,7 +1274,8 @@
         </div>
     </div>
 </div>
-<nz-modal [(nzVisible)]="assignedFromJobTitleDialogIsVisible" [nzTitle]="'Automatic Training Assignment'" nzWidth="50%"
+<!--
+<nz-modal [(nzVisible)]="assignableFromJobTitleDialogIsVisible" [nzTitle]="'Automatic Training Assignment'" nzWidth="50%"
     nzOkDisabled="false" nzCancelDisabled="true" (nzOnOk)="closeViewer()">
     <div *ngIf="removedFromJobTitle?.length > 0" style="display:inline-block;width:80%;font-size: 16px;">
         The job title associated with this training has changed!
@@ -1291,6 +1294,7 @@
         </div>
     </div>
 </nz-modal>
+-->
 <nz-modal [(nzVisible)]="questionEditorVisible" nzTitle="Question Editor" (nzOnCancel)="handleQuestionEditCancel()"
     (nzOnOk)="updateQuestion()" nzWidth="800">
     <div *ngIf="currentQuestion" style="background-color: white;">

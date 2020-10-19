@@ -237,7 +237,8 @@ export class LandingpageComponent implements OnInit {
   currentHowMsg: string;
   sub1: Subscription;
   explainerUrl = 'https://cdn.filestackcontent.com/kiKtqljARoygXbEeCN6V';
-  orgChartUrl = 'https://cdn.filestackcontent.com/';
+  orgChartUrl = 'https://cdn.filestackcontent.com/kSCuMFNzQ3q8Lr8rxDI0';
+  onboardingUrl = 'https://cdn.filestackcontent.com/7EDYT7rQjOwjLAmZg9Gm';
   trainingTemplateUrl = 'https://cdn.filestackcontent.com/';
   currentVideo;
   showYouTubeIcon = true;

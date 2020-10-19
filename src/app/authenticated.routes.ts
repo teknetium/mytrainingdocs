@@ -5,6 +5,7 @@ import { DocsComponent } from './components/docs/docs.component';
 
 
 export const AuthenticatedROUTES: Routes = [
+    /*
     {
         path: 'home',
         component: HomeComponent,
@@ -17,6 +18,7 @@ export const AuthenticatedROUTES: Routes = [
         component: DocsComponent,
 //        loadChildren: () => import('./components/docs/docs.module').then(m => m.DocsModule)
     },
+    */
     {
         path: 'myteam',
         loadChildren: () => import('./components/myteam/myteam.module').then(m => m.MyteamModule)

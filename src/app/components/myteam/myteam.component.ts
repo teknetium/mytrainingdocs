@@ -2378,7 +2378,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       return;
     }
     if (this.selectionMode === 'Individual') {
-      this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version);
+      this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version, this.allTrainingIdHash[this.selectedTrainingId].expirationDate);
 
       if (this.selectedUser.trainingStatus === 'none') {
         this.selectedUser.trainingStatus = 'upToDate';

@@ -49,7 +49,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     supervisor: 'fad fa-fw fa-user-tie',
     volunteer: 'fad fa-fw fa-user-cowboy',
     customer: 'fad fa-fw fa-user-crown',
-    candidate: 'fad fa-fw fa-user-graduate'
+    contractor: 'fad fa-fw fa-user-clock',
   }
   trainingStatusColorHash = {
     upToDate: '#52c41a',
