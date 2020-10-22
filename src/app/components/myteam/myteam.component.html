@@ -32,7 +32,8 @@
                     <ul>
                         <li style="font-size: 20px;">First Name</li>
                         <li style="font-size: 20px;">Last Name</li>
-                        <li style="font-size: 20px;">User Type ('individualContributor', 'supervisor', 'volunteer', 'contractor', 'customer')</li>
+                        <li style="font-size: 20px;">User Type ('individualContributor', 'supervisor', 'volunteer',
+                            'contractor', 'customer')</li>
                         <li style="font-size: 20px;">Email Address</li>
                         <li style="font-size: 20px;">Job Title</li>
                     </ul>
@@ -99,16 +100,41 @@
                 <button nz-button nzShape="round" (click)="launchImporter()" nzType="primary">
                     Let's Get Started!
                 </button>
+                <div *ngIf="authenticatedUser.appAdmin" style="float:left;">
+                    <button nz-button nzShape="round" (click)="testBulkAdd()" nzType="primary"
+                        style="display:inline-block;">
+                        Test
+                    </button>
+                    <div style="display:inline-block;">
+                        Max Depth
+                        <nz-input-number [(ngModel)]="maxLevel" [nzMin]="1" [nzMax]="10" [nzStep]="1">
+                        </nz-input-number>
+                    </div>
+                    <div style="display:inline-block;">
+                        User Min
+                        <nz-input-number [(ngModel)]="userMin" [nzMin]="1" [nzMax]="10" [nzStep]="1">
+                        </nz-input-number>
+                    </div>
+                    <div style="display:inline-block;">
+                        User Max
+                        <nz-input-number [(ngModel)]="userMax" [nzMin]="1" [nzMax]="10" [nzStep]="1">
+                        </nz-input-number>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <div *ngIf="authenticatedUser && myOrgUserObjs?.length > 1" style="height:100%;">
     <div *ngIf="showOrgChart === 'true'" class="legend">
-        <div style="font-size:16px;text-align: center;border-bottom:1px solid #2d42e6;margin-bottom:10px;padding-bottom:10px;">
+        <div
+            style="font-size:16px;text-align: center;border-bottom:1px solid #2d42e6;margin-bottom:10px;padding-bottom:10px;">
             Legend
         </div>
         <div style="border-bottom:1px solid #2d42e6;margin-bottom:10px;padding-bottom:10px;">
+            <div style="font-size:12px;text-align: center;">
+                User Type
+            </div>
             <div style="display:block;font-size:16px;">
                 <i class="fas fa-user"></i>
                 <span style="font-size:10px;margin-left:15px;">Individual Contributor</span>
@@ -122,7 +148,7 @@
                 <span style="font-size:10px;margin-left:15px;">Volunteer</span>
             </div>
             <div style="display:block;font-size:16px;">
-                <i class="fas fa-user-clock"></i>
+                <i class="fas fa-user-hard-hat"></i>
                 <span style="font-size:10px;margin-left:15px;">Contractor</span>
             </div>
             <div style="display:block;font-size:16px;">
@@ -131,13 +157,16 @@
             </div>
         </div>
         <div style="">
+            <div style="font-size:12px;text-align: center;">
+                User Training Status
+            </div>
             <div style="display:block;font-size:16px;">
                 <i class="fas fa-user" style="color:black;"></i>
                 <span style="font-size:10px;margin-left:15px;">No Trainings Assigned</span>
             </div>
             <div style="display:block;font-size:16px;">
                 <i class="fas fa-user" style="color:#52c41a;"></i>
-                <span style="font-size:10px;margin-left:15px;">Up To Date</span>
+                <span style="font-size:10px;margin-left:15px;">All Trainings are Up To Date</span>
             </div>
             <div style="display:block;font-size:16px;">
                 <i class="fas fa-user" style="color:red;"></i>
@@ -155,38 +184,11 @@
                         <button nz-button nzShape="round" (click)="launchImporter()" nzType="primary">
                             Add Users
                         </button>
-                    </div>
-                    <div *ngIf="authenticatedUser.appAdmin && authenticatedUser.settings.showCSV" style="float:left;">
-                        <button nz-button nzShape="round" (click)="testBulkAdd()" nzType="primary"
-                            style="display:inline-block;">
-                            Test
-                        </button>
                         <button nz-button nzShape="round" (click)="createCSV()" nzType="primary"
                             style="display:inline-block;">
                             CSV
                         </button>
-                        <div style="display:inline-block;">
-                            Max Depth
-                            <nz-input-number [(ngModel)]="maxLevel" [nzMin]="1" [nzMax]="10" [nzStep]="1">
-                            </nz-input-number>
-                        </div>
-                        <div style="display:inline-block;">
-                            User Min
-                            <nz-input-number [(ngModel)]="userMin" [nzMin]="1" [nzMax]="10" [nzStep]="1">
-                            </nz-input-number>
-                        </div>
-                        <div style="display:inline-block;">
-                            User Max
-                            <nz-input-number [(ngModel)]="userMax" [nzMin]="1" [nzMax]="10" [nzStep]="1">
-                            </nz-input-number>
-                        </div>
                     </div>
-                    <!--
-                    <button nz-button nzShape="round" (click)="deleteAllUsers()" nzType="primary"
-                        style="float:left;margin-right:10px;">
-                        Delete All Users
-                    </button>
-                    -->
                     <div style="float:left;margin-left:20px;" joyrideStep="Step3-myTeam" stepPosition="right"
                         title="User Search" text="Search for a user in your organization.">
                         <div style="display:inline-block;">
@@ -241,10 +243,6 @@
                     style="display:inline-block;font-size:16px;font-weight: 500;color:#444444;margin-bottom:10px;">No
                     User Selected
                 </span>
-                <!--
-                                        <i nz-icon nzType="close" style="font-size:22px;float:right;margin-right:20px;cursor:pointer;"
-                                            (click)="showUserDetailPanel = false" nz-tooltip nzTooltipTitle="Hide this panel"></i>
-                                            -->
             </div>
 
             <div joyrideStep="Step1-memberDetails" stepPosition="left" title="Member Details"
@@ -303,92 +301,13 @@
             <div style="clear: both;"></div>
         </div>
         <div *ngIf="showOrgChart === 'true'" style="position:relative;z-index:1;">
-            <div style="display:block;width:100%">
-                <!--
-                <div style="float:left;">
-                    <span style="display:block;font-size:14px;font-weight:500;">Highlight</span>
-                    <nz-select [(ngModel)]="legend" nzAllowClear [nzOptionHeightPx]="600" [nzOptionOverflowSize]="600"
-                        nzPlaceHolder="Select Item To Highlight" style="width:300px;"
-                        [nzCustomTemplate]="defaultTemplate" (ngModelChange)="setHighlightItem($event)">
-                        < !--
-                        <nz-option nzCustomContent nzValue="fas fa-flower-tulip" nzLabel="Clear Highlight">
-                            <i class="fas fa-flower-tulip"
-                                style="font-size:14px;color:orange;z-index:1;display:inline-block;margin-right:10px;"></i>
-                            <span style="font-size:12px;">Clear Highlight</span>
-                        </nz-option>
-                        -- >
-                        <nz-option-group nzLabel="User Type">
-                            <nz-option nzCustomContent nzValue="individualContributor" nzLabel="Individual Contributor">
-                                <i class="fas fa-user"
-                                    style="font-size:14px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
-                                <span style="font-size:12px;">Individual Contributor</span>
-                            </nz-option>
-                            <nz-option nzCustomContent nzValue="supervisor" nzLabel="Supervisor">
-                                <i class="fas fa-user-tie"
-                                    style="font-size:14px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
-                                <span style="font-size:12px;">Supervisor</span>
-                            </nz-option>
-                            <nz-option nzCustomContent nzValue="volunteer" nzLabel="Volunteer">
-                                <i class="fas fa-user-cowboy"
-                                    style="font-size:14px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
-                                <span style="font-size:12px;">Volunteer</span>
-                            </nz-option>
-                            <nz-option nzCustomContent nzValue="customer" nzLabel="Customer">
-                                <i class="fas fa-user-crown"
-                                    style="font-size:14px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
-                                <span style="font-size:12px;">Customer</span>
-                            </nz-option>
-                        </nz-option-group>
-                        <nz-option-group nzLabel="User Data Error">
-                            <nz-option nzCustomContent nzValue="badEmail" nzLabel="Bad Email">
-                                <i class="fas fa-at"
-                                    style="font-size:14px;color:red;z-index:1;display:inline-block;line-height:16px;margin-right:10px;">
-                                </i>
-                                <span style="font-size:12px;">Bad Email</span>
-                            </nz-option>
-                            <nz-option nzCustomContent nzValue="unknownSupervisor" nzLabel="Supervisor Not Found">
-                                <i class="fas fa-user-tie"
-                                    style="font-size:14px;color:red;z-index:1;display:inline-block;line-height:16px;margin-right:10px;">
-                                </i>
-                                <span style="font-size:12px;">No Supervisor Found</span>
-                            </nz-option>
-                            <nz-option nzCustomContent nzValue="accountPending" nzLabel="User Account Pending">
-                                <i class="fas fa-exclamation-triangle"
-                                    style="font-size:14px;color:red;z-index:1;display:inline-block;line-height:16px;margin-right:10px;">
-                                </i>
-                                <span style="font-size:12px;">User Account Pending</span>
-                            </nz-option>
-                        </nz-option-group>
-                        <nz-option-group nzLabel="User Training Status">
-                            <nz-option nzCustomContent nzValue="none" nzLabel="No Trainings Assigned">
-                                <i class="fas fa-user"
-                                    style="font-size:14px;color:#000000;z-index:1;display:inline-block;margin-right:10px;"></i>
-                                <span style="font-size:12px;">No Trainings Assigned</span>
-                            </nz-option>
-                            <nz-option nzCustomContent nzValue="upToDate" nzLabel="All Trainings are Up To Date">
-                                <i class="fas fa-user"
-                                    style="font-size:14px;color:#46bd15;z-index:1;display:inline-block;margin-right:10px;">
-                                </i>
-                                <span style="font-size:12px;">All Trainings are Up To Date</span>
-                            </nz-option>
-                            <nz-option nzCustomContent nzValue="pastDue" nzLabel="At Least One Training is Past Due">
-                                <i class="fas fa-user"
-                                    style="font-size:14px;color:red;z-index:1;display:inline-block;margin-right:10px;">
-                                </i>
-                                <span style="font-size:12px;">At Least One Training is Past Due</span>
-                            </nz-option>
-                        </nz-option-group>
-                    </nz-select>
-                    <ng-template #defaultTemplate let-selected> <i [ngClass]="highlightHash[selected.nzValue].icon"
-                            [ngStyle]="{'color': highlightHash[selected.nzValue].iconColor}"
-                            style="vertical-align: baseline;font-size:14px;"></i>
-                        &nbsp;&nbsp;&nbsp;{{ selected.nzLabel }}
-                    </ng-template>
-                </div>
-                -->
+            <div
+                style="display:block;width:100%;border-bottom:1px solid #dddddd;padding-bottom:20px;margin-bottom:10px;">
                 <div style="float:left;margin-right:20px;">
-                    <div>
-                        <span style="display:block;font-size:14px;font-weight:500;">Selection Mode</span>
+                    <div style="width:fit-content;display:block;">
+                        <span style="display:inline-block;font-size:14px;font-weight:500;">Selection
+                            Mode&nbsp;&nbsp;:&nbsp;&nbsp;</span>
+                        <span style="color:blue;">{{selectionMode}}</span>
                     </div>
                     <nz-radio-group [(ngModel)]="selectionMode" (ngModelChange)="setSelectionMode($event)">
                         <label nz-radio-button nzValue="Individual" nzTooltipPlacement nz-tooltip
@@ -409,7 +328,7 @@
                         </label>
                         <label nz-radio-button nzValue="Training" nz-tooltip nzTooltipTitle="Select by Training"
                             nzTooltipPlacement="bottomLeft">
-                            <i class="far fa-fw fa-file-certificate" style="font-size:16px;"></i>
+                            <i class="far fa-fw fa-graduation-cap" style="font-size:16px;"></i>
                         </label>
                         <!--
                         <label nz-radio-button nzValue="UserTrainingStatus" nz-tooltip
@@ -422,18 +341,6 @@
                         </label>
                         -->
                     </nz-radio-group>
-                    <!--
-                    <nz-select style="width:250px;" nzAllowClear nzPlaceHolder="Select Mode" [(ngModel)]="selectionMode"
-                        (ngModelChange)="setSelectionMode($event)">
-                        <nz-option nzLabel="Individual" nzValue="Individual"></nz-option>
-                        <nz-option nzLabel="Team" nzValue="Org"></nz-option>
-                        <nz-option nzLabel="Job Title" nzValue="JobTitle"></nz-option>
-                        <nz-option nzLabel="User Type" nzValue="UserType"></nz-option>
-                        <nz-option nzLabel="Training" nzValue="Training"></nz-option>
-                        <nz-option nzLabel="Errors & Warnings" nzValue="Errors"></nz-option>
-                        <nz-option nzLabel="User Training Status" nzValue="UserTrainingStatus"></nz-option>
-                    </nz-select>
-                    -->
                 </div>
                 <div *ngIf="selectionMode === 'JobTitle'" style="float:left;">
                     <span style="display:block;font-size:14px;font-weight:500;">Job Titles</span>
@@ -466,23 +373,27 @@
                         &nbsp;&nbsp;&nbsp;{{ selected.nzLabel }}</ng-template>
                 </div>
                 <div *ngIf="selectionMode === 'UserType'" style="float:left;">
-                    <span style="display:block;font-size:14px;font-weight:500;">User Types</span>
+                    <div style="width:fit-content;display:block;">
+                        <span style="display:inline-block;font-size:14px;font-weight:500;">User
+                            Types&nbsp;&nbsp;:&nbsp;&nbsp;</span>
+                        <span style="color:blue;">{{currentUserType}}</span>
+                    </div>
                     <nz-radio-group [(ngModel)]="currentUserType" (ngModelChange)="userTypeSelectedChanged($event)">
-                        <label nz-radio-button nzValue="individualContributor" nz-tooltip
+                        <label nz-radio-button nzValue="individualContributor" nz-tooltip nzTooltipPlacement="bottomLeft" 
                             nzTooltipTitle="Individual Contributor">
                             <i class="fas fa-fw fa-user" style="font-size:16px;"></i>
                         </label>
-                        <label nz-radio-button nzValue="supervisor" nz-tooltip nzTooltipTitle="Supervisor">
+                        <label nz-radio-button nzValue="supervisor"  nzTooltipPlacement="bottomLeft" nz-tooltip nzTooltipTitle="Supervisor">
                             <i class="fas fa-fw fa-user-tie" style="font-size:16px;"></i>
                         </label>
-                        <label nz-radio-button nzValue="volunteer" nz-tooltip nzTooltipTitle="Volunteer">
+                        <label nz-radio-button nzValue="volunteer"  nzTooltipPlacement="bottomLeft" nz-tooltip nzTooltipTitle="Volunteer">
                             <i class="fas fa-fw fa-user-cowboy" style="font-size:16px;"></i>
                         </label>
-                        <label nz-radio-button nzValue="customer" nz-tooltip nzTooltipTitle="Customer">
-                            <i class="fas fa-fw fa-user-crown" style="font-size:16px;"></i>
+                        <label nz-radio-button nzValue="contractor" nzTooltipPlacement="bottomLeft" nz-tooltip nzTooltipTitle="Contractor">
+                            <i class="fas fa-fw fa-user-hard-hat" style="font-size:16px;"></i>
                         </label>
-                        <label nz-radio-button nzValue="contractor" nz-tooltip nzTooltipTitle="Contractor">
-                            <i class="fas fa-fw fa-user-clock" style="font-size:16px;"></i>
+                        <label nz-radio-button nzValue="customer" nz-tooltip  nzTooltipPlacement="bottomLeft" nzTooltipTitle="Customer">
+                            <i class="fas fa-fw fa-user-crown" style="font-size:16px;"></i>
                         </label>
                     </nz-radio-group>
                 </div>
@@ -539,30 +450,6 @@
                         </button>
                     </div>
                 </div>
-
-                <!--
-                    <nz-select style="width:250px;" nzAllowClear nzPlaceHolder="Data Errors"
-                        [(ngModel)]="currentUserDataError" (ngModelChange)="userDataErrorSelectedChanged($event)">
-                        <nz-option nzCustomContent nzValue="duplicateEmail" nzLabel="Duplicate Email">
-                            <i class="fas fa-at"
-                                style="font-size:14px;color:red;z-index:1;display:inline-block;line-height:16px;margin-right:10px;">
-                            </i>
-                            <span style="font-size:12px;">Bad Email</span>
-                        </nz-option>
-                        <nz-option nzCustomContent nzValue="unknownSupervisor" nzLabel="Supervisor Not Found">
-                            <i class="fas fa-user-tie"
-                                style="font-size:14px;color:red;z-index:1;display:inline-block;line-height:16px;margin-right:10px;">
-                            </i>
-                            <span style="font-size:12px;">No Supervisor Found</span>
-                        </nz-option>
-                        <nz-option nzCustomContent nzValue="accountPending" nzLabel="User Account Pending">
-                            <i class="fas fa-exclamation-triangle"
-                                style="font-size:14px;color:red;z-index:1;display:inline-block;line-height:16px;margin-right:10px;">
-                            </i>
-                            <span style="font-size:12px;">User Account Pending</span>
-                        </nz-option>
-                    </nz-select>
-                    -->
                 <div style="padding-top:25px;float:right;">
                     <div *ngIf="selectionMode !== 'Individual'" class="selected-node"
                         style="padding:0 3px;margin-left:10px;display:inline-block;">
@@ -584,11 +471,6 @@
                         (click)="emailSelectedUsers()" nz-tooltip nzTooltipTitle="Send Email to Selected Users"
                         [disabled]="userIdsSelected.length === 0">
                         <i class="fas fa-envelope"></i></button>
-                    <!--
-                    <button nz-button nzShape="circle" nzType="default" style="display:inline-block;margin-left:10px;"
-                        (click)="expandAllNodes()" [disabled]="collapsedNodes.length === 0">
-                        <i class="fas fa-plus"></i></button>
-                        -->
                     <label nz-checkbox ngDefaultControl [(ngModel)]="includeFullName"
                         style="display:inline-block;cursor:pointer;font-size:12px;color:#000000;z-index:1;margin-left:10px;"
                         nz-tooltip nzTooltipTitle="">Show
@@ -604,26 +486,6 @@
                     </div>
                 </div>
                 <div style="clear: both;"></div>
-                <!--
-                <div *ngIf="selectionMode === 'Individual' && userIdSelected"
-                    style="display:block;background: rgba(253, 239, 178, 1);padding:10px;border: 2px solid #eaab10;padding:5px;border-radius: 5px;">
-                    <div
-                        style="float:left;width:30%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;padding:5px;">
-                        <i [ngClass]="userTypeIconHash[currentHoverUser?.userType]" style="font-size:16px;"
-                            [ngStyle]="{'color': userTrainingStatusColorHash[currentHoverUser?.trainingStatus]}"></i>&nbsp;
-                        <span *ngIf="currentHoverUser"
-                            style="display:inline-block;font-size:16px;font-weight: 500;color:black;">{{currentHoverUser?.firstName}}
-                            {{currentHoverUser?.lastName}}&nbsp;&nbsp;
-                        </span>
-                        <span *ngIf="currentHoverUser"
-                            style="display:inline-block;font-size:16px;font-weight: 300;color:#444444;">({{currentHoverUser?.jobTitle}})</span>
-                    </div>
-                    <app-user-trainings mode="admin" logSession="off" [uid]="currentHoverUid" compact="no"
-                        style="float:right;width:60%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;">
-                    </app-user-trainings>
-                    <div style="clear: both;"></div>
-                </div>
-                -->
             </div>
         </div>
         <div *ngIf="showOrgChart !== 'true'" style="padding-top:20px;">
@@ -759,6 +621,16 @@
                                         (click)="collapseNode(dr, false)">
                                         <i class="far fa-plus-circle"
                                             style="margin-top:4px;font-size:16px;color:red;"></i>
+                                        <div class="collapsed-block">
+                                            <div>
+                                                <i class="fas fa-users" style="font-size:18px;"></i> <span
+                                                    style="vertical-align: top;">&nbsp;{{nodeStatHash[dr]?.userCnt}}</span>
+                                            </div>
+                                            <div *ngIf="nodeStatHash[dr]?.pastDueCnt > 0">
+                                                <i class="fas fa-user" style="color:red;"></i>
+                                                {{nodeStatHash[dr]?.pastDueCnt}}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div *ngIf="!collapsedNodes.includes(dr)" style="display:block;">
@@ -802,7 +674,18 @@
                                                 <div *ngIf="collapsedNodes.includes(dr2) && myOrgUserHash[dr2]?.userType === 'supervisor' && maxLevel > 3"
                                                     (click)="collapseNode(dr2, false)">
                                                     <i class="far fa-plus-circle"
-                                                        style="margin-top:4px;font-size:16px;color:red;"></i>
+                                                        style="margin-top:4px;font-size:16px;color:red;">
+                                                    </i>
+                                                    <div class="collapsed-block">
+                                                        <div>
+                                                            <i class="fas fa-users" style="font-size:18px;"></i> <span
+                                                                style="vertical-align: top;">&nbsp;{{nodeStatHash[dr2]?.userCnt}}</span>
+                                                        </div>
+                                                        <div *ngIf="nodeStatHash[dr2]?.pastDueCnt > 0">
+                                                            <i class="fas fa-user" style="color:red;"></i>
+                                                            {{nodeStatHash[dr2]?.pastDueCnt}}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div *ngIf="!collapsedNodes.includes(dr2)" style="display:block;">
@@ -851,6 +734,17 @@
                                                                 (click)="collapseNode(dr3, false)">
                                                                 <i class="far fa-plus-circle"
                                                                     style="margin-top:4px;font-size:16px;color:red;"></i>
+                                                                <div class="collapsed-block">
+                                                                    <div>
+                                                                        <i class="fas fa-users"
+                                                                            style="font-size:18px;"></i> <span
+                                                                            style="vertical-align: top;">&nbsp;{{nodeStatHash[dr3]?.userCnt}}</span>
+                                                                    </div>
+                                                                    <div *ngIf="nodeStatHash[dr3]?.pastDueCnt > 0">
+                                                                        <i class="fas fa-user" style="color:red;"></i>
+                                                                        {{nodeStatHash[dr3]?.pastDueCnt}}
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div *ngIf="!collapsedNodes.includes(dr3)"
@@ -901,6 +795,21 @@
                                                                             (click)="collapseNode(dr4, false)">
                                                                             <i class="far fa-plus-circle"
                                                                                 style="margin-top:4px;font-size:16px;color:red;"></i>
+                                                                            <div class="collapsed-block">
+                                                                                <div>
+                                                                                    <i class="fas fa-users"
+                                                                                        style="font-size:18px;"></i>
+                                                                                    <span
+                                                                                        style="vertical-align: top;">&nbsp;{{nodeStatHash[dr4]?.userCnt}}</span>
+                                                                                </div>
+                                                                                <div
+                                                                                    *ngIf="nodeStatHash[dr4]?.pastDueCnt > 0">
+                                                                                    <i class="fas fa-user"
+                                                                                        style="color:red;"></i>
+                                                                                    {{nodeStatHash[dr4]?.pastDueCnt}}
+                                                                                </div>
+                                                                            </div>
+
                                                                         </div>
                                                                     </div>
                                                                     <div *ngIf="!collapsedNodes.includes(dr4)"
@@ -952,6 +861,19 @@
                                                                                         (click)="collapseNode(dr5, false)">
                                                                                         <i class="far fa-plus-circle"
                                                                                             style="margin-top:4px;font-size:16px;color:red;"></i>
+                                                                                        <div class="collapsed-block">
+                                                                                            <div>
+                                                                                                <i class="fas fa-users"
+                                                                                                    style="font-size:18px;"></i>
+                                                                                                <span
+                                                                                                    style="vertical-align: top;">&nbsp;{{nodeStatHash[dr5]?.userCnt}}</span>
+                                                                                            </div>
+                                                                                            <div
+                                                                                                *ngIf="nodeStatHash[dr5]?.pastDueCnt > 0">
+                                                                                                <i class="fas fa-user"
+                                                                                                    style="color:red;"></i>&nbsp;{{nodeStatHash[dr5]?.pastDueCnt}}
+                                                                                            </div>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div *ngIf="!collapsedNodes.includes(dr5)"
@@ -1005,6 +927,20 @@
                                                                                                     (click)="collapseNode(dr6, false)">
                                                                                                     <i class="far fa-plus-circle"
                                                                                                         style="margin-top:4px;font-size:16px;color:red;"></i>
+                                                                                                    <div
+                                                                                                        class="collapsed-block">
+                                                                                                        <div>
+                                                                                                            <i class="fas fa-users"
+                                                                                                                style="font-size:18px;"></i>
+                                                                                                            <span
+                                                                                                                style="vertical-align: top;">&nbsp;{{nodeStatHash[dr6]?.userCnt}}</span>
+                                                                                                        </div>
+                                                                                                        <div
+                                                                                                            *ngIf="nodeStatHash[dr6]?.pastDueCnt > 0">
+                                                                                                            <i class="fas fa-user"
+                                                                                                                style="color:red;"></i>&nbsp;{{nodeStatHash[dr6]?.pastDueCnt}}
+                                                                                                        </div>
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div *ngIf="!collapsedNodes.includes(dr6)"
@@ -1054,6 +990,20 @@
                                                                                                                 (click)="collapseNode(dr7, false)">
                                                                                                                 <i class="far fa-plus-circle"
                                                                                                                     style="margin-top:4px;font-size:16px;color:red;"></i>
+                                                                                                                <div
+                                                                                                                    class="collapsed-block">
+                                                                                                                    <div>
+                                                                                                                        <i class="fas fa-users"
+                                                                                                                            style="font-size:18px;"></i>
+                                                                                                                        <span
+                                                                                                                            style="vertical-align: top;">&nbsp;{{nodeStatHash[dr7]?.userCnt}}</span>
+                                                                                                                    </div>
+                                                                                                                    <div
+                                                                                                                        *ngIf="nodeStatHash[dr7]?.pastDueCnt > 0">
+                                                                                                                        <i class="fas fa-user"
+                                                                                                                            style="color:red;"></i>&nbsp;{{nodeStatHash[dr7]?.pastDueCnt}}
+                                                                                                                    </div>
+                                                                                                                </div>
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div *ngIf="!collapsedNodes.includes(dr7)"
@@ -1118,65 +1068,8 @@
                 </div>
             </div>
         </div>
-        <!--
-        <div [@userDetailSlide]="userDetailIsVisible ? 'open' : 'closed'" class="member-detail-card"
-            style="position:absolute;bottom:-40px;left:0;width:100%;z-index: 11;">
-            <div class="my-card-header">
-                <i [ngClass]="userTypeIconHash[selectedUser?.userType]" style="font-size:16px;"
-                    [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser?.trainingStatus]}" nz-tooltip
-                    [nzTooltipTitle]=""></i>&nbsp;
-                <span *ngIf="selectedUser"
-                    style="display:inline-block;font-size:16px;font-weight: 500;color:black;margin-bottom:10px;">{{selectedUser?.firstName}}
-                    {{selectedUser?.lastName}}&nbsp;&nbsp;
-                </span>
-                <span *ngIf="selectedUser"
-                    style="display:inline-block;font-size:16px;font-weight: 300;color:#444444;margin-bottom:10px;">({{selectedUser?.jobTitle}})</span>
-                <span *ngIf="!selectedUser"
-                    style="display:inline-block;font-size:16px;font-weight: 500;color:#444444;margin-bottom:10px;">No
-                    User Selected
-                </span>
-                <i nz-icon nzType="menu-fold" style="font-size:22px;float:right;margin-right:20px;cursor:pointer;"
-                    (click)="closeUserDetails()" nz-tooltip nzTooltipTitle="Hide this panel"></i>
-            </div>
-            <div joyrideStep="Step1-memberDetails" stepPosition="left" title="Member Details"
-                style="position: relative;display:block;padding:0 20px;background: rgba(253, 239, 178, 1);"
-                text="This is where the rubber hits the road!  Assign trainings, update profile information, set due dates, etc...">
-                <div
-                    style="width:100%;overflow:scroll;height:fit-content;text-align: left;background-color: white;border: 1px solid #eaab10;">
-                    <app-user-trainings mode="admin" logSession="off"></app-user-trainings>
-                </div>
-            </div>
-            <div class="my-card-footer">
-                <div class="card-action" style="border-right:1px solid #eaab10;">
-                    <div (click)="showUserTrainingModal = true" class="my-action">
-                        <i nz-icon nzType="plus-circle" style="color:blue;"></i><br>
-                        <span style="color:blue;font-size:10px;">Assign a Training</span>
-                    </div>
-                </div>
-                <div class="card-action" style="border-right:1px solid #eaab10;">
-                    <div (click)="editUser()" class="my-action">
-                        <i nz-icon nzType="edit" style="color:blue;"></i><br>
-                        <span style="color:blue;font-size:10px;">Edit User Profile</span>
-                    </div>
-                </div>
-                <div class="card-action" style="border-right:1px solid #eaab10;">
-                    <div (click)="resendRegistrationMsg(selectedUser.email, authenticatedUser.email)" class="my-action">
-                        <i nz-icon nzType="redo" style="color:blue;"></i><br>
-                        <span style="color:blue;font-size:10px;">Resend Registration Email</span>
-                    </div>
-                </div>
-                <div class="card-action">
-                    <div nz-popconfirm nzPopconfirmTitle="Delete this user?" (nzOnConfirm)="confirmDelete(selectedUser)"
-                        class="my-action">
-                        <i nz-icon nzType="delete" style="color:red;"></i><br>
-                        <span style="color:red;font-size:10px;">Delete this User</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    -->
-        <nz-drawer [nzClosable]="false" [nzMaskClosable]="true" [nzVisible]="userPanelVisible" nzPlacement="right"
-            nzTitle="User Profile" [nzWidth]="700">
+        <nz-drawer [nzMaskClosable]="true" [nzVisible]="userPanelVisible" nzPlacement="right" nzTitle="User Profile"
+            [nzWidth]="700">
             <div *ngIf="selectedUser" style="display:block;width:100%;">
                 <div style="display:block;width:90%;">
                     <div style="display:inline-block;width:25%;text-align: right;">
@@ -1274,7 +1167,8 @@
                                 <i class="fad fa-user-cowboy" style="vertical-align: bottom;"></i>
                                 <span style="margin-left:10px;font-size:12px;">Volunteer</span>
                             </label>
-                            <label nz-radio nzValue="contractor" (click)="newSupervisorSelected(false)" style="display:block;font-size:20px;">
+                            <label nz-radio nzValue="contractor" (click)="newSupervisorSelected(false)"
+                                style="display:block;font-size:20px;">
                                 <i class="fad fa-user-hard-hat" style="vertical-align: bottom;"></i>
                                 <span style="margin-left:10px;font-size:12px;">Contractor</span>
                             </label>

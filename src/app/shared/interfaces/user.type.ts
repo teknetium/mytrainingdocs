@@ -34,6 +34,7 @@ export interface UserBatchData {
   firstName: string,
   lastName: string,
   email: string,
+  userType: 'supervisor' | 'individualContributor' | 'volunteer' | 'customer' | 'contractor',
   jobTitle: string,
   supervisorName: string
 }
@@ -56,6 +57,15 @@ export interface OrgChartNode {
   _id?: string;
   level?: number;
   parent?: OrgChartNode;
+}
+
+export interface NodeStat {
+  rootUid: string,
+  userCnt: number,
+  pastDueCnt: number,
+  trainingHash: Object,
+  jobHash: Object,
+  userTypeHash: Object 
 }
 
 export interface BuildOrgProgress {

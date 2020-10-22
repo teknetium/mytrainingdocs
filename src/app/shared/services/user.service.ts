@@ -55,10 +55,11 @@ export class UserService {
   private userFailBS$ = new BehaviorSubject<UserFail>(null);
 
   userTypeIconHash = {
-    supervisor: 'fad fa-user-tie',
-    individualContributor: 'fad fa-user',
-    volunteer: 'fad fa-user-cowboy',
-    customer: 'fad fa-user-crown'
+    supervisor: 'fas fa-user-tie',
+    individualContributor: 'fas fa-user',
+    volunteer: 'fas fa-user-cowboy',
+    contractor: 'fas fa-user-hard-hat',
+    customer: 'fas fa-user-crown'
   }
 
   // Observables
@@ -78,7 +79,6 @@ export class UserService {
   newUserList: UserModel[] = [];
 
   newTeamMember = <UserModel>{
-    userType: 'individualContributor',
     _id: undefined,
     firstName: '',
     lastName: '',
@@ -146,7 +146,7 @@ export class UserService {
           //            this.org = this.authenticatedUser.org;
           this.teamId = this.authenticatedUser.uid;
           this.loadData(this.authenticatedUser.org, null);
-        } else if (this.authenticatedUser.userType === 'individualContributor') {
+        } else {
           this.allOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
           this.myOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
         }
@@ -368,7 +368,7 @@ export class UserService {
       let drUser = this.allOrgUserHash[userId];
       this.myOrgUserHash[drUser._id] = drUser;
       this.myOrgUsers.push(drUser);
-      this.userTrainingService.initUserTrainingsForUser(drUser._id);
+//      this.userTrainingService.initUserTrainingsForUser(drUser._id);
       if (drUser.directReports.length > 0) {
         this.addDirectReportsToMyOrgUserHash(drUser, level);
       }
@@ -511,7 +511,11 @@ export class UserService {
     let _id = String(new Date().getTime());
     for (let batchUser of batchUsers) {
       this.newTeamMember = cloneDeep(this.newTeamMember);
-      this.newTeamMember.userType = 'individualContributor';
+      if (!batchUser.userType) {
+        this.newTeamMember.userType = 'individualContributor';
+      } else {
+        this.newTeamMember.userType = batchUser.userType;
+      }
       this.newTeamMember._id = String(_id + '-' + batchCnt++);
       this.newTeamMember.firstName = batchUser.firstName;
       this.newTeamMember.lastName = batchUser.lastName;

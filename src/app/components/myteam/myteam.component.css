@@ -423,3 +423,11 @@ ul.ant-card-actions {
 .legend:hover {
     opacity: 1;
 }
+
+.collapsed-block {
+    display:block;
+    font-size:14px;
+    border:1px solid #dddddd;
+    background-color: #f9f9f9;
+    padding:2px;
+}

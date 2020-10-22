@@ -22,7 +22,7 @@ export class JobTitleService {
         this.jobTitles.push(jobTitle);
       }
     }
-    this.jobTitlesBS$.next(this.jobTitles);
+    this.jobTitlesBS$.next(Object.assign([], this.jobTitles));
   }
 
   addJobTitle(jt: string) {

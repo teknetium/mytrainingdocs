@@ -308,6 +308,30 @@ export class UserTrainingService {
         counter++;
       }
     }
+    let dbCnt = 0;
+    let batchAddedCount = 0;
+    let startIndex = 0;
+    let chunckSize = 100;
+    while (startIndex < userTrainings.length) {
+      let tmpArray = Object.assign([], userTrainings.slice(startIndex, startIndex + chunckSize));
+      startIndex += chunckSize;
+      this.postBulkUserTraining$(tmpArray).subscribe(userTrainingList => {
+        batchAddedCount += userTrainingList.length;
+        for (let ut of userTrainingList) {
+
+          if (this.uidUTHash[ut.uid]) {
+            this.uidUTHash[ut.uid].push(ut);
+          } else {
+            this.uidUTHash[ut.uid] = [ut];
+          }
+          this.userTrainings$BS.next(this.uidUTHash[ut.uid]);
+          this.allUserTrainingHash[ut._id] = ut;
+        }
+        console.log('bulk assign returns ...', userTrainingList);
+        this.uidUTHashBS$.next(this.uidUTHash);
+      });
+    }
+/*
     this.postBulkUserTraining$(userTrainings).subscribe(userTrainingList => {
       for (let ut of userTrainingList) {
 
@@ -322,6 +346,7 @@ export class UserTrainingService {
       console.log('bulk assign returns ...', userTrainingList);
       this.uidUTHashBS$.next(this.uidUTHash);
     });
+    */
   }
 
   saveUserTraining(ut: UserTrainingModel): void {
