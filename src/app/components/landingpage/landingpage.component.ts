@@ -184,16 +184,20 @@ export class LandingpageComponent implements OnInit {
 
   pricingModel = {
     'team': {
-      monthly: 250,
-      yearly: 2500
+      monthly: 99,
+      yearly: 999
     },
-    'org': {
-      monthly: 750,
-      yearly: 7000
+    'smallOrg': {
+      monthly: 500,
+      yearly: 4800
+    },
+    'largeOrg': {
+      monthly: 1500,
+      yearly: 15000
     },
     'enterprise': {
-      monthly: 1500,
-      yearly: 14000
+      monthly: 3000,
+      yearly: 30000
     }
   }
 

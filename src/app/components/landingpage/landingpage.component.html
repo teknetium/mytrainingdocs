@@ -430,14 +430,14 @@
         </div>
 
         <div class="row align-items-center">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
               <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
                 <div class="media align-items-center">
                   <nz-avatar nzIcon="user" [nzSize]="55" class="ant-avatar-blue"></nz-avatar>
                   <div class="m-l-15" style="text-align: center;">
-                    <h3 class="m-b-0">Team Plan</h3>
-                    <span class="font-size-12">2 Supervisors<br>&nbsp;</span>
+                    <h3 class="m-b-0">Team</h3>
+                    <span class="font-size-12">2 Supervisors</span>
                     <h2 class="font-weight-bold  m-b-0">
                       <span *ngIf="plans === 'monthly'">${{pricingModel.team.monthly}}</span>
                       <span *ngIf="plans === 'annually'">${{pricingModel.team.yearly}}</span>
@@ -460,18 +460,47 @@
             -->
             </nz-card>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
+            <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
+              <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
+                <div class="media align-items-center">
+                  <nz-avatar nzIcon="user" [nzSize]="55" class="ant-avatar-blue"></nz-avatar>
+                  <div class="m-l-15" style="text-align: center;">
+                    <h3 class="m-b-0">Small Org</h3>
+                    <span class="font-size-12">< 100 users</span>
+                    <h2 class="font-weight-bold  m-b-0">
+                      <span *ngIf="plans === 'monthly'">${{pricingModel.smallOrg.monthly}}</span>
+                      <span *ngIf="plans === 'annually'">${{pricingModel.smallOrg.yearly}}</span>
+                      <span class="font-size-13 font-weight-semibold">/{{duration}}</span>
+                    </h2>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-custom btn-rounded" id="checkout-button" style="display: inline-block;">Select
+                Plan</button>
+              <!--
+                      <div class="text-center">
+                        <div>
+                          <a class="btn btn-custom text-white" [ngxScrollTo]="destinations['contact'].ngxScrollToDestination"
+                            [ngxScrollToDuration]="ngxScrollToDuration" [ngxScrollToEasing]="ngxScrollToEasing">Choose
+                            Plan</a>
+                        </div>
+                      </div>
+                      -->
+            </nz-card>
+          </div>
+          <div class="col-md-3">
             <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
               <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
                 <div class="media align-items-center">
                   <nz-avatar nzIcon="team" [nzSize]="55" class="ant-avatar-cyan"></nz-avatar>
                   <div class="m-l-15" style="text-align: center;">
-                    <h3 class="m-b-0">Org Plan</h3>
-                    <span class="font-size-12">3 or more supervisors<br>
-                      < 100 users</span>
+                    <h3 class="m-b-0">Large Org</h3>
+                    <span class="font-size-12">
+                      < 300 users</span>
                         <h2 class="font-weight-bold  m-b-0">
-                          <span *ngIf="plans === 'monthly'">${{pricingModel.org.monthly}}</span>
-                          <span *ngIf="plans === 'annually'">${{pricingModel.org.yearly}}</span>
+                          <span *ngIf="plans === 'monthly'">${{pricingModel.largeOrg.monthly}}</span>
+                          <span *ngIf="plans === 'annually'">${{pricingModel.largeOrg.yearly}}</span>
                           <span class="font-size-13 font-weight-semibold">/{{duration}}</span>
                         </h2>
                   </div>
@@ -492,16 +521,16 @@
             -->
             </nz-card>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <nz-card
               style="position:relative;border-color: #e1e1e1;min-height:450px;padding-top:30px;text-align: center;">
               <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
                 <div class="media align-items-center">
                   <nz-avatar nzIcon="crown" [nzSize]="55" class="ant-avatar-gold"></nz-avatar>
                   <div class="m-l-15" style="text-align: center;">
-                    <h3 class="m-b-0">Enterprise Plan</h3>
-                    <span class="font-size-12">3 or more supervisors<br>
-                      > 100 users</span>
+                    <h3 class="m-b-0">Enterprise</h3>
+                    <span class="font-size-12">
+                      > 300 users</span>
                     <h2 class="font-weight-bold  m-b-0">
                       <span *ngIf="plans === 'monthly'">${{pricingModel.enterprise.monthly}}</span>
                       <span *ngIf="plans === 'annually'">${{pricingModel.enterprise.yearly}}</span>

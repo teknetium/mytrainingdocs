@@ -83,7 +83,8 @@ export class HomeComponent extends BaseComponent implements OnInit {
     pastDue: '#fee5e0',
     completed: '#8df8fe'
   }
-
+  userCardTitle = 'Team/Organization';
+  homePageWidth = 100;
 
   constructor(
     private auth: AuthService,
@@ -222,6 +223,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   selectUser(uid: string) {
     this.router.navigate(['/myteam/' + uid]);
+    this.userService.selectUser(uid);
   }
 
   startTour() {

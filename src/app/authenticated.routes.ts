@@ -5,7 +5,7 @@ import { DocsComponent } from './components/docs/docs.component';
 
 
 export const AuthenticatedROUTES: Routes = [
-    /*
+
     {
         path: 'home',
         component: HomeComponent,
@@ -13,6 +13,7 @@ export const AuthenticatedROUTES: Routes = [
             title: 'Home'
         }
     },
+    /*
     {
         path: 'docs',
         component: DocsComponent,

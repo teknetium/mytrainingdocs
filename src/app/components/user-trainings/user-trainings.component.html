@@ -1,7 +1,7 @@
 <div *ngIf="compact === 'yes'">
     <div style="padding:2px;">
         <div *ngFor="let userTraining of uidUTHash[uid]" style="display:inline-block;margin-left:20px;border-width:0;border-bottom-width:3px;border-style:solid;padding:2px;"
-        [ngStyle]="{'border-color': statusIconHash[userTraining?.status]?.color}">
+        [ngStyle]="{'border-color': statusIconHash[userTraining?.status]?.color}" nz-tooltip [nzTooltipTitle]="trainingIdHash[userTraining?.tid]?.title">
             <i [ngClass]="(trainingIdHash$ | async)[userTraining?.tid]?.iconClass"
                 style="font-size:18px;vertical-align: middle;display:inline-block;"
                 [ngStyle]="{'color': trainingIdHash[userTraining?.tid]?.iconColor}">

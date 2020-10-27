@@ -83,11 +83,11 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 export class MyteamComponent extends BaseComponent implements OnInit {
 
   LICENSE_KEY = "2bda9380-a84c-11e7-8243-1d92e7c67d6d";
-  results = "";
-  browserInnerHeight;
-  browserInnerWidth;
-  contentHeight;
-  contentWidth;
+  results: string = "";
+  browserInnerHeight: number;
+  browserInnerWidth: number;
+  contentHeight: number;
+  contentWidth: number;
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
@@ -253,7 +253,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   userNameToSearchFor: string;
   showAddToUserListButton = false;
   invalidSupervisorName = true;
-  supervisorName;
+  supervisorName: string;
+  supervisorEmail: string;
   supervisorChanged = false;
   showSupervisorAssignmentDialog = false;
   supervisorMatchFails: string[] = [];
@@ -1154,6 +1155,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   teamOrOrg = '';
   nameCnt = 0;
   nodeStatHash = {};
+  currentStep = 0;
+  showCSV = false;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1284,7 +1287,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.maxLevel$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(maxLevel => {
       this.maxLevel = maxLevel;
       if (this.maxLevel > 3) {
-        
+
       }
     });
     /*
@@ -1313,10 +1316,15 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!orgUserHash) {
         return;
       }
+
+      this.userList = [];
+      this.userListDisplay = [];
+
       this.myOrgUserHash = orgUserHash;
       this.myOrgUserObjs = Object.values(this.myOrgUserHash);
+      console.log('myOrgUserHash$ ', this.myOrgUserObjs);
       this.userList = this.myOrgUserObjs;
-      this.userListDisplay = [...this.userList];
+      this.userListDisplay = cloneDeep(this.userList);
       this.myOrgSupervisors = [];
       let bulkAddFailFound = false;
       let listOfSupervisorIds = [];
@@ -1324,6 +1332,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         if (!user.supervisorId) {
           continue;
         }
+
 
         if (user.settings.statusList.includes('duplicateEmail')) {
           this.duplicateEmailHash[user._id] = user.email;
@@ -1463,9 +1472,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           if (tids.includes(training._id)) {
             continue;
           } else {
+            /*
             if (training.versions.length < 2) {
               continue;
             }
+            */
             this.assignableTrainings.push(training);
           }
         }
@@ -1478,7 +1489,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         return;
       }
 
+
+
       this.authenticatedUser = user;
+      this.myOrgUserHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
       this.orgEmails.push(this.authenticatedUser.email);
       this.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
       this.teamId = this.authenticatedUser._id;
@@ -1526,6 +1540,18 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.userFail$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userFail => {
 
     })
+  }
+
+  pre(): void {
+    this.currentStep -= 1;
+  }
+
+  next(): void {
+    this.currentStep += 1;
+  }
+
+  done(): void {
+
   }
 
   collapseNode(uid: string, collapse: boolean) {
@@ -1585,8 +1611,25 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   createCSV() {
-    for (let user of this.newUsers) {
-      this.usersCSV += user.firstName + ',' + user.lastName + ',' + user.email + ',' + user.jobTitle + ',' + user.userType + ',' + user.supervisorName + '\n';
+    if (this.showCSV) {
+      this.showCSV = !this.showCSV;
+      return;
+    }
+
+    this.showCSV = !this.showCSV;
+    
+    this.test = !this.test;
+    this.usersCSV = '';
+    let supervisorName: string;
+    if (this.myOrgUserHash) {
+      for (let user of this.myOrgUserObjs) {
+        if (user.supervisorId) {
+          supervisorName = this.myOrgUserHash[user.supervisorId].firstName + ' ' + this.myOrgUserHash[user.supervisorId].lastName;
+        } else {
+          supervisorName = '';
+        }
+        this.usersCSV += user.firstName + ',' + user.lastName + ',' + user.email + ',' + user.jobTitle + ',' + user.userType + ',' + supervisorName + '\n';
+      }
     }
   }
 
@@ -1693,6 +1736,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       (this.listOfSearchJobTitles.length ? this.listOfSearchJobTitles.some(jobTitle => item.jobTitle === jobTitle) : true)
     const data = this.userList.filter(item => filterFunc(item));
 
+    this.userListDisplay = [];
     if (this.sortName && this.sortValue) {
       this.userListDisplay = data.sort((a, b) =>
         this.sortValue === 'ascend'
@@ -1737,6 +1781,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   testBulkAdd() {
     let currentSupervisorName = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
+    let currentSupervisorEmail = this.authenticatedUser.email;
     let supervisorCnt = 1;
     let name: string = this.getTestUser();
     let fullName: string[] = name.trim().split(' ');
@@ -1745,15 +1790,16 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     let node = <UserBatchData>{
       firstName: fullName[0],
       lastName: fullName[1],
-      email: 'greg@test.com',
+      email: fullName[0] + '.' + fullName[1] + '@' + this.authenticatedUser.org + '.com',
       userType: 'supervisor',
       jobTitle: 'Manager',
-      supervisorName: currentSupervisorName
+//      supervisorName: currentSupervisorName,
+      supervisorEmail: currentSupervisorEmail
     }
 
     let teamSize = Math.floor(this.randn_bm(this.userMin, this.userMax, 2));
     for (let i = 0; i < teamSize; i++) {
-      let childNode = this.buildNode(currentSupervisorName, level);
+      let childNode = this.buildNode(currentSupervisorName, currentSupervisorEmail, level);
       this.testNodes.push(childNode);
     }
 
@@ -1764,7 +1810,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
 
-  buildNode(supervisorName: string, level: number): UserBatchData {
+  buildNode(supervisorName: string, supervisorEmail: string, level: number): UserBatchData {
     let name: string;
     let teamSize: number;
     name = this.getTestUser();
@@ -1773,10 +1819,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     let node = <UserBatchData>{
       firstName: fullName[0],
       lastName: fullName[1],
-      email: 'greg@test.com',
+      email: fullName[0] + '.' + fullName[1] + '@' + this.authenticatedUser.org + '.com',
       userType: 'individualContributor',
-      jobTitle: '',
+      jobTitle: 'coordinator',
       supervisorName: supervisorName,
+      supervisorEmail: supervisorEmail
     }
     if (level < this.maxLevel) {
       if (Math.random() < .7) {
@@ -1789,13 +1836,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         }
         level++;
         for (let i = 0; i < teamSize; i++) {
-          let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], level);
+          let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], fullName[0] + '.' + fullName[1] + '@gmail.com',  level);
           this.testNodes.push(childNode);
         }
       }
     } else {
-      let jobTitleIndex = Math.floor(Math.random() * Math.floor(this.orgJobTitles.length));
-      let userTypeIndex = Math.floor(Math.random() * Math.floor(this.userTypes.length));
+      let jobTitleIndex = Math.floor(Math.random() * Math.floor(this.orgJobTitles.length - 1));
+      let userTypeIndex = Math.floor(Math.random() * Math.floor(this.userTypes.length - 1));
       node.jobTitle = this.orgJobTitles[jobTitleIndex];
       node.userType = this.userTypes[userTypeIndex];
     }
@@ -1969,9 +2016,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           key: "userType",
           validators: []
         },
+//        {
+//          label: "Supervisor Name",
+//          key: "supervisorName",
+//          validators: []
+//        }
         {
-          label: "Supervisor",
-          key: "supervisorName",
+          label: "Supervisor Email",
+          key: "supervisorEmail",
           validators: []
         }
       ],
@@ -1979,7 +2031,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       allowInvalidSubmit: true,
       managed: true,
       allowCustom: true,
-      disableManualInput: false
+      disableManualInput: true
     });
   }
 
@@ -2390,6 +2442,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
       this.userTrainingService.deleteUserTrainingByTidUid(this.currentTrainingSelected, uid);
     }
+    for (let node of this.collapsedNodes) {
+      this.figureOrgStat(node);
+    }
     this.currentTrainingSelected = null;
     this.userIdsSelected = [];
   }
@@ -2418,6 +2473,25 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   onDragStart(event) {
     this.dragging = true;
     this.resizeBarColor = '#7fa9f9';
+  }
+
+  selectTraining(tid: string): void {
+    if (this.allTrainingIdHash[tid].versions.length === 1) {
+      return;
+    }
+    this.selectedTrainingId = tid;
+  }
+
+  closeUserPanel() {
+    this.userPanelVisible = false;
+  }
+
+  versionFormatter(version) {
+    if (!version) {
+      return;
+    }
+    let re = /_/g;
+    return version.replace(re, '.');
   }
 
   onDrag(event) {

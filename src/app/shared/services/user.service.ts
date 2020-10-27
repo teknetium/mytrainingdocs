@@ -73,8 +73,10 @@ export class UserService {
   org = '';
   newUserHash = {};
   fullNameHash = <UserModel>{};
+  emailHash = <UserModel>{};
   newUserIds = [];
   supervisorName: string;
+  supervisorEmail: string;
   supervisorObj: UserModel;
   newUserList: UserModel[] = [];
 
@@ -142,7 +144,6 @@ export class UserService {
         this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
 
         if (this.authenticatedUser.userType === 'supervisor') {
-          this.router.navigate(['/myteam']);
           //            this.org = this.authenticatedUser.org;
           this.teamId = this.authenticatedUser.uid;
           this.loadData(this.authenticatedUser.org, null);
@@ -507,6 +508,8 @@ export class UserService {
     let supervisorMatchFail = [];
     this.newTeamMember.org = this.authenticatedUser.org;
     this.fullNameHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
+    this.emailHash[this.authenticatedUser.email] = this.authenticatedUser;
+
     let batchCnt = 1;
     let _id = String(new Date().getTime());
     for (let batchUser of batchUsers) {
@@ -550,12 +553,14 @@ export class UserService {
       this.newUserIds.push(this.newTeamMember._id);
       this.newUserList.push(this.newTeamMember);
       this.fullNameHash[this.newTeamMember.firstName + ' ' + this.newTeamMember.lastName] = this.newTeamMember;
+      this.emailHash[this.newTeamMember.email] = this.newTeamMember;
       this.allOrgUserHash[this.newTeamMember._id] = this.newTeamMember;
     }
 
 
     for (let nUser of this.newUserList) {
       if (!this.fullNameHash[this.newUserHash[nUser._id].supervisorName]) {
+//      if (!this.emailHash[this.newUserHash[nUser._id].supervisorEmail]) {
         nUser.settings.statusList.push('unknownSupervisor');
         nUser.supervisorId = this.authenticatedUser._id;
         nUser.teamId = this.authenticatedUser._id;
@@ -565,6 +570,10 @@ export class UserService {
         this.fullNameHash[this.newUserHash[nUser._id].supervisorName].userType = 'supervisor';
         nUser.supervisorId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
         nUser.teamId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
+//        this.emailHash[this.newUserHash[nUser._id].supervisorEmail].directReports.push(nUser._id);
+//        this.emailHash[this.newUserHash[nUser._id].supervisorEmail].userType = 'supervisor';
+//        nUser.supervisorId = this.emailHash[this.newUserHash[nUser._id].supervisorEmail]._id;
+//        nUser.teamId = this.emailHash[this.newUserHash[nUser._id].supervisorEmail]._id;
       }
     }
 

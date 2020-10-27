@@ -7,13 +7,11 @@
         </div>
         <ul nz-menu nzTheme="light" nzMode="horizontal"
             [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.bgColor, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary }">
-            <!--
             <li nz-menu-item nzMatchRouter>
                 <a routerLink="/home" routerLinkActive="active-link">
                     Home
                 </a>
             </li>
-            -->
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
                 class="nav-badge">
                 <a routerLink="/myteam" routerLinkActive="active-link">

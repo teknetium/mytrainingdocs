@@ -442,40 +442,6 @@ if (this.currentColor.indexOf('#') === 0) {
     this.iconColor = 'rgb(' + this.redValue + ', ' + this.greenValue + ', ' + this.blueValue + ')';
     return this.iconColor;
   }
-  /*
-    toggleStyle(style) {
-      this.currentStyles = [];
-      this.styleStr = 'style=';
-      if (style === 'solid') {
-        this.solid = !this.solid;
-      } else if (style === 'regular') {
-        this.regular = !this.regular;
-      } else if (style === 'light') {
-        this.light = !this.light;
-      } else if (style === 'duotone') {
-        this.duotone = !this.duotone;
-      }
-  
-      if (this.solid) {
-        this.currentStyles.push('Solid');
-        this.styleStr += 'solid,';
-      }
-      if (this.regular) {
-        this.currentStyles.push('Regular');
-        this.styleStr += ',regular';
-      }
-      if (this.light) {
-        this.currentStyles.push('Light');
-        this.styleStr += ',light';
-      }
-      if (this.duotone) {
-        this.currentStyles.push('Two Tone');
-        this.styleStr += ',duotone';
-      }
-  
-      this.searchForIcons();
-    }
-    */
 
   colorChange(data, color) {
     if (color === 'red') {

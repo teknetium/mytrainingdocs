@@ -21,10 +21,31 @@
     <div *ngIf="authenticatedUser?.userType === 'supervisor'">
         <div style="width:55%;display:inline-block;">
             <div style="display:block;width:100%;">
-                <nz-card style="width:100%;" nzTitle="Team Members" [nzExtra]="extraTemplate" style="border: 1px solid #dddddd;">
-                    <div *ngIf="myTeam.length === 0" style="padding:40px;">
+                <nz-card style="width:100%;" [nzTitle]="userCardTitle" [nzExtra]="extraTemplate"
+                    style="border: 1px solid #dddddd;">
+                    <div *ngIf="myTeam.length === 0" style="">
+                        <!--
+                        <div style="font-size:16px;font-weight:100;">
+                            We support two styles of onboarding:
+                        </div>
+                        <div style="font-size:16px;padding:30px;">
+                            <ul>
+                                <li>
+                                    Filing out an inline spreadsheet with the following column data:
+                                    <ul>
+                                        <li>First Name</li>
+                                        <li>Last Name</li>
+                                        <li>Email Address</li>
+                                        <li>Job Title</li>
+                                        <li>Supervisor's Name</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        -->
+
                         <span style="font-weight:200;" (click)="goTo('/myteam')">
-                            You have not added any team members yet!<br>
+                            You have not onboarded your team/organization yet!<br>
                             Head over to the <span style="color:blue;cursor: pointer;">My Team</span> page.
                         </span>
                     </div>
@@ -67,7 +88,7 @@
                     </div>
                 </nz-card>
                 <ng-template #extraTemplate>
-                    <div style="float:right;padding-top:7px;">
+                    <div *ngIf="myTeam.length > 0" style="float:right;padding-top:7px;">
                         <div style="float:right;margin-left:15px;padding-top:4px;">
                             <div class="pastDue"
                                 style="float:left;width:12px;height:12px;margin-right:5px;margin-top:2px;">
@@ -163,7 +184,8 @@
                 -->
             </div>
             <div style="width:100%;display:block;">
-                <nz-card style="width:100%;" nzTitle="Trainings" style="border: 1px solid #dddddd;" joyrideStep="step3" title="Your Team's Trainings"
+                <nz-card style="width:100%;" nzTitle="Trainings" style="border: 1px solid #dddddd;" joyrideStep="step3"
+                    title="Your Team's Trainings"
                     text="This section lists all of your trainings.  Selecting a training in this section will put you directly in the training editor.">
                     <div *ngIf="trainings.length === 0" style="padding:40px">
                         <span style="font-weight:200;" (click)="goTo('/trainings')">
@@ -193,7 +215,8 @@
             </div>
         </div>
         <div style="width:40%;float:right;height:100%;text-align: center;">
-            <nz-card style="width:100%;" [nzTitle]="titleTemplate" style="border: 1px solid #dddddd;">
+            <nz-card *ngIf="myTeam.length > 0 && trainings.length > 0" style="width:100%;" [nzTitle]="titleTemplate"
+                style="border: 1px solid #dddddd;">
 
                 <div
                     style="display:block;width:100%;padding-left:20px;padding-top:20px;text-align:left;height:85%;overflow-y: scroll;">
@@ -239,7 +262,8 @@
                     Training Sessions
                 </div>
                 <div style="display:block;width:100%;">
-                    <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onDateRangeChange($event)" nzFormat="MMM d, y">
+                    <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onDateRangeChange($event)"
+                        nzFormat="MMM d, y">
                     </nz-range-picker>
                 </div>
             </ng-template>

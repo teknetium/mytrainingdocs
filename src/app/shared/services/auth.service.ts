@@ -57,6 +57,7 @@ export class AuthService {
     this.isAuthenticated$.next(value);
     this.loggedIn = value;
     this.loggingIn = false;
+    this.router.navigate(['/home']);
   }
 
   getAuthenticatedUserProfileStream() {
