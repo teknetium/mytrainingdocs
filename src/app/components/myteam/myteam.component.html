@@ -42,26 +42,26 @@
         </div>
     </div>
     <div *ngIf="currentStep === 1" class="steps-content">
-                <div *ngIf="authenticatedUser.appAdmin" style="float:left;">
-                    <button nz-button nzShape="round" (click)="testBulkAdd()" nzType="primary" style="display:inline-block;">
-                        Test
-                    </button>
-                    <div style="display:inline-block;">
-                        Max Depth
-                        <nz-input-number [(ngModel)]="maxLevel" [nzMin]="1" [nzMax]="10" [nzStep]="1">
-                        </nz-input-number>
-                    </div>
-                    <div style="display:inline-block;">
-                        User Min
-                        <nz-input-number [(ngModel)]="userMin" [nzMin]="1" [nzMax]="10" [nzStep]="1">
-                        </nz-input-number>
-                    </div>
-                    <div style="display:inline-block;">
-                        User Max
-                        <nz-input-number [(ngModel)]="userMax" [nzMin]="1" [nzMax]="10" [nzStep]="1">
-                        </nz-input-number>
-                    </div>
-                </div>
+        <div *ngIf="authenticatedUser.appAdmin" style="float:left;">
+            <button nz-button nzShape="round" (click)="testBulkAdd()" nzType="primary" style="display:inline-block;">
+                Test
+            </button>
+            <div style="display:inline-block;">
+                Max Depth
+                <nz-input-number [(ngModel)]="maxLevel" [nzMin]="1" [nzMax]="10" [nzStep]="1">
+                </nz-input-number>
+            </div>
+            <div style="display:inline-block;">
+                User Min
+                <nz-input-number [(ngModel)]="userMin" [nzMin]="1" [nzMax]="10" [nzStep]="1">
+                </nz-input-number>
+            </div>
+            <div style="display:inline-block;">
+                User Max
+                <nz-input-number [(ngModel)]="userMax" [nzMin]="1" [nzMax]="10" [nzStep]="1">
+                </nz-input-number>
+            </div>
+        </div>
     </div>
     <div *ngIf="currentStep === 2" class="steps-content">
         This is Step 3
@@ -237,7 +237,7 @@
                 <span style="font-size:10px;margin-left:15px;">Customer</span>
             </div>
         </div>
-        <div style="">
+        <div>
             <div style="font-size:12px;text-align: center;">
                 User Training Status
             </div>
@@ -423,6 +423,20 @@
                         -->
                     </nz-radio-group>
                 </div>
+                <div *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'" style="float:left;margin-right:20px;">
+                    <span style="display:block;font-size:14px;font-weight:500;">User Training Status</span>
+                    <div style="padding-top:10px;">
+                        <i class="fas fa-user" style="font-size:16px;color:black;margin-right:3px;" nz-tooltip
+                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="No Trainings Assigned"></i>
+                        <span style="margin-right:20px;">{{ nodeStatHash[authenticatedUser?._id]?.noneCnt}}</span>
+                        <i class="fas fa-user" style="font-size:16px;color:#46bd15;margin-right:3px;" nz-tooltip
+                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="Up To Date"></i>
+                        <span style="margin-right:20px;">{{ nodeStatHash[authenticatedUser?._id]?.upToDateCnt}}</span>
+                        <i class="fas fa-user" style="font-size:16px;color:red;margin-right:3px;" nz-tooltip
+                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="Past Due"></i>
+                        <span style="margin-right:20px;">{{ nodeStatHash[authenticatedUser?._id]?.pastDueCnt}}</span>
+                    </div>
+                </div>
                 <div *ngIf="selectionMode === 'JobTitle'" style="float:left;margin-right:20px;">
                     <span style="display:block;font-size:14px;font-weight:500;">Job Titles</span>
                     <nz-select ngDefaultControl nzMode="tags" nzPlaceHolder="Select Job Titles"
@@ -446,7 +460,7 @@
                                 style="font-size:16px;z-index:1;float:left;line-height:16px;margin-right:10px;">
                             </i>
                             <div style="font-size:12px;float:left;">{{training.text}}</div>
-                            <div style="float:right;font-size:14px;margin-left:20px;">
+                            <div style="float:right;font-size:10px;margin-left:20px;">
                                 {{ versionFormatter(allTrainingIdHash[training.value]?.versions[0].version) }}
                             </div>
                             <div style="clear: both;"></div>
@@ -457,6 +471,30 @@
                             [ngStyle]="{'color': getTrainingIconColor(selected.nzValue)}"
                             style="vertical-align: baseline;font-size:16px;"></i>
                         &nbsp;&nbsp;&nbsp;{{ selected.nzLabel }}</ng-template>
+                </div>
+                <div *ngIf="selectionMode === 'Training'" style="float:left;margin-right:20px;">
+                    <span style="display:block;font-size:14px;font-weight:500;">User Training Status</span>
+                    <div style="padding-top:10px;">
+                        <!--
+                        <i class="fas fa-user" style="font-size:16px;color:black;margin-right:3px;"></i>
+                        <span style="margin-right:10px;">{{ nodeStatHash[authenticatedUser?._id]?.trainingHash.none}}</span>
+                        -->
+                        <i class="fas fa-user" style="font-size:16px;color:#46bd15;margin-right:3px;" nz-tooltip
+                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="In Progress"></i>
+                        <span
+                            style="margin-right:10px;">{{ nodeStatHash[authenticatedUser?._id]?.trainingHash.upToDate}}</span>
+                        <i class="fas fa-user" style="font-size:16px;color:red;margin-right:3px;" nz-tooltip
+                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="Past Due"></i>
+                        <span
+                            style="margin-right:10px;">{{ nodeStatHash[authenticatedUser?._id]?.trainingHash.pastDue}}</span>
+                        <i class="fas fa-user" style="font-size:16px;color:#4891f7;margin-right:3px;" nz-tooltip nzTooltipPlacement="bottomLeft"
+                            nzTooltipTitle="Completed"></i>
+                        <span style="margin-right:10px;">{{ nodeStatHash[authenticatedUser?._id]?.trainingHash.completed}}</span>
+                        <i class="fas fa-user" style="font-size:16px;color:#feb90b;margin-right:3px;" nz-tooltip
+                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="Pending Cert Approval"></i>
+                        <span
+                            style="margin-right:10px;">{{ nodeStatHash[authenticatedUser?._id]?.trainingHash.pendingCertUpload}}</span>
+                    </div>
                 </div>
                 <div *ngIf="selectionMode === 'UserType'" style="float:left;margin-right:20px;">
                     <div style="width:fit-content;display:block;">
@@ -556,11 +594,13 @@
                         (nzOnConfirm)="confirmUserTrainingDelete()" nz-tooltip
                         nzTooltipTitle="Remove Training from Users">
                         <i class="fas fa-arrow-alt-from-right"></i></button>
+                        <!--
                     <button *ngIf="selectionMode !== 'Individual' && selectionMode !== 'Errors'" nz-button
                         nzShape="circle" nzType="default" style="display:inline-block;margin-left:10px;"
                         (click)="emailSelectedUsers()" nz-tooltip nzTooltipTitle="Send Email to Selected Users"
                         [disabled]="userIdsSelected.length === 0">
                         <i class="fas fa-envelope"></i></button>
+                        -->
                 </div>
                 <div style="padding-top:30px;float:right;">
                     <label nz-checkbox ngDefaultControl [(ngModel)]="includeFullName"
@@ -727,10 +767,38 @@
                                                 <i class="fas fa-users" style="font-size:18px;"></i> <span
                                                     style="vertical-align: top;">&nbsp;{{nodeStatHash[dr]?.userCnt}}</span>
                                             </div>
-                                            <div *ngIf="nodeStatHash[dr]?.pastDueCnt > 0">
-                                                <i class="fas fa-user" style="color:red;"></i>
-                                                {{nodeStatHash[dr]?.pastDueCnt}}
-                                            </div>
+                                            <ng-container *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
+                                                <div>
+                                                    <i class="fas fa-user" style="color:black;"></i>
+                                                    {{nodeStatHash[dr]?.noneCnt}}
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-user" style="color:#46bd15;"></i>
+                                                    {{nodeStatHash[dr]?.upToDateCnt}}
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-user" style="color:red;"></i>
+                                                    {{nodeStatHash[dr]?.pastDueCnt}}
+                                                </div>
+                                            </ng-container>
+                                            <ng-container *ngIf="selectionMode === 'Training'">
+                                                <div>
+                                                    <i class="fas fa-user" style="color:#46bd15;"></i>
+                                                    {{nodeStatHash[dr]?.trainingHash.upToDate}}
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-user" style="color:red;"></i>
+                                                    {{nodeStatHash[dr]?.trainingHash.pastDue}}
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                    {{nodeStatHash[dr]?.trainingHash.completed}}
+                                                </div>
+                                                <div>
+                                                    <i class="fas fa-user" style="color:#feb90b;"></i>
+                                                    {{nodeStatHash[dr]?.trainingHash.pendingCertUpload}}
+                                                </div>
+                                            </ng-container>
                                         </div>
                                     </div>
                                 </div>
@@ -782,10 +850,38 @@
                                                             <i class="fas fa-users" style="font-size:18px;"></i> <span
                                                                 style="vertical-align: top;">&nbsp;{{nodeStatHash[dr2]?.userCnt}}</span>
                                                         </div>
-                                                        <div *ngIf="nodeStatHash[dr2]?.pastDueCnt > 0">
-                                                            <i class="fas fa-user" style="color:red;"></i>
-                                                            {{nodeStatHash[dr2]?.pastDueCnt}}
-                                                        </div>
+                                                        <ng-container *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
+                                                            <div>
+                                                                <i class="fas fa-user" style="color:black;"></i>
+                                                                {{nodeStatHash[dr2]?.noneCnt}}
+                                                            </div>
+                                                            <div>
+                                                                <i class="fas fa-user" style="color:#46bd15;"></i>
+                                                                {{nodeStatHash[dr2]?.upToDateCnt}}
+                                                            </div>
+                                                            <div>
+                                                                <i class="fas fa-user" style="color:red;"></i>
+                                                                {{nodeStatHash[dr2]?.pastDueCnt}}
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="selectionMode === 'Training'">
+                                                            <div>
+                                                                <i class="fas fa-user" style="color:#46bd15;"></i>
+                                                                {{nodeStatHash[dr2]?.trainingHash.upToDate}}
+                                                            </div>
+                                                            <div>
+                                                                <i class="fas fa-user" style="color:red;"></i>
+                                                                {{nodeStatHash[dr2]?.trainingHash.pastDue}}
+                                                            </div>
+                                                            <div>
+                                                                <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                                {{nodeStatHash[dr2]?.trainingHash.completed}}
+                                                            </div>
+                                                            <div>
+                                                                <i class="fas fa-user" style="color:#feb90b;"></i>
+                                                                {{nodeStatHash[dr2]?.trainingHash.pendingCertUpload}}
+                                                            </div>
+                                                        </ng-container>
                                                     </div>
                                                 </div>
                                             </div>
@@ -841,10 +937,44 @@
                                                                             style="font-size:18px;"></i> <span
                                                                             style="vertical-align: top;">&nbsp;{{nodeStatHash[dr3]?.userCnt}}</span>
                                                                     </div>
-                                                                    <div *ngIf="nodeStatHash[dr3]?.pastDueCnt > 0">
-                                                                        <i class="fas fa-user" style="color:red;"></i>
-                                                                        {{nodeStatHash[dr3]?.pastDueCnt}}
-                                                                    </div>
+                                                                    <ng-container *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
+                                                                        <div>
+                                                                            <i class="fas fa-user"
+                                                                                style="color:black;"></i>
+                                                                            {{nodeStatHash[dr3]?.noneCnt}}
+                                                                        </div>
+                                                                        <div>
+                                                                            <i class="fas fa-user"
+                                                                                style="color:#46bd15;"></i>
+                                                                            {{nodeStatHash[dr3]?.upToDateCnt}}
+                                                                        </div>
+                                                                        <div>
+                                                                            <i class="fas fa-user"
+                                                                                style="color:red;"></i>
+                                                                            {{nodeStatHash[dr3]?.pastDueCnt}}
+                                                                        </div>
+                                                                    </ng-container>
+                                                                    <ng-container *ngIf="selectionMode === 'Training'">
+                                                                        <div>
+                                                                            <i class="fas fa-user"
+                                                                                style="color:#46bd15;"></i>
+                                                                            {{nodeStatHash[dr3]?.trainingHash.upToDate}}
+                                                                        </div>
+                                                                        <div>
+                                                                            <i class="fas fa-user"
+                                                                                style="color:red;"></i>
+                                                                            {{nodeStatHash[dr3]?.trainingHash.pastDue}}
+                                                                        </div>
+                                                                        <div>
+                                                                            <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                                            {{nodeStatHash[dr3]?.trainingHash.completed}}
+                                                                        </div>
+                                                                        <div>
+                                                                            <i class="fas fa-user"
+                                                                                style="color:#feb90b;"></i>
+                                                                            {{nodeStatHash[dr3]?.trainingHash.pendingCertUpload}}
+                                                                        </div>
+                                                                    </ng-container>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -903,12 +1033,46 @@
                                                                                     <span
                                                                                         style="vertical-align: top;">&nbsp;{{nodeStatHash[dr4]?.userCnt}}</span>
                                                                                 </div>
-                                                                                <div
-                                                                                    *ngIf="nodeStatHash[dr4]?.pastDueCnt > 0">
-                                                                                    <i class="fas fa-user"
-                                                                                        style="color:red;"></i>
-                                                                                    {{nodeStatHash[dr4]?.pastDueCnt}}
-                                                                                </div>
+                                                                                <ng-container
+                                                                                    *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
+                                                                                    <div>
+                                                                                        <i class="fas fa-user"
+                                                                                            style="color:black;"></i>
+                                                                                        {{nodeStatHash[dr4]?.noneCnt}}
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <i class="fas fa-user"
+                                                                                            style="color:#46bd15;"></i>
+                                                                                        {{nodeStatHash[dr4]?.upToDateCnt}}
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <i class="fas fa-user"
+                                                                                            style="color:red;"></i>
+                                                                                        {{nodeStatHash[dr4]?.pastDueCnt}}
+                                                                                    </div>
+                                                                                </ng-container>
+                                                                                <ng-container
+                                                                                    *ngIf="selectionMode === 'Training'">
+                                                                                    <div>
+                                                                                        <i class="fas fa-user"
+                                                                                            style="color:#46bd15;"></i>
+                                                                                        {{nodeStatHash[dr4]?.trainingHash.upToDate}}
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <i class="fas fa-user"
+                                                                                            style="color:red;"></i>
+                                                                                        {{nodeStatHash[dr4]?.trainingHash.pastDue}}
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                                                        {{nodeStatHash[dr4]?.trainingHash.completed}}
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <i class="fas fa-user"
+                                                                                            style="color:#feb90b;"></i>
+                                                                                        {{nodeStatHash[dr4]?.trainingHash.pendingCertUpload}}
+                                                                                    </div>
+                                                                                </ng-container>
                                                                             </div>
 
                                                                         </div>
@@ -969,11 +1133,46 @@
                                                                                                 <span
                                                                                                     style="vertical-align: top;">&nbsp;{{nodeStatHash[dr5]?.userCnt}}</span>
                                                                                             </div>
-                                                                                            <div
-                                                                                                *ngIf="nodeStatHash[dr5]?.pastDueCnt > 0">
-                                                                                                <i class="fas fa-user"
-                                                                                                    style="color:red;"></i>&nbsp;{{nodeStatHash[dr5]?.pastDueCnt}}
-                                                                                            </div>
+                                                                                            <ng-container
+                                                                                                *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
+                                                                                                <div>
+                                                                                                    <i class="fas fa-user"
+                                                                                                        style="color:black;"></i>
+                                                                                                    {{nodeStatHash[dr5]?.noneCnt}}
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    <i class="fas fa-user"
+                                                                                                        style="color:#46bd15;"></i>
+                                                                                                    {{nodeStatHash[dr5]?.upToDateCnt}}
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    <i class="fas fa-user"
+                                                                                                        style="color:red;"></i>
+                                                                                                    {{nodeStatHash[dr5]?.pastDueCnt}}
+                                                                                                </div>
+                                                                                            </ng-container>
+                                                                                            <ng-container
+                                                                                                *ngIf="selectionMode === 'Training'">
+                                                                                                <div>
+                                                                                                    <i class="fas fa-user"
+                                                                                                        style="color:#46bd15;"></i>
+                                                                                                    {{nodeStatHash[dr5]?.trainingHash.upToDate}}
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    <i class="fas fa-user"
+                                                                                                        style="color:red;"></i>
+                                                                                                    {{nodeStatHash[dr5]?.trainingHash.pastDue}}
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                                                                    {{nodeStatHash[dr5]?.trainingHash.completed}}
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    <i class="fas fa-user"
+                                                                                                        style="color:#feb90b;"></i>
+                                                                                                    {{nodeStatHash[dr5]?.trainingHash.pendingCertUpload}}
+                                                                                                </div>
+                                                                                            </ng-container>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -1036,11 +1235,46 @@
                                                                                                             <span
                                                                                                                 style="vertical-align: top;">&nbsp;{{nodeStatHash[dr6]?.userCnt}}</span>
                                                                                                         </div>
-                                                                                                        <div
-                                                                                                            *ngIf="nodeStatHash[dr6]?.pastDueCnt > 0">
-                                                                                                            <i class="fas fa-user"
-                                                                                                                style="color:red;"></i>&nbsp;{{nodeStatHash[dr6]?.pastDueCnt}}
-                                                                                                        </div>
+                                                                                                        <ng-container
+                                                                                                            *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
+                                                                                                            <div>
+                                                                                                                <i class="fas fa-user"
+                                                                                                                    style="color:black;"></i>
+                                                                                                                {{nodeStatHash[dr6]?.noneCnt}}
+                                                                                                            </div>
+                                                                                                            <div>
+                                                                                                                <i class="fas fa-user"
+                                                                                                                    style="color:#46bd15;"></i>
+                                                                                                                {{nodeStatHash[dr6]?.upToDateCnt}}
+                                                                                                            </div>
+                                                                                                            <div>
+                                                                                                                <i class="fas fa-user"
+                                                                                                                    style="color:red;"></i>
+                                                                                                                {{nodeStatHash[dr6]?.pastDueCnt}}
+                                                                                                            </div>
+                                                                                                        </ng-container>
+                                                                                                        <ng-container
+                                                                                                            *ngIf="selectionMode === 'Training'">
+                                                                                                            <div>
+                                                                                                                <i class="fas fa-user"
+                                                                                                                    style="color:#46bd15;"></i>
+                                                                                                                {{nodeStatHash[dr6]?.trainingHash.upToDate}}
+                                                                                                            </div>
+                                                                                                            <div>
+                                                                                                                <i class="fas fa-user"
+                                                                                                                    style="color:red;"></i>
+                                                                                                                {{nodeStatHash[dr6]?.trainingHash.pastDue}}
+                                                                                                            </div>
+                                                                                                            <div>
+                                                                                                                <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                                                                                {{nodeStatHash[dr6]?.trainingHash.completed}}
+                                                                                                            </div>
+                                                                                                            <div>
+                                                                                                                <i class="fas fa-user"
+                                                                                                                    style="color:#feb90b;"></i>
+                                                                                                                {{nodeStatHash[dr6]?.trainingHash.pendingCertUpload}}
+                                                                                                            </div>
+                                                                                                        </ng-container>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
@@ -1099,11 +1333,46 @@
                                                                                                                         <span
                                                                                                                             style="vertical-align: top;">&nbsp;{{nodeStatHash[dr7]?.userCnt}}</span>
                                                                                                                     </div>
-                                                                                                                    <div
-                                                                                                                        *ngIf="nodeStatHash[dr7]?.pastDueCnt > 0">
-                                                                                                                        <i class="fas fa-user"
-                                                                                                                            style="color:red;"></i>&nbsp;{{nodeStatHash[dr7]?.pastDueCnt}}
-                                                                                                                    </div>
+                                                                                                                    <ng-container
+                                                                                                                        *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
+                                                                                                                        <div>
+                                                                                                                            <i class="fas fa-user"
+                                                                                                                                style="color:black;"></i>
+                                                                                                                            {{nodeStatHash[dr7]?.noneCnt}}
+                                                                                                                        </div>
+                                                                                                                        <div>
+                                                                                                                            <i class="fas fa-user"
+                                                                                                                                style="color:#46bd15;"></i>
+                                                                                                                            {{nodeStatHash[dr7]?.upToDateCnt}}
+                                                                                                                        </div>
+                                                                                                                        <div>
+                                                                                                                            <i class="fas fa-user"
+                                                                                                                                style="color:red;"></i>
+                                                                                                                            {{nodeStatHash[dr7]?.pastDueCnt}}
+                                                                                                                        </div>
+                                                                                                                    </ng-container>
+                                                                                                                    <ng-container
+                                                                                                                        *ngIf="selectionMode === 'Training'">
+                                                                                                                        <div>
+                                                                                                                            <i class="fas fa-user"
+                                                                                                                                style="color:#46bd15;"></i>
+                                                                                                                            {{nodeStatHash[dr7]?.trainingHash.upToDate}}
+                                                                                                                        </div>
+                                                                                                                        <div>
+                                                                                                                            <i class="fas fa-user"
+                                                                                                                                style="color:red;"></i>
+                                                                                                                            {{nodeStatHash[dr7]?.trainingHash.pastDue}}
+                                                                                                                        </div>
+                                                                                                                        <div>
+                                                                                                                            <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                                                                                            {{nodeStatHash[dr7]?.trainingHash.completed}}
+                                                                                                                        </div>
+                                                                                                                        <div>
+                                                                                                                            <i class="fas fa-user"
+                                                                                                                                style="color:#feb90b;"></i>
+                                                                                                                            {{nodeStatHash[dr7]?.trainingHash.pendingCertUpload}}
+                                                                                                                        </div>
+                                                                                                                    </ng-container>
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                         </div>
@@ -1250,8 +1519,8 @@
                         </label>
                     </div>
                     <div style="display:inline-block;width:70%;margin-left:20px;">
-                        <nz-radio-group ngDefaultControl [(ngModel)]="selectedUser.userType" (ngModelChanged)="userChanged('userType')"
-                            style="margin-bottom:20px;">
+                        <nz-radio-group ngDefaultControl [(ngModel)]="selectedUser.userType"
+                            (ngModelChanged)="userChanged('userType')" style="margin-bottom:20px;">
                             <label nz-radio nzValue="individualContributor" (click)="newSupervisorSelected(false)"
                                 style="display:block;font-size:20px;">
                                 <i class="fad fa-user" style="vertical-align: bottom;"></i>
@@ -1306,9 +1575,8 @@
                             Person
                         </button>
                         -->
-                        <button nz-button nzSize="small" nzShape="round" (click)="handleUpdateUser()"
-                            nzType="primary" style="margin: 10px;display:inline-block;"
-                            >Update
+                        <button nz-button nzSize="small" nzShape="round" (click)="handleUpdateUser()" nzType="primary"
+                            style="margin: 10px;display:inline-block;">Update
                             User
                         </button>
                     </div>

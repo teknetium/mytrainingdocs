@@ -127,7 +127,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   userTrainingStatusColorHash = {
     upToDate: '#52c41a',
     pastDue: 'red',
-    none: 'black'
+    none: 'black',
+    completed: '#4891f7',
+    pendingCertUpload: '#feb90b'
   }
   includeNewSupervisorsTeam = true;
   isNewSupervisorPanelOpen = false;
@@ -1286,9 +1288,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.initializeImporter();
     this.maxLevel$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(maxLevel => {
       this.maxLevel = maxLevel;
-      if (this.maxLevel > 3) {
-
-      }
     });
     /*
     this.batchFails$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(failList => {
@@ -1363,6 +1362,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         }
       }
       this.matchingSupervisors = this.myOrgSupervisors;
+      if (this.authenticatedUser) {
+        for (let dr1 of this.authenticatedUser.directReports) {
+          for (let dr2 of this.myOrgUserHash[dr1].directReports) {
+            this.collapseNode(dr2, true);
+          }
+        }
+      }
     });
     this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgUsers => {
       if (!myOrgUsers) {
@@ -1489,7 +1495,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         return;
       }
 
-
+      this.figureOrgStat(user._id);
 
       this.authenticatedUser = user;
       this.myOrgUserHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
@@ -1525,7 +1531,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           this.teamTrainings.push(training);
           //          this.showTrainingHash[training._id] = training;
         }
-      })
+      });
+
+
+
     })
 
     this.jobTitles$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(jobTitles => {
@@ -1667,6 +1676,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           this.userIdsSelected.push(user._id);
         }
       }
+    }
+    this.figureOrgStat(this.authenticatedUser._id);
+    for (let node of this.collapsedNodes) {
+      this.figureOrgStat(node);
     }
   }
 
@@ -2251,6 +2264,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
     this.currentTrainingSelected = null;
     this.selectionMode = mode;
+    this.figureOrgStat(this.authenticatedUser._id);
+    for (let node of this.collapsedNodes) {
+      this.figureOrgStat(node);
+    }
     /*
         if (mode === 'Org') {
           if (this.selectionMode === 'Individual' && this.userIdSelected) {
@@ -2308,12 +2325,26 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     let nodeStat = <NodeStat>{
       rootUid: userId,
       userCnt: 0,
+      noneCnt: 0,
       pastDueCnt: 0,
-      trainingHash: {},
+      upToDateCnt: 0,
+      trainingHash: {
+        none: 0,
+        upToDate: 0,
+        pastDue: 0,
+        completed: 0,
+        pendingCertUpload: 0
+      },
       jobHash: {},
-      userTypeHash: {}
+      userTypeHash: {
+        individualContributor: 0,
+        supervisor: 0,
+        volunteer: 0,
+        contractor: 0,
+        customer: 0
+      }
     }
-    this.nodeStatHash[userId] = nodeStat;
+    this.nodeStatHash[userId] = cloneDeep(nodeStat);
     this.processDirectReports(this.myOrgUserHash[userId], this.nodeStatHash[userId])
   }
 
@@ -2326,6 +2357,37 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       let drUser = this.myOrgUserHash[dr];
       if (drUser.trainingStatus === 'pastDue') {
         nodeStat.pastDueCnt++;
+      } else if (drUser.trainingStatus === 'none') {
+        nodeStat.noneCnt++;
+      } else if (drUser.trainingStatus === 'upToDate') {
+        nodeStat.upToDateCnt++;
+      }
+
+      if (this.currentTrainingSelected) {
+        let utList = this.uidUTHash[dr];
+        if (utList && utList.length > 0) {
+          for (let ut of utList) {
+            if (ut.tid === this.currentTrainingSelected) {
+              switch (ut.status) {
+                case 'upToDate':
+                  nodeStat.trainingHash['upToDate'] += 1;
+                  break;
+                case 'pastDue':
+                  nodeStat.trainingHash['pastDue'] += 1;
+                  break;
+                case 'completed':
+                  nodeStat.trainingHash['completed'] += 1;
+                  break;
+                case 'pendingCertUpload':
+                  nodeStat.trainingHash['pendingCertUpload'] += 1;
+                  break;
+                default:
+                  nodeStat.trainingHash['none'] += 1;
+                  break;
+              }
+            }
+          }
+        }
       }
       if (drUser.directReports.length > 0) {
         this.processDirectReports(drUser, nodeStat);
@@ -2442,6 +2504,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
       this.userTrainingService.deleteUserTrainingByTidUid(this.currentTrainingSelected, uid);
     }
+    this.figureOrgStat(this.authenticatedUser._id);
     for (let node of this.collapsedNodes) {
       this.figureOrgStat(node);
     }

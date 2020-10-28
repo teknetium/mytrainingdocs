@@ -9,6 +9,7 @@
             <i *ngIf="trainingIdHash[userTraining?.tid]?.type === 'recurring'" class="fas fa-redo-alt"
                 style="font-size:10px;vertical-align: top;display:inline-block;">
             </i>
+            <span style="font-size:12px;margin-left:3px;vertical-align: middle;">{{trainingIdHash[userTraining?.tid]?.title}}</span>
 
         </div>
         <div *ngIf="uid && (!uidUTHash[uid] || uidUTHash[uid].length === 0)" style="padding:5px;">

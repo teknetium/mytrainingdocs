@@ -53,7 +53,7 @@
                         <nz-list nzItemLayout="vertical" nzSize="small" style="width:100%;">
                             <nz-list-item *ngFor="let user of myTeam" (click)="selectUser(user._id)" class="list-item"
                                 style="width:100%;cursor:pointer;">
-                                <div style="width:100%;vertical-align: text-bottom;">
+                                <div style="width:100%;vertical-align: text-bottom;"> 
                                     <i *ngIf="user.userStatus === 'bulk-add-fail'" nz-icon nzType="usergroup-add"
                                         [nzTheme]="'outline'"
                                         style="color:red;display:inline-block;font-size:20px;width:10%;justify-content: left;vertical-align: middle;"></i>

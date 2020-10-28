@@ -63,9 +63,10 @@ export interface OrgChartNode {
 export interface NodeStat {
   rootUid: string,
   userCnt: number,
+  noneCnt: number,
+  upToDateCnt: number,
   pastDueCnt: number,
   trainingHash: Object,
-  jobHash: Object,
   userTypeHash: Object 
 }
 
