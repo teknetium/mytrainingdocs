@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener, Input, Output, EventEmitter, ElementRe
 import { FileService } from '../../shared/services/file.service';
 import { TrainingService } from '../../shared/services/training.service';
 import { UserService } from '../../shared/services/user.service';
-import { JobTitleService } from '../../shared/services/jobtitle.service';
+// import { JobTitleService } from '../../shared/services/jobtitle.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { AuthService } from '../../shared/services/auth.service';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -280,20 +280,20 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   assessmentItems$: Observable<AssessmentItem[]>;
   assessmentHash = {};
 
-  jobTitles: string[] = [];
+  //  jobTitles: string[] = [];
   categories: string[] = [];
   subcategories: string[] = [];
-  matchingJobTitles: string[] = [];
+  //  matchingJobTitles: string[] = [];
   matchingCategories: string[] = [];
   matchingSubcategories: string[] = [];
-  jobTitles$: Observable<string[]>;
+  //  jobTitles$: Observable<string[]>;
   categories$: Observable<string[]>;
   subcategories$: Observable<string[]>;
   previousVersion$: Observable<TrainingModel>;
   previousVersion: TrainingModel;
-  assignedFromJobTitle: string[] = [];
-  removedFromJobTitle: string[] = [];
-  assignedFromJobTitleDialogIsVisible = false;
+  //  assignedFromJobTitle: string[] = [];
+  //  removedFromJobTitle: string[] = [];
+  //  assignedFromJobTitleDialogIsVisible = false;
   trainingArchiveList: TrainingModel[] = [];
   trainingArchiveHash = {};
   trainingVersions$: Observable<TrainingVersion[]>;
@@ -335,7 +335,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   notifyPeriod;
   showTrainingConfig = false;
   tourStepsHash = {};
-  showNoJobTitle = false;
+  //  showNoJobTitle = false;
   myTeam: string[];
   newVersionActionPanelDisabled = true;
   //    header: ,
@@ -348,7 +348,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     private modalService: NzModalService,
     private fileService: FileService,
     private eventService: EventService,
-    private jobTitleService: JobTitleService,
+    //    private jobTitleService: JobTitleService,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
     private userService: UserService,
@@ -361,7 +361,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     super();
     //    this.startTour$ = this.eventService.getStartTourStream();
     this.assessmentItems$ = this.trainingService.getAssessmentItemStream();
-    this.jobTitles$ = this.jobTitleService.getJobTitleStream();
+    //    this.jobTitles$ = this.jobTitleService.getJobTitleStream();
     this.categories$ = this.trainingService.getCategoryStream();
     this.subcategories$ = this.trainingService.getSubcategoryStream();
     this.previousVersion$ = this.trainingService.getPreviousVersionStream();
@@ -425,10 +425,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
           }
         });
         */
+    /*
     this.jobTitles$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(jobTitles => {
       this.jobTitles = jobTitles;
       this.matchingJobTitles = this.jobTitles;
     });
+    */
 
     this.categories$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(categories => {
       this.categories = categories;
@@ -720,6 +722,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     patchNum++;
     return majorNum + '_' + minorNum + '_' + patchNum;
   }
+  /*
   onJobTitleChange(value: string): void {
     this.matchingJobTitles = this.jobTitles.filter(jobTitle => jobTitle.toLowerCase().indexOf(value.toLowerCase()) !== -1);
   }
@@ -727,7 +730,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.jobTitleService.addJobTitle(this.selectedTraining.jobTitle);
     this.saveTraining(true);
   }
-
+*/
   onSubcategoryChange(value: string): void {
     this.matchingSubcategories = this.subcategories.filter(subcategory => subcategory.toLowerCase().indexOf(value.toLowerCase()) !== -1);
   }
@@ -883,16 +886,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       return;
     }
     if (this.selectedTraining.versions.length === 1) {
-      if (!this.selectedTraining.jobTitle) {
-        this.showNoJobTitleConfirm();
-      } else {
-        this.saveNewVersion();
-      }
+      this.saveNewVersion();
     } else {
       this.lockTrainingModalIsVisible = true;
     }
   }
-
+/*
   assignTrainingDueToMatchingJobTitle(newVersion: string) {
     for (let userId of this.assignableUsers) {
       if (this.myOrgHash[userId].jobTitle === this.selectedTraining.jobTitle) {
@@ -901,7 +900,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
             this.myOrgHash[userId].trainingStatus = 'upToDate';
             this.userService.updateUser(this.myOrgHash[userId], false);
           }
-          this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, newVersion, this.selectedTraining.expirationDate );
+          this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, newVersion, this.selectedTraining.expirationDate);
           this.assignedFromJobTitle.push(userId);
         }
       }
@@ -911,7 +910,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
 
   }
-
+*/
   saveNewVersion() {
     this.introEditorHash = {};
 
@@ -932,6 +931,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.trainingClone = cloneDeep(this.selectedTraining);
     this.trainingService.saveNewVersion(this.trainingClone);
     this.trainingService.selectTrainingVersion(this.trainingClone);
+    /*
     if (this.selectedTraining.jobTitle) {
       for (let userId of this.assignableUsers) {
         if (this.myOrgHash[userId].jobTitle === this.selectedTraining.jobTitle) {
@@ -939,7 +939,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
             this.myOrgHash[userId].trainingStatus = 'upToDate';
             this.userService.updateUser(this.myOrgHash[userId], false);
           }
-          this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, '1_0_0', this.selectedTraining.expirationDate );
+          this.userTrainingService.assignTraining(userId, this.selectedTraining._id, this.authenticatedUser._id, '1_0_0', this.selectedTraining.expirationDate);
           this.assignedFromJobTitle.push(userId);
         }
       }
@@ -947,7 +947,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         this.assignedFromJobTitleDialogIsVisible = true;
       }
     }
-//    this.closeViewer();
+    */
+    //    this.closeViewer();
   }
 
   createMessage(type: string, msg: string): void {
@@ -1287,7 +1288,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   confirmAssignmentToUser() {
     this.showAssignToUserDialog = false;
-    this.userTrainingService.assignTraining(this.assignToUser._id, this.selectedTraining._id, this.authenticatedUser._id, this.selectedTraining.versions[0].version, this.selectedTraining.expirationDate );
+    this.userTrainingService.assignTraining(this.assignToUser._id, this.selectedTraining._id, this.authenticatedUser._id, this.selectedTraining.versions[0].version, this.selectedTraining.expirationDate);
     this.userTrainingService.getUTForTraining(this.selectedTraining._id);
   }
 
@@ -1312,7 +1313,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       nzOnCancel: () => console.log('Cancel')
     });
   }
-
+/*
   showNoJobTitleConfirm(): void {
     if (this.jobTitles.length > 0 && this.myTeam.length > 0) {
       this.modalService.confirm({
@@ -1325,6 +1326,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       });
     }
   }
+  */
 
   showAssessmentAlertConfirm(): void {
     this.modalService.error({

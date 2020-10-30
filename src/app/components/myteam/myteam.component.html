@@ -212,7 +212,7 @@
             style="font-size:16px;text-align: center;border-bottom:1px solid #2d42e6;margin-bottom:10px;padding-bottom:10px;">
             Legend
         </div>
-        <div style="border-bottom:1px solid #2d42e6;margin-bottom:10px;padding-bottom:10px;">
+        <div>
             <div style="font-size:12px;text-align: center;">
                 User Type
             </div>
@@ -233,10 +233,11 @@
                 <span style="font-size:10px;margin-left:15px;">Contractor</span>
             </div>
             <div style="display:block;font-size:16px;">
-                <i class="fas fa-user-crown"></i>
+                <i class="fas fa-user-alien"></i>
                 <span style="font-size:10px;margin-left:15px;">Customer</span>
             </div>
         </div>
+        <!--
         <div>
             <div style="font-size:12px;text-align: center;">
                 User Training Status
@@ -254,6 +255,7 @@
                 <span style="font-size:10px;margin-left:15px;">At Least One Training Past Due</span>
             </div>
         </div>
+        -->
 
     </div>
     <div style="position:relative;width:100%;height:100%;">
@@ -262,7 +264,8 @@
             <div>
                 <div style="float:left;">
                     <div style="float:left;">
-                        <button nz-button nzShape="round" (click)="launchImporter()" nzType="primary">
+                        <button nz-button nzShape="round" (click)="launchImporter()" nzType="primary"
+                            style="margin-right:20px;">
                             Add Users
                         </button>
                         <button nz-button nzShape="round" (click)="createCSV()" nzType="primary"
@@ -393,23 +396,23 @@
                     <nz-radio-group [(ngModel)]="selectionMode" (ngModelChange)="setSelectionMode($event)">
                         <label nz-radio-button nzValue="Individual" nzTooltipPlacement nz-tooltip
                             nzTooltipTitle="Select a Single User" nzTooltipPlacement="bottomLeft">
-                            <i class="far fa-fw fa-user" style="font-size:16px;"></i>
+                            <i class="far fa-fw fa-user" style="font-size:18px;"></i>
                         </label>
                         <label nz-radio-button nzValue="Org" nz-tooltip nzTooltipTitle="Select by Team/Org"
                             nzTooltipPlacement="bottomLeft">
-                            <i class="far fa-fw fa-users" style="font-size:16px;"></i>
+                            <i class="far fa-fw fa-users" style="font-size:18px;"></i>
                         </label>
                         <label nz-radio-button nzValue="JobTitle" nz-tooltip nzTooltipTitle="Select by Job Title"
                             nzTooltipPlacement="bottomLeft">
-                            <i class="far fa-fw fa-briefcase" style="font-size:16px;"></i>
+                            <i class="far fa-fw fa-briefcase" style="font-size:18px;"></i>
                         </label>
                         <label nz-radio-button nzValue="UserType" nz-tooltip nzTooltipTitle="Select by User Type"
                             nzTooltipPlacement="bottomLeft">
-                            <i class="far fa-fw fa-user-cowboy" style="font-size:16px;"></i>
+                            <i class="far fa-fw fa-user-cowboy" style="font-size:18px;"></i>
                         </label>
                         <label nz-radio-button nzValue="Training" nz-tooltip nzTooltipTitle="Select by Training"
                             nzTooltipPlacement="bottomLeft">
-                            <i class="far fa-fw fa-graduation-cap" style="font-size:16px;"></i>
+                            <i class="far fa-fw fa-graduation-cap" style="font-size:18px;"></i>
                         </label>
                         <!--
                         <label nz-radio-button nzValue="UserTrainingStatus" nz-tooltip
@@ -423,7 +426,8 @@
                         -->
                     </nz-radio-group>
                 </div>
-                <div *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'" style="float:left;margin-right:20px;">
+                <div *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'"
+                    style="float:left;margin-right:20px;">
                     <span style="display:block;font-size:14px;font-weight:500;">User Training Status</span>
                     <div style="padding-top:10px;">
                         <i class="fas fa-user" style="font-size:16px;color:black;margin-right:3px;" nz-tooltip
@@ -473,7 +477,7 @@
                         &nbsp;&nbsp;&nbsp;{{ selected.nzLabel }}</ng-template>
                 </div>
                 <div *ngIf="selectionMode === 'Training'" style="float:left;margin-right:20px;">
-                    <span style="display:block;font-size:14px;font-weight:500;">User Training Status</span>
+                    <span style="display:block;font-size:14px;font-weight:500;">Training Status</span>
                     <div style="padding-top:10px;">
                         <!--
                         <i class="fas fa-user" style="font-size:16px;color:black;margin-right:3px;"></i>
@@ -487,9 +491,10 @@
                             nzTooltipPlacement="bottomLeft" nzTooltipTitle="Past Due"></i>
                         <span
                             style="margin-right:10px;">{{ nodeStatHash[authenticatedUser?._id]?.trainingHash.pastDue}}</span>
-                        <i class="fas fa-user" style="font-size:16px;color:#4891f7;margin-right:3px;" nz-tooltip nzTooltipPlacement="bottomLeft"
-                            nzTooltipTitle="Completed"></i>
-                        <span style="margin-right:10px;">{{ nodeStatHash[authenticatedUser?._id]?.trainingHash.completed}}</span>
+                        <i class="fas fa-user" style="font-size:16px;color:#4891f7;margin-right:3px;" nz-tooltip
+                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="Completed"></i>
+                        <span
+                            style="margin-right:10px;">{{ nodeStatHash[authenticatedUser?._id]?.trainingHash.completed}}</span>
                         <i class="fas fa-user" style="font-size:16px;color:#feb90b;margin-right:3px;" nz-tooltip
                             nzTooltipPlacement="bottomLeft" nzTooltipTitle="Pending Cert Approval"></i>
                         <span
@@ -505,23 +510,23 @@
                     <nz-radio-group [(ngModel)]="currentUserType" (ngModelChange)="userTypeSelectedChanged($event)">
                         <label nz-radio-button nzValue="individualContributor" nz-tooltip
                             nzTooltipPlacement="bottomLeft" nzTooltipTitle="Individual Contributor">
-                            <i class="fas fa-fw fa-user" style="font-size:16px;"></i>
+                            <i class="fas fa-fw fa-user" style="font-size:18px;"></i>
                         </label>
                         <label nz-radio-button nzValue="supervisor" nzTooltipPlacement="bottomLeft" nz-tooltip
                             nzTooltipTitle="Supervisor">
-                            <i class="fas fa-fw fa-user-tie" style="font-size:16px;"></i>
+                            <i class="fas fa-fw fa-user-tie" style="font-size:18px;"></i>
                         </label>
                         <label nz-radio-button nzValue="volunteer" nzTooltipPlacement="bottomLeft" nz-tooltip
                             nzTooltipTitle="Volunteer">
-                            <i class="fas fa-fw fa-user-cowboy" style="font-size:16px;"></i>
+                            <i class="fas fa-fw fa-user-cowboy" style="font-size:18px;"></i>
                         </label>
                         <label nz-radio-button nzValue="contractor" nzTooltipPlacement="bottomLeft" nz-tooltip
                             nzTooltipTitle="Contractor">
-                            <i class="fas fa-fw fa-user-hard-hat" style="font-size:16px;"></i>
+                            <i class="fas fa-fw fa-user-hard-hat" style="font-size:18px;"></i>
                         </label>
                         <label nz-radio-button nzValue="customer" nz-tooltip nzTooltipPlacement="bottomLeft"
                             nzTooltipTitle="Customer">
-                            <i class="fas fa-fw fa-user-crown" style="font-size:16px;"></i>
+                            <i class="fas fa-fw fa-user-alien" style="font-size:18px;"></i>
                         </label>
                     </nz-radio-group>
                 </div>
@@ -594,7 +599,7 @@
                         (nzOnConfirm)="confirmUserTrainingDelete()" nz-tooltip
                         nzTooltipTitle="Remove Training from Users">
                         <i class="fas fa-arrow-alt-from-right"></i></button>
-                        <!--
+                    <!--
                     <button *ngIf="selectionMode !== 'Individual' && selectionMode !== 'Errors'" nz-button
                         nzShape="circle" nzType="default" style="display:inline-block;margin-left:10px;"
                         (click)="emailSelectedUsers()" nz-tooltip nzTooltipTitle="Send Email to Selected Users"
@@ -763,42 +768,163 @@
                                         <i class="far fa-plus-circle"
                                             style="margin-top:4px;font-size:16px;color:red;"></i>
                                         <div class="collapsed-block">
-                                            <div>
-                                                <i class="fas fa-users" style="font-size:18px;"></i> <span
-                                                    style="vertical-align: top;">&nbsp;{{nodeStatHash[dr]?.userCnt}}</span>
+                                            <div nz-tooltip nzTooltipTitle="Total Users" nzTooltipPlacement="right"
+                                                style="display:flex;justify-content:space-between;">
+                                                <i class="fas fa-users" style="font-size:18px;"></i>
+                                                <div style="vertical-align: top;margin-left:20px;">
+                                                    {{nodeStatHash[dr]?.userCnt}}
+                                                </div>
                                             </div>
-                                            <ng-container *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
-                                                <div>
-                                                    <i class="fas fa-user" style="color:black;"></i>
+                                            <div *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'"
+                                                style="padding:5px;">
+                                                <div nz-tooltip nzTooltipTitle="Selected Users"
+                                                    nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                    <div class="selected-node"
+                                                        style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                        <i class="fas fa-user" style="font-size:16px;"></i>
+                                                    </div>
+                                                    <div style="display:inline-block;padding-top:10px;">
+                                                        {{nodeStatHash[dr]?.selectedCnt}}
+                                                    </div>
+                                                </div>
+                                                <div nz-tooltip nzTooltipTitle="Users With No Trainings"
+                                                    nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;">
+                                                    <i class="fas fa-user"
+                                                        style="color:black;font-size:16px;padding-top:2px;"></i>
                                                     {{nodeStatHash[dr]?.noneCnt}}
                                                 </div>
-                                                <div>
-                                                    <i class="fas fa-user" style="color:#46bd15;"></i>
+                                                <div nz-tooltip nzTooltipTitle="Up To Date Users"
+                                                    nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;">
+                                                    <i class="fas fa-user"
+                                                        style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                     {{nodeStatHash[dr]?.upToDateCnt}}
                                                 </div>
-                                                <div>
-                                                    <i class="fas fa-user" style="color:red;"></i>
+                                                <div nz-tooltip
+                                                    nzTooltipTitle="Users With At Least One Training Past Due"
+                                                    nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;">
+                                                    <i class="fas fa-user"
+                                                        style="color:red;font-size:16px;padding-top:2px;"></i>
                                                     {{nodeStatHash[dr]?.pastDueCnt}}
                                                 </div>
-                                            </ng-container>
-                                            <ng-container *ngIf="selectionMode === 'Training'">
-                                                <div>
-                                                    <i class="fas fa-user" style="color:#46bd15;"></i>
+                                            </div>
+                                            <div *ngIf="selectionMode === 'Training'" style="padding:5px;">
+                                                <div nz-tooltip nzTooltipTitle="Selected Users"
+                                                    nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                    <div class="selected-node"
+                                                        style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                        <i class="fas fa-user" style="font-size:16px;"></i>
+                                                    </div>
+                                                    <div style="display:inline-block;padding-top:10px;">
+                                                        {{nodeStatHash[dr]?.selectedCnt}}
+                                                    </div>
+                                                </div>
+                                                <div nz-tooltip nzTooltipTitle="In Progress" nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;">
+                                                    <i class="fas fa-user"
+                                                        style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                     {{nodeStatHash[dr]?.trainingHash.upToDate}}
                                                 </div>
-                                                <div>
-                                                    <i class="fas fa-user" style="color:red;"></i>
+                                                <div nz-tooltip nzTooltipTitle="Past Due" nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;">
+                                                    <i class="fas fa-user"
+                                                        style="color:red;font-size:16px;padding-top:2px;"></i>
                                                     {{nodeStatHash[dr]?.trainingHash.pastDue}}
                                                 </div>
-                                                <div>
-                                                    <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                <div nz-tooltip nzTooltipTitle="Completed" nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;">
+                                                    <i class="fas fa-user"
+                                                        style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
                                                     {{nodeStatHash[dr]?.trainingHash.completed}}
                                                 </div>
-                                                <div>
-                                                    <i class="fas fa-user" style="color:#feb90b;"></i>
+                                                <div nz-tooltip nzTooltipTitle="Pending Certification Approval"
+                                                    nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;">
+                                                    <i class="fas fa-user"
+                                                        style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
                                                     {{nodeStatHash[dr]?.trainingHash.pendingCertUpload}}
                                                 </div>
-                                            </ng-container>
+                                            </div>
+                                            <div *ngIf="selectionMode === 'JobTitle'" style="padding:3px;">
+                                                <div nz-tooltip nzTooltipTitle="Selected Users"
+                                                    nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                    <div class="selected-node"
+                                                        style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                        <i class="fas fa-user" style="font-size:16px;"></i>
+                                                    </div>
+                                                    <div style="display:inline-block;padding-top:10px;">
+                                                        {{nodeStatHash[dr]?.selectedCnt}}
+                                                    </div>
+                                                </div>
+                                                <div *ngFor="let jobTitle of jobTitles"
+                                                    style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                    {{jobTitle}}
+                                                    <div style="margin-left:20px;">
+                                                        {{ nodeStatHash[dr]?.jobTitleHash[jobTitle] }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="selectionMode === 'UserType'" style="padding:5px;">
+                                                <div nz-tooltip nzTooltipTitle="Selected Users"
+                                                    nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                    <div class="selected-node"
+                                                        style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                        <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                            style="font-size:16px;"></i>
+                                                    </div>
+                                                    <div style="display:inline-block;padding-top:10px;">
+                                                        {{nodeStatHash[dr]?.selectedCnt}}
+                                                    </div>
+                                                </div>
+                                                <div nz-tooltip nzTooltipTitle="Individual Contributors"
+                                                    nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;">
+                                                    <i class="fas fa-user"
+                                                        style="color:black;font-size:16px;padding-top:2px;"></i>
+
+                                                    <div style="justify-content: right;">
+                                                        {{nodeStatHash[dr]?.userTypeHash.individualContributor}}
+                                                    </div>
+                                                </div>
+                                                <div nz-tooltip nzTooltipTitle="Supervisors" nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;">
+                                                    <i class="fas fa-user-tie"
+                                                        style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                    <div style="justify-content: right;">
+                                                        {{nodeStatHash[dr]?.userTypeHash.supervisor}}
+                                                    </div>
+                                                </div>
+                                                <div nz-tooltip nzTooltipTitle="Volunteers" nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;">
+                                                    <i class="fas fa-user-cowboy"
+                                                        style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                    <div style="justify-content: right;">
+                                                        {{nodeStatHash[dr]?.userTypeHash.volunteer}}
+                                                    </div>
+                                                </div>
+                                                <div nz-tooltip nzTooltipTitle="Contractors" nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;">
+                                                    <i class="fas fa-user-hard-hat"
+                                                        style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                    <div style="justify-content: right;">
+                                                        {{nodeStatHash[dr]?.userTypeHash.contractor}}
+                                                    </div>
+                                                </div>
+                                                <div nz-tooltip nzTooltipTitle="Customers" nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;">
+                                                    <i class="fas fa-user-alien"
+                                                        style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                    <div style="justify-content: right;">
+                                                        {{nodeStatHash[dr]?.userTypeHash.customer}}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -846,42 +972,173 @@
                                                         style="margin-top:4px;font-size:16px;color:red;">
                                                     </i>
                                                     <div class="collapsed-block">
-                                                        <div>
-                                                            <i class="fas fa-users" style="font-size:18px;"></i> <span
-                                                                style="vertical-align: top;">&nbsp;{{nodeStatHash[dr2]?.userCnt}}</span>
+                                                        <div nz-tooltip nzTooltipTitle="Total Users"
+                                                            nzTooltipPlacement="right"
+                                                            style="display:flex;justify-content:space-between;">
+                                                            <i class="fas fa-users" style="font-size:18px;"></i>
+                                                            <div style="vertical-align: top;margin-left:20px;">
+                                                                {{nodeStatHash[dr2]?.userCnt}}
+                                                            </div>
                                                         </div>
-                                                        <ng-container *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
-                                                            <div>
-                                                                <i class="fas fa-user" style="color:black;"></i>
+                                                        <div *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'"
+                                                            style="padding:5px;">
+                                                            <div nz-tooltip nzTooltipTitle="Selected Users"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                <div class="selected-node"
+                                                                    style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                    <i class="fas fa-user" style="font-size:16px;"></i>
+                                                                </div>
+                                                                <div style="display:inline-block;padding-top:10px;">
+                                                                    {{nodeStatHash[dr2]?.selectedCnt}}
+                                                                </div>
+                                                            </div>
+                                                            <div nz-tooltip nzTooltipTitle="Users With No Trainings"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;">
+                                                                <i class="fas fa-user"
+                                                                    style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                 {{nodeStatHash[dr2]?.noneCnt}}
                                                             </div>
-                                                            <div>
-                                                                <i class="fas fa-user" style="color:#46bd15;"></i>
+                                                            <div nz-tooltip nzTooltipTitle="Up To Date Users"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;">
+                                                                <i class="fas fa-user"
+                                                                    style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                                 {{nodeStatHash[dr2]?.upToDateCnt}}
                                                             </div>
-                                                            <div>
-                                                                <i class="fas fa-user" style="color:red;"></i>
+                                                            <div nz-tooltip
+                                                                nzTooltipTitle="Users With At Least One Training Past Due"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;">
+                                                                <i class="fas fa-user"
+                                                                    style="color:red;font-size:16px;padding-top:2px;"></i>
                                                                 {{nodeStatHash[dr2]?.pastDueCnt}}
                                                             </div>
-                                                        </ng-container>
-                                                        <ng-container *ngIf="selectionMode === 'Training'">
-                                                            <div>
-                                                                <i class="fas fa-user" style="color:#46bd15;"></i>
+                                                        </div>
+                                                        <div *ngIf="selectionMode === 'Training'" style="padding:5px;">
+                                                            <div nz-tooltip nzTooltipTitle="Selected Users"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                <div class="selected-node"
+                                                                    style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                    <i class="fas fa-user" style="font-size:16px;"></i>
+                                                                </div>
+                                                                <div style="display:inline-block;padding-top:10px;">
+                                                                    {{nodeStatHash[dr2]?.selectedCnt}}
+                                                                </div>
+                                                            </div>
+                                                            <div nz-tooltip nzTooltipTitle="In Progress"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;">
+                                                                <i class="fas fa-user"
+                                                                    style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                                 {{nodeStatHash[dr2]?.trainingHash.upToDate}}
                                                             </div>
-                                                            <div>
-                                                                <i class="fas fa-user" style="color:red;"></i>
+                                                            <div nz-tooltip nzTooltipTitle="Past Due"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;">
+                                                                <i class="fas fa-user"
+                                                                    style="color:red;font-size:16px;padding-top:2px;"></i>
                                                                 {{nodeStatHash[dr2]?.trainingHash.pastDue}}
                                                             </div>
-                                                            <div>
-                                                                <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                            <div nz-tooltip nzTooltipTitle="Completed"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;">
+                                                                <i class="fas fa-user"
+                                                                    style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
                                                                 {{nodeStatHash[dr2]?.trainingHash.completed}}
                                                             </div>
-                                                            <div>
-                                                                <i class="fas fa-user" style="color:#feb90b;"></i>
+                                                            <div nz-tooltip
+                                                                nzTooltipTitle="Pending Certification Approval"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;">
+                                                                <i class="fas fa-user"
+                                                                    style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
                                                                 {{nodeStatHash[dr2]?.trainingHash.pendingCertUpload}}
                                                             </div>
-                                                        </ng-container>
+                                                        </div>
+                                                        <div *ngIf="selectionMode === 'JobTitle'" style="padding:3px;">
+                                                            <div nz-tooltip nzTooltipTitle="Selected Users"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                <div class="selected-node"
+                                                                    style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                    <i class="fas fa-user" style="font-size:16px;"></i>
+                                                                </div>
+                                                                <div style="display:inline-block;padding-top:10px;">
+                                                                    {{nodeStatHash[dr2]?.selectedCnt}}
+                                                                </div>
+                                                            </div>
+                                                            <div *ngFor="let jobTitle of jobTitles"
+                                                                style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                                {{jobTitle}}
+                                                                <div style="margin-left:20px;">
+                                                                    {{ nodeStatHash[dr2]?.jobTitleHash[jobTitle] }}
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div *ngIf="selectionMode === 'UserType'" style="padding:5px;">
+                                                            <div nz-tooltip nzTooltipTitle="Selected Users"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                <div class="selected-node"
+                                                                    style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                    <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                                        style="font-size:16px;"></i>
+                                                                </div>
+                                                                <div style="display:inline-block;padding-top:10px;">
+                                                                    {{nodeStatHash[dr2]?.selectedCnt}}
+                                                                </div>
+                                                            </div>
+                                                            <div nz-tooltip nzTooltipTitle="Individual Contributors"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;">
+                                                                <i class="fas fa-user"
+                                                                    style="color:black;font-size:16px;padding-top:2px;"></i>
+
+                                                                <div style="justify-content: right;">
+                                                                    {{nodeStatHash[dr2]?.userTypeHash.individualContributor}}
+                                                                </div>
+                                                            </div>
+                                                            <div nz-tooltip nzTooltipTitle="Supervisors"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;">
+                                                                <i class="fas fa-user-tie"
+                                                                    style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                <div style="justify-content: right;">
+                                                                    {{nodeStatHash[dr2]?.userTypeHash.supervisor}}
+                                                                </div>
+                                                            </div>
+                                                            <div nz-tooltip nzTooltipTitle="Volunteers"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;">
+                                                                <i class="fas fa-user-cowboy"
+                                                                    style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                <div style="justify-content: right;">
+                                                                    {{nodeStatHash[dr2]?.userTypeHash.volunteer}}
+                                                                </div>
+                                                            </div>
+                                                            <div nz-tooltip nzTooltipTitle="Contractors"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;">
+                                                                <i class="fas fa-user-hard-hat"
+                                                                    style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                <div style="justify-content: right;">
+                                                                    {{nodeStatHash[dr2]?.userTypeHash.contractor}}
+                                                                </div>
+                                                            </div>
+                                                            <div nz-tooltip nzTooltipTitle="Customers"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;">
+                                                                <i class="fas fa-user-alien"
+                                                                    style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                <div style="justify-content: right;">
+                                                                    {{nodeStatHash[dr2]?.userTypeHash.customer}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -932,49 +1189,188 @@
                                                                 <i class="far fa-plus-circle"
                                                                     style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                 <div class="collapsed-block">
-                                                                    <div>
+                                                                    <div nz-tooltip nzTooltipTitle="Total Users"
+                                                                        nzTooltipPlacement="right"
+                                                                        style="display:flex;justify-content:space-between;">
                                                                         <i class="fas fa-users"
-                                                                            style="font-size:18px;"></i> <span
-                                                                            style="vertical-align: top;">&nbsp;{{nodeStatHash[dr3]?.userCnt}}</span>
+                                                                            style="font-size:18px;"></i>
+                                                                        <div
+                                                                            style="vertical-align: top;margin-left:20px;">
+                                                                            {{nodeStatHash[dr3]?.userCnt}}
+                                                                        </div>
                                                                     </div>
-                                                                    <ng-container *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
-                                                                        <div>
+                                                                    <div *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'"
+                                                                        style="padding:5px;">
+                                                                        <div nz-tooltip nzTooltipTitle="Selected Users"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                            <div class="selected-node"
+                                                                                style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                <i class="fas fa-user"
+                                                                                    style="font-size:16px;"></i>
+                                                                            </div>
+                                                                            <div
+                                                                                style="display:inline-block;padding-top:10px;">
+                                                                                {{nodeStatHash[dr3]?.selectedCnt}}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div nz-tooltip
+                                                                            nzTooltipTitle="Users With No Trainings"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;">
                                                                             <i class="fas fa-user"
-                                                                                style="color:black;"></i>
+                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                             {{nodeStatHash[dr3]?.noneCnt}}
                                                                         </div>
-                                                                        <div>
+                                                                        <div nz-tooltip
+                                                                            nzTooltipTitle="Up To Date Users"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;">
                                                                             <i class="fas fa-user"
-                                                                                style="color:#46bd15;"></i>
+                                                                                style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                                             {{nodeStatHash[dr3]?.upToDateCnt}}
                                                                         </div>
-                                                                        <div>
+                                                                        <div nz-tooltip
+                                                                            nzTooltipTitle="Users With At Least One Training Past Due"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;">
                                                                             <i class="fas fa-user"
-                                                                                style="color:red;"></i>
+                                                                                style="color:red;font-size:16px;padding-top:2px;"></i>
                                                                             {{nodeStatHash[dr3]?.pastDueCnt}}
                                                                         </div>
-                                                                    </ng-container>
-                                                                    <ng-container *ngIf="selectionMode === 'Training'">
-                                                                        <div>
+                                                                    </div>
+                                                                    <div *ngIf="selectionMode === 'Training'"
+                                                                        style="padding:5px;">
+                                                                        <div nz-tooltip nzTooltipTitle="Selected Users"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                            <div class="selected-node"
+                                                                                style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                <i class="fas fa-user"
+                                                                                    style="font-size:16px;"></i>
+                                                                            </div>
+                                                                            <div
+                                                                                style="display:inline-block;padding-top:10px;">
+                                                                                {{nodeStatHash[dr3]?.selectedCnt}}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div nz-tooltip nzTooltipTitle="In Progress"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;">
                                                                             <i class="fas fa-user"
-                                                                                style="color:#46bd15;"></i>
+                                                                                style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                                             {{nodeStatHash[dr3]?.trainingHash.upToDate}}
                                                                         </div>
-                                                                        <div>
+                                                                        <div nz-tooltip nzTooltipTitle="Past Due"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;">
                                                                             <i class="fas fa-user"
-                                                                                style="color:red;"></i>
+                                                                                style="color:red;font-size:16px;padding-top:2px;"></i>
                                                                             {{nodeStatHash[dr3]?.trainingHash.pastDue}}
                                                                         </div>
-                                                                        <div>
-                                                                            <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                                        <div nz-tooltip nzTooltipTitle="Completed"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;">
+                                                                            <i class="fas fa-user"
+                                                                                style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
                                                                             {{nodeStatHash[dr3]?.trainingHash.completed}}
                                                                         </div>
-                                                                        <div>
+                                                                        <div nz-tooltip
+                                                                            nzTooltipTitle="Pending Certification Approval"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;">
                                                                             <i class="fas fa-user"
-                                                                                style="color:#feb90b;"></i>
+                                                                                style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
                                                                             {{nodeStatHash[dr3]?.trainingHash.pendingCertUpload}}
                                                                         </div>
-                                                                    </ng-container>
+                                                                    </div>
+                                                                    <div *ngIf="selectionMode === 'JobTitle'"
+                                                                        style="padding:3px;">
+                                                                        <div nz-tooltip nzTooltipTitle="Selected Users"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                            <div class="selected-node"
+                                                                                style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                <i class="fas fa-user"
+                                                                                    style="font-size:16px;"></i>
+                                                                            </div>
+                                                                            <div
+                                                                                style="display:inline-block;padding-top:10px;">
+                                                                                {{nodeStatHash[dr3]?.selectedCnt}}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div *ngFor="let jobTitle of jobTitles"
+                                                                            style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                                            {{jobTitle}}
+                                                                            <div style="margin-left:20px;">
+                                                                                {{ nodeStatHash[dr3]?.jobTitleHash[jobTitle] }}
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div *ngIf="selectionMode === 'UserType'"
+                                                                        style="padding:5px;">
+                                                                        <div nz-tooltip nzTooltipTitle="Selected Users"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                            <div class="selected-node"
+                                                                                style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                                                    style="font-size:16px;"></i>
+                                                                            </div>
+                                                                            <div
+                                                                                style="display:inline-block;padding-top:10px;">
+                                                                                {{nodeStatHash[dr3]?.selectedCnt}}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div nz-tooltip
+                                                                            nzTooltipTitle="Individual Contributors"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;">
+                                                                            <i class="fas fa-user"
+                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+
+                                                                            <div style="justify-content: right;">
+                                                                                {{nodeStatHash[dr3]?.userTypeHash.individualContributor}}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div nz-tooltip nzTooltipTitle="Supervisors"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;">
+                                                                            <i class="fas fa-user-tie"
+                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                            <div style="justify-content: right;">
+                                                                                {{nodeStatHash[dr3]?.userTypeHash.supervisor}}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div nz-tooltip nzTooltipTitle="Volunteers"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;">
+                                                                            <i class="fas fa-user-cowboy"
+                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                            <div style="justify-content: right;">
+                                                                                {{nodeStatHash[dr3]?.userTypeHash.volunteer}}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div nz-tooltip nzTooltipTitle="Contractors"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;">
+                                                                            <i class="fas fa-user-hard-hat"
+                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                            <div style="justify-content: right;">
+                                                                                {{nodeStatHash[dr3]?.userTypeHash.contractor}}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div nz-tooltip nzTooltipTitle="Customers"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;">
+                                                                            <i class="fas fa-user-alien"
+                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                            <div style="justify-content: right;">
+                                                                                {{nodeStatHash[dr3]?.userTypeHash.customer}}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1027,52 +1423,205 @@
                                                                             <i class="far fa-plus-circle"
                                                                                 style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                             <div class="collapsed-block">
-                                                                                <div>
+                                                                                <div nz-tooltip
+                                                                                    nzTooltipTitle="Total Users"
+                                                                                    nzTooltipPlacement="right"
+                                                                                    style="display:flex;justify-content:space-between;">
                                                                                     <i class="fas fa-users"
                                                                                         style="font-size:18px;"></i>
-                                                                                    <span
-                                                                                        style="vertical-align: top;">&nbsp;{{nodeStatHash[dr4]?.userCnt}}</span>
+                                                                                    <div
+                                                                                        style="vertical-align: top;margin-left:20px;">
+                                                                                        {{nodeStatHash[dr4]?.userCnt}}
+                                                                                    </div>
                                                                                 </div>
-                                                                                <ng-container
-                                                                                    *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
-                                                                                    <div>
+                                                                                <div *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'"
+                                                                                    style="padding:5px;">
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Selected Users"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                        <div class="selected-node"
+                                                                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                            <i class="fas fa-user"
+                                                                                                style="font-size:16px;"></i>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            style="display:inline-block;padding-top:10px;">
+                                                                                            {{nodeStatHash[dr4]?.selectedCnt}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Users With No Trainings"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;">
                                                                                         <i class="fas fa-user"
-                                                                                            style="color:black;"></i>
+                                                                                            style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                         {{nodeStatHash[dr4]?.noneCnt}}
                                                                                     </div>
-                                                                                    <div>
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Up To Date Users"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;">
                                                                                         <i class="fas fa-user"
-                                                                                            style="color:#46bd15;"></i>
+                                                                                            style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                                                         {{nodeStatHash[dr4]?.upToDateCnt}}
                                                                                     </div>
-                                                                                    <div>
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Users With At Least One Training Past Due"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;">
                                                                                         <i class="fas fa-user"
-                                                                                            style="color:red;"></i>
+                                                                                            style="color:red;font-size:16px;padding-top:2px;"></i>
                                                                                         {{nodeStatHash[dr4]?.pastDueCnt}}
                                                                                     </div>
-                                                                                </ng-container>
-                                                                                <ng-container
-                                                                                    *ngIf="selectionMode === 'Training'">
-                                                                                    <div>
+                                                                                </div>
+                                                                                <div *ngIf="selectionMode === 'Training'"
+                                                                                    style="padding:5px;">
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Selected Users"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                        <div class="selected-node"
+                                                                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                            <i class="fas fa-user"
+                                                                                                style="font-size:16px;"></i>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            style="display:inline-block;padding-top:10px;">
+                                                                                            {{nodeStatHash[dr4]?.selectedCnt}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="In Progress"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;">
                                                                                         <i class="fas fa-user"
-                                                                                            style="color:#46bd15;"></i>
+                                                                                            style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                                                         {{nodeStatHash[dr4]?.trainingHash.upToDate}}
                                                                                     </div>
-                                                                                    <div>
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Past Due"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;">
                                                                                         <i class="fas fa-user"
-                                                                                            style="color:red;"></i>
+                                                                                            style="color:red;font-size:16px;padding-top:2px;"></i>
                                                                                         {{nodeStatHash[dr4]?.trainingHash.pastDue}}
                                                                                     </div>
-                                                                                    <div>
-                                                                                        <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Completed"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;">
+                                                                                        <i class="fas fa-user"
+                                                                                            style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
                                                                                         {{nodeStatHash[dr4]?.trainingHash.completed}}
                                                                                     </div>
-                                                                                    <div>
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Pending Certification Approval"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;">
                                                                                         <i class="fas fa-user"
-                                                                                            style="color:#feb90b;"></i>
+                                                                                            style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
                                                                                         {{nodeStatHash[dr4]?.trainingHash.pendingCertUpload}}
                                                                                     </div>
-                                                                                </ng-container>
+                                                                                </div>
+                                                                                <div *ngIf="selectionMode === 'JobTitle'"
+                                                                                    style="padding:3px;">
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Selected Users"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                        <div class="selected-node"
+                                                                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                            <i class="fas fa-user"
+                                                                                                style="font-size:16px;"></i>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            style="display:inline-block;padding-top:10px;">
+                                                                                            {{nodeStatHash[dr4]?.selectedCnt}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div *ngFor="let jobTitle of jobTitles"
+                                                                                        style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                                                        {{jobTitle}}
+                                                                                        <div style="margin-left:20px;">
+                                                                                            {{ nodeStatHash[dr4]?.jobTitleHash[jobTitle] }}
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                </div>
+                                                                                <div *ngIf="selectionMode === 'UserType'"
+                                                                                    style="padding:5px;">
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Selected Users"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                        <div class="selected-node"
+                                                                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                            <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                                                                style="font-size:16px;"></i>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            style="display:inline-block;padding-top:10px;">
+                                                                                            {{nodeStatHash[dr4]?.selectedCnt}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Individual Contributors"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;">
+                                                                                        <i class="fas fa-user"
+                                                                                            style="color:black;font-size:16px;padding-top:2px;"></i>
+
+                                                                                        <div
+                                                                                            style="justify-content: right;">
+                                                                                            {{nodeStatHash[dr4]?.userTypeHash.individualContributor}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Supervisors"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;">
+                                                                                        <i class="fas fa-user-tie"
+                                                                                            style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                        <div
+                                                                                            style="justify-content: right;">
+                                                                                            {{nodeStatHash[dr4]?.userTypeHash.supervisor}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Volunteers"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;">
+                                                                                        <i class="fas fa-user-cowboy"
+                                                                                            style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                        <div
+                                                                                            style="justify-content: right;">
+                                                                                            {{nodeStatHash[dr4]?.userTypeHash.volunteer}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Contractors"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;">
+                                                                                        <i class="fas fa-user-hard-hat"
+                                                                                            style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                        <div
+                                                                                            style="justify-content: right;">
+                                                                                            {{nodeStatHash[dr4]?.userTypeHash.contractor}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div nz-tooltip
+                                                                                        nzTooltipTitle="Customers"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;">
+                                                                                        <i class="fas fa-user-alien"
+                                                                                            style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                        <div
+                                                                                            style="justify-content: right;">
+                                                                                            {{nodeStatHash[dr4]?.userTypeHash.customer}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
 
                                                                         </div>
@@ -1127,52 +1676,206 @@
                                                                                         <i class="far fa-plus-circle"
                                                                                             style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                                         <div class="collapsed-block">
-                                                                                            <div>
+                                                                                            <div nz-tooltip
+                                                                                                nzTooltipTitle="Total Users"
+                                                                                                nzTooltipPlacement="right"
+                                                                                                style="display:flex;justify-content:space-between;">
                                                                                                 <i class="fas fa-users"
                                                                                                     style="font-size:18px;"></i>
-                                                                                                <span
-                                                                                                    style="vertical-align: top;">&nbsp;{{nodeStatHash[dr5]?.userCnt}}</span>
+                                                                                                <div
+                                                                                                    style="vertical-align: top;margin-left:20px;">
+                                                                                                    {{nodeStatHash[dr5]?.userCnt}}
+                                                                                                </div>
                                                                                             </div>
-                                                                                            <ng-container
-                                                                                                *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
-                                                                                                <div>
+                                                                                            <div *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'"
+                                                                                                style="padding:5px;">
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Selected Users"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                                    <div class="selected-node"
+                                                                                                        style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                                        <i class="fas fa-user"
+                                                                                                            style="font-size:16px;"></i>
+                                                                                                    </div>
+                                                                                                    <div
+                                                                                                        style="display:inline-block;padding-top:10px;">
+                                                                                                        {{nodeStatHash[dr5]?.selectedCnt}}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Users With No Trainings"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;">
                                                                                                     <i class="fas fa-user"
-                                                                                                        style="color:black;"></i>
+                                                                                                        style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                     {{nodeStatHash[dr5]?.noneCnt}}
                                                                                                 </div>
-                                                                                                <div>
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Up To Date Users"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;">
                                                                                                     <i class="fas fa-user"
-                                                                                                        style="color:#46bd15;"></i>
+                                                                                                        style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                                                                     {{nodeStatHash[dr5]?.upToDateCnt}}
                                                                                                 </div>
-                                                                                                <div>
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Users With At Least One Training Past Due"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;">
                                                                                                     <i class="fas fa-user"
-                                                                                                        style="color:red;"></i>
+                                                                                                        style="color:red;font-size:16px;padding-top:2px;"></i>
                                                                                                     {{nodeStatHash[dr5]?.pastDueCnt}}
                                                                                                 </div>
-                                                                                            </ng-container>
-                                                                                            <ng-container
-                                                                                                *ngIf="selectionMode === 'Training'">
-                                                                                                <div>
+                                                                                            </div>
+                                                                                            <div *ngIf="selectionMode === 'Training'"
+                                                                                                style="padding:5px;">
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Selected Users"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                                    <div class="selected-node"
+                                                                                                        style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                                        <i class="fas fa-user"
+                                                                                                            style="font-size:16px;"></i>
+                                                                                                    </div>
+                                                                                                    <div
+                                                                                                        style="display:inline-block;padding-top:10px;">
+                                                                                                        {{nodeStatHash[dr5]?.selectedCnt}}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="In Progress"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;">
                                                                                                     <i class="fas fa-user"
-                                                                                                        style="color:#46bd15;"></i>
+                                                                                                        style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                                                                     {{nodeStatHash[dr5]?.trainingHash.upToDate}}
                                                                                                 </div>
-                                                                                                <div>
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Past Due"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;">
                                                                                                     <i class="fas fa-user"
-                                                                                                        style="color:red;"></i>
+                                                                                                        style="color:red;font-size:16px;padding-top:2px;"></i>
                                                                                                     {{nodeStatHash[dr5]?.trainingHash.pastDue}}
                                                                                                 </div>
-                                                                                                <div>
-                                                                                                    <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Completed"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;">
+                                                                                                    <i class="fas fa-user"
+                                                                                                        style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
                                                                                                     {{nodeStatHash[dr5]?.trainingHash.completed}}
                                                                                                 </div>
-                                                                                                <div>
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Pending Certification Approval"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;">
                                                                                                     <i class="fas fa-user"
-                                                                                                        style="color:#feb90b;"></i>
+                                                                                                        style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
                                                                                                     {{nodeStatHash[dr5]?.trainingHash.pendingCertUpload}}
                                                                                                 </div>
-                                                                                            </ng-container>
+                                                                                            </div>
+                                                                                            <div *ngIf="selectionMode === 'JobTitle'"
+                                                                                                style="padding:3px;">
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Selected Users"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                                    <div class="selected-node"
+                                                                                                        style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                                        <i class="fas fa-user"
+                                                                                                            style="font-size:16px;"></i>
+                                                                                                    </div>
+                                                                                                    <div
+                                                                                                        style="display:inline-block;padding-top:10px;">
+                                                                                                        {{nodeStatHash[dr5]?.selectedCnt}}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div *ngFor="let jobTitle of jobTitles"
+                                                                                                    style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                                                                    {{jobTitle}}
+                                                                                                    <div
+                                                                                                        style="margin-left:20px;">
+                                                                                                        {{ nodeStatHash[dr5]?.jobTitleHash[jobTitle] }}
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                            </div>
+                                                                                            <div *ngIf="selectionMode === 'UserType'"
+                                                                                                style="padding:5px;">
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Selected Users"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                                    <div class="selected-node"
+                                                                                                        style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                                        <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                                                                            style="font-size:16px;"></i>
+                                                                                                    </div>
+                                                                                                    <div
+                                                                                                        style="display:inline-block;padding-top:10px;">
+                                                                                                        {{nodeStatHash[dr5]?.selectedCnt}}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Individual Contributors"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;">
+                                                                                                    <i class="fas fa-user"
+                                                                                                        style="color:black;font-size:16px;padding-top:2px;"></i>
+
+                                                                                                    <div
+                                                                                                        style="justify-content: right;">
+                                                                                                        {{nodeStatHash[dr5]?.userTypeHash.individualContributor}}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Supervisors"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;">
+                                                                                                    <i class="fas fa-user-tie"
+                                                                                                        style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                                    <div
+                                                                                                        style="justify-content: right;">
+                                                                                                        {{nodeStatHash[dr5]?.userTypeHash.supervisor}}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Volunteers"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;">
+                                                                                                    <i class="fas fa-user-cowboy"
+                                                                                                        style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                                    <div
+                                                                                                        style="justify-content: right;">
+                                                                                                        {{nodeStatHash[dr5]?.userTypeHash.volunteer}}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Contractors"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;">
+                                                                                                    <i class="fas fa-user-hard-hat"
+                                                                                                        style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                                    <div
+                                                                                                        style="justify-content: right;">
+                                                                                                        {{nodeStatHash[dr5]?.userTypeHash.contractor}}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div nz-tooltip
+                                                                                                    nzTooltipTitle="Customers"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;">
+                                                                                                    <i class="fas fa-user-alien"
+                                                                                                        style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                                    <div
+                                                                                                        style="justify-content: right;">
+                                                                                                        {{nodeStatHash[dr5]?.userTypeHash.customer}}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -1229,52 +1932,206 @@
                                                                                                         style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                                                     <div
                                                                                                         class="collapsed-block">
-                                                                                                        <div>
+                                                                                                        <div nz-tooltip
+                                                                                                            nzTooltipTitle="Total Users"
+                                                                                                            nzTooltipPlacement="right"
+                                                                                                            style="display:flex;justify-content:space-between;">
                                                                                                             <i class="fas fa-users"
                                                                                                                 style="font-size:18px;"></i>
-                                                                                                            <span
-                                                                                                                style="vertical-align: top;">&nbsp;{{nodeStatHash[dr6]?.userCnt}}</span>
+                                                                                                            <div
+                                                                                                                style="vertical-align: top;margin-left:20px;">
+                                                                                                                {{nodeStatHash[dr6]?.userCnt}}
+                                                                                                            </div>
                                                                                                         </div>
-                                                                                                        <ng-container
-                                                                                                            *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
-                                                                                                            <div>
+                                                                                                        <div *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'"
+                                                                                                            style="padding:5px;">
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Selected Users"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                                                <div class="selected-node"
+                                                                                                                    style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                                                    <i class="fas fa-user"
+                                                                                                                        style="font-size:16px;"></i>
+                                                                                                                </div>
+                                                                                                                <div
+                                                                                                                    style="display:inline-block;padding-top:10px;">
+                                                                                                                    {{nodeStatHash[dr6]?.selectedCnt}}
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Users With No Trainings"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;">
                                                                                                                 <i class="fas fa-user"
-                                                                                                                    style="color:black;"></i>
+                                                                                                                    style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                                 {{nodeStatHash[dr6]?.noneCnt}}
                                                                                                             </div>
-                                                                                                            <div>
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Up To Date Users"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;">
                                                                                                                 <i class="fas fa-user"
-                                                                                                                    style="color:#46bd15;"></i>
+                                                                                                                    style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                                                                                 {{nodeStatHash[dr6]?.upToDateCnt}}
                                                                                                             </div>
-                                                                                                            <div>
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Users With At Least One Training Past Due"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;">
                                                                                                                 <i class="fas fa-user"
-                                                                                                                    style="color:red;"></i>
+                                                                                                                    style="color:red;font-size:16px;padding-top:2px;"></i>
                                                                                                                 {{nodeStatHash[dr6]?.pastDueCnt}}
                                                                                                             </div>
-                                                                                                        </ng-container>
-                                                                                                        <ng-container
-                                                                                                            *ngIf="selectionMode === 'Training'">
-                                                                                                            <div>
+                                                                                                        </div>
+                                                                                                        <div *ngIf="selectionMode === 'Training'"
+                                                                                                            style="padding:5px;">
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Selected Users"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                                                <div class="selected-node"
+                                                                                                                    style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                                                    <i class="fas fa-user"
+                                                                                                                        style="font-size:16px;"></i>
+                                                                                                                </div>
+                                                                                                                <div
+                                                                                                                    style="display:inline-block;padding-top:10px;">
+                                                                                                                    {{nodeStatHash[dr6]?.selectedCnt}}
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="In Progress"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;">
                                                                                                                 <i class="fas fa-user"
-                                                                                                                    style="color:#46bd15;"></i>
+                                                                                                                    style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                                                                                 {{nodeStatHash[dr6]?.trainingHash.upToDate}}
                                                                                                             </div>
-                                                                                                            <div>
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Past Due"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;">
                                                                                                                 <i class="fas fa-user"
-                                                                                                                    style="color:red;"></i>
+                                                                                                                    style="color:red;font-size:16px;padding-top:2px;"></i>
                                                                                                                 {{nodeStatHash[dr6]?.trainingHash.pastDue}}
                                                                                                             </div>
-                                                                                                            <div>
-                                                                                                                <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Completed"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;">
+                                                                                                                <i class="fas fa-user"
+                                                                                                                    style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
                                                                                                                 {{nodeStatHash[dr6]?.trainingHash.completed}}
                                                                                                             </div>
-                                                                                                            <div>
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Pending Certification Approval"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;">
                                                                                                                 <i class="fas fa-user"
-                                                                                                                    style="color:#feb90b;"></i>
+                                                                                                                    style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
                                                                                                                 {{nodeStatHash[dr6]?.trainingHash.pendingCertUpload}}
                                                                                                             </div>
-                                                                                                        </ng-container>
+                                                                                                        </div>
+                                                                                                        <div *ngIf="selectionMode === 'JobTitle'"
+                                                                                                            style="padding:3px;">
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Selected Users"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                                                <div class="selected-node"
+                                                                                                                    style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                                                    <i class="fas fa-user"
+                                                                                                                        style="font-size:16px;"></i>
+                                                                                                                </div>
+                                                                                                                <div
+                                                                                                                    style="display:inline-block;padding-top:10px;">
+                                                                                                                    {{nodeStatHash[dr6]?.selectedCnt}}
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div *ngFor="let jobTitle of jobTitles"
+                                                                                                                style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                                                                                {{jobTitle}}
+                                                                                                                <div
+                                                                                                                    style="margin-left:20px;">
+                                                                                                                    {{ nodeStatHash[dr6]?.jobTitleHash[jobTitle] }}
+                                                                                                                </div>
+                                                                                                            </div>
+
+                                                                                                        </div>
+                                                                                                        <div *ngIf="selectionMode === 'UserType'"
+                                                                                                            style="padding:5px;">
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Selected Users"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                                                <div class="selected-node"
+                                                                                                                    style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                                                    <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                                                                                        style="font-size:16px;"></i>
+                                                                                                                </div>
+                                                                                                                <div
+                                                                                                                    style="display:inline-block;padding-top:10px;">
+                                                                                                                    {{nodeStatHash[dr6]?.selectedCnt}}
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Individual Contributors"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;">
+                                                                                                                <i class="fas fa-user"
+                                                                                                                    style="color:black;font-size:16px;padding-top:2px;"></i>
+
+                                                                                                                <div
+                                                                                                                    style="justify-content: right;">
+                                                                                                                    {{nodeStatHash[dr6]?.userTypeHash.individualContributor}}
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Supervisors"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;">
+                                                                                                                <i class="fas fa-user-tie"
+                                                                                                                    style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                                                <div
+                                                                                                                    style="justify-content: right;">
+                                                                                                                    {{nodeStatHash[dr6]?.userTypeHash.supervisor}}
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Volunteers"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;">
+                                                                                                                <i class="fas fa-user-cowboy"
+                                                                                                                    style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                                                <div
+                                                                                                                    style="justify-content: right;">
+                                                                                                                    {{nodeStatHash[dr6]?.userTypeHash.volunteer}}
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Contractors"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;">
+                                                                                                                <i class="fas fa-user-hard-hat"
+                                                                                                                    style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                                                <div
+                                                                                                                    style="justify-content: right;">
+                                                                                                                    {{nodeStatHash[dr6]?.userTypeHash.contractor}}
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div nz-tooltip
+                                                                                                                nzTooltipTitle="Customers"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;">
+                                                                                                                <i class="fas fa-user-alien"
+                                                                                                                    style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                                                <div
+                                                                                                                    style="justify-content: right;">
+                                                                                                                    {{nodeStatHash[dr6]?.userTypeHash.customer}}
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
@@ -1327,52 +2184,206 @@
                                                                                                                     style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                                                                 <div
                                                                                                                     class="collapsed-block">
-                                                                                                                    <div>
+                                                                                                                    <div nz-tooltip
+                                                                                                                        nzTooltipTitle="Total Users"
+                                                                                                                        nzTooltipPlacement="right"
+                                                                                                                        style="display:flex;justify-content:space-between;">
                                                                                                                         <i class="fas fa-users"
                                                                                                                             style="font-size:18px;"></i>
-                                                                                                                        <span
-                                                                                                                            style="vertical-align: top;">&nbsp;{{nodeStatHash[dr7]?.userCnt}}</span>
+                                                                                                                        <div
+                                                                                                                            style="vertical-align: top;margin-left:20px;">
+                                                                                                                            {{nodeStatHash[dr7]?.userCnt}}
+                                                                                                                        </div>
                                                                                                                     </div>
-                                                                                                                    <ng-container
-                                                                                                                        *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'">
-                                                                                                                        <div>
+                                                                                                                    <div *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'"
+                                                                                                                        style="padding:5px;">
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Selected Users"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                                                            <div class="selected-node"
+                                                                                                                                style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                                                                <i class="fas fa-user"
+                                                                                                                                    style="font-size:16px;"></i>
+                                                                                                                            </div>
+                                                                                                                            <div
+                                                                                                                                style="display:inline-block;padding-top:10px;">
+                                                                                                                                {{nodeStatHash[dr7]?.selectedCnt}}
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Users With No Trainings"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;">
                                                                                                                             <i class="fas fa-user"
-                                                                                                                                style="color:black;"></i>
+                                                                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                                             {{nodeStatHash[dr7]?.noneCnt}}
                                                                                                                         </div>
-                                                                                                                        <div>
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Up To Date Users"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;">
                                                                                                                             <i class="fas fa-user"
-                                                                                                                                style="color:#46bd15;"></i>
+                                                                                                                                style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                                                                                             {{nodeStatHash[dr7]?.upToDateCnt}}
                                                                                                                         </div>
-                                                                                                                        <div>
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Users With At Least One Training Past Due"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;">
                                                                                                                             <i class="fas fa-user"
-                                                                                                                                style="color:red;"></i>
+                                                                                                                                style="color:red;font-size:16px;padding-top:2px;"></i>
                                                                                                                             {{nodeStatHash[dr7]?.pastDueCnt}}
                                                                                                                         </div>
-                                                                                                                    </ng-container>
-                                                                                                                    <ng-container
-                                                                                                                        *ngIf="selectionMode === 'Training'">
-                                                                                                                        <div>
+                                                                                                                    </div>
+                                                                                                                    <div *ngIf="selectionMode === 'Training'"
+                                                                                                                        style="padding:5px;">
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Selected Users"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                                                            <div class="selected-node"
+                                                                                                                                style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                                                                <i class="fas fa-user"
+                                                                                                                                    style="font-size:16px;"></i>
+                                                                                                                            </div>
+                                                                                                                            <div
+                                                                                                                                style="display:inline-block;padding-top:10px;">
+                                                                                                                                {{nodeStatHash[dr7]?.selectedCnt}}
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="In Progress"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;">
                                                                                                                             <i class="fas fa-user"
-                                                                                                                                style="color:#46bd15;"></i>
+                                                                                                                                style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
                                                                                                                             {{nodeStatHash[dr7]?.trainingHash.upToDate}}
                                                                                                                         </div>
-                                                                                                                        <div>
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Past Due"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;">
                                                                                                                             <i class="fas fa-user"
-                                                                                                                                style="color:red;"></i>
+                                                                                                                                style="color:red;font-size:16px;padding-top:2px;"></i>
                                                                                                                             {{nodeStatHash[dr7]?.trainingHash.pastDue}}
                                                                                                                         </div>
-                                                                                                                        <div>
-                                                                                                                            <i class="fas fa-user" style="color:#4891f7;"></i>
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Completed"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;">
+                                                                                                                            <i class="fas fa-user"
+                                                                                                                                style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
                                                                                                                             {{nodeStatHash[dr7]?.trainingHash.completed}}
                                                                                                                         </div>
-                                                                                                                        <div>
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Pending Certification Approval"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;">
                                                                                                                             <i class="fas fa-user"
-                                                                                                                                style="color:#feb90b;"></i>
+                                                                                                                                style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
                                                                                                                             {{nodeStatHash[dr7]?.trainingHash.pendingCertUpload}}
                                                                                                                         </div>
-                                                                                                                    </ng-container>
+                                                                                                                    </div>
+                                                                                                                    <div *ngIf="selectionMode === 'JobTitle'"
+                                                                                                                        style="padding:3px;">
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Selected Users"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                                                            <div class="selected-node"
+                                                                                                                                style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                                                                <i class="fas fa-user"
+                                                                                                                                    style="font-size:16px;"></i>
+                                                                                                                            </div>
+                                                                                                                            <div
+                                                                                                                                style="display:inline-block;padding-top:10px;">
+                                                                                                                                {{nodeStatHash[dr7]?.selectedCnt}}
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        <div *ngFor="let jobTitle of jobTitles"
+                                                                                                                            style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                                                                                            {{jobTitle}}
+                                                                                                                            <div
+                                                                                                                                style="margin-left:20px;">
+                                                                                                                                {{ nodeStatHash[dr7]?.jobTitleHash[jobTitle] }}
+                                                                                                                            </div>
+                                                                                                                        </div>
+
+                                                                                                                    </div>
+                                                                                                                    <div *ngIf="selectionMode === 'UserType'"
+                                                                                                                        style="padding:5px;">
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Selected Users"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                                                                                                            <div class="selected-node"
+                                                                                                                                style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                                                                                                                <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                                                                                                    style="font-size:16px;"></i>
+                                                                                                                            </div>
+                                                                                                                            <div
+                                                                                                                                style="display:inline-block;padding-top:10px;">
+                                                                                                                                {{nodeStatHash[dr7]?.selectedCnt}}
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Individual Contributors"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;">
+                                                                                                                            <i class="fas fa-user"
+                                                                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+
+                                                                                                                            <div
+                                                                                                                                style="justify-content: right;">
+                                                                                                                                {{nodeStatHash[dr7]?.userTypeHash.individualContributor}}
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Supervisors"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;">
+                                                                                                                            <i class="fas fa-user-tie"
+                                                                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                                                            <div
+                                                                                                                                style="justify-content: right;">
+                                                                                                                                {{nodeStatHash[dr7]?.userTypeHash.supervisor}}
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Volunteers"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;">
+                                                                                                                            <i class="fas fa-user-cowboy"
+                                                                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                                                            <div
+                                                                                                                                style="justify-content: right;">
+                                                                                                                                {{nodeStatHash[dr7]?.userTypeHash.volunteer}}
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Contractors"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;">
+                                                                                                                            <i class="fas fa-user-hard-hat"
+                                                                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                                                            <div
+                                                                                                                                style="justify-content: right;">
+                                                                                                                                {{nodeStatHash[dr7]?.userTypeHash.contractor}}
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Customers"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;">
+                                                                                                                            <i class="fas fa-user-alien"
+                                                                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                                                                            <div
+                                                                                                                                style="justify-content: right;">
+                                                                                                                                {{nodeStatHash[dr7]?.userTypeHash.customer}}
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                         </div>
@@ -1544,7 +2555,7 @@
                             </label>
                             <label nz-radio nzValue="customer" (click)="newSupervisorSelected(false)"
                                 style="display:block;font-size:20px;">
-                                <i class="fad fa-user-crown" style="vertical-align: bottom;"></i>
+                                <i class="fad fa-user-alien" style="vertical-align: bottom;"></i>
                                 <span style="margin-left:10px;  font-size:12px;">Customer</span>
                             </label>
                         </nz-radio-group>

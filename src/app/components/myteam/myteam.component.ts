@@ -111,10 +111,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   private importer: FlatfileImporter;
 
   userTypeIconHash = {
+    none: 'fal fa-user',
     individualContributor: 'fas fa-fw fa-user',
     supervisor: 'fas fa-fw fa-user-tie',
     volunteer: 'fas fa-fw fa-user-cowboy',
-    customer: 'fas fa-fw fa-user-crown',
+    customer: 'fas fa-fw fa-user-alien',
     contractor: 'fas fa-fw fa-user-hard-hat'
   }
   /*
@@ -1136,7 +1137,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   maxLevel$: Observable<number>;
   selectionMode = 'Individual';
   jobTitleMatchCnt = 0;
-  currentUserType = '';
+  currentUserType = 'none';
   currentUserDataError = '';
   currentUserTrainingStatus = '';
   currentTrainingSelected = '';
@@ -1239,7 +1240,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           customer: {
             value: 'customer',
             label: 'customer',
-            icon: 'fas fa-user-crown',
+            icon: 'fas fa-user-alien',
             iconColor: 'black'
           },
           badEmail: {
@@ -1532,9 +1533,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           //          this.showTrainingHash[training._id] = training;
         }
       });
-
-
-
     })
 
     this.jobTitles$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(jobTitles => {
@@ -1655,6 +1653,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         this.userIdsSelected.push(user._id);
       }
     }
+    this.figureOrgStat(this.authenticatedUser._id);
+    for (let node of this.collapsedNodes) {
+      this.figureOrgStat(node);
+    }
   }
 
   trainingSelectedChanged(training: string) {
@@ -1681,6 +1683,41 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     for (let node of this.collapsedNodes) {
       this.figureOrgStat(node);
     }
+    if (this.authenticatedUser?.trainingStatus === 'pastDue') {
+      this.nodeStatHash[this.authenticatedUser?._id].pastDueCnt++;
+    } else if (this.authenticatedUser?.trainingStatus === 'none') {
+      this.nodeStatHash[this.authenticatedUser?._id].noneCnt++;
+    } else if (this.authenticatedUser?.trainingStatus === 'upToDate') {
+      this.nodeStatHash[this.authenticatedUser?._id].upToDateCnt++;
+    }
+
+    if (this.currentTrainingSelected) {
+      let utList = this.uidUTHash[this.authenticatedUser?._id];
+      if (utList && utList.length > 0) {
+        for (let ut of utList) {
+          if (ut.tid === this.currentTrainingSelected) {
+            switch (ut.status) {
+              case 'upToDate':
+                this.nodeStatHash[this.authenticatedUser?._id].trainingHash['upToDate'] += 1;
+                break;
+              case 'pastDue':
+                this.nodeStatHash[this.authenticatedUser?._id].trainingHash['pastDue'] += 1;
+                break;
+              case 'completed':
+                this.nodeStatHash[this.authenticatedUser?._id].trainingHash['completed'] += 1;
+                break;
+              case 'pendingCertUpload':
+                this.nodeStatHash[this.authenticatedUser?._id].trainingHash['pendingCertUpload'] += 1;
+                break;
+              default:
+                this.nodeStatHash[this.authenticatedUser?._id].trainingHash['none'] += 1;
+                break;
+            }
+          }
+        }
+      }
+    }
+
   }
 
   zoomIn() {
@@ -2192,6 +2229,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         this.userIdsSelected.push(user._id);
       }
     }
+    this.figureOrgStat(this.authenticatedUser._id);
+    for (let node of this.collapsedNodes) {
+      this.figureOrgStat(node);
+    }
   }
   userTrainingsStatusSelectedChanged(userTrainingStatus: string) {
     this.currentUserTrainingStatus = userTrainingStatus;
@@ -2250,7 +2291,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.currentJobTitlesSelected = [];
     this.userIdsSelected = [];
     this.assignableTrainings = this.teamTrainings;
-    this.currentUserType = null;
+    this.currentUserType = 'none';
     this.assignableTrainings = Object.assign([], this.teamTrainings);
 
     if (mode !== 'Individual') {
@@ -2268,27 +2309,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     for (let node of this.collapsedNodes) {
       this.figureOrgStat(node);
     }
-    /*
-        if (mode === 'Org') {
-          if (this.selectionMode === 'Individual' && this.userIdSelected) {
-            this.userDetailIsVisible = false;
-            this.selectUser(this.userIdSelected, -1);
-          }
-        } else if (mode === 'Individual') {
-        } else if (mode === 'JobTitle') {
-          if (this.selectionMode === 'Individual' && this.userIdSelected) {
-            this.userDetailIsVisible = false;
-            this.selectUser(this.userIdSelected, -1);
-          }
-          this.assignableTrainings = this.teamTrainings;
-          this.userIdsSelected = [];
-        } else if (mode === 'UserType') {
-          this.currentUserType = '';
-          this.userIdsSelected = [];
-          this.userDetailIsVisible = false;
-          this.assignableTrainings = this.teamTrainings;
-        }
-        */
   }
 
   selectUser(userId: string, i: number) {
@@ -2314,17 +2334,24 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   removeFromSelectedList(userId: string) {
     this.userIdsSelected.splice(this.userIdsSelected.indexOf(userId), 1);
     this.removeDirectReportsFromSelectedList(this.myOrgUserHash[userId]);
+    for (let node of this.collapsedNodes) {
+      this.figureOrgStat(node);
+    }
   }
 
   buildSelectedList(userId: string) {
     this.userIdsSelected.push(userId);
     this.addDirectReportsToSelectedList(this.myOrgUserHash[userId])
+    for (let node of this.collapsedNodes) {
+      this.figureOrgStat(node);
+    }
   }
 
   figureOrgStat(userId: string) {
-    let nodeStat = <NodeStat>{
+    let nodeStatObj = <NodeStat>{
       rootUid: userId,
       userCnt: 0,
+      selectedCnt: 0,
       noneCnt: 0,
       pastDueCnt: 0,
       upToDateCnt: 0,
@@ -2335,16 +2362,67 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         completed: 0,
         pendingCertUpload: 0
       },
-      jobHash: {},
       userTypeHash: {
         individualContributor: 0,
         supervisor: 0,
         volunteer: 0,
         contractor: 0,
         customer: 0
+      },
+      jobTitleHash: {}
+    }
+
+    this.nodeStatHash[userId] = cloneDeep(nodeStatObj);
+    let nodeStat = this.nodeStatHash[userId];
+    for (let jobTitle of this.jobTitles) {
+      nodeStat.jobTitleHash[jobTitle] = 0;
+    }
+    /*
+    if (this.myOrgUserHash[userId]?.trainingStatus === 'pastDue') {
+      nodeStat.pastDueCnt++;
+    } else if (this.myOrgUserHash[userId]?.trainingStatus === 'none') {
+      nodeStat.noneCnt++;
+    } else if (this.myOrgUserHash[userId]?.trainingStatus === 'upToDate') {
+      nodeStat.upToDateCnt++;
+    }
+
+    nodeStat.jobTitleHash[this.myOrgUserHash[userId]?.jobTitle] = 0;
+    if(this.jobTitles)
+    for (let jobTitle of this.jobTitles) {
+      nodeStat.jobTitleHash[jobTitle] = 0;
+    }
+
+//    nodeStat.jobTitleHash[this.authenticatedUser?.jobTitle] += 1;
+
+//    nodeStat.userTypeHash['supervisor'] += 1;
+
+    if (this.currentTrainingSelected) {
+      let utList = this.uidUTHash[this.myOrgUserHash[userId]?._id];
+      if (utList && utList.length > 0) {
+        for (let ut of utList) {
+          if (ut.tid === this.currentTrainingSelected) {
+            switch (ut.status) {
+              case 'upToDate':
+                nodeStat.trainingHash['upToDate'] += 1;
+                break;
+              case 'pastDue':
+                nodeStat.trainingHash['pastDue'] += 1;
+                break;
+              case 'completed':
+                nodeStat.trainingHash['completed'] += 1;
+                break;
+              case 'pendingCertUpload':
+                nodeStat.trainingHash['pendingCertUpload'] += 1;
+                break;
+              default:
+                nodeStat.trainingHash['none'] += 1;
+                break;
+            }
+          }
+        }
       }
     }
-    this.nodeStatHash[userId] = cloneDeep(nodeStat);
+*/
     this.processDirectReports(this.myOrgUserHash[userId], this.nodeStatHash[userId])
   }
 
@@ -2363,11 +2441,52 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         nodeStat.upToDateCnt++;
       }
 
+      nodeStat.jobTitleHash[drUser.jobTitle] += 1;
+
+      console.log('processDirectReports', nodeStat);
+      if (this.selectionMode === 'Org') {
+        if (this.userIdsSelected.includes(dr)) {
+          nodeStat.selectedCnt++;
+        }
+      }
+
+      switch (drUser.userType) {
+        case 'individualContributor':
+          nodeStat.userTypeHash['individualContributor'] += 1;
+          break;
+        case 'supervisor':
+          nodeStat.userTypeHash['supervisor'] += 1;
+          break;
+        case 'volunteer':
+          nodeStat.userTypeHash['volunteer'] += 1;
+          break;
+        case 'contractor':
+          nodeStat.userTypeHash['contractor'] += 1;
+          break;
+        case 'customer':
+          nodeStat.userTypeHash['customer'] += 1;
+          break;
+        default:
+          break;
+      }
+
+      if (this.currentJobTitlesSelected.length > 0) {
+        if (this.currentJobTitlesSelected.includes(drUser.jobTitle)) {
+          nodeStat.selectedCnt++;
+        }
+      }
+      if (this.currentUserType !== 'none') {
+        if (this.currentUserType === drUser.userType) {
+          nodeStat.selectedCnt++;
+        }
+      }
+
       if (this.currentTrainingSelected) {
         let utList = this.uidUTHash[dr];
         if (utList && utList.length > 0) {
           for (let ut of utList) {
             if (ut.tid === this.currentTrainingSelected) {
+              nodeStat.selectedCnt++;
               switch (ut.status) {
                 case 'upToDate':
                   nodeStat.trainingHash['upToDate'] += 1;

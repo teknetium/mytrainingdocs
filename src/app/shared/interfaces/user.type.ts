@@ -63,11 +63,13 @@ export interface OrgChartNode {
 export interface NodeStat {
   rootUid: string,
   userCnt: number,
+  selectedCnt: number,
   noneCnt: number,
   upToDateCnt: number,
   pastDueCnt: number,
   trainingHash: Object,
-  userTypeHash: Object 
+  userTypeHash: Object,
+  jobTitleHash: Object
 }
 
 export interface BuildOrgProgress {
