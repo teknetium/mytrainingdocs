@@ -111,7 +111,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   private importer: FlatfileImporter;
 
   userTypeIconHash = {
-    none: 'fal fa-user',
+    none: 'fas fa-user',
     individualContributor: 'fas fa-fw fa-user',
     supervisor: 'fas fa-fw fa-user-tie',
     volunteer: 'fas fa-fw fa-user-cowboy',

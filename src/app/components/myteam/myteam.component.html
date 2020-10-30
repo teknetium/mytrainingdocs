@@ -861,7 +861,7 @@
                                                         {{nodeStatHash[dr]?.selectedCnt}}
                                                     </div>
                                                 </div>
-                                                <div *ngFor="let jobTitle of jobTitles"
+                                                <div *ngFor="let jobTitle of jobTitles" [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
                                                     style="display:flex;justify-content:space-between;margin-bottom: 3px;">
                                                     {{jobTitle}}
                                                     <div style="margin-left:20px;">
@@ -875,50 +875,50 @@
                                                     style="display:flex;justify-content:space-between;margin-bottom:10px;">
                                                     <div class="selected-node"
                                                         style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
-                                                        <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                        <i [ngClass]="userTypeIconHash['none']"
                                                             style="font-size:16px;"></i>
                                                     </div>
                                                     <div style="display:inline-block;padding-top:10px;">
                                                         {{nodeStatHash[dr]?.selectedCnt}}
                                                     </div>
                                                 </div>
-                                                <div nz-tooltip nzTooltipTitle="Individual Contributors"
+                                                <div nz-tooltip nzTooltipTitle="Individual Contributors" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                                     nzTooltipPlacement="right"
                                                     style="display:flex;justify-content:space-between;">
-                                                    <i class="fas fa-user"
+                                                    <i class="fas fa-user" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                                         style="color:black;font-size:16px;padding-top:2px;"></i>
 
                                                     <div style="justify-content: right;">
                                                         {{nodeStatHash[dr]?.userTypeHash.individualContributor}}
                                                     </div>
                                                 </div>
-                                                <div nz-tooltip nzTooltipTitle="Supervisors" nzTooltipPlacement="right"
+                                                <div nz-tooltip nzTooltipTitle="Supervisors" nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
                                                     style="display:flex;justify-content:space-between;">
-                                                    <i class="fas fa-user-tie"
+                                                    <i class="fas fa-user-tie" [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
                                                         style="color:black;font-size:16px;padding-top:2px;"></i>
                                                     <div style="justify-content: right;">
                                                         {{nodeStatHash[dr]?.userTypeHash.supervisor}}
                                                     </div>
                                                 </div>
-                                                <div nz-tooltip nzTooltipTitle="Volunteers" nzTooltipPlacement="right"
+                                                <div nz-tooltip nzTooltipTitle="Volunteers" nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
                                                     style="display:flex;justify-content:space-between;">
-                                                    <i class="fas fa-user-cowboy"
+                                                    <i class="fas fa-user-cowboy" [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
                                                         style="color:black;font-size:16px;padding-top:2px;"></i>
                                                     <div style="justify-content: right;">
                                                         {{nodeStatHash[dr]?.userTypeHash.volunteer}}
                                                     </div>
                                                 </div>
-                                                <div nz-tooltip nzTooltipTitle="Contractors" nzTooltipPlacement="right"
+                                                <div nz-tooltip nzTooltipTitle="Contractors" nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'contractor'}"
                                                     style="display:flex;justify-content:space-between;">
-                                                    <i class="fas fa-user-hard-hat"
+                                                    <i class="fas fa-user-hard-hat" [ngClass]="{'selected-item': currentUserType === 'contractor'}"
                                                         style="color:black;font-size:16px;padding-top:2px;"></i>
                                                     <div style="justify-content: right;">
                                                         {{nodeStatHash[dr]?.userTypeHash.contractor}}
                                                     </div>
                                                 </div>
-                                                <div nz-tooltip nzTooltipTitle="Customers" nzTooltipPlacement="right"
+                                                <div nz-tooltip nzTooltipTitle="Customers" nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'customer'}"
                                                     style="display:flex;justify-content:space-between;">
-                                                    <i class="fas fa-user-alien"
+                                                    <i class="fas fa-user-alien" [ngClass]="{'selected-item': currentUserType === 'customer'}"
                                                         style="color:black;font-size:16px;padding-top:2px;"></i>
                                                     <div style="justify-content: right;">
                                                         {{nodeStatHash[dr]?.userTypeHash.customer}}
@@ -1070,7 +1070,7 @@
                                                                     {{nodeStatHash[dr2]?.selectedCnt}}
                                                                 </div>
                                                             </div>
-                                                            <div *ngFor="let jobTitle of jobTitles"
+                                                            <div *ngFor="let jobTitle of jobTitles" [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
                                                                 style="display:flex;justify-content:space-between;margin-bottom: 3px;">
                                                                 {{jobTitle}}
                                                                 <div style="margin-left:20px;">
@@ -1085,54 +1085,54 @@
                                                                 style="display:flex;justify-content:space-between;margin-bottom:10px;">
                                                                 <div class="selected-node"
                                                                     style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
-                                                                    <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                                    <i [ngClass]="userTypeIconHash['none']"
                                                                         style="font-size:16px;"></i>
                                                                 </div>
                                                                 <div style="display:inline-block;padding-top:10px;">
                                                                     {{nodeStatHash[dr2]?.selectedCnt}}
                                                                 </div>
                                                             </div>
-                                                            <div nz-tooltip nzTooltipTitle="Individual Contributors"
+                                                            <div nz-tooltip nzTooltipTitle="Individual Contributors" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                                                 nzTooltipPlacement="right"
                                                                 style="display:flex;justify-content:space-between;">
-                                                                <i class="fas fa-user"
+                                                                <i class="fas fa-user" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                                                     style="color:black;font-size:16px;padding-top:2px;"></i>
 
                                                                 <div style="justify-content: right;">
                                                                     {{nodeStatHash[dr2]?.userTypeHash.individualContributor}}
                                                                 </div>
                                                             </div>
-                                                            <div nz-tooltip nzTooltipTitle="Supervisors"
+                                                            <div nz-tooltip nzTooltipTitle="Supervisors" [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
                                                                 nzTooltipPlacement="right"
                                                                 style="display:flex;justify-content:space-between;">
-                                                                <i class="fas fa-user-tie"
+                                                                <i class="fas fa-user-tie" [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
                                                                     style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                 <div style="justify-content: right;">
                                                                     {{nodeStatHash[dr2]?.userTypeHash.supervisor}}
                                                                 </div>
                                                             </div>
-                                                            <div nz-tooltip nzTooltipTitle="Volunteers"
+                                                            <div nz-tooltip nzTooltipTitle="Volunteers" [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
                                                                 nzTooltipPlacement="right"
                                                                 style="display:flex;justify-content:space-between;">
-                                                                <i class="fas fa-user-cowboy"
+                                                                <i class="fas fa-user-cowboy" [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
                                                                     style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                 <div style="justify-content: right;">
                                                                     {{nodeStatHash[dr2]?.userTypeHash.volunteer}}
                                                                 </div>
                                                             </div>
-                                                            <div nz-tooltip nzTooltipTitle="Contractors"
+                                                            <div nz-tooltip nzTooltipTitle="Contractors" [ngClass]="{'selected-item': currentUserType === 'contractor'}"
                                                                 nzTooltipPlacement="right"
                                                                 style="display:flex;justify-content:space-between;">
-                                                                <i class="fas fa-user-hard-hat"
+                                                                <i class="fas fa-user-hard-hat" [ngClass]="{'selected-item': currentUserType === 'contractor'}"
                                                                     style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                 <div style="justify-content: right;">
                                                                     {{nodeStatHash[dr2]?.userTypeHash.contractor}}
                                                                 </div>
                                                             </div>
-                                                            <div nz-tooltip nzTooltipTitle="Customers"
+                                                            <div nz-tooltip nzTooltipTitle="Customers" [ngClass]="{'selected-item': currentUserType === 'customer'}"
                                                                 nzTooltipPlacement="right"
                                                                 style="display:flex;justify-content:space-between;">
-                                                                <i class="fas fa-user-alien"
+                                                                <i class="fas fa-user-alien" [ngClass]="{'selected-item': currentUserType === 'customer'}"
                                                                     style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                 <div style="justify-content: right;">
                                                                     {{nodeStatHash[dr2]?.userTypeHash.customer}}
@@ -1299,7 +1299,7 @@
                                                                                 {{nodeStatHash[dr3]?.selectedCnt}}
                                                                             </div>
                                                                         </div>
-                                                                        <div *ngFor="let jobTitle of jobTitles"
+                                                                        <div *ngFor="let jobTitle of jobTitles" [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
                                                                             style="display:flex;justify-content:space-between;margin-bottom: 3px;">
                                                                             {{jobTitle}}
                                                                             <div style="margin-left:20px;">
@@ -1315,7 +1315,7 @@
                                                                             style="display:flex;justify-content:space-between;margin-bottom:10px;">
                                                                             <div class="selected-node"
                                                                                 style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
-                                                                                <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                                                <i [ngClass]="userTypeIconHash['none']"
                                                                                     style="font-size:16px;"></i>
                                                                             </div>
                                                                             <div
@@ -1325,47 +1325,47 @@
                                                                         </div>
                                                                         <div nz-tooltip
                                                                             nzTooltipTitle="Individual Contributors"
-                                                                            nzTooltipPlacement="right"
+                                                                            nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                                                             style="display:flex;justify-content:space-between;">
-                                                                            <i class="fas fa-user"
-                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                            <i class="fas fa-user" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
+                                                                                style="font-size:16px;padding-top:2px;"></i>
 
                                                                             <div style="justify-content: right;">
                                                                                 {{nodeStatHash[dr3]?.userTypeHash.individualContributor}}
                                                                             </div>
                                                                         </div>
                                                                         <div nz-tooltip nzTooltipTitle="Supervisors"
-                                                                            nzTooltipPlacement="right"
+                                                                            nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
                                                                             style="display:flex;justify-content:space-between;">
-                                                                            <i class="fas fa-user-tie"
-                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                            <i class="fas fa-user-tie" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
+                                                                                style="font-size:16px;padding-top:2px;"></i>
                                                                             <div style="justify-content: right;">
                                                                                 {{nodeStatHash[dr3]?.userTypeHash.supervisor}}
                                                                             </div>
                                                                         </div>
                                                                         <div nz-tooltip nzTooltipTitle="Volunteers"
-                                                                            nzTooltipPlacement="right"
+                                                                            nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
                                                                             style="display:flex;justify-content:space-between;">
-                                                                            <i class="fas fa-user-cowboy"
-                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                            <i class="fas fa-user-cowboy" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
+                                                                                style="font-size:16px;padding-top:2px;"></i>
                                                                             <div style="justify-content: right;">
                                                                                 {{nodeStatHash[dr3]?.userTypeHash.volunteer}}
                                                                             </div>
                                                                         </div>
                                                                         <div nz-tooltip nzTooltipTitle="Contractors"
-                                                                            nzTooltipPlacement="right"
+                                                                            nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'contractor'}"
                                                                             style="display:flex;justify-content:space-between;">
-                                                                            <i class="fas fa-user-hard-hat"
-                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                            <i class="fas fa-user-hard-hat" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
+                                                                                style="font-size:16px;padding-top:2px;"></i>
                                                                             <div style="justify-content: right;">
                                                                                 {{nodeStatHash[dr3]?.userTypeHash.contractor}}
                                                                             </div>
                                                                         </div>
                                                                         <div nz-tooltip nzTooltipTitle="Customers"
-                                                                            nzTooltipPlacement="right"
+                                                                            nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'customer'}"
                                                                             style="display:flex;justify-content:space-between;">
-                                                                            <i class="fas fa-user-alien"
-                                                                                style="color:black;font-size:16px;padding-top:2px;"></i>
+                                                                            <i class="fas fa-user-alien" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
+                                                                                style="font-size:16px;padding-top:2px;"></i>
                                                                             <div style="justify-content: right;">
                                                                                 {{nodeStatHash[dr3]?.userTypeHash.customer}}
                                                                             </div>
@@ -1540,7 +1540,7 @@
                                                                                             {{nodeStatHash[dr4]?.selectedCnt}}
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div *ngFor="let jobTitle of jobTitles"
+                                                                                    <div *ngFor="let jobTitle of jobTitles" [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
                                                                                         style="display:flex;justify-content:space-between;margin-bottom: 3px;">
                                                                                         {{jobTitle}}
                                                                                         <div style="margin-left:20px;">
@@ -1557,7 +1557,7 @@
                                                                                         style="display:flex;justify-content:space-between;margin-bottom:10px;">
                                                                                         <div class="selected-node"
                                                                                             style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
-                                                                                            <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                                                            <i [ngClass]="userTypeIconHash['none']"
                                                                                                 style="font-size:16px;"></i>
                                                                                         </div>
                                                                                         <div
@@ -1567,9 +1567,9 @@
                                                                                     </div>
                                                                                     <div nz-tooltip
                                                                                         nzTooltipTitle="Individual Contributors"
-                                                                                        nzTooltipPlacement="right"
+                                                                                        nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                                                                         style="display:flex;justify-content:space-between;">
-                                                                                        <i class="fas fa-user"
+                                                                                        <i class="fas fa-user" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                                                                             style="color:black;font-size:16px;padding-top:2px;"></i>
 
                                                                                         <div
@@ -1579,9 +1579,9 @@
                                                                                     </div>
                                                                                     <div nz-tooltip
                                                                                         nzTooltipTitle="Supervisors"
-                                                                                        nzTooltipPlacement="right"
+                                                                                        nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
                                                                                         style="display:flex;justify-content:space-between;">
-                                                                                        <i class="fas fa-user-tie"
+                                                                                        <i class="fas fa-user-tie" [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
                                                                                             style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                         <div
                                                                                             style="justify-content: right;">
@@ -1590,9 +1590,9 @@
                                                                                     </div>
                                                                                     <div nz-tooltip
                                                                                         nzTooltipTitle="Volunteers"
-                                                                                        nzTooltipPlacement="right"
+                                                                                        nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
                                                                                         style="display:flex;justify-content:space-between;">
-                                                                                        <i class="fas fa-user-cowboy"
+                                                                                        <i class="fas fa-user-cowboy" [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
                                                                                             style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                         <div
                                                                                             style="justify-content: right;">
@@ -1601,9 +1601,9 @@
                                                                                     </div>
                                                                                     <div nz-tooltip
                                                                                         nzTooltipTitle="Contractors"
-                                                                                        nzTooltipPlacement="right"
+                                                                                        nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'contractor'}"
                                                                                         style="display:flex;justify-content:space-between;">
-                                                                                        <i class="fas fa-user-hard-hat"
+                                                                                        <i class="fas fa-user-hard-hat" [ngClass]="{'selected-item': currentUserType === 'contractor'}"
                                                                                             style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                         <div
                                                                                             style="justify-content: right;">
@@ -1612,9 +1612,9 @@
                                                                                     </div>
                                                                                     <div nz-tooltip
                                                                                         nzTooltipTitle="Customers"
-                                                                                        nzTooltipPlacement="right"
+                                                                                        nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'customer'}"
                                                                                         style="display:flex;justify-content:space-between;">
-                                                                                        <i class="fas fa-user-alien"
+                                                                                        <i class="fas fa-user-alien" [ngClass]="{'selected-item': currentUserType === 'customer'}"
                                                                                             style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                         <div
                                                                                             style="justify-content: right;">
@@ -1793,7 +1793,7 @@
                                                                                                         {{nodeStatHash[dr5]?.selectedCnt}}
                                                                                                     </div>
                                                                                                 </div>
-                                                                                                <div *ngFor="let jobTitle of jobTitles"
+                                                                                                <div *ngFor="let jobTitle of jobTitles" [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
                                                                                                     style="display:flex;justify-content:space-between;margin-bottom: 3px;">
                                                                                                     {{jobTitle}}
                                                                                                     <div
@@ -1811,7 +1811,7 @@
                                                                                                     style="display:flex;justify-content:space-between;margin-bottom:10px;">
                                                                                                     <div class="selected-node"
                                                                                                         style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
-                                                                                                        <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                                                                        <i [ngClass]="userTypeIconHash['none']"
                                                                                                             style="font-size:16px;"></i>
                                                                                                     </div>
                                                                                                     <div
@@ -1821,9 +1821,9 @@
                                                                                                 </div>
                                                                                                 <div nz-tooltip
                                                                                                     nzTooltipTitle="Individual Contributors"
-                                                                                                    nzTooltipPlacement="right"
+                                                                                                    nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                                                                                     style="display:flex;justify-content:space-between;">
-                                                                                                    <i class="fas fa-user"
+                                                                                                    <i class="fas fa-user" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                                                                                         style="color:black;font-size:16px;padding-top:2px;"></i>
 
                                                                                                     <div
@@ -1833,9 +1833,9 @@
                                                                                                 </div>
                                                                                                 <div nz-tooltip
                                                                                                     nzTooltipTitle="Supervisors"
-                                                                                                    nzTooltipPlacement="right"
+                                                                                                    nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
                                                                                                     style="display:flex;justify-content:space-between;">
-                                                                                                    <i class="fas fa-user-tie"
+                                                                                                    <i class="fas fa-user-tie" [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
                                                                                                         style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                     <div
                                                                                                         style="justify-content: right;">
@@ -1844,9 +1844,9 @@
                                                                                                 </div>
                                                                                                 <div nz-tooltip
                                                                                                     nzTooltipTitle="Volunteers"
-                                                                                                    nzTooltipPlacement="right"
+                                                                                                    nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
                                                                                                     style="display:flex;justify-content:space-between;">
-                                                                                                    <i class="fas fa-user-cowboy"
+                                                                                                    <i class="fas fa-user-cowboy" [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
                                                                                                         style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                     <div
                                                                                                         style="justify-content: right;">
@@ -1855,9 +1855,9 @@
                                                                                                 </div>
                                                                                                 <div nz-tooltip
                                                                                                     nzTooltipTitle="Contractors"
-                                                                                                    nzTooltipPlacement="right"
+                                                                                                    nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'contractor'}"
                                                                                                     style="display:flex;justify-content:space-between;">
-                                                                                                    <i class="fas fa-user-hard-hat"
+                                                                                                    <i class="fas fa-user-hard-hat" [ngClass]="{'selected-item': currentUserType === 'contractor'}"
                                                                                                         style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                     <div
                                                                                                         style="justify-content: right;">
@@ -1866,9 +1866,9 @@
                                                                                                 </div>
                                                                                                 <div nz-tooltip
                                                                                                     nzTooltipTitle="Customers"
-                                                                                                    nzTooltipPlacement="right"
+                                                                                                    nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'customer'}"
                                                                                                     style="display:flex;justify-content:space-between;">
-                                                                                                    <i class="fas fa-user-alien"
+                                                                                                    <i class="fas fa-user-alien" [ngClass]="{'selected-item': currentUserType === 'customer'}"
                                                                                                         style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                     <div
                                                                                                         style="justify-content: right;">
@@ -2049,7 +2049,7 @@
                                                                                                                     {{nodeStatHash[dr6]?.selectedCnt}}
                                                                                                                 </div>
                                                                                                             </div>
-                                                                                                            <div *ngFor="let jobTitle of jobTitles"
+                                                                                                            <div *ngFor="let jobTitle of jobTitles" [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
                                                                                                                 style="display:flex;justify-content:space-between;margin-bottom: 3px;">
                                                                                                                 {{jobTitle}}
                                                                                                                 <div
@@ -2067,7 +2067,7 @@
                                                                                                                 style="display:flex;justify-content:space-between;margin-bottom:10px;">
                                                                                                                 <div class="selected-node"
                                                                                                                     style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
-                                                                                                                    <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                                                                                    <i [ngClass]="userTypeIconHash['none']"
                                                                                                                         style="font-size:16px;"></i>
                                                                                                                 </div>
                                                                                                                 <div
@@ -2077,9 +2077,9 @@
                                                                                                             </div>
                                                                                                             <div nz-tooltip
                                                                                                                 nzTooltipTitle="Individual Contributors"
-                                                                                                                nzTooltipPlacement="right"
+                                                                                                                nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                                                                                                 style="display:flex;justify-content:space-between;">
-                                                                                                                <i class="fas fa-user"
+                                                                                                                <i class="fas fa-user" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                                                                                                     style="color:black;font-size:16px;padding-top:2px;"></i>
 
                                                                                                                 <div
@@ -2089,9 +2089,9 @@
                                                                                                             </div>
                                                                                                             <div nz-tooltip
                                                                                                                 nzTooltipTitle="Supervisors"
-                                                                                                                nzTooltipPlacement="right"
+                                                                                                                nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
                                                                                                                 style="display:flex;justify-content:space-between;">
-                                                                                                                <i class="fas fa-user-tie"
+                                                                                                                <i class="fas fa-user-tie" [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
                                                                                                                     style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                                 <div
                                                                                                                     style="justify-content: right;">
@@ -2100,9 +2100,9 @@
                                                                                                             </div>
                                                                                                             <div nz-tooltip
                                                                                                                 nzTooltipTitle="Volunteers"
-                                                                                                                nzTooltipPlacement="right"
+                                                                                                                nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
                                                                                                                 style="display:flex;justify-content:space-between;">
-                                                                                                                <i class="fas fa-user-cowboy"
+                                                                                                                <i class="fas fa-user-cowboy" [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
                                                                                                                     style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                                 <div
                                                                                                                     style="justify-content: right;">
@@ -2111,9 +2111,9 @@
                                                                                                             </div>
                                                                                                             <div nz-tooltip
                                                                                                                 nzTooltipTitle="Contractors"
-                                                                                                                nzTooltipPlacement="right"
+                                                                                                                nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'contractor'}"
                                                                                                                 style="display:flex;justify-content:space-between;">
-                                                                                                                <i class="fas fa-user-hard-hat"
+                                                                                                                <i class="fas fa-user-hard-hat" [ngClass]="{'selected-item': currentUserType === 'contractor'}"
                                                                                                                     style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                                 <div
                                                                                                                     style="justify-content: right;">
@@ -2122,9 +2122,9 @@
                                                                                                             </div>
                                                                                                             <div nz-tooltip
                                                                                                                 nzTooltipTitle="Customers"
-                                                                                                                nzTooltipPlacement="right"
+                                                                                                                nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'customer'}"
                                                                                                                 style="display:flex;justify-content:space-between;">
-                                                                                                                <i class="fas fa-user-alien"
+                                                                                                                <i class="fas fa-user-alien" [ngClass]="{'selected-item': currentUserType === 'customer'}"
                                                                                                                     style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                                 <div
                                                                                                                     style="justify-content: right;">
@@ -2301,7 +2301,7 @@
                                                                                                                                 {{nodeStatHash[dr7]?.selectedCnt}}
                                                                                                                             </div>
                                                                                                                         </div>
-                                                                                                                        <div *ngFor="let jobTitle of jobTitles"
+                                                                                                                        <div *ngFor="let jobTitle of jobTitles" [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
                                                                                                                             style="display:flex;justify-content:space-between;margin-bottom: 3px;">
                                                                                                                             {{jobTitle}}
                                                                                                                             <div
@@ -2319,7 +2319,7 @@
                                                                                                                             style="display:flex;justify-content:space-between;margin-bottom:10px;">
                                                                                                                             <div class="selected-node"
                                                                                                                                 style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
-                                                                                                                                <i [ngClass]="userTypeIconHash[currentUserType]"
+                                                                                                                                <i [ngClass]="userTypeIconHash['none']"
                                                                                                                                     style="font-size:16px;"></i>
                                                                                                                             </div>
                                                                                                                             <div
@@ -2329,9 +2329,9 @@
                                                                                                                         </div>
                                                                                                                         <div nz-tooltip
                                                                                                                             nzTooltipTitle="Individual Contributors"
-                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                                                                                                             style="display:flex;justify-content:space-between;">
-                                                                                                                            <i class="fas fa-user"
+                                                                                                                            <i class="fas fa-user" [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                                                                                                                 style="color:black;font-size:16px;padding-top:2px;"></i>
 
                                                                                                                             <div
@@ -2341,9 +2341,9 @@
                                                                                                                         </div>
                                                                                                                         <div nz-tooltip
                                                                                                                             nzTooltipTitle="Supervisors"
-                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
                                                                                                                             style="display:flex;justify-content:space-between;">
-                                                                                                                            <i class="fas fa-user-tie"
+                                                                                                                            <i class="fas fa-user-tie" [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
                                                                                                                                 style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                                             <div
                                                                                                                                 style="justify-content: right;">
@@ -2352,9 +2352,9 @@
                                                                                                                         </div>
                                                                                                                         <div nz-tooltip
                                                                                                                             nzTooltipTitle="Volunteers"
-                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
                                                                                                                             style="display:flex;justify-content:space-between;">
-                                                                                                                            <i class="fas fa-user-cowboy"
+                                                                                                                            <i class="fas fa-user-cowboy" [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
                                                                                                                                 style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                                             <div
                                                                                                                                 style="justify-content: right;">
@@ -2363,9 +2363,9 @@
                                                                                                                         </div>
                                                                                                                         <div nz-tooltip
                                                                                                                             nzTooltipTitle="Contractors"
-                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'contractor'}"
                                                                                                                             style="display:flex;justify-content:space-between;">
-                                                                                                                            <i class="fas fa-user-hard-hat"
+                                                                                                                            <i class="fas fa-user-hard-hat" [ngClass]="{'selected-item': currentUserType === 'contractor'}"
                                                                                                                                 style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                                             <div
                                                                                                                                 style="justify-content: right;">
@@ -2374,9 +2374,9 @@
                                                                                                                         </div>
                                                                                                                         <div nz-tooltip
                                                                                                                             nzTooltipTitle="Customers"
-                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            nzTooltipPlacement="right" [ngClass]="{'selected-item': currentUserType === 'customer'}"
                                                                                                                             style="display:flex;justify-content:space-between;">
-                                                                                                                            <i class="fas fa-user-alien"
+                                                                                                                            <i class="fas fa-user-alien" [ngClass]="{'selected-item': currentUserType === 'customer'}"
                                                                                                                                 style="color:black;font-size:16px;padding-top:2px;"></i>
                                                                                                                             <div
                                                                                                                                 style="justify-content: right;">

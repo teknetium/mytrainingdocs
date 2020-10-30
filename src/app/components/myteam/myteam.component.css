@@ -452,3 +452,7 @@ ul.ant-card-actions {
     cursor: not-allowed;
     opacity: .3;
 }
+
+.selected-item {
+    color: #eaab10 !important;
+}
