@@ -638,6 +638,14 @@ module.exports = function(app, config) {
       res.send(uts);
     });
   });
+  app.delete("/api/usertraining/deletebulk/:tid", jwtCheck, (req, res) => {
+    UserTraining.deleteMany({ tid: req.params.tid }, (err) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      res.status(200).send({ message: "userTrainings successfully deleted." });
+    });
+  });
   app.put("/api/usertraining/:id", jwtCheck, (req, res) => {
     UserTraining.findById(req.params.id, (err, userTraining) => {
       if (err) {

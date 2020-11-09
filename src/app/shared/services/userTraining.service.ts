@@ -348,6 +348,9 @@ export class UserTrainingService {
     });
     */
   }
+  deleteUTForTid(tid: string) {
+    this.deleteUTForTid$(tid).subscribe();
+  }
 
   saveUserTraining(ut: UserTrainingModel): void {
     this.updateUserTraining$(ut).subscribe(userTraining => {
@@ -467,6 +470,16 @@ export class UserTrainingService {
   deleteUserTraining$(id: string): Observable<any> {
     return this.http
       .delete(`${ENV.BASE_API}usertraining/${id}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+
+  deleteUTForTid$(tid: string): Observable<any> {
+    return this.http
+      .delete(`${ENV.BASE_API}usertraining/deletebulk/${tid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

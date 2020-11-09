@@ -25,6 +25,7 @@ export class UserService {
   private authenticatedUser: UserModel;
 
   // Writable streams
+  private trainingStatusChangeBS$ = new BehaviorSubject<string>(null);
   private maxLevelBS$ = new BehaviorSubject<number>(0);
   private httpErrorBS$ = new BehaviorSubject<HttpErrorResponse>(null);
   private batchFailsBS$ = new BehaviorSubject<UserBatchData[]>([]);
@@ -666,6 +667,10 @@ export class UserService {
     });
   }
 
+  getTrainingStatusChangeStream(): Observable<string> {
+    return this.trainingStatusChangeBS$.asObservable();
+  }
+  
   getMaxLevelStream(): Observable<number> {
     return this.maxLevelBS$.asObservable();
   }
@@ -690,6 +695,7 @@ export class UserService {
     this.allOrgUserHash[uid].trainingStatus = 'pastDue';
     //    this.myTeam[]
     this.updateUser(this.allOrgUserHash[uid], false);
+    this.trainingStatusChangeBS$.next(uid);
   }
 
   setUserStatusUpToDate(uid: string) {
