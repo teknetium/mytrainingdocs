@@ -257,9 +257,11 @@
                     </div>
                 </div>
             </div>
-            <app-user-trainings mode="admin" logSession="off" [uid]="currentHoverUid" compact="yes"
-                style="float:right;width:60%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;">
-            </app-user-trainings>
+            <div style="float:right;width:60%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;">
+                <app-user-trainings  mode="admin" logSession="off" [uid]="currentHoverUid"
+                     style="width:100%;height:35px;float:left;" compact="yes">
+                </app-user-trainings>
+            </div>
             <div style="clear: both;"></div>
         </div>
         <div *ngIf="showOrgChart === 'true'" style="position:relative;z-index:1;">
@@ -332,7 +334,7 @@
                             </i>
                         </div>
                         <div
-                            style="border:1px solid #bbbbbb;border-radius:32px;margin-left:20px;padding:4px;display:inline-block;">
+                            style="border:1px solid #dddddd;border-radius:32px;margin-left:20px;padding:4px;display:inline-block;">
                             <button nz-button nzShape="circle" nzType="default" [disabled]="!userIdSelected"
                                 style="display:inline-block;" (click)="showUserTrainingModal = true" nz-tooltip
                                 nzTooltipPlacement="bottomLeft" nzTooltipTitle="Assign Training to User">
@@ -526,7 +528,7 @@
                         {{userIdsSelected.length}}
                     </div>
                     <div *ngIf="selectionMode !== 'Individual' && selectionMode !== 'Errors'"
-                        style="border:1px solid #bbbbbb;border-radius:32px;margin-left:20px;padding:4px;display:inline-block;">
+                        style="border:1px solid #dddddd;border-radius:32px;margin-left:20px;padding:4px;display:inline-block;">
                         <button *ngIf="selectionMode !== 'Individual' && selectionMode !== 'Errors'" nz-button
                             nzShape="circle" nzType="default" [disabled]="userIdsSelected.length === 0"
                             style="display:inline-block;" (click)="showUserTrainingModal = true" nz-tooltip
@@ -583,10 +585,10 @@
                     <div style="display:inline-block;">
                         <i nz-icon nzType="zoom-in" nzTheme="outline"
                             style="cursor:pointer;display:inline-block;font-size:22px;margin-right:10px;"
-                            (click)="zoomIn()" nz-tooltip nzTooltipTitle="Zoom In"></i>
+                            (click)="zoomIn()" nz-tooltip nzTooltipPlacement="bottomRight" nzTooltipTitle="Zoom In"></i>
                         <i nz-icon nzType="zoom-out" nzTheme="outline"
                             style="cursor:pointer;display:inline-block;font-size:22px;" nz-tooltip
-                            nzTooltipTitle="Zoom Out" (click)="zoomOut()"></i>
+                            nzTooltipPlacement="bottomRight" nzTooltipTitle="Zoom Out" (click)="zoomOut()"></i>
                     </div>
                 </div>
                 <div style="clear: both;"></div>

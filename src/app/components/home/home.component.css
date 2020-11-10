@@ -40,3 +40,10 @@
 .pastDue {
     border-bottom: 2px solid red;
 }
+
+.upToDate {
+    border-bottom: 2px solid #46bd15;
+}
+.pendingCertApproval {
+    border-bottom: 2px solid #feb90b;
+}

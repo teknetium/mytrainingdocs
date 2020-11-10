@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable, from, Subscription } from 'rxjs';
 import { UserModel, UserIdHash } from '../shared/interfaces/user.type';
 import { TrainingModel, TrainingIdHash } from '../shared/interfaces/training.type';
 import { UserTrainingModel } from '../shared/interfaces/userTraining.type';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, NavigationCancel, NavigationStart, NavigationError, Event as NavigationEvent } from '@angular/router';
 import { FileModel } from '../shared/interfaces/file.type';
 import { EventService } from '../shared/services/event.service';
 import { NotificationService } from '../shared/services/notification.service';
@@ -102,7 +102,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   onResize(event) {
     this.browserInnerHeight = window.innerHeight;
     this.browserInnerWidth = window.innerWidth;
-    this.contentHeight = Math.floor(window.innerHeight  * .9);
+    this.contentHeight = Math.floor(window.innerHeight * .9);
     this.contentWidth = Math.floor(window.innerWidth * .9);
   }
   aboutThisPageHash = {
@@ -260,6 +260,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   emailUnique = true;
   currentEmail;
   currentStep = 0;
+  loading = true;
 
   constructor(
     private authService: AuthService,
@@ -275,6 +276,29 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {
     super();
+    this.router.events.subscribe((event: NavigationEvent) => {
+      if (event instanceof NavigationStart) {
+        console.log('nav start');
+        this.loading = true;
+      } else if (event instanceof NavigationEnd) {
+        this.loading = false;
+      } else if (event instanceof NavigationCancel) {
+        this.loading = false;
+      } else if (event instanceof NavigationError) {
+        this.loading = false;
+      }
+
+      /*
+      this.currentPage = event.url.substring(1);
+      console.log('Route', this.currentPage, event.url);
+      if (this.currentPage.indexOf('/') > -1) {
+      }
+      if (this.aboutThisPageHash[this.currentPage]) {
+        this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
+      }
+      */
+
+    });
     this.httpErrors$ = this.userService.getHttpErrorStream();
     //    this.uidUserTrainingHash$ = this.userTrainingService.getUidUserTrainingHashStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
@@ -292,15 +316,17 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       this.pageTaskHash[page] = Object.keys(this.aboutThisPageHash[page].taskHash);
     }
     this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
-    this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-      this.currentPage = event.url.substring(1);
-      console.log('Route', this.currentPage, event.url);
-      if (this.currentPage.indexOf('/') > -1) {
-      }
-      if (this.aboutThisPageHash[this.currentPage]) {
-        this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
-      }
-    });
+    /*
+        this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+          this.currentPage = event.url.substring(1);
+          console.log('Route', this.currentPage, event.url);
+          if (this.currentPage.indexOf('/') > -1) {
+          }
+          if (this.aboutThisPageHash[this.currentPage]) {
+            this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
+          }
+        });
+        */
     /*
         this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
           if (!userTrainings) {
@@ -323,7 +349,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       if (!user) {
         return;
       }
-//      this.userService.selectUser(user._id);
+      //      this.userService.selectUser(user._id);
 
       this.authenticatedUser = user;
       this.currentEmail = this.authenticatedUser.email;
@@ -333,10 +359,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
         //        this.playTaskVideo('gettingStarted');
       }
       this.authenticatedUser = user;
-//      this.userTrainingService.initUserTrainingsForUser(user._id);
-//      this.teamTrainingCnt$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(cnt => {
-//        this.teamTrainingCnt = cnt;
-//      });
+      //      this.userTrainingService.initUserTrainingsForUser(user._id);
+      //      this.teamTrainingCnt$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(cnt => {
+      //        this.teamTrainingCnt = cnt;
+      //      });
       /*
       this.uidUserTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUserTrainingHash => {
         if (uidUserTrainingHash[this.authenticatedUser._id]) {
@@ -368,7 +394,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       }
 
       this.currentHttpError = err.error.message;
-      this.messageService.error('HTTP Error: ' + this.currentHttpError, { nzDuration: 5000});
+      this.messageService.error('HTTP Error: ' + this.currentHttpError, { nzDuration: 5000 });
       this.httpErrors.push(this.currentHttpError);
     })
 
@@ -411,11 +437,11 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     //    return JSON.stringify(file);
     return '';
   }
-/*
-  toggleHelp() {
-    this.helpIsClosed = !this.helpIsClosed;
-  }
-*/
+  /*
+    toggleHelp() {
+      this.helpIsClosed = !this.helpIsClosed;
+    }
+  */
   onPlayerReady(api: VgAPI) {
     this.vgApi = api;
     /*
@@ -458,14 +484,14 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.authenticatedUser.lastName = this.lName;
     this.userService.updateUser(this.authenticatedUser, true);
     this.showNewUserModal = false;
-//    this.login();
+    //    this.login();
   }
 
   startTour() {
     console.log('new-app:startTour', this.currentPage);
     this.eventService.startTour(this.currentPage);
-//    let toursteps = this.aboutThisPageHash[this.currentPage].tourSteps;
-//    this.joyrideService.startTour(toursteps);
+    //    let toursteps = this.aboutThisPageHash[this.currentPage].tourSteps;
+    //    this.joyrideService.startTour(toursteps);
   }
 
   playTaskVideo(taskName) {

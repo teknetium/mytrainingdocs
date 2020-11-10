@@ -126,11 +126,13 @@
                         <span style="font-size:22px;vertical-align: middle;">&nbsp;{{selectedTraining?.title}}</span>
                     </div>
                 </div>
+                <!--
                 <button *ngIf="authenticatedUser && authenticatedUser?.appAdmin" nz-button nzType="default"
                     nzShape="circle" nz-tooltip nzTooltipTitle="Show Debug Info" class="header-icon"
                     (click)="debug = !debug">
                     <i nz-icon nzType="bug" [nzTheme]="'twotone'" style="vertical-align: top;"></i>
                 </button>
+                -->
                 <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Close Training"
                     (click)="closeViewer()" style="position:absolute;right:7px;top:7px;">
                     <i nz-icon nzType="close" theme="outline" style="vertical-align: top;color:red;">
@@ -370,10 +372,12 @@
                             <i nz-icon nzType="rollback" theme="outline" style="vertical-align: top;">
                             </i>
                         </button>
+                        <!--
                         <button *ngIf="authenticatedUser?.appAdmin" nz-button nzType="default" nzShape="circle"
                             nz-tooltip nzTooltipTitle="Show Debug Info" class="header-icon" (click)="debug = !debug">
                             <i nz-icon nzType="bug" [nzTheme]="'twotone'" style="vertical-align: top;"></i>
                         </button>
+                        -->
                         <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Close Training"
                             class="header-icon" (click)="closeViewer()" joyrideStep="Step10-header"
                             stepPosition="bottom" title="Close Training"

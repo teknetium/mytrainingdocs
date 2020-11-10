@@ -1267,11 +1267,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.myOrgSupervisors = [];
       let bulkAddFailFound = false;
       let listOfSupervisorIds = [];
+
       for (let user of this.myOrgUserObjs) {
         if (!user.supervisorId) {
           continue;
         }
-
 
         if (user.settings.statusList.includes('duplicateEmail')) {
           this.duplicateEmailHash[user._id] = user.email;
@@ -1454,6 +1454,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         name: this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName
       });
 
+      this.myOrgUserNameHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
 
       this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
         this.uid = params.get('uid');

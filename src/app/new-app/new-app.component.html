@@ -18,7 +18,8 @@
                     My Team
                 </a>
             </li>
-            <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter class="nav-badge">
+            <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
+                class="nav-badge">
                 <a routerLink="/mytrainings" routerLinkActive="active-link">
                     My Trainings
                 </a>
@@ -93,6 +94,11 @@
             <nz-step nzTitle="Create Trainings" nzSubtitle="" nzDescription=""> </nz-step>
         </nz-steps>
         -->
+        <div *ngIf="loading" style="position:fixed;top:0;left:0;width:100%;height:100%;">
+            <div style="width:100%;padding-top:300px;display:inline-block;">
+                <nz-spin nzSimple [nzSize]="'large'" style="text-align: center;"></nz-spin>
+            </div>
+        </div>
         <router-outlet [ngStyle]="{'height.px': browserInnerHeight - 64}"></router-outlet>
         <nz-modal nzWidth="600" [(nzVisible)]="showNewUserModal" nzCancelDisabled="true" nzClosable="false"
             nzTitle="Welcome!" (nzOnOk)="saveName()">
@@ -137,7 +143,8 @@
 
             </div>
             <div *ngIf="authenticatedUser$ | async as user" style="background-color: white;">
-                <span style="margin-left:10%;display:block;float:left;font-size:16px;">Please give us your name...</span>
+                <span style="margin-left:10%;display:block;float:left;font-size:16px;">Please give us your
+                    name...</span>
                 <div style="margin-left:10%;display:block;margin-bottom:10px;width:100%;">
                     <!--
                     <label style="display:inline-block;text-align: right;width:20%;padding-right:10px;"></label>
