@@ -1,7 +1,9 @@
 <div *ngIf="authenticatedUser?.firstName !== ''" style="height:100%;width:100%;padding:30px;position:relative;">
+    <!--
     <i *ngIf="authenticatedUser?.userType === 'supervisor'" z-icon nzType="question-circle" nzTheme="twotone"
         style="cursor:pointer;position:absolute;top:0;left:0;font-size:20px;color:#000000;" (click)="startTour()"
         nz-tooltip nzTooltipTitle="A little help"></i>
+        -->
     <div style="display:block;">
         <div joyrideStep="step1" title="Welcome"
             text="On this page you will find three sections that are intended to give you a very quick, high level understanding of your team and their training."
@@ -19,18 +21,17 @@
         </div>
     </div>
     <div *ngIf="authenticatedUser?.userType === 'supervisor'">
-        <div style="width:55%;display:inline-block;">
-            <div style="display:block;width:100%;">
-                <nz-card style="width:100%;" [nzTitle]="userCardTitle" [nzExtra]="extraTemplate"
-                    style="border: 1px solid #dddddd;">
-                    <div *ngIf="myTeam.length === 0" style="">
+        <div style="width:100%;display:block;height:60%;">
+                <nz-card style="float:left;width:48%;" [nzTitle]="userCardTitle"
+                    [nzExtra]="extraTemplate" >
+                    <div *ngIf="myTeam.length === 0">
                         <span style="font-weight:200;" (click)="goTo('/myteam')">
                             You have not onboarded your team/organization yet!<br>
                             Head over to the <span style="color:blue;cursor: pointer;">My Team</span> page.
                         </span>
                     </div>
-                    <div *ngIf="myOrgUsers.length > 0" style="width:100%;max-height: 40%;overflow: scroll;">
-                        <nz-list nzItemLayout="vertical" nzSize="small" style="width:100%;">
+                    <div *ngIf="myOrgUsers.length > 0" style="width:100%;">
+                        <nz-list nzItemLayout="vertical" nzSize="small" style="width:100%;height: 100%;overflow: scroll;">
                             <nz-list-item *ngFor="let user of myTeam" (click)="selectUser(user._id)" class="list-item"
                                 style="width:100%;cursor:pointer;padding:7px;">
                                 <div style="width:100%;vertical-align: text-bottom;height:36px;">
@@ -39,13 +40,11 @@
                                             style="width:12%;font-size:20px;float:left;vertical-align: middle;"
                                             [ngStyle]="{'color': trainingStatusColorHash[user.trainingStatus]}">
                                         </i>
-                                        <div
-                                            style="float:left;width:70%;padding-left:10px;font-size:14px;">
+                                        <div style="float:left;width:70%;padding-left:10px;font-size:14px;">
                                             {{ user.firstName }} {{ user.lastName }}
                                         </div>
                                     </div>
-                                    <div
-                                        style="float:right;width:50%;vertical-align: middle;">
+                                    <div style="float:right;width:50%;vertical-align: middle;">
                                         <div *ngFor="let ut of uidUTHash[user._id]">
                                             <div *ngIf="teamTrainingHash[ut.tid]" style="float:right;margin-left:10px;"
                                                 nz-tooltip [nzTooltipTitle]="teamTrainingHash[ut.tid].title"
@@ -77,33 +76,36 @@
                                     <div class="upToDate"
                                         style="float:left;width:12px;height:12px;margin-right:5px;margin-top:2px;">
                                     </div>
-                                    <div style="vertical-align: top;font-size:10px;">Up To Date</div>
+                                    <div style="margin-left:5px;vertical-align: top;font-size:12px;">&nbsp;&nbsp;Up To
+                                        Date</div>
                                 </li>
                                 <li nz-menu-item>
                                     <div class="pastDue"
                                         style="float:left;width:12px;height:12px;margin-right:5px;margin-top:2px;">
                                     </div>
-                                    <div style="vertical-align: top;font-size:10px;">Past Due</div>
+                                    <div style="margin-left:5px;vertical-align: top;font-size:12px;">&nbsp;&nbsp;Past
+                                        Due</div>
                                 </li>
                                 <li nz-menu-item>
                                     <div class="completed"
                                         style="float:left;width:12px;height:12px;margin-right:5px;margin-top:2px;">
                                     </div>
-                                    <div style="vertical-align: top;font-size:10px;">Completed</div>
+                                    <div style="margin-left:5px;vertical-align: top;font-size:12px;">
+                                        &nbsp;&nbsp;Completed</div>
                                 </li>
                                 <li nz-menu-item>
                                     <div class="pendingCertApproval"
                                         style="float:left;width:12px;height:12px;margin-right:5px;margin-top:2px;">
                                     </div>
-                                    <div style="vertical-align: top;font-size:10px;">
-                                        Pending Cert Approval
+                                    <div style="margin-left:5px;vertical-align: top;font-size:12px;">
+                                        &nbsp;&nbsp;Pending Cert Approval
                                     </div>
                                 </li>
                                 <li nz-menu-item>
                                     <i class="fas fa-redo-alt" style="float:left;font-size:12px;margin-right:5px;">
                                     </i>
-                                    <div style="vertical-align: top;font-size:10px;">
-                                        Recurring Training
+                                    <div style="margin-left:5px;vertical-align: top;font-size:12px;">
+                                        &nbsp;&nbsp;Recurring Training
                                     </div>
                                 </li>
                             </ul>
@@ -111,42 +113,47 @@
                         <div style="clear:both;"></div>
                     </div>
                 </ng-template>
-            </div>
-            <div style="width:100%;display:block;">
-                <nz-card style="width:100%;" nzTitle="Trainings" style="border: 1px solid #dddddd;" joyrideStep="step3"
-                    title="Your Team's Trainings"
-                    text="This section lists all of your trainings.  Selecting a training in this section will put you directly in the training editor.">
-                    <div *ngIf="trainings.length === 0" style="padding:40px">
-                        <span style="font-weight:200;" (click)="goTo('/trainings')">
-                            You have not created any trainings yet!<br>
-                            Head over to the <span style="color:blue;cursor: pointer;">All Trainings</span> page.
-                        </span>
-                    </div>
-                    <div *ngIf="trainings.length > 0">
-                        <nz-list nzItemLayout="vertical" nzSize="small">
-                            <nz-list-item *ngFor="let training of trainings" (click)="selectTraining(training._id)"
-                                class="list-item" style="cursor:pointer;">
-                                <div style="display:inline-block;width:10%;padding:5px;">
-                                    <i [ngClass]="training.iconClass" style="font-size:20px;vertical-align: bottom;"
-                                        [ngStyle]="{'color': training.iconColor}">
-                                    </i>
-                                    <i *ngIf="training.type === 'recurring'" class="fas fa-redo-alt"
-                                        style="font-size:10px;vertical-align: top;">
-                                    </i>
+            <nz-card style="float:right;width:48%;" nzTitle="Trainings"
+                joyrideStep="step3" title="Your Team's Trainings"
+                text="This section lists all of your trainings.  Selecting a training in this section will put you directly in the training editor.">
+                <div *ngIf="trainings.length === 0" style="padding:40px">
+                    <span style="font-weight:200;" (click)="goTo('/trainings')">
+                        You have not created any trainings yet!<br>
+                        Head over to the <span style="color:blue;cursor: pointer;">All Trainings</span> page.
+                    </span>
+                </div>
+                <div *ngIf="trainings.length > 0" style="width:100%;max-height:60%;overflow: scroll;">
+                    <nz-list nzItemLayout="vertical" nzSize="small">
+                        <nz-list-item *ngFor="let training of trainings" (click)="selectTraining(training._id)"
+                            class="list-item" style="cursor:pointer;">
+                            <div style="display:inline-block;width:10%;padding:5px;">
+                                <i [ngClass]="training.iconClass" style="font-size:20px;vertical-align: bottom;"
+                                    [ngStyle]="{'color': training.iconColor}">
+                                </i>
+                                <i *ngIf="training.type === 'recurring'" class="fas fa-redo-alt"
+                                    style="font-size:10px;vertical-align: top;">
+                                </i>
+                            </div>
+                            <div style="display:inline-block;width:90%;padding:5px;">
+                                <div style="width:100%;vertical-align: middle;font-size:14px;">
+                                    {{ training.title }}
                                 </div>
-                                <div style="display:inline-block;width:90%;padding:5px;">
-                                    <div style="width:100%;vertical-align: middle;font-size:14px;">
-                                        {{ training.title }}
-                                    </div>
-                                </div>
-                            </nz-list-item>
-                        </nz-list>
-                    </div>
-                </nz-card>
-            </div>
+                            </div>
+                        </nz-list-item>
+                    </nz-list>
+                </div>
+            </nz-card>
+            <div style="clear:both;"></div>
         </div>
-        <div style="width:40%;float:right;height:100%;text-align: center;">
-            <nz-card *ngIf="myTeam.length > 0 && trainings.length > 0" style="width:100%;" [nzTitle]="titleTemplate"
+        <div style="width:100%;display:block;text-align: center;">
+            <!--
+    <div [ngStyle]="{ width: '100%', border: '1px solid #d9d9d9', borderRadius: '4px' }">
+        <nz-calendar [nzFullscreen]="false" (nzSelectChange)="onValueChange($event)"
+            (nzPanelChange)="onPanelChange($event)"></nz-calendar>
+    </div>
+    -->
+            <!--
+           <nz-card *ngIf="myTeam.length > 0 && trainings.length > 0" style="width:100%;" [nzTitle]="titleTemplate"
                 style="border: 1px solid #dddddd;">
 
                 <div
@@ -169,11 +176,11 @@
                                             [nzTooltipTitle]="teamTrainingHash[session.tid].title">
                                         </i>
                                     </div>
-                                    <!--
+                                    < !--
                             <div style="display:inline-block;">
                                 {{teamTrainingHash[session.tid].title}}
                             </div>
-                            -->
+                            -- >
                                 </div>
                                 <div style="clear:both;"></div>
                             </div>
@@ -187,6 +194,7 @@
                     </div>
                 </div>
             </nz-card>
+            -->
             <ng-template #titleTemplate>
                 <div style="" joyrideStep="step4" title="Team member training sessions"
                     text="This section provides a view of your teams training sessions. The timeline provides start time and session duration. Using the date range picker you can view sessions from any date range you like.">

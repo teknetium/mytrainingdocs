@@ -5,7 +5,7 @@ import { HomeComponent } from './home.component';
 import { MyTrainingsModule } from '../my-trainings/my-trainings.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TrainingsModule } from '../trainings/trainings.module';
-import { NzModalModule, NzInputModule, NzIconModule, NzCardModule, NzBadgeModule, NzListModule, NzAvatarModule, NzToolTipModule, NzTimelineComponent, NzTimelineModule, NzDatePickerModule, NzAlertModule, NzDropDownModule } from 'ng-zorro-antd';
+import { NzModalModule, NzInputModule, NzIconModule, NzCardModule, NzBadgeModule, NzListModule, NzAvatarModule, NzToolTipModule, NzTimelineComponent, NzTimelineModule, NzDatePickerModule, NzAlertModule, NzDropDownModule, NzCalendarModule } from 'ng-zorro-antd';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { JoyrideModule, JoyrideService } from 'ngx-joyride';
 
@@ -32,7 +32,8 @@ import { JoyrideModule, JoyrideService } from 'ngx-joyride';
     NzBadgeModule,
     NzAlertModule,
     NzCardModule,
-    NzDropDownModule
+    NzDropDownModule,
+    NzCalendarModule
   ],
   exports: [
     HomeComponent

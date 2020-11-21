@@ -83,7 +83,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     pastDue: '#fee5e0',
     completed: '#8df8fe'
   }
-  userCardTitle = 'Team/Organization';
+  userCardTitle = 'My Team';
   homePageWidth = 100;
 
   constructor(

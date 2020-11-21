@@ -232,7 +232,7 @@
                     </div>
                     <span *ngIf="selectedTraining?.type === 'recurring'" style="display:inline-block;font-size:12px;"
                         class="separator">|</span>
-                        <!--
+                    <!--
                     <div style="display:inline-block;font-size:12px;color:#000000;padding:5px;">
                         Job Title&nbsp;:&nbsp;<span
                             style="color:blue;">{{selectedTraining?.jobTitle ? selectedTraining?.jobTitle : 'not set'}}</span>
@@ -1247,7 +1247,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div *ngIf="page?.content && page?.content?.type === 'url'"
+                                        <div *ngIf="page?.content?.type === 'url'"
                                             style="text-align: center;width:100%;height:900px;">
                                             <div style="display:inline-block;" [ngStyle]="{'width.px':contentWidth}">
                                                 <iframe [src]="safeUrlHash[page?.content?.webUrl]" allowfullscreen
@@ -1256,20 +1256,41 @@
                                                 </iframe>
                                             </div>
                                         </div>
-                                        <div *ngIf="page?.content && page?.content?.type === 'html'"
+                                        <div *ngIf="page?.content?.type === 'html'"
                                             style="text-align:center;width:100%;height:900px;">
                                             <div *ngIf="production === 'false' && selectedTraining?.status === 'unlocked' && mode === 'Edit'"
                                                 [ngStyle]="{'width.px':contentWidth, 'height.px': contentHeight - 400}"
-                                                style="display: inline-block;">
+                                                style="position:relative;display: inline-block;text-align:left;">
+                                                <!--
+                                                <span (click)="saveTraining(false)">Save</span>
+                                                -->
+
+                                                <button nz-button nzType="primary" style="margin-bottom:10px;"
+                                                    [disabled]="froalaBufferHash[page.content._id] === page.content.text"
+                                                    (click)="saveFroalaContent(page.content._id, page.content.text)">
+                                                    Save
+                                                </button>
+                                                <button nz-button nzType="default" style="margin:10px;"
+                                                    [disabled]="froalaBufferHash[page.content._id] === page.content.text"
+                                                     nz-popconfirm
+                        nzPopconfirmTitle="Discard Changes?" [nzPopconfirmTrigger]="'click'"
+                        [nzPopconfirmPlacement]="'right'" (nzOnConfirm)="cancelFroalaContent(page.content._id)">
+                                                    Cancel
+                                                </button>
+                                                <div [froalaEditor]="getFroalaOptions(page.content._id, page.content.text)"
+                                                    [(froalaModel)]="page.content.text">
+                                                </div>
+                                                <!--
                                                 <div [froalaEditor]="getFroalaOptions(page?._id)"
-                                                    [(froalaModel)]="page?.content.text "
+                                                    [(froalaModel)]="page.text"
                                                     style="height:400px;width:100%;">
                                                 </div>
+                                                -->
                                             </div>
                                             <div *ngIf="production === 'true' || selectedTraining?.status === 'locked' || mode === 'Preview'"
                                                 [ngStyle]="{'width.px':contentWidth}"
-                                                style="display: inline-block;height:fit-content;">
-                                                <div [froalaView]="page?.content?.text"></div>
+                                                style="text-align:left;display: inline-block;height:fit-content;">
+                                                <div [froalaView]="page.content.text"></div>
                                             </div>
                                         </div>
                                     </div>

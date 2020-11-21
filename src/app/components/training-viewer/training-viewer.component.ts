@@ -341,6 +341,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   //    header: ,
   //    page-navigation: { steps: ['Step1-header', 'Step2-header', 'Step3-header', 'Step4-header', 'Step5-header', 'Step6-header', 'Step7-header', 'Step8-header', 'Step9-header'] },
 
+  froalaBufferHash = {};
 
 
   constructor(
@@ -482,9 +483,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
       if (this.selectedTraining.pages) {
         for (let page of this.selectedTraining.pages) {
+          this.froalaBufferHash[page._id] = page.text;
           if (page.type === 'file' || page.type === 'url' || page.type === 'assessment') {
             this.introHash[page._id] = 'yes';
           } else if (page.type === 'text') {
+            this.froalaBufferHash[page.content._id] = page.content.text;
             this.introHash[page._id] = 'no';
           }
           /*
@@ -683,7 +686,15 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       }
     }
     */
-
+  
+  saveFroalaContent(editorId, model) {
+    this.froalaBufferHash[editorId] = model;
+    this.saveTraining(false);
+  }
+  cancelFroalaContent(editorId) {
+    this.currentPage.content.text = this.froalaBufferHash[editorId];
+  }
+  
   hideEditor(event) {
     event.preventDefault();
     this.introEditorHash[this.currentPageId] = false;
@@ -695,9 +706,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.introEditorHash[pageId] = action;
   }
 
-  getFroalaOptions(pageId: string): Object {
+  getFroalaOptions(editorId: string, model: string): Object {
     return new Object({
-      placeholderText: 'Edit Your Content Here!',
       immediateAngularModelUpdate: true,
       key: "0BA3jA11D9C4F6A3E4asftscjjlhi1lfixF6nablA3C11A8C6D2B4A4G2F3A3==",
       events: {
@@ -1044,11 +1054,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   addNewPage(pageType: string, contentType: string) {
 
     const content = <Content>{
-      _id: String(new Date().getTime()),
+      _id: 'Content' + String(new Date().getTime() ),
       type: contentType,
+      text:'default text content'
     }
     const newPage = <Page>{
-      _id: String(new Date().getTime()),
+      _id: 'Page' + String(new Date().getTime()),
       type: pageType,
       title: 'New Page',
       text: 'Your page introduction goes here.',
@@ -1090,9 +1101,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     } else if (pageType === 'text') {
       this.currentPage.title = 'HTML Page';
       this.currentPage.content.type = 'html';
-      this.currentPage.content.text = '';
       this.introHash[this.currentPageId] = 'no';
     }
+    this.saveTraining(false);
     //    this.setCurrentPage(newPage._id, undefined);
     //    this.cd.detectChanges();
   }

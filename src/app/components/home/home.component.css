@@ -1,49 +1,48 @@
 .myteam-container {
-    padding-top: 20px;
-    height: 100%;;
+	padding-top: 20px;
+	height: 100%;
 }
 
 .mytrainings {
-    
 }
 
 .list-item {
 }
 
 .list-item:hover {
-    background-color: #f5f5f5;
+	background-color: #f5f5f5;
 }
 
 .tab-titles {
-    width:fit-content;
-    height:40px;
-    padding:10px 20px;
-    margin-right: 2px;
-    display: inline-block;
+	width: fit-content;
+	height: 40px;
+	padding: 10px 20px;
+	margin-right: 2px;
+	display: inline-block;
 }
 
 .tab-titles:hover {
-    color: blue;
-    background-color: #f4f4f4;
+	color: blue;
+	background-color: #f4f4f4;
 }
 
 .selected-tab {
-    border-bottom:2px solid blue;
-    color: blue;
-    background-color: #f4f4f4;
+	border-bottom: 2px solid blue;
+	color: blue;
+	background-color: #f4f4f4;
 }
 
 .completed {
-    border-bottom: 2px solid blue;
+	border-bottom: 3px solid #4891f7;
 }
 
 .pastDue {
-    border-bottom: 2px solid red;
+	border-bottom: 3px solid red;
 }
 
 .upToDate {
-    border-bottom: 2px solid #46bd15;
+	border-bottom: 3px solid #46bd15;
 }
 .pendingCertApproval {
-    border-bottom: 2px solid #feb90b;
+	border-bottom: 3px solid #feb90b;
 }
