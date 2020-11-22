@@ -326,7 +326,7 @@
                         </div>
                         <div *ngFor="let ut of uidUTHash[selectedUser?._id]" nz-tooltip nzTooltipPlacement="bottomLeft"
                             [nzTooltipTitle]="allTrainingIdHash[ut.tid]?.title"
-                            style="display:inline-block;margin-left:10px;border-bottom: 2px solid white;padding:7px;"
+                            style="display:inline-block;margin-left:10px;border-bottom: 3px solid white;margin:7px;padding-bottom:5px;"
                             [ngStyle]="{'border-color': userTrainingStatusColorHash[ut.status]}">
                             <i [ngClass]="allTrainingIdHash[ut.tid]?.iconClass"
                                 style="font-size:20px;text-align: center;vertical-align: middle;"
