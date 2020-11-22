@@ -148,7 +148,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     pastDue: 'red'
   }
 
-  okDisabled = true;
+  okDisabled = false;
   cancelDisabled = false;
   messageDialogVisible = false;
 
@@ -342,6 +342,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   //    page-navigation: { steps: ['Step1-header', 'Step2-header', 'Step3-header', 'Step4-header', 'Step5-header', 'Step6-header', 'Step7-header', 'Step8-header', 'Step9-header'] },
 
   froalaBufferHash = {};
+  showFroalaEditor = true;
 
 
   constructor(
@@ -690,15 +691,22 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   saveFroalaContent(editorId, model) {
     this.froalaBufferHash[editorId] = model;
     this.saveTraining(false);
+    this.hideEditor(null);
   }
   cancelFroalaContent(editorId) {
-    this.currentPage.content.text = this.froalaBufferHash[editorId];
+    if (editorId === this.currentPageId) {
+      this.currentPage.text = this.froalaBufferHash[editorId];
+    } else {
+      this.currentPage.content.text = this.froalaBufferHash[editorId];
+    }
   }
   
   hideEditor(event) {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
     this.introEditorHash[this.currentPageId] = false;
-    this.saveTraining(false);
+//    this.saveTraining(false);
   }
 
   editIntro(event, pageId, action) {
