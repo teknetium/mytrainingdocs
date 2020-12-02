@@ -572,7 +572,7 @@
           </div>
         </div>
         <nz-collapse nzAccordion>
-          <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="headerTemplate" [nzActive]="panel.active">
+          <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="headerTemplate" [nzActive]="panel.active" style="text-align: left;">
             <div style="padding-left:20px;font-size: 20px;color:#000000;font-weight: 200;">{{ panel.answer }}</div>
             <ng-template #headerTemplate>
               <div style="color:#888888;font-size: 18px;font-weight: 200;">

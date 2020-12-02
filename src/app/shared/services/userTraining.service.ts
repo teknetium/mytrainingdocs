@@ -28,6 +28,8 @@ export class UserTrainingService {
   private uidUTHash = {};
   private sessionLog: UTSession[] = [];
   private sessionLogBS$ = new BehaviorSubject<UTSession[]>(null);
+  private bulkUserStatusUpdateBS$ = new BehaviorSubject<string[]>(null);
+  private uidList: string[] = [];
 
   constructor(
     private eventService: EventService,
@@ -75,6 +77,10 @@ export class UserTrainingService {
 
   getSessionLogStream(): Observable<UTSession[]> {
     return this.sessionLogBS$.asObservable();
+  }
+
+  getBulkUserStatusUpdateStream(): Observable<string[]> {
+    return this.bulkUserStatusUpdateBS$.asObservable();
   }
 
   getUidUTHashStream(): Observable<UidUTHash> {
@@ -318,35 +324,21 @@ export class UserTrainingService {
       this.postBulkUserTraining$(tmpArray).subscribe(userTrainingList => {
         batchAddedCount += userTrainingList.length;
         for (let ut of userTrainingList) {
-
+          this.uidList.push(ut.uid);
           if (this.uidUTHash[ut.uid]) {
             this.uidUTHash[ut.uid].push(ut);
           } else {
             this.uidUTHash[ut.uid] = [ut];
           }
-          this.userTrainings$BS.next(this.uidUTHash[ut.uid]);
+//          this.userTrainings$BS.next(this.uidUTHash[ut.uid]);
           this.allUserTrainingHash[ut._id] = ut;
         }
-        console.log('bulk assign returns ...', userTrainingList);
-        this.uidUTHashBS$.next(this.uidUTHash);
+//        console.log('bulk assign returns ...', userTrainingList);
+        this.bulkUserStatusUpdateBS$.next(this.uidList);
+        this.uidList = [];
       });
     }
-/*
-    this.postBulkUserTraining$(userTrainings).subscribe(userTrainingList => {
-      for (let ut of userTrainingList) {
-
-        if (this.uidUTHash[ut.uid]) {
-          this.uidUTHash[ut.uid].push(ut);
-        } else {
-          this.uidUTHash[ut.uid] = [ut];
-        }
-        this.userTrainings$BS.next(this.uidUTHash[ut.uid]);
-        this.allUserTrainingHash[ut._id] = ut;
-      }
-      console.log('bulk assign returns ...', userTrainingList);
-      this.uidUTHashBS$.next(this.uidUTHash);
-    });
-    */
+    this.uidUTHashBS$.next(this.uidUTHash);
   }
   deleteUTForTid(tid: string) {
     this.deleteUTForTid$(tid).subscribe();

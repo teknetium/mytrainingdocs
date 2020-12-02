@@ -1302,6 +1302,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         }
       }
       this.matchingSupervisors = this.myOrgSupervisors;
+      /*
       if (this.authenticatedUser) {
         for (let dr1 of this.authenticatedUser.directReports) {
           for (let dr2 of this.myOrgUserHash[dr1].directReports) {
@@ -1309,6 +1310,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           }
         }
       }
+      */
+      this.collapseAllSubOrgs(true);
     });
     this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgUsers => {
       if (!myOrgUsers) {
@@ -1505,6 +1508,19 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   done(): void {
 
+  }
+
+  collapseAllSubOrgs(collapseAll) {
+    if (collapseAll) {
+      this.collapsedNodes = [];
+      for (let user of this.userListDisplay) {
+        if (user.userType === 'supervisor') {
+          this.collapsedNodes.push(user._id);
+          this.figureOrgStat(user._id);        }
+      }
+    } else {
+      this.collapsedNodes = [];
+    }
   }
 
   collapseNode(uid: string, collapse: boolean) {
@@ -2351,7 +2367,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
       nodeStat.jobTitleHash[drUser.jobTitle] += 1;
 
-      console.log('processDirectReports', nodeStat);
+//      console.log('processDirectReports', nodeStat);
       if (this.selectionMode === 'Org') {
         if (this.userIdsSelected.includes(dr)) {
           nodeStat.selectedCnt++;

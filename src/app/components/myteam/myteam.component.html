@@ -222,51 +222,9 @@
             </div>
         </div>
         -->
-        <div
-            style="display:block;background:rgba(0,0,255,.2);padding:10px;border:2px solid #afbcf8;width:100%;margin-top:20px;margin-bottom:20px;border-radius: 5px;">
-            <div
-                style="float:left;width:38%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;padding:5px;">
-                <div *ngIf="currentHoverUser" style="width:100%;">
-                    <div style="float:left;overflow-x: hidden;">
-                        <i [ngClass]="userTypeIconHash[currentHoverUser?.userType]"
-                            style="font-size:16px;vertical-align: middle;"
-                            [ngStyle]="{'color': userTrainingStatusColorHash[currentHoverUser?.trainingStatus]}"
-                            nz-tooltip [nzTooltipTitle]=""></i>&nbsp;
-                        <span
-                            style="display:inline-block;font-size:16px;font-weight: 500;color:black;vertical-align: middle;">{{currentHoverUser?.firstName}}
-                            {{currentHoverUser?.lastName}}&nbsp;&nbsp;
-                        </span>
-                        <span
-                            style="display:inline-block;font-size:16px;font-weight: 300;color:#444444;vertical-align: middle;margin-right:20px;">({{currentHoverUser?.jobTitle}})
-                        </span>
-                    </div>
-                    <div *ngIf="currentHoverUser?.userType === 'supervisor'" style="float:right;">
-                        <i class="fas fa-user"
-                            style="font-size:16px;color:black;vertical-align: middle;margin-right:3px;" nz-tooltip
-                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="No Trainings Assigned"></i>
-                        <span
-                            style="margin-right:10px;vertical-align: middle;">{{ nodeStatHash[currentHoverUid]?.noneCnt}}</span>
-                        <i class="fas fa-user"
-                            style="font-size:16px;color:#46bd15;margin-right:3px;vertical-align: middle;" nz-tooltip
-                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="Up To Date"></i>
-                        <span
-                            style="margin-right:10px;vertical-align: middle;">{{ nodeStatHash[currentHoverUid]?.upToDateCnt}}</span>
-                        <i class="fas fa-user" style="font-size:16px;color:red;margin-right:3px;vertical-align: middle;"
-                            nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Past Due"></i>
-                        <span style="vertical-align: middle;">{{ nodeStatHash[currentHoverUid]?.pastDueCnt}}</span>
-                    </div>
-                </div>
-            </div>
-            <div style="float:right;width:60%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;">
-                <app-user-trainings  mode="admin" logSession="off" [uid]="currentHoverUid"
-                     style="width:100%;height:35px;float:left;" compact="yes">
-                </app-user-trainings>
-            </div>
-            <div style="clear: both;"></div>
-        </div>
         <div *ngIf="showOrgChart === 'true'" style="position:relative;z-index:1;">
             <div
-                style="display:block;width:100%;border-bottom:1px solid #dddddd;padding-bottom:20px;margin-bottom:10px;">
+                style="display:block;width:100%;border-bottom:1px solid #dddddd;padding:10px 0;margin-bottom:10px;">
                 <div style="float:left;margin-right:20px;">
                     <div style="width:fit-content;display:block;">
                         <span style="display:inline-block;font-size:14px;font-weight:500;">Selection
@@ -461,26 +419,33 @@
                     </nz-radio-group>
                 </div>
 
-                <div *ngIf="selectionMode === 'Org' || selectionMode === 'IndividualContributor'" style="float:left;margin-right:20px;">
+                <div *ngIf="selectionMode === 'Org' || selectionMode === 'IndividualContributor'"
+                    style="float:left;margin-right:20px;">
                     <div style="margin:0 10px;display:inline-block;">
                         <span style="display:block;font-size:14px;font-weight:500;">Organization Stats</span>
-                        <div style="padding:8px;display:block;border: 1px solid #dddddd;border-radius: 4px;background-color: #f7f7f7;">
-                            <i class="fas fa-users" nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Total Users"
+                        <div
+                            style="padding:8px;display:block;border: 1px solid #dddddd;border-radius: 4px;background-color: #f7f7f7;">
+                            <i class="fas fa-users" nz-tooltip nzTooltipPlacement="bottomLeft"
+                                nzTooltipTitle="Total Users"
                                 style="display:inline-block;font-size:18px;margin-right:3px;vertical-align: middle;"></i>
                             <span style="vertical-align: middle;margin-right:10px;">
                                 {{userListDisplay.length}}
                             </span>
-                            <i class="fas fa-user" style="font-size:16px;color:black;vertical-align: middle;margin-right:3px;" nz-tooltip
+                            <i class="fas fa-user"
+                                style="font-size:16px;color:black;vertical-align: middle;margin-right:3px;" nz-tooltip
                                 nzTooltipPlacement="bottomLeft" nzTooltipTitle="No Trainings Assigned"></i>
                             <span
                                 style="margin-right:10px;vertical-align: middle;">{{ nodeStatHash[authenticatedUser?._id]?.noneCnt}}</span>
-                            <i class="fas fa-user" style="font-size:16px;color:#46bd15;margin-right:3px;vertical-align: middle;" nz-tooltip
+                            <i class="fas fa-user"
+                                style="font-size:16px;color:#46bd15;margin-right:3px;vertical-align: middle;" nz-tooltip
                                 nzTooltipPlacement="bottomLeft" nzTooltipTitle="Up To Date"></i>
                             <span
                                 style="margin-right:10px;vertical-align: middle;">{{ nodeStatHash[authenticatedUser?._id]?.upToDateCnt}}</span>
-                            <i class="fas fa-user" style="font-size:16px;color:red;margin-right:3px;vertical-align: middle;" nz-tooltip
+                            <i class="fas fa-user"
+                                style="font-size:16px;color:red;margin-right:3px;vertical-align: middle;" nz-tooltip
                                 nzTooltipPlacement="bottomLeft" nzTooltipTitle="Past Due"></i>
-                            <span style="vertical-align: middle;">{{ nodeStatHash[authenticatedUser?._id]?.pastDueCnt}}</span>
+                            <span
+                                style="vertical-align: middle;">{{ nodeStatHash[authenticatedUser?._id]?.pastDueCnt}}</span>
                         </div>
                     </div>
                 </div>
@@ -578,19 +543,70 @@
                                 style="vertical-align: middle;">{{ nodeStatHash[authenticatedUser?._id]?.pastDueCnt}}</span>
                         </div>
                     </div>
-                    <label nz-checkbox ngDefaultControl [(ngModel)]="includeFullName"
-                        style="display:inline-block;cursor:pointer;font-size:12px;color:#000000;z-index:1;margin-left:10px;"
-                        nz-tooltip nzTooltipTitle="">Show
-                        Names
-                    </label>
-                    <div style="display:inline-block;">
-                        <i nz-icon nzType="zoom-in" nzTheme="outline"
-                            style="cursor:pointer;display:inline-block;font-size:22px;margin-right:10px;"
-                            (click)="zoomIn()" nz-tooltip nzTooltipPlacement="bottomRight" nzTooltipTitle="Zoom In"></i>
-                        <i nz-icon nzType="zoom-out" nzTheme="outline"
-                            style="cursor:pointer;display:inline-block;font-size:22px;" nz-tooltip
-                            nzTooltipPlacement="bottomRight" nzTooltipTitle="Zoom Out" (click)="zoomOut()"></i>
-                    </div>
+                    <button *ngIf="!includeFullName" nz-button nzShape="circle"
+                        (click)="includeFullName = !includeFullName" style="margin-right:3px;vertical-align: middle;"
+                        nz-tooltip nzTooltipPlacement="bottomRight" nzTooltipTitle="Show Individual Contributor's Name">
+                        <i class="fal fa-tag" style="font-size:18px;"></i>
+                    </button>
+                    <button *ngIf="includeFullName" nz-button nzShape="circle"
+                        (click)="includeFullName = !includeFullName" style="margin-right:3px;vertical-align: middle;"
+                        nz-tooltip nzTooltipPlacement="bottomRight"
+                        nzTooltipTitle="Hide Individual Contributor's Names">
+                        <span class="fa-stack fa-2x" style="font-size:10px;">
+                            <i class="far fa-tag fa-stack-1x"></i>
+                            <i class="fal fa-ban fa-stack-2x"></i>
+                        </span>
+                    </button>
+                    <button nz-button nzShape="circle" (click)="collapseAllSubOrgs(false)"
+                        style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
+                        nzTooltipTitle="Expand All Suborganizations">
+                        <i class="fal fa-chevron-circle-down" style="font-size:18px;"></i>
+
+                    </button>
+                    <button nz-button nzShape="circle" (click)="collapseAllSubOrgs(true)"
+                        style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
+                        nzTooltipTitle="Collapse All Suborganizations">
+                        <i class="fal fa-chevron-circle-up" style="font-size:18px;"></i>
+                    </button>
+                    <button nz-button nzShape="circle" (click)="zoomIn()"
+                        style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
+                        nzTooltipTitle="Zoom In">
+                        <i class="fal fa-search-plus" style="font-size:18px;"></i>
+                    </button>
+                    <button nz-button nzShape="circle" (click)="zoomOut()" style="vertical-align: middle;" nz-tooltip
+                        nzTooltipPlacement="bottomRight" nzTooltipTitle="Zoom Out">
+                        <i class="fal fa-search-minus" style="font-size:18px;"></i>
+                    </button>
+                    <!--
+                    <nz-dropdown-menu #actionMenu="nzDropdownMenu">
+                        <ul nz-menu>
+                            <li nz-menu-item >
+                                <i nz-icon nzType="zoom-in" nzTheme="outline"
+                                    style="cursor:pointer;display:inline-block;font-size:22px;margin-right:10px;">
+                                </i>
+                                Zoom In
+                            </li>
+                            <li nz-menu-item>
+                                <i nz-icon nzType="zoom-out" nzTheme="outline"
+                                    style="cursor:pointer;display:inline-block;font-size:22px;">
+                                </i>
+                                Zoom Out
+                            </li>
+                            <li nz-menu-item>
+                                <label nz-checkbox ngDefaultControl [(ngModel)]="includeFullName"
+                                    style="display:block;cursor:pointer;font-size:12px;color:#000000;z-index:1;">Show
+                                    Names
+                                </label>
+                            </li>
+                            <li nz-menu-item
+                                Collapse All Suborganizations
+                            </li>
+                            <li nz-menu-item>
+                                Expand All Suborganizations
+                            </li>
+                        </ul>
+                    </nz-dropdown-menu>
+                    -->
                 </div>
                 <div style="clear: both;"></div>
             </div>
@@ -670,6 +686,49 @@
         </div>
         <div *ngIf="showOrgChart === 'true'" style="display:block;height:75%;overflow:scroll;">
 
+            <div
+                style="display:block;background:rgba(0,0,255,.2);padding:10px;border:2px solid #afbcf8;width:100%;margin-bottom:10px;border-radius: 5px;">
+                <div
+                    style="float:left;width:38%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;padding:5px;">
+                    <div *ngIf="currentHoverUser" style="width:100%;">
+                        <div style="float:left;overflow-x: hidden;">
+                            <i [ngClass]="userTypeIconHash[currentHoverUser?.userType]"
+                                style="font-size:16px;vertical-align: middle;"
+                                [ngStyle]="{'color': userTrainingStatusColorHash[currentHoverUser?.trainingStatus]}"
+                                nz-tooltip [nzTooltipTitle]=""></i>&nbsp;
+                            <span
+                                style="display:inline-block;font-size:16px;font-weight: 500;color:black;vertical-align: middle;">{{currentHoverUser?.firstName}}
+                                {{currentHoverUser?.lastName}}&nbsp;&nbsp;
+                            </span>
+                            <span
+                                style="display:inline-block;font-size:16px;font-weight: 300;color:#444444;vertical-align: middle;margin-right:20px;">({{currentHoverUser?.jobTitle}})
+                            </span>
+                        </div>
+                        <div *ngIf="currentHoverUser?.userType === 'supervisor'" style="float:right;">
+                            <i class="fas fa-user"
+                                style="font-size:16px;color:black;vertical-align: middle;margin-right:3px;" nz-tooltip
+                                nzTooltipPlacement="bottomLeft" nzTooltipTitle="No Trainings Assigned"></i>
+                            <span
+                                style="margin-right:10px;vertical-align: middle;">{{ nodeStatHash[currentHoverUid]?.noneCnt}}</span>
+                            <i class="fas fa-user"
+                                style="font-size:16px;color:#46bd15;margin-right:3px;vertical-align: middle;" nz-tooltip
+                                nzTooltipPlacement="bottomLeft" nzTooltipTitle="Up To Date"></i>
+                            <span
+                                style="margin-right:10px;vertical-align: middle;">{{ nodeStatHash[currentHoverUid]?.upToDateCnt}}</span>
+                            <i class="fas fa-user"
+                                style="font-size:16px;color:red;margin-right:3px;vertical-align: middle;" nz-tooltip
+                                nzTooltipPlacement="bottomLeft" nzTooltipTitle="Past Due"></i>
+                            <span style="vertical-align: middle;">{{ nodeStatHash[currentHoverUid]?.pastDueCnt}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="float:right;width:60%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;">
+                    <app-user-trainings mode="admin" logSession="off" [uid]="currentHoverUid"
+                        style="width:100%;height:35px;float:left;" compact="yes">
+                    </app-user-trainings>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
             <div style="text-align: center;width:100%;overflow: scroll;position:relative;">
                 <div style="background-color:white;display:inline-block;white-space: nowrap;">
                     <div style="text-align: center;margin-bottom:20px;">
@@ -711,8 +770,7 @@
 
                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
                                             style="font-size:16px;" [ngStyle]="{'color': getStatusColor(dr)}"></i>
-                                        <span
-                                            *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || includeFullName"
+                                        <span *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || includeFullName"
                                             [ngStyle]="{'font-size.px': textFontSize}" style="display: block;">
                                             {{orgChartNodeHash[dr]?.fName}}<br>{{orgChartNodeHash[dr]?.lName}}
                                         </span>
@@ -720,13 +778,15 @@
                                     <div *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' && !collapsedNodes.includes(dr)"
                                         class="org-chart-vert-connector-bottom">
                                     </div>
-                                    <div *ngIf="!collapsedNodes.includes(dr) && myOrgUserHash[dr]?.userType === 'supervisor' && maxLevel > 2"
-                                        (click)="collapseNode(dr, true)">
+                                    <div *ngIf="!collapsedNodes.includes(dr) && myOrgUserHash[dr]?.userType === 'supervisor'"
+                                        (click)="collapseNode(dr, true)" nz-tooltip
+                                        nzTooltipTitle="Collapse Suborganization" nzTooltipPlacement="right">
                                         <i class="fal fa-minus-circle" style="font-size:12px;"></i>
                                     </div>
-                                    <div *ngIf="collapsedNodes.includes(dr) && myOrgUserHash[dr]?.userType === 'supervisor' && maxLevel > 2"
+                                    <div *ngIf="collapsedNodes.includes(dr) && myOrgUserHash[dr]?.userType === 'supervisor'"
                                         (click)="collapseNode(dr, false)" style="margin:0 8px;">
-                                        <i class="far fa-plus-circle"
+                                        <i class="far fa-plus-circle" nz-tooltip nzTooltipTitle="Expand Suborganization"
+                                            nzTooltipPlacement="right"
                                             style="margin-top:4px;font-size:16px;color:red;"></i>
                                         <div class="collapsed-block">
                                             <div nz-tooltip nzTooltipTitle="Total Users" nzTooltipPlacement="right"
@@ -934,13 +994,17 @@
                                                 <div *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor' && !collapsedNodes.includes(dr2)"
                                                     class="org-chart-vert-connector-bottom">
                                                 </div>
-                                                <div *ngIf="!collapsedNodes.includes(dr2) && myOrgUserHash[dr2]?.userType === 'supervisor' && maxLevel > 3"
-                                                    (click)="collapseNode(dr2, true)">
+                                                <div *ngIf="!collapsedNodes.includes(dr2) && myOrgUserHash[dr2]?.userType === 'supervisor'"
+                                                    (click)="collapseNode(dr2, true)" nz-tooltip
+                                                    nzTooltipTitle="Collapse Suborganization"
+                                                    nzTooltipPlacement="right">
                                                     <i class="fal fa-minus-circle" style="font-size:12px;"></i>
                                                 </div>
-                                                <div *ngIf="collapsedNodes.includes(dr2) && myOrgUserHash[dr2]?.userType === 'supervisor' && maxLevel > 3"
+                                                <div *ngIf="collapsedNodes.includes(dr2) && myOrgUserHash[dr2]?.userType === 'supervisor'"
                                                     (click)="collapseNode(dr2, false)" style="margin:0 8px;">
-                                                    <i class="far fa-plus-circle"
+                                                    <i class="far fa-plus-circle" nz-tooltip
+                                                        nzTooltipTitle="Expand Suborganization"
+                                                        nzTooltipPlacement="right"
                                                         style="margin-top:4px;font-size:16px;color:red;">
                                                     </i>
                                                     <div class="collapsed-block">
@@ -1162,14 +1226,19 @@
                                                             <div *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor' && !collapsedNodes.includes(dr3)"
                                                                 class="org-chart-vert-connector-bottom">
                                                             </div>
-                                                            <div *ngIf="!collapsedNodes.includes(dr3) && myOrgUserHash[dr3]?.userType === 'supervisor' && maxLevel > 4"
-                                                                (click)="collapseNode(dr3, true)">
+                                                            <div *ngIf="!collapsedNodes.includes(dr3) && myOrgUserHash[dr3]?.userType === 'supervisor'"
+                                                                (click)="collapseNode(dr3, true)" nz-tooltip
+                                                                nzTooltipTitle="Collapse Suborganization"
+                                                                nzTooltipPlacement="right">
                                                                 <i class="fal fa-minus-circle"
                                                                     style="font-size:12px;"></i>
                                                             </div>
-                                                            <div *ngIf="collapsedNodes.includes(dr3) && myOrgUserHash[dr3]?.userType === 'supervisor' && maxLevel > 4"
-                                                                (click)="collapseNode(dr3, false)" style="margin:0 8px;">
-                                                                <i class="far fa-plus-circle"
+                                                            <div *ngIf="collapsedNodes.includes(dr3) && myOrgUserHash[dr3]?.userType === 'supervisor'"
+                                                                (click)="collapseNode(dr3, false)"
+                                                                style="margin:0 8px;">
+                                                                <i class="far fa-plus-circle" nz-tooltip
+                                                                    nzTooltipTitle="Expand Suborganization"
+                                                                    nzTooltipPlacement="right"
                                                                     style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                 <div class="collapsed-block">
                                                                     <div nz-tooltip nzTooltipTitle="Total Users"
@@ -1407,14 +1476,19 @@
                                                                         <div *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor' && !collapsedNodes.includes(dr4)"
                                                                             class="org-chart-vert-connector-bottom">
                                                                         </div>
-                                                                        <div *ngIf="!collapsedNodes.includes(dr4) && myOrgUserHash[dr4]?.userType === 'supervisor' && maxLevel > 5"
-                                                                            (click)="collapseNode(dr4, true)">
+                                                                        <div *ngIf="!collapsedNodes.includes(dr4) && myOrgUserHash[dr4]?.userType === 'supervisor'"
+                                                                            (click)="collapseNode(dr4, true)" nz-tooltip
+                                                                            nzTooltipTitle="Collapse Suborganization"
+                                                                            nzTooltipPlacement="right">
                                                                             <i class="fal fa-minus-circle"
                                                                                 style="font-size:10px;"></i>
                                                                         </div>
-                                                                        <div *ngIf="collapsedNodes.includes(dr4) && myOrgUserHash[dr4]?.userType === 'supervisor' && maxLevel > 5"
-                                                                            (click)="collapseNode(dr4, false)" style="margin:0 8px;">
-                                                                            <i class="far fa-plus-circle"
+                                                                        <div *ngIf="collapsedNodes.includes(dr4) && myOrgUserHash[dr4]?.userType === 'supervisor'"
+                                                                            (click)="collapseNode(dr4, false)"
+                                                                            style="margin:0 8px;">
+                                                                            <i class="far fa-plus-circle" nz-tooltip
+                                                                                nzTooltipTitle="Expand Suborganization"
+                                                                                nzTooltipPlacement="right"
                                                                                 style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                             <div class="collapsed-block">
                                                                                 <div nz-tooltip
@@ -1671,14 +1745,18 @@
                                                                                     <div *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor' && !collapsedNodes.includes(dr5)"
                                                                                         class="org-chart-vert-connector-bottom">
                                                                                     </div>
-                                                                                    <div *ngIf="!collapsedNodes.includes(dr5) && myOrgUserHash[dr5]?.userType === 'supervisor' && maxLevel > 6"
+                                                                                    <div *ngIf="!collapsedNodes.includes(dr5) && myOrgUserHash[dr5]?.userType === 'supervisor'"
                                                                                         (click)="collapseNode(dr5, true)">
                                                                                         <i class="fal fa-minus-circle"
                                                                                             style="font-size:10px;"></i>
                                                                                     </div>
-                                                                                    <div *ngIf="collapsedNodes.includes(dr5) && myOrgUserHash[dr5]?.userType === 'supervisor' && maxLevel > 6"
-                                                                                        (click)="collapseNode(dr5, false)" style="margin:0 8px;">
+                                                                                    <div *ngIf="collapsedNodes.includes(dr5) && myOrgUserHash[dr5]?.userType === 'supervisor'"
+                                                                                        (click)="collapseNode(dr5, false)"
+                                                                                        style="margin:0 8px;">
                                                                                         <i class="far fa-plus-circle"
+                                                                                            nz-tooltip
+                                                                                            nzTooltipTitle="Expand Suborganization"
+                                                                                            nzTooltipPlacement="right"
                                                                                             style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                                         <div class="collapsed-block">
                                                                                             <div nz-tooltip
@@ -1937,14 +2015,21 @@
                                                                                                 <div *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor' && !collapsedNodes.includes(dr6)"
                                                                                                     class="org-chart-vert-connector-bottom">
                                                                                                 </div>
-                                                                                                <div *ngIf="!collapsedNodes.includes(dr6) && myOrgUserHash[dr6]?.userType === 'supervisor' && maxLevel > 7"
-                                                                                                    (click)="collapseNode(dr6, true)">
+                                                                                                <div *ngIf="!collapsedNodes.includes(dr6) && myOrgUserHash[dr6]?.userType === 'supervisor'"
+                                                                                                    (click)="collapseNode(dr6, true)"
+                                                                                                    nz-tooltip
+                                                                                                    nzTooltipTitle="Collapse Suborganization"
+                                                                                                    nzTooltipPlacement="right">
                                                                                                     <i class="fal fa-minus-circle"
                                                                                                         style="font-size:10px;"></i>
                                                                                                 </div>
-                                                                                                <div *ngIf="collapsedNodes.includes(dr6) && myOrgUserHash[dr6]?.userType === 'supervisor' && maxLevel > 7"
-                                                                                                    (click)="collapseNode(dr6, false)" style="margin:0 8px;">
+                                                                                                <div *ngIf="collapsedNodes.includes(dr6) && myOrgUserHash[dr6]?.userType === 'supervisor'"
+                                                                                                    (click)="collapseNode(dr6, false)"
+                                                                                                    style="margin:0 8px;">
                                                                                                     <i class="far fa-plus-circle"
+                                                                                                        nz-tooltip
+                                                                                                        nzTooltipTitle="Expand Suborganization"
+                                                                                                        nzTooltipPlacement="right"
                                                                                                         style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                                                     <div
                                                                                                         class="collapsed-block">
@@ -2201,13 +2286,20 @@
                                                                                                                 class="org-chart-vert-connector-bottom">
                                                                                                             </div>
                                                                                                             <div *ngIf="!collapsedNodes.includes(dr7)"
-                                                                                                                (click)="collapseNode(dr7, true)">
+                                                                                                                (click)="collapseNode(dr7, true)"
+                                                                                                                nz-tooltip
+                                                                                                                nzTooltipTitle="Collapse Suborganization"
+                                                                                                                nzTooltipPlacement="right">
                                                                                                                 <i class="fal fa-minus-circle"
                                                                                                                     style="font-size:10px;"></i>
                                                                                                             </div>
                                                                                                             <div *ngIf="collapsedNodes.includes(dr7)"
-                                                                                                                (click)="collapseNode(dr7, false)" style="margin:0 8px;">
+                                                                                                                (click)="collapseNode(dr7, false)"
+                                                                                                                style="margin:0 8px;">
                                                                                                                 <i class="far fa-plus-circle"
+                                                                                                                    nz-tooltip
+                                                                                                                    nzTooltipTitle="Expand Suborganization"
+                                                                                                                    nzTooltipPlacement="right"
                                                                                                                     style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                                                                 <div
                                                                                                                     class="collapsed-block">

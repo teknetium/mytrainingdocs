@@ -697,10 +697,27 @@ export class UserService {
     this.updateUser(this.allOrgUserHash[uid], false);
     this.trainingStatusChangeBS$.next(uid);
   }
+  setUsersStatusPastDue(uids: string[]) {
+    this.setUsersStatusPastDue$(uids).subscribe(responseObj => {
+      console.log("setUsersStatusPastDue ", responseObj);
+    });
+    for (let uid of uids) {
+      this.allOrgUserHash[uid].trainingStatus = 'pastDue';
+    }
+  }
 
   setUserStatusUpToDate(uid: string) {
     this.allOrgUserHash[uid].trainingStatus = 'upToDate';
     this.updateUser(this.allOrgUserHash[uid], false);
+  }
+
+  setUsersStatusUpToDate(uids: string[]) {
+    this.setUsersStatusUpToDate$(uids).subscribe(responseObj => {
+      console.log("setUsersStatusUpToDate ", uids, responseObj);
+    });;
+    for (let uid of uids) {
+      this.allOrgUserHash[uid].trainingStatus = 'upToDate';
+    }
   }
 
   setUserStatusNone(uid: string) {
@@ -840,6 +857,28 @@ export class UserService {
     return this.http
       .post<UserModel[]>(`${ENV.BASE_API}user/bulknew/`, users, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+
+  }
+
+  setUsersStatusUpToDate$(uids: string[]): any {
+    return this.http
+      .put<string[]>(`${ENV.BASE_API}user/bulkuptodate/`, uids, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+    
+  }
+
+  setUsersStatusPastDue$(uids: string[]): any {
+    return this.http
+      .put<string[]>(`${ENV.BASE_API}user/bulkpastdue/`, uids, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
         catchError((error) => this._handleError(error))

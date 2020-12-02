@@ -552,16 +552,14 @@
             </div>
             <div *ngIf="production === 'true' || mode === 'Preview'"
                 style="text-align: center;padding:5px;background-color: #fefbe7;">
-                <button nz-button nzType="default" nzShape="circle" class="header-icon" (click)="loadPrevPage()"
+                <button nz-button nzType="primary" nzSize="small" nzShape="round" class="header-icon" (click)="loadPrevPage()"
                     [disabled]="isFirstPage(currentPage._id) || assessmentInProgress">
-                    <i nz-icon nzType="left" theme="outline" style="vertical-align: top;color:blue;">
-                    </i>
+                    Previous Page
                 </button>
-                <button nz-button nzType="default" nzShape="circle" class="header-icon" (click)="loadNextPage()"
+                <button nz-button nzType="primary" nzSize="small" nzShape="round" class="header-icon" (click)="loadNextPage()"
                     [disabled]="isLastPage(currentPage?._id) || assessmentInProgress || (currentPage?.type === 'assessment' &&
                     (assessmentStatus === 'notCompleted' || assessmentStatus === 'firstTime'))">
-                    <i nz-icon nzType="right" theme="outline" style="vertical-align: top;color:blue;">
-                    </i>
+                    Next Page
                 </button>
                 <!--
                 <button nz-button nzType="primary" nzSize="small"
@@ -576,7 +574,7 @@
                 </button>
                 -->
             </div>
-            <div style="padding:10px;text-align: center;background-color: #fefbe7;">
+            <div *ngIf="production !== 'true' && mode === 'Edit'" style="padding:10px;text-align: center;background-color: #fefbe7;">
                 <div *ngFor="let page of selectedTraining?.pages; index as pageIndex"
                     style="display:inline-block;padding:5px;"
                     [ngClass]="{'current-page': currentPageId === page?._id, 'page-icon-production':production === 'true', 'page-icon': production === 'false' && mode === 'Edit' }"

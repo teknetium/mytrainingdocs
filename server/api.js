@@ -939,6 +939,27 @@ module.exports = function(app, config) {
     });
   });
   
+  app.put("/api/user/bulkuptodate", jwtCheck, (req, res) => {
+    const userIds = req.body;
+
+    User.updateMany({ _id: { $in: userIds } }, { trainingStatus: "upToDate" }, (err, responseObj) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      res.send({ n: responseObj.n, nModified: responseObj.nModified });
+    })
+  });
+
+  app.put("/api/user/bulkpastdue", jwtCheck, (req, res) => {
+    const userIds = req.body;
+
+    User.updateMany({ _id: { $in: userIds } }, { trainingStatus: "pastDue" }, (err, responseObj) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      res.send({ n: responseObj.n, nModified: responseObj.nModified });
+    })
+  });
 
   //
   // ASSESSMENT methods

@@ -199,8 +199,8 @@ export class AuthService {
       .subscribe(
         () => {
           this.logout();
-//          this.renewToken();
-//          this.scheduleRenewal();
+          this.renewToken();
+          this.scheduleRenewal();
         }
       );
   }

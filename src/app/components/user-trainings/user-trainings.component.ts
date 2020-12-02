@@ -54,6 +54,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   authenticatedUser: UserModel;
   uidUTHash$: Observable<UidUTHash>;
   userTrainings$: Observable<UserTrainingModel[]>;
+  bulkUserStatusUpdate$: Observable<string[]>;
   userTrainingCompleted$: Observable<UserTrainingModel>;
   userTrainings: UserTrainingModel[];
   trainingIdHash$: Observable<TrainingIdHash>;
@@ -106,6 +107,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     this.selectedUser$ = this.userService.getSelectedUserStream();
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     this.selectedTraining$ = this.trainingService.getSelectedTrainingStream();
+    this.bulkUserStatusUpdate$ = this.userTrainingService.getBulkUserStatusUpdateStream();
   }
 
   ngOnInit() {
@@ -202,6 +204,36 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       } else {
         this.userTrainings = [];
       }
+    });
+
+    this.bulkUserStatusUpdate$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userIds => {
+      if (!userIds) {
+        return;
+      }
+      console.log("bulkUserStatusUpdate ", userIds);
+      let pastDueList: string[] = [];
+      let updateToDateList: string[] = [];
+      let userTrainings: UserTrainingModel[];
+      let pastDueFound = false;
+      for (let uid of userIds) {
+        userTrainings = this.uidUTHash[uid];
+        for (let userTraining of userTrainings) {
+          this.utIdHash[userTraining._id] = userTraining;
+          if (userTraining.status === 'pastDue') {
+            pastDueFound = true;
+          }
+        }
+        if (pastDueFound) {
+          pastDueList.push(uid);
+          pastDueFound = false;
+        } else {
+          updateToDateList.push(uid);
+        }
+      }
+
+      this.userService.setUsersStatusUpToDate(updateToDateList);
+
+      this.userService.setUsersStatusPastDue(pastDueList);
 
     });
 
