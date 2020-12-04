@@ -10,24 +10,6 @@
     border-radius: 50%;
 }
 
-.legend-item {
-    width: 100%;
-    padding: 5px;
-}
-
-.legend-item:hover {
-    background-color: #f1f1f1;
-}
-
-.legend-item2 {
-    width: 100%;
-    padding: 5px;
-}
-.legend-item2:hover {
-    background-color: #f1f1f1;
-}
-
-
 .my-team {
     width: 100%;
     height: 100%;
@@ -102,12 +84,6 @@
 }
 .all-training-list-entry:hover {
     background-color: #f1f1f1;
-}
-
-
-.legend {
-    font-size: 10px;
-    margin-bottom: 10px;    
 }
 
 .tab-titles {
@@ -411,15 +387,14 @@ ul.ant-card-actions {
 
 .legend {
     position:fixed;
-    bottom:0;
-    right:0;
-    width:fit-content;
-    opacity:.3;
+    left:10px;
+    bottom:50px;
+    width:250px;
     z-index: 10000;
-    color:#2d42e6;
-    background-color: #ecf2ff;
+    color: black;
+    background-color: white;
     padding:10px;
-    border:2px solid #2d42e6;
+    border:2px solid black;
     border-radius: 5px;
 }
 
@@ -455,4 +430,36 @@ ul.ant-card-actions {
 
 .selected-item {
     color: #eaab10 !important;
+}
+
+.legend-item {
+    cursor: default;
+    width:100%;
+    padding:3px;
+    border:1px solid white;
+}
+
+.legend-item:hover {
+    background-color: #f1f1f1;
+    border:1px solid #dddddd;
+}
+
+.legend-text {
+    font-size:12px;
+    margin-left: 15px;
+}
+
+.legend-icon {
+    color:black;
+    font-size:16px;
+    vertical-align: middle;
+}
+
+.legend-header {
+    font-size:14px;
+    text-align: center;
+    margin-top:10px;
+    font-weight:500;
+    border-bottom: 1px solid #dddddd;
+    margin-bottom:2px;
 }

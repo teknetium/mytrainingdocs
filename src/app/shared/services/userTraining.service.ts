@@ -175,6 +175,23 @@ export class UserTrainingService {
   }
 */
   resetUserTrainingStatus(tid, version) {
+    let utObj = <UserTrainingModel>{
+      _id: null,
+      tid: tid,
+      trainingVersion: version,
+      uid: null,
+      teamId: null,
+      status: 'upToDate',
+      dueDate: new Date().getTime() + 604800000,
+      dateCompleted: 0,
+      timeToDate: 0,
+      assessmentResponses: null,
+      certImage: null
+    }
+    this.resetStatusForMany$(utObj).subscribe(responseObj => {
+      console.log("resetStatusForMany", responseObj);
+    });
+    /*
     this.getUTForTraining$(tid).subscribe(utList => {
       for (let ut of utList) {
         // for onetime trainings, the expirationDate property holds the number of days after assignment that the training is due
@@ -188,6 +205,7 @@ export class UserTrainingService {
         }
       }
     })
+    */
   }
 
   /*
@@ -420,6 +438,17 @@ export class UserTrainingService {
 
   private get _authHeader(): string {
     return `Bearer ${this.auth.accessToken}`;
+  }
+
+  resetStatusForMany$(utObj: UserTrainingModel): Observable<any> {
+    return this.http
+      .put<UserTrainingModel>(`${ENV.BASE_API}usertraining/resetstatus/`, utObj, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+     
   }
 
   postUserTraining$(userTraining: UserTrainingModel): Observable<UserTrainingModel> {

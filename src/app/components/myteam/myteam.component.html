@@ -82,42 +82,165 @@
 <div>
 </div>
 <div *ngIf="authenticatedUser && myOrgUserObjs?.length > 1" style="height:100%;">
-    <div *ngIf="showOrgChart === 'true'" class="legend">
-        <div
-            style="font-size:16px;text-align: center;border-bottom:1px solid #2d42e6;margin-bottom:10px;padding-bottom:10px;">
-            Legend
-        </div>
+    <div *ngIf="showOrgChart === 'true'" class="legend" [@legendSlide]="showLegend ? 'open' : 'closed'">
         <div>
-            <div style="font-size:12px;text-align: center;">
-                User Type
+            <div class="legend-header">
+                SELECTION MODE
             </div>
-            <div style="display:block;font-size:16px;">
-                <i class="fas fa-user"></i>
-                <span style="font-size:10px;margin-left:15px;">Individual Contributor</span>
+            <div class="legend-item" nz-popover nzPopoverTitle="Individual Mode"
+                nzPopoverContent="Selects individual users" nzPopoverPlacement="right">
+                <i class="far fa-fw fa-user legend-icon"></i>
+                <span class="legend-text">Individual</span>
             </div>
-            <div style="display:block;font-size:16px;">
-                <i class="fas fa-user-tie"></i>
-                <span style="font-size:10px;margin-left:15px;">Supervisor</span>
+            <div class="legend-item" nz-popover nzPopoverTitle="Suborganization Mode"
+                nzPopoverContent="Selects entire suborganizations" nzPopoverPlacement="right">
+                <i class="far fa-fw fa-users legend-icon"></i>
+                <span class="legend-text">Suborganization</span>
             </div>
-            <div style="display:block;font-size:16px;">
-                <i class="fas fa-user-cowboy"></i>
-                <span style="font-size:10px;margin-left:15px;">Volunteer</span>
+            <div class="legend-item" nz-popover nzPopoverTitle="Job Title Mode"
+                nzPopoverContent="Selects users based on their job title" nzPopoverPlacement="right">
+                <i class="far fa-fw fa-briefcase legend-icon"></i>
+                <span class="legend-text">Job Title</span>
             </div>
-            <div style="display:block;font-size:16px;">
-                <i class="fas fa-user-hard-hat"></i>
-                <span style="font-size:10px;margin-left:15px;">Contractor</span>
+            <div class="legend-item" nz-popover nzPopoverTitle="User Type Mode"
+                nzPopoverContent="Selects users based on their user type" nzPopoverPlacement="right">
+                <i class="far fa-fw fa-user-cowboy legend-icon"></i>
+                <span class="legend-text">User Type</span>
             </div>
-            <div style="display:block;font-size:16px;">
-                <i class="fas fa-user-alien"></i>
-                <span style="font-size:10px;margin-left:15px;">Customer</span>
+            <div class="legend-item" nz-popover nzPopoverTitle="Training Mode"
+                nzPopoverContent="Selects users based on an assigned training" nzPopoverPlacement="right">
+                <i class="far fa-fw fa-graduation-cap legend-icon"></i>
+                <span class="legend-text">Training</span>
             </div>
+            <div class="legend-header">
+                USER TRAINING STATUS
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="No Trainings Assigned"
+                nzPopoverContent="Black user icon indicates no trainings have been assigned" nzPopoverPlacement="right">
+                <i class="fas fa-fw fa-user legend-icon"></i>
+                <span class="legend-text">No Trainings Assigned</span>
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Inprogress"
+                nzPopoverContent="Green user icon indicates that this user has no trainings that are past due"
+                nzPopoverPlacement="right">
+                <i class="fas fa-fw fa-user legend-icon" style="color:#46bd15;"></i>
+                <span class="legend-text">Trainings In Progress</span>
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Past Due"
+                nzPopoverContent="Red user icon indicates that at least one training is past due"
+                nzPopoverPlacement="right">
+                <i class="fas fa-fw fa-user legend-icon" style="color:red;"></i>
+                <span class="legend-text">&#62;= 1 Training Past Due</span>
+            </div>
+            <div class="legend-header">
+                USER TYPE
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Individual Contributor"
+                nzPopoverContent="This user is an indiviual contributor" nzPopoverPlacement="right">
+                <i class="fas fa-fw fa-user legend-icon"></i>
+                <span class="legend-text">Individual Contributor</span>
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Supervisor"
+                nzPopoverContent="This user is a supervisor who has individual contributors reporting to them"
+                nzPopoverPlacement="right">
+                <i class="fas fa-fw fa-user-tie legend-icon"></i>
+                <span class="legend-text">Supervisor</span>
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Volunteer" nzPopoverContent="This user is a volunteer"
+                nzPopoverPlacement="right">
+                <i class="fas fa-fw fa-user-cowboy legend-icon"></i>
+                <span class="legend-text">Volunteer</span>
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Contractor"
+                nzPopoverContent="This user is employed as a contractor" nzPopoverPlacement="right">
+                <i class="fas fa-fw fa-user-hard-hat legend-icon"></i>
+                <span class="legend-text">Contractor</span>
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Customer"
+                nzPopoverContent="This user is an external customer" nzPopoverPlacement="right">
+                <i class="fas fa-fw fa-user-alien legend-icon"></i>
+                <span class="legend-text">Customer</span>
+            </div>
+            <div class="legend-header">
+                TRAINING STATUS
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="In Progress"
+                nzPopoverContent="This training is in progress, not completed nor past due" nzPopoverPlacement="right">
+                <div style="display:inline-block;width:10px;height:10px;border-bottom:3px solid #46bd15;">
+                </div>
+                <span class="legend-text">In Progress</span>
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Past Due" nzPopoverContent="This training is past due"
+                nzPopoverPlacement="right">
+                <div style="display:inline-block;width:10px;height:10px;border-bottom:3px solid red;">
+                </div>
+                <span class="legend-text">Past Due</span>
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Completed"
+                nzPopoverContent="This training has been completed" nzPopoverPlacement="left">
+                <div style="display:inline-block;width:10px;height:10px;border-bottom:3px solid  #4891f7;">
+                </div>
+                <span class="legend-text">Completed</span>
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Pending Cert Approval"
+                nzPopoverContent="This training is a recurring training whose certificate is pending approval by the user's supervisor"
+                nzPopoverPlacement="right">
+                <div style="display:inline-block;width:10px;height:10px;border-bottom:3px solid #feb90b;">
+                </div>
+                <span class="legend-text"> Pending Cert Approval</span>
+            </div>
+            <div class="legend-header">
+                MISC
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Selected User"
+                nzPopoverContent="This style container indicates that this user is included in the selection group"
+                nzPopoverPlacement="rightBottom">
+                <div
+                    style="display:inline-block;width:15px;height:15px;font-size:16px;border:2px solid #eaab10;background: rgba(253, 239, 178, 1);vertical-align: middle;">
+                </div>
+                <span class="legend-text">Selected User</span>
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Hover User" [nzPopoverContent]="hoverTemplate"
+                nzPopoverPlacement="rightBottom">
+                <div
+                    style="display:inline-block;width:15px;height:15px;font-size:16px;border:2px solid #afbcf8;background: rgba(0,0,255,.2);vertical-align: middle;">
+                </div>
+                <span class="legend-text">Hover User</span>
+            </div>
+            <ng-template #hoverTemplate>
+                <div style="width:400px;height:fit-content;">
+                    This style container indicates that this user either:
+                    <div style="padding-left:30px;">
+                        <ul>
+                            <li>
+                                has mouse focus
+                            </li>
+                            <li>
+                                is in the suborganization of the user with mouse focus
+                            </li>
+                            <li>
+                                is in the reporting chain of the user with mouse focus
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </ng-template>
         </div>
+    </div>
+    <div style="position:fixed;bottom:5px;left:5px;">
+        <button *ngIf="!showLegend" nz-button nzSize="small" nzType="primary" (click)="showLegend = true">
+            Show Legend
+        </button>
+        <button *ngIf="showLegend" nz-button nzSize="small" nzType="primary" (click)="showLegend = false">
+            Hide Legend
+        </button>
     </div>
     <div style="position:relative;width:100%;height:100%;">
         <div
             style="position:relative;margin-left:-20px;margin-top:-20px;margin-right:-20px;background-color: #f1f1f1;border:1px solid #dddddd;padding:10px;">
             <div>
                 <div style="float:left;">
+                    <!--
                     <div style="float:left;">
                         <button nz-button nzShape="round" (click)="launchImporter()" nzType="primary"
                             style="margin-right:20px;">
@@ -128,8 +251,9 @@
                             CSV
                         </button>
                     </div>
-                    <div style="float:left;margin-left:20px;" joyrideStep="Step3-myTeam" stepPosition="right"
-                        title="User Search" text="Search for a user in your organization.">
+                    -->
+                    <div style="float:left;" joyrideStep="Step3-myTeam" stepPosition="right" title="User Search"
+                        text="Search for a user in your organization.">
                         <div style="display:inline-block;">
                             <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
                                 <input type="text" nzSize="small" nz-input placeholder="input search text"
@@ -161,70 +285,8 @@
                 text="If you have a large organization, you are going to love this feature.  Don't be shy...click around and see what there is to see.">
             </div>
         </div>
-        <!--
-            <i nz-icon nzType="question-circle" nzTheme="twotone"
-                style="cursor:pointer;position:absolute;top:80px;left:20;font-size:20px;color:#000000;"
-                (click)="startTour('orgChart')" nz-tooltip nzTooltipTitle="A little help"></i>
-                -->
-        <!--
-        <div *ngIf="(selectionMode === 'Individual' && userIdSelected) " class="member-detail-card"
-            style="display:block;width:100%;z-index: 11;margin-top:5px;margin-bottom:20px;margin-top:20px;border-radius: 5px;">
-            <div class="my-card-header">
-                <i [ngClass]="userTypeIconHash[selectedUser?.userType]" style="font-size:16px;"
-                    [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser?.trainingStatus]}" nz-tooltip
-                    [nzTooltipTitle]=""></i>&nbsp;
-                <span *ngIf="selectedUser"
-                    style="display:inline-block;font-size:16px;font-weight: 500;color:black;margin-bottom:10px;">{{selectedUser?.firstName}}
-                    {{selectedUser?.lastName}}&nbsp;&nbsp;
-                </span>
-                <span *ngIf="selectedUser"
-                    style="display:inline-block;font-size:16px;font-weight: 300;color:#444444;margin-bottom:10px;">({{selectedUser?.jobTitle}})</span>
-                <span *ngIf="!selectedUser"
-                    style="display:inline-block;font-size:16px;font-weight: 500;color:#444444;margin-bottom:10px;">No
-                    User Selected
-                </span>
-            </div>
-
-            <div joyrideStep="Step1-memberDetails" stepPosition="left" title="Member Details"
-                style="position: relative;display:block;padding:0 20px;background: rgba(253, 239, 178, 1);"
-                text="This is where the rubber hits the road!  Assign trainings, update profile information, set due dates, etc...">
-                <div
-                    style="width:100%;overflow:scroll;text-align: left;background-color: white;border: 1px solid #eaab10;">
-                    <app-user-trainings mode="admin" logSession="off"></app-user-trainings>
-                </div>
-            </div>
-            <div class="my-card-footer">
-                <div class="card-action" style="border-right:1px solid #eaab10;">
-                    <div (click)="showUserTrainingModal = true" class="my-action">
-                        <i nz-icon nzType="plus-circle" style="color:blue;"></i><br>
-                        <span style="color:blue;font-size:12px;">Assign a Training</span>
-                    </div>
-                </div>
-                <div class="card-action" style="border-right:1px solid #eaab10;">
-                    <div (click)="editUser()" class="my-action">
-                        <i nz-icon nzType="edit" style="color:blue;"></i><br>
-                        <span style="color:blue;font-size:12px;">Edit User Profile</span>
-                    </div>
-                </div>
-                <div class="card-action" style="border-right:1px solid #eaab10;">
-                    <div (click)="resendRegistrationMsg(selectedUser.email, authenticatedUser.email)" class="my-action">
-                        <i nz-icon nzType="redo" style="color:blue;"></i><br>
-                        <span style="color:blue;font-size:12px;">Resend Registration Email</span>
-                    </div>
-                </div>
-                <div class="card-action">
-                    <div nz-popconfirm nzPopconfirmTitle="Delete this user?" (nzOnConfirm)="confirmDelete(selectedUser)"
-                        class="my-action">
-                        <i nz-icon nzType="delete" style="color:red;"></i><br>
-                        <span style="color:red;font-size:12px;">Delete this User</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        -->
         <div *ngIf="showOrgChart === 'true'" style="position:relative;z-index:1;">
-            <div
-                style="display:block;width:100%;border-bottom:1px solid #dddddd;padding:10px 0;margin-bottom:10px;">
+            <div style="display:block;width:100%;border-bottom:1px solid #dddddd;padding:10px 0;margin-bottom:10px;">
                 <div style="float:left;margin-right:20px;">
                     <div style="width:fit-content;display:block;">
                         <span style="display:inline-block;font-size:14px;font-weight:500;">Selection
@@ -264,7 +326,8 @@
                     </nz-select>
                 </div>
                 <div *ngIf="selectionMode === 'Individual'" style="float:left;margin-right:20px;">
-                    <div style="padding-top:22px;display:inline-block;">
+                    <div style="display:inline-block;">
+                        <span style="display:block;font-size:14px;font-weight:500;">Selected User</span>
                         <div class="selected-node" style="padding:7px;display:inline-block;margin-right:10px;">
                             <i [ngClass]="userTypeIconHash[selectedUser?.userType]" style="font-size:16px;"
                                 [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser?.trainingStatus]}"
@@ -282,17 +345,25 @@
                                 User Selected
                             </span>
                         </div>
-                        <div *ngFor="let ut of uidUTHash[selectedUser?._id]" nz-tooltip nzTooltipPlacement="bottomLeft"
-                            [nzTooltipTitle]="allTrainingIdHash[ut.tid]?.title"
-                            style="display:inline-block;margin-left:10px;border-bottom: 3px solid white;margin:7px;padding-bottom:5px;"
-                            [ngStyle]="{'border-color': userTrainingStatusColorHash[ut.status]}">
-                            <i [ngClass]="allTrainingIdHash[ut.tid]?.iconClass"
-                                style="font-size:20px;text-align: center;vertical-align: middle;"
-                                [ngStyle]="{'color': allTrainingIdHash[ut.tid]?.iconColor}">
-                            </i>
+                    </div>
+                    <div *ngIf="uidUTHash[selectedUser?._id]?.length > 0"
+                        style="display:inline-block;margin-left:20px;">
+                        <span style="display:block;font-size:14px;font-weight:500;">Assigned Trainings</span>
+                        <div style="display:inline-block;">
+                            <div *ngFor="let ut of uidUTHash[selectedUser?._id]" nz-tooltip
+                                nzTooltipPlacement="bottomLeft" [nzTooltipTitle]="allTrainingIdHash[ut.tid]?.title"
+                                style="display:inline-block;margin-right:10px;border-bottom: 3px solid white;margin-top:10px;padding-bottom:4px;"
+                                [ngStyle]="{'border-color': userTrainingStatusColorHash[ut.status]}">
+                                <i [ngClass]="allTrainingIdHash[ut.tid]?.iconClass"
+                                    style="font-size:24px;text-align: center;vertical-align: middle;"
+                                    [ngStyle]="{'color': allTrainingIdHash[ut.tid]?.iconColor}">
+                                </i>
+                            </div>
                         </div>
-                        <div
-                            style="border:1px solid #dddddd;border-radius:32px;margin-left:20px;padding:4px;display:inline-block;">
+                    </div>
+                    <div style="display:inline-block;margin-left:20px;">
+                        <span style="display:block;font-size:14px;font-weight:500;">Actions</span>
+                        <div style="border:1px solid #dddddd;border-radius:32px;padding:4px;display:inline-block;">
                             <button nz-button nzShape="circle" nzType="default" [disabled]="!userIdSelected"
                                 style="display:inline-block;" (click)="showUserTrainingModal = true" nz-tooltip
                                 nzTooltipPlacement="bottomLeft" nzTooltipTitle="Assign Training to User">
@@ -515,7 +586,8 @@
                         -->
                     </div>
                 </div>
-                <div style="float:right;">
+                <div style="float:right;padding-top:22px;">
+                    <!--
                     <div style="margin:4px 10px;display:inline-block;">
                         <span style="display:block;font-size:14px;font-weight:500;">Organization Stats</span>
                         <div
@@ -543,40 +615,45 @@
                                 style="vertical-align: middle;">{{ nodeStatHash[authenticatedUser?._id]?.pastDueCnt}}</span>
                         </div>
                     </div>
-                    <button *ngIf="!includeFullName" nz-button nzShape="circle"
-                        (click)="includeFullName = !includeFullName" style="margin-right:3px;vertical-align: middle;"
-                        nz-tooltip nzTooltipPlacement="bottomRight" nzTooltipTitle="Show Individual Contributor's Name">
-                        <i class="fal fa-tag" style="font-size:18px;"></i>
-                    </button>
-                    <button *ngIf="includeFullName" nz-button nzShape="circle"
-                        (click)="includeFullName = !includeFullName" style="margin-right:3px;vertical-align: middle;"
-                        nz-tooltip nzTooltipPlacement="bottomRight"
-                        nzTooltipTitle="Hide Individual Contributor's Names">
-                        <span class="fa-stack fa-2x" style="font-size:10px;">
-                            <i class="far fa-tag fa-stack-1x"></i>
-                            <i class="fal fa-ban fa-stack-2x"></i>
-                        </span>
-                    </button>
-                    <button nz-button nzShape="circle" (click)="collapseAllSubOrgs(false)"
-                        style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
-                        nzTooltipTitle="Expand All Suborganizations">
-                        <i class="fal fa-chevron-circle-down" style="font-size:18px;"></i>
+                    -->
+                    <div
+                        style="border:1px solid #dddddd;border-radius: 25px;padding: 3px;width: fit-content;display: inline-block;">
+                        <button *ngIf="!includeFullName" nz-button nzShape="circle"
+                            (click)="includeFullName = !includeFullName"
+                            style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
+                            nzTooltipTitle="Show Individual Contributor's Name">
+                            <i class="fal fa-tag" style="font-size:18px;"></i>
+                        </button>
+                        <button *ngIf="includeFullName" nz-button nzShape="circle"
+                            (click)="includeFullName = !includeFullName"
+                            style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
+                            nzTooltipTitle="Hide Individual Contributor's Names">
+                            <span class="fa-stack fa-2x" style="font-size:10px;">
+                                <i class="far fa-tag fa-stack-1x"></i>
+                                <i class="fal fa-ban fa-stack-2x"></i>
+                            </span>
+                        </button>
+                        <button nz-button nzShape="circle" (click)="collapseAllSubOrgs(false)"
+                            style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
+                            nzTooltipTitle="Expand All Suborganizations">
+                            <i class="fal fa-chevron-circle-down" style="font-size:18px;"></i>
 
-                    </button>
-                    <button nz-button nzShape="circle" (click)="collapseAllSubOrgs(true)"
-                        style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
-                        nzTooltipTitle="Collapse All Suborganizations">
-                        <i class="fal fa-chevron-circle-up" style="font-size:18px;"></i>
-                    </button>
-                    <button nz-button nzShape="circle" (click)="zoomIn()"
-                        style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
-                        nzTooltipTitle="Zoom In">
-                        <i class="fal fa-search-plus" style="font-size:18px;"></i>
-                    </button>
-                    <button nz-button nzShape="circle" (click)="zoomOut()" style="vertical-align: middle;" nz-tooltip
-                        nzTooltipPlacement="bottomRight" nzTooltipTitle="Zoom Out">
-                        <i class="fal fa-search-minus" style="font-size:18px;"></i>
-                    </button>
+                        </button>
+                        <button nz-button nzShape="circle" (click)="collapseAllSubOrgs(true)"
+                            style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
+                            nzTooltipTitle="Collapse All Suborganizations">
+                            <i class="fal fa-chevron-circle-up" style="font-size:18px;"></i>
+                        </button>
+                        <button nz-button nzShape="circle" (click)="zoomIn()"
+                            style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
+                            nzTooltipTitle="Zoom In">
+                            <i class="fal fa-search-plus" style="font-size:18px;"></i>
+                        </button>
+                        <button nz-button nzShape="circle" (click)="zoomOut()" style="vertical-align: middle;"
+                            nz-tooltip nzTooltipPlacement="bottomRight" nzTooltipTitle="Zoom Out">
+                            <i class="fal fa-search-minus" style="font-size:18px;"></i>
+                        </button>
+                    </div>
                     <!--
                     <nz-dropdown-menu #actionMenu="nzDropdownMenu">
                         <ul nz-menu>
@@ -731,8 +808,8 @@
             </div>
             <div style="text-align: center;width:100%;overflow: scroll;position:relative;">
                 <div style="background-color:white;display:inline-block;white-space: nowrap;">
-                    <div style="text-align: center;margin-bottom:20px;">
-                        <div style="display:inline-block;padding:5px;position:relative;border:2px solid white;cursor:pointer;"
+                    <div class="supervisor-node org-chart-node" style="text-align: center;margin-bottom:20px;">
+                        <div style="display:inline-block;padding:5px 5px 0 5px;position:relative;border:2px solid white;cursor:pointer;"
                             (mouseenter)="setHoverData(authenticatedUser._id)" (mouseleave)="setHoverData(null)"
                             (click)="selectUser(authenticatedUser._id)"
                             [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === authenticatedUser._id) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(authenticatedUser._id)), 'hover-node': authenticatedUser._id === currentHoverUid  || currentHoverReportChain.includes(authenticatedUser._id)}">
@@ -742,12 +819,180 @@
                             <span style="display: block;" [ngStyle]="{'font-size.px': textFontSize}">
                                 {{authenticatedUser.firstName}}<br>{{authenticatedUser.lastName}}
                             </span>
-                            <div *ngIf="authenticatedUser.directReports.length > 0"
-                                class="org-chart-vert-connector-bottom">
+                        </div>
+                        <div *ngIf="!collapsedNodes.includes(authenticatedUser._id)"
+                            class="org-chart-vert-connector-bottom">
+                        </div>
+                        <div *ngIf="!collapsedNodes.includes(authenticatedUser._id) && myOrgUserHash[authenticatedUser._id]?.userType === 'supervisor'"
+                            (click)="collapseNode(authenticatedUser._id, true)" nz-tooltip
+                            nzTooltipTitle="Collapse Suborganization" nzTooltipPlacement="right">
+                            <i class="fal fa-minus-circle" style="font-size:12px;"></i>
+                        </div>
+                        <div *ngIf="collapsedNodes.includes(authenticatedUser._id) && myOrgUserHash[authenticatedUser._id]?.userType === 'supervisor'"
+                            (click)="collapseNode(authenticatedUser._id, false)" style="margin:0 8px;">
+                            <i class="far fa-plus-circle" nz-tooltip nzTooltipTitle="Expand Suborganization"
+                                nzTooltipPlacement="right" style="margin-top:4px;font-size:16px;color:red;"></i>
+                            <div class="collapsed-block">
+                                <div nz-tooltip nzTooltipTitle="Total Users" nzTooltipPlacement="right"
+                                    style="display:flex;justify-content:space-between;">
+                                    <i class="fas fa-users" style="font-size:18px;"></i>
+                                    <div style="vertical-align: top;margin-left:20px;">
+                                        {{nodeStatHash[authenticatedUser._id]?.userCnt}}
+                                    </div>
+                                </div>
+                                <div *ngIf="selectionMode === 'Org' || selectionMode === 'Individual'"
+                                    style="padding:5px;">
+                                    <div nz-tooltip nzTooltipTitle="Selected Users" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                        <div class="selected-node"
+                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                            <i class="fas fa-user" style="font-size:16px;"></i>
+                                        </div>
+                                        <div style="display:inline-block;padding-top:10px;">
+                                            {{nodeStatHash[authenticatedUser._id]?.selectedCnt}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Users With No Trainings" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;">
+                                        <i class="fas fa-user" style="color:black;font-size:16px;padding-top:2px;"></i>
+                                        {{nodeStatHash[authenticatedUser._id]?.noneCnt}}
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Up To Date Users" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;">
+                                        <i class="fas fa-user"
+                                            style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
+                                        {{nodeStatHash[authenticatedUser._id]?.upToDateCnt}}
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Users With At Least One Training Past Due"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;">
+                                        <i class="fas fa-user" style="color:red;font-size:16px;padding-top:2px;"></i>
+                                        {{nodeStatHash[authenticatedUser._id]?.pastDueCnt}}
+                                    </div>
+                                </div>
+                                <div *ngIf="selectionMode === 'Training'" style="padding:5px;">
+                                    <div nz-tooltip nzTooltipTitle="Selected Users" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                        <div class="selected-node"
+                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                            <i class="fas fa-user" style="font-size:16px;"></i>
+                                        </div>
+                                        <div style="display:inline-block;padding-top:10px;">
+                                            {{nodeStatHash[authenticatedUser._id]?.selectedCnt}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="In Progress" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;">
+                                        <i class="fas fa-user"
+                                            style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
+                                        {{nodeStatHash[authenticatedUser._id]?.trainingHash.upToDate}}
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Past Due" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;">
+                                        <i class="fas fa-user" style="color:red;font-size:16px;padding-top:2px;"></i>
+                                        {{nodeStatHash[authenticatedUser._id]?.trainingHash.pastDue}}
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Completed" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;">
+                                        <i class="fas fa-user"
+                                            style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
+                                        {{nodeStatHash[authenticatedUser._id]?.trainingHash.completed}}
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Pending Certification Approval"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;">
+                                        <i class="fas fa-user"
+                                            style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                        {{nodeStatHash[authenticatedUser._id]?.trainingHash.pendingCertUpload}}
+                                    </div>
+                                </div>
+                                <div *ngIf="selectionMode === 'JobTitle'" style="padding:3px;">
+                                    <div nz-tooltip nzTooltipTitle="Selected Users" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                        <div class="selected-node"
+                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                            <i class="fas fa-user" style="font-size:16px;"></i>
+                                        </div>
+                                        <div style="display:inline-block;padding-top:10px;">
+                                            {{nodeStatHash[authenticatedUser._id]?.selectedCnt}}
+                                        </div>
+                                    </div>
+                                    <div *ngFor="let jobTitle of jobTitles"
+                                        [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
+                                        style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                        {{jobTitle}}
+                                        <div style="margin-left:20px;">
+                                            {{ nodeStatHash[authenticatedUser._id]?.jobTitleHash[jobTitle] }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="selectionMode === 'UserType'" style="padding:5px;">
+                                    <div nz-tooltip nzTooltipTitle="Selected Users" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                                        <div class="selected-node"
+                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;">
+                                            <i [ngClass]="userTypeIconHash['none']" style="font-size:16px;"></i>
+                                        </div>
+                                        <div style="display:inline-block;padding-top:10px;">
+                                            {{nodeStatHash[authenticatedUser._id]?.selectedCnt}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Individual Contributors"
+                                        [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
+                                        nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user"
+                                            [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
+                                            style="color:black;font-size:16px;padding-top:2px;"></i>
+
+                                        <div style="justify-content: right;">
+                                            {{nodeStatHash[authenticatedUser._id]?.userTypeHash.individualContributor}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Supervisors" nzTooltipPlacement="right"
+                                        [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
+                                        style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user-tie"
+                                            [ngClass]="{'selected-item': currentUserType === 'supervisor'}"
+                                            style="color:black;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;">
+                                            {{nodeStatHash[authenticatedUser._id]?.userTypeHash.supervisor}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Volunteers" nzTooltipPlacement="right"
+                                        [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
+                                        style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user-cowboy"
+                                            [ngClass]="{'selected-item': currentUserType === 'volunteer'}"
+                                            style="color:black;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;">
+                                            {{nodeStatHash[authenticatedUser._id]?.userTypeHash.volunteer}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Contractors" nzTooltipPlacement="right"
+                                        [ngClass]="{'selected-item': currentUserType === 'contractor'}"
+                                        style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user-hard-hat"
+                                            [ngClass]="{'selected-item': currentUserType === 'contractor'}"
+                                            style="color:black;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;">
+                                            {{nodeStatHash[authenticatedUser._id]?.userTypeHash.contractor}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Customers" nzTooltipPlacement="right"
+                                        [ngClass]="{'selected-item': currentUserType === 'customer'}"
+                                        style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user-alien"
+                                            [ngClass]="{'selected-item': currentUserType === 'customer'}"
+                                            style="color:black;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;">
+                                            {{nodeStatHash[authenticatedUser._id]?.userTypeHash.customer}}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div style="background-color:white;display:block;">
+                    <div *ngIf="!collapsedNodes.includes(authenticatedUser._id)"
+                        style="background-color:white;display:block;">
                         <div *ngFor="let dr of authenticatedUser.directReports; let drIndex = index"
                             style="vertical-align: top;position:relative;display:inline-block;">
                             <div style="position:relative;">

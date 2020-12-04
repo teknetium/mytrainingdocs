@@ -183,97 +183,6 @@
         Log In
       </div>
     </div>
-    <!--
-  <nz-modal [(nzVisible)]="showTaskVideoModal" nzWidth="700" nzTitle="Task Video" nzCancelDisabled="true"
-    (nzOnOk)="closeTaskVideoModal()" style="background-color: #000000;">
-    <div style="text-align: center;margin-top:5px;background-color: #000000;">
-      <vg-player (onPlayerReady)="onPlayerReady($event)">
-
-        <vg-controls>
-          <vg-play-pause></vg-play-pause>
-          <vg-playback-button></vg-playback-button>
-
-          <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-
-          <vg-scrub-bar>
-            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-            <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-          </vg-scrub-bar>
-
-          <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
-          <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-
-          <vg-track-selector></vg-track-selector>
-          <vg-mute></vg-mute>
-          <vg-volume></vg-volume>
-
-          <vg-fullscreen></vg-fullscreen>
-        </vg-controls>
-
-        <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
-          <source [src]="(taskVideo$ | async)" type="video/mp4">
-        </video>
-      </vg-player>
-    </div>
-  </nz-modal>
--->
-    <!-- START HOME -->
-    <!--
-    <section class="section" style="height:fit-content;position: relative;">
-  </div>
-</div>
-</div>
--->
-    <!--
-      <div class="home-table">
-        <div class="home-table-center">
-          <div class="container">
-            <div class="row justify-content-center">
-              <div class="col-lg-12">
-                <div class="text-center mx-auto" style="margin-bottom: 50px;">
-                  < !--
-                <div
-                  style="display:inline-block;width:fit-content;margin-bottom:60px;background: rgba(255,255,255,.1);padding:10px;border-radius: 60px;">
-                  <img width="100" src="../../../assets/images/rocket.png">
-                  <span style="font-size:22px;color:orange;">&nbsp;&nbsp;BETA Release Coming Soon!</span>
-                </div>
-                -- >
-                  <div style="font-size:46px;font-weight: 200;color:white;">
-                    Training people is HARD.
-                  </div>
-                  <div style="margin-top:40px;font-size:36px;font-weight: 300;color:white;">
-                    We can help!
-                  </div>
-                </div>
-              </div>
-              <div
-                style="display:inline-block;margin-top:80px;background: rgba(255,255,255,.2);padding:20px;border-radius: 50%;position:relative;">
-                <i class="fas fa-play opaque"
-                  style="position:absolute;left:45%;top:40%;cursor:pointer;text-align:center;font-size:46px;color:red;"
-                  (click)="loadVideo('explainer')"></i>
-                <img width="300" src="../../../assets/images/howitworks.png">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-        -->
-
-    <!-- END HOME -->
-    <!--
-  <section class="section" id="beta">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="text-center">
-          <div style="display:block;width:100%">
-            <img width="100%" src="../../../assets/images/launch.png">
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  -->
     <section class="section" id="features">
       <div class="container">
         <div class="row">
@@ -288,18 +197,19 @@
         <div class="row">
           <div class="col-lg-6" style="padding:60px 50px 60px 10px;">
             <div class="text-center">
-              <h2>Onboarding Your Team/Organization</h2>
+              <h2>Status Tracking that SCALES!</h2>
               <p>
-                With just a couple of clicks, your entire organization is onboarded.  Every person receives an email which contains a link to complete their registration.
-              </p>
+                Whether your organization has 50 employees or 50,000 employees, our unique org-chart gives you training metrics and more at a glance.
             </div>
           </div>
           <div class="col-lg-6" style="height:fit-content;">
             <div class="text-center" style="position:relative;">
+              <!--
               <i class="fas fa-play opaque"
                 style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
                 (click)="loadVideo('onboarding')"></i>
-              <img width="400" src="../../../assets/images/onboarding.png">
+                -->
+              <img width="600" src="../../../assets/images/orgchart.png">
             </div>
           </div>
         </div>

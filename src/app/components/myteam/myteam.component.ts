@@ -31,10 +31,10 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   styleUrls: ['./myteam.component.css'],
   // changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger('userDetailSlide', [
+    trigger('legendSlide', [
       // ...
       state('closed', style({
-        'margin-left': '-110%'
+        'margin-left': '-300px'
       })),
       state('open', style({
         'margin-left': '0',
@@ -1162,6 +1162,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   showCSV = false;
   manageCurrentTrainingsModal = false;
   trainingStatusChange$: Observable<string>;
+  showLegend = true;
 
   constructor(
     private cd: ChangeDetectorRef,
