@@ -195,6 +195,7 @@ export class UserService {
                 settings: {
                   statusList: [],
                   showCSV: false,
+                  showLegend: true,
                   themeColor: {
                     name: 'orange ',
                     bgColor: 'orange',
@@ -542,6 +543,7 @@ export class UserService {
       this.newTeamMember.settings = {
         statusList: cloneDeep(statusList),
         showCSV: true,
+        showLegend: true,
         themeColor: {
           name: 'orange ',
           bgColor: 'orange',

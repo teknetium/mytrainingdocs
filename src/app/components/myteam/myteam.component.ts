@@ -184,7 +184,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     settings: {
       statusList: [],
       showCSV: false,
-      themeColor: {}
+      themeColor: {},
+      showLegend: true
     },
     jobTitle: ''
   }
@@ -1162,7 +1163,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   showCSV = false;
   manageCurrentTrainingsModal = false;
   trainingStatusChange$: Observable<string>;
-  showLegend = true;
+  showLegend;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1448,6 +1449,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.figureOrgStat(user._id);
 
       this.authenticatedUser = user;
+      this.showLegend = this.authenticatedUser.settings.showLegend;
+
       this.myOrgUserHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
       this.orgEmails.push(this.authenticatedUser.email);
       this.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
@@ -2130,7 +2133,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         primary: 'white',
         secondary: '#999999',
         bgColor: '#e9e9e9',
-      }
+      },
+      showLegend: true
     };
     this.supervisorName = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
     this.selectedUser = this.newTeamMember;

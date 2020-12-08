@@ -1,4 +1,5 @@
 <div *ngIf="authenticatedUser$ | async as user" style="display:block;margin-bottom:40px;">
+    <!--
     <div *ngIf="user.appAdmin" class="settings-item">
         <div class="settings-item-left">
             <i nz-icon nzType="file-text" [nzTheme]="'twotone'" style="font-size:24px;vertical-align: middle;"></i>
@@ -10,21 +11,21 @@
         </div>
         <div style="clear: both;"></div>
     </div>
-    <!--
-    <div class="settings-item">
-        <div class="settings-item-left">
-            <i nz-icon nzType="info-circle" [nzTheme]="'twotone'" style="font-size:24px;vertical-align: middle;"></i>
-            <span style="vertical-align: middle;margin-left:10px;font-size: 16px;">Show Page Info</span>
-        </div>
-        <div class="settings-item-right">
-            <nz-switch [(ngModel)]="user.settings.showPageInfo"
-                (ngModelChange)="updateUserSettings($event, 'showPageInfo', $event)"></nz-switch>
-        </div>
-        <div style="clear: both;"></div>
-    </div>
     -->
     <div class="settings-item">
         <div class="settings-item-left">
+            <i class="fad fa-fw fa-list" style="color:blue;font-size:24px;vertical-align: middle;"></i>
+            <span style="vertical-align: middle;margin-left:10px;font-size: 16px;">Show Legend</span>
+        </div>
+        <div class="settings-item-right">
+            <nz-switch [(ngModel)]="user.settings.showLegend"
+                (ngModelChange)="updateUserSettings($event, 'showLegend', $event)"></nz-switch>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    <div class="settings-item">
+        <div class="settings-item-left">
+            <i class="fad fa-fw fa-brush" style="color:blue;font-size:24px;vertical-align: middle;"></i>
             <span style="vertical-align: middle;margin-left:10px;font-size: 16px;">Banner Theme</span>
         </div>
         <div class="settings-item-right">

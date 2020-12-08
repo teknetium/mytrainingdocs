@@ -1,25 +1,30 @@
 <div *ngIf="userListDisplay?.length === 1">
     <nz-steps [nzCurrent]="currentStep">
-        <nz-step nzTitle="Prepare Data"></nz-step>
+        <nz-step nzTitle="Data Requirements"></nz-step>
         <nz-step nzTitle="Upload Data"></nz-step>
         <nz-step nzTitle="Correct Errors"></nz-step>
     </nz-steps>
     <div *ngIf="currentStep === 0" class="steps-content">
+        <div style="text-align: center;">
+        <h2>Data Requirements for Onboarding your Team/Organization</h2>
+        </div>
         <div style="display:inline-block;font-size:16px;font-weight: 200;">
             <p>
                 You will need the following data for each user:
             </p>
             <div style="padding-left:40px;">
                 <ul style="list-style-type:none;">
-                    <li>First Name<span style="color:red;">*</span></li>
-                    <li>Last Name<span style="color:red;">*</span></li>
-                    <li>Email Address<span style="color:red;">*</span></li>
-                    <li>Supervisor's Email Address<span style="color:red;">*</span></li>
+                    <li>First Name</li>
+                    <li>Last Name</li>
+                    <li>Email Address</li>
                     <li>User Type (one of 'individualContributor', 'supervisor',
                         'volunteer',
                         'contractor', 'customer')</li>
                     <li>Job Title</li>
+                    <li>Supervisor's Name</li>
                 </ul>
+
+            <p></p>
             </div>
             <p>
                 You may provide this information in one of two ways:<br>
@@ -32,7 +37,7 @@
                         This file will be uploaded into the system. The following is an example of the required
                         formatting.<br>
                         <span
-                            style="font-weight: 500;margin-left:20px;">Frank,Smith,volunteer,volunteer,frank@company.com,lifeguard,Stuart
+                            style="font-weight: 500;margin-left:20px;">Frank,Smith,frank@company.com,volunteer,Chief Bottle Washer,Stuart
                             Smally</span>
                     </li>
                     <li style="font-size: 16px;">Enter the information on the fly in the onboarding dialog.
@@ -84,6 +89,9 @@
 <div *ngIf="authenticatedUser && myOrgUserObjs?.length > 1" style="height:100%;">
     <div *ngIf="showOrgChart === 'true'" class="legend" [@legendSlide]="showLegend ? 'open' : 'closed'">
         <div>
+            <div style="font-size:18px;text-align: center;margin-bottom:20px;font-weight: 500;">
+                Legend
+            </div>
             <div class="legend-header">
                 SELECTION MODE
             </div>
@@ -176,7 +184,7 @@
                 </div>
                 <span class="legend-text">Past Due</span>
             </div>
-            <div class="legend-item" nz-popover nzPopoverTitle="Completed"
+            <div class="legend-item" nz-popover nzPopoverTitle="Completed" nz-popover
                 nzPopoverContent="This training has been completed" nzPopoverPlacement="left">
                 <div style="display:inline-block;width:10px;height:10px;border-bottom:3px solid  #4891f7;">
                 </div>
@@ -363,7 +371,7 @@
                     </div>
                     <div style="display:inline-block;margin-left:20px;">
                         <span style="display:block;font-size:14px;font-weight:500;">Actions</span>
-                        <div style="border:1px solid #dddddd;border-radius:32px;padding:4px;display:inline-block;">
+                        <div style="border:1px solid #dddddd;border-radius:32px;padding:3px;display:inline-block;">
                             <button nz-button nzShape="circle" nzType="default" [disabled]="!userIdSelected"
                                 style="display:inline-block;" (click)="showUserTrainingModal = true" nz-tooltip
                                 nzTooltipPlacement="bottomLeft" nzTooltipTitle="Assign Training to User">
@@ -490,6 +498,7 @@
                     </nz-radio-group>
                 </div>
 
+                <!--
                 <div *ngIf="selectionMode === 'Org' || selectionMode === 'IndividualContributor'"
                     style="float:left;margin-right:20px;">
                     <div style="margin:0 10px;display:inline-block;">
@@ -520,6 +529,7 @@
                         </div>
                     </div>
                 </div>
+                -->
 
 
                 <div *ngIf="selectionMode === 'Errors'" style="float:left;margin-right:20px;">
@@ -565,7 +575,7 @@
                         {{userIdsSelected.length}}
                     </div>
                     <div *ngIf="selectionMode !== 'Individual' && selectionMode !== 'Errors'"
-                        style="border:1px solid #dddddd;border-radius:32px;margin-left:20px;padding:4px;display:inline-block;">
+                        style="border:1px solid #dddddd;border-radius:32px;margin-left:20px;padding:3px;display:inline-block;">
                         <button *ngIf="selectionMode !== 'Individual' && selectionMode !== 'Errors'" nz-button
                             nzShape="circle" nzType="default" [disabled]="userIdsSelected.length === 0"
                             style="display:inline-block;" (click)="showUserTrainingModal = true" nz-tooltip
@@ -577,45 +587,9 @@
                             (nzOnConfirm)="confirmUserTrainingDelete()" nz-tooltip nzTooltipPlacement="bottomLeft"
                             nzTooltipTitle="Remove Training from Users">
                             <i class="fas fa-arrow-alt-from-right"></i></button>
-                        <!--
-                    <button *ngIf="selectionMode !== 'Individual' && selectionMode !== 'Errors'" nz-button
-                        nzShape="circle" nzType="default" style="display:inline-block;margin-left:10px;"
-                        (click)="emailSelectedUsers()" nz-tooltip nzTooltipTitle="Send Email to Selected Users"
-                        [disabled]="userIdsSelected.length === 0">
-                        <i class="fas fa-envelope"></i></button>
-                        -->
                     </div>
                 </div>
                 <div style="float:right;padding-top:22px;">
-                    <!--
-                    <div style="margin:4px 10px;display:inline-block;">
-                        <span style="display:block;font-size:14px;font-weight:500;">Organization Stats</span>
-                        <div
-                            style="padding:8px;display:block;border: 1px solid #dddddd;border-radius: 4px;background-color: #f7f7f7;">
-                            <i class="fas fa-users" nz-tooltip nzTooltipPlacement="bottomLeft"
-                                nzTooltipTitle="Total Users not including YOU"
-                                style="display:inline-block;font-size:18px;margin-right:3px;vertical-align: middle;"></i>
-                            <span style="vertical-align: middle;margin-right:10px;">
-                                {{userListDisplay.length - 1}}
-                            </span>
-                            <i class="fas fa-user"
-                                style="font-size:16px;color:black;vertical-align: middle;margin-right:3px;" nz-tooltip
-                                nzTooltipPlacement="bottomLeft" nzTooltipTitle="No Trainings Assigned"></i>
-                            <span
-                                style="margin-right:10px;vertical-align: middle;">{{ nodeStatHash[authenticatedUser?._id]?.noneCnt}}</span>
-                            <i class="fas fa-user"
-                                style="font-size:16px;color:#46bd15;margin-right:3px;vertical-align: middle;" nz-tooltip
-                                nzTooltipPlacement="bottomLeft" nzTooltipTitle="Up To Date"></i>
-                            <span
-                                style="margin-right:10px;vertical-align: middle;">{{ nodeStatHash[authenticatedUser?._id]?.upToDateCnt}}</span>
-                            <i class="fas fa-user"
-                                style="font-size:16px;color:red;margin-right:3px;vertical-align: middle;" nz-tooltip
-                                nzTooltipPlacement="bottomLeft" nzTooltipTitle="Past Due"></i>
-                            <span
-                                style="vertical-align: middle;">{{ nodeStatHash[authenticatedUser?._id]?.pastDueCnt}}</span>
-                        </div>
-                    </div>
-                    -->
                     <div
                         style="border:1px solid #dddddd;border-radius: 25px;padding: 3px;width: fit-content;display: inline-block;">
                         <button *ngIf="!includeFullName" nz-button nzShape="circle"
@@ -627,7 +601,7 @@
                         <button *ngIf="includeFullName" nz-button nzShape="circle"
                             (click)="includeFullName = !includeFullName"
                             style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
-                            nzTooltipTitle="Hide Individual Contributor's Names">
+                            nzTooltipTitle="Hide Individual Contributor's Name">
                             <span class="fa-stack fa-2x" style="font-size:10px;">
                                 <i class="far fa-tag fa-stack-1x"></i>
                                 <i class="fal fa-ban fa-stack-2x"></i>
@@ -684,6 +658,45 @@
                         </ul>
                     </nz-dropdown-menu>
                     -->
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+            <div
+                style="display:block;background:rgba(0,0,255,.05);padding:10px;border:2px solid #afbcf8;width:100%;margin-bottom:10px;border-radius: 5px;">
+                <div style="float:left;width:38%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;padding:5px;">
+                    <div *ngIf="currentHoverUser" style="width:100%;">
+                        <div style="float:left;overflow-x: hidden;">
+                            <i [ngClass]="userTypeIconHash[currentHoverUser?.userType]"
+                                style="font-size:16px;vertical-align: middle;"
+                                [ngStyle]="{'color': userTrainingStatusColorHash[currentHoverUser?.trainingStatus]}" nz-tooltip
+                                [nzTooltipTitle]=""></i>&nbsp;
+                            <span
+                                style="display:inline-block;font-size:16px;font-weight: 500;color:black;vertical-align: middle;">{{currentHoverUser?.firstName}}
+                                {{currentHoverUser?.lastName}}&nbsp;&nbsp;
+                            </span>
+                            <span
+                                style="display:inline-block;font-size:16px;font-weight: 300;color:#444444;vertical-align: middle;margin-right:20px;">({{currentHoverUser?.jobTitle}})
+                            </span>
+                        </div>
+                        <div *ngIf="currentHoverUser?.userType === 'supervisor'" style="float:right;">
+                            <i class="fas fa-user" style="font-size:16px;color:black;vertical-align: middle;margin-right:3px;"
+                                nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="No Trainings Assigned"></i>
+                            <span
+                                style="margin-right:10px;vertical-align: middle;">{{ nodeStatHash[currentHoverUid]?.noneCnt}}</span>
+                            <i class="fas fa-user" style="font-size:16px;color:#46bd15;margin-right:3px;vertical-align: middle;"
+                                nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Up To Date"></i>
+                            <span
+                                style="margin-right:10px;vertical-align: middle;">{{ nodeStatHash[currentHoverUid]?.upToDateCnt}}</span>
+                            <i class="fas fa-user" style="font-size:16px;color:red;margin-right:3px;vertical-align: middle;"
+                                nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Past Due"></i>
+                            <span style="vertical-align: middle;">{{ nodeStatHash[currentHoverUid]?.pastDueCnt}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="float:right;width:60%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;">
+                    <app-user-trainings mode="admin" logSession="off" [uid]="currentHoverUid"
+                        style="width:100%;height:35px;float:left;" compact="yes">
+                    </app-user-trainings>
                 </div>
                 <div style="clear: both;"></div>
             </div>
@@ -763,53 +776,10 @@
         </div>
         <div *ngIf="showOrgChart === 'true'" style="display:block;height:75%;overflow:scroll;">
 
-            <div
-                style="display:block;background:rgba(0,0,255,.2);padding:10px;border:2px solid #afbcf8;width:100%;margin-bottom:10px;border-radius: 5px;">
-                <div
-                    style="float:left;width:38%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;padding:5px;">
-                    <div *ngIf="currentHoverUser" style="width:100%;">
-                        <div style="float:left;overflow-x: hidden;">
-                            <i [ngClass]="userTypeIconHash[currentHoverUser?.userType]"
-                                style="font-size:16px;vertical-align: middle;"
-                                [ngStyle]="{'color': userTrainingStatusColorHash[currentHoverUser?.trainingStatus]}"
-                                nz-tooltip [nzTooltipTitle]=""></i>&nbsp;
-                            <span
-                                style="display:inline-block;font-size:16px;font-weight: 500;color:black;vertical-align: middle;">{{currentHoverUser?.firstName}}
-                                {{currentHoverUser?.lastName}}&nbsp;&nbsp;
-                            </span>
-                            <span
-                                style="display:inline-block;font-size:16px;font-weight: 300;color:#444444;vertical-align: middle;margin-right:20px;">({{currentHoverUser?.jobTitle}})
-                            </span>
-                        </div>
-                        <div *ngIf="currentHoverUser?.userType === 'supervisor'" style="float:right;">
-                            <i class="fas fa-user"
-                                style="font-size:16px;color:black;vertical-align: middle;margin-right:3px;" nz-tooltip
-                                nzTooltipPlacement="bottomLeft" nzTooltipTitle="No Trainings Assigned"></i>
-                            <span
-                                style="margin-right:10px;vertical-align: middle;">{{ nodeStatHash[currentHoverUid]?.noneCnt}}</span>
-                            <i class="fas fa-user"
-                                style="font-size:16px;color:#46bd15;margin-right:3px;vertical-align: middle;" nz-tooltip
-                                nzTooltipPlacement="bottomLeft" nzTooltipTitle="Up To Date"></i>
-                            <span
-                                style="margin-right:10px;vertical-align: middle;">{{ nodeStatHash[currentHoverUid]?.upToDateCnt}}</span>
-                            <i class="fas fa-user"
-                                style="font-size:16px;color:red;margin-right:3px;vertical-align: middle;" nz-tooltip
-                                nzTooltipPlacement="bottomLeft" nzTooltipTitle="Past Due"></i>
-                            <span style="vertical-align: middle;">{{ nodeStatHash[currentHoverUid]?.pastDueCnt}}</span>
-                        </div>
-                    </div>
-                </div>
-                <div style="float:right;width:60%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;">
-                    <app-user-trainings mode="admin" logSession="off" [uid]="currentHoverUid"
-                        style="width:100%;height:35px;float:left;" compact="yes">
-                    </app-user-trainings>
-                </div>
-                <div style="clear: both;"></div>
-            </div>
             <div style="text-align: center;width:100%;overflow: scroll;position:relative;">
                 <div style="background-color:white;display:inline-block;white-space: nowrap;">
                     <div class="supervisor-node org-chart-node" style="text-align: center;margin-bottom:20px;">
-                        <div style="display:inline-block;padding:5px 5px 0 5px;position:relative;border:2px solid white;cursor:pointer;"
+                        <div style="display:inline-block;padding:5px 5px 0 5px;position:relative;border:2px solid white;cursor:pointer;border-radius:5px;"
                             (mouseenter)="setHoverData(authenticatedUser._id)" (mouseleave)="setHoverData(null)"
                             (click)="selectUser(authenticatedUser._id)"
                             [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === authenticatedUser._id) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(authenticatedUser._id)), 'hover-node': authenticatedUser._id === currentHoverUid  || currentHoverReportChain.includes(authenticatedUser._id)}">
@@ -832,7 +802,7 @@
                             (click)="collapseNode(authenticatedUser._id, false)" style="margin:0 8px;">
                             <i class="far fa-plus-circle" nz-tooltip nzTooltipTitle="Expand Suborganization"
                                 nzTooltipPlacement="right" style="margin-top:4px;font-size:16px;color:red;"></i>
-                            <div class="collapsed-block">
+                            <div class="collapsed-block" [ngClass]="{'hover-collapsed-block': orgChartNodeHash[authenticatedUser._id]?.extra.reportChain.includes(currentHoverUid) || authenticatedUser._id === currentHoverUid}">
                                 <div nz-tooltip nzTooltipTitle="Total Users" nzTooltipPlacement="right"
                                     style="display:flex;justify-content:space-between;">
                                     <i class="fas fa-users" style="font-size:18px;"></i>
@@ -1008,7 +978,7 @@
                                 <div (mouseenter)="setHoverData(dr)" (mouseleave)="setHoverData(null)"
                                     class="org-chart-node" [ngStyle]="{'padding.px': orgChartPadding}"
                                     [ngClass]="{'supervisor-node': myOrgUserHash[dr]?.userType === 'supervisor'}">
-                                    <div style="border:2px solid white;" (click)="selectUser(dr)"
+                                    <div class="user-icon-node" (click)="selectUser(dr)"
                                         [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr) || (selectionMode !== 'Indiviual' &&
                                         userIdsSelected.includes(dr)), 'hover-node': userIdSelected !== dr && allActive || dr === currentHoverUid ||
                                         orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr)}">
@@ -1033,7 +1003,7 @@
                                         <i class="far fa-plus-circle" nz-tooltip nzTooltipTitle="Expand Suborganization"
                                             nzTooltipPlacement="right"
                                             style="margin-top:4px;font-size:16px;color:red;"></i>
-                                        <div class="collapsed-block">
+                                        <div class="collapsed-block" [ngClass]="{'hover-collapsed-block': orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || dr === currentHoverUid}">
                                             <div nz-tooltip nzTooltipTitle="Total Users" nzTooltipPlacement="right"
                                                 style="display:flex;justify-content:space-between;">
                                                 <i class="fas fa-users" style="font-size:18px;"></i>
@@ -1222,7 +1192,7 @@
                                             <div (mouseenter)="setHoverData(dr2)" (mouseleave)="setHoverData(null)"
                                                 [ngStyle]="{'padding.px': orgChartPadding}" class="org-chart-node"
                                                 [ngClass]="{'supervisor-node': myOrgUserHash[dr2]?.userType === 'supervisor'}">
-                                                <div style="border:2px solid white;" (click)="selectUser(dr2)"
+                                                <div class="user-icon-node" (click)="selectUser(dr2)"
                                                     [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr2) || (selectionMode !== 'Indiviual' &&
                                                     userIdsSelected.includes(dr2)) , 'hover-node': userIdSelected !== dr2 && allActive || dr2 === currentHoverUid ||
                                                     orgChartNodeHash[dr2]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2)}">
@@ -1252,7 +1222,7 @@
                                                         nzTooltipPlacement="right"
                                                         style="margin-top:4px;font-size:16px;color:red;">
                                                     </i>
-                                                    <div class="collapsed-block">
+                                                    <div class="collapsed-block" [ngClass]="{'hover-collapsed-block': orgChartNodeHash[dr2]?.extra.reportChain.includes(currentHoverUid) || dr2 === currentHoverUid}">
                                                         <div nz-tooltip nzTooltipTitle="Total Users"
                                                             nzTooltipPlacement="right"
                                                             style="display:flex;justify-content:space-between;">
@@ -1453,7 +1423,7 @@
                                                             [ngStyle]="{'padding.px': orgChartPadding}"
                                                             class="org-chart-node" (mouseleave)="setHoverData(null)"
                                                             [ngClass]="{'supervisor-node': myOrgUserHash[dr3]?.userType === 'supervisor'}">
-                                                            <div style="border:2px solid white;"
+                                                            <div class="user-icon-node"
                                                                 (click)="selectUser(dr3)"
                                                                 [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr3) || (selectionMode !== 'Indiviual' &&
                                                                 userIdsSelected.includes(dr3)), 'hover-node': userIdSelected !== dr3 && allActive || dr3 === currentHoverUid ||
@@ -1485,7 +1455,7 @@
                                                                     nzTooltipTitle="Expand Suborganization"
                                                                     nzTooltipPlacement="right"
                                                                     style="margin-top:4px;font-size:16px;color:red;"></i>
-                                                                <div class="collapsed-block">
+                                                                <div class="collapsed-block" [ngClass]="{'hover-collapsed-block': orgChartNodeHash[dr3]?.extra.reportChain.includes(currentHoverUid) || dr3 === currentHoverUid}">
                                                                     <div nz-tooltip nzTooltipTitle="Total Users"
                                                                         nzTooltipPlacement="right"
                                                                         style="display:flex;justify-content:space-between;">
@@ -1703,8 +1673,7 @@
                                                                         (mouseleave)="setHoverData(null)"
                                                                         class="org-chart-node"
                                                                         [ngClass]="{'supervisor-node': myOrgUserHash[dr4]?.userType === 'supervisor'}">
-                                                                        <div (click)="selectUser(dr4)"
-                                                                            style="border:2px solid white;"
+                                                                        <div (click)="selectUser(dr4)" class="user-icon-node"
                                                                             [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr4) || (selectionMode !== 'Indiviual' &&
                                                                             userIdsSelected.includes(dr4)), 'hover-node': userIdSelected !== dr4 && allActive || dr4 === currentHoverUid ||
                                                                             orgChartNodeHash[dr4]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr4)}">
@@ -1735,7 +1704,7 @@
                                                                                 nzTooltipTitle="Expand Suborganization"
                                                                                 nzTooltipPlacement="right"
                                                                                 style="margin-top:4px;font-size:16px;color:red;"></i>
-                                                                            <div class="collapsed-block">
+                                                                            <div class="collapsed-block" [ngClass]="{'hover-collapsed-block': orgChartNodeHash[dr4]?.extra.reportChain.includes(currentHoverUid) || dr4 === currentHoverUid}">
                                                                                 <div nz-tooltip
                                                                                     nzTooltipTitle="Total Users"
                                                                                     nzTooltipPlacement="right"
@@ -1972,8 +1941,7 @@
                                                                                     [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                     (mouseleave)="setHoverData(null)"
                                                                                     class="org-chart-node">
-                                                                                    <div (click)="selectUser(dr5)"
-                                                                                        style="border:2px solid white;"
+                                                                                    <div (click)="selectUser(dr5)" class="user-icon-node"
                                                                                         [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr5) || (selectionMode !== 'Indiviual' &&
                                                                                         userIdsSelected.includes(dr5)), 'hover-node': userIdSelected !== dr5 && allActive || dr5 === currentHoverUid ||
                                                                                         orgChartNodeHash[dr5]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr5)}">
@@ -2003,7 +1971,7 @@
                                                                                             nzTooltipTitle="Expand Suborganization"
                                                                                             nzTooltipPlacement="right"
                                                                                             style="margin-top:4px;font-size:16px;color:red;"></i>
-                                                                                        <div class="collapsed-block">
+                                                                                        <div class="collapsed-block" [ngClass]="{'hover-collapsed-block': orgChartNodeHash[dr5]?.extra.reportChain.includes(currentHoverUid) || dr5 === currentHoverUid}">
                                                                                             <div nz-tooltip
                                                                                                 nzTooltipTitle="Total Users"
                                                                                                 nzTooltipPlacement="right"
@@ -2241,8 +2209,7 @@
                                                                                                 [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                 (mouseleave)="setHoverData(null)"
                                                                                                 class="org-chart-node">
-                                                                                                <div (click)="selectUser(dr6)"
-                                                                                                    style="border:2px solid white;"
+                                                                                                <div (click)="selectUser(dr6)" class="user-icon-node"
                                                                                                     [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr6) || (selectionMode !== 'Indiviual' &&
                                                                                                     userIdsSelected.includes(dr6)), 'hover-node': userIdSelected !== dr6 && allActive || dr6 === currentHoverUid ||
                                                                                                     orgChartNodeHash[dr6]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr6)}">
@@ -2277,7 +2244,7 @@
                                                                                                         nzTooltipPlacement="right"
                                                                                                         style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                                                     <div
-                                                                                                        class="collapsed-block">
+                                                                                                        class="collapsed-block" [ngClass]="{'hover-collapsed-block': orgChartNodeHash[dr6]?.extra.reportChain.includes(currentHoverUid) || dr6 === currentHoverUid}">
                                                                                                         <div nz-tooltip
                                                                                                             nzTooltipTitle="Total Users"
                                                                                                             nzTooltipPlacement="right"
@@ -2512,8 +2479,7 @@
                                                                                                             [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                             (mouseleave)="setHoverData(null)"
                                                                                                             class="org-chart-node">
-                                                                                                            <div (click)="selectUser(dr7)"
-                                                                                                                style="border:2px solid white;"
+                                                                                                            <div (click)="selectUser(dr7)" class="user-icon-node"
                                                                                                                 [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr7) || (selectionMode !== 'Indiviual' &&
                                                                                                                 userIdsSelected.includes(dr7)), 'hover-node': userIdSelected !== dr7 && allActive || dr7 === currentHoverUid ||
                                                                                                                 orgChartNodeHash[dr7]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr7)}">
@@ -2547,7 +2513,7 @@
                                                                                                                     nzTooltipPlacement="right"
                                                                                                                     style="margin-top:4px;font-size:16px;color:red;"></i>
                                                                                                                 <div
-                                                                                                                    class="collapsed-block">
+                                                                                                                    class="collapsed-block" [ngClass]="{'hover-collapsed-block': orgChartNodeHash[dr7]?.extra.reportChain.includes(currentHoverUid) || dr7 === currentHoverUid}">
                                                                                                                     <div nz-tooltip
                                                                                                                         nzTooltipTitle="Total Users"
                                                                                                                         nzTooltipPlacement="right"
@@ -2783,7 +2749,7 @@
                                                                                                                         (mouseleave)="setHoverData(null)"
                                                                                                                         class="org-chart-node">
                                                                                                                         <div (click)="selectUser(dr8)"
-                                                                                                                            style="border:2px solid white;"
+                                                                                                                            style="border:2px solid white;margin:0 8px;"
                                                                                                                             [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr8) || (selectionMode !== 'Indiviual' &&
                                                                                                                             userIdsSelected.includes(dr8)), 'hover-node': userIdSelected !== dr8 && allActive || dr8 === currentHoverUid ||
                                                                                                                             orgChartNodeHash[dr8]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr8)}">

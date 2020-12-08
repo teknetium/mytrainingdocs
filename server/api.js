@@ -646,9 +646,7 @@ module.exports = function(app, config) {
       res.status(200).send({ message: "userTrainings successfully deleted." });
     });
   });
-  app.put("/api/usertraining/:id", jwtCheck, (req, res) => {
-  });
-    app.put("/api/usertraining/:id", jwtCheck, (req, res) => {
+app.put("/api/usertraining/:id", jwtCheck, (req, res) => {
     UserTraining.findById(req.params.id, (err, userTraining) => {
       if (err) {
         return res.status(500).send({ message: err.message });

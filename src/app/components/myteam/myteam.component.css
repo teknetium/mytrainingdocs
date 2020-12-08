@@ -213,7 +213,7 @@
     display: none !important;
 }
 .hover-node {
-    background: rgba(0,0,255, .2) !important;
+    background: rgba(0,0,255, .05) !important;
     border:2px solid #afbcf8 !important;
 }
 
@@ -222,6 +222,7 @@
 }
 
 .selected-node {
+    border-radius: 5px;
     border: 2px solid #eaab10 !important;
     background: rgba(253, 239, 178, 1) !important;
 }
@@ -294,6 +295,7 @@ ul.ant-card-actions {
     color:black !important;
     cursor: pointer;
     border: 2px solid white;
+    border-radius: 5px;
 }
 .org-chart-node-horizontal {
     display:inline-block;
@@ -405,9 +407,15 @@ ul.ant-card-actions {
 .collapsed-block {
     display:block;
     font-size:14px;
-    border:1px solid #dddddd;
+    border: 2px solid #dddddd;
     background-color: #f9f9f9;
-    padding:2px;
+    padding: 6px;
+    border-radius: 5px;
+}
+
+.hover-collapsed-block {
+    background: rgba(0,0,255, .05);
+    border: 2px solid #afbcf8;
 }
 
 .steps-content {
@@ -462,4 +470,11 @@ ul.ant-card-actions {
     font-weight:500;
     border-bottom: 1px solid #dddddd;
     margin-bottom:2px;
+}
+
+.user-icon-node {
+    border:2px solid white;
+    padding:0 4px;
+    display:inline-block;
+    border-radius: 5px;   
 }
