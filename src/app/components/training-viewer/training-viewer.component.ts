@@ -1484,7 +1484,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       subject: this.subject,
       text: this.messageBody
     }
-    this.mailService.sendMessage(msg);
+    this.mailService.sendMessage(msg, false);
     this.messageDialogVisible = false;
   }
 

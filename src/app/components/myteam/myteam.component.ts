@@ -7,13 +7,13 @@ import { TrainingService } from '../../shared/services/training.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { UserTrainingModel, UidUTHash } from '../../shared/interfaces/userTraining.type';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
-import { Observable, BehaviorSubject, Subscription, defer } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription, defer, from, timer, } from 'rxjs';
 import { UserModel, UserFail, UserIdHash, OrgChartNode, BuildOrgProgress, UserBatchData, NodeStat } from '../../shared/interfaces/user.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
 import { JobTitleService } from '../../shared/services/jobtitle.service';
 import { MessageModel, TemplateMessageModel } from '../../shared/interfaces/message.type';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, filter, scan, map, concatMap, share } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as cloneDeep from 'lodash/cloneDeep';
 import { BaseComponent } from '../base.component';
@@ -1118,7 +1118,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   maxLevelSummary = true;
   includeFullName = false;
   useMaxWidth = true;
-  test = false;
+  test = true;
   userMin = 5;
   userMax = 9;
   maxLevelUserMin = 3;
@@ -1164,6 +1164,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   manageCurrentTrainingsModal = false;
   trainingStatusChange$: Observable<string>;
   showLegend;
+  showMessageModal = false;
+  msgSubject = '';
+  msgBody = '';
+  currentRecipientUid = '';
+  tmpUid;
+  recipientUidList = [];
+  sentList = [];
+  percentSent = 0;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1536,6 +1544,55 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
   }
 
+  handleSendMessageCancel() {
+    this.showMessageModal = false;
+  }
+  
+  /*
+  timeOf = (interval: number) => <T>(val: T) =>
+    timer(interval).pipe(map(x => val));
+
+  timed = (interval: number) => <T>(source: Observable<T>) =>
+    source.pipe(
+      concatMap(this.timeOf(1000)),
+      map(x => [x]),
+      scan((acc, val) => [...acc, ...val]),
+    )
+
+  arr$ = from(this.arr)
+    .pipe(
+      timed(1000),
+    )
+    */
+//  delayAndCall(arr:)
+
+  sendMessage() {
+    let msg = <MessageModel>{
+      to: '',
+      from: this.authenticatedUser.email,
+      subject: this.msgSubject,
+      text: this.msgBody
+    }
+    for (let uid of this.recipientUidList) {
+      console.log("sending message to")
+      msg.to = this.myOrgUserHash[uid].email;
+      this.mailService.sendMessage(msg, this.test);
+    }
+    this.showMessageModal = false;
+  }
+
+  currentRecipient(uid) {
+    this.currentRecipientUid = uid;
+  }
+
+  removeRecipient(index) {
+    this.recipientUidList.splice(index, 1);
+  }
+
+  showMsgModal() {
+    this.showMessageModal = true;
+    this.recipientUidList = Object.assign(this.recipientUidList, this.userIdsSelected);
+  }
   /*
     expandAllNodes() {
       this.collapsedNodes = [];

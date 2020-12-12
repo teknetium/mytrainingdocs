@@ -17,7 +17,11 @@ export class SendmailService {
 
   constructor(private http: HttpClient, private auth: AuthService) { }
 
-  sendMessage(msg: MessageModel) {
+  sendMessage(msg: MessageModel, test: boolean) {
+    if (test) {
+      console.log('TEST MODE  sendmailService', msg);
+      return;
+    }
     this.postMessage$(msg).subscribe(item => {
       console.log('sendmailService', msg);
     })

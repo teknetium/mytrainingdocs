@@ -48,6 +48,7 @@ const ngZorroConfig: NzConfig = {
     NzDropDownModule,
     NzSwitchModule,
     NzCardModule,
+    NzProgressModule,
     NzPopoverModule,
     JoyrideModule.forRoot(),
   ],

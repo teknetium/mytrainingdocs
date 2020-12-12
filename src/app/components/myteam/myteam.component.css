@@ -213,7 +213,7 @@
     display: none !important;
 }
 .hover-node {
-    background: rgba(0,0,255, .05) !important;
+    background: rgba(0,0,255, .09) !important;
     border:2px solid #afbcf8 !important;
 }
 
@@ -293,7 +293,6 @@ ul.ant-card-actions {
     width:fit-content;
     position:relative;
     color:black !important;
-    cursor: pointer;
     border: 2px solid white;
     border-radius: 5px;
 }
@@ -302,7 +301,6 @@ ul.ant-card-actions {
     height:fit-content;
     position:relative;
     color:black !important;
-    cursor: pointer;
     border: 2px solid white;
 }
 .maxlevel-node {
@@ -310,7 +308,6 @@ ul.ant-card-actions {
     display:inline-block;
     width:fit-content;
     position:relative;
-    cursor: pointer;
 }
 .action {
     font-size:16px;
@@ -411,10 +408,11 @@ ul.ant-card-actions {
     background-color: #f9f9f9;
     padding: 6px;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .hover-collapsed-block {
-    background: rgba(0,0,255, .05);
+    background: rgba(0,0,255, .09);
     border: 2px solid #afbcf8;
 }
 
@@ -477,4 +475,9 @@ ul.ant-card-actions {
     padding:0 4px;
     display:inline-block;
     border-radius: 5px;   
+    cursor: pointer;
+}
+
+.current-recipient {
+    background-color: #f1f1f1;
 }
