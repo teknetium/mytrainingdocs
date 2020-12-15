@@ -14,38 +14,57 @@ import { ENV } from './env.config';
 export class SendmailService {
 
   msg: MessageModel;
+  templateHash = {
+    resetTrainingStatus: 'd-b4679d4de1fb41e18d1e2487995f9bdf',
+    minorChangeNotification: 'd-3d4ee355e8164a999bbd8a4dd3d106dc',
+  };
 
-  constructor(private http: HttpClient, private auth: AuthService) { }
+  constructor(private http: HttpClient, private auth: AuthService) {
 
-  sendMessage(msg: MessageModel, test: boolean) {
+  }
+
+  sendMessages(msgs: MessageModel[], test: boolean) {
     if (test) {
-      console.log('TEST MODE  sendmailService', msg);
+      console.log('TEST MODE  sendmailService');
       return;
     }
-    this.postMessage$(msg).subscribe(item => {
-      console.log('sendmailService', msg);
-    })
-
+    let startIndex = 0;
+    let chunckSize = 200;
+    while (startIndex < msgs.length) {
+      console.log('sendMessages', chunckSize);
+      let tmpArray = Object.assign([], msgs.slice(startIndex, startIndex + chunckSize));
+      startIndex += chunckSize;
+      this.postMessages$(tmpArray).subscribe(item => {
+        console.log('sendmailService : sending messages ', item );
+      });
+    }
   }
-  sendTemplateMessage(msg: TemplateMessageModel) {
-    this.postTemplateMessage$(msg).subscribe(item => {
-      console.log('sendmailService', msg);
-    })
 
+  sendTemplateMessages(msgs: TemplateMessageModel[]) {
+    let startIndex = 0;
+    let chunckSize = 100;
+    while (startIndex < msgs.length) {
+      console.log('sendTemplateMessages', chunckSize);
+      let tmpArray = Object.assign([], msgs.slice(startIndex, startIndex + chunckSize));
+      startIndex += chunckSize;
+      this.postTemplateMessages$(tmpArray).subscribe(item => {
+        console.log('sendmailService : sending template messages ', item);
+      });
+    }
   }
 
-  postMessage$(msg: MessageModel): Observable<any> {
+  postMessages$(msgs: MessageModel[]): Observable<any> {
     return this.http
-      .post<MessageModel>(`${ENV.BASE_API}sendmail`, msg, {
+      .post<MessageModel[]>(`${ENV.BASE_API}sendmail`, msgs, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
         catchError((error) => this._handleError(error))
       );
   }
-  postTemplateMessage$(msg: TemplateMessageModel): Observable<any> {
+  postTemplateMessages$(msgs: TemplateMessageModel[]): Observable<any> {
     return this.http
-      .post<MessageModel>(`${ENV.BASE_API}sendmail/template`, msg, {
+      .post<TemplateMessageModel[]>(`${ENV.BASE_API}sendmail/template`, msgs, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

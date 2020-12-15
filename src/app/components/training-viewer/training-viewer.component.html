@@ -35,14 +35,17 @@
             </h3>
 
 
-            <ng-container *ngIf="assignedToUsers.length > 0">
-                <p>The following users are responsible for this training:</p>
-                <ul style="margin-left:100px;">
-                    <li *ngFor="let user of assignedToUsers">
+            <div *ngIf="assignedToUsers.length > 0">
+                <p>The following
+                    <span style="font-size:20px;">{{ assignedToUsers.length }}</span>
+                    users are responsible for this training:</p>
+                <div
+                    style="margin-left:40px;padding-left:10px;width:60%;max-height:200px;overflow:scroll;height:fit-content;border:1px solid #dddddd;border-radius: 5px;">
+                    <div *ngFor="let user of assignedToUsers">
                         {{ myOrgHash[user]?.firstName }} {{ myOrgHash[user]?.lastName }}
-                    </li>
-                </ul>
-            </ng-container>
+                    </div>
+                </div>
+            </div>
         </div>
         <div style="clear: both;"></div>
         <div style="display: block;">
@@ -552,12 +555,19 @@
             </div>
             <div *ngIf="production === 'true' || mode === 'Preview'"
                 style="text-align: center;padding:5px;background-color: #fefbe7;">
-                <button nz-button nzType="primary" nzSize="small" nzShape="round" class="header-icon" (click)="loadPrevPage()"
-                    [disabled]="isFirstPage(currentPage._id) || assessmentInProgress">
+                <!--
+                <br>
+                assessmentInProgress : {{ assessmentInProgress }}
+                <br>
+                assessmentStatus : {{ assessmentStatus }}
+                <br>
+                -->
+                <button nz-button nzType="primary" nzSize="small" nzShape="round" class="header-icon"
+                    (click)="loadPrevPage()" [disabled]="isFirstPage(currentPage._id) || assessmentInProgress">
                     Previous Page
                 </button>
-                <button nz-button nzType="primary" nzSize="small" nzShape="round" class="header-icon" (click)="loadNextPage()"
-                    [disabled]="isLastPage(currentPage?._id) || assessmentInProgress || (currentPage?.type === 'assessment' &&
+                <button nz-button nzType="primary" nzSize="small" nzShape="round" class="header-icon"
+                    (click)="loadNextPage()" [disabled]="isLastPage(currentPage?._id) || assessmentInProgress || (currentPage?.type === 'assessment' &&
                     (assessmentStatus === 'notCompleted' || assessmentStatus === 'firstTime'))">
                     Next Page
                 </button>
@@ -574,7 +584,8 @@
                 </button>
                 -->
             </div>
-            <div *ngIf="production !== 'true' && mode === 'Edit'" style="padding:10px;text-align: center;background-color: #fefbe7;">
+            <div *ngIf="production !== 'true' && mode === 'Edit'"
+                style="padding:10px;text-align: center;background-color: #fefbe7;">
                 <div *ngFor="let page of selectedTraining?.pages; index as pageIndex"
                     style="display:inline-block;padding:5px;"
                     [ngClass]="{'current-page': currentPageId === page?._id, 'page-icon-production':production === 'true', 'page-icon': production === 'false' && mode === 'Edit' }"

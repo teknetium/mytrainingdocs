@@ -112,23 +112,18 @@ module.exports = function(app, config) {
 
   
   app.post("/api/sendmail", (req, res) => {
-    const msg = {
-      to: req.body.to,
-      from: req.body.from,
-      subject: req.body.subject,
-      text: req.body.text,
-      html: req.body.html,
-    };
-    sgMail.send(msg);
+    const msgs = req.body;
+    msgs.forEach(msg => {
+      sgMail.send(msg);
+    });
+    res.send(msgs.length);
   });
   app.post("/api/sendmail/template", (req, res) => {
-    const msg = {
-      to: req.body.to,
-      from: req.body.from,
-      templateId: req.body.templateId,
-      dynamicTemplateData: req.body.dynamicTemplateData
-    };
-    sgMail.send(msg);
+    const msgs = req.body;
+    msgs.forEach(msg => {
+      sgMail.send(msg);
+    });
+    res.send(msgs.length);
   });
 
   app.get("/api/verifyemail/:uid", (req, res) => {
@@ -647,6 +642,28 @@ module.exports = function(app, config) {
     });
   });
   app.put("/api/usertraining/resetstatus", jwtCheck, (req, res) => {
+    let utObj = req.body;
+
+    UserTraining.find({ tid: utObj.tid }, (err, userTrainings) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (!userTrainings) {
+        return res.status(400).send({ message: "No users found for " + req.params.tid });
+      }
+      let utIdArr = [];
+      userTrainings.forEach(userTraining => {
+        utIdArr.push(userTraining._id);
+      });
+
+      UserTraining.updateMany({ _id: { $in: utIdArr } }, { status: "upToDate", dueDate: utObj.dueDate, dateCompleted: 0, certImage: null, trainingVersion: utObj.trainingVersion }, (err2, responseObj) => {
+        if (err2) {
+          return res.status(500).send({ message: err2.message });
+        }
+        res.send({ n: responseObj.n, nModified: responseObj.nModified });
+      });
+    });
+
   });
   app.put("/api/usertraining/:id", jwtCheck, (req, res) => {
     UserTraining.findById(req.params.id, (err, userTraining) => {

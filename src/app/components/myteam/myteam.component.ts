@@ -1567,6 +1567,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 //  delayAndCall(arr:)
 
   sendMessage() {
+    let messages: MessageModel[] = [];
     let msg = <MessageModel>{
       to: '',
       from: this.authenticatedUser.email,
@@ -1576,9 +1577,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     for (let uid of this.recipientUidList) {
       console.log("sending message to")
       msg.to = this.myOrgUserHash[uid].email;
-      this.mailService.sendMessage(msg, this.test);
+      messages.push(Object.assign({}, msg));
     }
     this.showMessageModal = false;
+    this.mailService.sendMessages(messages, this.test);
   }
 
   currentRecipient(uid) {

@@ -613,6 +613,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     });
 
     this.myTeamHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myTeamHash => {
+      if (!myTeamHash) {
+        return;
+      }
       this.myTeamHash = myTeamHash;
       this.myTeam = Object.keys(myTeamHash);
     })
@@ -880,10 +883,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     //    this.currentSelectedTrainingVersions.unshift(newTrainingVersionObj);
     let trainingClone = cloneDeep(this.selectedTraining);
 
-    // if the job title being saved for this version is not the same as the previous version
-    // then we have some work to do.   Remove the training from the users with the old job title
-    // and assign the training to the users with the new jopb title
-
     this.trainingService.saveNewVersion(trainingClone);
     this.trainingService.selectTrainingVersion(trainingClone);
 
@@ -994,8 +993,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   resetTrainingStatus(version: string) {
     this.userTrainingService.resetUserTrainingStatus(this.selectedTraining._id, version);
+    let messages: TemplateMessageModel[] = [];
+
     this.subject = 'Urgent: Must retake a training'
     this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated and you are required to retake it.";
+
     for (let user of this.assignedToUsers) {
       let msg = <TemplateMessageModel>{
         to: this.myOrgHash[user].email,
@@ -1006,11 +1008,14 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
           trainingTitle: this.selectedTraining.title,
         }
       }
-      this.mailService.sendTemplateMessage(msg);
+      messages.push(Object.assign({}, msg));
     }
+
+    this.mailService.sendTemplateMessages(messages);
   }
 
   sendNotifications() {
+    let messages: TemplateMessageModel[] = [];
     for (let user of this.assignedToUsers) {
       let msg = <TemplateMessageModel>{
         to: this.myOrgHash[user].email,
@@ -1021,8 +1026,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
           trainingTitle: this.selectedTraining.title,
         }
       }
-      this.mailService.sendTemplateMessage(msg);
+      messages.push(Object.assign({}, msg));
     }
+    this.mailService.sendTemplateMessages(messages);
   }
 
   pageUrlChanged() {
@@ -1062,12 +1068,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   addNewPage(pageType: string, contentType: string) {
 
     const content = <Content>{
-      _id: 'Content' + String(new Date().getTime() ),
+      _id: String(new Date().getTime() ),
       type: contentType,
       text:'default text content'
     }
     const newPage = <Page>{
-      _id: 'Page' + String(new Date().getTime()),
+      _id: String(new Date().getTime()),
       type: pageType,
       title: 'New Page',
       text: 'Your page introduction goes here.',
@@ -1075,7 +1081,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
 
     this.selectedTraining.pages.push(newPage);
-    this.saveTraining(false);
+//    this.saveTraining(false);
     this.currentPage = newPage;
     this.currentPageId = newPage._id;
     this.buildPageHashes();
@@ -1478,13 +1484,18 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   emailInterestList() {
-    let msg = <MessageModel>{
-      to: this.selectedTraining.interestList[0],
-      from: this.authenticatedUser.email,
-      subject: this.subject,
-      text: this.messageBody
+    let messages: MessageModel[] = [];
+    let msg: MessageModel;
+    for (let email of this.selectedTraining.interestList) {
+      msg = <MessageModel>{
+        to: email,
+        from: this.authenticatedUser.email,
+        subject: this.subject,
+        text: this.messageBody
+      }
+      messages.push(Object.assign({}, msg));
     }
-    this.mailService.sendMessage(msg, false);
+    this.mailService.sendMessages(messages, false);
     this.messageDialogVisible = false;
   }
 

@@ -229,7 +229,7 @@ export class UserService {
         uid: uid
       },
     }
-    this.sendmailService.sendTemplateMessage(message);
+    this.sendmailService.sendTemplateMessages([message]);
   }
 
   sendRegistrationMsg(toAddr, fromAddr) {
@@ -241,7 +241,7 @@ export class UserService {
         email: toAddr
       },
     }
-    this.sendmailService.sendTemplateMessage(message);
+    this.sendmailService.sendTemplateMessages([message]);
   }
   /*
     logLoginEvent() {
@@ -512,6 +512,8 @@ export class UserService {
     this.fullNameHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
     this.emailHash[this.authenticatedUser.email] = this.authenticatedUser;
 
+    let message: TemplateMessageModel;
+    let msgs: TemplateMessageModel[] = [];
     let batchCnt = 1;
     let _id = String(new Date().getTime());
     for (let batchUser of batchUsers) {
@@ -531,7 +533,15 @@ export class UserService {
       } else {
         this.newTeamMember.email = batchUser.email;
         if (!testing) {
-          this.sendRegistrationMsg(this.newTeamMember.email, this.authenticatedUser.email);
+          message = {
+            to: this.newTeamMember.email,
+            from: this.authenticatedUser.email,
+            templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
+            dynamicTemplateData: {
+              email: this.newTeamMember.email
+            },
+          }
+          msgs.push(Object.assign({}, message));
           statusList.push('accountPending');
         }
         this.newTeamMember.userStatus = 'pending';
@@ -559,7 +569,10 @@ export class UserService {
       this.emailHash[this.newTeamMember.email] = this.newTeamMember;
       this.allOrgUserHash[this.newTeamMember._id] = this.newTeamMember;
     }
-
+    
+    if (msgs.length > 0) {
+      this.sendmailService.sendTemplateMessages(msgs);
+    }
 
     for (let nUser of this.newUserList) {
       if (!this.fullNameHash[this.newUserHash[nUser._id].supervisorName]) {

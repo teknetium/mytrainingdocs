@@ -409,7 +409,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
           trainingTitle: this.trainingIdHash[this.currentTrainingId].title
         }
       }
-      this.mailService.sendTemplateMessage(msg);
+      this.mailService.sendTemplateMessages([msg]);
       let supervisorEmail: string = this.userService.getSupervisorEmailForUser(this.utIdHash[this.currentUserTraining].uid);
       if (supervisorEmail) {
         let msg2 = <TemplateMessageModel>{
@@ -422,7 +422,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
             uid: this.utIdHash[this.currentUserTraining].uid
           }
         }
-        this.mailService.sendTemplateMessage(msg2);
+        this.mailService.sendTemplateMessages([msg2]);
       }
 
       this.utIdHash[this.currentUserTraining].status = 'pendingCertUpload';
