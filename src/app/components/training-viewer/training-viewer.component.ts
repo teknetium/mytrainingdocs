@@ -4,10 +4,12 @@ import { TrainingService } from '../../shared/services/training.service';
 import { UserService } from '../../shared/services/user.service';
 // import { JobTitleService } from '../../shared/services/jobtitle.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
+import { NotificationService } from '../../shared/services/notification.service';
 import { AuthService } from '../../shared/services/auth.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { TrainingModel, Page, Content, TrainingVersion } from 'src/app/shared/interfaces/training.type';
 import { Assessment, AssessmentItem } from 'src/app/shared/interfaces/assessment.type';
+import { AlertModel } from 'src/app/shared/interfaces/notification.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FileModel, FilePlusModel } from 'src/app/shared/interfaces/file.type';
@@ -349,7 +351,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     private trainingService: TrainingService,
     private modalService: NzModalService,
     private fileService: FileService,
-    private eventService: EventService,
+    private notifyService: NotificationService,
     //    private jobTitleService: JobTitleService,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
@@ -891,10 +893,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     if (this.changeLevel === 'major') {
       this.resetTrainingStatus(newVersion);
     }
-
+/*
     for (let user of this.assignedToUsers) {
       this.userTrainingService.updateUTVersion(user, this.selectedTraining._id, newVersion);
     }
+    */
+    this.closeViewer();
   }
 
   save() {
@@ -997,6 +1001,13 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
     this.subject = 'Urgent: Must retake a training'
     this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated and you are required to retake it.";
+
+
+    let alert = <AlertModel>{
+      type: 'info',
+      message: 'Resetting training status for ' + this.assignedToUsers.length + ' users.'
+    }
+    this.notifyService.showAlert(alert);
 
     for (let user of this.assignedToUsers) {
       let msg = <TemplateMessageModel>{

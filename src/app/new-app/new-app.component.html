@@ -99,7 +99,12 @@
                 <nz-spin nzSimple [nzSize]="'large'" style="text-align: center;"></nz-spin>
             </div>
         </div>
-        <router-outlet [ngStyle]="{'height.px': browserInnerHeight - 64}"></router-outlet>
+        <div *ngIf="alerts.length > 0" style="display:block;height:fit-content;margin-bottom:40px;">
+            <nz-alert *ngFor="let alert of alerts; index as i" nzBanner [nzMessage]="alert?.message" [nzType]="alert?.type"
+                nzCloseable (nzOnClose)="onAlertClose(i)">
+            </nz-alert>
+        </div>
+        <router-outlet [ngStyle]="{'height.px': browserInnerHeight - headerHight}"></router-outlet>
         <nz-modal nzWidth="600" [(nzVisible)]="showNewUserModal" nzCancelDisabled="true" nzClosable="false"
             nzTitle="Welcome!" (nzOnOk)="saveName()">
             <div style="padding:20px;color:#000000;">

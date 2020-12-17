@@ -11,3 +11,7 @@ export interface NotificationModel {
     bgColor: string
   }
 
+export interface AlertModel {
+  type: 'success' | 'info' | 'warning' | 'error',
+  message: string
+}

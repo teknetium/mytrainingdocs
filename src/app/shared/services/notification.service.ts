@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, throwError as ObservableThrowError } from 
 import { catchError } from 'rxjs/operators';
 import { TrainingService } from '../services/training.service';
 import { EventModel } from '../interfaces/event.type';
-import { CommentModel } from '../interfaces/comment.type';
+import { AlertModel } from '../interfaces/notification.type';
 import { AuthService } from './auth.service';
 import { ENV } from './env.config';
 
@@ -19,11 +19,20 @@ export class NotificationService {
   notificationCnt$ = new BehaviorSubject<number>(0);
   selectedNotificationBS$ = new BehaviorSubject<NotificationModel>(null);
   selectedNotificationIndexBS$ = new BehaviorSubject<number>(null);
+  alertBS$ = new BehaviorSubject<AlertModel>(null);
 
   constructor(
     private auth: AuthService,
     private http: HttpClient,
   ) {
+  }
+
+  showAlert(alert: AlertModel) {
+    this.alertBS$.next(alert);
+  }
+
+  getAlertStream(): Observable<AlertModel> {
+    return this.alertBS$.asObservable();
   }
 
   getNotificationsStream(): Observable<NotificationModel[]> {

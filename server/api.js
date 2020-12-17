@@ -633,12 +633,14 @@ module.exports = function(app, config) {
       res.send(uts);
     });
   });
-  app.delete("/api/usertraining/deletebulk/:tid", jwtCheck, (req, res) => {
-    UserTraining.deleteMany({ tid: req.params.tid }, (err) => {
+  app.put("/api/usertraining/bulkdelete/:tid", jwtCheck, (req, res) => {
+    let uids = req.body;
+
+    UserTraining.deleteMany({ uid: { $in: uids }, tid: req.params.tid }, {}, (err, responseObj) => {
       if (err) {
         return res.status(500).send({ message: err.message });
       }
-      res.status(200).send({ message: "userTrainings successfully deleted." });
+      res.status(200).send(responseObj);
     });
   });
   app.put("/api/usertraining/resetstatus", jwtCheck, (req, res) => {

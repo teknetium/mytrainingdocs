@@ -379,7 +379,7 @@
                             <button nz-button nzShape="circle" nzType="default" [disabled]="!userIdSelected"
                                 style="display:inline-block;" (click)="showUserTrainingModal = true" nz-tooltip
                                 nzTooltipPlacement="bottomLeft" nzTooltipTitle="Assign Training to User">
-                                <i class="fas fa-arrow-alt-to-right"></i>
+                                <i class="fas fa-plus"></i>
                             </button>
                             <button nz-button nzShape="circle" nzType="default" [disabled]="!userIdSelected"
                                 style="display:inline-block;margin-left:3px;"
@@ -582,13 +582,13 @@
                             nzShape="circle" nzType="default" [disabled]="userIdsSelected.length === 0"
                             style="display:inline-block;" (click)="showUserTrainingModal = true" nz-tooltip
                             nzTooltipPlacement="bottomLeft" nzTooltipTitle="Assign Training to Users">
-                            <i class="fas fa-arrow-alt-to-right"></i></button>
+                            <i class="fas fa-plus"></i></button>
                         <button *ngIf="selectionMode === 'Training'" nz-button nzShape="circle"
                             [disabled]="userIdsSelected.length === 0" style="display:inline-block;margin-left:3px;"
                             nz-popconfirm nzPopconfirmTitle="Remove this training from all users selected?"
                             (nzOnConfirm)="confirmUserTrainingDelete()" nz-tooltip nzTooltipPlacement="bottomLeft"
                             nzTooltipTitle="Remove Training from Users">
-                            <i class="fas fa-arrow-alt-from-right"></i></button>
+                            <i class="fas fa-trash"></i></button>
                         <button *ngIf="selectionMode !== 'Individual'" nz-button nzShape="circle" nzType="default"
                             [disabled]="userIdsSelected.length === 0" style="display:inline-block;margin-left:3px;" (click)="showMsgModal()"
                             nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Send Message to Selected Users">

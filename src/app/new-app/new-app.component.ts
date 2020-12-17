@@ -5,6 +5,7 @@ import { UserService } from '../shared/services/user.service';
 import { UserTrainingService } from '../shared/services/userTraining.service';
 import { BehaviorSubject, Observable, from, Subscription } from 'rxjs';
 import { UserModel, UserIdHash } from '../shared/interfaces/user.type';
+import { AlertModel } from '../shared/interfaces/notification.type';
 import { TrainingModel, TrainingIdHash } from '../shared/interfaces/training.type';
 import { UserTrainingModel } from '../shared/interfaces/userTraining.type';
 import { Router, NavigationEnd, NavigationCancel, NavigationStart, NavigationError, Event as NavigationEvent } from '@angular/router';
@@ -261,6 +262,27 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   currentEmail;
   currentStep = 0;
   loading = true;
+  alerts: AlertModel[] = [];
+  /*
+    {
+      type: 'error',
+      message: 'sample error message'
+    },
+    {
+      type: 'info',
+      message: 'sample INFO message'
+    },
+    {
+      type: 'warning',
+      message: 'sample WARNING message'
+    },
+    {
+      type: 'success',
+      message: 'sample error message'
+    }
+  ];
+  */
+  alert$: Observable<AlertModel>;
 
   constructor(
     private authService: AuthService,
@@ -308,6 +330,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
     this.myDomainUser$ = this.userService.getMyDomainUsersStream();
     this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
+    this.alert$ = this.notificationService.getAlertStream();
   }
 
   ngOnInit(): void {
@@ -405,7 +428,18 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
       this.showTaskVideoModal = true;
     })
+    this.alert$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(alert => {
+      if (!alert) {
+        return;
+      }
+
+      this.alerts.push(alert);
+    })
   };
+
+  onAlertClose(index: number) {
+    this.alerts.splice(index, 1);
+  }
 
   checkUniqueEmail(data) {
     if (this.currentEmail.email === this.authenticatedUser.email) {

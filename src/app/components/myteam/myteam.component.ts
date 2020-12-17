@@ -5,7 +5,9 @@ import { EventService } from '../../shared/services/event.service';
 import { ResizeEvent } from '../../shared/interfaces/event.type';
 import { TrainingService } from '../../shared/services/training.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
+import { NotificationService } from '../../shared/services/notification.service';
 import { UserTrainingModel, UidUTHash } from '../../shared/interfaces/userTraining.type';
+import { AlertModel } from '../../shared/interfaces/notification.type';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
 import { Observable, BehaviorSubject, Subscription, defer, from, timer, } from 'rxjs';
 import { UserModel, UserFail, UserIdHash, OrgChartNode, BuildOrgProgress, UserBatchData, NodeStat } from '../../shared/interfaces/user.type';
@@ -1182,6 +1184,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private jobTitleService: JobTitleService,
     private userTrainingService: UserTrainingService,
     private joyrideService: JoyrideService,
+    private notifyService: NotificationService,
     private messageService: NzMessageService,
     private route: ActivatedRoute,
     private router: Router
@@ -2599,32 +2602,37 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   confirmUserTrainingDelete() {
     for (let uid of this.userIdsSelected) {
+      let user = this.myOrgUserHash[uid];
       let utList = this.uidUTHash[uid];
-      let newUtList = []
+      let newUtList = [];
+      let currentUserTrainingStatus: string;
       if (utList.length === 1) {
-        this.userService.setUserStatusNone(uid);
+        user.trainingStatus = 'none';
         this.uidUTHash[uid] = [];
       } else {
-        let anotherPastDueFound = false;
+        let pastDueFound = false;
         for (let ut of utList) {
           if (ut.tid !== this.currentTrainingSelected) {
             newUtList.push(ut);
             if (ut.status === 'pastDue') {
-              this.userService.setUserStatusPastDue(uid);
-              anotherPastDueFound = true;
+              pastDueFound = true;
+            }
+          } else {
+            if (ut.status === 'pastDue') {
+              currentUserTrainingStatus = 'pastDue';
             }
           }
         }
         this.uidUTHash[uid] = newUtList;
-        if (!anotherPastDueFound) {
-          this.userService.setUserStatusUpToDate(uid);
+        if (!pastDueFound) {
+          user.trainingStatus = 'upToDate';
         }
-        
       }
 
 //      this.userTrainingService.deleteUserTrainingByTidUid(this.currentTrainingSelected, uid);
     }
-    this.userTrainingService.deleteUTForTid(this.currentTrainingSelected);
+    this.userTrainingService.bulkDeleteTraining(this.userIdsSelected, this.currentTrainingSelected);
+//    this.userTrainingService.deleteUTForTid(this.currentTrainingSelected);
     this.figureOrgStat(this.authenticatedUser._id);
     for (let node of this.collapsedNodes) {
       this.figureOrgStat(node);
@@ -2648,6 +2656,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.assignableTrainings.splice(this.assignableTrainings.indexOf(this.selectedTrainingId), 1);
       this.userTrainingService.getUTForUser(this.userIdSelected);
     } else {
+      let alert = <AlertModel>{
+        type: 'info',
+        message: 'Assigning training to ' + this.userIdsSelected.length + ' users.'
+      }
+      this.notifyService.showAlert(alert);
       this.userTrainingService.bulkAssignTraining(this.userIdsSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version);
       for (let uid of this.userIdsSelected) {
         let user = this.myOrgUserHash[uid];

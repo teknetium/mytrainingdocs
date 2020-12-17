@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError as ObservableThrowError, Subscription } from 'rxjs';
-import { EventService } from '../services/event.service';
-import { EventModel } from '../interfaces/event.type';
+import { NotificationService } from '../services/notification.service';
+import { AlertModel } from '../interfaces/notification.type';
 import { TrainingModel } from '../interfaces/training.type';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { UserTrainingModel, AssessmentResponse, UserTrainingHash, UTSession, UTSessionHash, UidUTHash } from '../interfaces/userTraining.type';
@@ -32,7 +32,7 @@ export class UserTrainingService {
   private uidList: string[] = [];
 
   constructor(
-    private eventService: EventService,
+    private notifyService: NotificationService,
     private http: HttpClient,
     private auth: AuthService) {
   }
@@ -174,6 +174,7 @@ export class UserTrainingService {
     return 'upToDate';
   }
 */
+  
   resetUserTrainingStatus(tid, version) {
     let utObj = <UserTrainingModel>{
       _id: null,
@@ -190,6 +191,11 @@ export class UserTrainingService {
     }
     this.resetStatusForMany$(utObj).subscribe(responseObj => {
       console.log("resetStatusForMany", responseObj);
+      let alert = <AlertModel>{
+        type: 'success',
+        message: 'Successfully reset status for ' + responseObj.n + ' users.'
+      }
+      this.notifyService.showAlert(alert);
     });
     /*
     this.getUTForTraining$(tid).subscribe(utList => {
@@ -329,34 +335,74 @@ export class UserTrainingService {
           certImage: null
         };
         userTrainings.push(uT);
+        utList.push(Object.assign([],uT));
+        this.uidUTHash[uid] = Object.assign([], utList);
         counter++;
       }
     }
+
+    let warningAlert: AlertModel;
+    if (userTrainings.length === 0) {
+      warningAlert = <AlertModel>{
+        type: 'warning',
+        message: 'WARNING  -  All users selected already have that training assigned to them.'
+      }
+      this.notifyService.showAlert(warningAlert);
+    } else if (userTrainings.length < uids.length) {
+      warningAlert = <AlertModel>{
+        type: 'warning',
+        message: 'WARNING  ' + (uids.length - userTrainings.length) + ' out of the ' + uids.length + ' users selected already have that training assigned to them.'
+      }
+      this.notifyService.showAlert(warningAlert);
+    }
+
+    //    this.uidUTHashBS$.next(this.uidUTHash);
     let dbCnt = 0;
     let batchAddedCount = 0;
     let startIndex = 0;
     let chunckSize = 100;
+    let loopCnt = 0;
+    let iterationCnt = Math.floor(userTrainings.length / chunckSize) + 1;
     while (startIndex < userTrainings.length) {
       let tmpArray = Object.assign([], userTrainings.slice(startIndex, startIndex + chunckSize));
       startIndex += chunckSize;
       this.postBulkUserTraining$(tmpArray).subscribe(userTrainingList => {
+        loopCnt++;
         batchAddedCount += userTrainingList.length;
         for (let ut of userTrainingList) {
           this.uidList.push(ut.uid);
+          /*
           if (this.uidUTHash[ut.uid]) {
             this.uidUTHash[ut.uid].push(ut);
           } else {
             this.uidUTHash[ut.uid] = [ut];
           }
+          */
 //          this.userTrainings$BS.next(this.uidUTHash[ut.uid]);
           this.allUserTrainingHash[ut._id] = ut;
         }
 //        console.log('bulk assign returns ...', userTrainingList);
         this.bulkUserStatusUpdateBS$.next(this.uidList);
         this.uidList = [];
+
+        if ((loopCnt === iterationCnt) && (batchAddedCount === userTrainings.length)) {
+          let successAlert = <AlertModel>{
+            type: 'success',
+            message: 'Successfully assigned training to  ' + batchAddedCount + ' users.'
+          }
+          this.notifyService.showAlert(successAlert);
+        } else if ((loopCnt === iterationCnt) && (batchAddedCount < userTrainings.length)) {
+          let errorAlert = <AlertModel>{
+            type: 'error',
+            message: loopCnt + '/' + iterationCnt + ' Houston, we have a problem.  We were only able to assign the training to ' + batchAddedCount + ' out of ' + userTrainings.length + ' users.'
+          }
+          this.notifyService.showAlert(errorAlert);
+        }
       });
     }
-    this.uidUTHashBS$.next(this.uidUTHash);
+
+    
+    
   }
   deleteUTForTid(tid: string) {
     this.deleteUTForTid$(tid).subscribe();
@@ -436,8 +482,42 @@ export class UserTrainingService {
     })
   }
 
+  bulkDeleteTraining(uids: string[], tid: string) {
+    /*
+    let utIds: string[] = [];
+    let utList: UserTrainingModel[] = [];
+    for (let uid of uids) {
+      utList = this.uidUTHash[uid];
+      for (let ut of utList) {
+        if (ut.tid === tid) {
+          utIds.push(ut._id);
+        }
+      }
+    }
+    */
+    this.bulkDeleteUserTrainings$(tid, uids).subscribe(responseObj => {
+      console.log('bulkDeleteUserTrainings', responseObj);
+      let alert = <AlertModel>{
+        type: 'success',
+        message: 'Successfully removed the training from ' + responseObj.n + ' users.'
+      }
+      this.notifyService.showAlert(alert);
+    })
+  }
+
   private get _authHeader(): string {
     return `Bearer ${this.auth.accessToken}`;
+  }
+
+  bulkDeleteUserTrainings$(tid: string, uids: string[]): Observable<any> {
+    return this.http
+      .put<string[]>(`${ENV.BASE_API}usertraining/bulkdelete/${tid}`, uids, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+
   }
 
   resetStatusForMany$(utObj: UserTrainingModel): Observable<any> {
@@ -448,7 +528,7 @@ export class UserTrainingService {
       .pipe(
         catchError((error) => this._handleError(error))
       );
-     
+
   }
 
   postUserTraining$(userTraining: UserTrainingModel): Observable<UserTrainingModel> {
