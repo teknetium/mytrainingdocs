@@ -331,9 +331,11 @@
                             [nzValue]="jobTitle.value"></nz-option>
                     </nz-select>
                 </div>
-                <div *ngIf="selectionMode === 'Individual'" style="float:left;margin-right:20px;">
+                <div *ngIf="selectionMode === 'Individual'" style="padding-top:22px;float:left;margin-right:20px;">
                     <div style="display:inline-block;">
+                        <!--
                         <span style="display:block;font-size:14px;font-weight:500;">Selected User</span>
+                        -->
                         <div class="selected-node" style="padding:7px;display:inline-block;margin-right:10px;">
                             <i [ngClass]="userTypeIconHash[selectedUser?.userType]" style="font-size:16px;"
                                 [ngStyle]="{'color': userTrainingStatusColorHash[selectedUser?.trainingStatus]}"
@@ -352,6 +354,7 @@
                             </span>
                         </div>
                     </div>
+                    <!--
                     <div *ngIf="uidUTHash[selectedUser?._id]?.length > 0"
                         style="display:inline-block;margin-left:20px;">
                         <span style="display:block;font-size:14px;font-weight:500;">Assigned Trainings</span>
@@ -367,8 +370,11 @@
                             </div>
                         </div>
                     </div>
-                    <div style="display:inline-block;margin-left:20px;">
+                    -->
+                    <div style="display:inline-block;margin-left:10px;">
+                        <!--
                         <span style="display:block;font-size:14px;font-weight:500;">Actions</span>
+                        -->
                         <div style="border:1px solid #dddddd;border-radius:32px;padding:3px;display:inline-block;">
                             <button nz-button nzShape="circle" nzType="default" [disabled]="!userIdSelected"
                                 style="display:inline-block;" (click)="showUserTrainingModal = true" nz-tooltip
@@ -376,24 +382,24 @@
                                 <i class="fas fa-arrow-alt-to-right"></i>
                             </button>
                             <button nz-button nzShape="circle" nzType="default" [disabled]="!userIdSelected"
-                                style="display:inline-block;margin-left:10px;"
+                                style="display:inline-block;margin-left:3px;"
                                 (click)="manageCurrentTrainingsModal = true" nz-tooltip nzTooltipPlacement="bottomLeft"
                                 nzTooltipTitle="Manage Current Trainings">
                                 <i class="fas fa-graduation-cap"></i>
                             </button>
                             <button [disabled]="!userIdSelected" nz-button nzShape="circle"
-                                style="display:inline-block;margin-left:10px;" nz-popconfirm
+                                style="display:inline-block;margin-left:3px;" nz-popconfirm
                                 nzPopconfirmTitle="Delete this user?" (nzOnConfirm)="confirmDelete(selectedUser)"
                                 nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Delete User">
                                 <i class="fas fa-trash"></i>
                             </button>
                             <button [disabled]="!userIdSelected" nz-button nzShape="circle"
-                                style="display:inline-block;margin-left:10px;" nz-tooltip
+                                style="display:inline-block;margin-left:3px;" nz-tooltip
                                 nzTooltipPlacement="bottomLeft" nzTooltipTitle="Edit User" (click)="editUser()">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button [disabled]="!userIdSelected" nz-button nzShape="circle"
-                                style="display:inline-block;margin-left:10px;" nz-popconfirm
+                                style="display:inline-block;margin-left:3px;" nz-popconfirm
                                 nzPopconfirmTitle="Resend Registration Message?"
                                 (nzOnConfirm)="resendRegistrationMsg(selectedUser.email, authenticatedUser.email)"
                                 nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Resend Registration Email">
@@ -441,13 +447,10 @@
                         </div>
                     </ng-template>
                 </div>
+                <!--
                 <div *ngIf="selectionMode === 'Training'" style="float:left;margin-right:10px;">
                     <span style="display:block;font-size:14px;font-weight:500;">Training Status</span>
                     <div style="padding-top:10px;">
-                        <!--
-                        <i class="fas fa-user" style="font-size:16px;color:black;margin-right:3px;"></i>
-                        <span style="margin-right:10px;">{{ nodeStatHash[authenticatedUser?._id]?.trainingHash.none}}</span>
-                        -->
                         <i class="fas fa-graduation-cap" style="font-size:16px;color:#46bd15;margin-right:3px;" nz-tooltip
                             nzTooltipPlacement="bottomLeft" nzTooltipTitle="In Progress"></i>
                         <span
@@ -466,6 +469,7 @@
                             style="margin-right:10px;">{{ nodeStatHash[authenticatedUser?._id]?.trainingHash.pendingCertUpload}}</span>
                     </div>
                 </div>
+                -->
                 <div *ngIf="selectionMode === 'UserType'" style="float:left;margin-right:20px;">
                     <div style="width:fit-content;display:block;">
                         <span style="display:inline-block;font-size:14px;font-weight:500;">User
@@ -568,9 +572,9 @@
                 </div>
                 <div style="padding-top:22px;float:left;">
                     <div *ngIf="selectionMode !== 'Individual'" class="selected-node"
-                        style="padding:7px;display:inline-block;" nz-tooltip nzTooltipPlacement="bottomLeft"
+                        style="padding:7px;display:inline-block;font-size:16px;font-weight: 200;color:#444444;" nz-tooltip nzTooltipPlacement="bottomLeft"
                         nzTooltipTitle="Users Selected">
-                        {{userIdsSelected.length}}
+                        {{userIdsSelected.length}} Users Selected
                     </div>
                     <div *ngIf="selectionMode !== 'Individual' && selectionMode !== 'Errors'"
                         style="border:1px solid #dddddd;border-radius:32px;margin-left:20px;padding:3px;display:inline-block;">
@@ -580,13 +584,13 @@
                             nzTooltipPlacement="bottomLeft" nzTooltipTitle="Assign Training to Users">
                             <i class="fas fa-arrow-alt-to-right"></i></button>
                         <button *ngIf="selectionMode === 'Training'" nz-button nzShape="circle"
-                            [disabled]="userIdsSelected.length === 0" style="display:inline-block;margin-left:10px;"
+                            [disabled]="userIdsSelected.length === 0" style="display:inline-block;margin-left:3px;"
                             nz-popconfirm nzPopconfirmTitle="Remove this training from all users selected?"
                             (nzOnConfirm)="confirmUserTrainingDelete()" nz-tooltip nzTooltipPlacement="bottomLeft"
                             nzTooltipTitle="Remove Training from Users">
                             <i class="fas fa-arrow-alt-from-right"></i></button>
                         <button *ngIf="selectionMode !== 'Individual'" nz-button nzShape="circle" nzType="default"
-                            [disabled]="userIdsSelected.length === 0" style="display:inline-block;margin-left:10px;" (click)="showMsgModal()"
+                            [disabled]="userIdsSelected.length === 0" style="display:inline-block;margin-left:3px;" (click)="showMsgModal()"
                             nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Send Message to Selected Users">
                             <i class="fas fa-envelope"></i></button>
                     </div>
@@ -615,43 +619,42 @@
                         </div>
                     </nz-modal>
                 </div>
-                <div style="float:right;padding-top:22px;">
+                <div style="float:right;padding-top:24px;">
                     <div
                         style="border:1px solid #dddddd;border-radius: 25px;padding: 3px;width: fit-content;display: inline-block;">
                         <button *ngIf="!includeFullName" nz-button nzShape="circle"
                             (click)="includeFullName = !includeFullName"
                             style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
                             nzTooltipTitle="Show Individual Contributor's Name">
-                            <i class="fal fa-tag" style="font-size:18px;"></i>
+                            <i class="fas fa-tag" style="font-size:16px;vertical-align: middle;"></i>
                         </button>
                         <button *ngIf="includeFullName" nz-button nzShape="circle"
                             (click)="includeFullName = !includeFullName"
                             style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
                             nzTooltipTitle="Hide Individual Contributor's Name">
-                            <span class="fa-stack fa-2x" style="font-size:10px;">
-                                <i class="far fa-tag fa-stack-1x"></i>
+                            <span class="fa-stack fa-2x" style="font-size:12px;">
+                                <i class="fas fa-tag fa-stack-1x"></i>
                                 <i class="fal fa-ban fa-stack-2x"></i>
                             </span>
                         </button>
                         <button nz-button nzShape="circle" (click)="collapseAllSubOrgs(false)"
                             style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
                             nzTooltipTitle="Expand All Suborganizations">
-                            <i class="fal fa-chevron-circle-down" style="font-size:18px;"></i>
-
+                            <i class="fas fa-chevron-circle-down" style="font-size:16px;vertical-align: middle;"></i>
                         </button>
                         <button nz-button nzShape="circle" (click)="collapseAllSubOrgs(true)"
                             style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
                             nzTooltipTitle="Collapse All Suborganizations">
-                            <i class="fal fa-chevron-circle-up" style="font-size:18px;"></i>
+                            <i class="fas fa-chevron-circle-up" style="font-size:16px;vertical-align: middle;"></i>
                         </button>
                         <button nz-button nzShape="circle" (click)="zoomIn()"
                             style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
                             nzTooltipTitle="Zoom In">
-                            <i class="fal fa-search-plus" style="font-size:18px;"></i>
+                            <i class="fas fa-search-plus" style="font-size:16px;vertical-align: middle;"></i>
                         </button>
                         <button nz-button nzShape="circle" (click)="zoomOut()" style="vertical-align: middle;"
                             nz-tooltip nzTooltipPlacement="bottomRight" nzTooltipTitle="Zoom Out">
-                            <i class="fal fa-search-minus" style="font-size:18px;"></i>
+                            <i class="fas fa-search-minus" style="font-size:16px;vertical-align: middle;"></i>
                         </button>
                     </div>
                     <!--

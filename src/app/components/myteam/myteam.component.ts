@@ -1708,6 +1708,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     for (let node of this.collapsedNodes) {
       this.figureOrgStat(node);
     }
+    /*
     if (this.authenticatedUser?.trainingStatus === 'pastDue') {
       this.nodeStatHash[this.authenticatedUser?._id].pastDueCnt++;
     } else if (this.authenticatedUser?.trainingStatus === 'none') {
@@ -1742,6 +1743,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         }
       }
     }
+    */
 
   }
 

@@ -1001,7 +1001,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     for (let user of this.assignedToUsers) {
       let msg = <TemplateMessageModel>{
         to: this.myOrgHash[user].email,
-        from: this.authenticatedUser.email,
+        from: 'greg@mytrainingdocs.com',
         templateId: 'd-b4679d4de1fb41e18d1e2487995f9bdf',
         dynamicTemplateData: {
           firstName: this.myOrgHash[user].firstName,
@@ -1019,7 +1019,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     for (let user of this.assignedToUsers) {
       let msg = <TemplateMessageModel>{
         to: this.myOrgHash[user].email,
-        from: this.authenticatedUser.email,
+        from: 'greg@mytrainingdocs.com',
         templateId: 'd-3d4ee355e8164a999bbd8a4dd3d106dc',
         dynamicTemplateData: {
           firstName: this.myOrgHash[user].firstName,

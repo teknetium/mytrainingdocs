@@ -535,7 +535,7 @@ export class UserService {
         if (!testing) {
           message = {
             to: this.newTeamMember.email,
-            from: this.authenticatedUser.email,
+            from: 'greg@mytrainingdocs.com',
             templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
             dynamicTemplateData: {
               email: this.newTeamMember.email
