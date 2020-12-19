@@ -23,7 +23,8 @@ export interface UserModel {
     statusList: string[],
     showCSV: boolean,
     themeColor: {},
-    showLegend: boolean
+    showLegend: boolean,
+    showAlerts: boolean
   }
 }
 

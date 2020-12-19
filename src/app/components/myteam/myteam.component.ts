@@ -187,7 +187,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       statusList: [],
       showCSV: false,
       themeColor: {},
-      showLegend: true
+      showLegend: true,
+      showAlerts: true
     },
     jobTitle: ''
   }
@@ -2198,7 +2199,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         secondary: '#999999',
         bgColor: '#e9e9e9',
       },
-      showLegend: true
+      showLegend: true,
+      showAlerts: true
     };
     this.supervisorName = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
     this.selectedUser = this.newTeamMember;
@@ -2601,6 +2603,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   confirmUserTrainingDelete() {
+    let upToDateUIDs = [];
+    let noneUIDs = [];
     for (let uid of this.userIdsSelected) {
       let user = this.myOrgUserHash[uid];
       let utList = this.uidUTHash[uid];
@@ -2609,6 +2613,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (utList.length === 1) {
         user.trainingStatus = 'none';
         this.uidUTHash[uid] = [];
+        noneUIDs.push(uid);
       } else {
         let pastDueFound = false;
         for (let ut of utList) {
@@ -2626,11 +2631,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         this.uidUTHash[uid] = newUtList;
         if (!pastDueFound) {
           user.trainingStatus = 'upToDate';
+          upToDateUIDs.push(uid);
         }
       }
 
 //      this.userTrainingService.deleteUserTrainingByTidUid(this.currentTrainingSelected, uid);
     }
+    this.userService.setUsersStatusNone(noneUIDs);
+    this.userService.setUsersStatusUpToDate(upToDateUIDs);
     this.userTrainingService.bulkDeleteTraining(this.userIdsSelected, this.currentTrainingSelected);
 //    this.userTrainingService.deleteUTForTid(this.currentTrainingSelected);
     this.figureOrgStat(this.authenticatedUser._id);
@@ -2658,7 +2666,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else {
       let alert = <AlertModel>{
         type: 'info',
-        message: 'Assigning training to ' + this.userIdsSelected.length + ' users.'
+        message: 'The selected training is being assigned to ' + this.userIdsSelected.length + ' users.'
       }
       this.notifyService.showAlert(alert);
       this.userTrainingService.bulkAssignTraining(this.userIdsSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version);

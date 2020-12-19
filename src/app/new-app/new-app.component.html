@@ -7,35 +7,38 @@
         </div>
         <ul nz-menu nzTheme="light" nzMode="horizontal"
             [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.bgColor, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary }">
-            <li nz-menu-item nzMatchRouter>
+            <li nz-menu-item nzMatchRouter class="nav-badge"
+                [ngClass]="{'current-nav': currentPage === 'home', 'nav-element': currentPage !== 'home'}">
                 <a routerLink="/home" routerLinkActive="active-link">
                     Home
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
-                class="nav-badge">
+                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'myteam'}">
                 <a routerLink="/myteam" routerLinkActive="active-link">
                     My Team
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
-                class="nav-badge">
+                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'mytrainings'}">
                 <a routerLink="/mytrainings" routerLinkActive="active-link">
                     My Trainings
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor' || (authenticatedUser$ | async)?.teamAdmin"
-                nz-menu-item nzMatchRouter>
+                nz-menu-item nzMatchRouter class="nav-badge" [ngClass]="{'current-nav': currentPage === 'trainings'}">
                 <a routerLink="/trainings" routerLinkActive="active-link">
                     All Trainings
                 </a>
             </li>
-            <li nz-menu-item class="navbar-rhs">
-                <span class=" pointer" nz-dropdown [nzDropdownMenu]="profile" [nzTrigger]="'click'"
-                    [nzPlacement]="'bottomRight'">
+            <li nz-menu-item class="navbar-rhs" nz-dropdown [nzDropdownMenu]="profile" [nzTrigger]="'hover'"
+                [nzPlacement]="'bottomRight'">
+                <span class=" pointer">
                     <nz-avatar [nzText]="(authenticatedUser$ | async)?.firstName.substring(0,1)"
                         [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.secondary, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary}">
                     </nz-avatar>
+                    <i nz-icon nzType="down" theme="outline"
+                        style="display:inline-block;vertical-align:middle;color:black;font-size:12px;"></i>
                 </span>
                 <nz-dropdown-menu #profile="nzDropdownMenu">
                     <ul nz-menu class="p-b-15 p-t-20">
@@ -48,20 +51,31 @@
                                 </div>
                             </div>
                         </li>
-                        <li nz-menu-item>
+                        <li nz-menu-item (click)="quickViewToggle()">
                             <a class="p-v-5 d-flex align-items-center justify-content-between">
-                                <div (click)="userPanelVisible = true">
+                                <div>
+                                    <i class="fal fa-cog"
+                                        style="font-size:20px;color:#000000;vertical-align: middle;"></i>
+                                    <span class="m-l-10">Settings</span>
+                                </div>
+                            </a>
+                        </li>
+                        <!--
+                        <li nz-menu-item (click)="userPanelVisible = true">
+                            <a class="p-v-5 d-flex align-items-center justify-content-between">
+                                <div>
                                     <i class="" nz-icon nzType="user" theme="outline"
                                         style="vertical-align: baseline;font-size:20px;"></i>
                                     <span class="m-l-10">Edit Profile</span>
                                 </div>
                             </a>
                         </li>
+                        -->
                         <li nz-menu-item (click)="logout()">
                             <a class="p-v-5 d-flex align-items-center justify-content-between">
                                 <div>
-                                    <i class="" nz-icon nzType="logout" theme="outline"
-                                        style="vertical-align: baseline;font-size:20px;color:#bbbbbb;"></i>
+                                    <i class="fal fa-sign-out"
+                                        style="vertical-align: baseline;font-size:20px;color:black;"></i>
                                     <span class="m-l-10">Logout</span>
                                 </div>
                             </a>
@@ -69,18 +83,48 @@
                     </ul>
                 </nz-dropdown-menu>
             </li>
-            <li class="navbar-rhs" nz-tooltip nzTooltipTitle="Settings" nzTooltipPlacement="bottomLeft">
-                <a (click)="quickViewToggle()">
-                    <i nz-icon nzType="setting" theme="outline" style="font-size:20px;color:#000000;"></i>
-                </a>
+            <li nz-menu-item class="navbar-rhs" nz-dropdown [nzDropdownMenu]="alertDropDown" [nzTrigger]="'hover'"
+                    nzPlacement="bottomRight">
+                <span class="pointer" >
+                    <a>
+                        <i *ngIf="dropDownAlerts.length === 0" class="far fa-bell"
+                            style="font-size:20px;color:#000000;vertical-align: middle;"></i>
+                        <i *ngIf="dropDownAlerts.length > 0" class="far fa-bell-on"
+                            style="font-size:30px;color:#000000;vertical-align: middle;"></i>
+                    </a>
+                </span>
+                <nz-dropdown-menu #alertDropDown="nzDropdownMenu">
+                    <ul nz-menu>
+                        <li *ngIf="dropDownAlerts.length === 0" style="width:200px;padding:20px;">
+                            <div
+                                style="line-height:normal;font-size:16px;font-weight:200;">
+                                No Alerts!
+
+                            </div>
+                        </li>
+                        <li *ngFor="let alert of dropDownAlerts; index as i" nz-menu-item>
+                            <div style="width:500px;font-size:12px;border-radius:4px;padding:5px;white-space: normal;"
+                                [ngStyle]="{'border': border[alert.type], 'background': bgColor[alert.type]}">
+                                <span>
+                                    <i [ngClass]="icon[alert.type]" [ngStyle]="{'color': iconColor[alert.type]}"
+                                        style="font-size:14px;margin-right:10px;"></i>
+                                </span>
+                                <span>{{messageLabel[alert.type] + alert?.message}}</span>
+
+                            </div>
+                        </li>
+                        <li nz-menu-item style="line-height:normal;padding:0 20px;text-align: center;">
+                            <div *ngIf="dropDownAlerts.length > 0"
+                                style="text-align: center;">
+                                <button nz-button nzType="default" nzSize="small" (click)="dropDownAlerts = []; alerts = []"
+                                    style="line-height:normal;font-size:12px;border-radius:4px;padding:0 5px;background:#f1f1f1;border:1px solid #dddddd;">
+                                    Clear All
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                </nz-dropdown-menu>
             </li>
-            <!--
-            <li class="navbar-rhs">
-                <a >
-                {{user.org}}
-                </a>
-            </li>
-            -->
         </ul>
         <ng-template #httpError>
 
@@ -99,9 +143,12 @@
                 <nz-spin nzSimple [nzSize]="'large'" style="text-align: center;"></nz-spin>
             </div>
         </div>
-        <div *ngIf="alerts.length > 0" style="display:block;height:fit-content;margin-bottom:40px;">
-            <nz-alert *ngFor="let alert of alerts; index as i" nzBanner [nzMessage]="alert?.message" [nzType]="alert?.type"
-                nzCloseable (nzOnClose)="onAlertClose(i)">
+        <div *ngIf="user.settings.showAlerts && alerts.length > 0"
+            style="display:block;height:fit-content;margin-bottom:40px;">
+            <nz-alert *ngFor="let alert of alerts; index as i" nzBanner
+                [nzMessage]="messageLabel[alert.type] + alert?.message" [nzType]="alert?.type" nzCloseable
+                (nzOnClose)="onAlertClose(i)" [ngStyle]="{'border': border[alert.type]}"
+                style="margin-bottom:3px;border-radius:4px;">
             </nz-alert>
         </div>
         <router-outlet [ngStyle]="{'height.px': browserInnerHeight - headerHight}"></router-outlet>
@@ -112,40 +159,6 @@
                     <h3>Welcome to <span style="color:red;">my</span>Training<span style="color:red;">docs</span>!</h3>
                 </div>
                 <br>
-
-                <!--
-                <p style="margin-bottom: 20px;color:#000000;">
-                    Your organization name is 
-                    <span style="font-size:24px;">&nbsp;&nbsp;&nbsp;{{user.org}}</span>
-                </p>
-                <div style="display:block;margin-bottom:10px;width:100%;">
-                    <input style="display:inline-block;width:80%;" nz-input type="text" [placeholder]="user.org"
-                        ngDefaultControl [(ngModel)]="user.org">
-                </div>
-                <br>
-                <p style="margin-bottom: 20px;color:#000000;">
-                    Look for the following icons when you need assistance using the site.
-                </p>
-                <p>
-                    <span style="color:#000000;">
-                        <i nz-icon nzType="question-circle" nzTheme="twotone"
-                            style="margin-left:30px;font-size:20px;color:#000000;vertical-align: baseline;"></i>
-                        &nbsp;&nbsp;
-                        Gives you a quick tour
-                        <br>
-                        <i nz-icon nzType="play-circle" nzTheme="twotone"
-                            style="margin-top:10px;color:blue;margin-left:30px;font-size:20px;color:#000000;vertical-align: baseline;"></i>
-                        &nbsp;&nbsp;
-                        Plays a How-To video for the current page
-                        <br>
-                        <br>
-                        <div>
-                            So, let's get started! Oh, one more bit of housekeeping...
-                        </div>
-                    </span>
-                </p>
-                -->
-
             </div>
             <div *ngIf="authenticatedUser$ | async as user" style="background-color: white;">
                 <span style="margin-left:10%;display:block;float:left;font-size:16px;">Please give us your
@@ -168,70 +181,75 @@
 
             </div>
         </nz-modal>
-        <nz-drawer nzWidth="500px" nzTitle="App Settings" [nzClosable]="false" [nzVisible]="quickViewVisible"
+        <nz-drawer nzWidth="700px" nzTitle="Settings" [nzClosable]="false" [nzVisible]="quickViewVisible"
             nzPlacement="right" (nzOnClose)="quickViewToggle()">
-            <app-settings></app-settings>
+            <nz-tabset>
+                <nz-tab nzTitle="Application">
+                    <app-settings></app-settings>
+                </nz-tab>
+                <nz-tab nzTitle="User">
+                    <div style="display:block;width:90%;">
+                        <div style="display:inline-block;width:25%;text-align: right;">
+                            <label style="font-size:14px;color:#000000;">
+                                First Name
+                            </label>
+                        </div>
+                        <div style="display:inline-block;width:70%;margin-left:20px;">
+                            <input nz-input nzSize="small" type="text" placeholder="First Name" ngDefaultControl
+                                [(ngModel)]="authenticatedUser.firstName" style="margin-bottom:2px;">
+                        </div>
+                    </div>
+                    <div style="display:block;width:90%;">
+                        <div style="display:inline-block;width:25%;text-align: right;">
+                            <label style="font-size:14px;color:#000000;">
+                                Last Name
+                            </label>
+                        </div>
+                        <div style="display:inline-block;width:70%;margin-left:20px;">
+                            <input nz-input nzSize="small" type="text" placeholder="Last Name" ngDefaultControl
+                                [(ngModel)]="authenticatedUser.lastName" style="margin-bottom:2px;">
+                        </div>
+                    </div>
+                    <div style="display:block;width:90%;">
+                        <div style="display:inline-block;width:25%;text-align: right;">
+                            <label style="font-size:14px;color:#000000;">
+                                Email
+                            </label>
+                        </div>
+                        <div style="display:inline-block;width:70%;margin-left:20px;">
+                            <nz-input-group [nzSuffix]="suffixTemplate">
+                                <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl
+                                    [(ngModel)]="currentEmail" (ngModelChange)="checkUniqueEmail($event)"
+                                    style="margin-bottom:2px;" (keydown.enter)="checkUniqueEmail($event)"
+                                    (blur)="checkUniqueEmail($event)">
+                            </nz-input-group>
+                            <ng-template #suffixTemplate>
+                                <span *ngIf="!emailUnique" style="font-size:10px;">email taken</span>
+                                <span *ngIf="emailUnique" style="font-size:10px;">email available</span>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div style="display:block;margin-top:20px;width:90%;text-align: center;">
+                        <div style="display:inline-block;width:60%;">
+                            <!--
+                            <button nz-button nzSize="small" nzShape="round" (click)="handleUpdateUserCancel()"
+                                nzType="default" style="margin: 10px;display:inline-block;">Cancel
+                            </button>
+                            -->
+                            <button *ngIf="authenticatedUser" nz-button nzSize="small" nzShape="round"
+                                (click)="handleUpdateUser()" [disabled]="!emailUnique" nzType="primary"
+                                style="margin: 10px;display:inline-block;">Update
+                                User
+                            </button>
+                        </div>
+                    </div>
+                </nz-tab>
+                <nz-tab nzTitle="Organization">
+                </nz-tab>
+            </nz-tabset>
         </nz-drawer>
     </nz-content>
     <!--
     <nz-footer class="footer">Copyright ©2020 Teknetium, LLC</nz-footer>
     -->
-    <nz-drawer [nzClosable]="false" [nzMaskClosable]="true" [nzVisible]="userPanelVisible" nzPlacement="right"
-        nzTitle="User Profile" [nzWidth]="700">
-        <div *ngIf="authenticatedUser" style="display:block;width:100%;">
-            <div style="display:block;width:90%;">
-                <div style="display:inline-block;width:25%;text-align: right;">
-                    <label style="font-size:14px;color:#000000;">
-                        First Name
-                    </label>
-                </div>
-                <div style="display:inline-block;width:70%;margin-left:20px;">
-                    <input nz-input nzSize="small" type="text" placeholder="First Name" ngDefaultControl
-                        [(ngModel)]="authenticatedUser.firstName" style="margin-bottom:2px;">
-                </div>
-            </div>
-            <div style="display:block;width:90%;">
-                <div style="display:inline-block;width:25%;text-align: right;">
-                    <label style="font-size:14px;color:#000000;">
-                        Last Name
-                    </label>
-                </div>
-                <div style="display:inline-block;width:70%;margin-left:20px;">
-                    <input nz-input nzSize="small" type="text" placeholder="Last Name" ngDefaultControl
-                        [(ngModel)]="authenticatedUser.lastName" style="margin-bottom:2px;">
-                </div>
-            </div>
-            <div style="display:block;width:90%;">
-                <div style="display:inline-block;width:25%;text-align: right;">
-                    <label style="font-size:14px;color:#000000;">
-                        Email
-                    </label>
-                </div>
-                <div style="display:inline-block;width:70%;margin-left:20px;">
-                    <nz-input-group [nzSuffix]="suffixTemplate">
-                        <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl
-                            [(ngModel)]="currentEmail" (ngModelChange)="checkUniqueEmail($event)"
-                            style="margin-bottom:2px;" (keydown.enter)="checkUniqueEmail($event)"
-                            (blur)="checkUniqueEmail($event)">
-                    </nz-input-group>
-                    <ng-template #suffixTemplate>
-                        <span *ngIf="!emailUnique" style="font-size:10px;">email taken</span>
-                        <span *ngIf="emailUnique" style="font-size:10px;">email available</span>
-                    </ng-template>
-                </div>
-            </div>
-            <div style="display:block;margin-top:20px;width:90%;text-align: center;">
-                <div style="display:inline-block;width:60%;">
-                    <button nz-button nzSize="small" nzShape="round" (click)="handleUpdateUserCancel()" nzType="default"
-                        style="margin: 10px;display:inline-block;">Cancel
-                    </button>
-                    <button *ngIf="authenticatedUser" nz-button nzSize="small" nzShape="round"
-                        (click)="handleUpdateUser()" [disabled]="!emailUnique" nzType="primary"
-                        style="margin: 10px;display:inline-block;">Update
-                        User
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nz-drawer>
 </nz-layout>

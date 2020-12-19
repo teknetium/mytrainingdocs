@@ -231,7 +231,7 @@
             </ng-template>
         </div>
     </div>
-    <div style="position:fixed;bottom:5px;left:5px;">
+    <div style="position:fixed;bottom:5px;left:5px;z-index:1000;">
         <button *ngIf="!showLegend" nz-button nzSize="small" nzType="primary" (click)="showLegend = true">
             Show Legend
         </button>
@@ -831,7 +831,7 @@
                             (click)="collapseNode(authenticatedUser._id, false)" style="margin:0 8px;">
                             <i class="far fa-plus-circle" nz-tooltip nzTooltipTitle="Expand Suborganization"
                                 nzTooltipPlacement="right" style="margin-top:4px;font-size:16px;color:red;cursor:pointer;"></i>
-                            <div class="collapsed-block" [ngClass]="{'hover-collapsed-block': orgChartNodeHash[authenticatedUser._id]?.extra.reportChain.includes(currentHoverUid) || authenticatedUser._id === currentHoverUid}">
+                            <div (mouseenter)="setHoverData(authenticatedUser._id)" (mouseleave)="setHoverData(null)"  class="collapsed-block" [ngClass]="{'hover-collapsed-block': orgChartNodeHash[authenticatedUser._id]?.extra.reportChain.includes(currentHoverUid) || authenticatedUser._id === currentHoverUid}">
                                 <div nz-tooltip nzTooltipTitle="Total Users" nzTooltipPlacement="right"
                                     style="display:flex;justify-content:space-between;">
                                     <i class="fas fa-users" style="font-size:18px;"></i>

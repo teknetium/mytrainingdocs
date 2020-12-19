@@ -193,7 +193,7 @@ export class UserTrainingService {
       console.log("resetStatusForMany", responseObj);
       let alert = <AlertModel>{
         type: 'success',
-        message: 'Successfully reset status for ' + responseObj.n + ' users.'
+        message: 'Reset status for ' + responseObj.n + ' users.'
       }
       this.notifyService.showAlert(alert);
     });
@@ -345,13 +345,13 @@ export class UserTrainingService {
     if (userTrainings.length === 0) {
       warningAlert = <AlertModel>{
         type: 'warning',
-        message: 'WARNING  -  All users selected already have that training assigned to them.'
+        message: 'The selected training has already been assigned to these users.'
       }
       this.notifyService.showAlert(warningAlert);
     } else if (userTrainings.length < uids.length) {
       warningAlert = <AlertModel>{
         type: 'warning',
-        message: 'WARNING  ' + (uids.length - userTrainings.length) + ' out of the ' + uids.length + ' users selected already have that training assigned to them.'
+        message: (uids.length - userTrainings.length) + ' out of the ' + uids.length + ' users selected already have that training assigned to them.'
       }
       this.notifyService.showAlert(warningAlert);
     }
@@ -388,13 +388,13 @@ export class UserTrainingService {
         if ((loopCnt === iterationCnt) && (batchAddedCount === userTrainings.length)) {
           let successAlert = <AlertModel>{
             type: 'success',
-            message: 'Successfully assigned training to  ' + batchAddedCount + ' users.'
+            message: 'The selected training has been assigned to ' + batchAddedCount + ' users.'
           }
           this.notifyService.showAlert(successAlert);
         } else if ((loopCnt === iterationCnt) && (batchAddedCount < userTrainings.length)) {
           let errorAlert = <AlertModel>{
             type: 'error',
-            message: loopCnt + '/' + iterationCnt + ' Houston, we have a problem.  We were only able to assign the training to ' + batchAddedCount + ' out of ' + userTrainings.length + ' users.'
+            message: 'Houston, we have a problem.  We were only able to assign the training to ' + batchAddedCount + ' out of ' + userTrainings.length + ' users.'
           }
           this.notifyService.showAlert(errorAlert);
         }
@@ -499,7 +499,7 @@ export class UserTrainingService {
       console.log('bulkDeleteUserTrainings', responseObj);
       let alert = <AlertModel>{
         type: 'success',
-        message: 'Successfully removed the training from ' + responseObj.n + ' users.'
+        message: 'The selected training has been removed from ' + responseObj.n + ' users.'
       }
       this.notifyService.showAlert(alert);
     })

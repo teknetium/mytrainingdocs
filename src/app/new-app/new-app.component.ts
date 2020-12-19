@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, TemplateRef } from '@angular/core';
+import { Component, OnInit, HostListener, TemplateRef, ViewChild, ElementRef } from '@angular/core';
 import { AuthService } from '../shared/services/auth.service';
 import { TrainingService } from '../shared/services/training.service';
 import { UserService } from '../shared/services/user.service';
@@ -94,6 +94,12 @@ export interface Task {
 })
 
 export class NewAppComponent extends BaseComponent implements OnInit {
+  @ViewChild('audioOption') audioPlayerRef: ElementRef;
+
+  onAudioPlay() {
+    this.audioPlayerRef.nativeElement.play();
+  }
+
   browserInnerHeight;
   browserInnerWidth;
   contentHeight;
@@ -262,8 +268,9 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   currentEmail;
   currentStep = 0;
   loading = true;
-  alerts: AlertModel[] = [];
-  /*
+  dropDownAlerts: AlertModel[] = [];
+  alerts: AlertModel[] = [
+    /*
     {
       type: 'error',
       message: 'sample error message'
@@ -274,15 +281,45 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     },
     {
       type: 'warning',
-      message: 'sample WARNING message'
+      message: 'sample WARNING messagesample WARNING messagesample WARNING messagesample WARNING messagesample WARNING messagesample WARNING message'
     },
     {
       type: 'success',
       message: 'sample error message'
     }
+    */
   ];
-  */
   alert$: Observable<AlertModel>;
+  icon = {
+    info: 'fas fa-info-circle',
+    warning: 'fas fa-exclamation-circle',
+    success: 'fas fa-check-circle',
+    error: 'fas fa-times-circle'
+  }
+  iconColor = {
+    info: '#4891f7',
+    warning: '#edaf41',
+    success: '#75c040',
+    error: '#de3c39'
+  }
+  border = {
+    info: '1px solid #4891f7',
+    warning: '1px solid #edaf41',
+    success: '1px solid #75c040',
+    error: '1px solid #de3c39'
+  }
+  bgColor = {
+    info: '#e9f6fe',
+    warning: '#fefbe8',
+    success: '#f8ffee',
+    error: '#fdf1f0'
+  }
+  messageLabel = {
+    info: "INFO - ",
+    warning: "WARNING - ",
+    error: "ERROR - ",
+    success: "SUCCESS - ",
+  }
 
   constructor(
     private authService: AuthService,
@@ -339,17 +376,16 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       this.pageTaskHash[page] = Object.keys(this.aboutThisPageHash[page].taskHash);
     }
     this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
-    /*
         this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
           this.currentPage = event.url.substring(1);
           console.log('Route', this.currentPage, event.url);
-          if (this.currentPage.indexOf('/') > -1) {
-          }
-          if (this.aboutThisPageHash[this.currentPage]) {
-            this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
-          }
+
+//          if (this.currentPage.indexOf('/') > -1) {
+//          }
+//          if (this.aboutThisPageHash[this.currentPage]) {
+//            this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
+//          }
         });
-        */
     /*
         this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
           if (!userTrainings) {
@@ -434,6 +470,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       }
 
       this.alerts.push(alert);
+      this.dropDownAlerts.push(alert);
     })
   };
 

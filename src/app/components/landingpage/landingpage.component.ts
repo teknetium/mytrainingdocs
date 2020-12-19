@@ -187,7 +187,8 @@ export class LandingpageComponent implements OnInit {
       monthly: 99,
       yearly: 999
     },
-    'smallOrg': {
+    'compact': {
+      perUser: 5,
       monthly: 500,
       yearly: 4800
     },

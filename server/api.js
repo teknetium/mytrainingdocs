@@ -981,6 +981,16 @@ module.exports = function(app, config) {
       res.send({ n: responseObj.n, nModified: responseObj.nModified });
     })
   });
+  app.put("/api/user/bulknone", jwtCheck, (req, res) => {
+    const userIds = req.body;
+
+    User.updateMany({ _id: { $in: userIds } }, { trainingStatus: "none" }, (err, responseObj) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      res.send({ n: responseObj.n, nModified: responseObj.nModified });
+    })
+  });
 
   //
   // ASSESSMENT methods

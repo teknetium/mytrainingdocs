@@ -196,6 +196,7 @@ export class UserService {
                   statusList: [],
                   showCSV: false,
                   showLegend: true,
+                  showAlerts: true,
                   themeColor: {
                     name: 'orange ',
                     bgColor: 'orange',
@@ -554,6 +555,7 @@ export class UserService {
         statusList: cloneDeep(statusList),
         showCSV: true,
         showLegend: true,
+        showAlerts: true,
         themeColor: {
           name: 'orange ',
           bgColor: 'orange',
@@ -739,6 +741,14 @@ export class UserService {
     this.allOrgUserHash[uid].trainingStatus = 'none';
     this.updateUser(this.allOrgUserHash[uid], false);
   }
+  setUsersStatusNone(uids: string[]) {
+    this.setUsersStatusNone$(uids).subscribe(responseObj => {
+      console.log("setUsersStatusNone ", uids, responseObj);
+    });;
+    for (let uid of uids) {
+      this.allOrgUserHash[uid].trainingStatus = 'none';
+    }
+  }
 
   getUIDReportChainHashStream(): Observable<UserIdHash> {
     return this.uidReportChainHashBS$.asObservable();
@@ -893,6 +903,17 @@ export class UserService {
   setUsersStatusPastDue$(uids: string[]): any {
     return this.http
       .put<string[]>(`${ENV.BASE_API}user/bulkpastdue/`, uids, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+
+  }
+
+  setUsersStatusNone$(uids: string[]): any {
+    return this.http
+      .put<string[]>(`${ENV.BASE_API}user/bulknone/`, uids, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

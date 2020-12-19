@@ -26,17 +26,22 @@
   text-align: center;
 }
 
+.current-nav {
+  background: rgba(255, 255, 255, .3);
+  color:blue !important;
+}
+
 .navbar-rhs {
   float:right;
   margin-right: 20px;
 }
 
 .nav-badge {
-  margin: 0 10px;
+  padding: 0 10px;
 }
 
 .nav-badge:hover {
-  color: cyan !important;
+  background: rgba(255,255,255, .3);
 }
 
 nz-content {
@@ -48,7 +53,7 @@ nz-footer {
 }
 .active-link {
   font-size: 14px;
-  color: red !important;
+  color:blue !important;
 }
 
 .inner-content {
@@ -89,3 +94,13 @@ nz-footer {
 }
 .task:hover {
 }
+
+.alert-close {
+  float:right;
+  font-size:16px;
+  color:#aaaaaa;
+  vertical-align: middle;
+}
+ .alert-close:hover {
+   color:black;
+ }
