@@ -6,7 +6,7 @@ import { ResizeEvent } from '../../shared/interfaces/event.type';
 import { TrainingService } from '../../shared/services/training.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { NotificationService } from '../../shared/services/notification.service';
-import { UserTrainingModel, UidUTHash } from '../../shared/interfaces/userTraining.type';
+import { UserTrainingModel, UidUTHash, TidUTHash, UidTidUTHash } from '../../shared/interfaces/userTraining.type';
 import { AlertModel } from '../../shared/interfaces/notification.type';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
 import { Observable, BehaviorSubject, Subscription, defer, from, timer, } from 'rxjs';
@@ -1147,8 +1147,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   currentTrainingSelected = '';
   listOfTrainingTitles = [];
   legendObj = {};
-  tidUTHash = {};
-  uidTidUTHash = {};
+  tidUTHash: TidUTHash;
+  uidTidUTHash: UidTidUTHash = {};
   currentHoverUser: UserModel;
   collapsedNodes: string[] = [];
   uidDataErrorHash = {};
@@ -1350,7 +1350,21 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!uidUTHash) {
         return;
       }
-      this.uidUTHash = uidUTHash;
+      this.uidUTHash = cloneDeep(uidUTHash);
+      let uids = Object.keys(uidUTHash);
+      let utList: UserTrainingModel[];
+      let tidUTHash: TidUTHash = {};
+      for (let uid of uids) {
+        utList = this.uidUTHash[uid];
+        if (!utList) {
+          continue;
+        } else {
+          for (let ut of utList) {
+            tidUTHash[ut.tid] = cloneDeep(ut);
+          }
+          this.uidTidUTHash[uid] = cloneDeep(tidUTHash);
+        }
+      }
       /*
       let uids = Object.keys(this.uidUTHash);
       for (let uid of uids) {
@@ -2580,10 +2594,15 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   getStatusColor(uid: string): string {
 
+    let ut: UserTrainingModel;
+
     if (this.selectionMode === 'Training' && this.userIdsSelected.includes(uid)) {
       let tidUTHash = this.uidTidUTHash[uid];
-      if (tidUTHash && tidUTHash[this.currentTrainingSelected]) {
-        return this.userTrainingStatusColorHash[tidUTHash[this.currentTrainingSelected].status];
+      if (tidUTHash) {
+        ut = tidUTHash[this.currentTrainingSelected];
+        return this.userTrainingStatusColorHash[ut.status];
+      } else {
+        return 'orange';
       }
     } else if (this.myOrgUserHash[uid]) {
       return this.userTrainingStatusColorHash[this.myOrgUserHash[uid].trainingStatus];
@@ -2666,10 +2685,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else {
       let alert = <AlertModel>{
         type: 'info',
-        message: 'The selected training is being assigned to ' + this.userIdsSelected.length + ' users.'
+        message: '"' + this.allTrainingIdHash[this.selectedTrainingId].title + '" is being assigned to ' + this.userIdsSelected.length + ' users.'
       }
       this.notifyService.showAlert(alert);
-      this.userTrainingService.bulkAssignTraining(this.userIdsSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version);
+      this.userTrainingService.bulkAssignTraining(this.userIdsSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version, this.allTrainingIdHash[this.selectedTrainingId].title);
       for (let uid of this.userIdsSelected) {
         let user = this.myOrgUserHash[uid];
         if (user.trainingStatus === 'none') {

@@ -8,6 +8,7 @@ import { UserTrainingModel, AssessmentResponse, UserTrainingHash, UTSession, UTS
 import { AuthService } from './auth.service';
 import { ENV } from './env.config';
 import { catchError } from 'rxjs/operators';
+import * as cloneDeep from 'lodash/cloneDeep';
 
 
 @Injectable({
@@ -302,7 +303,7 @@ export class UserTrainingService {
     })
   }
 
-  bulkAssignTraining(uids: string[], tid: string, teamId: string, version: string) {
+  bulkAssignTraining(uids: string[], tid: string, teamId: string, version: string, title: string) {
     let userTrainings: UserTrainingModel[] = [];
     let id = String(new Date().getTime());
     let dueDate = new Date().getTime() + 1209600000;
@@ -335,8 +336,8 @@ export class UserTrainingService {
           certImage: null
         };
         userTrainings.push(uT);
-        utList.push(Object.assign([],uT));
-        this.uidUTHash[uid] = Object.assign([], utList);
+        utList.push(cloneDeep(uT));
+        this.uidUTHash[uid] = cloneDeep(utList);
         counter++;
       }
     }
@@ -345,18 +346,18 @@ export class UserTrainingService {
     if (userTrainings.length === 0) {
       warningAlert = <AlertModel>{
         type: 'warning',
-        message: 'The selected training has already been assigned to these users.'
+        message: '"' + title + '" has already been assigned to these users.'
       }
       this.notifyService.showAlert(warningAlert);
     } else if (userTrainings.length < uids.length) {
       warningAlert = <AlertModel>{
         type: 'warning',
-        message: (uids.length - userTrainings.length) + ' out of the ' + uids.length + ' users selected already have that training assigned to them.'
+        message: (uids.length - userTrainings.length) + ' out of the ' + uids.length + ' users selected already have "' + title + '" assigned to them.'
       }
       this.notifyService.showAlert(warningAlert);
     }
 
-    //    this.uidUTHashBS$.next(this.uidUTHash);
+    this.uidUTHashBS$.next(cloneDeep(this.uidUTHash));
     let dbCnt = 0;
     let batchAddedCount = 0;
     let startIndex = 0;
@@ -382,19 +383,19 @@ export class UserTrainingService {
           this.allUserTrainingHash[ut._id] = ut;
         }
 //        console.log('bulk assign returns ...', userTrainingList);
-        this.bulkUserStatusUpdateBS$.next(this.uidList);
+        this.bulkUserStatusUpdateBS$.next(cloneDeep(this.uidList));
         this.uidList = [];
 
         if ((loopCnt === iterationCnt) && (batchAddedCount === userTrainings.length)) {
           let successAlert = <AlertModel>{
             type: 'success',
-            message: 'The selected training has been assigned to ' + batchAddedCount + ' users.'
+            message: '"' + title + '" has been assigned to ' + batchAddedCount + ' users.'
           }
           this.notifyService.showAlert(successAlert);
         } else if ((loopCnt === iterationCnt) && (batchAddedCount < userTrainings.length)) {
           let errorAlert = <AlertModel>{
             type: 'error',
-            message: 'Houston, we have a problem.  We were only able to assign the training to ' + batchAddedCount + ' out of ' + userTrainings.length + ' users.'
+            message: 'Houston, we have a problem.  We were only able to assign "' + title + '" to ' + batchAddedCount + ' out of ' + userTrainings.length + ' users.'
           }
           this.notifyService.showAlert(errorAlert);
         }
@@ -502,6 +503,18 @@ export class UserTrainingService {
         message: 'The selected training has been removed from ' + responseObj.n + ' users.'
       }
       this.notifyService.showAlert(alert);
+      let newUTList: UserTrainingModel[] = [];
+      let utList: UserTrainingModel[];
+      for (let uid of uids) {
+        utList = this.uidUTHash[uid];
+        for (let ut of utList) {
+          if (ut.tid !== tid) {
+            newUTList.push(ut);
+          }
+        }
+        this.uidUTHash[uid] = Object.assign([], newUTList);
+      }
+      this.uidUTHashBS$.next(this.uidUTHash);
     })
   }
 

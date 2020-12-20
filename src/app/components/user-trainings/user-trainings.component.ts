@@ -213,23 +213,30 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
       console.log("bulkUserStatusUpdate ", userIds);
       let pastDueList: string[] = [];
       let updateToDateList: string[] = [];
+      let noneList: string[] = [];
       let userTrainings: UserTrainingModel[];
       let pastDueFound = false;
       for (let uid of userIds) {
         userTrainings = this.uidUTHash[uid];
-        for (let userTraining of userTrainings) {
-          this.utIdHash[userTraining._id] = userTraining;
-          if (userTraining.status === 'pastDue') {
-            pastDueFound = true;
+        if (!userTrainings) {
+          noneList.push(uid);
+        } else {
+          for (let userTraining of userTrainings) {
+            this.utIdHash[userTraining._id] = userTraining;
+            if (userTraining.status === 'pastDue') {
+              pastDueFound = true;
+            }
+          }
+          if (pastDueFound) {
+            pastDueList.push(uid);
+            pastDueFound = false;
+          } else {
+            updateToDateList.push(uid);
           }
         }
-        if (pastDueFound) {
-          pastDueList.push(uid);
-          pastDueFound = false;
-        } else {
-          updateToDateList.push(uid);
-        }
       }
+
+      this.userService.setUsersStatusNone(noneList);
 
       this.userService.setUsersStatusUpToDate(updateToDateList);
 
