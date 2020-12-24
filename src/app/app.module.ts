@@ -19,7 +19,7 @@ import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
 import { VgOverlayPlayModule } from 'videogular2/compiled/overlay-play';
 import { SettingsModule } from './components/settings/settings.module';
-import { JoyrideModule } from 'ngx-joyride';
+import { JoyrideModule, JoyrideService} from 'ngx-joyride';
 import { LandingpageModule } from './components/landingpage/landingpage.module';
 import { DocsModule } from './components/docs/docs.module';
 import { VerifyEmailModule } from './components/verify-email/verify-email.module';
@@ -54,7 +54,8 @@ registerLocaleData(en);
         VerifyEmailModule,
         DocsModule,
         NzStepsModule,
-        NzSpinModule
+        NzSpinModule,
+        JoyrideModule.forRoot()
     ],
     providers: [
 //        { provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true },
@@ -66,6 +67,7 @@ registerLocaleData(en);
         AuthGuard,
         AuthService,
         UserService,
+        JoyrideService
     ],
     bootstrap: [AppComponent]
 })

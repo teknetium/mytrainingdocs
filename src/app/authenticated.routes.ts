@@ -22,7 +22,8 @@ export const AuthenticatedROUTES: Routes = [
     */
     {
         path: 'myteam',
-        loadChildren: () => import('./components/myteam/myteam.module').then(m => m.MyteamModule)
+        component: MyteamComponent
+//        loadChildren: () => import('./components/myteam/myteam.module').then(m => m.MyteamModule)
     },
     {
         path: 'myteam/:uid',

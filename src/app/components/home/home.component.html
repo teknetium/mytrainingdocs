@@ -5,8 +5,8 @@
         nz-tooltip nzTooltipTitle="A little help"></i>
         -->
     <div style="display:block;">
-        <div joyrideStep="step1" title="Welcome"
-            text="On this page you will find three sections that are intended to give you a very quick, high level understanding of your team and their training."
+        <div joyrideStep="task0Step1" [stepContent]="stepContent" [stepContentParams]="taskStepContentHash?.task0Step1"
+
             style="margin-bottom:20px;display: inline-block;">
             <span style="font-weight: 200;font-size:28px;">
                 Welcome,
@@ -20,9 +20,19 @@
             <app-my-trainings useBanner="yes"></app-my-trainings>
         </div>
     </div>
+        <ng-template #stepContent let-task="task" let-title="title" let-content="content">
+            <div style="width:500px;height:300px;">
+                <div style="border:1px solid #bbbbbb;border-radius:5px;background-color: #f1f1f1;;">
+                    <div style="float:left;font-size:42px;color:red;font-weight:500;">{{task}} - </div>
+                    <div style="float:left;font-weight:200;font-size:22px;">{{title}}</div>
+                    <div style="clear: both;"></div>
+                    {{ content }}
+                </div>
+            </div>
+        </ng-template>
     <div *ngIf="authenticatedUser?.userType === 'supervisor'">
         <div style="width:100%;display:block;height:60%;">
-                <nz-card style="float:left;width:48%;" [nzTitle]="userCardTitle"
+                <nz-card style="float:left;width:48%;" [nzTitle]="userCardTitle" joyrideStep="task0Step2" [stepContent]="stepContent" [stepContentParams]="taskStepContentHash?.task0Step2"
                     [nzExtra]="extraTemplate" >
                     <div *ngIf="myTeam.length === 0">
                         <span style="font-weight:200;" (click)="goTo('/myteam')">
@@ -114,8 +124,7 @@
                     </div>
                 </ng-template>
             <nz-card style="float:right;width:48%;" nzTitle="Trainings"
-                joyrideStep="step3" title="Your Team's Trainings"
-                text="This section lists all of your trainings.  Selecting a training in this section will put you directly in the training editor.">
+                joyrideStep="task0Step3"  [stepContent]="stepContent" [stepContentParams]="taskStepContentHash?.task0Step2">
                 <div *ngIf="trainings.length === 0" style="padding:40px">
                     <span style="font-weight:200;" (click)="goTo('/trainings')">
                         You have not created any trainings yet!<br>
@@ -196,8 +205,7 @@
             </nz-card>
             -->
             <ng-template #titleTemplate>
-                <div style="" joyrideStep="step4" title="Team member training sessions"
-                    text="This section provides a view of your teams training sessions. The timeline provides start time and session duration. Using the date range picker you can view sessions from any date range you like.">
+                <div style="" joyrideStep="task0Step4" title="Team member training sessions">
                     Training Sessions
                 </div>
                 <div style="display:block;width:100%;">

@@ -1004,6 +1004,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
 
     let alert = <AlertModel>{
+      timestamp: new Date().getTime(),
       type: 'info',
       message: 'Resetting the training status for ' + this.assignedToUsers.length + ' users.'
     }

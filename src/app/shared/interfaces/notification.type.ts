@@ -13,5 +13,6 @@ export interface NotificationModel {
 
 export interface AlertModel {
   type: 'success' | 'info' | 'warning' | 'error',
-  message: string
+  message: string,
+  timestamp: number
 }

@@ -26,7 +26,7 @@ import { JoyrideModule, JoyrideService } from 'ngx-joyride';
     NzListModule,
     NzAvatarModule,
     NzToolTipModule,
-    JoyrideModule.forRoot(),
+    JoyrideModule,
     NzTimelineModule,
     NzDatePickerModule,
     NzBadgeModule,

@@ -6,6 +6,8 @@ import { ResizeEvent } from '../../shared/interfaces/event.type';
 import { TrainingService } from '../../shared/services/training.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { NotificationService } from '../../shared/services/notification.service';
+import { TaskWizardService } from '../../shared/services/taskWizard.service';
+import { TaskModel, TaskHash, TaskStepContentHash } from '../../shared/interfaces/task.type';
 import { UserTrainingModel, UidUTHash, TidUTHash, UidTidUTHash } from '../../shared/interfaces/userTraining.type';
 import { AlertModel } from '../../shared/interfaces/notification.type';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
@@ -247,7 +249,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   uidReportChainHash = {};
   orgChartHeight;
   currentTab = 0;
-  tourStepsHash = {};
   bulkAdd = false;
   orgProgress: BuildOrgProgress = {
     usersTotal: 0,
@@ -1175,6 +1176,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   recipientUidList = [];
   sentList = [];
   percentSent = 0;
+  stepParamHash = {};
+  taskHash: TaskHash;
+  taskStepContentHash: TaskStepContentHash;
+  taskHash$: Observable<TaskHash>;
+  taskStepContentHash$: Observable<TaskStepContentHash>;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1185,6 +1191,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private jobTitleService: JobTitleService,
     private userTrainingService: UserTrainingService,
     private joyrideService: JoyrideService,
+    private taskWizardService: TaskWizardService,
     private notifyService: NotificationService,
     private messageService: NzMessageService,
     private route: ActivatedRoute,
@@ -1209,11 +1216,31 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.newUser$ = this.userService.getNewUserStream();
     this.jobTitles$ = this.jobTitleService.getJobTitleStream();
     this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
+    this.taskHash$ = this.taskWizardService.getTaskHashStream();
+    this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
 
     this.userTrainingService.selectUser(null);
   }
 
   ngOnInit() {
+
+    this.taskHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskHash => {
+      if (!taskHash) {
+        return;
+      }
+
+      this.taskHash = taskHash;
+    });
+
+    this.taskStepContentHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskStepContentHash => {
+      if (!taskStepContentHash) {
+        return;
+      }
+
+      this.taskStepContentHash = taskStepContentHash;
+      console.log("taskStepContentHash", this.taskStepContentHash);
+    });
+
 
     this.orgJobTitles = [
       'lifeguard',
@@ -1230,9 +1257,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
 
     this.userList = [];
+    /*
     this.tourStepsHash['myTeam'] = ['Step1-myTeam', 'Step2-myTeam', 'Step3-myTeam', 'Step4-myTeam', 'Step5-myTeam'];
     this.tourStepsHash['memberDetails'] = ['Step1-memberDetails'];
     this.tourStepsHash['orgChart'] = ['Step1-orgChart'];
+    */
 
     this.contentHeight = Math.floor((window.innerHeight - (.3 * window.innerHeight)) * .90);
     this.contentWidth = Math.floor(window.innerWidth * .9);
@@ -1247,7 +1276,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!failList) {
         return;
       }
-
+  
       this.batchFails = failList;
     });
     */
@@ -1338,7 +1367,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (!uid) {
         return;
       }
-      this.figureOrgStat(this.authenticatedUser._id);
+      if (this.authenticatedUser) {
+        this.figureOrgStat(this.authenticatedUser._id);
+      }
     });
     this.uidReportChainHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidReportChainHash => {
       if (!uidReportChainHash) {
@@ -1527,6 +1558,23 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
     })
   }
+/*
+  startTour(task) {
+    let steps = this.taskWizardHash[task];
+    this.joyrideService.startTour({ steps: steps, stepDefaultPosition: 'bottom', themeColor: '#0d1cb9' });
+  }
+
+  task2Step2() {
+    this.collapsedNodes.splice(this.collapsedNodes.indexOf(this.authenticatedUser._id), 1);
+    for (let dr of this.authenticatedUser.directReports) {
+      if (this.myOrgUserHash[dr].userType === 'supervisor') {
+        this.taskItemHash['task2Step3'] = dr;
+        this.selectUser(dr, -1);
+        break;
+      }
+    }
+  }
+  */
 
   pre(): void {
     this.currentStep -= 1;
@@ -1540,13 +1588,31 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   }
 
+  onTaskWizardNext(taskStep) {
+    switch (taskStep) {
+      case 'task1Step1': {
+        this.selectionMode = 'Individual';
+        break;
+      }
+      case 'task1Step2': {
+        this.userIdSelected = this.authenticatedUser._id;
+        break;
+      }
+      case 'task1Step3': {
+        this.showUserTrainingModal = true;
+        break;
+      }
+    }
+  }
+
   collapseAllSubOrgs(collapseAll) {
     if (collapseAll) {
       this.collapsedNodes = [];
       for (let user of this.userListDisplay) {
         if (user.userType === 'supervisor') {
           this.collapsedNodes.push(user._id);
-          this.figureOrgStat(user._id);        }
+          this.figureOrgStat(user._id);
+        }
       }
     } else {
       this.collapsedNodes = [];
@@ -1565,24 +1631,24 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   handleSendMessageCancel() {
     this.showMessageModal = false;
   }
-  
+
   /*
   timeOf = (interval: number) => <T>(val: T) =>
     timer(interval).pipe(map(x => val));
-
+  
   timed = (interval: number) => <T>(source: Observable<T>) =>
     source.pipe(
       concatMap(this.timeOf(1000)),
       map(x => [x]),
       scan((acc, val) => [...acc, ...val]),
     )
-
+  
   arr$ = from(this.arr)
     .pipe(
       timed(1000),
     )
     */
-//  delayAndCall(arr:)
+  //  delayAndCall(arr:)
 
   sendMessage() {
     let messages: MessageModel[] = [];
@@ -1734,7 +1800,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else if (this.authenticatedUser?.trainingStatus === 'upToDate') {
       this.nodeStatHash[this.authenticatedUser?._id].upToDateCnt++;
     }
-
+  
     if (this.currentTrainingSelected) {
       let utList = this.uidUTHash[this.authenticatedUser?._id];
       if (utList && utList.length > 0) {
@@ -2345,9 +2411,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   setSelectionMode(mode: string) {
     this.currentJobTitlesSelected = [];
     this.userIdsSelected = [];
-    this.assignableTrainings = this.teamTrainings;
     this.currentUserType = 'none';
-    this.assignableTrainings = Object.assign([], this.teamTrainings);
+    this.assignableTrainings = cloneDeep(this.teamTrainings);
 
     if (mode !== 'Individual') {
       this.userDetailIsVisible = false;
@@ -2452,7 +2517,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
       nodeStat.jobTitleHash[drUser.jobTitle] += 1;
 
-//      console.log('processDirectReports', nodeStat);
+      //      console.log('processDirectReports', nodeStat);
       if (this.selectionMode === 'Org') {
         if (this.userIdsSelected.includes(dr)) {
           nodeStat.selectedCnt++;
@@ -2654,12 +2719,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         }
       }
 
-//      this.userTrainingService.deleteUserTrainingByTidUid(this.currentTrainingSelected, uid);
+      //      this.userTrainingService.deleteUserTrainingByTidUid(this.currentTrainingSelected, uid);
     }
     this.userService.setUsersStatusNone(noneUIDs);
     this.userService.setUsersStatusUpToDate(upToDateUIDs);
     this.userTrainingService.bulkDeleteTraining(this.userIdsSelected, this.currentTrainingSelected);
-//    this.userTrainingService.deleteUTForTid(this.currentTrainingSelected);
+    //    this.userTrainingService.deleteUTForTid(this.currentTrainingSelected);
     this.figureOrgStat(this.authenticatedUser._id);
     for (let node of this.collapsedNodes) {
       this.figureOrgStat(node);
@@ -2685,7 +2750,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else {
       let alert = <AlertModel>{
         type: 'info',
-        message: '"' + this.allTrainingIdHash[this.selectedTrainingId].title + '" is being assigned to ' + this.userIdsSelected.length + ' users.'
+        message: 'The training "' + this.allTrainingIdHash[this.selectedTrainingId].title + '" is being assigned to ' + this.userIdsSelected.length + ' users.'
       }
       this.notifyService.showAlert(alert);
       this.userTrainingService.bulkAssignTraining(this.userIdsSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version, this.allTrainingIdHash[this.selectedTrainingId].title);
@@ -2754,11 +2819,5 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   allowDrop(event) {
     event.preventDefault();
   }
-
-  startTour(section) {
-    let steps = this.tourStepsHash[section];
-    this.joyrideService.startTour({ steps: steps });
-  }
-
 
 }

@@ -5,7 +5,7 @@ import { NzTagModule, NzConfig, NZ_CONFIG, NzToolTipModule, NzPopoverModule, NzT
 import { MyteamComponent } from './myteam.component';
 import { UserTrainingsModule } from '../user-trainings/user-trainings.module';
 import { MyteamRoutingModule } from './myteam-routing.module';
-import { NgxOrgChartModule } from 'ngx-org-chart';
+//import { NgxOrgChartModule } from 'ngx-org-chart';
 import { JoyrideModule, JoyrideService } from 'ngx-joyride';
 
 const ngZorroConfig: NzConfig = {
@@ -43,14 +43,14 @@ const ngZorroConfig: NzConfig = {
     NzDrawerModule,
     NzTreeModule,
     NzBadgeModule,
-    NgxOrgChartModule,
+//    NgxOrgChartModule,
     NzProgressModule,
     NzDropDownModule,
     NzSwitchModule,
     NzCardModule,
     NzProgressModule,
     NzPopoverModule,
-    JoyrideModule.forRoot(),
+    JoyrideModule,
   ],
   exports: [
     MyteamComponent,

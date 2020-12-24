@@ -12,6 +12,8 @@ import { Router, NavigationEnd, NavigationCancel, NavigationStart, NavigationErr
 import { FileModel } from '../shared/interfaces/file.type';
 import { EventService } from '../shared/services/event.service';
 import { NotificationService } from '../shared/services/notification.service';
+import { TaskWizardService } from '../shared/services/taskWizard.service';
+import { TaskModel, TaskHash, TaskStepContentHash } from '../shared/interfaces/task.type';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { UidUserTrainingHash } from '../shared/interfaces/userTraining.type';
@@ -112,81 +114,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.contentHeight = Math.floor(window.innerHeight * .9);
     this.contentWidth = Math.floor(window.innerWidth * .9);
   }
-  aboutThisPageHash = {
-    home: {
-      title: 'Home',
-      visible: true,
-      intro: `Here you will find information on your team members, your team's trainings, and training sessions.`,
-      taskHash: {
-        gettingStartedSupervisor: {
-          userType: ['supervisor'],
-          desc: 'Getting Started',
-          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
-          mimeType: 'video/mpeg',
-          poster: './assets/images/logo/logo.png'
-        }
-      },
-    },
-    mytrainings: {
-      title: 'My Trainings',
-      visible: true,
-      intro: `Here you will find the trainings for which you are responsible.
-       `,
-      taskHash: {
-        executeTraining: {
-          userType: ['supervisor', 'individualContributor'],
-          desc: 'Execute Your Trainings',
-          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
-          mimeType: 'video/quicktime',
-          poster: './assets/images/logo/logo.png'
-        }
-      },
-    },
-    myteam: {
-      title: 'My Team',
-      visible: true,
-      intro: `Here is where you manage your team.  Add new members, assign trainings, update
-      profile info, etc.`,
-      taskHash: {
-        addTeamMember: {
-          userType: ['supervisor'],
-          desc: 'Adding Team Members',
-          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
-          mimeType: 'video/quicktime',
-          poster: './assets/images/logo/logo.png'
-        },
-        manageUserTrainings: {
-          userType: ['supervisor'],
-          desc: 'Add / Remove Trainings from Team Members',
-          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
-          mimeType: 'video/quicktime',
-          poster: './assets/images/logo/logo.png'
-        }
-      },
-    },
-    trainings: {
-      title: 'All Trainings',
-      visible: true,
-      intro: 'Introduction to the page.',
-      taskHash: {
-        manageTrainings: {
-          userType: ['supervisor'],
-          desc: 'Create/Edit Trainings',
-          url: 'https://cdn.filestackcontent.com/oNn7wEGNS1Kxj7c1Mgpf',
-          mimeType: 'video/quicktime',
-          poster: './assets/images/logo/logo.png'
-        },
-        usingAssessments: {
-          userType: ['supervisor'],
-          desc: 'How to Create and Use Assessments',
-          url: 'https://cdn.filestackcontent.com/GKJeAoaORBOPvf0CBkDd',
-          mimeType: 'video/quicktime',
-          poster: './assets/images/logo/logo.png'
-        },
-      }
-    }
-  }
-
 
   vgApi: VgAPI;
   isCollapsed = false;
@@ -258,7 +185,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   pageNames = [];
   isVideoOpen = false;
   bannerColor = '#f1f1f1';
-  pageTaskHash = {};
   userPanelVisible = false;
   lName;
   fName;
@@ -321,6 +247,14 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     success: "SUCCESS - ",
   }
 
+  tasks$: Observable<string[]>;
+  taskHash$: Observable<TaskHash>;
+  taskStepContentHash$: Observable<TaskStepContentHash>;
+  tasks: string[];
+  taskHash: TaskHash;
+  taskStepContentHash: TaskStepContentHash;
+  taskWizardHash = {};
+
   constructor(
     private authService: AuthService,
     private userService: UserService,
@@ -328,6 +262,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     private userTrainingService: UserTrainingService,
     private router: Router,
     private joyrideService: JoyrideService,
+    private taskWizardService: TaskWizardService,
     private eventService: EventService,
     private messageService: NzMessageService,
     private notificationService: NotificationService,
@@ -368,24 +303,26 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.myDomainUser$ = this.userService.getMyDomainUsersStream();
     this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.alert$ = this.notificationService.getAlertStream();
+    this.tasks$ = this.taskWizardService.getTasksStream();
+    this.taskHash$ = this.taskWizardService.getTaskHashStream();
+    this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
   }
 
+
+
   ngOnInit(): void {
+/*
     this.pageNames = Object.keys(this.aboutThisPageHash);
     for (let page of this.pageNames) {
-      this.pageTaskHash[page] = Object.keys(this.aboutThisPageHash[page].taskHash);
+      this.taskHash[page] = Object.keys(this.aboutThisPageHash[page].taskHash);
     }
     this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
-        this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-          this.currentPage = event.url.substring(1);
-          console.log('Route', this.currentPage, event.url);
+    */
+    this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+      this.currentPage = event.url.substring(1);
+      console.log('Route', this.currentPage, event.url);
+    });
 
-//          if (this.currentPage.indexOf('/') > -1) {
-//          }
-//          if (this.aboutThisPageHash[this.currentPage]) {
-//            this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
-//          }
-        });
     /*
         this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
           if (!userTrainings) {
@@ -431,6 +368,33 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       })
       */
     })
+
+    /*
+    this.tasks$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(tasks => {
+      if (!tasks) {
+        return;
+      }
+
+      this.tasks = tasks;
+    });
+    */
+
+    this.taskHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskHash => {
+      if (!taskHash) {
+        return;
+      }
+
+      this.taskHash = taskHash;
+    });
+
+    this.taskStepContentHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskStepContentHash => {
+      if (!taskStepContentHash) {
+        return;
+      }
+
+      this.taskStepContentHash = taskStepContentHash;
+      console.log("taskStepContentHash", this.taskStepContentHash);
+    });
 
     this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(teamIdHash => {
       if (!teamIdHash) {
@@ -558,13 +522,15 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     //    this.login();
   }
 
-  startTour() {
-    console.log('new-app:startTour', this.currentPage);
-    this.eventService.startTour(this.currentPage);
+  startTour(task: string) {
+    console.log("startTour", task);
+    this.taskWizardService.startTour(task);
+//    this.joyrideService.startTour({ steps: this.taskHash[task].steps });
+    // this.eventService.startTour(this.currentPage);
     //    let toursteps = this.aboutThisPageHash[this.currentPage].tourSteps;
     //    this.joyrideService.startTour(toursteps);
   }
-
+/*
   playTaskVideo(taskName) {
     if (!taskName) {
       taskName = this.taskNames[0];
@@ -578,6 +544,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.task.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.aboutThisPageHash[this.currentPage].taskHash[taskName].url));
     this.taskBS$.next(this.task);
   }
+  */
 
   handleUpdateUserCancel() {
     this.userPanelVisible = false;

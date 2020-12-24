@@ -7,26 +7,27 @@
         </div>
         <ul nz-menu nzTheme="light" nzMode="horizontal"
             [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.bgColor, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary }">
-            <li nz-menu-item nzMatchRouter class="nav-badge"
+            <li nz-menu-item nzMatchRouter class="nav-badge" style="top:0;" joyrideStep="task0Step1" title="Foo Fu"
                 [ngClass]="{'current-nav': currentPage === 'home', 'nav-element': currentPage !== 'home'}">
                 <a routerLink="/home" routerLinkActive="active-link">
                     Home
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
-                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'myteam'}">
+                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'myteam'}" style="top:0;">
                 <a routerLink="/myteam" routerLinkActive="active-link">
                     My Team
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
-                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'mytrainings'}">
+                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'mytrainings'}" style="top:0;">
                 <a routerLink="/mytrainings" routerLinkActive="active-link">
                     My Trainings
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor' || (authenticatedUser$ | async)?.teamAdmin"
-                nz-menu-item nzMatchRouter class="nav-badge" [ngClass]="{'current-nav': currentPage === 'trainings'}">
+                nz-menu-item nzMatchRouter class="nav-badge" [ngClass]="{'current-nav': currentPage === 'trainings'}"
+                style="top:0;">
                 <a routerLink="/trainings" routerLinkActive="active-link">
                     All Trainings
                 </a>
@@ -37,8 +38,6 @@
                     <nz-avatar [nzText]="(authenticatedUser$ | async)?.firstName.substring(0,1)"
                         [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.secondary, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary}">
                     </nz-avatar>
-                    <i nz-icon nzType="down" theme="outline"
-                        style="display:inline-block;vertical-align:middle;color:black;font-size:12px;"></i>
                 </span>
                 <nz-dropdown-menu #profile="nzDropdownMenu">
                     <ul nz-menu class="p-b-15 p-t-20">
@@ -84,19 +83,19 @@
                 </nz-dropdown-menu>
             </li>
             <li nz-menu-item class="navbar-rhs" nz-dropdown [nzDropdownMenu]="alertDropDown" [nzTrigger]="'hover'"
-                    nzPlacement="bottomRight">
-                <span class="pointer" >
+                nzPlacement="bottomRight">
+                <span class="pointer">
                     <a>
-                        <i *ngIf="dropDownAlerts.length === 0" class="far fa-bell"
+                        <i *ngIf="dropDownAlerts.length === 0" class="far fa-fw fa-bell"
                             style="font-size:20px;color:#000000;vertical-align: middle;"></i>
-                        <i *ngIf="dropDownAlerts.length > 0" class="far fa-spin fa-bell-on"
-                            style="font-size:20px;color:#000000;vertical-align: middle;"></i>
+                        <i *ngIf="dropDownAlerts.length > 0" class="far fa-fw fa-bell-on"
+                            style="font-size:34px;color:blue;vertical-align: middle;"></i>
                     </a>
                 </span>
                 <nz-dropdown-menu #alertDropDown="nzDropdownMenu">
                     <ul nz-menu>
-                        <li *ngIf="dropDownAlerts.length === 0" style="width:200px;padding:20px;">
-                            <div
+                        <li style="width:200px;padding:20px;">
+                            <div *ngIf="dropDownAlerts.length === 0"
                                 style="line-height:normal;font-size:16px;font-weight:200;">
                                 No Alerts!
 
@@ -114,13 +113,30 @@
                             </div>
                         </li>
                         <li nz-menu-item style="line-height:normal;padding:0 20px;text-align: center;">
-                            <div *ngIf="dropDownAlerts.length > 0"
-                                style="text-align: center;">
-                                <button nz-button nzType="default" nzSize="small" (click)="dropDownAlerts = []; alerts = []"
+                            <div *ngIf="dropDownAlerts.length > 0" style="text-align: center;">
+                                <button nz-button nzType="default" nzSize="small"
+                                    (click)="dropDownAlerts = []; alerts = []"
                                     style="line-height:normal;font-size:12px;border-radius:4px;padding:0 5px;background:#f1f1f1;border:1px solid #dddddd;">
                                     Clear All
                                 </button>
                             </div>
+                        </li>
+                    </ul>
+                </nz-dropdown-menu>
+            </li>
+            <li nz-menu-item class="navbar-rhs" nz-dropdown [nzDropdownMenu]="taskDropDown" [nzTrigger]="'hover'"
+                nzPlacement="bottomRight">
+                <span class="pointer">
+                    <a>
+                        <i class="fas fa-fw fa-tasks"
+                            style="display:inline-block;vertical-align:middle;font-size:20px;vertical-align: middle;"></i>
+                    </a>
+                </span>
+                <nz-dropdown-menu #taskDropDown="nzDropdownMenu">
+                    <ul nz-menu>
+                        <li nz-menu-item *ngFor="let task of tasks$ | async" (click)="startTour(task)">
+                            <span style="font-weight:500;">{{taskHash[task]?.taskId}} - </span><span
+                                style="font-weight:200;">{{taskHash[task]?.description}}</span>
                         </li>
                     </ul>
                 </nz-dropdown-menu>

@@ -101,7 +101,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     this.sessionLog$ = this.userTrainingService.getSessionLogStream();
     this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
-    this.startTour$ = this.eventService.getStartTourStream();
+//    this.startTour$ = this.eventService.getStartTourStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
     this.teamTrainingHash$ = this.trainingService.getTeamTrainingHashStream();
   }
@@ -113,13 +113,14 @@ export class HomeComponent extends BaseComponent implements OnInit {
     this.endRangeTimeMS = this.now + 3600000;
     this.dateRange = [new Date(this.startRangeTimeMS), new Date(this.endRangeTimeMS) ]
     
-
+/*
     this.startTour$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(page => {
       if (page == 'home') {
         console.log('startTour', page);
         this.startTour();
       }
     });
+    */
 
     this.uidUTHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUTHash => {
       if (!uidUTHash) {
@@ -162,8 +163,6 @@ export class HomeComponent extends BaseComponent implements OnInit {
       if (!user) {
         return;
       }
-
-
 
       this.authenticatedUser = user;
       if (this.authenticatedUser.userType !== 'supervisor') {
@@ -225,12 +224,13 @@ export class HomeComponent extends BaseComponent implements OnInit {
     this.router.navigate(['/myteam/' + uid]);
     this.userService.selectUser(uid);
   }
-
+/*
   startTour() {
     this.joyrideService.startTour(
       { steps: ['step1', 'step2', 'step3', 'step4'] } // Your steps order
     );
   }
+  */
 
   onDateRangeChange(dateRange) {
     if (!this.sessionLog) {
