@@ -25,6 +25,7 @@ import { BaseComponent } from '../components/base.component';
 import { JoyrideService } from 'ngx-joyride';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { LoaderService } from '../shared/services/loader.service';
 
 
 export interface Task {
@@ -194,6 +195,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   currentEmail;
   currentStep = 0;
   loading = true;
+  newLoading: boolean;
   dropDownAlerts: AlertModel[] = [];
   alerts: AlertModel[] = [
     /*
@@ -258,6 +260,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    private loaderService: LoaderService,
     private trainingService: TrainingService,
     private userTrainingService: UserTrainingService,
     private router: Router,
@@ -306,6 +309,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.tasks$ = this.taskWizardService.getTasksStream();
     this.taskHash$ = this.taskWizardService.getTaskHashStream();
     this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
+    this.loaderService.isLoading.subscribe((v) => {
+      console.log(v);
+      this.newLoading = v;
+    });
   }
 
 

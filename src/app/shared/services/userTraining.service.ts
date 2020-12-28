@@ -518,7 +518,7 @@ export class UserTrainingService {
             newUTList.push(ut);
           }
         }
-        this.uidUTHash[uid] = Object.assign([], newUTList);
+        this.uidUTHash[uid] = cloneDeep(newUTList);
       }
       this.uidUTHashBS$.next(this.uidUTHash);
     })

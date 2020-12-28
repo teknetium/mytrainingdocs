@@ -50,28 +50,30 @@ import { NzMessageService } from 'ng-zorro-antd/message';
         animate('300ms')
       ]),
     ]),
-    trigger('userSlide', [
+    trigger('searchSlide', [
       // ...
-      state('in', style({
-        'opacity': '1'
+      state('open', style({
+        'width': '300px',
+        'margin-left': '-15px'
       })),
-      state('out', style({
-        'opacity': '0'
+      state('closed', style({
+        'width': '0',
+        'margin-left': '-45px'
       })),
       transition('in => out', [
-        animate('400ms')
+        animate('800ms')
       ]),
       transition('out => in', [
-        animate('400ms')
+        animate('800ms')
       ])
     ]),
-    trigger('switchUserToggle', [
+    trigger('flattenSearchIcon', [
       // ...
-      state('', style({
+      state('open', style({
         'visibility': 'hidden',
         'height': '0'
       })),
-      state('open', style({
+      state('closed', style({
         'visibility': 'visible',
         'height': 'fit-content',
       })),
@@ -1126,7 +1128,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   userMin = 5;
   userMax = 9;
   maxLevelUserMin = 3;
-  maxLevelUserMax = 20;
+  maxLevelUserMax = 25;
   uidUTStatHash = {};
   usersCSV = '';
   bottomLevelWidth = 6;
@@ -1181,6 +1183,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   taskStepContentHash: TaskStepContentHash;
   taskHash$: Observable<TaskHash>;
   taskStepContentHash$: Observable<TaskStepContentHash>;
+  showUserSearch = false;
 
   constructor(
     private cd: ChangeDetectorRef,

@@ -481,3 +481,13 @@ ul.ant-card-actions {
 .current-recipient {
     background-color: #f1f1f1;
 }
+
+.user-search {
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    width:300px;
+}
+
+.user-search:hover {
+    border: 1px solid #bbbbbb;
+}

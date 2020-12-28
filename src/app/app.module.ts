@@ -23,6 +23,7 @@ import { JoyrideModule, JoyrideService} from 'ngx-joyride';
 import { LandingpageModule } from './components/landingpage/landingpage.module';
 import { DocsModule } from './components/docs/docs.module';
 import { VerifyEmailModule } from './components/verify-email/verify-email.module';
+import { MyLoaderModule } from './components/my-loader/my-loader.module';
 
 
 const ngZorroConfig: NzConfig = {
@@ -55,6 +56,7 @@ registerLocaleData(en);
         DocsModule,
         NzStepsModule,
         NzSpinModule,
+        MyLoaderModule, 
         JoyrideModule.forRoot()
     ],
     providers: [

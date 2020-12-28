@@ -1,9 +1,9 @@
 <ng-template #stepContent let-task="task" let-desc="description" let-title="title" let-content="content">
     <div style="width:500px;height:300px;">
-        <div style="text-align:center;font-size:18px;color:blue;font-weight:500;">
+        <div style="text-align:center;font-size:14px;color:blue;font-weight:500;">
             {{task}}&nbsp;&nbsp;-&nbsp;&nbsp;{{desc}}</div>
         <div style="margin-top:20px;height:80%;">
-            <div style="font-weight:200;font-size:16px;">{{title}}</div>
+            <div style="font-weight:200;font-size:22px;">{{title}}</div>
             <div
                 style="margin-top:20px;padding:20px;height:60%;border:1px solid #bbbbbb;border-radius:5px;background-color: #f1f1f1;">
                 {{ content }}
@@ -76,7 +76,7 @@
             </div>
             <div style="display:inline-block;">
                 User Max
-                <nz-input-number [(ngModel)]="userMax" [nzMin]="1" [nzMax]="10" [nzStep]="1">
+                <nz-input-number [(ngModel)]="userMax" [nzMin]="1" [nzMax]="20" [nzStep]="1">
                 </nz-input-number>
             </div>
         </div>
@@ -271,14 +271,16 @@
                     -->
                     <div style="float:left;">
                         <div style="display:inline-block;">
-                            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" style="width:300px;">
-                                <input type="text" nzSize="small" nz-input placeholder="input search text"
+                            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" class="user-search">
+                                <input type="text" nz-input placeholder="User Search"
                                     [(ngModel)]="userNameToSearchFor" (ngModelChange)="onUserSearchChange($event)"
-                                    [nzAutocomplete]="autoUserSearch" style="border-top-left-radius:25px;border-bottom-left-radius: 25px;"/>
+                                    [nzAutocomplete]="autoUserSearch"
+                                    style="border:1px solid white;" />
                             </nz-input-group>
                             <nz-autocomplete [nzDataSource]="matchingUsers" #autoUserSearch></nz-autocomplete>
                             <ng-template #suffixIconButton>
-                                <button nz-button nzType="primary" nzSearch style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;z-index: 1000;"><i nz-icon nzType="search"></i></button>
+                                <button nz-button nzType="primary" nzSearch style="z-index: 1000;height:41px;"><i nz-icon
+                                        nzType="search"></i></button>
                             </ng-template>
                         </div>
                     </div>
@@ -351,7 +353,8 @@
                         <label nz-radio-button nzValue="Individual" nzTooltipPlacement nz-tooltip
                             nzTooltipTitle="Select a Single User" nzTooltipPlacement="bottomLeft"
                             joyrideStep="task1Step1" [stepContent]="stepContent"
-                            [stepContentParams]="taskStepContentHash?.task1Step1" (next)="onTaskWizardNext('task1Step1')">
+                            [stepContentParams]="taskStepContentHash?.task1Step1"
+                            (next)="onTaskWizardNext('task1Step1')">
                             <i class="far fa-fw fa-user" style="font-size:18px;"></i>
                         </label>
                         <label nz-radio-button nzValue="Org" nz-tooltip nzTooltipTitle="Select by Team/Org"
@@ -430,7 +433,8 @@
                                 style="display:inline-block;" (click)="showUserTrainingModal = true" nz-tooltip
                                 nzTooltipPlacement="bottomLeft" nzTooltipTitle="Assign Training to User"
                                 joyrideStep="task1Step3" [stepContent]="stepContent"
-                            [stepContentParams]="taskStepContentHash?.task1Step3" (next)="onTaskWizardNext('task1Step3')">
+                                [stepContentParams]="taskStepContentHash?.task1Step3"
+                                (next)="onTaskWizardNext('task1Step3')">
                                 <i class="fas fa-plus"></i>
                             </button>
                             <button nz-button nzShape="circle" nzType="default" [disabled]="!userIdSelected"
@@ -869,8 +873,9 @@
                     <div class="supervisor-node org-chart-node" style="text-align: center;margin-bottom:20px;">
                         <div style="display:inline-block;padding:5px 5px 0 5px;position:relative;border:2px solid white;cursor:pointer;border-radius:5px;"
                             (mouseenter)="setHoverData(authenticatedUser._id)" (mouseleave)="setHoverData(null)"
-                            (click)="selectUser(authenticatedUser._id)" joyrideStep="task1Step2" [stepContent]="stepContent"
-                            [stepContentParams]="taskStepContentHash?.task1Step2" (next)="onTaskWizardNext('task1Step2')"
+                            (click)="selectUser(authenticatedUser._id)" joyrideStep="task1Step2"
+                            [stepContent]="stepContent" [stepContentParams]="taskStepContentHash?.task1Step2"
+                            (next)="onTaskWizardNext('task1Step2')"
                             [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === authenticatedUser._id) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(authenticatedUser._id)), 'hover-node': authenticatedUser._id === currentHoverUid  || currentHoverReportChain.includes(authenticatedUser._id)}">
 
                             <i [ngClass]="userTypeIconHash[authenticatedUser.userType]" style="font-size:16px;"

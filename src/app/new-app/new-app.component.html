@@ -94,9 +94,8 @@
                 </span>
                 <nz-dropdown-menu #alertDropDown="nzDropdownMenu">
                     <ul nz-menu>
-                        <li style="width:200px;padding:20px;">
-                            <div *ngIf="dropDownAlerts.length === 0"
-                                style="line-height:normal;font-size:16px;font-weight:200;">
+                        <li *ngIf="dropDownAlerts.length === 0" style="width:200px;padding:20px;">
+                            <div style="line-height:normal;font-size:16px;font-weight:200;">
                                 No Alerts!
 
                             </div>
@@ -154,8 +153,8 @@
             <nz-step nzTitle="Create Trainings" nzSubtitle="" nzDescription=""> </nz-step>
         </nz-steps>
         -->
-        <div *ngIf="loading" style="position:fixed;top:0;left:0;width:100%;height:100%;">
-            <div style="width:100%;padding-top:300px;display:inline-block;">
+        <div *ngIf="newLoading" style="position:fixed;top:0;left:0;width:100%;height:100%;background: rgba(0,0,0,.6);z-index: 2000;">
+            <div style="width:100%;padding-top:500px;display:inline-block;">
                 <nz-spin nzSimple [nzSize]="'large'" style="text-align: center;"></nz-spin>
             </div>
         </div>

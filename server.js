@@ -46,8 +46,8 @@ const app = express();
 
 app.use(cors());
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: '200mb' }));
+app.use(bodyParser.urlencoded({ extended: false, limit: '200mb'}));
 app.use(methodOverride("X-HTTP-Method-Override"));
 
 // Set port

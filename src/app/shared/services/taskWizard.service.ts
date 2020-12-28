@@ -12,12 +12,12 @@ export class TaskWizardService {
   taskHash = {
     task0: {
       taskId: 'Task 0',
-      description: 'Navbar',
-      steps: ['task0Step1@home', 'task0Step2@home', 'task0Step3@home', 'task0Step4@home'],
+      description: 'Getting Started',
+      steps: ['task0Step1@home', 'task0Step2@myteam', 'task0Step3@mytrainings', 'task0Step4@trainings'],
     },
     task1: {
       taskId: 'Task 1',
-      description: 'assign a training to an individual',
+      description: 'Assign a training to an individual',
       steps: ['task1Step1@myteam', 'task1Step2@myteam', 'task1Step3@myteam', 'task1Step4@myteam'],
     },
     task2: {
@@ -70,7 +70,7 @@ export class TaskWizardService {
     },
     task1Step1: {
       task: 'Task 1',
-      description: 'assign a training to an individual',
+      description: 'Assign a training to an individual',
       title: 'Step 1 -  Set Selection Mode to Individual',
       content: 'The selection mode is used to control how users are selected in the org chart.  When set to Individual, clicking on a user in the org chart simply selects that user.'
     },
@@ -82,13 +82,13 @@ export class TaskWizardService {
     },
     task1Step3: {
       task: 'Task 1',
-      description: 'assign a training to an individual',
+      description: 'Assign a training to an individual',
       title: 'Step 3 -  Click on the plus icon',
       content: 'Clicking on this button brings up a dialog that allows you to chose a training to assign.'
     },
     task1Step4: {
       task: 'Task 1',
-      description: 'assign a training to an individual',
+      description: 'Assign a training to an individual',
       title: 'step 4',
       content: 'Set the selection mode to individual.'
     },
