@@ -364,7 +364,7 @@ export class UserTrainingService {
     let dbCnt = 0;
     let batchAddedCount = 0;
     let startIndex = 0;
-    let chunckSize = 100;
+    let chunckSize = 500;
     let loopCnt = 0;
     let iterationCnt = Math.floor(userTrainings.length / chunckSize) + 1;
     while (startIndex < userTrainings.length) {

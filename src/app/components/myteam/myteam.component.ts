@@ -1372,6 +1372,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
       if (this.authenticatedUser) {
         this.figureOrgStat(this.authenticatedUser._id);
+        for (let node of this.collapsedNodes) {
+          this.figureOrgStat(node);
+        }
       }
     });
     this.uidReportChainHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidReportChainHash => {
@@ -2445,6 +2448,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         this.rowSelected = i;
         this.userDetailIsVisible = true;
       }
+      this.figureOrgStat(this.authenticatedUser._id);
+      for (let node of this.collapsedNodes) {
+        this.figureOrgStat(node);
+      }
     } else if (this.selectionMode === 'Org') {
       if (this.userIdsSelected.includes(userId)) {
         this.removeFromSelectedList(userId);
@@ -2521,6 +2528,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       nodeStat.jobTitleHash[drUser.jobTitle] += 1;
 
       //      console.log('processDirectReports', nodeStat);
+
+      if (this.selectionMode === 'Individual') {
+        if (this.userIdSelected === dr) {
+          nodeStat.selectedCnt++;
+        }
+      }
+
       if (this.selectionMode === 'Org') {
         if (this.userIdsSelected.includes(dr)) {
           nodeStat.selectedCnt++;

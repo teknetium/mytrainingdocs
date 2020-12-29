@@ -256,6 +256,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   taskHash: TaskHash;
   taskStepContentHash: TaskStepContentHash;
   taskWizardHash = {};
+  newLoading$: Observable<boolean>;
 
   constructor(
     private authService: AuthService,
@@ -309,10 +310,8 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.tasks$ = this.taskWizardService.getTasksStream();
     this.taskHash$ = this.taskWizardService.getTaskHashStream();
     this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
-    this.loaderService.isLoading.subscribe((v) => {
-      console.log(v);
-      this.newLoading = v;
-    });
+    this.newLoading$ = this.loaderService.getIsLoadingStream();
+
   }
 
 
@@ -325,6 +324,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     }
     this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
     */
+    this.newLoading$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(isLoading => {
+      this.newLoading = isLoading;
+    });
+
     this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       this.currentPage = event.url.substring(1);
       console.log('Route', this.currentPage, event.url);
