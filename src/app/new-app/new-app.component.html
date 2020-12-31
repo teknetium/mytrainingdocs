@@ -153,11 +153,6 @@
             <nz-step nzTitle="Create Trainings" nzSubtitle="" nzDescription=""> </nz-step>
         </nz-steps>
         -->
-        <div *ngIf="newLoading" style="position:fixed;top:0;left:0;width:100%;height:100%;background: rgba(0,0,0,.6);z-index: 2000;">
-            <div style="width:100%;padding-top:500px;display:inline-block;">
-                <nz-spin nzSimple [nzSize]="'large'" style="text-align: center;"></nz-spin>
-            </div>
-        </div>
         <div *ngIf="user.settings.showAlerts && alerts.length > 0"
             style="display:block;height:fit-content;margin-bottom:40px;">
             <nz-alert *ngFor="let alert of alerts; index as i" nzBanner
@@ -268,3 +263,4 @@
     <nz-footer class="footer">Copyright ©2020 Teknetium, LLC</nz-footer>
     -->
 </nz-layout>
+<app-my-loader></app-my-loader>

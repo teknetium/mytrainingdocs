@@ -1,0 +1,15 @@
+<!-- my-loader.component.html -->
+<div [hidden]="!loading">
+    <div class="loading-spinner" style="background:rgba(0,0,0,.6);z-index: 2000;">
+        <!--
+        <img src="https://loading.io/mod/spinner/gear-set/index.svg">
+        -->
+        <div style="width:100%;display:inline-block;">
+            <nz-spin nzSimple [nzSize]="'large'" style="text-align: center;"></nz-spin>
+        </div>
+
+        <!--
+        <span class="loading-message">Please wait...</span>
+        -->
+    </div>
+</div>

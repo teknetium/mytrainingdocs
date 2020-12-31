@@ -9,6 +9,7 @@ import { AuthService } from './auth.service';
 import { ENV } from './env.config';
 import { catchError } from 'rxjs/operators';
 import * as cloneDeep from 'lodash/cloneDeep';
+import { start } from 'repl';
 
 
 @Injectable({
@@ -501,27 +502,48 @@ export class UserTrainingService {
       }
     }
     */
-    this.bulkDeleteUserTrainings$(tid, uids).subscribe(responseObj => {
-      console.log('bulkDeleteUserTrainings', responseObj);
-      let alert = <AlertModel>{
-        timestamp: new Date().getTime(),
-        type: 'success',
-        message: 'The selected training has been removed from ' + responseObj.n + ' users.'
-      }
-      this.notifyService.showAlert(alert);
-      let newUTList: UserTrainingModel[] = [];
-      let utList: UserTrainingModel[];
-      for (let uid of uids) {
-        utList = this.uidUTHash[uid];
-        for (let ut of utList) {
-          if (ut.tid !== tid) {
-            newUTList.push(ut);
+    let chunks = [];
+    let deletedCnt = 0;
+    let startIndex = 0;
+    let chunkSize = 5000;
+    let iterationCnt = uids.length / chunkSize;
+    if (uids.length % chunkSize > 0) {
+      iterationCnt++;
+    }
+    for (let i = 0; i < iterationCnt - 1; i++) {
+      chunks.push(uids.slice(startIndex, startIndex + chunkSize));
+      startIndex += chunkSize;
+    }
+    console.log('bulkDeleteTraining', chunks)
+    for (let index in chunks) {
+
+      this.bulkDeleteUserTrainings$(tid, chunks[index]).subscribe(responseObj => {
+        console.log('bulkDeleteUserTrainings ', responseObj);
+        deletedCnt += responseObj.n;
+
+        if (Number(index) === (chunks.length - 1)) {
+          let alert = <AlertModel>{
+            timestamp: new Date().getTime(),
+            type: 'success',
+            message: 'The selected training has been removed from ' + deletedCnt + ' users.'
           }
+          this.notifyService.showAlert(alert);
+
+          let newUTList: UserTrainingModel[] = [];
+          let utList: UserTrainingModel[];
+          for (let uid of uids) {
+            utList = this.uidUTHash[uid];
+            for (let ut of utList) {
+              if (ut.tid !== tid) {
+                newUTList.push(ut);
+              }
+            }
+            this.uidUTHash[uid] = cloneDeep(newUTList);
+          }
+          this.uidUTHashBS$.next(this.uidUTHash);
         }
-        this.uidUTHash[uid] = cloneDeep(newUTList);
-      }
-      this.uidUTHashBS$.next(this.uidUTHash);
-    })
+      })
+    }
   }
 
   private get _authHeader(): string {
@@ -533,10 +555,6 @@ export class UserTrainingService {
       .put<string[]>(`${ENV.BASE_API}usertraining/bulkdelete/${tid}`, uids, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-
   }
 
   resetStatusForMany$(utObj: UserTrainingModel): Observable<any> {
@@ -544,9 +562,6 @@ export class UserTrainingService {
       .put<UserTrainingModel>(`${ENV.BASE_API}usertraining/resetstatus/`, utObj, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
 
   }
 
@@ -555,36 +570,24 @@ export class UserTrainingService {
       .post<UserTrainingModel>(`${ENV.BASE_API}usertraining/new/`, userTraining, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
   postBulkUserTraining$(userTrainings: UserTrainingModel[]): Observable<UserTrainingModel[]> {
     return this.http
-      .post<UserTrainingModel>(`${ENV.BASE_API}usertraining/newbulk/`, userTrainings, {
+      .post<UserTrainingModel[]>(`${ENV.BASE_API}usertraining/newbulk/`, userTrainings, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
   postUTSession$(utSession: UTSession): Observable<UTSession> {
     return this.http
       .post<UTSession>(`${ENV.BASE_API}utsession/new/`, utSession, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
   updateUserTraining$(userTraining: UserTrainingModel): Observable<UserTrainingModel> {
     return this.http
       .put<UserTrainingModel>(`${ENV.BASE_API}usertraining/${userTraining._id}`, userTraining, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
 
   deleteUserTraining$(id: string): Observable<any> {
@@ -592,9 +595,6 @@ export class UserTrainingService {
       .delete(`${ENV.BASE_API}usertraining/${id}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
 
   deleteUTForTid$(tid: string): Observable<any> {
@@ -602,9 +602,6 @@ export class UserTrainingService {
       .delete(`${ENV.BASE_API}usertraining/deletebulk/${tid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
 
   getUTForUser$(uid: string): Observable<UserTrainingModel[]> {
@@ -612,63 +609,42 @@ export class UserTrainingService {
       .get<UserTrainingModel[]>(`${ENV.BASE_API}usertraining/uid/${uid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
   getUTForTeam$(teamId: string): Observable<UserTrainingModel[]> {
     return this.http
       .get<UserTrainingModel[]>(`${ENV.BASE_API}usertraining/teamid/${teamId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
   getUTSessionsForUser$(uid: string): Observable<UTSession[]> {
     return this.http
       .get<UTSession[]>(`${ENV.BASE_API}utsession/uid/${uid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
   getUTSeessionForTraining$(tid: string): Observable<UTSession[]> {
     return this.http
       .get<UTSession[]>(`${ENV.BASE_API}utsession/tid/${tid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
   getUTSessionsForTeam$(teamId: string): Observable<UTSession[]> {
     return this.http
       .get<UTSession[]>(`${ENV.BASE_API}utsession/team/${teamId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
-  getUserTraining$(id: string): Observable<UserTrainingModel[]> {
+  getUserTraining$(id: string): Observable<UserTrainingModel> {
     return this.http
       .get<UserTrainingModel>(`${ENV.BASE_API}usertraining/${id}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
   getUTForTraining$(tid: string): Observable<UserTrainingModel[]> {
     return this.http
       .get<UserTrainingModel[]>(`${ENV.BASE_API}usertraining/tid/${tid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
 
   private _handleError(err: HttpErrorResponse | any): Observable<any> {

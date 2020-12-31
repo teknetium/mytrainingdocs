@@ -9,52 +9,30 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoaderService } from '../services/loader.service';
+import { NotificationService } from '../services/notification.service';
+import { AlertModel } from '../interfaces/notification.type';
+import { catchError, map } from 'rxjs/operators'
 
 @Injectable()
 export class LoaderInterceptor implements HttpInterceptor {
   private requests: HttpRequest<any>[] = [];
+  constructor(
+    private myLoader: LoaderService
+  ) { }
 
-  constructor(private loaderService: LoaderService) { }
-
-  removeRequest(req: HttpRequest<any>) {
-    const i = this.requests.indexOf(req);
-    if (i >= 0) {
-      this.requests.splice(i, 1);
-    }
-//    this.loaderService.isLoading.next(this.requests.length > 0);
-    this.loaderService.setIsLoading(this.requests.length > 0);
-  }
-
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-    this.requests.push(req);
-
-    console.log("No of requests--->" + this.requests.length);
-
-    this.loaderService.setIsLoading(true);
-    return Observable.create(observer => {
-      const subscription = next.handle(req)
-        .subscribe(
-          event => {
-            if (event instanceof HttpResponse) {
-              this.removeRequest(req);
-              observer.next(event);
-            }
-          },
-          err => {
-            alert('error' + err);
-            this.removeRequest(req);
-            observer.error(err);
-          },
-          () => {
-            this.removeRequest(req);
-            observer.complete();
-          });
-      // remove request from queue when cancelled
-      return () => {
-        this.removeRequest(req);
-        subscription.unsubscribe();
-      };
-    });
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    this.myLoader.setLoading(true, request.url);
+    return next.handle(request)
+      .pipe(catchError((err) => {
+//        console.log('Error in HTTP_INTERCEPTOR');
+        this.myLoader.setLoading(false, request.url);
+        return err;
+      }))
+      .pipe(map<HttpEvent<any>, any>((evt: HttpEvent<any>) => {
+        if (evt instanceof HttpResponse) {
+          this.myLoader.setLoading(false, request.url);
+        }
+        return evt;
+      }));
   }
 }

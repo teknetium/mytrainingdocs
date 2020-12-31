@@ -873,9 +873,6 @@ export class UserService {
       .post<UserModel>(`${ENV.BASE_API}user/new/`, user, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
 
   }
   postBulkUsers$(users: UserModel[]): Observable<UserModel[]> {
@@ -883,21 +880,13 @@ export class UserService {
       .post<UserModel[]>(`${ENV.BASE_API}user/bulknew/`, users, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-
   }
 
   setUsersStatusUpToDate$(uids: string[]): any {
     return this.http
       .put<string[]>(`${ENV.BASE_API}user/bulkuptodate/`, uids, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
-      })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-    
+      })    
   }
 
   setUsersStatusPastDue$(uids: string[]): any {
@@ -905,10 +894,6 @@ export class UserService {
       .put<string[]>(`${ENV.BASE_API}user/bulkpastdue/`, uids, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-
   }
 
   setUsersStatusNone$(uids: string[]): any {
@@ -916,10 +901,6 @@ export class UserService {
       .put<string[]>(`${ENV.BASE_API}user/bulknone/`, uids, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-
   }
 
   activateUser(email: string) {
@@ -937,18 +918,12 @@ export class UserService {
       .get<UserModel>(`${ENV.BASE_API}user/${userId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
   getUserByEmail(email: string): Observable<UserModel> {
     return this.http
       .get<UserModel>(`${ENV.BASE_API}user/email/${email}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
 
   getUserByUid(uid: string): Observable<UserModel> {
@@ -956,9 +931,6 @@ export class UserService {
       .get<UserModel>(`${ENV.BASE_API}user/uid/${uid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
   /*
     getAllUsers$(teamId: string): Observable<UserModel[]> {
@@ -978,9 +950,6 @@ export class UserService {
       .get<UserModel[]>(`${ENV.BASE_API}users/${teamId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
 
 
@@ -989,9 +958,6 @@ export class UserService {
       .get<UserModel[]>(`${ENV.BASE_API}users/org/${uid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
 
   getAllUsersInDomain$(domain: string): Observable<UserModel[]> {
@@ -999,9 +965,6 @@ export class UserService {
       .get<UserModel[]>(`${ENV.BASE_API}users/domain/${domain}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
 
   statusCheck$(teamId: string): Observable<{}> {
@@ -1009,9 +972,6 @@ export class UserService {
       .get(`/api/daily/usertrainingstatuscheck`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
   }
 
   putUser$(user: UserModel): Observable<UserModel> {
@@ -1019,10 +979,6 @@ export class UserService {
       .put<UserModel>(`${ENV.BASE_API}users/${user._id}`, user, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-
   }
 
   deleteUser$(userId: string): Observable<{}> {
@@ -1030,10 +986,6 @@ export class UserService {
       .delete(`${ENV.BASE_API}users/${userId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-
   }
   /*
   deleteAll$(): Observable<{}> {
@@ -1041,10 +993,6 @@ export class UserService {
       .delete(`${ENV.BASE_API}users/all`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
-      .pipe(
-        catchError((error) => this._handleError(error))
-      );
-
   }
   */
 

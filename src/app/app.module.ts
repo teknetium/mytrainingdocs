@@ -23,6 +23,10 @@ import { JoyrideModule, JoyrideService} from 'ngx-joyride';
 import { LandingpageModule } from './components/landingpage/landingpage.module';
 import { DocsModule } from './components/docs/docs.module';
 import { VerifyEmailModule } from './components/verify-email/verify-email.module';
+import { MyLoaderModule } from './components/my-loader/my-loader.module';
+import { LoaderInterceptor } from './shared/interceptor/loader-interceptor.service';
+import { LoaderService } from './shared/services/loader.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 const ngZorroConfig: NzConfig = {
@@ -55,10 +59,12 @@ registerLocaleData(en);
         DocsModule,
         NzStepsModule,
         NzSpinModule,
+        MyLoaderModule,
         JoyrideModule.forRoot()
     ],
     providers: [
-//        { provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true },
+        //        { provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
         { 
             provide: NZ_I18N,
             useValue: en_US, 
@@ -67,7 +73,8 @@ registerLocaleData(en);
         AuthGuard,
         AuthService,
         UserService,
-        JoyrideService
+        JoyrideService,
+        LoaderService
     ],
     bootstrap: [AppComponent]
 })

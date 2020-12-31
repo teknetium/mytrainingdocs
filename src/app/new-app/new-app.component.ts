@@ -25,7 +25,6 @@ import { BaseComponent } from '../components/base.component';
 import { JoyrideService } from 'ngx-joyride';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { LoaderService } from '../shared/services/loader.service';
 
 
 export interface Task {
@@ -256,12 +255,11 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   taskHash: TaskHash;
   taskStepContentHash: TaskStepContentHash;
   taskWizardHash = {};
-  newLoading$: Observable<boolean>;
+//  newLoading$: Observable<boolean>;
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private loaderService: LoaderService,
     private trainingService: TrainingService,
     private userTrainingService: UserTrainingService,
     private router: Router,
@@ -310,11 +308,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.tasks$ = this.taskWizardService.getTasksStream();
     this.taskHash$ = this.taskWizardService.getTaskHashStream();
     this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
-    this.newLoading$ = this.loaderService.getIsLoadingStream();
-
   }
-
-
 
   ngOnInit(): void {
 /*
@@ -324,9 +318,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     }
     this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
     */
-    this.newLoading$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(isLoading => {
-      this.newLoading = isLoading;
-    });
 
     this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       this.currentPage = event.url.substring(1);

@@ -1222,7 +1222,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.taskHash$ = this.taskWizardService.getTaskHashStream();
     this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
 
-    this.userTrainingService.selectUser(null);
+//    this.userTrainingService.selectUser(null);
   }
 
   ngOnInit() {
@@ -2223,7 +2223,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.matchingUsers = userNameList.filter(user => user.toLowerCase().indexOf(value.toLowerCase()) !== -1);
     let index = userNameList.indexOf(value);
     if (index > -1) {
-      this.selectionMode = 'Individual';
+      this.setSelectionMode('Individual');
+//      this.selectionMode = 'Individual';
+//      this.userIdsSelected = [];
       this.selectUser(this.myOrgUserNameHash[value]._id, index);
       //      this.showAddToUserListButton = true;
     }
