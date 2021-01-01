@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef, ViewChild, ElementRef, Renderer2  } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
 import { EventService } from '../../shared/services/event.service';
@@ -1184,6 +1184,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   taskHash$: Observable<TaskHash>;
   taskStepContentHash$: Observable<TaskStepContentHash>;
   showUserSearch = false;
+//  @ViewChild('justCollapsedNode') justCollapsedNodeElementRef : ElementRef<HTMLElement>;
+  collapsedNode = '';
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1198,7 +1200,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private notifyService: NotificationService,
     private messageService: NzMessageService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private renderer: Renderer2
   ) {
     super();
     this.trainingStatusChange$ = this.userService.getTrainingStatusChangeStream();
@@ -1224,6 +1227,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
 //    this.userTrainingService.selectUser(null);
   }
+
+    // ElementRef { nativeElement: <input> }    console.log(this.justCollapsedNode);
 
   ngOnInit() {
 
@@ -1626,12 +1631,20 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   collapseNode(uid: string, collapse: boolean) {
+    this.collapsedNode = uid;
     if (collapse) {
       this.collapsedNodes.push(uid);
       this.figureOrgStat(uid);
     } else {
       this.collapsedNodes.splice(this.collapsedNodes.indexOf(uid), 1);
     }
+    setTimeout(() => this.centerIt(uid), 500);
+  }
+
+  centerIt(id) {
+    let element: Element;
+    element = document.getElementById(id);
+    element.scrollIntoView({ behavior: 'smooth', inline: 'center' });
   }
 
   handleSendMessageCancel() {

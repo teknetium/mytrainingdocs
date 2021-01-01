@@ -870,7 +870,7 @@
 
             <div style="text-align: center;width:100%;overflow: scroll;position:relative;">
                 <div style="background-color:white;display:inline-block;white-space: nowrap;">
-                    <div class="supervisor-node org-chart-node" style="text-align: center;margin-bottom:20px;">
+                    <div class="supervisor-node org-chart-node" style="text-align: center;margin-bottom:20px;" id="{{authenticatedUser._id}}">
                         <div style="display:inline-block;padding:5px 5px 0 5px;position:relative;border:2px solid white;cursor:pointer;border-radius:5px;"
                             (mouseenter)="setHoverData(authenticatedUser._id)" (mouseleave)="setHoverData(null)"
                             (click)="selectUser(authenticatedUser._id)" joyrideStep="task1Step2"
@@ -1081,7 +1081,7 @@
                                 </div>
                             </div>
                             <div style="text-align: center;">
-                                <div class="org-chart-node" [ngStyle]="{'padding.px': orgChartPadding}"
+                                <div class="org-chart-node" [ngStyle]="{'padding.px': orgChartPadding}" id="{{dr}}"
                                     [ngClass]="{'supervisor-node': myOrgUserHash[dr]?.userType === 'supervisor'}">
                                     <div (mouseenter)="setHoverData(dr)" (mouseleave)="setHoverData(null)"
                                         class="user-icon-node" (click)="selectUser(dr)"
@@ -1292,7 +1292,7 @@
                                             </div>
                                         </div>
                                         <div style="text-align: center;">
-                                            <div [ngStyle]="{'padding.px': orgChartPadding}" class="org-chart-node"
+                                            <div [ngStyle]="{'padding.px': orgChartPadding}" class="org-chart-node" id="{{dr2}}"
                                                 [ngClass]="{'supervisor-node': myOrgUserHash[dr2]?.userType === 'supervisor'}">
                                                 <div (mouseenter)="setHoverData(dr2)" (mouseleave)="setHoverData(null)"
                                                     class="user-icon-node" (click)="selectUser(dr2)"
@@ -1521,7 +1521,7 @@
                                                     </div>
                                                     <div style="text-align: center;">
                                                         <div [ngStyle]="{'padding.px': orgChartPadding}"
-                                                            class="org-chart-node"
+                                                            class="org-chart-node" id="{{dr3}}"
                                                             [ngClass]="{'supervisor-node': myOrgUserHash[dr3]?.userType === 'supervisor'}">
                                                             <div class="user-icon-node" (mouseenter)="setHoverData(dr3)"
                                                                 (mouseleave)="setHoverData(null)"
@@ -1551,7 +1551,7 @@
                                                             </div>
                                                             <div *ngIf="collapsedNodes.includes(dr3) && myOrgUserHash[dr3]?.userType === 'supervisor'"
                                                                 (click)="collapseNode(dr3, false)"
-                                                                style="margin:0 8px;">
+                                                                style="margin:0 8px;"> 
                                                                 <i class="far fa-plus-circle" nz-tooltip
                                                                     nzTooltipTitle="Expand Suborganization"
                                                                     nzTooltipPlacement="right"
@@ -1767,7 +1767,7 @@
                                                                 </div>
                                                                 <div style="text-align: center;">
                                                                     <div [ngStyle]="{'padding.px': orgChartPadding}"
-                                                                        class="org-chart-node"
+                                                                        class="org-chart-node" id="{{dr4}}"
                                                                         [ngClass]="{'supervisor-node': myOrgUserHash[dr4]?.userType === 'supervisor'}">
                                                                         <div (mouseenter)="setHoverData(dr4)"
                                                                             (mouseleave)="setHoverData(null)"
@@ -2034,7 +2034,7 @@
 
                                                                             <div style="text-align: center;">
                                                                                 <div [ngStyle]="{'padding.px': orgChartPadding}"
-                                                                                    class="org-chart-node">
+                                                                                    class="org-chart-node" id="{{dr5}}">
                                                                                     <div (click)="selectUser(dr5)"
                                                                                         class="user-icon-node"
                                                                                         (mouseenter)="setHoverData(dr5)"
@@ -2332,7 +2332,7 @@
                                                                                                 </div>
                                                                                                 <div *ngIf="collapsedNodes.includes(dr6) && myOrgUserHash[dr6]?.userType === 'supervisor'"
                                                                                                     (click)="collapseNode(dr6, false)"
-                                                                                                    style="margin:0 8px;">
+                                                                                                    style="margin:0 8px;" [id]="dr6">
                                                                                                     <i class="far fa-plus-circle"
                                                                                                         nz-tooltip
                                                                                                         nzTooltipTitle="Expand Suborganization"
@@ -2598,7 +2598,7 @@
                                                                                                             </div>
                                                                                                             <div *ngIf="collapsedNodes.includes(dr7)"
                                                                                                                 (click)="collapseNode(dr7, false)"
-                                                                                                                style="margin:0 8px;">
+                                                                                                                style="margin:0 8px;" id="{{dr7}}">
                                                                                                                 <i class="far fa-plus-circle"
                                                                                                                     nz-tooltip
                                                                                                                     nzTooltipTitle="Expand Suborganization"
