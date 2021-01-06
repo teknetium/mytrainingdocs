@@ -27,7 +27,7 @@ import { MyLoaderModule } from './components/my-loader/my-loader.module';
 import { LoaderInterceptor } from './shared/interceptor/loader-interceptor.service';
 import { LoaderService } from './shared/services/loader.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-
+import { HttpErrorInterceptor } from './shared/interceptor/error-interceptor.service';
 
 const ngZorroConfig: NzConfig = {
     message: { nzTop: 300 },
@@ -69,6 +69,11 @@ registerLocaleData(en);
             provide: NZ_I18N,
             useValue: en_US, 
         },
+//        {
+//            provide: HTTP_INTERCEPTORS,
+//            useClass: HttpErrorInterceptor,
+//            multi: true
+//        },
         { provide: NZ_CONFIG, useValue: ngZorroConfig },
         AuthGuard,
         AuthService,

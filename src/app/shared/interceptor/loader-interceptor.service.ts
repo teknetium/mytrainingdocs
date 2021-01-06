@@ -22,6 +22,7 @@ export class LoaderInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.myLoader.setLoading(true, request.url);
+    console.log('loader interceptor', request.url);
     return next.handle(request)
       .pipe(catchError((err) => {
 //        console.log('Error in HTTP_INTERCEPTOR');

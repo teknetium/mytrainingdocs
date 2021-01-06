@@ -27,6 +27,7 @@ import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dro
 import { stringify } from 'querystring';
 // import * as names from '../../../assets/names.json';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { LoaderService } from '../../shared/services/loader.service';
 
 
 @Component({
@@ -49,6 +50,22 @@ import { NzMessageService } from 'ng-zorro-antd/message';
       transition('closed => open', [
         animate('300ms')
       ]),
+    ]),
+    trigger('collapseNode', [
+      // ...
+      state('collapsed', style({
+        'width': '150px',
+        'border': "2px solid #888888"
+      })),
+      state('expanded', style({
+        'width': 'fit-contents',
+      })),
+      transition('in => out', [
+        animate('800ms')
+      ]),
+      transition('out => in', [
+        animate('800ms')
+      ])
     ]),
     trigger('searchSlide', [
       // ...
@@ -1184,9 +1201,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   taskHash$: Observable<TaskHash>;
   taskStepContentHash$: Observable<TaskStepContentHash>;
   showUserSearch = false;
-//  @ViewChild('justCollapsedNode') justCollapsedNodeElementRef : ElementRef<HTMLElement>;
-  collapsedNode = '';
+  my
 
+  
   constructor(
     private cd: ChangeDetectorRef,
     private authService: AuthService,
@@ -1201,6 +1218,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private messageService: NzMessageService,
     private route: ActivatedRoute,
     private router: Router,
+    private myLoader: LoaderService,
     private renderer: Renderer2
   ) {
     super();
@@ -1617,7 +1635,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   collapseAllSubOrgs(collapseAll) {
+    this.myLoader.setLoading(true, 'https://localhost:4200/myteam');
     if (collapseAll) {
+
       this.collapsedNodes = [];
       for (let user of this.userListDisplay) {
         if (user.userType === 'supervisor') {
@@ -1628,10 +1648,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else {
       this.collapsedNodes = [];
     }
+    this.myLoader.setLoading(false, 'https://localhost:4200/myteam');
   }
 
   collapseNode(uid: string, collapse: boolean) {
-    this.collapsedNode = uid;
     if (collapse) {
       this.collapsedNodes.push(uid);
       this.figureOrgStat(uid);
@@ -1644,7 +1664,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   centerIt(id) {
     let element: Element;
     element = document.getElementById(id);
-    element.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+    element.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'center' });
   }
 
   handleSendMessageCancel() {
@@ -2098,7 +2118,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       return;
     }
     //    console.log('checkUniqueEmail', data);
-    this.userService.getUserByEmail(this.selectedUser.email).subscribe(user => {
+    this.userService.getUserByEmail$(this.selectedUser.email).subscribe(user => {
       this.emailUnique = false;
     },
       err => {

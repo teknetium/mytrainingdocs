@@ -88,8 +88,10 @@
                     <a>
                         <i *ngIf="dropDownAlerts.length === 0" class="far fa-fw fa-bell"
                             style="font-size:20px;color:#000000;vertical-align: middle;"></i>
-                        <i *ngIf="dropDownAlerts.length > 0" class="far fa-fw fa-bell-on"
-                            style="font-size:34px;color:blue;vertical-align: middle;"></i>
+                        <nz-badge  *ngIf="dropDownAlerts.length > 0" [nzCount]="dropDownAlerts.length">
+                            <i *ngIf="dropDownAlerts.length > 0" class="far fa-fw fa-bell-on"
+                                style="font-size:30px;color:blue;vertical-align: middle;"></i>
+                        </nz-badge>
                     </a>
                 </span>
                 <nz-dropdown-menu #alertDropDown="nzDropdownMenu">

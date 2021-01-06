@@ -449,7 +449,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       return;
     }
     console.log('checkUniqueEmail', data);
-    this.userService.getUserByEmail(this.currentEmail.email).subscribe(user => {
+    this.userService.getUserByEmail$(this.currentEmail.email).subscribe(user => {
       this.emailUnique = false;
     },
       err => {

@@ -832,7 +832,7 @@ module.exports = function(app, config) {
         return res.status(500).send({ message: err.message });
       }
       if (!user) {
-        return res.status(400).send({ message: "User not found - Email : " + req.params.email });
+        return res.status(200).send(null);
       }
       res.send(user);
     });
@@ -844,7 +844,7 @@ module.exports = function(app, config) {
         return res.status(500).send({ message: err.message });
       }
       if (!user) {
-        return res.status(400).send({ message: "User not found - UID : " + req.params.uid }); 
+        return res.status(200).send(null); 
       }
       res.send(user);
     });
