@@ -28,7 +28,7 @@ export class AuthService {
   isAdmin: boolean;
   // Create a stream of logged in status to communicate throughout app
   loggedIn = false;
-  loggedIn$ = new BehaviorSubject<boolean>(this.loggedIn);
+  loggedIn$ = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = new BehaviorSubject<boolean>(false);
   isAuthenticatedObservable: Observable<boolean> = this.isAuthenticated$.asObservable();
   authenticatedUserProfile$ = new AsyncSubject<Auth0ProfileModel>();
@@ -65,6 +65,9 @@ export class AuthService {
   }
 
   setAuthenticatedUserProfile(profile: Auth0ProfileModel) {
+    if (!profile) {
+      return;
+    }
     this.authenticatedUserProfile$.next(profile);
     this.authenticatedUserProfile$.complete();
   }

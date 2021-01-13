@@ -26,7 +26,17 @@ export class OrgService {
 
   getOrgs$(): Observable<OrgModel[]> {
     return this.http
-      .get<OrgModel[]>(`${ENV.BASE_API}org/`, {
+      .get<OrgModel[]>(`${ENV.BASE_API}orgs/`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+
+  getOrgObj$(orgId): Observable<OrgModel> {
+    return this.http
+      .get<OrgModel>(`${ENV.BASE_API}orgs/${orgId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
       .pipe(
@@ -41,7 +51,7 @@ export class OrgService {
   // POST new comment (admin only)
   postOrg$(org: OrgModel): Observable<OrgModel> {
     return this.http
-      .post<OrgModel>(`${ENV.BASE_API}orgs/new`, org, {
+      .post<OrgModel>(`${ENV.BASE_API}org/new`, org, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
@@ -52,7 +62,7 @@ export class OrgService {
   // DELETE existing comment
   deleteOrg$(id: string): Observable<OrgModel> {
     return this.http
-      .delete(`${ENV.BASE_API}orgs/${id}`, {
+      .delete(`${ENV.BASE_API}org/${id}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

@@ -96,7 +96,7 @@ module.exports = function(app, config) {
   const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId org iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const trainingListProjection = "_id title versions type category subcategory owner description teamId org iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const userTrainingListProjection = "_id tid uid teamId status dueDate timeToDate dateCompleted assessmentResponses trainingVersion certImage";
-  const userListProjection = "_id uid userType userStatus jobTitle trainingStatus firstName lastName email emailVerified teamAdmin orgAdmin appAdmin teamId org supervisorId directReports profilePicUrl settings";
+  const userListProjection = "_id uid empId userType userStatus jobTitle trainingStatus firstName lastName email emailVerified teamAdmin orgAdmin appAdmin teamId org supervisorId directReports profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const docProjection = '_id productId productVersion author featureName sections images';
@@ -862,6 +862,7 @@ module.exports = function(app, config) {
       const user = new User({
         _id: req.body._id,
         uid: req.body.uid,
+        empId: req.body.empId,
         userType: req.body.userType,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -910,6 +911,7 @@ module.exports = function(app, config) {
       user.uid = req.body.uid;
       user.userType = req.body.userType;
       user.teamId = req.body.teamId;
+      user.empId = req.body.empId;
       user.org = req.body.org;
       user.firstName = req.body.firstName;
       user.lastName = req.body.lastName;

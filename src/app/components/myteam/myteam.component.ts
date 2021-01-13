@@ -155,6 +155,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     completed: '#4891f7',
     pendingCertUpload: '#feb90b'
   }
+  userStatusColorHash = {
+    active: 'blue',
+    inactive: '#aaaaaa',
+    pending: '#feb90b'
+  }
   includeNewSupervisorsTeam = true;
   isNewSupervisorPanelOpen = false;
   isUserAddPanelOpen = false;
@@ -190,6 +195,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     _id: '',
     teamId: '',
     org: '',
+    empId: '',
     firstName: '',
     lastName: '',
     email: '',
@@ -209,6 +215,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       showCSV: false,
       themeColor: {},
       showLegend: true,
+      showInactiveUsers: true,
       showAlerts: true
     },
     jobTitle: ''
@@ -320,6 +327,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   listOfJobTitles = [];
   listOfTrainingStatus = [{ text: 'No Trainings', value: 'none' }, { text: 'Past Due', value: 'pastDue' }, { text: 'In Progress', value: 'upToDate' }];
   listOfUserTypes = [{ text: 'Individual Contributor', value: 'individualContributor' }, { text: 'Supervisor', value: 'supervisor' }, { text: 'Volunteer', value: 'volunteer' }, { text: 'Customer', value: 'customer ' }];
+  listOfUserStatus = [{ text: 'Pending', value: 'pending' }, { text: 'Activer', value: 'active' }, { text: 'Inactive', value: 'inactive' }];
   listOfSearchTrainingStatus: string[] = [];
   listOfSearchUserTypes: string[] = [];
   listOfSearchJobTitles: string[] = [];
@@ -1135,6 +1143,27 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   orgJobTitles = [];
   userTypes = [];
+  selectionModeHash = {
+    Individual: 'Individual',
+    Org: 'Suborganization',
+    JobTitle: 'Job Title',
+    UserType: 'User Type',
+    Training: 'Training',
+    UserStatus: 'User Status'
+  }
+  userTypeHash = {
+    individualContributor: 'Individual Contributor',
+    supervisor: 'Supervisor',
+    volunteer: 'Volunteer',
+    contractor: 'Contractor',
+    customer: 'Customer',
+  };
+  userStatusHash = {
+    active: 'Active',
+    inactive: 'Inactive',
+    pending: 'Pending'
+  };
+
   testNodes = <UserBatchData[]>[];
   maxLevel = 0;
 
@@ -1162,6 +1191,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   selectionMode = 'Individual';
   jobTitleMatchCnt = 0;
   currentUserType = 'none';
+  currentUserStatus = 'none';
   currentUserDataError = '';
   currentUserTrainingStatus = '';
   currentTrainingSelected = '';
@@ -1635,7 +1665,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   collapseAllSubOrgs(collapseAll) {
-    this.myLoader.setLoading(true, 'https://localhost:4200/myteam');
+//    this.myLoader.setLoading(true, 'https://localhost:4200/myteam');
     if (collapseAll) {
 
       this.collapsedNodes = [];
@@ -1648,7 +1678,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else {
       this.collapsedNodes = [];
     }
-    this.myLoader.setLoading(false, 'https://localhost:4200/myteam');
+//    this.myLoader.setLoading(false, 'https://localhost:4200/myteam');
   }
 
   collapseNode(uid: string, collapse: boolean) {
@@ -2321,6 +2351,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         bgColor: '#e9e9e9',
       },
       showLegend: true,
+      showInactiveUsers: true,
       showAlerts: true
     };
     this.supervisorName = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
@@ -2396,6 +2427,21 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.figureOrgStat(node);
     }
   }
+
+  userStatusSelectedChanged(userStatus: string) {
+    this.currentUserStatus = userStatus;
+    this.userIdsSelected = [];
+    for (let user of this.myOrgUserObjs) {
+      if (this.currentUserStatus === user.userStatus) {
+        this.userIdsSelected.push(user._id);
+      }
+    }
+    this.figureOrgStat(this.authenticatedUser._id);
+    for (let node of this.collapsedNodes) {
+      this.figureOrgStat(node);
+    }
+  }
+
   userTrainingsStatusSelectedChanged(userTrainingStatus: string) {
     this.currentUserTrainingStatus = userTrainingStatus;
     this.userIdsSelected = [];
@@ -2405,8 +2451,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
     }
   }
-  userDataErrorSelectedChanged(userDataError: string) {
 
+  userDataErrorSelectedChanged(userDataError: string) {
     this.currentUserDataError = userDataError;
     this.userIdsSelected = [];
     for (let user of this.myOrgUserObjs) {
@@ -2453,17 +2499,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.currentJobTitlesSelected = [];
     this.userIdsSelected = [];
     this.currentUserType = 'none';
+    this.currentUserStatus = 'none';
     this.assignableTrainings = cloneDeep(this.teamTrainings);
 
-    if (mode !== 'Individual') {
-      this.userDetailIsVisible = false;
-    } else {
-      if (this.userIdSelected) {
-        this.userDetailIsVisible = true;
-      } else {
-        this.userDetailIsVisible = false;
-      }
-    }
     this.currentTrainingSelected = null;
     this.selectionMode = mode;
     this.figureOrgStat(this.authenticatedUser._id);
@@ -2534,6 +2572,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         contractor: 0,
         customer: 0
       },
+      userStatusHash: {
+        active: 0,
+        inactive: 0,
+        pending: 0
+      },
       jobTitleHash: {}
     }
 
@@ -2595,6 +2638,19 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         default:
           break;
       }
+      switch (drUser.userStatus) {
+        case 'active':
+          nodeStat.userStatusHash['active'] += 1;
+          break;
+        case 'inactive':
+          nodeStat.userStatusHash['inactive'] += 1;
+          break;
+        case 'pending':
+          nodeStat.userStatusHash['pending'] += 1;
+          break;
+        default:
+          break;
+      }
 
       if (this.currentJobTitlesSelected.length > 0) {
         if (this.currentJobTitlesSelected.includes(drUser.jobTitle)) {
@@ -2603,6 +2659,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
       if (this.currentUserType !== 'none') {
         if (this.currentUserType === drUser.userType) {
+          nodeStat.selectedCnt++;
+        }
+      }
+
+      if (this.currentUserStatus !== 'none') {
+        if (this.currentUserStatus === drUser.userStatus) {
           nodeStat.selectedCnt++;
         }
       }
@@ -2709,6 +2771,15 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.userService.selectAuthenticatedUser();
   }
 
+  confirmInactive(user: UserModel) {
+    if (user._id === this.authenticatedUser._id) {
+      return;
+    }
+    this.userService.markUserAsInactive(user._id);
+    this.userTrainingService.deleteUTForUser(user._id);
+    this.userService.selectAuthenticatedUser();
+  }
+
   getStatusColor(uid: string): string {
 
     let ut: UserTrainingModel;
@@ -2721,6 +2792,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       } else {
         return 'orange';
       }
+    } else if (this.selectionMode === 'UserStatus') {
+      return this.userStatusColorHash[this.myOrgUserHash[uid].userStatus];
     } else if (this.myOrgUserHash[uid]) {
       return this.userTrainingStatusColorHash[this.myOrgUserHash[uid].trainingStatus];
     }

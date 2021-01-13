@@ -63,28 +63,28 @@
       </video>
     </vg-player>
     <vg-player *ngIf="currentVideo === 'onboarding'" (onPlayerReady)="onPlayerReady($event)">
-    
+
       <vg-controls>
         <vg-play-pause></vg-play-pause>
         <vg-playback-button></vg-playback-button>
-    
+
         <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-    
+
         <vg-scrub-bar>
           <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
           <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
         </vg-scrub-bar>
-    
+
         <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
         <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-    
+
         <vg-track-selector></vg-track-selector>
         <vg-mute></vg-mute>
         <vg-volume></vg-volume>
-    
+
         <vg-fullscreen></vg-fullscreen>
       </vg-controls>
-    
+
       <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
         <source [src]="onboardingUrl" type="video/mp4">
       </video>
@@ -129,7 +129,7 @@
       style="background-color:rgba(220, 220, 220, .7);position:fixed;top:0;left:0;right:0;font-size: 12px;height: 64px;z-index: 100;text-align: center;width:100%;">
       <div
         style="position: absolute;left: 10px;top: 10px;height: 44px;border-radius: 24px;padding: 5px 8px; background: rgba(255,255,255,.3); width: 180px;">
-        <img height="35" src="assets/images/logo/logo.png" >
+        <img height="35" src="assets/images/logo/logo.png">
       </div>
 
       <div class="nav-link">
@@ -171,15 +171,12 @@
           [ngxScrollToEasing]="ngxScrollToEasing">Contact Us</a>
       </div>
 
-      <div class="nav-link"
-        style="cursor:pointer;font-size: 12px;z-index: 100;float:right;"
-        (click)="signup()">
+      <div class="nav-link" style="cursor:pointer;font-size: 12px;z-index: 100;float:right;" (click)="signup()">
 
         Sign Up
       </div>
 
-      <div class="nav-link" style="cursor:pointer;font-size: 12px;z-index: 100;float:right;"
-        (click)="login()">
+      <div class="nav-link" style="cursor:pointer;font-size: 12px;z-index: 100;float:right;" (click)="login()">
         Log In
       </div>
     </div>
@@ -199,7 +196,8 @@
             <div class="text-center">
               <h2>Status Tracking that SCALES!</h2>
               <p>
-                Whether your organization has 50 employees or 50,000 employees, our unique org-chart gives you training metrics and more at a glance.
+                Whether your organization has 50 employees or 50,000 employees, our unique org-chart gives you training
+                metrics and more at a glance.
             </div>
           </div>
           <div class="col-lg-6" style="height:fit-content;">
@@ -326,8 +324,9 @@
           <div class="col-lg-12">
             <div class="text-center">
               <h2 class="mb-0 text-capitalize"> <span class="font-weight-bold">Pricing</span></h2>
-              <div class="main-title-border">
+              <div class="main-title-border" style="margin-bottom: 10px;">
               </div>
+              <!--
               <div class="m-b-10">
                 <h6>Billing Cycle</h6>
                 <nz-radio-group [(ngModel)]="plans">
@@ -335,135 +334,213 @@
                   <label nz-radio-button nzValue="annually" (click)="planChange()">Annually</label>
                 </nz-radio-group>
               </div>
+              -->
             </div>
           </div>
         </div>
-
         <div class="row align-items-center">
-          <div class="col-md-3">
-            <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
-              <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
-                <div class="media align-items-center">
-                  <nz-avatar nzIcon="user" [nzSize]="55" class="ant-avatar-blue"></nz-avatar>
-                  <div class="m-l-15" style="text-align: center;">
-                    <h3 class="m-b-0">Team</h3>
-                    <span class="font-size-12">2 Supervisors</span>
-                    <h2 class="font-weight-bold  m-b-0">
-                      <span *ngIf="plans === 'monthly'">${{pricingModel.team.monthly}}</span>
-                      <span *ngIf="plans === 'annually'">${{pricingModel.team.yearly}}</span>
-                      <span class="font-size-13 font-weight-semibold">/{{duration}}</span>
-                    </h2>
-                  </div>
-                </div>
-              </div>
-              <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
-                style="display: inline-block;">Select
-                Plan</button>
-              <!--
-            <div class="text-center">
-              <div>
-                <a class="btn btn-custom text-white" [ngxScrollTo]="destinations['contact'].ngxScrollToDestination"
-                  [ngxScrollToDuration]="ngxScrollToDuration" [ngxScrollToEasing]="ngxScrollToEasing">Choose
-                  Plan</a>
-              </div>
-            </div>
-            -->
-            </nz-card>
-          </div>
-          <div class="col-md-3">
-            <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:10%;">
-              <div class="" style="padding:10px;margin-bottom:200px;">
+          <div class="col-md-4">
+            <nz-card style="border-color: #e1e1e1;min-height:450px;position:relative;">
+              <div class="" style="">
                 <div class="media align-items-center" style="display:block;">
-                  <i class="fad fa-car-side" style="font-size:46px;color:blue;"></i>
+                  <i class="fad fa-user" style="font-size:46px;color:#4891f7;margin-bottom:20px;"></i>
                   <div style="text-align: center;">
-                    <h3 >Compact</h3>
-                    <h2 class="font-weight-bold  m-b-0">
-                      <span *ngIf="plans === 'monthly'">${{pricingModel.compact.monthly}}</span>
-                      <span *ngIf="plans === 'annually'">${{pricingModel.compact.yearly}}</span>
-                      <span class="font-size-13 font-weight-semibold">/{{duration}}</span>
-                    </h2>
+                    <h3>Basic</h3>
+                    <div *ngIf="plans === 'monthly'" style="width:75%;display:inline-block;">
+                      <span style="font-size:34px;font-weight:400;color:black;">
+                        $6
+                      </span>
+                      <span style="font-size:22px;font-weight:400;">
+                        / user
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <button type="button" class="btn btn-custom btn-rounded" id="checkout-button" style="display: inline-block;">Select
-                Plan</button>
-              <!--
-                      <div class="text-center">
-                        <div>
-                          <a class="btn btn-custom text-white" [ngxScrollTo]="destinations['contact'].ngxScrollToDestination"
-                            [ngxScrollToDuration]="ngxScrollToDuration" [ngxScrollToEasing]="ngxScrollToEasing">Choose
-                            Plan</a>
-                        </div>
+                  <div style="text-align: left;margin-top:40px;">
+                    <div style="width:100%;">
+                      <div style="display:block;padding-left:40px;">
+                        <span style="display:inline-block;width:40px;">
+                          <i class="fas fa-check" style="font-size:20px;color:#52c41a;"></i>
+                        </span>
+                        <span style="display:inline-block;font-size:16px;color:black;">
+                          One Click Deploy
+                        </span>
                       </div>
-                      -->
-            </nz-card>
-          </div>
-          <div class="col-md-3">
-            <nz-card style="border-color: #e1e1e1;min-height:450px;padding-top:30px;">
-              <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
-                <div class="media align-items-center">
-                  <nz-avatar nzIcon="team" [nzSize]="55" class="ant-avatar-cyan"></nz-avatar>
-                  <div class="m-l-15" style="text-align: center;">
-                    <h3 class="m-b-0">Large Org</h3>
-                    <span class="font-size-12">
-                      < 300 users</span>
-                        <h2 class="font-weight-bold  m-b-0">
-                          <span *ngIf="plans === 'monthly'">${{pricingModel.largeOrg.monthly}}</span>
-                          <span *ngIf="plans === 'annually'">${{pricingModel.largeOrg.yearly}}</span>
-                          <span class="font-size-13 font-weight-semibold">/{{duration}}</span>
-                        </h2>
+                      <div style="display:block;padding-left:40px;">
+                        <span style="display:inline-block;width:40px;">
+                          <i class="fas fa-minus" style="font-size:20px;color:#aaaaaa;"></i>
+                        </span>
+                        <span style="display:inline-block;font-size:16px;color:black;">
+                          Training Assessments
+                        </span>
+                      </div>
+                      <div style="display:block;padding-left:40px;">
+                        <span style="display:inline-block;width:40px;">
+                          <i class="fas fa-check" style="font-size:20px;color:#52c41a;"></i>
+                        </span>
+                        <span style="display:inline-block;font-size:16px;color:black;">
+                          20 Trainings
+                        </span>
+                      </div>
+                      <div style="display:block;padding-left:40px;">
+                        <span style="display:inline-block;width:40px;">
+                          <i class="fas fa-minus" style="font-size:20px;color:#aaaaaa;"></i>
+                        </span>
+                        <span style="display:inline-block;font-size:16px;color:black;">
+                          Interactive Org Chart
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-
-              <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
-                style="display: inline-block;">Select
-                Plan</button>
-              <!--
-            <div class="text-center">
-              <div>
-                <a class="btn btn-custom text-white" [ngxScrollTo]="destinations['contact'].ngxScrollToDestination"
-                  [ngxScrollToDuration]="ngxScrollToDuration" [ngxScrollToEasing]="ngxScrollToEasing">Choose
-                  Plan</a>
+              <div style="position: absolute;bottom: 20px;text-align: center;margin-left:-1.5rem;width: 100%;">
+                <div style="">
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="basic"
+                    data-cb-plan-quantity="1" style="display: inline-block;">
+                    <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
+                      style="display: inline-block;">Select
+                      Plan
+                    </button>
+                  </a>
+                </div>
               </div>
-            </div>
-            -->
             </nz-card>
           </div>
-          <div class="col-md-3">
-            <nz-card
-              style="position:relative;border-color: #e1e1e1;min-height:450px;padding-top:30px;text-align: center;">
-              <div class="d-flex p-b-20" style="padding:10px;margin-bottom:200px;">
-                <div class="media align-items-center">
-                  <nz-avatar nzIcon="crown" [nzSize]="55" class="ant-avatar-gold"></nz-avatar>
-                  <div class="m-l-15" style="text-align: center;">
-                    <h3 class="m-b-0">Enterprise</h3>
-                    <span class="font-size-12">
-                      > 300 users</span>
-                    <h2 class="font-weight-bold  m-b-0">
-                      <span *ngIf="plans === 'monthly'">${{pricingModel.enterprise.monthly}}</span>
-                      <span *ngIf="plans === 'annually'">${{pricingModel.enterprise.yearly}}</span>
-                      <span class="font-size-13 font-weight-semibold">/{{duration}}</span>
-                    </h2>
+          <div class="col-md-4">
+            <nz-card style="border-color: #e1e1e1;min-height:450px;position:relative;">
+              <div class="" style="">
+                <div class="media align-items-center" style="display:block;">
+                  <i class="fad fa-user-tie" style="font-size:46px;color:#d54493;margin-bottom:20px;"></i>
+                  <div style="text-align: center;">
+                    <h3>Pro</h3>
+                    <div *ngIf="plans === 'monthly'" style="width:75%;display:inline-block;">
+                      <span style="font-size:34px;font-weight:400;color:black;">
+                        $12
+                      </span>
+                      <span style="font-size:22px;font-weight:400;">
+                        / user
+                      </span>
+                    </div>
+                  </div>
+                  <div style="text-align: left;margin-top:40px;">
+                    <div style="width:100%;">
+                      <div style="display:block;padding-left:40px;">
+                        <span style="display:inline-block;width:40px;">
+                          <i class="fas fa-check" style="font-size:20px;color:#52c41a;"></i>
+                        </span>
+                        <span style="display:inline-block;font-size:16px;color:black;">
+                          One Click Deploy
+                        </span>
+                      </div>
+                      <div style="display:block;padding-left:40px;">
+                        <span style="display:inline-block;width:40px;">
+                          <i class="fas fa-minus" style="font-size:20px;color:#aaaaaa;"></i>
+                        </span>
+                        <span style="display:inline-block;font-size:16px;color:black;">
+                          Training Assessments
+                        </span>
+                      </div>
+                      <div style="display:block;padding-left:40px;">
+                        <span style="display:inline-block;width:40px;">
+                          <i class="fas fa-check" style="font-size:20px;color:#52c41a;"></i>
+                        </span>
+                        <span style="display:inline-block;font-size:16px;color:black;">
+                          40 Trainings
+                        </span>
+                      </div>
+                      <div style="display:block;padding-left:40px;">
+                        <span style="display:inline-block;width:40px;">
+                          <i class="fas fa-check" style="font-size:20px;color:#52c41a;"></i>
+                        </span>
+                        <span style="display:inline-block;font-size:16px;color:black;">
+                          Interactive Org Chart
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
-                style="display: inline-block;">Select
-                Plan</button>
+              <div style="position: absolute;bottom: 20px;text-align: center;margin-left:-1.5rem;width: 100%;">
+                <div style="">
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="pro" data-cb-plan-quantity="1"
+                    style="display: inline-block;">
+                    <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
+                      style="display: inline-block;">Select
+                      Plan
+                    </button>
+                  </a>
+                </div>
+              </div>
+            </nz-card>
+          </div>
+          <div class="col-md-4">
+            <nz-card style="border-color: #e1e1e1;min-height:450px;position:relative;">
+              <div class="" style="">
+                <div class="media align-items-center" style="display:block;">
+                  <i class="fad fa-user-graduate" style="font-size:46px;color:#6939c9;margin-bottom:20px;"></i>
+                  <div style="text-align: center;">
+                    <h3>Expert</h3>
+                    <div *ngIf="plans === 'monthly'" style="width:75%;display:inline-block;">
+                      <span style="font-size:34px;font-weight:400;color:black;">
+                        $18
+                      </span>
+                      <span style="font-size:22px;font-weight:400;">
+                        / user
+                      </span>
+                    </div>
+                  </div>
+                  <div style="text-align: left;margin-top:40px;">
+                    <div style="width:100%;">
+                      <div style="display:block;padding-left:40px;">
+                        <span style="display:inline-block;width:40px;">
+                          <i class="fas fa-check" style="font-size:20px;color:#52c41a;"></i>
+                        </span>
+                        <span style="display:inline-block;font-size:16px;color:black;">
+                          One Click Deploy
+                        </span>
+                      </div>
+                      <div style="display:block;padding-left:40px;">
+                        <span style="display:inline-block;width:40px;">
+                          <i class="fas fa-check" style="font-size:20px;color:#52c41a;"></i>
+                        </span>
+                        <span style="display:inline-block;font-size:16px;color:black;">
+                          Training Assessments
+                        </span>
+                      </div>
+                      <div style="display:block;padding-left:40px;">
+                        <span style="display:inline-block;width:40px;">
+                          <i class="fas fa-check" style="font-size:20px;color:#52c41a;"></i>
+                        </span>
+                        <span style="display:inline-block;font-size:16px;color:black;">
+                          Unlimited Trainings
+                        </span>
+                      </div>
+                      <div style="display:block;padding-left:40px;">
+                        <span style="display:inline-block;width:40px;">
+                          <i class="fas fa-check" style="font-size:20px;color:#52c41a;"></i>
+                        </span>
+                        <span style="display:inline-block;font-size:16px;color:black;">
+                          Interactive Org Chart
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="position: absolute;bottom: 20px;text-align: center;margin-left:-1.5rem;width: 100%;">
+                <div style="">
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="expert" data-cb-plan-quantity="1"
+                    style="display: inline-block;">
+                    <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
+                      style="display: inline-block;">Select
+                      Plan
+                    </button>
+                  </a>
+                </div>
+              </div>
             </nz-card>
           </div>
         </div>
-        <!--
-        <div class="row" style="height: 0;">
-          <div class="bg-purple-opacity text-purple"
-            style="border-radius:20px;border:1px solid #595ff5;position:relative;top:-280px;width:100%;padding:10px;text-align:center;font-size:20px;">
-            <span style="font-size:16px;">All plans include</span><br>
-            <span style="font-weight: 500;font-size:20px;">Unlimited File Uploads</span><br><span
-              style="font-size:16px;">and</span><br><span style="font-weight: 500;font-size:20px;">24/7 Support</span>
-          </div>
-        </div>
-        -->
       </div>
     </section>
     <!-- END PRICING -->
@@ -483,7 +560,8 @@
           </div>
         </div>
         <nz-collapse nzAccordion>
-          <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="headerTemplate" [nzActive]="panel.active" style="text-align: left;">
+          <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="headerTemplate" [nzActive]="panel.active"
+            style="text-align: left;">
             <div style="padding-left:20px;font-size: 20px;color:#000000;font-weight: 200;">{{ panel.answer }}</div>
             <ng-template #headerTemplate>
               <div style="color:#888888;font-size: 18px;font-weight: 200;">

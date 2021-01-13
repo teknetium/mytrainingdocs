@@ -93,14 +93,14 @@ export class LandingpageComponent implements OnInit {
       focus: false,
       title: 'Assessments Made Easy',
       class: 'fal fa-file-certificate text-danger bg-danger-opacity',
-      blurb: 'Assessments are critical to ensuring mastery of content as well as understanding the effectiveness of the training content itself.',
+      blurb: 'Quickly and easily add assessnents to your trainings.  ',
       learnMore: ''
     },
     {
       focus: false,
       title: 'Interactive Org Chart',
       class: 'fal fa-sitemap text-blue bg-blue-opacity',
-      blurb: 'Understand your entire organization\'s training status at a glance.  Interact with users directly in the chart.',
+      blurb: 'Manage users and trainings all from within our unique dynamic, interactive org chart.',
       learnMore: ''
     },
     {
@@ -134,9 +134,9 @@ export class LandingpageComponent implements OnInit {
     },
     {
       focus: false,
-      title: 'Fast, Easy Deployment',
+      title: 'One Click Deployment',
       class: 'fal fa-shipping-fast orange',
-      blurb: 'Deploy to your individual team or your entire organization in a matter of minutes, not weeks!',
+      blurb: 'Deploy to your entire organization in a matter of minutes, not weeks!',
       learnMore: ''
     }
     /*
@@ -183,18 +183,14 @@ export class LandingpageComponent implements OnInit {
   duration: string = "month";
 
   pricingModel = {
-    'team': {
+    'basic': {
       monthly: 99,
       yearly: 999
     },
-    'compact': {
+    'pro': {
       perUser: 5,
       monthly: 500,
       yearly: 4800
-    },
-    'largeOrg': {
-      monthly: 1500,
-      yearly: 15000
     },
     'enterprise': {
       monthly: 3000,

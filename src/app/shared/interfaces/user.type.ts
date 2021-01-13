@@ -8,12 +8,13 @@ export interface UserModel {
   lastName: string,
   email: string,
   emailVerified: boolean,
+  empId: string,
   org: string,
   teamId: string,
   teamAdmin: boolean,
   appAdmin: boolean,
   orgAdmin: boolean,
-  userStatus: 'pending' | 'active' | 'inactive'
+  userStatus: 'pending' | 'active' | 'inactive' | 'none'
   trainingStatus: 'upToDate' | 'pastDue' | 'none',
   jobTitle: string,
   profilePicUrl: string,
@@ -24,6 +25,7 @@ export interface UserModel {
     showCSV: boolean,
     themeColor: {},
     showLegend: boolean,
+    showInactiveUsers: boolean,
     showAlerts: boolean
   }
 }
@@ -71,6 +73,7 @@ export interface NodeStat {
   pastDueCnt: number,
   trainingHash: Object,
   userTypeHash: Object,
+  userStatusHash: Object,
   jobTitleHash: Object
 }
 

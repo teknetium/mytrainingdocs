@@ -12,28 +12,8 @@
         <div style="clear: both;"></div>
     </div>
     -->
-    <div *ngIf="user.userType === 'supervisor'" class="settings-item">
-        <div class="settings-item-left">
-            <i class="fad fa-fw fa-list" style="color:blue;font-size:24px;vertical-align: middle;"></i>
-            <span style="vertical-align: middle;margin-left:10px;font-size: 16px;">Show Legend</span>
-            <span style="font-size:10px;">&nbsp;&nbsp;&nbsp;(My Team Page)</span>
-        </div>
-        <div class="settings-item-right">
-            <nz-switch [(ngModel)]="user.settings.showLegend"
-                (ngModelChange)="updateUserSettings($event, 'showLegend', $event)"></nz-switch>
-        </div>
-        <div style="clear: both;"></div>
-    </div>
-    <div class="settings-item">
-        <div class="settings-item-left">
-            <i class="fad fa-fw fa-bell" style="color:blue;font-size:24px;vertical-align: middle;"></i>
-            <span style="vertical-align: middle;margin-left:10px;font-size: 16px;">Show Alerts</span>
-        </div>
-        <div class="settings-item-right">
-            <nz-switch [(ngModel)]="user.settings.showAlerts"
-                (ngModelChange)="updateUserSettings($event, 'showAlerts', $event)"></nz-switch>
-        </div>
-        <div style="clear: both;"></div>
+    <div style="text-align: center;">
+        <h4>General</h4>
     </div>
     <div class="settings-item">
         <div class="settings-item-left">
@@ -48,6 +28,42 @@
                 <div [ngStyle]="{'background-color': color.bgColor, 'color': color.fgColor}"
                     style="height:24px;width:24px;border-radius:6px;"></div>
             </div>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    <div class="settings-item">
+        <div class="settings-item-left">
+            <i class="fad fa-fw fa-bell" style="color:blue;font-size:24px;vertical-align: middle;"></i>
+            <span style="vertical-align: middle;margin-left:10px;font-size: 16px;">Show Alerts</span>
+        </div>
+        <div class="settings-item-right">
+            <nz-switch [(ngModel)]="user.settings.showAlerts"
+                (ngModelChange)="updateUserSettings($event, 'showAlerts', $event)"></nz-switch>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    <div style="text-align: center;">
+        <h4>My Team</h4>
+    </div>
+    <div *ngIf="user.userType === 'supervisor'" class="settings-item">
+        <div class="settings-item-left">
+            <i class="fad fa-fw fa-list" style="color:blue;font-size:24px;vertical-align: middle;"></i>
+            <span style="vertical-align: middle;margin-left:10px;font-size: 16px;">Show Legend</span>
+        </div>
+        <div class="settings-item-right">
+            <nz-switch [(ngModel)]="user.settings.showLegend"
+                (ngModelChange)="updateUserSettings($event, 'showLegend', $event)"></nz-switch>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    <div class="settings-item">
+        <div class="settings-item-left">
+            <i class="fad fa-fw fa-user-times" style="color:blue;font-size:24px;vertical-align: middle;"></i>
+            <span style="vertical-align: middle;margin-left:10px;font-size: 16px;">Show Inactive Users</span>
+        </div>
+        <div class="settings-item-right">
+            <nz-switch [(ngModel)]="user.settings.showInactiveUsers"
+                (ngModelChange)="updateUserSettings($event, 'showInactiveUsers', $event)"></nz-switch>
         </div>
         <div style="clear: both;"></div>
     </div>

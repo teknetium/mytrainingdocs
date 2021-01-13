@@ -272,15 +272,14 @@
                     <div style="float:left;">
                         <div style="display:inline-block;">
                             <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" class="user-search">
-                                <input type="text" nz-input placeholder="User Search"
-                                    [(ngModel)]="userNameToSearchFor" (ngModelChange)="onUserSearchChange($event)"
-                                    [nzAutocomplete]="autoUserSearch"
+                                <input type="text" nz-input placeholder="User Search" [(ngModel)]="userNameToSearchFor"
+                                    (ngModelChange)="onUserSearchChange($event)" [nzAutocomplete]="autoUserSearch"
                                     style="border:1px solid white;" />
                             </nz-input-group>
                             <nz-autocomplete [nzDataSource]="matchingUsers" #autoUserSearch></nz-autocomplete>
                             <ng-template #suffixIconButton>
-                                <button nz-button nzType="primary" nzSearch style="z-index: 1000;height:41px;"><i nz-icon
-                                        nzType="search"></i></button>
+                                <button nz-button nzType="primary" nzSearch style="z-index: 1000;height:41px;"><i
+                                        nz-icon nzType="search"></i></button>
                             </ng-template>
                         </div>
                     </div>
@@ -347,7 +346,7 @@
                     <div style="width:fit-content;display:block;">
                         <span style="display:inline-block;font-size:14px;font-weight:500;">Selection
                             Mode&nbsp;&nbsp;:&nbsp;&nbsp;</span>
-                        <span style="color:blue;">{{selectionMode}}</span>
+                        <span style="color:blue;">{{selectionModeHash[selectionMode]}}</span>
                     </div>
                     <nz-radio-group [(ngModel)]="selectionMode" (ngModelChange)="setSelectionMode($event)">
                         <label nz-radio-button nzValue="Individual" nzTooltipPlacement nz-tooltip
@@ -357,7 +356,7 @@
                             (next)="onTaskWizardNext('task1Step1')">
                             <i class="far fa-fw fa-user" style="font-size:18px;"></i>
                         </label>
-                        <label nz-radio-button nzValue="Org" nz-tooltip nzTooltipTitle="Select by Team/Org"
+                        <label nz-radio-button nzValue="Org" nz-tooltip nzTooltipTitle="Select by Suborganization"
                             nzTooltipPlacement="bottomLeft">
                             <i class="far fa-fw fa-users" style="font-size:18px;"></i>
                         </label>
@@ -368,6 +367,10 @@
                         <label nz-radio-button nzValue="UserType" nz-tooltip nzTooltipTitle="Select by User Type"
                             nzTooltipPlacement="bottomLeft">
                             <i class="far fa-fw fa-user-cowboy" style="font-size:18px;"></i>
+                        </label>
+                        <label nz-radio-button nzValue="UserStatus" nz-tooltip nzTooltipTitle="Select by User Status"
+                            nzTooltipPlacement="bottomLeft">
+                            <i class="far fa-fw fa-user-check" style="font-size:18px;"></i>
                         </label>
                         <label nz-radio-button nzValue="Training" nz-tooltip nzTooltipTitle="Select by Training"
                             nzTooltipPlacement="bottomLeft">
@@ -401,8 +404,7 @@
                             <span *ngIf="selectedUser"
                                 style="display:inline-block;font-size:16px;font-weight: 300;color:#444444;">({{selectedUser?.jobTitle}})</span>
                                 -->
-                            <span *ngIf="!selectedUser"
-                                style="display:inline-block;font-size:16px;color:#444444;">No
+                            <span *ngIf="!selectedUser" style="display:inline-block;font-size:16px;color:#444444;">No
                                 User Selected
                             </span>
                         </div>
@@ -445,9 +447,9 @@
                             </button>
                             <button [disabled]="!userIdSelected" nz-button nzShape="circle"
                                 style="display:inline-block;margin-left:3px;" nz-popconfirm
-                                nzPopconfirmTitle="Delete this user?" (nzOnConfirm)="confirmDelete(selectedUser)"
-                                nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Delete User">
-                                <i class="fas fa-trash"></i>
+                                nzPopconfirmTitle="Mark this user as inactive?" (nzOnConfirm)="confirmInactive(selectedUser)"
+                                nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Mark this user as inactive">
+                                <i class="fas fa-user-times"></i>
                             </button>
                             <button [disabled]="!userIdSelected" nz-button nzShape="circle"
                                 style="display:inline-block;margin-left:3px;" nz-tooltip nzTooltipPlacement="bottomLeft"
@@ -481,15 +483,18 @@
                         <nz-option *ngFor="let training of listOfTrainingTitles" [nzLabel]="training.text"
                             [nzValue]="training.value" nzCustomContent
                             [nzDisabled]="allTrainingIdHash[training.value]?.versions.length === 1">
-                            <i [ngClass]="getSelectedTrainingIconClass(training.value)"
-                                [ngStyle]="{'color': getTrainingIconColor(training.value)}"
-                                style="font-size:16px;z-index:1;float:left;line-height:16px;margin-right:10px;">
-                            </i>
-                            <div style="font-size:12px;float:left;width:155px;overflow: hidden;">{{training.text}}</div>
-                            <div style="float:right;font-size:10px;">
-                                {{ versionFormatter(allTrainingIdHash[training.value]?.versions[0].version) }}
+                            <div style="padding:5px;">
+                                <i [ngClass]="getSelectedTrainingIconClass(training.value)"
+                                    [ngStyle]="{'color': getTrainingIconColor(training.value)}"
+                                    style="font-size:16px;z-index:1;float:left;line-height:16px;margin-right:10px;">
+                                </i>
+                                <div style="font-size:12px;float:left;width:155px;overflow: hidden;">{{training.text}}
+                                </div>
+                                <div style="float:right;font-size:10px;">
+                                    {{ versionFormatter(allTrainingIdHash[training.value]?.versions[0].version) }}
+                                </div>
+                                <div style="clear: both;"></div>
                             </div>
-                            <div style="clear: both;"></div>
                         </nz-option>
                     </nz-select>
                     <ng-template #trainingTemplate let-selected>
@@ -529,8 +534,8 @@
                 <div *ngIf="selectionMode === 'UserType'" style="float:left;margin-right:20px;">
                     <div style="width:fit-content;display:block;">
                         <span style="display:inline-block;font-size:14px;font-weight:500;">User
-                            Types&nbsp;&nbsp;:&nbsp;&nbsp;</span>
-                        <span style="color:blue;">{{currentUserType}}</span>
+                            Type&nbsp;&nbsp;:&nbsp;&nbsp;</span>
+                        <span style="color:blue;">{{userTypeHash[currentUserType]}}</span>
                     </div>
                     <nz-radio-group [(ngModel)]="currentUserType" (ngModelChange)="userTypeSelectedChanged($event)">
                         <label nz-radio-button nzValue="individualContributor" nz-tooltip
@@ -552,6 +557,27 @@
                         <label nz-radio-button nzValue="customer" nz-tooltip nzTooltipPlacement="bottomLeft"
                             nzTooltipTitle="Customer">
                             <i class="fas fa-fw fa-user-alien" style="font-size:18px;"></i>
+                        </label>
+                    </nz-radio-group>
+                </div>
+                <div *ngIf="selectionMode === 'UserStatus'" style="float:left;margin-right:20px;">
+                    <div style="width:fit-content;display:block;">
+                        <span style="display:inline-block;font-size:14px;font-weight:500;">User
+                            Status&nbsp;&nbsp;:&nbsp;&nbsp;</span>
+                        <span style="color:blue;">{{userStatusHash[currentUserStatus]}}</span>
+                    </div>
+                    <nz-radio-group [(ngModel)]="currentUserStatus" (ngModelChange)="userStatusSelectedChanged($event)">
+                        <label nz-radio-button nzValue="active" nz-tooltip nzTooltipPlacement="bottomLeft"
+                            nzTooltipTitle="Active">
+                            <i class="fas fa-fw fa-user" style="font-size:18px;color: blue;"></i>
+                        </label>
+                        <label nz-radio-button nzValue="inactive" nzTooltipPlacement="bottomLeft" nz-tooltip
+                            nzTooltipTitle="Inactive">
+                            <i class="fas fa-fw fa-user" style="font-size:18px;color:#aaaaaa;"></i>
+                        </label>
+                        <label nz-radio-button nzValue="pending" nzTooltipPlacement="bottomLeft" nz-tooltip
+                            nzTooltipTitle="Pending">
+                            <i class="fas fa-fw fa-user" style="font-size:18px;color:#feb90b;"></i>
                         </label>
                     </nz-radio-group>
                 </div>
@@ -866,11 +892,12 @@
                 </tbody>
             </nz-table>
         </div>
-        <div *ngIf="showOrgChart === 'true'" style="display:block;height:75%;overflow:scroll;">
+        <div *ngIf="showOrgChart === 'true'" style="display:block;height:75%;overflow:scroll;margin-top:40px;">
 
             <div style="text-align: center;width:100%;overflow: scroll;position:relative;">
                 <div style="background-color:white;display:inline-block;white-space: nowrap;">
-                    <div class="supervisor-node org-chart-node" style="text-align: center;margin-bottom:20px;" id="{{authenticatedUser._id}}">
+                    <div class="supervisor-node org-chart-node" style="text-align: center;margin-bottom:20px;"
+                        id="{{authenticatedUser._id}}">
                         <div style="display:inline-block;padding:5px 5px 0 5px;position:relative;border:2px solid white;cursor:pointer;border-radius:5px;"
                             (mouseenter)="setHoverData(authenticatedUser._id)" (mouseleave)="setHoverData(null)"
                             (click)="selectUser(authenticatedUser._id)" joyrideStep="task1Step2"
@@ -1061,6 +1088,44 @@
                                             style="color:black;font-size:16px;padding-top:2px;"></i>
                                         <div style="justify-content: right;">
                                             {{nodeStatHash[authenticatedUser._id]?.userTypeHash.customer}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="selectionMode === 'UserStatus'" style="padding:5px;">
+                                    <div nz-tooltip nzTooltipTitle="Selected Users" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:10px;border-bottom: 1px solid #dddddd;padding-bottom:5px;">
+                                        <div class="selected-node"
+                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;width:24px;height:24px;">
+                                        </div>
+                                        <div style="display:inline-block;padding-top:6px;">
+                                            {{nodeStatHash[authenticatedUser._id]?.selectedCnt}}
+                                        </div>
+                                    </div>
+                                    <div style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
+                                        User Status</div>
+                                    <div nz-tooltip nzTooltipTitle="Active"
+                                        [ngClass]="{'selected-item': currentUserStatus === 'active'}" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user"
+                                            style="color:blue;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[authenticatedUser._id]?.userStatusHash.active}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Inactive" [ngClass]="{'selected-item': currentUserStatus === 'inactive'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#aaaaaa;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[authenticatedUser._id]?.userStatusHash.inactive}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Pending" [ngClass]="{'selected-item': currentUserStatus === 'pending'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[authenticatedUser._id]?.userStatusHash.pending}}
                                         </div>
                                     </div>
                                 </div>
@@ -1275,6 +1340,43 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                <div *ngIf="selectionMode === 'UserStatus'" style="padding:5px;">
+                                    <div nz-tooltip nzTooltipTitle="Selected Users" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:10px;border-bottom: 1px solid #dddddd;padding-bottom:5px;">
+                                        <div class="selected-node"
+                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;width:24px;height:24px;">
+                                        </div>
+                                        <div style="display:inline-block;padding-top:6px;">
+                                            {{nodeStatHash[dr]?.selectedCnt}}
+                                        </div>
+                                    </div>
+                                    <div style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
+                                        User Status</div>
+                                    <div nz-tooltip nzTooltipTitle="Active" [ngClass]="{'selected-item': currentUserStatus === 'active'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:blue;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr]?.userStatusHash.active}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Inactive" [ngClass]="{'selected-item': currentUserStatus === 'inactive'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#aaaaaa;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr]?.userStatusHash.inactive}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Pending" [ngClass]="{'selected-item': currentUserStatus === 'pending'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr]?.userStatusHash.pending}}
+                                        </div>
+                                    </div>
+                                </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1292,7 +1394,8 @@
                                             </div>
                                         </div>
                                         <div style="text-align: center;" id="{{dr2}}-container">
-                                            <div [ngStyle]="{'padding.px': orgChartPadding}" class="org-chart-node" id="{{dr2}}"
+                                            <div [ngStyle]="{'padding.px': orgChartPadding}" class="org-chart-node"
+                                                id="{{dr2}}"
                                                 [ngClass]="{'supervisor-node': myOrgUserHash[dr2]?.userType === 'supervisor'}">
                                                 <div (mouseenter)="setHoverData(dr2)" (mouseleave)="setHoverData(null)"
                                                     class="user-icon-node" (click)="selectUser(dr2)"
@@ -1502,6 +1605,43 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                <div *ngIf="selectionMode === 'UserStatus'" style="padding:5px;">
+                                    <div nz-tooltip nzTooltipTitle="Selected Users" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:10px;border-bottom: 1px solid #dddddd;padding-bottom:5px;">
+                                        <div class="selected-node"
+                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;width:24px;height:24px;">
+                                        </div>
+                                        <div style="display:inline-block;padding-top:6px;">
+                                            {{nodeStatHash[dr2]?.selectedCnt}}
+                                        </div>
+                                    </div>
+                                    <div style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
+                                        User Status</div>
+                                    <div nz-tooltip nzTooltipTitle="Active" [ngClass]="{'selected-item': currentUserStatus === 'active'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:blue;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr2]?.userStatusHash.active}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Inactive" [ngClass]="{'selected-item': currentUserStatus === 'inactive'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#aaaaaa;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr2]?.userStatusHash.inactive}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Pending" [ngClass]="{'selected-item': currentUserStatus === 'pending'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr2]?.userStatusHash.pending}}
+                                        </div>
+                                    </div>
+                                </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1551,7 +1691,7 @@
                                                             </div>
                                                             <div *ngIf="collapsedNodes.includes(dr3) && myOrgUserHash[dr3]?.userType === 'supervisor'"
                                                                 (click)="collapseNode(dr3, false)"
-                                                                style="margin:0 8px;"> 
+                                                                style="margin:0 8px;">
                                                                 <i class="far fa-plus-circle" nz-tooltip
                                                                     nzTooltipTitle="Expand Suborganization"
                                                                     nzTooltipPlacement="right"
@@ -1747,6 +1887,43 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                <div *ngIf="selectionMode === 'UserStatus'" style="padding:5px;">
+                                    <div nz-tooltip nzTooltipTitle="Selected Users" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:10px;border-bottom: 1px solid #dddddd;padding-bottom:5px;">
+                                        <div class="selected-node"
+                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;width:24px;height:24px;">
+                                        </div>
+                                        <div style="display:inline-block;padding-top:6px;">
+                                            {{nodeStatHash[dr3]?.selectedCnt}}
+                                        </div>
+                                    </div>
+                                    <div style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
+                                        User Status</div>
+                                    <div nz-tooltip nzTooltipTitle="Active" [ngClass]="{'selected-item': currentUserStatus === 'active'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:blue;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr3]?.userStatusHash.active}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Inactive" [ngClass]="{'selected-item': currentUserStatus === 'inactive'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#aaaaaa;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr3]?.userStatusHash.inactive}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Pending" [ngClass]="{'selected-item': currentUserStatus === 'pending'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr3]?.userStatusHash.pending}}
+                                        </div>
+                                    </div>
+                                </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2011,8 +2188,44 @@
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
+                                <div *ngIf="selectionMode === 'UserStatus'" style="padding:5px;">
+                                    <div nz-tooltip nzTooltipTitle="Selected Users" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:10px;border-bottom: 1px solid #dddddd;padding-bottom:5px;">
+                                        <div class="selected-node"
+                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;width:24px;height:24px;">
+                                        </div>
+                                        <div style="display:inline-block;padding-top:6px;">
+                                            {{nodeStatHash[dr4]?.selectedCnt}}
+                                        </div>
+                                    </div>
+                                    <div style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
+                                        User Status</div>
+                                    <div nz-tooltip nzTooltipTitle="Active" [ngClass]="{'selected-item': currentUserStatus === 'active'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:blue;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr4]?.userStatusHash.active}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Inactive" [ngClass]="{'selected-item': currentUserStatus === 'inactive'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#aaaaaa;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr4]?.userStatusHash.inactive}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Pending" [ngClass]="{'selected-item': currentUserStatus === 'pending'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr4]?.userStatusHash.pending}}
+                                        </div>
+                                    </div>
+                                </div>
                                                                             </div>
-
                                                                         </div>
                                                                     </div>
                                                                     <div *ngIf="!collapsedNodes.includes(dr4)"
@@ -2032,7 +2245,8 @@
                                                                                 </div>
                                                                             </div>
 
-                                                                            <div style="text-align: center;" id="{{dr5}}-container">
+                                                                            <div style="text-align: center;"
+                                                                                id="{{dr5}}-container">
                                                                                 <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                     class="org-chart-node" id="{{dr5}}">
                                                                                     <div (click)="selectUser(dr5)"
@@ -2277,6 +2491,43 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
+                                <div *ngIf="selectionMode === 'UserStatus'" style="padding:5px;">
+                                    <div nz-tooltip nzTooltipTitle="Selected Users" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:10px;border-bottom: 1px solid #dddddd;padding-bottom:5px;">
+                                        <div class="selected-node"
+                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;width:24px;height:24px;">
+                                        </div>
+                                        <div style="display:inline-block;padding-top:6px;">
+                                            {{nodeStatHash[dr5]?.selectedCnt}}
+                                        </div>
+                                    </div>
+                                    <div style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
+                                        User Status</div>
+                                    <div nz-tooltip nzTooltipTitle="Active" [ngClass]="{'selected-item': currentUserStatus === 'active'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:blue;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr5]?.userStatusHash.active}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Inactive" [ngClass]="{'selected-item': currentUserStatus === 'inactive'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#aaaaaa;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr5]?.userStatusHash.inactive}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Pending" [ngClass]="{'selected-item': currentUserStatus === 'pending'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr5]?.userStatusHash.pending}}
+                                        </div>
+                                    </div>
+                                </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -2297,8 +2548,8 @@
                                                                                                 class="org-chart-horizontal-connector-left">
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div
-                                                                                            style="text-align: center;" id="{{dr6}}-container">
+                                                                                        <div style="text-align: center;"
+                                                                                            id="{{dr6}}-container">
                                                                                             <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                 class="org-chart-node">
                                                                                                 <div (click)="selectUser(dr6)"
@@ -2332,7 +2583,8 @@
                                                                                                 </div>
                                                                                                 <div *ngIf="collapsedNodes.includes(dr6) && myOrgUserHash[dr6]?.userType === 'supervisor'"
                                                                                                     (click)="collapseNode(dr6, false)"
-                                                                                                    style="margin:0 8px;" [id]="dr6">
+                                                                                                    style="margin:0 8px;"
+                                                                                                    [id]="dr6">
                                                                                                     <i class="far fa-plus-circle"
                                                                                                         nz-tooltip
                                                                                                         nzTooltipTitle="Expand Suborganization"
@@ -2547,6 +2799,43 @@
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                         </div>
+                                <div *ngIf="selectionMode === 'UserStatus'" style="padding:5px;">
+                                    <div nz-tooltip nzTooltipTitle="Selected Users" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:10px;border-bottom: 1px solid #dddddd;padding-bottom:5px;">
+                                        <div class="selected-node"
+                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;width:24px;height:24px;">
+                                        </div>
+                                        <div style="display:inline-block;padding-top:6px;">
+                                            {{nodeStatHash[dr6]?.selectedCnt}}
+                                        </div>
+                                    </div>
+                                    <div style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
+                                        User Status</div>
+                                    <div nz-tooltip nzTooltipTitle="Active" [ngClass]="{'selected-item': currentUserStatus === 'active'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:blue;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr6]?.userStatusHash.active}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Inactive" [ngClass]="{'selected-item': currentUserStatus === 'inactive'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#aaaaaa;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr6]?.userStatusHash.inactive}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Pending" [ngClass]="{'selected-item': currentUserStatus === 'pending'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr6]?.userStatusHash.pending}}
+                                        </div>
+                                    </div>
+                                </div>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
@@ -2564,8 +2853,8 @@
                                                                                                     <div *ngIf="dr7Index !== 0"
                                                                                                         class="org-chart-horizontal-connector-left">
                                                                                                     </div>
-                                                                                                    <div
-                                                                                                        style="text-align: center;" id="{{dr7}}-container">
+                                                                                                    <div style="text-align: center;"
+                                                                                                        id="{{dr7}}-container">
                                                                                                         <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                             class="org-chart-node">
                                                                                                             <div (click)="selectUser(dr7)"
@@ -2598,7 +2887,8 @@
                                                                                                             </div>
                                                                                                             <div *ngIf="collapsedNodes.includes(dr7)"
                                                                                                                 (click)="collapseNode(dr7, false)"
-                                                                                                                style="margin:0 8px;" id="{{dr7}}">
+                                                                                                                style="margin:0 8px;"
+                                                                                                                id="{{dr7}}">
                                                                                                                 <i class="far fa-plus-circle"
                                                                                                                     nz-tooltip
                                                                                                                     nzTooltipTitle="Expand Suborganization"
@@ -2813,6 +3103,43 @@
                                                                                                                             </div>
                                                                                                                         </div>
                                                                                                                     </div>
+                                <div *ngIf="selectionMode === 'UserStatus'" style="padding:5px;">
+                                    <div nz-tooltip nzTooltipTitle="Selected Users" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:10px;border-bottom: 1px solid #dddddd;padding-bottom:5px;">
+                                        <div class="selected-node"
+                                            style="display:inline-block;padding:3px 3px 0 3px;margin:4px 20px 4px -5px;width:24px;height:24px;">
+                                        </div>
+                                        <div style="display:inline-block;padding-top:6px;">
+                                            {{nodeStatHash[dr7]?.selectedCnt}}
+                                        </div>
+                                    </div>
+                                    <div style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
+                                        User Status</div>
+                                    <div nz-tooltip nzTooltipTitle="Active" [ngClass]="{'selected-item': currentUserStatus === 'active'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:blue;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr7]?.userStatusHash.active}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Inactive" [ngClass]="{'selected-item': currentUserStatus === 'inactive'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#aaaaaa;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr7]?.userStatusHash.inactive}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Pending" [ngClass]="{'selected-item': currentUserStatus === 'pending'}"
+                                        nzTooltipPlacement="right" style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" 
+                                            style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[dr7]?.userStatusHash.pending}}
+                                        </div>
+                                    </div>
+                                </div>
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                         </div>
