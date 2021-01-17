@@ -104,7 +104,7 @@ export class NotificationService {
   private _handleError(err: HttpErrorResponse | any): Observable<any> {
     const errorMsg = err.message || 'Error: Unable to complete request.';
     if (err.message && err.message.indexOf('No JWT present') > -1) {
-      this.auth.login();
+//      this.auth.login();
     }
     return ObservableThrowError(errorMsg);
   }

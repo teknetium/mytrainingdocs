@@ -1,9 +1,9 @@
 export interface OrgModel {
   _id: string,
   domain: string,
-  adminId: string,
+  adminIds: string[],
   createDate: number,
-  creatorId: string,
+  owner: string,
   userCount: number,
-  plan: 'Free' | 'Team' | 'Org' | 'Enterprise',
+  plan: 'basic' | 'pro' | 'expert' | 'none',
 }

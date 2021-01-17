@@ -101,7 +101,7 @@ module.exports = function(app, config) {
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const docProjection = '_id productId productVersion author featureName sections images';
   const commentListProjection = "_id tid version author text rating date";
-  const orgListProjection = "_id domain adminId plan createDate userCount";
+  const orgListProjection = "_id domain adminIds owner plan createDate userCount";
   const assessmentListProjection = "_id type title owner description timeLimit isFinal passingGrade items";
   const utSessionProjection = "_id utId uid tid teamId startTime stopTime";
 
@@ -245,6 +245,7 @@ module.exports = function(app, config) {
   app.get("/api/daily/usertrainingstatuscheck", (req, res) => {
     UserTraining.find({}, userTrainingListProjection, (err, userTrainings) => {
       let now = new Date().getTime();
+      let pastDueUserList = []
       let response = {
         now: now,
         noChange: [],
@@ -258,7 +259,7 @@ module.exports = function(app, config) {
       }
       if (userTrainings) {
         userTrainings.forEach(userTraining => {
-          if (userTraining.dueDate < now) {
+          if (userTraining.status !== 'pastDue' && userTraining.dueDate < now) {
             response.pastDue.push(userTraining._id);
             userTraining.status = 'pastDue';
             userTraining.save(err2 => {
@@ -266,24 +267,22 @@ module.exports = function(app, config) {
                 response.errors.push(userTraining._id);
               }
             });
-            User.findById(userTraining._id, userListProjection, (err, user) => {
-              if (err) {
-                response.errors.push(userTraining._id);
-              }
-              if (!user) {
-                response.errors.push(userTraining._id);
-              }
-              user.trainingStatus = 'pastdue';
-              user.save(err3 => {
-                
-              });
-            });
 
-          } else {
-            response.noChange.push(userTraining._id);
+            if (!pastDueUserList.includes(userTraining.uid)) {
+              pastDueUserList.push(userTraining.uid);
+            }
+
           }
         });
-        return res.send(response);
+        if (pastDueUserList.length > 0) {
+          User.updateMany({ _id: { $in: pastDueUserList } }, { trainingStatus: "pastDue" }, (err2, responseObj) => {
+            if (err2) {
+              return res.status(500).send({ message: err2.message });
+            }
+            res.send({ n: responseObj.n, nModified: responseObj.nModified });
+          });
+        }
+        return res.status(200).send(pastDueUserList);
       }
       return res.status(500).send({ message: "no userTraining records found" });
     });
@@ -636,12 +635,16 @@ module.exports = function(app, config) {
   app.put("/api/usertraining/bulkdelete/:tid", jwtCheck, (req, res) => {
     let uids = req.body;
 
+    let resObj = {
+      n: uids.length
+    }
+
     UserTraining.deleteMany({ uid: { $in: uids }, tid: req.params.tid }, {}, (err, responseObj) => {
       if (err) {
         return res.status(500).send({ message: err.message });
       }
-      res.status(200).send(responseObj);
     });
+    res.status(200).send(resObj);
   });
   app.put("/api/usertraining/resetstatus", jwtCheck, (req, res) => {
     let utObj = req.body;
@@ -969,8 +972,8 @@ module.exports = function(app, config) {
       if (err) {
         return res.status(500).send({ message: err.message });
       }
-      res.send({ n: responseObj.n, nModified: responseObj.nModified });
     })
+    res.send({ n: userIds.length, nModified: 0 });
   });
 
   app.put("/api/user/bulkpastdue", jwtCheck, (req, res) => {
@@ -980,8 +983,8 @@ module.exports = function(app, config) {
       if (err) {
         return res.status(500).send({ message: err.message });
       }
-      res.send({ n: responseObj.n, nModified: responseObj.nModified });
     })
+    res.send({ n: userIds.length, nModified: 0 });
   });
   app.put("/api/user/bulknone", jwtCheck, (req, res) => {
     const userIds = req.body;
@@ -990,8 +993,8 @@ module.exports = function(app, config) {
       if (err) {
         return res.status(500).send({ message: err.message });
       }
-      res.send({ n: responseObj.n, nModified: responseObj.nModified });
     })
+    res.send({ n: userIds.length, nModified: 0 });
   });
 
   //
@@ -1209,7 +1212,18 @@ module.exports = function(app, config) {
   //
   // Org methods
   //
-  app.get("/api/orgs/", (req, res) => {
+  app.get("/api/orgs/:domain", (req, res) => {
+    Org.findOne({ domain: req.params.domain }, orgListProjection, (err, orgObj) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (!orgObj) {
+        return res.status(400).send({ message: "Org not found." + req.params.domain});
+      }
+      res.send(orgObj);
+    });
+  });
+  app.get("/api/orgs/all/", (req, res) => {
     Org.find({}, orgListProjection, (err, orgs) => {
       let orgsArr = [];
       if (err) {
@@ -1223,21 +1237,54 @@ module.exports = function(app, config) {
       res.send(orgsArr);
     });
   });
-  app.post("/api/orgs/new", jwtCheck, (req, res) => {
+  app.post("/api/orgs/new/", jwtCheck, (req, res) => {
     const org = new Org({
       domain: req.body.domain,
-      adminId: req.body.adminId,
+      adminIds: req.body.adminIds,
       createDate: req.body.createDate,
-      creatorId: req.body.creatorId,
+      owner: req.body.owner,
       userCount: req.body.userCount,
       plan: req.body.plan,
       _id: req.body._id,
     });
-    Org.create(org, function (err, orgObj) {
+    Org.create(org, function (err2, orgObj) {
+      if (err2) {
+        return res.status(500).send({ message: err2.message });
+      }
+      res.send(orgObj);
+    });
+  });
+  app.put("/api/orgs/update/", jwtCheck, (req, res) => {
+    const org = new Org({
+      domain: req.body.domain,
+      adminIds: req.body.adminIds,
+      createDate: req.body.createDate,
+      owner: req.body.owner,
+      userCount: req.body.userCount,
+      plan: req.body.plan,
+      _id: req.body._id,
+    });
+    Org.findById(req.body._id, (err, orgObj) => {
       if (err) {
         return res.status(500).send({ message: err.message });
       }
-      res.send(orgObj);
+      if (!orgObj) {
+        return res.status(400).send({ message: "Org not found." });
+      }
+      orgObj._id = req.body._id;
+      orgObj.domain = req.body.domain;
+      orgObj.adminIds = req.body.adminIds;
+      orgObj.createDate = req.body.createDate;
+      orgObj.owner = req.body.owner;
+      orgObj.userCount = req.body.userCount;
+      orgObj.plan = req.body.plan;
+
+      orgObj.save(err2 => {
+        if (err2) {
+          return res.status(500).send({ message: err2.message });
+        }
+        res.send(orgObj);
+      });
     });
   });
   app.delete("/api/orgs/:id", jwtCheck, (req, res) => {

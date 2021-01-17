@@ -46,3 +46,11 @@
 .pendingCertApproval {
 	border-bottom: 3px solid #feb90b;
 }
+
+.task-item {
+	cursor: pointer;
+	padding:5px;
+}
+.task-item:hover {
+	background-color: #f1f1f1;
+}

@@ -42,6 +42,17 @@
         </div>
         <div style="clear: both;"></div>
     </div>
+    <div class="settings-item">
+        <div class="settings-item-left">
+            <i class="fad fa-fw fa-tasks" style="color:blue;font-size:24px;vertical-align: middle;"></i>
+            <span style="vertical-align: middle;margin-left:10px;font-size: 16px;">Show Tasks</span>
+        </div>
+        <div class="settings-item-right">
+            <nz-switch [(ngModel)]="user.settings.showTasks"
+                (ngModelChange)="updateUserSettings($event, 'showTasks', $event)"></nz-switch>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
     <div style="text-align: center;">
         <h4>My Team</h4>
     </div>

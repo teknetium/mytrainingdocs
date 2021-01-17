@@ -93,7 +93,7 @@ export class LandingpageComponent implements OnInit {
       focus: false,
       title: 'Assessments Made Easy',
       class: 'fal fa-file-certificate text-danger bg-danger-opacity',
-      blurb: 'Quickly and easily add assessnents to your trainings.  ',
+      blurb: 'Quickly and easily add assessments to your trainings.  ',
       learnMore: ''
     },
     {
@@ -130,6 +130,13 @@ export class LandingpageComponent implements OnInit {
       title: 'Supports Common Document Formats',
       class: 'fal fa-file-check purple2',
       blurb: 'View your training documents without the application that created them.',
+      learnMore: ''
+    },
+    {
+      focus: false,
+      title: 'Training Versioning',
+      class: 'fal fa-copy text-yellow bg-yellow-opacity',
+      blurb: 'Robust versioning of trainings.',
       learnMore: ''
     },
     {

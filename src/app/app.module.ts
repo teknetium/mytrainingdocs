@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgZorroAntdModule, NZ_I18N, en_US, NzBadgeModule, NzConfig, NZ_CONFIG, NzStepsModule, NzSpinModule, NzAlertModule } from 'ng-zorro-antd';
+import { NgZorroAntdModule, NZ_I18N, en_US, NzBadgeModule, NzConfig, NZ_CONFIG, NzStepsModule, NzSpinModule, NzAlertModule, NzRadioModule } from 'ng-zorro-antd';
 import { registerLocaleData,  } from '@angular/common';
 import en from '@angular/common/locales/en';
 
@@ -14,6 +14,7 @@ import { HomeModule } from './components/home/home.module';
 import { NewAppComponent } from './new-app/new-app.component';
 import { AuthService } from './shared/services/auth.service';
 import { UserService } from './shared/services/user.service';
+import { OrgService } from './shared/services/org.service';
 import { LoginModule } from './components/login/login.module';
 import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
@@ -58,6 +59,7 @@ registerLocaleData(en);
         VerifyEmailModule,
         DocsModule,
         NzStepsModule,
+        NzRadioModule,
         NzSpinModule,
         MyLoaderModule,
         JoyrideModule.forRoot()
@@ -78,6 +80,7 @@ registerLocaleData(en);
         AuthGuard,
         AuthService,
         UserService,
+        OrgService,
         JoyrideService,
         LoaderService
     ],

@@ -4,6 +4,7 @@ import { UserService } from '../../shared/services/user.service';
 import { EventService } from '../../shared/services/event.service';
 import { ResizeEvent } from '../../shared/interfaces/event.type';
 import { TrainingService } from '../../shared/services/training.service';
+import { OrgService } from '../../shared/services/org.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { NotificationService } from '../../shared/services/notification.service';
 import { TaskWizardService } from '../../shared/services/taskWizard.service';
@@ -13,6 +14,7 @@ import { AlertModel } from '../../shared/interfaces/notification.type';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
 import { Observable, BehaviorSubject, Subscription, defer, from, timer, } from 'rxjs';
 import { UserModel, UserFail, UserIdHash, OrgChartNode, BuildOrgProgress, UserBatchData, NodeStat } from '../../shared/interfaces/user.type';
+import { OrgModel } from '../../shared/interfaces/org.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { SendmailService } from '../../shared/services/sendmail.service';
 import { JobTitleService } from '../../shared/services/jobtitle.service';
@@ -158,7 +160,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   userStatusColorHash = {
     active: 'blue',
     inactive: '#aaaaaa',
-    pending: '#feb90b'
+    pending: '#feb90b',
+    error: 'red'
   }
   includeNewSupervisorsTeam = true;
   isNewSupervisorPanelOpen = false;
@@ -216,7 +219,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       themeColor: {},
       showLegend: true,
       showInactiveUsers: true,
-      showAlerts: true
+      showAlerts: true,
+      showTasks: true
     },
     jobTitle: ''
   }
@@ -320,7 +324,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   orgChartNodeHash = {};
   orgChartFullscreen = false;
   iconFontSize = 16;
-  textFontSize = 6;
+  textFontSize = 12;
   orgChartPadding = 1;
   showOrgChart = 'true';
   userTrainings: UserTrainingModel[];
@@ -1188,7 +1192,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   currentJobTitleFilters = [];
   currentJobTitlesSelected = [];
   maxLevel$: Observable<number>;
-  selectionMode = 'Individual';
+  selectionMode = 'UserStatus';
   jobTitleMatchCnt = 0;
   currentUserType = 'none';
   currentUserStatus = 'none';
@@ -1231,7 +1235,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   taskHash$: Observable<TaskHash>;
   taskStepContentHash$: Observable<TaskStepContentHash>;
   showUserSearch = false;
-  my
+  myPlan = null;
+  org$: Observable<OrgModel>;
+  showUpgradeDialog = false;
 
   
   constructor(
@@ -1240,6 +1246,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     private userService: UserService,
     private mailService: SendmailService,
     private trainingService: TrainingService,
+    private orgService: OrgService,
     private jobTitleService: JobTitleService,
     private userTrainingService: UserTrainingService,
     private joyrideService: JoyrideService,
@@ -1272,6 +1279,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
     this.taskHash$ = this.taskWizardService.getTaskHashStream();
     this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
+    this.org$ = this.orgService.getOrgStream();
 
 //    this.userTrainingService.selectUser(null);
   }
@@ -1286,6 +1294,17 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
 
       this.taskHash = taskHash;
+    });
+    this.org$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(org => {
+      if (!org) {
+        return;
+      }
+
+      this.org = org;
+      this.myPlan = org.plan;
+      if (this.myPlan === 'basic') {
+        this.collapsedNodes = [];
+      }
     });
 
     this.taskStepContentHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskStepContentHash => {
@@ -1401,6 +1420,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         }
       }
       this.matchingSupervisors = this.myOrgSupervisors;
+      if (this.myPlan && this.myPlan !== 'basic') {
+        this.collapseAllSubOrgs(true);
+      }
       /*
       if (this.authenticatedUser) {
         for (let dr1 of this.authenticatedUser.directReports) {
@@ -1410,7 +1432,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         }
       }
       */
-      this.collapseAllSubOrgs(true);
     });
     this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgUsers => {
       if (!myOrgUsers) {
@@ -2352,7 +2373,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       },
       showLegend: true,
       showInactiveUsers: true,
-      showAlerts: true
+      showAlerts: true,
+      showTasks: true
     };
     this.supervisorName = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
     this.selectedUser = this.newTeamMember;
@@ -2503,6 +2525,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.assignableTrainings = cloneDeep(this.teamTrainings);
 
     this.currentTrainingSelected = null;
+    if ((this.myPlan === 'pro' || this.myPlan === 'basic') && (mode === 'UserType' || mode === 'JobTitle' || mode === 'Org')) {
+      this.showUpgradeDialog = true;
+    }
     this.selectionMode = mode;
     this.figureOrgStat(this.authenticatedUser._id);
     for (let node of this.collapsedNodes) {
@@ -2525,12 +2550,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       for (let node of this.collapsedNodes) {
         this.figureOrgStat(node);
       }
-    } else if (this.selectionMode === 'Org') {
+    } else if (this.selectionMode === 'Org' && this.myPlan === 'expert') {
       if (this.userIdsSelected.includes(userId)) {
         this.removeFromSelectedList(userId);
       } else {
         this.buildSelectedList(userId);
       }
+    } else if (this.selectionMode === 'Org' && this.myPlan === 'pro') {
+      this.showUpgradeDialog
     }
   }
 
@@ -2575,7 +2602,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       userStatusHash: {
         active: 0,
         inactive: 0,
-        pending: 0
+        pending: 0,
+        error: 0
       },
       jobTitleHash: {}
     }
@@ -2647,6 +2675,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           break;
         case 'pending':
           nodeStat.userStatusHash['pending'] += 1;
+          break;
+        case 'error':
+          nodeStat.userStatusHash['error'] += 1;
           break;
         default:
           break;

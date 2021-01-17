@@ -1,6 +1,8 @@
 import { Component, OnInit, HostListener, TemplateRef, ViewChild, ElementRef } from '@angular/core';
 import { AuthService } from '../shared/services/auth.service';
 import { TrainingService } from '../shared/services/training.service';
+import { OrgService } from '../shared/services/org.service';
+import { OrgModel } from '../shared/interfaces/org.type';
 import { UserService } from '../shared/services/user.service';
 import { UserTrainingService } from '../shared/services/userTraining.service';
 import { BehaviorSubject, Observable, from, Subscription } from 'rxjs';
@@ -26,7 +28,7 @@ import { JoyrideService } from 'ngx-joyride';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
-
+/*
 export interface Task {
   desc: string,
   url: string,
@@ -34,6 +36,7 @@ export interface Task {
   mimeType: string,
   poster: string
 }
+*/
 
 @Component({
   selector: 'new-app-root',
@@ -127,8 +130,8 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   isConfirmDeleteModalVisible = false;
   editId: string | null;
   taskVideo$ = new BehaviorSubject<SafeResourceUrl>(null);
-  taskBS$ = new BehaviorSubject<Task>(null);
-  task: Task = null;
+//  taskBS$ = new BehaviorSubject<Task>(null);
+//  task: Task = null;
 
 
   myTeamCnt = 0;
@@ -256,10 +259,24 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   taskStepContentHash: TaskStepContentHash;
   taskWizardHash = {};
 //  newLoading$: Observable<boolean>;
+  org$: Observable<OrgModel>;
+  orgObj: OrgModel;
+  myPlan = 'basic';
+  planHash = {
+    basic: 'Basic',
+    pro: 'Pro',
+    expert: 'Expert'
+  }
+  myOrgUsers = [];
+  myOrgUsers$: Observable<UserModel[]>;
+  listOfSelectedUsers = [];
+  listOfUsers = [];
+  userNameHash = {};
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    private orgService: OrgService,
     private trainingService: TrainingService,
     private userTrainingService: UserTrainingService,
     private router: Router,
@@ -308,6 +325,8 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.tasks$ = this.taskWizardService.getTasksStream();
     this.taskHash$ = this.taskWizardService.getTaskHashStream();
     this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
+    this.org$ = this.orgService.getOrgStream();
+    this.myOrgUsers$ = this.userService.getMyOrgUsersStream();
   }
 
   ngOnInit(): void {
@@ -356,6 +375,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
         //        this.playTaskVideo('gettingStarted');
       }
       this.authenticatedUser = user;
+      this.listOfSelectedUsers.push(this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName);
       //      this.userTrainingService.initUserTrainingsForUser(user._id);
       //      this.teamTrainingCnt$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(cnt => {
       //        this.teamTrainingCnt = cnt;
@@ -421,13 +441,31 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       this.messageService.error('HTTP Error: ' + this.currentHttpError, { nzDuration: 5000 });
       this.httpErrors.push(this.currentHttpError);
     })
-
+/*
     this.taskBS$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(task => {
       if (!task) {
         return;
       }
 
       this.showTaskVideoModal = true;
+    })
+    */
+
+    this.org$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgObj => {
+      this.orgObj = orgObj;
+    })
+
+    this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(users => {
+      if (!users) {
+        return;
+      }
+
+      this.myOrgUsers = users;
+      for (let user of this.myOrgUsers) {
+        let name = user.firstName + ' ' + user.lastName;
+        this.userNameHash[name] = user;
+        this.listOfUsers.push({ label: name, value: name });
+      }
     })
     this.alert$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(alert => {
       if (!alert) {
@@ -441,6 +479,20 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
   onAlertClose(index: number) {
     this.alerts.splice(index, 1);
+  }
+
+  planChanged(plan: string) {
+    this.myPlan = plan;
+    console.log('planChanged', this.myPlan);
+    this.orgService.setPlan(this.myPlan);
+  }
+
+  adminUserListChanged(userList) {
+    let adminIds: string[] = [];
+    for (let user of userList) {
+      adminIds.push(this.userNameHash[user.value]._id);
+    }
+    this.orgService.setAdminIds(this.orgObj.adminIds);
   }
 
   checkUniqueEmail(data) {
@@ -523,14 +575,14 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     //    this.login();
   }
 
-  startTour(task: string) {
-    console.log("startTour", task);
-    this.taskWizardService.startTour(task);
-//    this.joyrideService.startTour({ steps: this.taskHash[task].steps });
-    // this.eventService.startTour(this.currentPage);
-    //    let toursteps = this.aboutThisPageHash[this.currentPage].tourSteps;
-    //    this.joyrideService.startTour(toursteps);
-  }
+    startTour(task: string) {
+      console.log("startTour", task);
+      this.taskWizardService.startTour(task);
+  //    this.joyrideService.startTour({ steps: this.taskHash[task].steps });
+      // this.eventService.startTour(this.currentPage);
+      //    let toursteps = this.aboutThisPageHash[this.currentPage].tourSteps;
+      //    this.joyrideService.startTour(toursteps);
+    }
 /*
   playTaskVideo(taskName) {
     if (!taskName) {

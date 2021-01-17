@@ -292,7 +292,8 @@ export class UserTrainingService {
       dateCompleted: 0,
       timeToDate: 0,
       assessmentResponses: [],
-      certImage: null
+      certImage: null,
+      notifyDates: []
     };
     this.postUserTraining$(userTraining).subscribe(userTraining => {
       this.getUTForUser$(userTraining.uid).subscribe(userTrainings => {
@@ -335,7 +336,8 @@ export class UserTrainingService {
           dateCompleted: 0,
           timeToDate: 0,
           assessmentResponses: [],
-          certImage: null
+          certImage: null,
+          notifyDates: []
         };
         userTrainings.push(uT);
         utList.push(cloneDeep(uT));
@@ -695,7 +697,7 @@ export class UserTrainingService {
   private _handleError(err: HttpErrorResponse | any): Observable<any> {
     const errorMsg = err.message || 'Error: Unable to complete request.';
     if (err.message && err.message.indexOf('No JWT present') > -1) {
-      this.auth.login();
+//      this.auth.login();
     }
     return ObservableThrowError(errorMsg);
   }

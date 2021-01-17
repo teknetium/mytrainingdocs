@@ -14,7 +14,7 @@ export interface UserModel {
   teamAdmin: boolean,
   appAdmin: boolean,
   orgAdmin: boolean,
-  userStatus: 'pending' | 'active' | 'inactive' | 'none'
+  userStatus: 'pending' | 'active' | 'inactive' | 'error' | 'none'
   trainingStatus: 'upToDate' | 'pastDue' | 'none',
   jobTitle: string,
   profilePicUrl: string,
@@ -26,7 +26,8 @@ export interface UserModel {
     themeColor: {},
     showLegend: boolean,
     showInactiveUsers: boolean,
-    showAlerts: boolean
+    showAlerts: boolean,
+    showTasks: boolean
   }
 }
 

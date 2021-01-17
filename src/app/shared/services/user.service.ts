@@ -114,14 +114,12 @@ export class UserService {
   reportChainNodeHash = {};
   myTeamIdIndexHash = {};
   myOrgNodes: OrgChartNode[] = [];
-  //  directReports: OrgChartNode[][][][] = [[[[]]]];
-  //  supervisors: OrgChartNode[][][] = [[[]]];
-  //  supervisorUids: string[][][] = [[[]]];
   levelIndex = [];
   uidLevelIndexHash = {};
   maxLevel = 0;
   uidStatusHash: {};
   orgObj: OrgModel;
+  org$: Observable<OrgModel>;
 
   constructor(
     private http: HttpClient,
@@ -134,7 +132,7 @@ export class UserService {
     private eventService: EventService,
   ) {
     this.action = 'init';
-
+    this.org$ = this.orgService.getOrgStream();
     this.authenticatedUserProfile$ = this.auth.getAuthenticatedUserProfileStream();
     this.authenticatedUserProfile$.subscribe({
       next: (profile) => {
@@ -149,6 +147,9 @@ export class UserService {
                   this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
                 }
                 this.authenticatedUserBS$.next(this.authenticatedUser);
+
+                this.orgService.getOrg(this.authenticatedUser.org);
+
                 this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
 
                 if (this.authenticatedUser.userType === 'supervisor') {
@@ -171,13 +172,22 @@ export class UserService {
                       if (this.authenticatedUser.jobTitle) {
                         this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
                       }
+                      this.orgService.getOrg(this.authenticatedUser.org);
                       this.authenticatedUserBS$.next(this.authenticatedUser);
                       this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
                     } else {
                       let domain: string = profile.email.substring(profile.email.indexOf('@') + 1, profile.email.indexOf('.'));
-                      this.getAllUsersInDomain$(domain).subscribe(users => {
-                        this.myDomainUsersBS$.next(users);
-                      });
+                      let orgObject = <OrgModel>{
+                        _id: String(new Date().getTime()),
+                        domain: domain,
+                        adminIds: [profile.uid],
+                        owner: profile.uid,
+                        plan: 'none',
+                        createDate: new Date().getTime(),
+                        userCount: 1
+                      }
+
+                      this.orgService.createOrg(cloneDeep(orgObject));
 
                       this.authenticatedUser = <UserModel>{
                         _id: profile.uid,
@@ -205,6 +215,7 @@ export class UserService {
                           showLegend: true,
                           showInactiveUsers: true,
                           showAlerts: true,
+                          showTasks: true,
                           themeColor: {
                             name: 'orange ',
                             bgColor: 'orange',
@@ -225,8 +236,7 @@ export class UserService {
                           this.loadData(this.authenticatedUser.org, null);
                         },
                         error: (err) => { }
-                      })
-
+                      });
                     }
                   },
                   error: () => { }
@@ -266,52 +276,9 @@ export class UserService {
     }
     this.sendmailService.sendTemplateMessages([message]);
   }
-  /*
-    logLoginEvent() {
-      let now = new Date().getTime();
-      let loginEvent = <EventModel>{
-        _id: String(new Date().getTime()),
-        title: 'Login Event',
-        type: 'loginSession',
-        userId: this.authenticatedUser._id,
-        teamId: this.authenticatedUser.teamId,
-        desc: 'user login',
-        mark: {
-          iconClass: this.userTypeIconHash[this.authenticatedUser.userType],
-          iconColor: 'purple',
-          useBadge: false,
-          badgeColor: 'blue'
-        },
-        creationDate: now,
-        actionDate: now,
-      }
-   
-      this.eventService.addEvent(loginEvent);
-    }
-    */
-  /*
-    getAllOrgUsers() {
-      this.getOrg$(this.authenticatedUser.org).subscribe(userList => {
-        if (!userList) {
-          return;
-        }
-        this.myOrgUsers = userList;
-        for (let user of userList) {
-          this.allOrgUserHash[user._id] = user;
-          if (user.jobTitle) {
-            this.jobTitleService.addJobTitle(user.jobTitle);
-          }
-        }
-      })
-    }
-  */
+
   loadData(org, userIdToSelect) {
-    this.orgService.getOrgObj$(org).subscribe(orgObj => {
-      if (!orgObj) {
-        return;
-      }
-      this.orgObj = orgObj;
-    });
+    this.orgService.getOrg(org);
 
     //    this.getTeam$(teamId).subscribe((userList) => {
     this.getOrg$(org).subscribe(allOrgUserList => {
@@ -586,6 +553,7 @@ export class UserService {
         showLegend: true,
         showInactiveUsers: true,
         showAlerts: true,
+        showTasks: true,
         themeColor: {
           name: 'orange ',
           bgColor: 'orange',
@@ -1077,7 +1045,7 @@ export class UserService {
     console.log("_handleError", err);
     //    this.httpErrorBS$.next(err);
     if (err.error.message && err.error.message.indexOf('No JWT present') > -1) {
-      this.auth.login();
+      //      this.auth.login();
     }
     return ObservableThrowError(errorMsg);
   }

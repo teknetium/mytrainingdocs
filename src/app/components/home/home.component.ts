@@ -13,6 +13,8 @@ import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from '../base.component';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
+import { TaskModel, TaskHash, TaskStepContentHash } from '../../shared/interfaces/task.type';
+import { TaskWizardService } from '../../shared/services/taskWizard.service';
 import { JoyrideService } from 'ngx-joyride';
 
 export interface UserStat {
@@ -85,9 +87,20 @@ export class HomeComponent extends BaseComponent implements OnInit {
   }
   userCardTitle = 'My Team';
   homePageWidth = 100;
+  tasks$: Observable<string[]>
+  taskHash$: Observable<TaskHash>;
+  taskStepContentHash$: Observable<TaskStepContentHash>;
+  tasks: string[];
+  taskHash: TaskHash;
+  taskStepContentHash: TaskStepContentHash;
+  taskWizardHash = {};
+
+
+
 
   constructor(
     private auth: AuthService,
+    private taskWizardService: TaskWizardService,
     private eventService: EventService,
     private userService: UserService,
     private trainingService: TrainingService,
@@ -103,6 +116,9 @@ export class HomeComponent extends BaseComponent implements OnInit {
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
 //    this.startTour$ = this.eventService.getStartTourStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
+    this.taskHash$ = this.taskWizardService.getTaskHashStream();
+    this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
+    this.tasks$ = this.taskWizardService.getTasksStream();
     this.teamTrainingHash$ = this.trainingService.getTeamTrainingHashStream();
   }
 
@@ -172,6 +188,22 @@ export class HomeComponent extends BaseComponent implements OnInit {
         this.userTrainingService.getUTForTeam(this.authenticatedUser._id);
         this.userTrainingService.getUTSessionsForTeam(this.authenticatedUser._id);
       }
+    });
+    this.taskHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskHash => {
+      if (!taskHash) {
+        return;
+      }
+
+      this.taskHash = taskHash;
+    });
+
+    this.taskStepContentHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskStepContentHash => {
+      if (!taskStepContentHash) {
+        return;
+      }
+
+      this.taskStepContentHash = taskStepContentHash;
+      console.log("taskStepContentHash", this.taskStepContentHash);
     });
     this.teamTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(teamTrainingHash => {
       if (!teamTrainingHash) {
@@ -254,6 +286,15 @@ export class HomeComponent extends BaseComponent implements OnInit {
     let m = String(Math.floor(ms / 60000)).padStart(2, '0');
     let s = String(Math.floor(((ms % 3600000) % 60000) / 1000)).padStart(2, '0');
     return m + ':' + s;
+  }
+
+  startTour(task: string) {
+    console.log("startTour", task);
+    this.taskWizardService.startTour(task);
+    //    this.joyrideService.startTour({ steps: this.taskHash[task].steps });
+    // this.eventService.startTour(this.currentPage);
+    //    let toursteps = this.aboutThisPageHash[this.currentPage].tourSteps;
+    //    this.joyrideService.startTour(toursteps);
   }
 
   selectTraining(tid: string) {

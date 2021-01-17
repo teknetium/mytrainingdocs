@@ -8,6 +8,7 @@ export interface UserTrainingModel {
   dueDate: number,
   dateCompleted: number,
   timeToDate: number,
+  notifyDates: number[],
   assessmentResponses: AssessmentResponse[],
   certImage: {
     name: string,
