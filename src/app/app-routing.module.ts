@@ -57,6 +57,10 @@ const appRoutes: Routes = [
     {
         path: 'landingpage',
         component: LandingpageComponent,
+    },
+    {
+        path: 'naydo',
+        component: LandingpageComponent,
     }
 //    {
 //        path: 'docs',

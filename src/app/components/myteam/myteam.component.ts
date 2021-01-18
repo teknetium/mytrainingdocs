@@ -1617,7 +1617,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         this.teamTrainings = [];
         this.listOfTrainingTitles = [];
         for (let training of trainings) {
-          this.listOfTrainingTitles.push({ text: training.title, value: training._id });
+          this.listOfTrainingTitles.push({ text: training.versions[0].title, value: training._id });
           //          this.iconClassToColorHash[training.iconClass] = training.iconColor;
           this.teamTrainings.push(training);
           //          this.showTrainingHash[training._id] = training;
@@ -1787,7 +1787,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     if (!this.allTrainingIdHash[tid]) {
       return 'fas fa-flower-tulip';
     }
-    return this.allTrainingIdHash[tid].iconClass;
+    return this.allTrainingIdHash[tid].versions[0].iconClass;
   }
 
   getTrainingIconColor(tid: string): string {
@@ -1795,7 +1795,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     if (!this.allTrainingIdHash[tid]) {
       return 'orange';
     }
-    return this.allTrainingIdHash[tid].iconColor;
+    return this.allTrainingIdHash[tid].versions[0].iconColor;
   }
 
   resendRegistrationMsg(to: string, from: string) {
@@ -2906,10 +2906,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else {
       let alert = <AlertModel>{
         type: 'info',
-        message: 'The training "' + this.allTrainingIdHash[this.selectedTrainingId].title + '" is being assigned to ' + this.userIdsSelected.length + ' users.'
+        message: 'The training "' + this.allTrainingIdHash[this.selectedTrainingId].versions[0].title + '" is being assigned to ' + this.userIdsSelected.length + ' users.'
       }
       this.notifyService.showAlert(alert);
-      this.userTrainingService.bulkAssignTraining(this.userIdsSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version, this.allTrainingIdHash[this.selectedTrainingId].title);
+      this.userTrainingService.bulkAssignTraining(this.userIdsSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version, this.allTrainingIdHash[this.selectedTrainingId].versions[0].title);
       for (let uid of this.userIdsSelected) {
         let user = this.myOrgUserHash[uid];
         if (user.trainingStatus === 'none') {

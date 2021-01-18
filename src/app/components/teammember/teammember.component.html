@@ -45,12 +45,12 @@
                             style="margin-right:10px;display:inline-block;font-size:12px;vertical-align: middle;"
                             [nzTwotoneColor]="'red'"></i>
 
-                        <i [ngClass]="allTrainingIdHash[training._id].iconClass"
+                        <i [ngClass]="allTrainingIdHash[training._id]?.versions[0].iconClass"
                             style="display:inline-block;font-size:20px;margin-right:10px;vertical-align: middle;"
-                            [ngStyle]="{'color': allTrainingIdHash[training._id].iconColor}">
+                            [ngStyle]="{'color': allTrainingIdHash[training._id]?.versions[0].iconColor}">
                         </i>
                         <div style="display:inline-block;font-size:14px;">
-                            {{ training.title }}
+                            {{ training?.versions[0].title }}
                         </div>
                     </div>
                 </div>

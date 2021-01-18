@@ -862,10 +862,10 @@
                             <td (click)="selectUser(data._id, i)" [ngClass]="{'row-selected': rowSelected === i}"
                                 style="width:15%;">
                                 <div *ngFor="let ut of uidUTHash[data._id]" style="float:left;margin-left:10px;">
-                                    <i [ngClass]="allTrainingIdHash[ut.tid]?.iconClass"
+                                    <i [ngClass]="allTrainingIdHash[ut.tid]?.versions[0].iconClass"
                                         style="font-size:20px;text-align: center;vertical-align: middle;" nz-tooltip
-                                        [nzTooltipTitle]="allTrainingIdHash[ut.tid]?.title"
-                                        [ngStyle]="{'color': allTrainingIdHash[ut.tid]?.iconColor}">
+                                        [nzTooltipTitle]="allTrainingIdHash[ut.tid]?.versions[0].title"
+                                        [ngStyle]="{'color': allTrainingIdHash[ut.tid]?.versions[0].iconColor}">
                                     </i>
                                 </div>
                             </td>
@@ -3409,12 +3409,12 @@
                         style="padding:10px 20px;width:100%;"
                         [ngClass]="{'selected-training': selectedTrainingId === training._id, 'disabled': training?.versions.length === 1, 'active-training': training?.versions.length > 1 }"
                         (click)="selectTraining(training._id)">
-                        <i [ngClass]="allTrainingIdHash[training._id]?.iconClass"
+                        <i [ngClass]="allTrainingIdHash[training._id]?.versions[0].iconClass"
                             style="display:inline-block;font-size:20px;margin-right:10px;vertical-align: middle;"
-                            [ngStyle]="{'color': allTrainingIdHash[training._id]?.iconColor}">
+                            [ngStyle]="{'color': allTrainingIdHash[training._id]?.versions[0].iconColor}">
                         </i>
                         <div style="display:inline-block;font-size:14px;">
-                            {{ training.title }}
+                            {{ training.versions[0].title }}
                         </div>
                         <div style="float:right;font-size:14px;margin-left:20px;">
                             version {{ versionFormatter(training.versions[0].version) }}

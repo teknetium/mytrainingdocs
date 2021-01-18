@@ -1,15 +1,15 @@
 <div *ngIf="compact === 'yes'">
     <div style="padding:2px;">
         <div *ngFor="let userTraining of uidUTHash[uid]" style="display:inline-block;margin-left:20px;border-width:0;border-bottom-width:3px;border-style:solid;padding:2px;"
-        [ngStyle]="{'border-color': statusIconHash[userTraining?.status]?.color}" nz-tooltip [nzTooltipTitle]="trainingIdHash[userTraining?.tid]?.title">
-            <i [ngClass]="(trainingIdHash$ | async)[userTraining?.tid]?.iconClass"
+        [ngStyle]="{'border-color': statusIconHash[userTraining?.status]?.color}" nz-tooltip [nzTooltipTitle]="trainingIdHash[userTraining?.tid]?.versions[0].title">
+            <i [ngClass]="(trainingIdHash$ | async)[userTraining?.tid]?.versions[0].iconClass"
                 style="font-size:18px;vertical-align: middle;display:inline-block;"
-                [ngStyle]="{'color': trainingIdHash[userTraining?.tid]?.iconColor}">
+                [ngStyle]="{'color': trainingIdHash[userTraining?.tid]?.versions[0].iconColor}">
             </i>
             <i *ngIf="trainingIdHash[userTraining?.tid]?.type === 'recurring'" class="fas fa-redo-alt"
                 style="font-size:10px;vertical-align: top;display:inline-block;">
             </i>
-            <span style="font-size:12px;margin-left:3px;vertical-align: middle;">{{trainingIdHash[userTraining?.tid]?.title}}</span>
+            <span style="font-size:12px;margin-left:3px;vertical-align: middle;">{{trainingIdHash[userTraining?.tid]?.versions[0].title}}</span>
 
         </div>
         <div *ngIf="uid && (!uidUTHash[uid] || uidUTHash[uid].length === 0)" style="padding:5px;">
@@ -49,14 +49,14 @@
                         style="margin-right:5px;display:inline-block;font-size:12px;vertical-align: middle;"
                         [nzTwotoneColor]="'red'"></i>
                         -->
-                    <i [ngClass]="(trainingIdHash$ | async)[userTraining?.tid]?.iconClass"
+                    <i [ngClass]="(trainingIdHash$ | async)[userTraining?.tid]?.versions[0].iconClass"
                         style="font-size:24px;vertical-align: middle;"
-                        [ngStyle]="{'color': trainingIdHash[userTraining?.tid]?.iconColor}">
+                        [ngStyle]="{'color': trainingIdHash[userTraining?.tid]?.versions[0].iconColor}">
                     </i>
                     <i *ngIf="trainingIdHash[userTraining?.tid]?.type === 'recurring'" class="fas fa-redo-alt"
                         style="font-size:10px;vertical-align: top;">
                     </i>
-                    <span style="margin-left:10px;">{{ trainingIdHash[userTraining?.tid]?.title }}</span>
+                    <span style="margin-left:10px;">{{ trainingIdHash[userTraining?.tid]?.versions[0].title }}</span>
                 </td>
                 <td>
                     {{ versionFormatter(userTraining?.trainingVersion) }}

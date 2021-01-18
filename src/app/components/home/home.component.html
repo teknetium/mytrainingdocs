@@ -75,11 +75,11 @@
                                 <div style="float:right;width:50%;vertical-align: middle;">
                                     <div *ngFor="let ut of uidUTHash[user._id]">
                                         <div *ngIf="teamTrainingHash[ut.tid]" style="float:right;margin-left:10px;"
-                                            nz-tooltip [nzTooltipTitle]="teamTrainingHash[ut.tid].title"
+                                            nz-tooltip [nzTooltipTitle]="teamTrainingHash[ut.tid]?.versions[0].title"
                                             [ngClass]="{'completed': ut.status === 'completed', 'pastDue': ut.status === 'pastDue', 'upToDate': ut.status === 'upToDate', 'pendingCertApproval': ut.status === 'pendingCertUpload'}">
-                                            <i [ngClass]="teamTrainingHash[ut.tid].iconClass"
+                                            <i [ngClass]="teamTrainingHash[ut.tid]?.versions[0].iconClass"
                                                 style="display:inline-block;font-size:22px;vertical-align: middle;margin:5px 0;"
-                                                [ngStyle]="{'color': teamTrainingHash[ut.tid].iconColor}">
+                                                [ngStyle]="{'color': teamTrainingHash[ut.tid]?.versions[0].iconColor}">
                                             </i>
                                             <i *ngIf="teamTrainingHash[ut.tid].type === 'recurring'"
                                                 class="fas fa-redo-alt" style="font-size:10px;vertical-align: top;">
@@ -153,17 +153,23 @@
                     <nz-list nzItemLayout="vertical" nzSize="small">
                         <nz-list-item *ngFor="let training of trainings" (click)="selectTraining(training._id)"
                             class="list-item" style="cursor:pointer;">
+                            <div style="display:inline-block;width:7%;padding:5px;">
+                                <i *ngIf="training.status === 'locked'" nz-icon nzType="lock" style="vertical-align:middle;color:red;font-size:14px;display:inline-block;">
+                                </i>
+                                <i *ngIf="training.status === 'unlocked'" nz-icon nzType="unlock" style="vertical-align:middle;color:#46bd15;font-size:14px;display:inline-block;">
+                                </i>
+                            </div>
                             <div style="display:inline-block;width:10%;padding:5px;">
-                                <i [ngClass]="training.iconClass" style="font-size:20px;vertical-align: bottom;"
-                                    [ngStyle]="{'color': training.iconColor}">
+                                <i [ngClass]="training?.versions[0].iconClass" style="font-size:20px;vertical-align: bottom;"
+                                    [ngStyle]="{'color': training?.versions[0].iconColor}">
                                 </i>
                                 <i *ngIf="training.type === 'recurring'" class="fas fa-redo-alt"
                                     style="font-size:10px;vertical-align: top;">
                                 </i>
                             </div>
-                            <div style="display:inline-block;width:90%;padding:5px;">
+                            <div style="display:inline-block;width:83%;padding:5px;">
                                 <div style="width:100%;vertical-align: middle;font-size:14px;">
-                                    {{ training.title }}
+                                    {{ training?.versions[0].title }}
                                 </div>
                             </div>
                         </nz-list-item>
@@ -173,55 +179,6 @@
             <div style="clear:both;"></div>
         </div>
         <div style="width:100%;display:block;text-align: center;">
-            <!--
-    <div [ngStyle]="{ width: '100%', border: '1px solid #d9d9d9', borderRadius: '4px' }">
-        <nz-calendar [nzFullscreen]="false" (nzSelectChange)="onValueChange($event)"
-            (nzPanelChange)="onPanelChange($event)"></nz-calendar>
-    </div>
-    -->
-            <!--
-           <nz-card *ngIf="myTeam.length > 0 && trainings.length > 0" style="width:100%;" [nzTitle]="titleTemplate"
-                style="border: 1px solid #dddddd;">
-
-                <div
-                    style="display:block;width:100%;padding-left:20px;padding-top:20px;text-align:left;height:85%;overflow-y: scroll;">
-                    <nz-timeline *ngIf="filteredSessionLog && filteredSessionLog.length > 0">
-                        <nz-timeline-item *ngFor="let session of filteredSessionLog">
-                            <div style="display:block;">
-                                <div *ngIf="session" style="float:left;font-size:16px;">
-                                    {{myTeamIdHash[session.uid].firstName}} {{myTeamIdHash[session.uid].lastName}}
-                                </div>
-                                <div style="float:left;margin-left:10px;font-size:12px;color:#bbbbbb;padding:4px 0;">
-                                    {{session.startTime| date:'medium'}}&nbsp;&nbsp;({{timeFormat(session.stopTime - session.startTime)}})
-                                </div>
-                                <div *ngIf="teamTrainingHash && teamTrainingHash[session.tid]"
-                                    style="float:right;padding-top:4px;">
-                                    <div style="display:inline-block;margin-right:10px;">
-                                        <i [ngClass]="teamTrainingHash[session.tid].iconClass"
-                                            style="font-size:20px;vertical-align: middle;"
-                                            [ngStyle]="{'color': teamTrainingHash[session.tid].iconColor}" nz-tooltip
-                                            [nzTooltipTitle]="teamTrainingHash[session.tid].title">
-                                        </i>
-                                    </div>
-                                    < !--
-                            <div style="display:inline-block;">
-                                {{teamTrainingHash[session.tid].title}}
-                            </div>
-                            -- >
-                                </div>
-                                <div style="clear:both;"></div>
-                            </div>
-                        </nz-timeline-item>
-                    </nz-timeline>
-                    <div *ngIf="filteredSessionLog && filteredSessionLog.length === 0">
-                        <nz-alert nzType="error" nzMessage="No sessions found!"
-                            nzDescription="{{startRangeTimeMS| date:'medium'}}&nbsp;&nbsp;-&nbsp;&nbsp;{{endRangeTimeMS| date:'medium'}}">
-                        </nz-alert>
-
-                    </div>
-                </div>
-            </nz-card>
-            -->
             <ng-template #titleTemplate>
                 <div style="" joyrideStep="task0Step4" title="Team member training sessions">
                     Training Sessions
