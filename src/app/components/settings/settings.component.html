@@ -12,17 +12,17 @@
         <div style="clear: both;"></div>
     </div>
     -->
-    <div style="text-align: center;">
+    <div style="text-align: center;border-bottom:1px solid #dddddd;">
         <h4>General</h4>
     </div>
     <div class="settings-item">
-        <div class="settings-item-left">
+        <div class="settings-item-left" style="width:70%">
             <i class="fad fa-fw fa-palette" style="color:blue;font-size:24px;vertical-align: middle;"></i>
             <span style="vertical-align: middle;margin-left:10px;font-size: 16px;">Nav Bar Theme</span>
         </div>
         <div class="settings-item-right">
             <div *ngFor="let color of colors; index as i"
-                style="display:inline-block;height: fit-content;width:fit-content;margin-right:5px;border-radius:6px;border: 2px solid white;padding:3px;"
+                style="display:table-cell;height: fit-content;width:fit-content;margin-right:5px;border-radius:6px;border: 2px solid white;padding:3px;"
                 (click)="updateUserSettings($event, 'themeColor', color)"
                 [ngClass]="{'current-theme': color.name === (authenticatedUser$ | async)?.settings.themeColor.name}">
                 <div [ngStyle]="{'background-color': color.bgColor, 'color': color.fgColor}"
@@ -53,7 +53,7 @@
         </div>
         <div style="clear: both;"></div>
     </div>
-    <div style="text-align: center;">
+    <div style="text-align: center;border-bottom:1px solid #dddddd;">
         <h4>My Team</h4>
     </div>
     <div *ngIf="user.userType === 'supervisor'" class="settings-item">

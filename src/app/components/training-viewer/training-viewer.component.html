@@ -525,7 +525,7 @@
                             <i nz-icon nzType="html5" theme="outline" style="vertical-align:top;font-size:16px;"></i>
                             <span style="font-size:12px;">Create an HTML Page</span>
                         </li>
-                        <li nz-menu-item (click)="addNewPage('assessment', 'none')">
+                        <li [nzDisabled]="(org$ | async)?.plan !== 'expert'" nz-menu-item (click)="addNewPage('assessment', 'none')">
                             <i nz-icon nzType="file-done" theme="outline"
                                 style="vertical-align:top;font-size:16px;"></i>
                             <span style="font-size:12px;">Create an

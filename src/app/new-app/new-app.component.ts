@@ -272,6 +272,12 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   listOfSelectedUsers = [];
   listOfUsers = [];
   userNameHash = {};
+  planNameHash = {
+    basic: 'Basic',
+    pro: 'Pro',
+    expert: 'Expert'
+  }
+
 
   constructor(
     private authService: AuthService,

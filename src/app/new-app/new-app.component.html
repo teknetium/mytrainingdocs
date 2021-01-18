@@ -47,6 +47,10 @@
                                     <p class="m-b-0 text-dark font-weight-semibold">
                                         {{(authenticatedUser$ | async)?.firstName}}
                                         {{(authenticatedUser$ | async)?.lastName}} </p>
+                                    <span style="font-weight: 500;">
+                                        {{planNameHash[(org$ | async)?.plan]}}
+                                    </span>
+                                    Plan
                                 </div>
                             </div>
                         </li>
@@ -142,26 +146,6 @@
                     </ul>
                 </nz-dropdown-menu>
             </li>
-            <!--
-            <li nz-menu-item class="navbar-rhs">
-                <nz-badge [nzCount]=""></nz-badge>
-            </li>
-            -->
-            <!--
-            <li nz-menu-item class="navbar-rhs">
-                <nz-radio-group [(ngModel)]="myPlan" (ngModelChange)="planChanged($event)">
-                    <label nz-radio-button nzValue="basic" style="background: rgba(255,255,255,0.1);">
-                        <i class="fas fa-user" style="vertical-align: bottom;background: rgba(255,255,255,0.1);"></i>
-                    </label>
-                    <label nz-radio-button nzValue="pro" style="background: rgba(255,255,255,0.1);">
-                        <i class="fas fa-user-tie" style="vertical-align: bottom;"></i>
-                    </label>
-                    <label nz-radio-button nzValue="expert" style="background: rgba(255,255,255,0.1);">
-                        <i class="fas fa-user-graduate" style="vertical-align: bottom;"></i>
-                    </label>
-                </nz-radio-group>
-            </li>
-            -->
         </ul>
         <ng-template #httpError>
 
@@ -217,7 +201,9 @@
             nzPlacement="right" (nzOnClose)="quickViewToggle()">
             <nz-tabset>
                 <nz-tab nzTitle="Application">
-                    <app-settings></app-settings>
+                    <div style="padding-top:20px;">
+                        <app-settings></app-settings>
+                    </div>
                 </nz-tab>
                 <nz-tab nzTitle="User">
                     <div style="display:block;width:90%;">
@@ -276,9 +262,9 @@
                         </div>
                     </div>
                 </nz-tab>
-                <nz-tab nzTitle="Organization">
-                    <div  style="padding:20px 40px;">
-                        <div  style="width:50%;float:left;">
+                <nz-tab *ngIf="(org$ | async)?.adminIds.includes(authenticatedUser._id)" nzTitle="Organization">
+                    <div style="padding:20px 40px;display:table-cell;">
+                        <div style="display:table-cell;width:400px;vertical-align: middle;">
                             <span style="font-size:16px;">
                                 Current Plan&nbsp;&nbsp;:&nbsp;&nbsp;
                             </span>
@@ -286,18 +272,17 @@
                                 {{planHash[(org$ | async)?.plan]}}
                             </span>
                         </div>
-                        <div style="width:50%;float:right;">
-                            <nz-radio-group [(ngModel)]="myPlan" (ngModelChange)="planChanged($event)"
+                        <div style="display:table-cell;">
+                            <nz-radio-group [(ngModel)]="orgObj.plan" (ngModelChange)="planChanged($event)"
                                 style="float:right;">
-                                <label nz-radio-button nzValue="basic" style="">
-                                    <i class="fas fa-user"
-                                        style="vertical-align: bottom;color:#b4d956;"></i>
+                                <label nz-radio-button nzValue="basic" style="" nz-tooltip nzTooltipTitle="Basic Plan">
+                                    <i class="fas fa-user" style="font-size:24px;"></i>
                                 </label>
-                                <label nz-radio-button nzValue="pro" style="">
-                                    <i class="fas fa-user-tie" style="vertical-align: bottom;"></i>
+                                <label nz-radio-button nzValue="pro" nz-tooltip nzTooltipTitle="Pro Plan">
+                                    <i class="fas fa-user-tie" style="font-size:24px;"></i>
                                 </label>
-                                <label nz-radio-button nzValue="expert" style="">
-                                    <i class="fas fa-user-graduate" style="vertical-align: bottom;"></i>
+                                <label nz-radio-button nzValue="expert" nz-tooltip nzTooltipTitle="Basic Plan">
+                                    <i class="fas fa-user-graduate" style="font-size:24px;"></i>
                                 </label>
                             </nz-radio-group>
                         </div>
@@ -311,7 +296,8 @@
                         </div>
                         <div style="width:50%;float:right;">
                             <nz-select [nzMaxTagCount]="3" [nzMaxTagPlaceholder]="tagPlaceHolder" nzMode="multiple"
-                                nzPlaceHolder="Please select" (ngModelChange)="adminUserListChanged($event)" [(ngModel)]="listOfSelectedUsers" style="width:100%;">
+                                nzPlaceHolder="Please select" (ngModelChange)="adminUserListChanged($event)"
+                                [(ngModel)]="listOfSelectedUsers" style="width:100%;">
                                 <nz-option *ngFor="let option of listOfUsers" [nzLabel]="option.label"
                                     [nzValue]="option.value"></nz-option>
                             </nz-select>

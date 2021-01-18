@@ -14,6 +14,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FileModel, FilePlusModel } from 'src/app/shared/interfaces/file.type';
 import { UserModel, UserIdHash } from 'src/app/shared/interfaces/user.type';
+import { OrgService } from '../../shared/services/org.service';
 import { VgAPI } from 'videogular2/compiled/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { merge, take } from 'rxjs/operators';
@@ -28,6 +29,7 @@ import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
 import { JoyrideService } from 'ngx-joyride';
 import { AssessmentResponse, UserTrainingModel } from 'src/app/shared/interfaces/userTraining.type';
+import { OrgModel } from 'src/app/shared/interfaces/org.type';
 
 
 @Component({
@@ -345,6 +347,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   froalaBufferHash = {};
   showFroalaEditor = true;
+  org$: Observable<OrgModel>;
+  org: OrgModel;
 
 
   constructor(
@@ -352,6 +356,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     private modalService: NzModalService,
     private fileService: FileService,
     private notifyService: NotificationService,
+    private orgService: OrgService,
     //    private jobTitleService: JobTitleService,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
@@ -380,6 +385,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.users$ = this.userTrainingService.getUsersForTrainingStream();
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     //    this.trainingIsDirty$ = this.trainingService.getTrainingIsDirtyStream();
+    this.org$ = this.orgService.getOrgStream();
 
   }
 
@@ -649,49 +655,12 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
         this.assignToDisabled = true;
       }
     })
-    /*
-        this.assessmentItems$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(items => {
-          if (!items) {
-            return;
-          }
-    
-          this.assessmentItems = items;
-          this.questions = [];
-          this.assessmentHash = {};
-          for (let item of this.assessmentItems) {
-            this.questions.push(item.question);
-            this.assessmentHash[item.question] = item;
-          }
-          this.matchingQuestions = this.questions;
-        });
-        */
-
-    /*
-    this.newVersion$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(version => {
-      if (!version) {
-        return;
-      }
-    
-    
-      console.log('newVersion$.subscribe', version, this.currentPageId, this.pageFileHash); 
-      this.fileService.selectFsHandle(this.currentPage.content[0].file, 0);
-    })
-    */
 
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       this.authenticatedUser = user;
     })
 
   }
-  /*
-    getSafeUrl(mimeType: string, url: string): SafeResourceUrl {
-      if (mimeType.includes('video')) {
-        return this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(url));
-      } else {
-        this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI((this.previewBase) + this.uploadedFile.fileStackId));      
-      }
-    }
-    */
   
   saveFroalaContent(editorId, model) {
     this.froalaBufferHash[editorId] = model;

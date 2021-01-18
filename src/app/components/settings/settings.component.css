@@ -1,17 +1,22 @@
 .settings-item {
   padding:20px 10px;
   display:block;
+  width:100%;
 }
 .settings-item-left {
-  float: left;
+  display:table-cell;
   font-size: 14px;
   vertical-align: middle;
+  justify-content: left;
+  width:300px;
 }
 .settings-item-right {
-  float:right;
+  display:table-cell;
   font-size: 14px;
   text-align: right;
   vertical-align: middle;
+  justify-content: right;
+  width:300px;
 }
 
 .current-theme {
