@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable, throwError as ObservableThrowError, Subscr
 import { NotificationService } from '../services/notification.service';
 import { AlertModel } from '../interfaces/notification.type';
 import { TrainingModel } from '../interfaces/training.type';
+import { UserModel } from '../interfaces/user.type';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { UserTrainingModel, AssessmentResponse, UserTrainingHash, UTSession, UTSessionHash, UidUTHash } from '../interfaces/userTraining.type';
 import { AuthService } from './auth.service';
@@ -280,33 +281,41 @@ export class UserTrainingService {
 
 
 
-  assignTraining(uid: string, tid: string, teamId: string, version: string, dueDate: number) {
+  assignTraining(user: UserModel, training: TrainingModel) {
     let userTraining:UserTrainingModel = {
       _id: String(new Date().getTime()),
-      tid: tid,
-      uid: uid,
-      teamId: teamId,
+      tid: training._id,
+      uid: user._id,
+      teamId: user._id,
       status: 'upToDate',
-      trainingVersion: version,
-      dueDate: new Date().getTime() + dueDate,
+      trainingVersion: training.versions[0].version,
+      dueDate: new Date().getTime() + training.expirationDate,
       dateCompleted: 0,
       timeToDate: 0,
       assessmentResponses: [],
       certImage: null,
       notifyDates: []
     };
+    for (let notifyDays of training.notifySchedule) {
+      let notifyMs = 86400000 * notifyDays;
+      userTraining.notifyDates.push(userTraining.dueDate - notifyMs);
+    }
     this.postUserTraining$(userTraining).subscribe(userTraining => {
       this.getUTForUser$(userTraining.uid).subscribe(userTrainings => {
-        console.log('userTrainingService: assignTraining', userTrainings);
         this.userTrainings$BS.next(userTrainings);
         this.uidUTHash[userTraining.uid] = userTrainings;
         this.uidUTHashBS$.next(this.uidUTHash);
         this.allUserTrainingHash[userTraining._id] = userTraining;
+        let alert = <AlertModel>{
+          type: 'success',
+          message: 'The training "' + training.versions[0].title + '" has been assigned to ' + user.firstName + ' ' + user.lastName
+        }
+        this.notifyService.showAlert(alert);
       })
     })
   }
 
-  bulkAssignTraining(uids: string[], tid: string, teamId: string, version: string, title: string) {
+  bulkAssignTraining(uids: string[], training: TrainingModel, teamId: string) {
     let userTrainings: UserTrainingModel[] = [];
     let id = String(new Date().getTime());
     let dueDate = new Date().getTime() + 1209600000;
@@ -319,7 +328,7 @@ export class UserTrainingService {
         utList = [];
       }
       for (let ut of utList) {
-        if (ut.tid === tid) {
+        if (ut.tid === training._id) {
           found = true;
           break;
         }
@@ -327,11 +336,11 @@ export class UserTrainingService {
       if (!found) {
         let uT: UserTrainingModel = {
           _id: id + counter,
-          tid: tid,
+          tid: training._id,
           uid: uid,
           teamId: teamId,
           status: 'upToDate',
-          trainingVersion: version,
+          trainingVersion: training.versions[0].version,
           dueDate: dueDate,
           dateCompleted: 0,
           timeToDate: 0,
@@ -339,6 +348,10 @@ export class UserTrainingService {
           certImage: null,
           notifyDates: []
         };
+        for (let notifyDays of training.notifySchedule) {
+          let notifyMs = 86400000 * notifyDays;
+          uT.notifyDates.push(uT.dueDate - notifyMs);
+        }
         userTrainings.push(uT);
         utList.push(cloneDeep(uT));
         this.uidUTHash[uid] = cloneDeep(utList);
@@ -351,14 +364,14 @@ export class UserTrainingService {
       warningAlert = <AlertModel>{
         timestamp: new Date().getTime(),
         type: 'warning',
-        message: 'The training "' + title + '" has already been assigned to these users.'
+        message: 'The training "' + training.title + '" has already been assigned to these users.'
       }
       this.notifyService.showAlert(warningAlert);
     } else if (userTrainings.length < uids.length) {
       warningAlert = <AlertModel>{
         timestamp: new Date().getTime(),
         type: 'warning',
-        message: (uids.length - userTrainings.length) + ' out of the ' + uids.length + ' users selected already have the training "' + title + '" assigned to them.'
+        message: (uids.length - userTrainings.length) + ' out of the ' + uids.length + ' users selected already have the training "' + training.title + '" assigned to them.'
       }
       this.notifyService.showAlert(warningAlert);
     }
@@ -396,14 +409,14 @@ export class UserTrainingService {
           let successAlert = <AlertModel>{
             timestamp: new Date().getTime(),
             type: 'success',
-            message: 'The training "' + title + '" has been assigned to ' + batchAddedCount + ' users.'
+            message: 'The training "' + training.title + '" has been assigned to ' + batchAddedCount + ' users.'
           }
           this.notifyService.showAlert(successAlert);
         } else if ((loopCnt === iterationCnt) && (batchAddedCount < userTrainings.length)) {
           let errorAlert = <AlertModel>{
             timestamp: new Date().getTime(),
             type: 'error',
-            message: 'Houston, we have a problem.  We were only able to assign the training "' + title + '" to ' + batchAddedCount + ' out of ' + userTrainings.length + ' users.'
+            message: 'Houston, we have a problem.  We were only able to assign the training "' + training.title + '" to ' + batchAddedCount + ' out of ' + userTrainings.length + ' users.'
           }
           this.notifyService.showAlert(errorAlert);
         }

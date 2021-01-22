@@ -153,23 +153,23 @@
                     <nz-list nzItemLayout="vertical" nzSize="small">
                         <nz-list-item *ngFor="let training of trainings" (click)="selectTraining(training._id)"
                             class="list-item" style="cursor:pointer;">
-                            <div style="display:inline-block;width:7%;padding:5px;">
+                            <div style="display:inline-block;width:5%;padding:5px;">
                                 <i *ngIf="training.status === 'locked'" nz-icon nzType="lock" style="vertical-align:middle;color:red;font-size:14px;display:inline-block;">
                                 </i>
                                 <i *ngIf="training.status === 'unlocked'" nz-icon nzType="unlock" style="vertical-align:middle;color:#46bd15;font-size:14px;display:inline-block;">
                                 </i>
                             </div>
-                            <div style="display:inline-block;width:10%;padding:5px;">
-                                <i [ngClass]="training?.versions[0].iconClass" style="font-size:20px;vertical-align: bottom;"
-                                    [ngStyle]="{'color': training?.versions[0].iconColor}">
+                            <div style="display:inline-block;width:7%;padding:5px;">
+                                <i [ngClass]="training?.iconClass" style="font-size:20px;vertical-align: bottom;"
+                                    [ngStyle]="{'color': training?.iconColor}">
                                 </i>
                                 <i *ngIf="training.type === 'recurring'" class="fas fa-redo-alt"
                                     style="font-size:10px;vertical-align: top;">
                                 </i>
                             </div>
-                            <div style="display:inline-block;width:83%;padding:5px;">
+                            <div style="display:inline-block;width:88%;padding:5px;">
                                 <div style="width:100%;vertical-align: middle;font-size:14px;">
-                                    {{ training?.versions[0].title }}
+                                    {{ training?.title }}
                                 </div>
                             </div>
                         </nz-list-item>

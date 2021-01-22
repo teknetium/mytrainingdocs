@@ -27,6 +27,7 @@ import { BaseComponent } from '../components/base.component';
 import { JoyrideService } from 'ngx-joyride';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import * as cloneDeep from 'lodash/cloneDeep';
 
 /*
 export interface Task {
@@ -95,6 +96,66 @@ export interface Task {
         animate('300ms')
       ]),
     ]),
+    trigger('infoSlide', [
+      // ...
+      state('closed', style({
+        'margin-top': '-60px'
+      })),
+      state('open', style({
+        'margin-top': '70px',
+      })),
+      transition('open => closed', [
+        animate('300ms')
+      ]),
+      transition('closed => open', [
+        animate('300ms')
+      ]),
+    ]),
+    trigger('warningSlide', [
+      // ...
+      state('closed', style({
+        'margin-top': '-60px'
+      })),
+      state('open', style({
+        'margin-top': '140px',
+      })),
+      transition('open => closed', [
+        animate('300ms')
+      ]),
+      transition('closed => open', [
+        animate('300ms')
+      ]),
+    ]),
+    trigger('errorSlide', [
+      // ...
+      state('closed', style({
+        'margin-top': '-60px'
+      })),
+      state('open', style({
+        'margin-top': '210px',
+      })),
+      transition('open => closed', [
+        animate('300ms')
+      ]),
+      transition('closed => open', [
+        animate('300ms')
+      ]),
+    ]),
+    trigger('successSlide', [
+      // ...
+      state('closed', style({
+        'margin-top': '-60px'
+      })),
+      state('open', style({
+        'margin-top': '280px',
+      })),
+      transition('open => closed', [
+        animate('300ms')
+      ]),
+      transition('closed => open', [
+        animate('300ms')
+      ]),
+    ])
   ]
 })
 
@@ -130,8 +191,8 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   isConfirmDeleteModalVisible = false;
   editId: string | null;
   taskVideo$ = new BehaviorSubject<SafeResourceUrl>(null);
-//  taskBS$ = new BehaviorSubject<Task>(null);
-//  task: Task = null;
+  //  taskBS$ = new BehaviorSubject<Task>(null);
+  //  task: Task = null;
 
 
   myTeamCnt = 0;
@@ -258,26 +319,56 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   taskHash: TaskHash;
   taskStepContentHash: TaskStepContentHash;
   taskWizardHash = {};
-//  newLoading$: Observable<boolean>;
+  //  newLoading$: Observable<boolean>;
   org$: Observable<OrgModel>;
   orgObj: OrgModel;
   myPlan = 'basic';
-  planHash = {
-    basic: 'Basic',
-    pro: 'Pro',
-    expert: 'Expert'
-  }
   myOrgUsers = [];
   myOrgUsers$: Observable<UserModel[]>;
   listOfSelectedUsers = [];
   listOfUsers = [];
   userNameHash = {};
-  planNameHash = {
-    basic: 'Basic',
-    pro: 'Pro',
-    expert: 'Expert'
+  planHash = {
+    basic: {
+      name: 'Basic',
+      icon: 'fad fa-user',
+      color: 'green'
+    },
+    pro: {
+      name: 'Pro',
+      icon: 'fad fa-user-tie',
+      color: 'red'
+    },
+    expert: {
+      name: 'Expert',
+      icon: 'fad fa-user-graduate',
+      color: 'blueviolet'
+    },
+    none: {
+      name: 'None',
+      icon: 'fad fa-user-slash',
+      color: 'black'
+    }
   }
 
+  showUpgradeToExpertDialog$: Observable<boolean>;
+  showUpgradeToProDialog$: Observable<boolean>;
+  showUpgradeToProDialog = false;
+  showUpgradeToExpertDialog = false;
+  upgradeToExpertOkText = '';
+  upgradeToProOkText = '';
+  infoAlertIsVisible = false;
+  warningAlertIsVisible = false;
+  errorAlertIsVisible = false;
+  successAlertIsVisible = false;
+  alertBackgroundColorHash = {
+    info: 'blue',
+    warning: 'goldenrod',
+    error: 'red',
+    success: 'green'
+  }
+  currentAlert: AlertModel;
+  timeTest = 0;
 
   constructor(
     private authService: AuthService,
@@ -333,16 +424,37 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
     this.org$ = this.orgService.getOrgStream();
     this.myOrgUsers$ = this.userService.getMyOrgUsersStream();
+    this.showUpgradeToProDialog$ = this.orgService.getShowUpgradeToProDialogStream();
+    this.showUpgradeToExpertDialog$ = this.orgService.getShowUpgradeToExpertDialogStream();
   }
 
   ngOnInit(): void {
-/*
-    this.pageNames = Object.keys(this.aboutThisPageHash);
-    for (let page of this.pageNames) {
-      this.taskHash[page] = Object.keys(this.aboutThisPageHash[page].taskHash);
-    }
-    this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
+    /*
+    this.infoAlertIsVisible = true;
+    setTimeout(() => {
+      this.infoAlertIsVisible = false;
+    }, 12000);
+    this.warningAlertIsVisible = true;
+    setTimeout(() => {
+      this.warningAlertIsVisible = false;
+    }, 12000);
+    this.errorAlertIsVisible = true;
+    setTimeout(() => {
+      this.errorAlertIsVisible = false;
+    }, 12000);
+    this.successAlertIsVisible = true;
+    setTimeout(() => {
+      this.successAlertIsVisible = false;
+    }, 12000);
     */
+
+    /*
+        this.pageNames = Object.keys(this.aboutThisPageHash);
+        for (let page of this.pageNames) {
+          this.taskHash[page] = Object.keys(this.aboutThisPageHash[page].taskHash);
+        }
+        this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
+        */
 
     this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       this.currentPage = event.url.substring(1);
@@ -374,6 +486,15 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       //      this.userService.selectUser(user._id);
 
       this.authenticatedUser = user;
+      if (this.orgObj) {
+        if (this.orgObj.adminIds.includes(this.authenticatedUser._id)) {
+          this.upgradeToExpertOkText = "Upgrade to the Expert Plan Now";
+          this.upgradeToProOkText = "Upgrade to the Pro Plan Now";
+        } else {
+          this.upgradeToExpertOkText = "Send Message";
+        }
+      }
+
       this.currentEmail = this.authenticatedUser.email;
       if (this.authenticatedUser.firstName === '') {
         this.firstTimer = true;
@@ -447,18 +568,35 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       this.messageService.error('HTTP Error: ' + this.currentHttpError, { nzDuration: 5000 });
       this.httpErrors.push(this.currentHttpError);
     })
-/*
-    this.taskBS$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(task => {
-      if (!task) {
-        return;
-      }
-
-      this.showTaskVideoModal = true;
-    })
-    */
+    /*
+        this.taskBS$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(task => {
+          if (!task) {
+            return;
+          }
+    
+          this.showTaskVideoModal = true;
+        })
+        */
 
     this.org$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgObj => {
       this.orgObj = orgObj;
+      if (this.authenticatedUser) {
+        if (this.orgObj.adminIds.includes(this.authenticatedUser._id)) {
+          this.upgradeToExpertOkText = "Upgrade to the Expert Plan Now";
+          this.upgradeToProOkText = "Upgrade to the Pro Plan Now";
+        } else {
+          this.upgradeToExpertOkText = "Send Message";
+          this.upgradeToProOkText = "Send Message";
+        }
+      }
+    })
+
+    this.showUpgradeToExpertDialog$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(showUpgradeToExpertDialog => {
+      this.showUpgradeToExpertDialog = showUpgradeToExpertDialog;
+    })
+
+    this.showUpgradeToProDialog$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(showUpgradeToProDialog => {
+      this.showUpgradeToProDialog = showUpgradeToProDialog;
     })
 
     this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(users => {
@@ -480,6 +618,40 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
       this.alerts.push(alert);
       this.dropDownAlerts.push(alert);
+      this.timeTest = 3000;
+      switch (alert.type) {
+        case 'info':
+          this.infoAlertIsVisible = true;
+          setTimeout(() => {
+            this.infoAlertIsVisible = false;
+            this.alerts.shift();
+          }, 5000);
+          break;
+        case 'warning':
+          this.warningAlertIsVisible = true;
+          setTimeout(() => {
+            this.warningAlertIsVisible = false;
+            this.alerts.shift();
+          }, 5000);
+          break;
+        case 'error':
+          this.errorAlertIsVisible = true;
+          setTimeout(() => {
+            this.errorAlertIsVisible = false;
+            this.alerts.shift();
+          }, 5000);
+          break;
+        case 'success':
+          this.successAlertIsVisible = true;
+          setTimeout(() => {
+            this.successAlertIsVisible = false;
+            this.alerts.shift();
+          }, 5000);
+          break;
+        default:
+          break;
+      }
+
     })
   };
 
@@ -491,6 +663,45 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.myPlan = plan;
     console.log('planChanged', this.myPlan);
     this.orgService.setPlan(this.myPlan);
+  }
+
+  handleUpgradeToProOk() {
+    if (this.orgObj.adminIds.includes(this.authenticatedUser._id)) {
+      this.orgObj.plan = 'pro';
+      this.orgService.setPlan('pro');
+      let alert = <AlertModel>{
+        type: 'success',
+        message: 'You have successfully upgraded to the Pro plan.'
+      }
+      this.notificationService.showAlert(alert);
+    } else {
+      let alert = <AlertModel>{
+        type: 'info',
+        message: 'A message has been sent to your software administrator.'
+      }
+      this.notificationService.showAlert(alert);
+      console.log('handleUpgradeToExpertOk...sending message to admin list');
+    }
+    this.showUpgradeToProDialog = false;
+  }
+  handleUpgradeToExpertOk() {
+    if (this.orgObj.adminIds.includes(this.authenticatedUser._id)) {
+      this.orgObj.plan = 'expert';
+      this.orgService.setPlan('expert');
+      let alert = <AlertModel>{
+        type: 'success',
+        message: 'You have successfully upgraded to the Expert plan.'
+      }
+      this.notificationService.showAlert(alert);
+    } else {
+      let alert = <AlertModel>{
+        type: 'info',
+        message: 'A message has been sent to your software administrator.'
+      }
+      this.notificationService.showAlert(alert);
+      console.log('handleUpgradeToExpertOk...sending message to admin list');
+    }
+    this.showUpgradeToExpertDialog = false;
   }
 
   adminUserListChanged(userList) {
@@ -581,29 +792,29 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     //    this.login();
   }
 
-    startTour(task: string) {
-      console.log("startTour", task);
-      this.taskWizardService.startTour(task);
-  //    this.joyrideService.startTour({ steps: this.taskHash[task].steps });
-      // this.eventService.startTour(this.currentPage);
-      //    let toursteps = this.aboutThisPageHash[this.currentPage].tourSteps;
-      //    this.joyrideService.startTour(toursteps);
-    }
-/*
-  playTaskVideo(taskName) {
-    if (!taskName) {
-      taskName = this.taskNames[0];
-    }
-    this.currentTask = taskName;
-    this.isVideoOpen = true;
-    this.task = this.aboutThisPageHash[this.currentPage].taskHash[taskName];
-    if (!this.task) {
-      return;
-    }
-    this.task.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.aboutThisPageHash[this.currentPage].taskHash[taskName].url));
-    this.taskBS$.next(this.task);
+  startTour(task: string) {
+    console.log("startTour", task);
+    this.taskWizardService.startTour(task);
+    //    this.joyrideService.startTour({ steps: this.taskHash[task].steps });
+    // this.eventService.startTour(this.currentPage);
+    //    let toursteps = this.aboutThisPageHash[this.currentPage].tourSteps;
+    //    this.joyrideService.startTour(toursteps);
   }
-  */
+  /*
+    playTaskVideo(taskName) {
+      if (!taskName) {
+        taskName = this.taskNames[0];
+      }
+      this.currentTask = taskName;
+      this.isVideoOpen = true;
+      this.task = this.aboutThisPageHash[this.currentPage].taskHash[taskName];
+      if (!this.task) {
+        return;
+      }
+      this.task.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.aboutThisPageHash[this.currentPage].taskHash[taskName].url));
+      this.taskBS$.next(this.task);
+    }
+    */
 
   handleUpdateUserCancel() {
     this.userPanelVisible = false;

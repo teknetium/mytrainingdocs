@@ -16,6 +16,8 @@ import { Router } from '@angular/router';
 
 export class OrgService {
 
+  private showUpgradeToExpertDialogBS$ = new BehaviorSubject<boolean>(false);
+  private showUpgradeToProDialogBS$ = new BehaviorSubject<boolean>(false);
   private authenticatedUser$: Observable<UserModel>;
   private authenticatedUser: UserModel;
   private orgBS$ = new BehaviorSubject<OrgModel>(null);
@@ -64,12 +66,28 @@ export class OrgService {
     this.orgBS$.next(this.currentOrg);
   }
 
+  showUpgradeToProDialog(show: boolean) {
+    this.showUpgradeToProDialogBS$.next(show);
+  }
+
+  showUpgradeToExpertDialog(show: boolean) {
+    this.showUpgradeToExpertDialogBS$.next(show);
+  }
+
   updateOrg(orgObj: OrgModel) {
     if (orgObj) {
       this.updateOrg$(orgObj).subscribe(org => {
         console.log('updateOrg', orgObj);
       })
     }
+  }
+
+  getShowUpgradeToProDialogStream(): Observable<boolean> {
+    return this.showUpgradeToProDialogBS$.asObservable();
+  }
+
+  getShowUpgradeToExpertDialogStream(): Observable<boolean> {
+    return this.showUpgradeToExpertDialogBS$.asObservable();
   }
 
   getOrgStream(): Observable<OrgModel> {

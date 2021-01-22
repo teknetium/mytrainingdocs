@@ -229,7 +229,7 @@ export class TrainingService {
           } else if (training.type === 'recurring') {
             dueDate = training.expirationDate * 24 * 60 * 60 * 1000;
           }
-          this.userTrainingService.assignTraining(userId, training._id, this.authenticatedUser.org, training.versions[0].version, dueDate);
+          this.userTrainingService.assignTraining(this.authenticatedUser, training);
         }
       }
     }

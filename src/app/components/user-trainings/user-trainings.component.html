@@ -26,6 +26,7 @@
                 <th style="padding-left:40px;">Title</th>
                 <th>Version</th>
                 <th style="padding-left:10px;">Time (mm:ss)</th>
+                <th style="padding-left:10px;">Notify Dates</th>
                 <th style="padding-left:10px;">Due Date</th>
                 <th style="padding-left:10px;">Date Completed</th>
                 <th style="padding-left:30px;">Actions</th>
@@ -63,6 +64,11 @@
                 </td>
                 <td style="width:9%;">
                     {{ timeFormat(userTraining?.timeToDate) }}
+                </td>
+                <td>
+                    <div *ngFor="let notifyDate of userTraining?.notifyDates" style="font-size:10px;padding:3px;">
+                    {{ notifyDate | date}}
+                    </div>
                 </td>
                 <td *ngIf="mode === 'admin'" style="width:15%;">
                     <nz-date-picker nzFormat="MMM d, y" nzSize="small" ngDefaultControl [ngModel]="userTraining.dueDate"

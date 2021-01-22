@@ -41,7 +41,7 @@ import { LoaderService } from '../../shared/services/loader.service';
     trigger('legendSlide', [
       // ...
       state('closed', style({
-        'margin-left': '-300px'
+        'margin-left': '-350px'
       })),
       state('open', style({
         'margin-left': '0',
@@ -1237,7 +1237,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   showUserSearch = false;
   myPlan = null;
   org$: Observable<OrgModel>;
-  showUpgradeDialog = false;
+  orgObj: OrgModel;
+  showUpgradeToExpertDialog = false;
+  showUpgradeToProDialog = false;
+  upgradeToExpertOkText = '';
+  upgradeToProOkText = '';
 
   
   constructor(
@@ -1281,6 +1285,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
     this.org$ = this.orgService.getOrgStream();
 
+
 //    this.userTrainingService.selectUser(null);
   }
 
@@ -1295,13 +1300,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
       this.taskHash = taskHash;
     });
-    this.org$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(org => {
-      if (!org) {
+    this.org$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgObj => {
+      if (!orgObj) {
         return;
       }
 
-      this.org = org;
-      this.myPlan = org.plan;
+      this.orgObj = orgObj;
+      this.myPlan = orgObj.plan;
       if (this.myPlan === 'basic') {
         this.collapsedNodes = [];
       }
@@ -1703,13 +1708,17 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   collapseNode(uid: string, collapse: boolean) {
-    if (collapse) {
-      this.collapsedNodes.push(uid);
-      this.figureOrgStat(uid);
+    if (this.orgObj.plan === 'basic') {
+      this.showUpgradeToProDialog = true;
     } else {
-      this.collapsedNodes.splice(this.collapsedNodes.indexOf(uid), 1);
+      if (collapse) {
+        this.collapsedNodes.push(uid);
+        this.figureOrgStat(uid);
+      } else {
+        this.collapsedNodes.splice(this.collapsedNodes.indexOf(uid), 1);
+      }
+      setTimeout(() => this.centerIt(uid), 500);
     }
-    setTimeout(() => this.centerIt(uid), 500);
   }
 
   centerIt(id) {
@@ -1765,9 +1774,25 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.recipientUidList.splice(index, 1);
   }
 
+
+  showAssignTrainingModal() {
+    if (this.orgObj.plan === 'basic' || this.orgObj.plan === 'pro') {
+//      this.showUpgradeToExpertDialog = true;
+      this.orgService.showUpgradeToExpertDialog(true);
+    } else {
+      this.showUserTrainingModal = true;
+    }
+  }
+
   showMsgModal() {
-    this.showMessageModal = true;
-    this.recipientUidList = Object.assign(this.recipientUidList, this.userIdsSelected);
+    console.log('showMsgModal', this.orgObj);
+    if (this.orgObj.plan === 'basic' || this.orgObj.plan === 'pro') {
+//      this.showUpgradeToExpertDialog = true;
+      this.orgService.showUpgradeToExpertDialog(true);
+    } else {
+      this.showMessageModal = true;
+      this.recipientUidList = Object.assign(this.recipientUidList, this.userIdsSelected);
+    }
   }
   /*
     expandAllNodes() {
@@ -2525,9 +2550,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.assignableTrainings = cloneDeep(this.teamTrainings);
 
     this.currentTrainingSelected = null;
+    /*
     if ((this.myPlan === 'pro' || this.myPlan === 'basic') && (mode === 'UserType' || mode === 'JobTitle' || mode === 'Org')) {
       this.showUpgradeDialog = true;
     }
+    */
     this.selectionMode = mode;
     this.figureOrgStat(this.authenticatedUser._id);
     for (let node of this.collapsedNodes) {
@@ -2550,14 +2577,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       for (let node of this.collapsedNodes) {
         this.figureOrgStat(node);
       }
-    } else if (this.selectionMode === 'Org' && this.myPlan === 'expert') {
+    } else if (this.selectionMode === 'Org') {
       if (this.userIdsSelected.includes(userId)) {
         this.removeFromSelectedList(userId);
       } else {
         this.buildSelectedList(userId);
       }
-    } else if (this.selectionMode === 'Org' && this.myPlan === 'pro') {
-      this.showUpgradeDialog
     }
   }
 
@@ -2895,7 +2920,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       return;
     }
     if (this.selectionMode === 'Individual') {
-      this.userTrainingService.assignTraining(this.userIdSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version, this.allTrainingIdHash[this.selectedTrainingId].expirationDate);
+      let training = this.allTrainingIdHash[this.selectedTrainingId];
+      this.userTrainingService.assignTraining(this.selectedUser, training);
 
       if (this.selectedUser.trainingStatus === 'none') {
         this.selectedUser.trainingStatus = 'upToDate';
@@ -2904,12 +2930,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.assignableTrainings.splice(this.assignableTrainings.indexOf(this.selectedTrainingId), 1);
       this.userTrainingService.getUTForUser(this.userIdSelected);
     } else {
+      let training = this.allTrainingIdHash[this.selectedTrainingId];
       let alert = <AlertModel>{
         type: 'info',
         message: 'The training "' + this.allTrainingIdHash[this.selectedTrainingId].versions[0].title + '" is being assigned to ' + this.userIdsSelected.length + ' users.'
       }
       this.notifyService.showAlert(alert);
-      this.userTrainingService.bulkAssignTraining(this.userIdsSelected, this.selectedTrainingId, this.authenticatedUser._id, this.allTrainingIdHash[this.selectedTrainingId].versions[0].version, this.allTrainingIdHash[this.selectedTrainingId].versions[0].title);
+      this.userTrainingService.bulkAssignTraining(this.userIdsSelected, training, this.authenticatedUser._id);
       for (let uid of this.userIdsSelected) {
         let user = this.myOrgUserHash[uid];
         if (user.trainingStatus === 'none') {

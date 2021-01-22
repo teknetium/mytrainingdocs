@@ -347,8 +347,8 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   froalaBufferHash = {};
   showFroalaEditor = true;
-  org$: Observable<OrgModel>;
-  org: OrgModel;
+  orgObj$: Observable<OrgModel>;
+  orgObj: OrgModel;
 
 
   constructor(
@@ -385,7 +385,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.users$ = this.userTrainingService.getUsersForTrainingStream();
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
     //    this.trainingIsDirty$ = this.trainingService.getTrainingIsDirtyStream();
-    this.org$ = this.orgService.getOrgStream();
+    this.orgObj$ = this.orgService.getOrgStream();
 
   }
 
@@ -631,6 +631,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.myOrgHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgHash => {
       console.log('myOrgHash$  ', myOrgHash);
       this.myOrgHash = myOrgHash;
+    })
+
+    this.orgObj$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgObj => {
+      this.orgObj = orgObj;
     })
 
     this.users$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userList => {
@@ -1048,6 +1052,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   addNewPage(pageType: string, contentType: string) {
 
+    if (pageType === 'assessment' && (this.orgObj.plan === 'basic' || this.orgObj.plan === 'pro')) {
+      this.orgService.showUpgradeToExpertDialog(true);
+      return;
+    }
+
     const content = <Content>{
       _id: String(new Date().getTime() ),
       type: contentType,
@@ -1294,7 +1303,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   confirmAssignmentToUser() {
     this.showAssignToUserDialog = false;
-    this.userTrainingService.assignTraining(this.assignToUser._id, this.selectedTraining._id, this.authenticatedUser._id, this.selectedTraining.versions[0].version, this.selectedTraining.expirationDate);
+    this.userTrainingService.assignTraining(this.myOrgHash[this.assignToUser._id], this.selectedTraining);
     this.userTrainingService.getUTForTraining(this.selectedTraining._id);
   }
 

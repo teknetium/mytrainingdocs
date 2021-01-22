@@ -27,6 +27,7 @@ const userTrainingSchema = new Schema({
   trainingVersion: { type: String, required: false },
   status: { type: String, required: true },
   dueDate: { type: Number, required: false },
+  notifyDates: { type: [Number], required: false },
   timeToDate: { type: Number, required: false },
   dateCompleted: { type: Number, required: false },
   assessmentResponses: [assessmentResponseSchema],

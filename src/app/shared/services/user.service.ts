@@ -137,6 +137,7 @@ export class UserService {
     this.authenticatedUserProfile$.subscribe({
       next: (profile) => {
         if (profile) {
+          console.log('authenticatedUserProfile$', profile);
           this.getUserByUid$(profile.uid).subscribe({
             next: (user) => {
               if (user) {
