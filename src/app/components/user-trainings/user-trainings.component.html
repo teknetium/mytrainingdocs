@@ -65,9 +65,9 @@
                 <td style="width:9%;">
                     {{ timeFormat(userTraining?.timeToDate) }}
                 </td>
-                <td>
-                    <div *ngFor="let notifyDate of userTraining?.notifyDates" style="font-size:10px;padding:3px;">
-                    {{ notifyDate | date}}
+                <td style="width:9%;">
+                    <div *ngFor="let notifyEvent of userTraining?.notifySchedule" style="font-size:10px;padding:3px;">
+                    {{ notifyEvent?.date | date}}
                     </div>
                 </td>
                 <td *ngIf="mode === 'admin'" style="width:15%;">

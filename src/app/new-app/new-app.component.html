@@ -1,31 +1,35 @@
 <div style="position: relative;">
     <div [@infoSlide]="infoAlertIsVisible ? 'open' : 'closed'"
-        style="position:absolute;height:60px;left:20%;right:20%;z-index:100000;background-color: #e9f6fe;border:2px solid cornflowerblue;text-align: center;border-radius:10px;padding:10px;">
-        <div style="">
+        style="position:absolute;left:20%;right:20%;z-index:100000;background-color: #e9f6fe;border:2px solid cornflowerblue;text-align: center;border-radius:10px;padding:10px;">
+        <div>
             <nz-tag [nzColor]="'blue'" style="border-radius: 10px;border:1px solid cornflowerblue;">Info</nz-tag>
-            {{alerts[0]?.message}}
+            {{infoAlerts[0]?.message}}
         </div>
+        <nz-progress nzStrokeColor="blue" [nzPercent]="infoAlertPercentComplete" [nzShowInfo]="false" nzStrokeWidth="1"></nz-progress>
     </div>
     <div [@warningSlide]="warningAlertIsVisible ? 'open' : 'closed'"
-        style="position:absolute;height:60px;left:20%;right:20%;z-index:100000;background-color: #fef1e8;border:2px solid goldenrod;text-align: center;border-radius:10px;padding:10px;">
-        <div style="">
+        style="position:absolute;left:20%;right:20%;z-index:100000;background-color: #fef1e8;border:2px solid goldenrod;text-align: center;border-radius:10px;padding:10px;">
+        <div>
             <nz-tag [nzColor]="'gold'" style="border-radius: 10px;border:1px solid goldenrod;">Warning</nz-tag>
-            {{alerts[0]?.message}}
+            {{warningAlerts[0]?.message}}
         </div>
+        <nz-progress nzStrokeColor="goldenrod" [nzPercent]="warningAlertPercentComplete" [nzShowInfo]="false" nzStrokeWidth="1"></nz-progress>
     </div>
     <div [@successSlide]="successAlertIsVisible ? 'open' : 'closed'"
-        style="position:absolute;height:60px;left:20%;right:20%;z-index:100000;background-color: #f8ffee;border:2px solid forestgreen;text-align: center;border-radius:10px;padding:10px;">
-        <div style="">
+        style="position:absolute;left:20%;right:20%;z-index:100000;background-color: #f8ffee;border:2px solid forestgreen;text-align: center;border-radius:10px;padding:10px;">
+        <div>
             <nz-tag [nzColor]="'green'" style="border-radius: 10px;border:1px solid forestgreen;">Success</nz-tag>
-            {{alerts[0]?.message}}
+            {{successAlerts[0]?.message}}
         </div>
+        <nz-progress nzStrokeColor="forestgreen" [nzPercent]="successAlertPercentComplete" [nzShowInfo]="false" nzStrokeWidth="1"></nz-progress>
     </div>
     <div [@errorSlide]="errorAlertIsVisible ? 'open' : 'closed'"
-        style="position:absolute;height:60px;left:20%;right:20%;z-index:100000;background-color: #fdf1f0;border:2px solid red;text-align: center;border-radius:10px;padding:10px;">
-        <div style="color:white;">
+        style="position:absolute;left:20%;right:20%;z-index:100000;background-color: #fdf1f0;border:2px solid red;text-align: center;border-radius:10px;padding:10px;">
+        <div>
             <nz-tag [nzColor]="'red'" style="border-radius: 10px;border:1px solid red;">Error</nz-tag>
-            {{alerts[0]?.message}}
+            {{errorAlerts[0]?.message}}
         </div>
+        <nz-progress nzStrokeColor="red" [nzPercent]="errorAlertPercentComplete" [nzShowInfo]="false" nzStrokeWidth="1"></nz-progress>
     </div>
 </div>
 <nz-layout style="height:100%;">

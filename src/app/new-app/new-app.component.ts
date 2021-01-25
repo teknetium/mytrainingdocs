@@ -99,10 +99,10 @@ export interface Task {
     trigger('infoSlide', [
       // ...
       state('closed', style({
-        'margin-top': '-60px'
+        'margin-top': '-100px'
       })),
       state('open', style({
-        'margin-top': '70px',
+        'margin-top': '200px',
       })),
       transition('open => closed', [
         animate('300ms')
@@ -114,10 +114,10 @@ export interface Task {
     trigger('warningSlide', [
       // ...
       state('closed', style({
-        'margin-top': '-60px'
+        'margin-top': '-100px'
       })),
       state('open', style({
-        'margin-top': '140px',
+        'margin-top': '290px',
       })),
       transition('open => closed', [
         animate('300ms')
@@ -129,10 +129,10 @@ export interface Task {
     trigger('errorSlide', [
       // ...
       state('closed', style({
-        'margin-top': '-60px'
+        'margin-top': '-100px'
       })),
       state('open', style({
-        'margin-top': '210px',
+        'margin-top': '380px',
       })),
       transition('open => closed', [
         animate('300ms')
@@ -144,10 +144,10 @@ export interface Task {
     trigger('successSlide', [
       // ...
       state('closed', style({
-        'margin-top': '-60px'
+        'margin-top': '-100px'
       })),
       state('open', style({
-        'margin-top': '280px',
+        'margin-top': '470px',
       })),
       transition('open => closed', [
         animate('300ms')
@@ -368,7 +368,22 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     success: 'green'
   }
   currentAlert: AlertModel;
-  timeTest = 0;
+  alertInterval = 100;
+  alertTime = 5000;
+  infoAlertHasFocus = false;
+  warningAlertHasFocus = false;
+  errorAlertHasFocus = false;
+  successAlertHasFocus = false;
+  alertHash = {};
+  infoAlerts: AlertModel[] = [];
+  warningAlerts: AlertModel[] = [];
+  errorAlerts: AlertModel[] = [];
+  successAlerts: AlertModel[] = [];
+  infoAlertPercentComplete: number = 0;
+  errorAlertPercentComplete: number = 0;
+  warningAlertPercentComplete: number = 0;
+  successAlertPercentComplete: number = 0;
+
 
   constructor(
     private authService: AuthService,
@@ -429,7 +444,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    /*
+/*
     this.infoAlertIsVisible = true;
     setTimeout(() => {
       this.infoAlertIsVisible = false;
@@ -446,7 +461,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     setTimeout(() => {
       this.successAlertIsVisible = false;
     }, 12000);
-    */
+*/
 
     /*
         this.pageNames = Object.keys(this.aboutThisPageHash);
@@ -616,37 +631,63 @@ export class NewAppComponent extends BaseComponent implements OnInit {
         return;
       }
 
-      this.alerts.push(alert);
       this.dropDownAlerts.push(alert);
-      this.timeTest = 3000;
       switch (alert.type) {
         case 'info':
+          this.infoAlerts.push(alert);
           this.infoAlertIsVisible = true;
-          setTimeout(() => {
-            this.infoAlertIsVisible = false;
-            this.alerts.shift();
-          }, 5000);
+          this.infoAlertPercentComplete = 0;
+          let infoFuncId = setInterval(() => {
+            if (this.infoAlertPercentComplete < 100) {
+              this.infoAlertPercentComplete += (this.alertInterval / this.alertTime) * 100;
+            } else {
+              clearInterval(infoFuncId);
+              this.infoAlertIsVisible = false;
+              this.infoAlerts.shift();
+            }
+          }, this.alertInterval);
           break;
         case 'warning':
+          this.warningAlerts.push(alert);
           this.warningAlertIsVisible = true;
-          setTimeout(() => {
-            this.warningAlertIsVisible = false;
-            this.alerts.shift();
-          }, 5000);
+          this.warningAlertPercentComplete = 0;
+          let warningFuncId = setInterval(() => {
+            if (this.warningAlertPercentComplete < 100) {
+              this.warningAlertPercentComplete += (this.alertInterval / this.alertTime) * 100;
+            } else {
+              clearInterval(warningFuncId);
+              this.warningAlertIsVisible = false;
+              this.warningAlerts.shift();
+            }
+          }, this.alertInterval);
           break;
         case 'error':
+          this.errorAlerts.push(alert);
           this.errorAlertIsVisible = true;
-          setTimeout(() => {
-            this.errorAlertIsVisible = false;
-            this.alerts.shift();
-          }, 5000);
+          this.errorAlertPercentComplete = 0;
+          let errorFuncId = setInterval(() => {
+            if (this.errorAlertPercentComplete < 100) {
+              this.errorAlertPercentComplete += (this.alertInterval / this.alertTime) * 100;
+            } else {
+              clearInterval(errorFuncId);
+              this.errorAlertIsVisible = false;
+              this.errorAlerts.shift();
+            }
+          }, this.alertInterval);
           break;
         case 'success':
+          this.successAlerts.push(alert);
           this.successAlertIsVisible = true;
-          setTimeout(() => {
-            this.successAlertIsVisible = false;
-            this.alerts.shift();
-          }, 5000);
+          this.successAlertPercentComplete = 0;
+          let successFuncId = setInterval(() => {
+            if (this.successAlertPercentComplete < 100) {
+              this.successAlertPercentComplete += (this.alertInterval / this.alertTime) * 100;
+            } else {
+              clearInterval(successFuncId);
+              this.successAlertIsVisible = false;
+              this.successAlerts.shift();
+            }
+          }, this.alertInterval);
           break;
         default:
           break;

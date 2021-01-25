@@ -409,7 +409,7 @@
                         </label>
                     </nz-radio-group>
                 </div>
-                <div *ngIf="selectionMode === 'JobTitle' && (org$ | async)?.plan === 'expert'"
+                <div *ngIf="selectionMode === 'JobTitle'"
                     style="float:left;margin-right:20px;">
                     <span style="display:block;font-size:14px;font-weight:500;">Job Titles</span>
                     <nz-select ngDefaultControl nzMode="tags" nzPlaceHolder="Select Job Titles"
@@ -564,7 +564,7 @@
                     </div>
                 </div>
                 -->
-                <div *ngIf="selectionMode === 'UserType' && (org$ | async)?.plan === 'expert'"
+                <div *ngIf="selectionMode === 'UserType'"
                     style="float:left;margin-right:20px;">
                     <div style="width:fit-content;display:block;">
                         <span style="display:inline-block;font-size:14px;font-weight:500;">User

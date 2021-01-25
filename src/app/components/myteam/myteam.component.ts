@@ -1238,10 +1238,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   myPlan = null;
   org$: Observable<OrgModel>;
   orgObj: OrgModel;
-  showUpgradeToExpertDialog = false;
-  showUpgradeToProDialog = false;
-  upgradeToExpertOkText = '';
-  upgradeToProOkText = '';
+//  showUpgradeToExpertDialog = false;
+//  showUpgradeToProDialog = false;
+//  upgradeToExpertOkText = '';
+//  upgradeToProOkText = '';
 
   
   constructor(
@@ -1709,7 +1709,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   collapseNode(uid: string, collapse: boolean) {
     if (this.orgObj.plan === 'basic') {
-      this.showUpgradeToProDialog = true;
+      this.orgService.showUpgradeToProDialog(true);
+//      this.showUpgradeToProDialog = true;
     } else {
       if (collapse) {
         this.collapsedNodes.push(uid);

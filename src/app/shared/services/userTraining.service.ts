@@ -5,7 +5,7 @@ import { AlertModel } from '../interfaces/notification.type';
 import { TrainingModel } from '../interfaces/training.type';
 import { UserModel } from '../interfaces/user.type';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { UserTrainingModel, AssessmentResponse, UserTrainingHash, UTSession, UTSessionHash, UidUTHash } from '../interfaces/userTraining.type';
+import { UserTrainingModel, AssessmentResponse, NotifyEvent, UserTrainingHash, UTSession, UTSessionHash, UidUTHash } from '../interfaces/userTraining.type';
 import { AuthService } from './auth.service';
 import { ENV } from './env.config';
 import { catchError } from 'rxjs/operators';
@@ -165,18 +165,6 @@ export class UserTrainingService {
     }
     return utList;
   }
-/*
-  getStatusForUser(uid: string): string {
-    this.getUTForUser$(uid).subscribe(userTrainings => {
-      for (let ut of userTrainings) {
-        if (ut.status === 'pastDue') {
-          return 'pastDue';
-        }
-      }
-    })
-    return 'upToDate';
-  }
-*/
   
   resetUserTrainingStatus(tid, version) {
     let utObj = <UserTrainingModel>{
@@ -190,7 +178,8 @@ export class UserTrainingService {
       dateCompleted: 0,
       timeToDate: 0,
       assessmentResponses: null,
-      certImage: null
+      certImage: null,
+      notifySchedule: []
     }
     this.resetStatusForMany$(utObj).subscribe(responseObj => {
       console.log("resetStatusForMany", responseObj);
@@ -201,46 +190,8 @@ export class UserTrainingService {
       }
       this.notifyService.showAlert(alert);
     });
-    /*
-    this.getUTForTraining$(tid).subscribe(utList => {
-      for (let ut of utList) {
-        // for onetime trainings, the expirationDate property holds the number of days after assignment that the training is due
-        if (ut.status === 'completed') {
-          ut.status = 'upToDate';
-          ut.dateCompleted = 0;
-          ut.dueDate = new Date().getTime() + 604800000;
-          ut.trainingVersion = version;
-          ut.assessmentResponses = [];
-          this.saveUserTraining(ut);
-        }
-      }
-    })
-    */
   }
 
-  /*
-    getAllUserTrainings() {
-      this.allUserTrainingHash
-    }
-  */
-  
-
-/*
-  deleteUTForTraining(tid: string) {
-    let uids: string[] = [];
-    let utIds: string[] = [];
-    this.getUTForTraining$(tid).subscribe(uts => {
-      if (uts.length > 0) {
-        for (let ut of uts) {
-          utIds.push(ut._id);
-        }
-        this.deleteUTs$(utIds);
-      }
-      this.userTrainingForTidBS$.next(uts);
-      this.usersBS$.next(uids);
-    })
-  }
-  */
   getUTForTraining(tid: string) {
     let uids: string[] = [];
     this.getUTForTraining$(tid).subscribe(uts => {
@@ -294,11 +245,21 @@ export class UserTrainingService {
       timeToDate: 0,
       assessmentResponses: [],
       certImage: null,
-      notifyDates: []
+      notifySchedule: []
     };
     for (let notifyDays of training.notifySchedule) {
+      let notifyEvent: NotifyEvent = {
+        date: 0,
+        subject: '',
+        message: '',
+        recipient: ''
+      }
       let notifyMs = 86400000 * notifyDays;
-      userTraining.notifyDates.push(userTraining.dueDate - notifyMs);
+      notifyEvent.date = (userTraining.dueDate - notifyMs);
+      notifyEvent.subject = 'Training ' + training.title + ' must be completed in ' + notifyDays + ' days.';
+      notifyEvent.message = "This is a Training due date notification.  Your training '" + training.title + "' must be completed in " + notifyDays + ".";
+      notifyEvent.recipient = user.email;
+      userTraining.notifySchedule.push(notifyEvent);
     }
     this.postUserTraining$(userTraining).subscribe(userTraining => {
       this.getUTForUser$(userTraining.uid).subscribe(userTrainings => {
@@ -318,9 +279,24 @@ export class UserTrainingService {
   bulkAssignTraining(uids: string[], training: TrainingModel, teamId: string) {
     let userTrainings: UserTrainingModel[] = [];
     let id = String(new Date().getTime());
-    let dueDate = new Date().getTime() + 1209600000;
+    let dueDate = new Date().getTime() + (training.expirationDate * 86400000);
     let counter = 0;
     let found = false;
+    let notifySchedule: NotifyEvent[] = [];
+    for (let notifyDay of training.notifySchedule) {
+      console.log('bulkAssignTraining', notifyDay, typeof notifyDay);
+      let notifyEvent: NotifyEvent = {
+        date: 0,
+        subject: '',
+        message: '',
+        recipient: ''
+      }
+      let notifyMs = 86400000 * notifyDay;
+      notifyEvent.date = dueDate - notifyMs;
+      notifyEvent.subject = "Training '" + training.title + "' must be completed in " + notifyDay + " days.";
+      notifyEvent.message = "This is a Training due date notification.  Your training '" + training.title + "' must be completed in " + notifyDay + " days.";
+      notifySchedule.push(notifyEvent);
+    }
     for (let uid of uids) {
       found = false;
       let utList = this.uidUTHash[uid];
@@ -346,12 +322,10 @@ export class UserTrainingService {
           timeToDate: 0,
           assessmentResponses: [],
           certImage: null,
-          notifyDates: []
+          notifySchedule: notifySchedule,
         };
-        for (let notifyDays of training.notifySchedule) {
-          let notifyMs = 86400000 * notifyDays;
-          uT.notifyDates.push(uT.dueDate - notifyMs);
-        }
+
+
         userTrainings.push(uT);
         utList.push(cloneDeep(uT));
         this.uidUTHash[uid] = cloneDeep(utList);

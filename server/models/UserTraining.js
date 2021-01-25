@@ -7,6 +7,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const notifyEventSchema = new Schema ({
+  date: { type: Number, required: true },
+  subject: { type: String, required: true },
+  message: { type: String, required: true },
+  recipient: { type: String, required: false }
+})
+
 const assessmentResponseSchema = new Schema({
   uid: { type: String, required: true },
   tid: { type: String, required: true },
@@ -27,7 +34,7 @@ const userTrainingSchema = new Schema({
   trainingVersion: { type: String, required: false },
   status: { type: String, required: true },
   dueDate: { type: Number, required: false },
-  notifyDates: { type: [Number], required: false },
+  notifySchedule: [notifyEventSchema],
   timeToDate: { type: Number, required: false },
   dateCompleted: { type: Number, required: false },
   assessmentResponses: [assessmentResponseSchema],

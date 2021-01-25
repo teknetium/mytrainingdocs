@@ -104,3 +104,7 @@ nz-footer {
  .alert-close:hover {
    color:black;
  }
+
+ .top {
+   z-index: 10000000 !important;
+ }

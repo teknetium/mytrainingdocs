@@ -8,7 +8,7 @@ export interface UserTrainingModel {
   dueDate: number,
   dateCompleted: number,
   timeToDate: number,
-  notifyDates: number[],
+  notifySchedule: NotifyEvent[],
   assessmentResponses: AssessmentResponse[],
   certImage: {
     name: string,
@@ -17,6 +17,13 @@ export interface UserTrainingModel {
     fileStackUrl: string,
     dateUploaded: number
   },
+}
+
+export interface NotifyEvent {
+  date: number,
+  subject: string,
+  message: string,
+  recipient: string
 }
 
 export interface AssessmentResponse {
