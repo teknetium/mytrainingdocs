@@ -30,7 +30,7 @@ import { stringify } from 'querystring';
 // import * as names from '../../../assets/names.json';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { LoaderService } from '../../shared/services/loader.service';
-
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-myteam',
@@ -53,20 +53,21 @@ import { LoaderService } from '../../shared/services/loader.service';
         animate('300ms')
       ]),
     ]),
-    trigger('collapseNode', [
+    trigger('expandNode', [
       // ...
       state('collapsed', style({
-        'width': '150px',
-        'border': "2px solid #888888"
+        'width': '0',
+        'height': "fit-content"
       })),
       state('expanded', style({
-        'width': 'fit-contents',
+        'width': 'fit-content',
+        'height': 'fit-content',
       })),
-      transition('in => out', [
-        animate('800ms')
+      transition('collapsed => expanded', [
+        animate('1000ms')
       ]),
-      transition('out => in', [
-        animate('800ms')
+      transition('expanded => collapsed', [
+        animate('1000ms')
       ])
     ]),
     trigger('searchSlide', [
@@ -113,6 +114,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   browserInnerWidth: number;
   contentHeight: number;
   contentWidth: number;
+
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
@@ -1165,7 +1167,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   userStatusHash = {
     active: 'Active',
     inactive: 'Inactive',
-    pending: 'Pending'
+    pending: 'Pending',
+    error: 'Error'
   };
 
   testNodes = <UserBatchData[]>[];
@@ -1242,7 +1245,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 //  showUpgradeToProDialog = false;
 //  upgradeToExpertOkText = '';
 //  upgradeToProOkText = '';
-
+  @ViewChild('orgChart') orgChart: ElementRef;
+  @ViewChild('canvas') canvas: ElementRef;
+  @ViewChild('downloadLink') downloadLink: ElementRef;
+  showOrgChartImageModal = false;
   
   constructor(
     private cd: ChangeDetectorRef,
@@ -1549,6 +1555,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (this.authenticatedUser) {
         this.userService.buildOrgChart(this.authenticatedUser._id, false);
       }
+      if (this.currentSelectedReportChain) {
+        for (let uid of this.currentSelectedReportChain) {
+          this.collapsedNodes.splice(this.collapsedNodes.indexOf(uid), 1);
+        }
+      }
+      this.centerIt(this.selectedUser);
+      this.setHoverData(this.selectedUser._id);
     });
 
     this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
@@ -1673,6 +1686,19 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   }
 
+  downloadOrgChartImage() {
+    if (this.orgObj.plan === 'basic') {
+      this.orgService.showUpgradeToProDialog(true);
+    } else {
+      html2canvas(this.orgChart.nativeElement).then(canvas => {
+        this.canvas.nativeElement.src = canvas.toDataURL();
+        this.downloadLink.nativeElement.href = canvas.toDataURL('image/png');
+        this.downloadLink.nativeElement.download = 'orgChart.png';
+        this.downloadLink.nativeElement.click();
+      });
+    }
+  }
+
   onTaskWizardNext(taskStep) {
     switch (taskStep) {
       case 'task1Step1': {
@@ -1725,7 +1751,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   centerIt(id) {
     let element: Element;
     element = document.getElementById(id);
-    element.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'center' });
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'center' });
+    }
   }
 
   handleSendMessageCancel() {

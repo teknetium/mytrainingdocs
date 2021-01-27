@@ -114,16 +114,27 @@ module.exports = function(app, config) {
   app.post("/api/sendmail", (req, res) => {
     const msgs = req.body;
     msgs.forEach(msg => {
-      sgMail.send(msg);
+      sgMail.send(msg)
+        .then(() => {
+          console.log('Email sent')
+        })
+        .catch((error) => {
+          console.error(error)
+        });
     });
-    res.send(msgs.length);
+    res.status(200).send({ count: msgs.length });
   });
   app.post("/api/sendmail/template", (req, res) => {
     const msgs = req.body;
     msgs.forEach(msg => {
-      sgMail.send(msg);
+      sgMail.send(msg).then(() => {
+        console.log('Email sent')
+      })
+        .catch((error) => {
+          console.error(error)
+        });
     });
-    res.send(msgs.length);
+    res.status(200).send({ count: msgs.length });
   });
 
   app.get("/api/verifyemail/:uid", (req, res) => {
@@ -289,27 +300,20 @@ module.exports = function(app, config) {
   });
   app.get("/api/daily/notifications", (req, res) => {
     UserTraining.find({}, userTrainingListProjection, (err, userTrainings) => {
-      let now = new Date().getTime();
-      let response = {
-        now: now,
-        noChange: [],
-        pastDue: [],
-        errors: []
-      }
-      let pastDue = [];
-      let errors = [];
+      let now = new Date();
+      let hourOfDay = now.getHours();
+      let dayStart = now - (hourOfDay * 3600000);
+      let dayEnd = dayStart + 86400000;
+
+
       if (userTrainings) {
         userTrainings.forEach(userTraining => {
-          if (userTraining.dueDate < now) {
-            response.pastDue.push(userTraining._id);
-            userTraining.status = 'pastDue';
-            userTraining.save(err2 => {
-              if (err2) {
-                response.errors.push(userTraining._id);
+          if (userTraining.notifySchedule) {
+            userTraining.notifySchedule.forEach(notifyEvent => {
+              if (notifyEvent.date > dayStart && notiyEvent.date < dayEnd) {
+                // send message
               }
-            });
-          } else {
-            response.noChange.push(userTraining._id);
+            })
           }
         });
         return res.send(response);

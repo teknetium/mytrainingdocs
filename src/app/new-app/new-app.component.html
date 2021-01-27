@@ -5,7 +5,8 @@
             <nz-tag [nzColor]="'blue'" style="border-radius: 10px;border:1px solid cornflowerblue;">Info</nz-tag>
             {{infoAlerts[0]?.message}}
         </div>
-        <nz-progress nzStrokeColor="blue" [nzPercent]="infoAlertPercentComplete" [nzShowInfo]="false" nzStrokeWidth="1"></nz-progress>
+        <nz-progress nzStrokeColor="blue" [nzPercent]="infoAlertPercentComplete" [nzShowInfo]="false" nzStrokeWidth="1">
+        </nz-progress>
     </div>
     <div [@warningSlide]="warningAlertIsVisible ? 'open' : 'closed'"
         style="position:absolute;left:20%;right:20%;z-index:100000;background-color: #fef1e8;border:2px solid goldenrod;text-align: center;border-radius:10px;padding:10px;">
@@ -13,7 +14,8 @@
             <nz-tag [nzColor]="'gold'" style="border-radius: 10px;border:1px solid goldenrod;">Warning</nz-tag>
             {{warningAlerts[0]?.message}}
         </div>
-        <nz-progress nzStrokeColor="goldenrod" [nzPercent]="warningAlertPercentComplete" [nzShowInfo]="false" nzStrokeWidth="1"></nz-progress>
+        <nz-progress nzStrokeColor="goldenrod" [nzPercent]="warningAlertPercentComplete" [nzShowInfo]="false"
+            nzStrokeWidth="1"></nz-progress>
     </div>
     <div [@successSlide]="successAlertIsVisible ? 'open' : 'closed'"
         style="position:absolute;left:20%;right:20%;z-index:100000;background-color: #f8ffee;border:2px solid forestgreen;text-align: center;border-radius:10px;padding:10px;">
@@ -21,7 +23,8 @@
             <nz-tag [nzColor]="'green'" style="border-radius: 10px;border:1px solid forestgreen;">Success</nz-tag>
             {{successAlerts[0]?.message}}
         </div>
-        <nz-progress nzStrokeColor="forestgreen" [nzPercent]="successAlertPercentComplete" [nzShowInfo]="false" nzStrokeWidth="1"></nz-progress>
+        <nz-progress nzStrokeColor="forestgreen" [nzPercent]="successAlertPercentComplete" [nzShowInfo]="false"
+            nzStrokeWidth="1"></nz-progress>
     </div>
     <div [@errorSlide]="errorAlertIsVisible ? 'open' : 'closed'"
         style="position:absolute;left:20%;right:20%;z-index:100000;background-color: #fdf1f0;border:2px solid red;text-align: center;border-radius:10px;padding:10px;">
@@ -29,7 +32,8 @@
             <nz-tag [nzColor]="'red'" style="border-radius: 10px;border:1px solid red;">Error</nz-tag>
             {{errorAlerts[0]?.message}}
         </div>
-        <nz-progress nzStrokeColor="red" [nzPercent]="errorAlertPercentComplete" [nzShowInfo]="false" nzStrokeWidth="1"></nz-progress>
+        <nz-progress nzStrokeColor="red" [nzPercent]="errorAlertPercentComplete" [nzShowInfo]="false" nzStrokeWidth="1">
+        </nz-progress>
     </div>
 </div>
 <nz-layout style="height:100%;">
@@ -41,27 +45,27 @@
         </div>
         <ul nz-menu nzTheme="light" nzMode="horizontal"
             [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.bgColor, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary }">
-            <li nz-menu-item nzMatchRouter class="nav-badge" style="top:0;" joyrideStep="task0Step1" title="Foo Fu"
+            <li nz-menu-item nzMatchRouter class="nav-badge" style="top:0;" joyrideStep="task0Step1" style="top:0;margin:0 20px;"
                 [ngClass]="{'current-nav': currentPage === 'home', 'nav-element': currentPage !== 'home'}">
                 <a routerLink="/home" routerLinkActive="active-link">
                     Home
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
-                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'myteam'}" style="top:0;">
+                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'myteam'}" style="top:0;margin:0 20px;">
                 <a routerLink="/myteam" routerLinkActive="active-link">
                     My Team
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
-                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'mytrainings'}" style="top:0;">
+                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'mytrainings'}" style="top:0;margin:0 20px;">
                 <a routerLink="/mytrainings" routerLinkActive="active-link">
                     My Trainings
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor' || (authenticatedUser$ | async)?.teamAdmin"
                 nz-menu-item nzMatchRouter class="nav-badge" [ngClass]="{'current-nav': currentPage === 'trainings'}"
-                style="top:0;">
+                style="top:0;margin:0 20px;">
                 <a routerLink="/trainings" routerLinkActive="active-link">
                     All Trainings
                 </a>
@@ -295,29 +299,45 @@
                 </nz-tab>
                 <nz-tab *ngIf="(org$ | async)?.adminIds.includes(authenticatedUser._id)" nzTitle="Organization">
                     <div style="padding:20px 40px;display:table-cell;">
-                        <div style="display:table-cell;width:400px;vertical-align: middle;">
-                            <span style="font-size:16px;">
-                                Current Plan&nbsp;&nbsp;:&nbsp;&nbsp;
-                            </span>
-                            <span style="font-size:16px;color:blue;">
-                                {{planHash[(org$ | async)?.plan]?.name}}
-                            </span>
+                        <div>
+                            <div style="display:table-cell;width:400px;vertical-align: middle;">
+                                <span style="font-size:16px;">
+                                    Current Plan&nbsp;&nbsp;:&nbsp;&nbsp;
+                                </span>
+                                <span style="font-size:16px;color:blue;">
+                                    {{planHash[(org$ | async)?.plan]?.name}}
+                                </span>
+                            </div>
+                            <div style="display:table-cell;">
+                                <nz-radio-group [(ngModel)]="orgObj.plan" (ngModelChange)="planChanged($event)"
+                                    style="float:right;">
+                                    <label nz-radio-button nzValue="basic" style="" nz-tooltip
+                                        nzTooltipTitle="Basic Plan">
+                                        <i class="fad fa-user" style="font-size:22px;color:green;"></i>
+                                    </label>
+                                    <label nz-radio-button nzValue="pro" nz-tooltip nzTooltipTitle="Pro Plan">
+                                        <i class="fad fa-user-tie" style="font-size:22px;color:red;"></i>
+                                    </label>
+                                    <label nz-radio-button nzValue="expert" nz-tooltip nzTooltipTitle="Expert Plan">
+                                        <i class="fad fa-user-graduate" style="font-size:22px;color:blueviolet;"></i>
+                                    </label>
+                                </nz-radio-group>
+                            </div>
+                            <div style="clear:both;"></div>
                         </div>
-                        <div style="display:table-cell;">
-                            <nz-radio-group [(ngModel)]="orgObj.plan" (ngModelChange)="planChanged($event)"
-                                style="float:right;">
-                                <label nz-radio-button nzValue="basic" style="" nz-tooltip nzTooltipTitle="Basic Plan">
-                                    <i class="fad fa-user" style="font-size:22px;color:green;"></i>
-                                </label>
-                                <label nz-radio-button nzValue="pro" nz-tooltip nzTooltipTitle="Pro Plan">
-                                    <i class="fad fa-user-tie" style="font-size:22px;color:red;"></i>
-                                </label>
-                                <label nz-radio-button nzValue="expert" nz-tooltip nzTooltipTitle="Expert Plan">
-                                    <i class="fad fa-user-graduate" style="font-size:22px;color:blueviolet;"></i>
-                                </label>
-                            </nz-radio-group>
+                        <div>
+                            <div>
+                            <div>
+
+                            </div>
+                            </div>
+                            <div>
+                            
+                            </div>
+                            <div>
+                            
+                            </div>
                         </div>
-                        <div style="clear:both;"></div>
                     </div>
                     <div style="padding:20px 40px;">
                         <div style="width:50%;float:left;">

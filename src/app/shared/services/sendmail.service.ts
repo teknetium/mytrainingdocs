@@ -6,6 +6,8 @@ import { UserService } from './user.service';
 import { throwError as ObservableThrowError, Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
+import * as cloneDeep from 'lodash/cloneDeep';
+
 
 
 @Injectable({
@@ -29,10 +31,10 @@ export class SendmailService {
       return;
     }
     let startIndex = 0;
-    let chunckSize = 200;
+    let chunckSize = 1000;
     while (startIndex < msgs.length) {
       console.log('sendMessages', chunckSize);
-      let tmpArray = Object.assign([], msgs.slice(startIndex, startIndex + chunckSize));
+      let tmpArray = cloneDeep(msgs.slice(startIndex, startIndex + chunckSize));
       startIndex += chunckSize;
       this.postMessages$(tmpArray).subscribe(item => {
         console.log('sendmailService : sending messages ', item );
@@ -42,10 +44,10 @@ export class SendmailService {
 
   sendTemplateMessages(msgs: TemplateMessageModel[]) {
     let startIndex = 0;
-    let chunckSize = 100;
+    let chunckSize = 1000;
     while (startIndex < msgs.length) {
       console.log('sendTemplateMessages', chunckSize);
-      let tmpArray = Object.assign([], msgs.slice(startIndex, startIndex + chunckSize));
+      let tmpArray = cloneDeep(msgs.slice(startIndex, startIndex + chunckSize));
       startIndex += chunckSize;
       this.postTemplateMessages$(tmpArray).subscribe(item => {
         console.log('sendmailService : sending template messages ', item);

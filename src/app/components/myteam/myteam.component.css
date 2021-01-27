@@ -486,10 +486,10 @@ ul.ant-card-actions {
 .user-search {
     border: 1px solid #dddddd;
     border-radius: 5px;
-    width:300px;
+    width:100%;
 }
 
-.user-search:hover {
+.arch:hover {
     border: 1px solid #bbbbbb;
 }
 
