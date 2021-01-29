@@ -276,10 +276,10 @@
         </div>
     </div>
     <div style="position:fixed;bottom:5px;left:5px;z-index:1000;">
-        <button *ngIf="!showLegend" nz-button  nzType="primary" (click)="showLegend = true">
+        <button *ngIf="!showLegend" nz-button nzType="primary" (click)="showLegend = true">
             Show Legend
         </button>
-        <button *ngIf="showLegend" nz-button  nzType="primary" (click)="showLegend = false">
+        <button *ngIf="showLegend" nz-button nzType="primary" (click)="showLegend = false">
             Hide Legend
         </button>
     </div>
@@ -287,60 +287,67 @@
         <div
             style="position:relative;margin-left:-20px;margin-top:-20px;margin-right:-20px;background-color: #f1f1f1;border:1px solid #dddddd;padding:10px 20px;">
             <div>
-                <div style="float:left;width:10%;">
+                <div style="float:left;width:15%;">
                     <nz-radio-group [(ngModel)]="showOrgChart" (ngModelChange)="toggleMainView($event)">
                         <label nz-radio-button nzValue="true" nz-tooltip nzTooltipTitle="Org Chart"><i nz-icon
                                 nzType="apartment" nzTheme="outline" style="font-size:18px;"></i></label>
                         <label nz-radio-button nzValue="false" nz-tooltip nzTooltipTitle="List"><i nz-icon
                                 nzType="unordered-list" nzTheme="outline" style="font-size:18px;"></i></label>
                     </nz-radio-group>
+                    <div style="display:inline-block;margin-left:20px;">
+                        <button nz-button nzShape="circle" nzSize="default" nzType="default"
+                            style="display:inline-block;" (click)="bulkAddUsers()" nz-tooltip nzTooltipPlacement="top"
+                            nzTooltipTitle="Bulk Add Users">
+                            <i class="fas fa-user-plus"></i>
+                        </button>
+                    </div>
                 </div>
-                <div *ngIf="showOrgChart === 'true'" style="float:left;width:60%;">
+                <div *ngIf="showOrgChart === 'true'" style="float:left;width:55%;">
                     <div style="float:right;padding-right:10%;">
-                    <nz-radio-group [(ngModel)]="selectionMode" (ngModelChange)="setSelectionMode($event)">
-                        <label nz-radio-button nzValue="UserStatus" nz-tooltip nzTooltipTitle="Select by User Status"
-                            nzTooltipPlacement="bottomLeft">
-                            <i class="fas fa-fw fa-user-check" style="font-size:18px;"></i>
-                        </label>
-                        <label nz-radio-button nzValue="Individual" nzTooltipPlacement nz-tooltip
-                            nzTooltipTitle="Select a Single User" nzTooltipPlacement="bottomLeft"
-                            joyrideStep="task1Step1" [stepContent]="stepContent"
-                            [stepContentParams]="taskStepContentHash?.task1Step1"
-                            (next)="onTaskWizardNext('task1Step1')">
-                            <i class="fas fa-fw fa-user" style="font-size:18px;"></i>
-                        </label>
-                        <label nz-radio-button nzValue="Training" nz-tooltip nzTooltipTitle="Select by Training"
-                            nzTooltipPlacement="bottomLeft">
-                            <i class="fas fa-fw fa-graduation-cap" style="font-size:18px;"></i>
-                        </label>
-                        <label nz-radio-button nzValue="Org" nz-tooltip nzTooltipTitle="Select by Suborganization"
-                            nzTooltipPlacement="bottomLeft">
-                            <i class="fas fa-fw fa-users" style="font-size:18px;"></i>
-                        </label>
-                        <label nz-radio-button nzValue="JobTitle" nz-tooltip nzTooltipTitle="Select by Job Title"
-                            nzTooltipPlacement="bottomLeft">
-                            <i class="fas fa-fw fa-briefcase" style="font-size:18px;"></i>
-                        </label>
-                        <label nz-radio-button nzValue="UserType" nz-tooltip nzTooltipTitle="Select by User Type"
-                            nzTooltipPlacement="bottomLeft">
-                            <i class="fas fa-fw fa-user-cowboy" style="font-size:18px;"></i>
-                        </label>
-                    </nz-radio-group>
+                        <nz-radio-group [(ngModel)]="selectionMode" (ngModelChange)="setSelectionMode($event)">
+                            <label nz-radio-button nzValue="UserStatus" nz-tooltip
+                                nzTooltipTitle="Select by User Status" nzTooltipPlacement="bottomLeft">
+                                <i class="fas fa-fw fa-user-check" style="font-size:18px;"></i>
+                            </label>
+                            <label nz-radio-button nzValue="Individual" nzTooltipPlacement nz-tooltip
+                                nzTooltipTitle="Select a Single User" nzTooltipPlacement="bottomLeft"
+                                joyrideStep="task1Step1" [stepContent]="stepContent"
+                                [stepContentParams]="taskStepContentHash?.task1Step1"
+                                (next)="onTaskWizardNext('task1Step1')">
+                                <i class="fas fa-fw fa-user" style="font-size:18px;"></i>
+                            </label>
+                            <label nz-radio-button nzValue="Training" nz-tooltip nzTooltipTitle="Select by Training"
+                                nzTooltipPlacement="bottomLeft">
+                                <i class="fas fa-fw fa-graduation-cap" style="font-size:18px;"></i>
+                            </label>
+                            <label nz-radio-button nzValue="Org" nz-tooltip nzTooltipTitle="Select by Suborganization"
+                                nzTooltipPlacement="bottomLeft">
+                                <i class="fas fa-fw fa-users" style="font-size:18px;"></i>
+                            </label>
+                            <label nz-radio-button nzValue="JobTitle" nz-tooltip nzTooltipTitle="Select by Job Title"
+                                nzTooltipPlacement="bottomLeft">
+                                <i class="fas fa-fw fa-briefcase" style="font-size:18px;"></i>
+                            </label>
+                            <label nz-radio-button nzValue="UserType" nz-tooltip nzTooltipTitle="Select by User Type"
+                                nzTooltipPlacement="bottomLeft">
+                                <i class="fas fa-fw fa-user-cowboy" style="font-size:18px;"></i>
+                            </label>
+                        </nz-radio-group>
                     </div>
                 </div>
                 <div style="float:right;width:30%;">
                     <div style="float:right;width:70%;">
-                            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" class="user-search">
-                                <input type="text" nz-input placeholder="User Search" [(ngModel)]="userNameToSearchFor"
-                                    (ngModelChange)="onUserSearchChange($event)" [nzAutocomplete]="autoUserSearch"
-                                    style="border:1px solid white;" />
-                            </nz-input-group>
-                            <nz-autocomplete [nzDataSource]="matchingUsers" #autoUserSearch></nz-autocomplete>
-                            <ng-template #suffixIconButton>
-                                <button nz-button nzType="primary" nzSearch style="z-index: 1000;height:41px;"><i nz-icon
-                                        nzType="search"></i></button>
-                            </ng-template>
-                            </div>
+                        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" class="user-search">
+                            <input type="text" nz-input placeholder="User Search" [(ngModel)]="userNameToSearchFor"
+                                (ngModelChange)="onUserSearchChange($event)" [nzAutocomplete]="autoUserSearch"
+                                style="border:1px solid white;" />
+                        </nz-input-group>
+                        <nz-autocomplete [nzDataSource]="matchingUsers" #autoUserSearch></nz-autocomplete>
+                        <ng-template #suffixIconButton>
+                            <button nz-button nzType="primary" nzSearch style="z-index: 1000;height:41px;"><i nz-icon
+                                    nzType="search"></i></button>
+                        </ng-template>
+                    </div>
                 </div>
                 <div style="clear:both;"></div>
             </div>
@@ -531,7 +538,8 @@
                     <div *ngIf="selectionMode !== 'Individual' && selectionMode !== 'Errors'"
                         style="border:1px solid #dddddd;border-radius:32px;margin-left:20px;padding:3px;display:inline-block;">
                         <button *ngIf="selectionMode !== 'Individual' && selectionMode !== 'Errors'" nz-button
-                            nzShape="circle" nzType="default" [disabled]="userIdsSelected.length === 0  || currentUserStatus === 'inactive' || currentUserStatus === 'pending' || currentUserStatus === 'error'"
+                            nzShape="circle" nzType="default"
+                            [disabled]="userIdsSelected.length === 0  || currentUserStatus === 'inactive' || currentUserStatus === 'pending' || currentUserStatus === 'error'"
                             style="display:inline-block;" (click)="showAssignTrainingModal()" nz-tooltip
                             nzTooltipPlacement="bottomLeft" nzTooltipTitle="Assign Training to Users">
                             <i class="fas fa-plus"></i></button>
@@ -542,9 +550,9 @@
                             nzTooltipTitle="Remove Training from Users">
                             <i class="fas fa-trash"></i></button>
                         <button *ngIf="selectionMode !== 'Individual'" nz-button nzShape="circle" nzType="default"
-                            [disabled]="userIdsSelected.length === 0 || currentUserStatus === 'inactive' || currentUserStatus === 'pending' || currentUserStatus === 'error'" style="display:inline-block;margin-left:3px;"
-                            (click)="showMsgModal()" nz-tooltip nzTooltipPlacement="bottomLeft"
-                            nzTooltipTitle="Send Message to Selected Users">
+                            [disabled]="userIdsSelected.length === 0 || currentUserStatus === 'inactive' || currentUserStatus === 'pending' || currentUserStatus === 'error'"
+                            style="display:inline-block;margin-left:3px;" (click)="showMsgModal()" nz-tooltip
+                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="Send Message to Selected Users">
                             <i class="fas fa-envelope"></i></button>
                     </div>
                     <nz-modal [(nzVisible)]="showMessageModal" nzTitle="Send a Message to the Selected Users"
@@ -578,10 +586,10 @@
                 <div style="float:right;">
                     <div
                         style="border:1px solid #dddddd;border-radius: 25px;padding: 3px;width: fit-content;display: inline-block;">
-                        <button nz-button nzShape="circle" (click)="downloadOrgChartImage()" id="downloadLink"
+                        <button nz-button nzShape="circle" (click)="showDownloadPNGImageModal()" id="downloadJPGLink"
                             style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
-                            nzTooltipTitle="Download the current chart as a PNG image">
-                            <i class="fas fa-download" style="font-size:16px;vertical-align: middle;"></i>
+                            nzTooltipTitle="View Org Chart as Image">
+                            <i class="fas fa-camera" style="font-size:16px;vertical-align: middle;"></i>
                         </button>
                         <button *ngIf="!includeFullName" nz-button nzShape="circle"
                             (click)="includeFullName = !includeFullName"
@@ -598,9 +606,9 @@
                                 <i class="fal fa-ban fa-stack-2x"></i>
                             </span>
                         </button>
-                        <button *ngIf="(org$ | async)?.plan !== 'basic'" nz-button nzShape="circle" (click)="collapseAllSubOrgs(false)"
-                            style="margin-right:3px;vertical-align: middle;" nz-tooltip nzTooltipPlacement="bottomRight"
-                            nzTooltipTitle="Expand All Suborganizations">
+                        <button *ngIf="(org$ | async)?.plan !== 'basic'" nz-button nzShape="circle"
+                            (click)="collapseAllSubOrgs(false)" style="margin-right:3px;vertical-align: middle;"
+                            nz-tooltip nzTooltipPlacement="bottomRight" nzTooltipTitle="Expand All Suborganizations">
                             <i class="fas fa-chevron-circle-down" style="font-size:16px;vertical-align: middle;"></i>
                         </button>
                         <button *ngIf="(org$ | async)?.plan !== 'basic'" nz-button nzShape="circle"
@@ -739,17 +747,16 @@
             </nz-table>
         </div>
 
-        <nz-modal [nzVisible]="showOrgChartImageModal" nzTitle="Org Chart"
-        (nzOnOk)="handleAssignUserTraining()"
-            style="width:500px;padding:10px;float:left;">
-<div id="download">
-    <img #canvas>
-    <a #downloadLink></a>
-</div>
-</nz-modal>
 
         <div *ngIf="showOrgChart === 'true'" style="display:block;height:75%;overflow:scroll;margin-top:20px;">
 
+            <nz-modal [nzVisible]="showOrgChartImageModal" nzTitle="Org Chart" nzWidth="800"
+                (nzOnCancel)="showOrgChartImageModal = false" (nzOnOk)="downloadPNGImage()" nzOkText="Download Image">
+                <div>
+                    <img #canvas width="700">
+                    <a #downloadPNGLink></a>
+                </div>
+            </nz-modal>
             <div style="text-align: center;width:100%;overflow: scroll;position:relative;">
                 <!--
                 <div id="orgChartTarget" style="width:300px;height:200px;position:fixed;left: 5px;top:200px;border:1px solid #dddddd;">
@@ -757,18 +764,26 @@
                 </div>
                 -->
                 <div #orgChart style="background-color:white;display:inline-block;white-space: nowrap;">
+                    <div style="margin-bottom: 20px;">
+                        <i *ngIf="selectionMode === 'Training'" [ngClass]="getSelectedTrainingIconClass(currentTrainingSelected)"
+                            [ngStyle]="{'color': getTrainingIconColor(currentTrainingSelected)}"
+                            style="display:inline-block;vertical-align: baseline;font-size:28px;margin-right:15px;"></i>
+                        <h2 style="display:inline-block;">{{orgChartTitle}}</h2>
+                        <span style="display:inline-block;font-size:18px;color:#aaaaaa;">&nbsp;&nbsp;&nbsp;{{today |
+                            date}}</span>
+                    </div>
                     <div class="supervisor-node org-chart-node" style="text-align: center;margin-bottom:20px;"
                         id="{{authenticatedUser._id}}">
                         <div style="display:inline-block;padding:5px 5px 0 5px;position:relative;border:2px solid white;cursor:pointer;border-radius:5px;"
                             (mouseenter)="setHoverData(authenticatedUser._id)" (mouseleave)="setHoverData(null)"
                             (click)="selectUser(authenticatedUser._id)" joyrideStep="task1Step2"
                             [stepContent]="stepContent" [stepContentParams]="taskStepContentHash?.task1Step2"
-                            (next)="onTaskWizardNext('task1Step2')" 
+                            (next)="onTaskWizardNext('task1Step2')"
                             [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === authenticatedUser._id) || (selectionMode !== 'Indiviual' && userIdsSelected.includes(authenticatedUser._id)), 'hover-node': authenticatedUser._id === currentHoverUid  || currentHoverReportChain.includes(authenticatedUser._id)}">
 
                             <i [ngClass]="userTypeIconHash[authenticatedUser.userType]" style="font-size:16px;"
                                 [ngStyle]="{'color': getStatusColor(authenticatedUser._id)}"></i>
-                            <span style="display: block;color:#bbbbbb;" [ngStyle]="{'font-size.px': textFontSize}">
+                            <span style="display: block;color:#666666;" [ngStyle]="{'font-size.px': textFontSize}">
                                 {{authenticatedUser.firstName}}<br>{{authenticatedUser.lastName}}
                             </span>
                         </div>
@@ -1025,9 +1040,8 @@
 
                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
                                             style="font-size:16px;" [ngStyle]="{'color': getStatusColor(dr)}"></i>
-                                        <span *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || includeFullName"
-                                            [ngStyle]="{'font-size.px': textFontSize}"
-                                            style="display: block;color:#bbbbbb;">
+                                        <span [ngStyle]="{'font-size.px': textFontSize}"
+                                            style="z-index:1000000;display: block;color:#666666;">
                                             {{orgChartNodeHash[dr]?.fName}}<br>{{orgChartNodeHash[dr]?.lName}}
                                         </span>
                                     </div>
@@ -1288,7 +1302,7 @@
                                                     <span
                                                         *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor' || includeFullName"
                                                         [ngStyle]="{'font-size.px': textFontSize}"
-                                                        style="display: block;color:#bbbbbb;">
+                                                        style="display: block;color:#666666;">
                                                         {{orgChartNodeHash[dr2]?.fName}}<br>{{orgChartNodeHash[dr2]?.lName}}
                                                     </span>
                                                 </div>
@@ -1569,7 +1583,7 @@
                                                                     [ngStyle]="{'color': getStatusColor(dr3)}"></i>
                                                                 <span
                                                                     *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor' || includeFullName"
-                                                                    style="display: block;color:#bbbbbb;"
+                                                                    style="display: block;color:#666666;"
                                                                     [ngStyle]="{'font-size.px': textFontSize}">
                                                                     {{orgChartNodeHash[dr3]?.fName}}<br>{{orgChartNodeHash[dr3]?.lName}}
                                                                 </span>
@@ -1873,7 +1887,7 @@
                                                                                 [ngStyle]="{'color': getStatusColor(dr4)}"></i>
                                                                             <span
                                                                                 *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor' || includeFullName"
-                                                                                style="display: block;color:#bbbbbb;"
+                                                                                style="display: block;color:#666666;"
                                                                                 [ngStyle]="{'font-size.px': textFontSize}">
                                                                                 {{orgChartNodeHash[dr4]?.fName}}<br>{{orgChartNodeHash[dr4]?.lName}}
                                                                             </span>
@@ -2191,7 +2205,8 @@
                                                                                     class="org-chart-node">
                                                                                     <div (click)="selectUser(dr5)"
                                                                                         class="user-icon-node"
-                                                                                        (mouseenter)="setHoverData(dr5)"  id="{{dr5}}"
+                                                                                        (mouseenter)="setHoverData(dr5)"
+                                                                                        id="{{dr5}}"
                                                                                         (mouseleave)="setHoverData(null)"
                                                                                         [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr5) || (selectionMode !== 'Indiviual' &&
                                                                                         userIdsSelected.includes(dr5)), 'hover-node': userIdSelected !== dr5 && allActive || dr5 === currentHoverUid ||
@@ -2201,7 +2216,7 @@
                                                                                             [ngStyle]="{'color': getStatusColor(dr5)}"></i>
                                                                                         <span
                                                                                             *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor' || includeFullName"
-                                                                                            style="display: block;color:#bbbbbb;"
+                                                                                            style="display: block;color:#666666;"
                                                                                             [ngStyle]="{'font-size.px': textFontSize}">
                                                                                             {{orgChartNodeHash[dr5]?.fName}}<br>{{orgChartNodeHash[dr5]?.lName}}
                                                                                         </span>
@@ -2518,7 +2533,8 @@
                                                                                             <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                 class="org-chart-node">
                                                                                                 <div (click)="selectUser(dr6)"
-                                                                                                    class="user-icon-node"  id="{{dr6}}"
+                                                                                                    class="user-icon-node"
+                                                                                                    id="{{dr6}}"
                                                                                                     (mouseenter)="setHoverData(dr6)"
                                                                                                     (mouseleave)="setHoverData(null)"
                                                                                                     [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr6) || (selectionMode !== 'Indiviual' &&
@@ -2530,7 +2546,7 @@
 
                                                                                                     <span
                                                                                                         *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor' || includeFullName"
-                                                                                                        style="display: block;color:#bbbbbb;"
+                                                                                                        style="display: block;color:#666666;"
                                                                                                         [ngStyle]="{'font-size.px': textFontSize}">
                                                                                                         {{orgChartNodeHash[dr6]?.fName}}<br>{{orgChartNodeHash[dr6]?.lName}}
                                                                                                     </span>
@@ -2849,7 +2865,8 @@
                                                                                                         id="{{dr7}}-container">
                                                                                                         <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                             class="org-chart-node">
-                                                                                                            <div (click)="selectUser(dr7)"  id="{{dr7}}"
+                                                                                                            <div (click)="selectUser(dr7)"
+                                                                                                                id="{{dr7}}"
                                                                                                                 class="user-icon-node"
                                                                                                                 (mouseenter)="setHoverData(dr7)"
                                                                                                                 (mouseleave)="setHoverData(null)"
@@ -2861,7 +2878,7 @@
                                                                                                                     [ngStyle]="{'color': getStatusColor(dr7)}"></i>
                                                                                                                 <span
                                                                                                                     *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor' || includeFullName"
-                                                                                                                    style="display: block;color:#bbbbbb;"
+                                                                                                                    style="display: block;color:#666666;"
                                                                                                                     [ngStyle]="{'font-size.px': textFontSize}">
                                                                                                                     {{orgChartNodeHash[dr7]?.fName}}<br>{{orgChartNodeHash[dr7]?.lName}}
                                                                                                                 </span>

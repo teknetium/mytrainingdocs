@@ -224,7 +224,7 @@
 .selected-node {
     border-radius: 5px;
     border: 2px solid #eaab10 !important;
-    background: rgba(253, 239, 178, 1) !important;
+    background-color:#fbeeb9 !important;
 }
 
 ul.ant-card-actions {

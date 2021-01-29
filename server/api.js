@@ -679,8 +679,7 @@ module.exports = function(app, config) {
     UserTraining.findById(req.params.id, (err, userTraining) => {
       if (err) {
         return res.status(500).send({ message: err.message });
-      }
-      if (!userTraining) {
+      }      if (!userTraining) {
         return res.status(400).send({ message: "UserTraining not found." });
       }
       userTraining._id = req.body._id;

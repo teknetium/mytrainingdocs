@@ -11,6 +11,7 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   _id: { type: String, required: true },
   uid: { type: String, required: false },
+  empId: { type: String, required: false },
   userType: { type: String, required: false },
   firstName: { type: String, required: false },
   lastName: { type: String, required: false },

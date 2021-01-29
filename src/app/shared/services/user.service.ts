@@ -75,7 +75,7 @@ export class UserService {
   batchCount = 0;
   org = '';
   newUserHash = {};
-  fullNameHash = <UserModel>{};
+//  fullNameHash = <UserModel>{};
   emailHash = <UserModel>{};
   newUserIds = [];
   supervisorName: string;
@@ -507,13 +507,14 @@ export class UserService {
     let statusList: string[] = [];
     let supervisorMatchFail = [];
     this.newTeamMember.org = this.authenticatedUser.org;
-    this.fullNameHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
+//    this.fullNameHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
     this.emailHash[this.authenticatedUser.email] = this.authenticatedUser;
 
     let message: TemplateMessageModel;
     let msgs: TemplateMessageModel[] = [];
     let batchCnt = 1;
-    let _id = String(new Date().getTime());
+//    let _id = String(new Date().getTime());
+    
     for (let batchUser of batchUsers) {
       this.newTeamMember = cloneDeep(this.newTeamMember);
       if (!batchUser.userType) {
@@ -521,7 +522,7 @@ export class UserService {
       } else {
         this.newTeamMember.userType = batchUser.userType;
       }
-      this.newTeamMember._id = String(_id + '-' + batchCnt++);
+      this.newTeamMember._id = batchUser.empId;
       this.newTeamMember.firstName = batchUser.firstName;
       this.newTeamMember.lastName = batchUser.lastName;
       if (!this.emailIsValid(batchUser.email)) {
@@ -539,7 +540,7 @@ export class UserService {
               email: this.newTeamMember.email
             },
           }
-          msgs.push(Object.assign({}, message));
+          msgs.push(cloneDeep(message));
           statusList.push('accountPending');
         }
         this.newTeamMember.userStatus = 'pending';
@@ -566,7 +567,7 @@ export class UserService {
       this.newUserHash[this.newTeamMember._id] = batchUser;
       this.newUserIds.push(this.newTeamMember._id);
       this.newUserList.push(this.newTeamMember);
-      this.fullNameHash[this.newTeamMember.firstName + ' ' + this.newTeamMember.lastName] = this.newTeamMember;
+//      this.fullNameHash[this.newTeamMember.firstName + ' ' + this.newTeamMember.lastName] = this.newTeamMember;
       this.emailHash[this.newTeamMember.email] = this.newTeamMember;
       this.allOrgUserHash[this.newTeamMember._id] = this.newTeamMember;
     }
@@ -576,17 +577,22 @@ export class UserService {
     }
 
     for (let nUser of this.newUserList) {
-      if (!this.fullNameHash[this.newUserHash[nUser._id].supervisorName]) {
+//      if (!this.fullNameHash[this.newUserHash[nUser._id].supervisorName]) {
+      if (!this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmpId]) {
         //      if (!this.emailHash[this.newUserHash[nUser._id].supervisorEmail]) {
         nUser.settings.statusList.push('unknownSupervisor');
         nUser.supervisorId = this.authenticatedUser._id;
         nUser.teamId = this.authenticatedUser._id;
         this.authenticatedUser.directReports.push(nUser._id);
       } else {
-        this.fullNameHash[this.newUserHash[nUser._id].supervisorName].directReports.push(nUser._id);
-        this.fullNameHash[this.newUserHash[nUser._id].supervisorName].userType = 'supervisor';
-        nUser.supervisorId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
-        nUser.teamId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
+//        this.fullNameHash[this.newUserHash[nUser._id].supervisorName].directReports.push(nUser._id);
+//        this.fullNameHash[this.newUserHash[nUser._id].supervisorName].userType = 'supervisor';
+//        nUser.supervisorId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
+//        nUser.teamId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
+        this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmpId].directReports.push(nUser._id);
+        this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmpId].userType = 'supervisor';
+        nUser.supervisorId = this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmpId]._id;
+        nUser.teamId = this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmpId]._id;
         //        this.emailHash[this.newUserHash[nUser._id].supervisorEmail].directReports.push(nUser._id);
         //        this.emailHash[this.newUserHash[nUser._id].supervisorEmail].userType = 'supervisor';
         //        nUser.supervisorId = this.emailHash[this.newUserHash[nUser._id].supervisorEmail]._id;

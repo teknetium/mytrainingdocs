@@ -1247,8 +1247,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 //  upgradeToProOkText = '';
   @ViewChild('orgChart') orgChart: ElementRef;
   @ViewChild('canvas') canvas: ElementRef;
-  @ViewChild('downloadLink') downloadLink: ElementRef;
+  @ViewChild('downloadPNGLink') downloadPNGLink: ElementRef;
   showOrgChartImageModal = false;
+  orgChartTitle = '';
+  today: string;
   
   constructor(
     private cd: ChangeDetectorRef,
@@ -1298,6 +1300,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     // ElementRef { nativeElement: <input> }    console.log(this.justCollapsedNode);
 
   ngOnInit() {
+
+    this.today = String(new Date().getTime());
+    this.orgChartTitle = 'User Status';
 
     this.taskHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskHash => {
       if (!taskHash) {
@@ -1604,6 +1609,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.figureOrgStat(user._id);
 
       this.authenticatedUser = user;
+
       this.showLegend = this.authenticatedUser.settings.showLegend;
 
       this.myOrgUserHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
@@ -1685,17 +1691,45 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   done(): void {
 
   }
-
-  downloadOrgChartImage() {
+/*
+  downloadPNGImage() {
     if (this.orgObj.plan === 'basic') {
       this.orgService.showUpgradeToProDialog(true);
     } else {
+      this.showOrgChartImageModal = true;
       html2canvas(this.orgChart.nativeElement).then(canvas => {
         this.canvas.nativeElement.src = canvas.toDataURL();
-        this.downloadLink.nativeElement.href = canvas.toDataURL('image/png');
-        this.downloadLink.nativeElement.download = 'orgChart.png';
-        this.downloadLink.nativeElement.click();
+        this.downloadPNGLink.nativeElement.href = canvas.toDataURL('image/png');
+        this.downloadPNGLink.nativeElement.download = 'orgChart.png';
+        this.downloadPNGLink.nativeElement.click();
       });
+    }
+  }
+  */
+  downloadPNGImage() {
+    this.downloadPNGLink.nativeElement.click();
+    setTimeout(() => {
+      this.showOrgChartImageModal = false;
+    }, 3000);
+  }
+
+  showDownloadPNGImageModal() {
+    if (this.orgObj.plan === 'basic') {
+      this.orgService.showUpgradeToProDialog(true);
+    } else {
+      this.canvas.nativeElement.src = '';
+      // The org chart looks better without the selected-node class
+      let tmpUserIdsSelected = Object.assign([], this.userIdsSelected);
+      this.userIdsSelected = [];
+      this.showOrgChartImageModal = true;
+      setTimeout(() => {
+        html2canvas(this.orgChart.nativeElement).then(canvas => {
+          this.canvas.nativeElement.src = canvas.toDataURL();
+          this.downloadPNGLink.nativeElement.href = canvas.toDataURL('image/png');
+          this.downloadPNGLink.nativeElement.download = 'orgChart.png';
+          this.userIdsSelected = tmpUserIdsSelected;
+        })
+      }, 1000);
     }
   }
 
@@ -1839,7 +1873,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   getSelectedTrainingIconClass(tid: string): string {
     //    console.log('getSelectedTrainingIconClass', tid);
     if (!this.allTrainingIdHash[tid]) {
-      return 'fas fa-flower-tulip';
+      return 'fas fa-graduation-cap';
     }
     return this.allTrainingIdHash[tid].versions[0].iconClass;
   }
@@ -1892,10 +1926,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       }
     }
   }
-
+/*
   orgChartFilterChanged(filters: string[]) {
     this.currentJobTitleFilters = filters;
   }
+  */
 
   jobTitleSelectedChanged(filters: string[]) {
     this.userIdsSelected = [];
@@ -1916,6 +1951,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.userIdsSelected = [];
     this.uidTidUTHash = {};
     this.currentTrainingSelected = training;
+    this.orgChartTitle = this.allTrainingIdHash[training].title;
     for (let user of this.myOrgUserObjs) {
       let tidUTHash = {};
       let tids = [];
@@ -2085,8 +2121,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   testBulkAdd() {
-    let currentSupervisorName = this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName;
-    let currentSupervisorEmail = this.authenticatedUser.email;
+    let currentSupervisorEmpId = this.authenticatedUser._id;
     let supervisorCnt = 1;
     let name: string = this.getTestUser();
     let fullName: string[] = name.trim().split(' ');
@@ -2098,14 +2133,14 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       email: 'gregl@teknetium.com',
       userType: 'supervisor',
       jobTitle: 'Manager',
-      supervisorName: '',
-      supervisorEmail: '',
+      empId: this.authenticatedUser._id,
+      supervisorEmpId: null,
       level: 0
     }
 
     let teamSize = Math.floor(this.randn_bm(this.userMin, this.userMax, 2));
     for (let i = 0; i < teamSize; i++) {
-      let childNode = this.buildNode(currentSupervisorName, currentSupervisorEmail, level);
+      let childNode = this.buildNode(currentSupervisorEmpId, level);
       this.testNodes.push(childNode);
     }
 
@@ -2116,11 +2151,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
 
-  buildNode(supervisorName: string, supervisorEmail: string, level: number): UserBatchData {
+  buildNode(supervisorEmpId: string, level: number): UserBatchData {
     let name: string;
     let teamSize: number;
     name = this.getTestUser();
     let fullName: string[] = name.trim().split(' ');
+    let empId: string = String(new Date().getTime()) + String(this.nameCnt++).trim();
 
     let node = <UserBatchData>{
       firstName: fullName[0],
@@ -2128,8 +2164,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       email: fullName[0] + '.' + fullName[1] + '@' + this.authenticatedUser.org + '.com',
       userType: 'individualContributor',
       jobTitle: 'coordinator',
-      supervisorName: supervisorName,
-      supervisorEmail: supervisorEmail,
+      empId: empId,
+      supervisorEmpId: supervisorEmpId,
       level: level
     }
     if (level < this.maxLevel) {
@@ -2146,7 +2182,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           node.userType = 'individualContributor';
         }
         for (let i = 0; i < teamSize; i++) {
-          let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], fullName[0] + '.' + fullName[1] + '@gmail.com', level);
+//          let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], fullName[0] + '.' + fullName[1] + '@gmail.com', level);
+          let childNode = this.buildNode(empId, level);
           this.testNodes.push(childNode);
         }
       }
@@ -2307,6 +2344,11 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           validators: [{ validate: "required" }]
         },
         {
+          label: "Employee Id",
+          key: "empId",
+          validators: [{ validate: "required" }]
+        },
+        {
           label: "Email Address",
           key: "email",
           validators: [
@@ -2335,8 +2377,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
         //          validators: []
         //        }
         {
-          label: "Supervisor Email",
-          key: "supervisorEmail",
+          label: "Supervisor Employee Id",
+          key: "supervisorEmpId",
           validators: []
         }
       ],
@@ -2589,6 +2631,33 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     for (let node of this.collapsedNodes) {
       this.figureOrgStat(node);
     }
+    switch (mode) {
+      case 'JobTitle': {
+        this.orgChartTitle = 'Job Titles';
+        break;
+      }
+      case 'Training': {
+        this.orgChartTitle = '';
+        break;
+      }
+      case 'UserStatus': {
+        this.orgChartTitle = 'User Status';
+        break;
+      }
+      case 'UserType': {
+        this.orgChartTitle = 'User Type';
+        break;
+      }
+      case 'Individual': {
+        this.orgChartTitle = 'User Training Status';
+        break;
+      }
+      case 'Org': {
+        this.orgChartTitle = 'User Training Status';
+        break;
+      }
+    }
+
   }
 
   selectUser(userId: string, i: number) {

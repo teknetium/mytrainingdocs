@@ -41,8 +41,9 @@ export interface UserBatchData {
   email: string,
   userType: 'supervisor' | 'individualContributor' | 'volunteer' | 'customer' | 'contractor',
   jobTitle: string,
-  supervisorName: string,
-  supervisorEmail: string
+  status?: 'inactive',
+  empId: string,
+  supervisorEmpId: string
 }
 
 
