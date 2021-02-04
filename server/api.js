@@ -901,11 +901,11 @@ module.exports = function(app, config) {
   app.post("/api/user/bulknew", jwtCheck, (req, res) => {
     const users = req.body;
 
-    User.insertMany(users, { ordered: false }, (err, userIds) => {
+    User.insertMany(users, { ordered: false, rawResult: true }, (err, results) => {
       if (err) {
         return res.status(500).send({ message: err.message });
       }
-      res.send(userIds);
+      res.send(results);
     })
   });
   app.put("/api/users/:id", jwtCheck, (req, res) => {

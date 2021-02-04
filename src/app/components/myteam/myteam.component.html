@@ -1,105 +1,123 @@
-<ng-template #stepContent let-task="task" let-desc="description" let-title="title" let-content="content">
-    <div style="width:500px;height:300px;">
-        <div style="text-align:center;font-size:14px;color:blue;font-weight:500;">
-            {{task}}&nbsp;&nbsp;-&nbsp;&nbsp;{{desc}}</div>
-        <div style="margin-top:20px;height:80%;">
-            <div style="font-weight:200;font-size:22px;">{{title}}</div>
-            <div
-                style="margin-top:20px;padding:20px;height:60%;border:1px solid #bbbbbb;border-radius:5px;background-color: #f1f1f1;">
-                {{ content }}
+<nz-modal [(nzVisible)]="showBulkAddModal" nzTitle="Add Users Wizard" nzWidth="80%"
+    (nzOnCancel)="showBulkAddModal = false" (nzOnOk)="showBulkAddModal = false">
+    <ng-template #stepContent let-task="task" let-desc="description" let-title="title" let-content="content">
+        <div style="width:500px;height:300px;">
+            <div style="text-align:center;font-size:14px;color:blue;font-weight:500;">
+                {{task}}&nbsp;&nbsp;-&nbsp;&nbsp;{{desc}}</div>
+            <div style="margin-top:20px;height:80%;">
+                <div style="font-weight:200;font-size:22px;">{{title}}</div>
+                <div
+                    style="margin-top:20px;padding:20px;height:60%;border:1px solid #bbbbbb;border-radius:5px;background-color: #f1f1f1;">
+                    {{ content }}
+                </div>
             </div>
         </div>
-    </div>
-</ng-template>
-<div *ngIf="userListDisplay?.length === 1">
-    <nz-steps [nzCurrent]="currentStep">
-        <nz-step nzTitle="Data Requirements"></nz-step>
-        <nz-step nzTitle="Upload Data"></nz-step>
-        <nz-step nzTitle="Correct Errors"></nz-step>
-    </nz-steps>
-    <div *ngIf="currentStep === 0" class="steps-content">
-        <div style="text-align: center;">
-            <h2>Data Requirements for Onboarding your Team/Organization</h2>
-        </div>
-        <div style="display:inline-block;font-size:16px;font-weight: 200;">
-            <p>
-                You will need the following data for each user:
-            </p>
-            <div style="padding-left:40px;">
-                <ul style="list-style-type:none;">
-                    <li>First Name</li>
-                    <li>Last Name</li>
-                    <li>Email Address</li>
-                    <li>User Type (one of 'individualContributor', 'supervisor',
-                        'volunteer',
-                        'contractor', 'customer')</li>
-                    <li>Job Title</li>
-                    <li>Supervisor's Name</li>
-                </ul>
+    </ng-template>
+    <div>
+        <nz-steps [nzCurrent]="currentStep">
+            <nz-step nzTitle="Data Requirements"></nz-step>
+            <nz-step nzTitle="Upload Data"></nz-step>
+            <nz-step nzTitle="Register Users"></nz-step>
+        </nz-steps>
+        <div *ngIf="currentStep === 0" class="steps-content">
+            <div style="text-align: center;">
+                <h2>Data Requirements for Onboarding your Team/Organization</h2>
+            </div>
+            <div style="display:inline-block;font-size:16px;font-weight: 200;">
+                <p>
+                    You will need the following data for each user:
+                </p>
+                <div style="padding-left:40px;">
+                    <ul style="list-style-type:none;">
+                        <li>First Name</li>
+                        <li>Last Name</li>
+                        <li>Email Address</li>
+                        <li>Supervisor's Email Address</li>
+                    </ul>
 
-                <p></p>
-            </div>
-            <p>
-                You may provide this information in one of two ways:<br>
-            </p>
-            <div style="padding-left:40px;">
-                <ul>
-                    <li style="font-size: 16px;">Create a text file with the required items separated by
-                        commas. One user per
-                        line.
-                        This file will be uploaded into the system. The following is an example of the required
-                        formatting.<br>
-                        <span style="font-weight: 500;margin-left:20px;">Frank,Smith,frank@company.com,volunteer,Chief
-                            Bottle Washer,Stuart
-                            Smally</span>
-                    </li>
-                    <li style="font-size: 16px;">Enter the information on the fly in the onboarding dialog.
-                    </li>
-                </ul>
+                    <p></p>
+                </div>
+                <p>
+                    The most convenient source of this data is from your company's Human Resources Management system.
+                    HRM systems typically have a way to export data to a text or spreadsheat format document.
+                </p>
+                <p>
+                    
+                </p>
+                <div style="padding-left:40px;">
+
+                    <div style="font-size: 16px;margin-bottom:20px;">
+                        <ol>
+                            <li style="margin-bottom:10px;">
+                                Create a text file with the required items separated by commas. One user per
+                                line.
+                                This file will be uploaded into the system. The following is an example of the required
+                                formatting.
+                                <span style="font-weight:500;margin-left:20px;color:black;">
+                                    Frank,Smith,frank@company.com,123456789,volunteer,Programmer,0987654321
+                                </span>
+                            </li>
+                            <li>
+                                Enter the information on the fly in the onboarding dialog.
+                            </li>
+                        </ol>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div *ngIf="currentStep === 1" class="steps-content">
-        <div *ngIf="authenticatedUser.appAdmin" style="float:left;">
-            <button nz-button nzShape="round" (click)="testBulkAdd()" nzType="primary" style="display:inline-block;">
-                Generate Org
+        <div *ngIf="currentStep === 1" class="steps-content">
+            <div style="display:block;margin-bottom:20px;">
+                <button nz-button nzShape="round" (click)="launchImporter()" nzType="primary">
+                    Upload Data
+                </button>
+            </div>
+            <div *ngIf="authenticatedUser.appAdmin" style="float:left;">
+                <button nz-button nzShape="round" (click)="testBulkAdd()" nzType="primary"
+                    style="display:inline-block;margin-right:10px;">
+                    Generate New Org
+                </button>
+                <div style="display:inline-block;">
+                    Max Depth
+                    <nz-input-number [(ngModel)]="maxLevel" [nzMin]="1" [nzMax]="10" [nzStep]="1">
+                    </nz-input-number>
+                </div>
+                <div style="display:inline-block;">
+                    User Min
+                    <nz-input-number [(ngModel)]="userMin" [nzMin]="1" [nzMax]="10" [nzStep]="1">
+                    </nz-input-number>
+                </div>
+                <div style="display:inline-block;">
+                    User Max
+                    <nz-input-number [(ngModel)]="userMax" [nzMin]="1" [nzMax]="20" [nzStep]="1">
+                    </nz-input-number>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="currentStep === 2" class="steps-content">
+            The upload process has completed.  {{newUsers.length}} users were uploaded.
+            <button nz-button nzType="default" (click)="registerUsers()">
+                <span>Register Users</span>
             </button>
-            <div style="display:inline-block;">
-                Max Depth
-                <nz-input-number [(ngModel)]="maxLevel" [nzMin]="1" [nzMax]="10" [nzStep]="1">
-                </nz-input-number>
-            </div>
-            <div style="display:inline-block;">
-                User Min
-                <nz-input-number [(ngModel)]="userMin" [nzMin]="1" [nzMax]="10" [nzStep]="1">
-                </nz-input-number>
-            </div>
-            <div style="display:inline-block;">
-                User Max
-                <nz-input-number [(ngModel)]="userMax" [nzMin]="1" [nzMax]="20" [nzStep]="1">
-                </nz-input-number>
-            </div>
         </div>
-    </div>
-    <div *ngIf="currentStep === 2" class="steps-content">
-        This is Step 3
-    </div>
-    <div class="steps-action">
-        <button nz-button nzType="default" (click)="pre()" *ngIf="currentStep > 0">
-            <span>Previous</span>
-        </button>
-        <button nz-button nzType="default" (click)="next()" *ngIf="currentStep < 2">
-            <span>Next</span>
-        </button>
-        <button nz-button nzType="primary" (click)="done()" *ngIf="currentStep === 2">
-            <span>Done</span>
-        </button>
-    </div>
+        <div class="steps-action">
+            <!--
+            <button nz-button nzType="default" (click)="pre()" *ngIf="currentStep > 0">
+                <span>Previous</span>
+            </button>
+            -->
+            <button nz-button nzType="default" (click)="next()" *ngIf="currentStep < 1">
+                <span>Next</span>
+            </button>
+            <!--
+            <button nz-button nzType="primary" (click)="done()" *ngIf="currentStep === 2">
+                <span>Done</span>
+            </button>
+            -->
+        </div>
 
-</div>
-<div>
-</div>
-<div *ngIf="authenticatedUser && myOrgUserObjs?.length > 1" style="height:100%;">
+    </div>
+</nz-modal>
+<div *ngIf="authenticatedUser && !showBulkAddModal" style="height:100%;">
     <div *ngIf="showOrgChart === 'true'" class="legend" [@legendSlide]="showLegend ? 'open' : 'closed'">
         <div>
             <div style="font-size:18px;text-align: center;margin-bottom:20px;font-weight: 500;">
@@ -285,24 +303,26 @@
     </div>
     <div style="position:relative;width:100%;height:100%;">
         <div
-            style="position:relative;margin-left:-20px;margin-top:-20px;margin-right:-20px;background-color: #f1f1f1;border:1px solid #dddddd;padding:10px 20px;">
+            style="position:relative;margin-left:-20px;margin-top:-20px;margin-right:-20px;background-color: #fafafa;border:1px solid #dddddd;padding:10px 20px;">
             <div>
-                <div style="float:left;width:15%;">
+                <div style="float:left;width:20%;">
                     <nz-radio-group [(ngModel)]="showOrgChart" (ngModelChange)="toggleMainView($event)">
                         <label nz-radio-button nzValue="true" nz-tooltip nzTooltipTitle="Org Chart"><i nz-icon
                                 nzType="apartment" nzTheme="outline" style="font-size:18px;"></i></label>
                         <label nz-radio-button nzValue="false" nz-tooltip nzTooltipTitle="List"><i nz-icon
                                 nzType="unordered-list" nzTheme="outline" style="font-size:18px;"></i></label>
                     </nz-radio-group>
-                    <div style="display:inline-block;margin-left:20px;">
-                        <button nz-button nzShape="circle" nzSize="default" nzType="default"
-                            style="display:inline-block;" (click)="bulkAddUsers()" nz-tooltip nzTooltipPlacement="top"
-                            nzTooltipTitle="Bulk Add Users">
-                            <i class="fas fa-user-plus"></i>
+                    <div style="display:inline-block;margin-left:20px;vertical-align: middle;">
+                        <button nz-button nzSize="default" nzType="default" style="display:inline-block;"
+                            (click)="showBulkAddModal = true" nz-tooltip nzTooltipPlacement="top"
+                            nzTooltipTitle="Add Users">
+                            <i class="fas fa-user-plus" style="font-size:18px;"></i>
                         </button>
                     </div>
+                    <div style="cursor:pointer;position:fixed;top:65px;left:220px;width:20px;height:60px;z-index:1000;"
+                        (click)="showCSVBuffer = !showCSVBuffer"></div>
                 </div>
-                <div *ngIf="showOrgChart === 'true'" style="float:left;width:55%;">
+                <div *ngIf="showOrgChart === 'true'" style="float:left;width:50%;">
                     <div style="float:right;padding-right:10%;">
                         <nz-radio-group [(ngModel)]="selectionMode" (ngModelChange)="setSelectionMode($event)">
                             <label nz-radio-button nzValue="UserStatus" nz-tooltip
@@ -352,6 +372,9 @@
                 <div style="clear:both;"></div>
             </div>
         </div>
+        <div *ngIf="authenticatedUser.email === 'gregl@teknetium.com' && showCSVBuffer">
+            <textarea rows="10" nz-input [(ngModel)]="usersCSV"></textarea>
+        </div>
         <div *ngIf="showOrgChart === 'true'" style="position:relative;z-index:1;">
             <div style="display:block;width:100%;padding-top:10px;">
                 <div style="float:left;margin-right:20px;">
@@ -395,6 +418,7 @@
                                 nzTooltipTitle="Manage Current Trainings">
                                 <i class="fas fa-graduation-cap"></i>
                             </button>
+                            <!--
                             <button [disabled]="!userIdSelected" nz-button nzShape="circle"
                                 style="display:inline-block;margin-left:3px;" nz-popconfirm
                                 nzPopconfirmTitle="Mark this user as inactive?"
@@ -402,6 +426,7 @@
                                 nzTooltipTitle="Mark this user as inactive">
                                 <i class="fas fa-user-times"></i>
                             </button>
+                            -->
                             <button [disabled]="!userIdSelected" nz-button nzShape="circle"
                                 style="display:inline-block;margin-left:3px;" nz-tooltip nzTooltipPlacement="bottomLeft"
                                 nzTooltipTitle="Edit User" (click)="editUser()">
@@ -475,7 +500,7 @@
                     </nz-radio-group>
                 </div>
                 <div *ngIf="selectionMode === 'UserStatus'" style="float:left;margin-right:20px;">
-                    <nz-radio-group [(ngModel)]="currentUserType" (ngModelChange)="userStatusSelectedChanged($event)">
+                    <nz-radio-group [(ngModel)]="currentUserStatus" (ngModelChange)="userStatusSelectedChanged($event)">
                         <label nz-radio-button nzValue="active" nz-tooltip nzTooltipPlacement="bottomLeft"
                             nzTooltipTitle="Active">
                             <i class="fas fa-fw fa-user" style="color:blue;font-size:18px;"></i>
@@ -494,6 +519,7 @@
                         </label>
                     </nz-radio-group>
                 </div>
+                <!--
                 <div *ngIf="selectionMode === 'Errors'" style="float:left;margin-right:20px;">
                     <span style="display:block;font-size:14px;font-weight:500;width:fit-content;">User Data
                         Errors</span>
@@ -512,6 +538,8 @@
                         </label>
                     </nz-radio-group>
                 </div>
+                -->
+                <!--
                 <div *ngIf="selectionMode === 'Errors'">
                     <button *ngIf="currentUserDataError === 'accountPending'" nz-button nzShape="round" nzType="primary"
                         style="display:inline-block;margin-left:10px;" (click)="emailSelectedUsers()">
@@ -530,15 +558,20 @@
                         </button>
                     </div>
                 </div>
+            -->
                 <div style="float:left;">
-                    <div *ngIf="selectionMode !== 'Individual'" class="selected-node"
-                        style="padding:7px;display:inline-block;color:#444444;">
+                    <div *ngIf="selectionMode !== 'Individual' && !(selectionMode === 'UserStatus' && currentUserStatus === 'error')"
+                        class="selected-node" style="padding:7px;display:inline-block;color:#444444;">
                         {{userIdsSelected.length}} Users Selected
                     </div>
                     <div *ngIf="selectionMode !== 'Individual' && selectionMode !== 'Errors'"
                         style="border:1px solid #dddddd;border-radius:32px;margin-left:20px;padding:3px;display:inline-block;">
-                        <button *ngIf="selectionMode !== 'Individual' && selectionMode !== 'Errors'" nz-button
-                            nzShape="circle" nzType="default"
+                        <button *ngIf="selectionMode !== 'Individual'" nz-button nzShape="circle" nzType="default"
+                            [disabled]="userIdsSelected.length === 0  || currentUserStatus === 'inactive' || currentUserStatus === 'pending' || currentUserStatus === 'error'"
+                            style="display:inline-block;" (click)="processNextUser()" nz-tooltip
+                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="Next User">
+                            <i class="fas fa-arrow-alt-to-right"></i></button>
+                        <button *ngIf="selectionMode !== 'Individual'" nz-button nzShape="circle" nzType="default"
                             [disabled]="userIdsSelected.length === 0  || currentUserStatus === 'inactive' || currentUserStatus === 'pending' || currentUserStatus === 'error'"
                             style="display:inline-block;" (click)="showAssignTrainingModal()" nz-tooltip
                             nzTooltipPlacement="bottomLeft" nzTooltipTitle="Assign Training to Users">
@@ -765,7 +798,8 @@
                 -->
                 <div #orgChart style="background-color:white;display:inline-block;white-space: nowrap;">
                     <div style="margin-bottom: 20px;">
-                        <i *ngIf="selectionMode === 'Training'" [ngClass]="getSelectedTrainingIconClass(currentTrainingSelected)"
+                        <i *ngIf="selectionMode === 'Training'"
+                            [ngClass]="getSelectedTrainingIconClass(currentTrainingSelected)"
                             [ngStyle]="{'color': getTrainingIconColor(currentTrainingSelected)}"
                             style="display:inline-block;vertical-align: baseline;font-size:28px;margin-right:15px;"></i>
                         <h2 style="display:inline-block;">{{orgChartTitle}}</h2>
@@ -821,9 +855,11 @@
                                             {{nodeStatHash[authenticatedUser._id]?.selectedCnt}}
                                         </div>
                                     </div>
+                                    <!--
                                     <div
                                         style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
                                         User Training Status</div>
+                                        -->
                                     <div nz-tooltip nzTooltipTitle="Users With No Trainings" nzTooltipPlacement="right"
                                         style="display:flex;justify-content:space-between;">
                                         <i class="fas fa-user" style="color:black;font-size:16px;padding-top:2px;"></i>
@@ -3246,6 +3282,48 @@
         <nz-drawer [nzMaskClosable]="true" [nzVisible]="userPanelVisible" nzPlacement="right" nzTitle="User Profile"
             [nzWidth]="700" (nzOnClose)="closeUserPanel()">
             <div *ngIf="selectedUser" style="display:block;width:100%;">
+                <div style="display:block;width:90%;margin-bottom:5px;">
+                    <div style="display:inline-block;width:25%;text-align: right;">
+                        <label style="font-size:14px;color:#000000;">
+                            Status
+                        </label>
+                    </div>
+                    <div style="display:inline-block;width:70%;margin-left:20px;">
+                        <nz-radio-group [(ngModel)]="selectedUser.userStatus" (ngModelChange)="statusChanged($event)">
+                            <label nz-radio-button nzValue="active"
+                                [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error'">
+                                Active
+                            </label>
+                            <label nz-radio-button nzValue="inactive"
+                                [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error'">
+                                Inactive
+                            </label>
+                            <label nz-radio-button nzValue="pending" nz-tooltip
+                                nzTooltipTitle="This status indicates the user has not completed the registration process."
+                                [nzDisabled]="selectedUser.userStatus === 'error' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive'">
+                                Pending
+                            </label>
+                            <label nz-radio-button nzValue="error" nz-tooltip
+                                nzTooltipTitle="This status indicates the user has either a bad email address or a bad supervisor id."
+                                [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive'">
+                                Error
+                            </label>
+                        </nz-radio-group>
+                    </div>
+                </div>
+
+                <div style="display:block;width:90%;">
+                    <div style="display:inline-block;width:25%;text-align: right;">
+                        <label style="font-size:14px;color:#000000;">
+                            Errors
+                        </label>
+                    </div>
+                    <div style="display:inline-block;width:70%;margin-left:20px;">
+                        <ul>
+                            <li *ngFor="let error of selectedUser.settings.statusList">{{error}}</li>
+                        </ul>
+                    </div>
+                </div>
                 <div style="display:block;width:90%;">
                     <div style="display:inline-block;width:25%;text-align: right;">
                         <label style="font-size:14px;color:#000000;">

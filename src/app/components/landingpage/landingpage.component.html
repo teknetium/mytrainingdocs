@@ -209,7 +209,7 @@
                 style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
                 (click)="loadVideo('onboarding')"></i>
                 -->
-              <img width="400" src="../../../assets/images/org-chart-new.png">
+              <img width="400" src="../../../assets/images/orgChart_1.29.21.png">
             </div>
           </div>
         </div>
@@ -222,7 +222,7 @@
                 style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
                 (click)="loadVideo('orgChart')"></i>
                 -->
-              <img width="400" src="../../../assets/images/org-chart-new.png">
+              <img width="400" src="../../../assets/images/orgChart_1.29.21.png">
             </div>
           </div>
           <div class="col-lg-6" style="padding:60px 10px 60px 50px;">
@@ -329,7 +329,7 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="text-center">
-              <h2 class="mb-0 text-capitalize"> <span class="font-weight-bold">Pricing</span></h2>
+              <h2 class="mb-0 text-capitalize"> <span class="font-weight-bold" (click)="showPriceEditor = !showPriceEditor">Pricing</span></h2>
               <div class="main-title-border" style="margin-bottom: 10px;">
               </div>
               <!--
@@ -345,23 +345,160 @@
           </div>
         </div>
         <div class="row align-items-center">
+          <div class="col-md-12">
+            <div style="display:block;font-size:24px;text-align: center;">Monthly Cost Calculator</div>
+            <div *ngIf="showPriceEditor">
+              <div style="margin-top:20px;">
+                <span style="font-size:24px;color:blue;">Basic Plan</span>
+                <div style="display:inline-block;">
+                  <nz-input-number [(ngModel)]="planCostPerUserHash['basic'][0]" [nzMin]="0" [nzMax]="50" nzSize="large"
+                    [nzStep]="1" (ngModelChange)="planPriceChanged('basic', 0, $event)"></nz-input-number>
+                </div>
+                <div style="display:inline-block;">
+                  <nz-input-number [(ngModel)]="planCostPerUserHash['basic'][1]" [nzMin]="0" [nzMax]="50" nzSize="large"
+                    [nzStep]="1" (ngModelChange)="planPriceChanged('basic', 1, $event)"></nz-input-number>
+                </div>
+                <div style="display:inline-block;">
+                  <nz-input-number [(ngModel)]="planCostPerUserHash['basic'][2]" [nzMin]="0" [nzMax]="50" nzSize="large"
+                    [nzStep]="1" (ngModelChange)="planPriceChanged('basic', 2, $event)"></nz-input-number>
+                </div>
+              </div>
+
+              <div>
+                <span style="font-size:24px;color:blue;">Pro Plan</span>
+                <div style="display:inline-block;">
+                  <nz-input-number [(ngModel)]="planCostPerUserHash['pro'][0]" [nzMin]="0" [nzMax]="50" nzSize="large"
+                    [nzStep]="1" (ngModelChange)="planPriceChanged('pro', 0, $event)"></nz-input-number>
+                </div>
+                <div style="display:inline-block;">
+                  <nz-input-number [(ngModel)]="planCostPerUserHash['pro'][1]" [nzMin]="0" [nzMax]="50" nzSize="large"
+                    [nzStep]="1" (ngModelChange)="planPriceChanged('pro', 1, $event)"></nz-input-number>
+                </div>
+                <div style="display:inline-block;">
+                  <nz-input-number [(ngModel)]="planCostPerUserHash['pro'][2]" [nzMin]="0" [nzMax]="50" nzSize="large"
+                    [nzStep]="1" (ngModelChange)="planPriceChanged('pro', 2, $event)"></nz-input-number>
+                </div>
+              </div>
+              <div>
+                <span style="font-size:24px;color:blue;">Expert Plan</span>
+                <div style="display:inline-block;">
+                  <nz-input-number [(ngModel)]="planCostPerUserHash['expert'][0]" [nzMin]="0" [nzMax]="50"
+                    nzSize="large" [nzStep]="1" (ngModelChange)="planPriceChanged('expert', 0, $event)">
+                  </nz-input-number>
+                </div>
+                <div style="display:inline-block;">
+                  <nz-input-number [(ngModel)]="planCostPerUserHash['expert'][1]" [nzMin]="0" [nzMax]="50"
+                    nzSize="large" [nzStep]="1" (ngModelChange)="planPriceChanged('expert', 1, $event)">
+                  </nz-input-number>
+                </div>
+                <div style="display:inline-block;">
+                  <nz-input-number [(ngModel)]="planCostPerUserHash['expert'][2]" [nzMin]="0" [nzMax]="50"
+                    nzSize="large" [nzStep]="1" (ngModelChange)="planPriceChanged('expert', 2, $event)">
+                  </nz-input-number>
+                </div>
+              </div>
+            </div>
+            <div style="width: 100%;text-align: center;margin:40px 0;">
+              <div style="display:inline;border:1px solid #dddddd;padding:40px;background: beige;">
+                <div style="display:inline-block;font-size:24px;">
+                  How many people are in your organization?&nbsp;&nbsp;
+                </div>
+                <div style="display:inline-block;">
+                  <nz-input-number [(ngModel)]="userCnt" [nzMin]="0" [nzMax]="10000" nzSize="large" [nzStep]="10"
+                    (ngModelChange)="userCntChanged($event)"></nz-input-number>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--
+        </div>
+        <div class="row align-items-center">
+          -->
           <div class="col-md-4">
+            <div>
+              <div style="float:right;">
+                <span style="font-size:20px;color:red;">Monthly Subscription Fee</span><span
+                  style="margin-left:20px;font-size:14px;color:#bbbbbb;">$</span><span
+                  style="font-size:16px;">{{monthlyCostHash['basic']?.toFixed(2)}}
+                </span>
+              </div>
+              <div style="clear: both;"></div>
+              <div *ngIf="naydo">
+                <div style="float:right;">
+                  <span style="font-size:14px;color:red;">Non-profit discount ({{discounts.nonProfit * 100}}%)
+                  </span><span style="margin-left:20px;font-size:14px;color:#bbbbbb;">-
+                    $</span><span style="font-size:14px;">{{(monthlyCostHash['basic'] *
+                    discounts.nonProfit)?.toFixed(2)}}</span>
+                </div>
+                <div style="clear: both;"></div>
+                <div style="float:right;">
+                  <span style="font-size:14px;color:red;">Conference discount ({{discounts.conference * 100}}%)
+                  </span><span style="margin-left:20px;font-size:14px;color:#bbbbbb;">-
+                    $</span><span style="font-size:14px;">{{((monthlyCostHash['basic'] - (monthlyCostHash['basic'] *
+                    discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
+                </div>
+                <div style="clear: both;"></div>
+                <div style="float:right;border-top:1px solid #dddddd;">
+                  <span style="font-size:20px;color:red;">Monthly Total</span><span
+                    style="margin-left:20px;font-size:20px;color:#bbbbbb;">$</span><span
+                    style="font-size:20px;">{{((monthlyCostHash['basic'] - (monthlyCostHash['basic'] *
+                    discounts.nonProfit)) -
+                    ((monthlyCostHash['basic'] - (monthlyCostHash['basic'] * discounts.nonProfit)) *
+                    discounts.conference))?.toFixed(2)}}</span>
+                </div>
+              </div>
+              <div style="clear: both;"></div>
+              <div *ngIf="userCnt > 0 && naydo" style="float:right;">
+                <span style="font-size:20px;color:red;">Average Cost Per User </span><span
+                  style="margin-left:20px;font-size:20px;color:#bbbbbb;">$</span><span
+                  style="font-size:20px;">{{((monthlyCostHash['basic'] - (monthlyCostHash['basic'] *
+                  discounts.nonProfit) -
+                  ((monthlyCostHash['basic'] - (monthlyCostHash['basic'] * discounts.nonProfit)) *
+                  discounts.conference)) / userCnt)?.toFixed(2)}}</span>
+              </div>
+              <div *ngIf="userCnt > 0 && !naydo" style="float:right;">
+                <span style="font-size:20px;color:red;">Average Cost Per User </span><span
+                  style="margin-left:20px;font-size:20px;color:#bbbbbb;">$</span><span
+                  style="font-size:20px;">{{(monthlyCostHash['basic'] / userCnt)?.toFixed(2)}}</span>
+              </div>
+              <div style="clear: both;"></div>
+
+            </div>
             <nz-card class="price-card">
               <div class="" style="">
                 <div class="media align-items-center" style="display:block;">
                   <i class="fad fa-user" style="font-size:46px;color:green;margin-bottom:20px;"></i>
                   <div style="text-align: center;">
                     <h3>Basic</h3>
-                    <div *ngIf="plans === 'monthly'" style="width:75%;display:inline-block;">
-                      <span style="font-size:34px;font-weight:400;color:black;">
-                        $10
-                      </span>
-                      <span style="font-size:14px;font-weight:300;color:#999999;">
-                        /user /month
-                      </span>
+                    <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
+                      <div style="margin:20px 0 40px 0;">
+                        <div style="display:block;width:100%;color:black;">
+                          <span style="color:#bbbbbb;font-size:24px;font-weight:300;">$</span>
+                          <span
+                            style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['basic'][0]}} </span>
+                          <span style="color:#bbbbbb;font-size:24px;font-weight:300;">$</span>
+                          <span
+                            style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['basic'][1]}} </span>
+                          <span style="color:#bbbbbb;font-size:24px;font-weight:300;">$</span>
+                          <span
+                            style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['basic'][2]}} </span>
+                          <span style="color:#bbbbbb;font-size:14px;font-weight:300;"> /user /month</span>
+                        </div>
+                        <div style="display:block;width:100%;color:black;">
+                          <span style="color:black;font-size:12px;font-weight:300;">
+                            < 100</span>
+                              <span style="color:black;font-size:12px;font-weight:300;"> users</span>
+                              <span style="color:black;font-size:18px;font-weight:300;">&nbsp;|&nbsp;</span>
+                              <span style="color:black;font-size:12px;font-weight:300;">101-300</span>
+                              <span style="color:black;font-size:12px;font-weight:300;"> users</span>
+                              <span style="color:black;font-size:16px;font-weight:300;">&nbsp;|&nbsp;</span>
+                              <span style="color:black;font-size:12px;font-weight:300;">> 301</span>
+                              <span style="color:black;font-size:12px;font-weight:300;"> users</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div style="text-align: left;margin-top:40px;">
+                  <div style="text-align: left;margin-top:20px;">
                     <div style="width:100%;">
                       <div style="display:block;padding-left:20px;">
                         <span style="display:inline-block;width:40px;">
@@ -456,22 +593,98 @@
             </nz-card>
           </div>
           <div class="col-md-4">
+            <!--
+            <span style="font-size:20px;color:red;">Your Monthly Cost </span>
+            <span style="font-size:20px;color:#bbbbbb;">$</span>
+            <span style="font-size:24px;">
+              {{monthlyCostHash['pro']}}
+            </span>
+            -->
+            <div>
+              <div style="float:right;">
+                <span style="font-size:20px;color:red;">Monthly Subscription Fee</span><span
+                  style="margin-left:20px;font-size:14px;color:#bbbbbb;">$</span><span
+                  style="font-size:16px;">{{monthlyCostHash['pro'].toFixed(2)}}
+                </span>
+              </div>
+              <div style="clear: both;"></div>
+              <div *ngIf="naydo">
+                <div style="float:right;">
+                  <span style="font-size:14px;color:red;">Non-profit discount ({{discounts.nonProfit * 100}}%)
+                  </span><span style="margin-left:20px;font-size:14px;color:#bbbbbb;">-
+                    $</span><span style="font-size:14px;">{{(monthlyCostHash['pro'] *
+                    discounts.nonProfit)?.toFixed(2)}}</span>
+                </div>
+                <div style="clear: both;"></div>
+                <div style="float:right;">
+                  <span style="font-size:14px;color:red;">Conference discount ({{discounts.conference * 100}}%)
+                  </span><span style="margin-left:20px;font-size:14px;color:#bbbbbb;">-
+                    $</span><span style="font-size:14px;">{{((monthlyCostHash['pro'] - (monthlyCostHash['pro'] *
+                    discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
+                </div>
+                <div style="clear: both;"></div>
+                <div style="float:right;border-top:1px solid #dddddd;">
+                  <span style="font-size:20px;color:red;">Monthly Total </span><span
+                    style="margin-left:20px;font-size:20px;color:#bbbbbb;">$</span><span
+                    style="font-size:20px;">{{((monthlyCostHash['pro'] - (monthlyCostHash['pro'] *
+                    discounts.nonProfit))
+                    -
+                    ((monthlyCostHash['pro'] - (monthlyCostHash['pro'] * discounts.nonProfit)) *
+                    discounts.conference))?.toFixed(2)}}</span>
+                </div>
+              </div>
+              <div style="clear: both;"></div>
+              <div *ngIf="userCnt > 0 && naydo" style="float:right;">
+                <span style="font-size:20px;color:red;">Average Cost Per User </span><span
+                  style="margin-left:20px;font-size:20px;color:#bbbbbb;">$</span><span
+                  style="font-size:20px;">{{((monthlyCostHash['pro'] - (monthlyCostHash['pro'] * discounts.nonProfit)
+                  -
+                  ((monthlyCostHash['pro'] - (monthlyCostHash['pro'] * discounts.nonProfit)) * discounts.conference))
+                  /
+                  userCnt)?.toFixed(2)}}</span>
+              </div>
+              <div *ngIf="userCnt > 0 && !naydo" style="float:right;">
+                <span style="font-size:20px;color:red;">Average Cost Per User </span><span
+                  style="margin-left:20px;font-size:20px;color:#bbbbbb;">$</span><span
+                  style="font-size:20px;">{{(monthlyCostHash['pro'] / userCnt)?.toFixed(2)}}</span>
+              </div>
+              <div style="clear: both;"></div>
+            </div>
             <nz-card class="price-card">
               <div>
                 <div class="media align-items-center" style="display:block;">
                   <i class="fad fa-user-tie" style="font-size:46px;color:red;margin-bottom:20px;"></i>
                   <div style="text-align: center;">
                     <h3>Pro</h3>
-                    <div *ngIf="plans === 'monthly'" style="width:75%;display:inline-block;">
-                      <span style="font-size:34px;font-weight:400;color:black;">
-                        $14
-                      </span>
-                      <span style="font-size:14px;font-weight:300;color:#999999;">
-                        /user /month
-                      </span>
+                    <div *ngIf="plans === 'monthly'" style="width:100%;display:inline-block;">
+                      <div style="margin:20px 0 40px 0;">
+                        <div style="display:block;width:100%;color:black;">
+                          <span style="color:#bbbbbb;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['pro'][0]}} 
+                          </span>
+                          <span style="color:#bbbbbb;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['pro'][1]}} 
+                          </span>
+                          <span style="color:#bbbbbb;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['pro'][2]}} 
+                          </span>
+                          <span style="color:#bbbbbb;font-size:14px;font-weight:300;"> /user /month</span>
+                        </div>
+                        <div style="display:block;width:100%;color:black;">
+                          <span style="color:black;font-size:12px;font-weight:300;">
+                            < 100</span>
+                              <span style="color:black;font-size:12px;font-weight:300;"> users</span>
+                              <span style="color:black;font-size:18px;font-weight:300;">&nbsp;|&nbsp;</span>
+                              <span style="color:black;font-size:12px;font-weight:300;">101-300</span>
+                              <span style="color:black;font-size:12px;font-weight:300;"> users</span>
+                              <span style="color:black;font-size:16px;font-weight:300;">&nbsp;|&nbsp;</span>
+                              <span style="color:black;font-size:12px;font-weight:300;">> 301</span>
+                              <span style="color:black;font-size:12px;font-weight:300;"> users</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div style="text-align: left;margin-top:40px;">
+                  <div style="text-align: left;margin-top:20px;">
                     <div style="width:100%;">
                       <div style="display:block;padding-left:20px;">
                         <span style="display:inline-block;width:40px;">
@@ -566,22 +779,90 @@
             </nz-card>
           </div>
           <div class="col-md-4">
+            <div>
+              <div style="float:right;">
+                <span style="font-size:20px;color:red;">Monthly Subscription Fee</span><span
+                  style="margin-left:20px;font-size:14px;color:#bbbbbb;">$</span><span
+                  style="font-size:16px;">{{monthlyCostHash['expert']?.toFixed(2)}}
+                </span>
+              </div>
+              <div style="clear: both;"></div>
+              <div *ngIf="naydo">
+                <div style="float:right;">
+                  <span style="font-size:14px;color:red;">Non-profit discount ({{discounts.nonProfit * 100}}%)
+                  </span><span style="margin-left:20px;font-size:14px;color:#bbbbbb;">-
+                    $</span><span style="font-size:14px;">{{(monthlyCostHash['expert'] *
+                    discounts.nonProfit)?.toFixed(2)}}</span>
+                </div>
+                <div style="clear: both;"></div>
+                <div style="float:right;">
+                  <span style="font-size:14px;color:red;">Conference discount ({{discounts.conference * 100}}%)
+                  </span><span style="margin-left:20px;font-size:14px;color:#bbbbbb;">-
+                    $</span><span style="font-size:14px;">{{((monthlyCostHash['expert'] - (monthlyCostHash['expert'] *
+                    discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
+                </div>
+                <div style="clear: both;"></div>
+                <div style="float:right;border-top:1px solid #dddddd;">
+                  <span style="font-size:20px;color:red;">Monthly Total </span><span
+                    style="margin-left:20px;font-size:20px;color:#bbbbbb;">$</span><span
+                    style="font-size:20px;">{{((monthlyCostHash['expert'] - (monthlyCostHash['expert'] *
+                    discounts.nonProfit)) -
+                    ((monthlyCostHash['expert'] - (monthlyCostHash['expert'] * discounts.nonProfit)) *
+                    discounts.conference))?.toFixed(2)}}</span>
+                </div>
+                <div style="clear: both;"></div>
+              </div>
+              <div *ngIf="userCnt > 0 && naydo" style="float:right;">
+                <span style="font-size:20px;color:red;">Average Cost Per User </span><span
+                  style="margin-left:20px;font-size:20px;color:#bbbbbb;">$</span><span
+                  style="font-size:20px;">{{((monthlyCostHash['expert'] - (monthlyCostHash['expert'] *
+                  discounts.nonProfit) -
+                  ((monthlyCostHash['expert'] - (monthlyCostHash['expert'] * discounts.nonProfit)) *
+                  discounts.conference)) /
+                  userCnt)?.toFixed(2)}}</span>
+              </div>
+              <div *ngIf="userCnt > 0 && !naydo" style="float:right;">
+                <span style="font-size:20px;color:red;">Average Cost Per User </span><span
+                  style="margin-left:20px;font-size:20px;color:#bbbbbb;">$</span><span
+                  style="font-size:20px;">{{(monthlyCostHash['expert'] / userCnt)?.toFixed(2)}}</span>
+              </div>
+              <div style="clear: both;"></div>
+            </div>
             <nz-card class="price-card">
               <div>
                 <div class="media align-items-center" style="display:block;">
                   <i class="fad fa-user-graduate" style="font-size:46px;color:blueviolet;margin-bottom:20px;"></i>
                   <div style="text-align: center;">
                     <h3>Expert</h3>
-                    <div *ngIf="plans === 'monthly'" style="width:75%;display:inline-block;">
-                      <span style="font-size:34px;font-weight:400;color:black;">
-                        $18
-                      </span>
-                      <span style="font-size:14px;font-weight:300;color:#999999;">
-                        /user /month
-                      </span>
+                    <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
+                      <div style="margin:20px 0 40px 0;">
+                        <div style="display:block;width:100%;color:black;">
+                          <span style="color:#bbbbbb;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][0]}} 
+                          </span>
+                          <span style="color:#bbbbbb;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][1]}} 
+                          </span>
+                          <span style="color:#bbbbbb;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][2]}} 
+                          </span>
+                          <span style="color:#bbbbbb;font-size:14px;font-weight:300;"> /user /month</span>
+                        </div>
+                        <div style="display:block;width:100%;color:black;">
+                          <span style="color:black;font-size:12px;font-weight:300;">
+                            < 100</span>
+                              <span style="color:black;font-size:12px;font-weight:300;"> users</span>
+                              <span style="color:black;font-size:18px;font-weight:300;">&nbsp;|&nbsp;</span>
+                              <span style="color:black;font-size:12px;font-weight:300;">101-300</span>
+                              <span style="color:black;font-size:12px;font-weight:300;"> users</span>
+                              <span style="color:black;font-size:16px;font-weight:300;">&nbsp;|&nbsp;</span>
+                              <span style="color:black;font-size:12px;font-weight:300;">> 301</span>
+                              <span style="color:black;font-size:12px;font-weight:300;"> users</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div style="text-align: left;margin-top:40px;">
+                  <div style="text-align: left;margin-top:20px;">
                     <div style="width:100%;">
                       <div style="display:block;padding-left:20px;">
                         <span style="display:inline-block;width:40px;">
@@ -657,44 +938,6 @@
                       </div>
                     </div>
                   </div>
-                  <!--
-                  <div style="text-align: left;margin-top:40px;">
-                    <div style="width:100%;">
-                      <div style="display:block;padding-left:40px;">
-                        <span style="display:inline-block;width:40px;">
-                          <i class="fas fa-check" style="font-size:20px;color:#52c41a;"></i>
-                        </span>
-                        <span style="display:inline-block;font-size:16px;color:black;">
-                          One Click Deploy
-                        </span>
-                      </div>
-                      <div style="display:block;padding-left:40px;">
-                        <span style="display:inline-block;width:40px;">
-                          <i class="fas fa-check" style="font-size:20px;color:#52c41a;"></i>
-                        </span>
-                        <span style="display:inline-block;font-size:16px;color:black;">
-                          Training Assessments
-                        </span>
-                      </div>
-                      <div style="display:block;padding-left:40px;">
-                        <span style="display:inline-block;width:40px;">
-                          <i class="fas fa-check" style="font-size:20px;color:#52c41a;"></i>
-                        </span>
-                        <span style="display:inline-block;font-size:16px;color:black;">
-                          Unlimited Trainings
-                        </span>
-                      </div>
-                      <div style="display:block;padding-left:40px;">
-                        <span style="display:inline-block;width:40px;">
-                          <i class="fas fa-check" style="font-size:20px;color:#52c41a;"></i>
-                        </span>
-                        <span style="display:inline-block;font-size:16px;color:black;">
-                          Interactive Org Chart
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                    -->
                 </div>
               </div>
               <div style="margin-top:40px;">
@@ -735,9 +978,9 @@
         <nz-collapse nzAccordion>
           <nz-collapse-panel *ngFor="let panel of panels" [nzHeader]="headerTemplate" [nzActive]="panel.active"
             style="text-align: left;">
-            <div style="padding-left:20px;font-size: 20px;color:#000000;font-weight: 200;">{{ panel.answer }}</div>
+            <div style="padding-left:20px;font-size: 20px;color:#000000;font-weight: 300;">{{ panel.answer }}</div>
             <ng-template #headerTemplate>
-              <div style="color:#888888;font-size: 18px;font-weight: 200;">
+              <div style="color:#888888;font-size: 18px;font-weight: 300;">
                 {{ panel.question }}
               </div>
             </ng-template>

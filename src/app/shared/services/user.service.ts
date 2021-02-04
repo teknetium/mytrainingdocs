@@ -16,6 +16,9 @@ import { OrgService } from './org.service';
 import { TemplateMessageModel } from '../../shared/interfaces/message.type';
 import * as cloneDeep from 'lodash/cloneDeep';
 import { OrgModel } from '../interfaces/org.type';
+import { NotificationService } from '../../shared/services/notification.service';
+import { AlertModel } from '../../shared/interfaces/notification.type';
+
 
 
 @Injectable({
@@ -129,7 +132,8 @@ export class UserService {
     private sendmailService: SendmailService,
     private router: Router,
     private orgService: OrgService,
-    private eventService: EventService,
+    private notifyService: NotificationService,
+
   ) {
     this.action = 'init';
     this.org$ = this.orgService.getOrgStream();
@@ -200,7 +204,7 @@ export class UserService {
                         emailVerified: true,
                         teamId: null,
                         org: domain,
-                        empId: null,
+                        empId: profile.uid,
                         teamAdmin: false,
                         orgAdmin: true,
                         appAdmin: true,
@@ -522,13 +526,15 @@ export class UserService {
       } else {
         this.newTeamMember.userType = batchUser.userType;
       }
-      this.newTeamMember._id = batchUser.empId;
+      this.newTeamMember._id = batchUser.email;
       this.newTeamMember.firstName = batchUser.firstName;
       this.newTeamMember.lastName = batchUser.lastName;
       if (!this.emailIsValid(batchUser.email)) {
         statusList.push('invalidEmailFormat');
+        this.newTeamMember.userStatus = 'error';
       } else if (emailList.includes(batchUser.email)) {
         statusList.push('duplicateEmail');
+        this.newTeamMember.userStatus = 'error';
       } else {
         this.newTeamMember.email = batchUser.email;
         if (!testing) {
@@ -582,6 +588,7 @@ export class UserService {
         //      if (!this.emailHash[this.newUserHash[nUser._id].supervisorEmail]) {
         nUser.settings.statusList.push('unknownSupervisor');
         nUser.supervisorId = this.authenticatedUser._id;
+        nUser.userStatus = 'error';
         nUser.teamId = this.authenticatedUser._id;
         this.authenticatedUser.directReports.push(nUser._id);
       } else {
@@ -604,16 +611,33 @@ export class UserService {
 
     let dbCnt = 0;
     let batchUserAddedCount = 0;
+    let batchUserErrorCount = 0;
     let startIndex = 0;
     let chunckSize = 100;
     while (startIndex < this.newUserList.length) {
       let tmpArray = Object.assign([], this.newUserList.slice(startIndex, startIndex + chunckSize));
       startIndex += chunckSize;
-      this.postBulkUsers$(tmpArray).subscribe(users => {
-        batchUserAddedCount += users.length;
-        if (batchUserAddedCount === this.newUserList.length) {
+      this.postBulkUsers$(tmpArray).subscribe(results => {
+        console.log('return object from insertMany  ', results);
+        batchUserAddedCount += results.insertedCount;
+        batchUserErrorCount += results.mongoose.validationErrors.length;
+
+        if (batchUserAddedCount + batchUserErrorCount === this.newUserList.length) {
+          let alert = <AlertModel>{
+            type: 'success',
+            message: 'Added ' + batchUserAddedCount + ' users.'
+          }
+          this.notifyService.showAlert(cloneDeep(alert));
+          if (batchUserErrorCount > 0) {
+            alert = <AlertModel>{
+              type: 'error',
+              message: 'Encountered ' + batchUserErrorCount + ' errors.'
+            }
+            this.notifyService.showAlert(alert);
+          }
           this.loadData(this.authenticatedUser.org, null);
         }
+
       });
     }
     /*
@@ -887,7 +911,7 @@ export class UserService {
         catchError((error) => this._handleError(error))
       );
   }
-  postBulkUsers$(users: UserModel[]): Observable<UserModel[]> {
+  postBulkUsers$(users: UserModel[]): Observable<any> {
     return this.http
       .post<UserModel[]>(`${ENV.BASE_API}user/bulknew/`, users, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),

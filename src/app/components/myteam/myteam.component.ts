@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef, ViewChild, ElementRef, Renderer2  } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, HostListener, ChangeDetectorRef, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
 import { EventService } from '../../shared/services/event.service';
@@ -31,6 +31,7 @@ import { stringify } from 'querystring';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { LoaderService } from '../../shared/services/loader.service';
 import html2canvas from 'html2canvas';
+import { IfStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-myteam',
@@ -106,7 +107,7 @@ import html2canvas from 'html2canvas';
     ])
   ]
 })
-export class MyteamComponent extends BaseComponent implements OnInit {
+export class MyteamComponent extends BaseComponent implements OnInit, AfterViewInit {
 
   LICENSE_KEY = "2bda9380-a84c-11e7-8243-1d92e7c67d6d";
   results: string = "";
@@ -337,7 +338,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   listOfSearchTrainingStatus: string[] = [];
   listOfSearchUserTypes: string[] = [];
   listOfSearchJobTitles: string[] = [];
-  userListDisplay: UserModel[];
+  userListDisplay: UserModel[] = [];
   hoverUid;
   rowSelected = 0;
   showTeam = 'false';
@@ -1241,17 +1242,20 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   myPlan = null;
   org$: Observable<OrgModel>;
   orgObj: OrgModel;
-//  showUpgradeToExpertDialog = false;
-//  showUpgradeToProDialog = false;
-//  upgradeToExpertOkText = '';
-//  upgradeToProOkText = '';
+  //  showUpgradeToExpertDialog = false;
+  //  showUpgradeToProDialog = false;
+  //  upgradeToExpertOkText = '';
+  //  upgradeToProOkText = '';
   @ViewChild('orgChart') orgChart: ElementRef;
   @ViewChild('canvas') canvas: ElementRef;
   @ViewChild('downloadPNGLink') downloadPNGLink: ElementRef;
   showOrgChartImageModal = false;
   orgChartTitle = '';
   today: string;
-  
+  showCSVBuffer = false;
+  errorUIDs = [];
+  showBulkAddModal = false;
+
   constructor(
     private cd: ChangeDetectorRef,
     private authService: AuthService,
@@ -1294,15 +1298,34 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.org$ = this.orgService.getOrgStream();
 
 
-//    this.userTrainingService.selectUser(null);
+    //    this.userTrainingService.selectUser(null);
   }
 
-    // ElementRef { nativeElement: <input> }    console.log(this.justCollapsedNode);
+  // ElementRef { nativeElement: <input> }    console.log(this.justCollapsedNode);
+  ngAfterViewInit() {
+
+  }
 
   ngOnInit() {
 
+    if (this.userListDisplay.length === 0) {
+      this.showBulkAddModal = true;
+    }
+
     this.today = String(new Date().getTime());
     this.orgChartTitle = 'User Status';
+
+    this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+      let uid = params.get('uid');
+      if (uid) {
+        this.selectionMode = 'Individual';
+        console.log('route', uid);
+        setTimeout(() => {
+          this.selectUser(uid, -1);
+        }, 2000);
+      }
+    });
+
 
     this.taskHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskHash => {
       if (!taskHash) {
@@ -1439,15 +1462,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       if (this.myPlan && this.myPlan !== 'basic') {
         this.collapseAllSubOrgs(true);
       }
-      /*
-      if (this.authenticatedUser) {
-        for (let dr1 of this.authenticatedUser.directReports) {
-          for (let dr2 of this.myOrgUserHash[dr1].directReports) {
-            this.collapseNode(dr2, true);
-          }
-        }
-      }
-      */
+      this.createCSV();
     });
     this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgUsers => {
       if (!myOrgUsers) {
@@ -1612,7 +1627,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
       this.showLegend = this.authenticatedUser.settings.showLegend;
 
-      this.myOrgUserHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
+      this.myOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
       this.orgEmails.push(this.authenticatedUser.email);
       this.org = this.authenticatedUser.email.substring(this.authenticatedUser.email.indexOf('@') + 1);
       this.teamId = this.authenticatedUser._id;
@@ -1662,23 +1677,23 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
     })
   }
-/*
-  startTour(task) {
-    let steps = this.taskWizardHash[task];
-    this.joyrideService.startTour({ steps: steps, stepDefaultPosition: 'bottom', themeColor: '#0d1cb9' });
-  }
-
-  task2Step2() {
-    this.collapsedNodes.splice(this.collapsedNodes.indexOf(this.authenticatedUser._id), 1);
-    for (let dr of this.authenticatedUser.directReports) {
-      if (this.myOrgUserHash[dr].userType === 'supervisor') {
-        this.taskItemHash['task2Step3'] = dr;
-        this.selectUser(dr, -1);
-        break;
+  /*
+    startTour(task) {
+      let steps = this.taskWizardHash[task];
+      this.joyrideService.startTour({ steps: steps, stepDefaultPosition: 'bottom', themeColor: '#0d1cb9' });
+    }
+  
+    task2Step2() {
+      this.collapsedNodes.splice(this.collapsedNodes.indexOf(this.authenticatedUser._id), 1);
+      for (let dr of this.authenticatedUser.directReports) {
+        if (this.myOrgUserHash[dr].userType === 'supervisor') {
+          this.taskItemHash['task2Step3'] = dr;
+          this.selectUser(dr, -1);
+          break;
+        }
       }
     }
-  }
-  */
+    */
 
   pre(): void {
     this.currentStep -= 1;
@@ -1689,23 +1704,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   done(): void {
+    this.showBulkAddModal = false;
+//      this.userService.createNewUsersFromBatch(this.newUsers, false);
+  }
 
-  }
-/*
-  downloadPNGImage() {
-    if (this.orgObj.plan === 'basic') {
-      this.orgService.showUpgradeToProDialog(true);
-    } else {
-      this.showOrgChartImageModal = true;
-      html2canvas(this.orgChart.nativeElement).then(canvas => {
-        this.canvas.nativeElement.src = canvas.toDataURL();
-        this.downloadPNGLink.nativeElement.href = canvas.toDataURL('image/png');
-        this.downloadPNGLink.nativeElement.download = 'orgChart.png';
-        this.downloadPNGLink.nativeElement.click();
-      });
-    }
-  }
-  */
   downloadPNGImage() {
     this.downloadPNGLink.nativeElement.click();
     setTimeout(() => {
@@ -1751,7 +1753,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   collapseAllSubOrgs(collapseAll) {
-//    this.myLoader.setLoading(true, 'https://localhost:4200/myteam');
+    //    this.myLoader.setLoading(true, 'https://localhost:4200/myteam');
     if (collapseAll) {
 
       this.collapsedNodes = [];
@@ -1764,13 +1766,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else {
       this.collapsedNodes = [];
     }
-//    this.myLoader.setLoading(false, 'https://localhost:4200/myteam');
+    //    this.myLoader.setLoading(false, 'https://localhost:4200/myteam');
   }
 
   collapseNode(uid: string, collapse: boolean) {
     if (this.orgObj.plan === 'basic') {
       this.orgService.showUpgradeToProDialog(true);
-//      this.showUpgradeToProDialog = true;
+      //      this.showUpgradeToProDialog = true;
     } else {
       if (collapse) {
         this.collapsedNodes.push(uid);
@@ -1840,7 +1842,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
 
   showAssignTrainingModal() {
     if (this.orgObj.plan === 'basic' || this.orgObj.plan === 'pro') {
-//      this.showUpgradeToExpertDialog = true;
+      //      this.showUpgradeToExpertDialog = true;
       this.orgService.showUpgradeToExpertDialog(true);
     } else {
       this.showUserTrainingModal = true;
@@ -1850,25 +1852,13 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   showMsgModal() {
     console.log('showMsgModal', this.orgObj);
     if (this.orgObj.plan === 'basic' || this.orgObj.plan === 'pro') {
-//      this.showUpgradeToExpertDialog = true;
+      //      this.showUpgradeToExpertDialog = true;
       this.orgService.showUpgradeToExpertDialog(true);
     } else {
       this.showMessageModal = true;
       this.recipientUidList = Object.assign(this.recipientUidList, this.userIdsSelected);
     }
   }
-  /*
-    expandAllNodes() {
-      this.collapsedNodes = [];
-    }
-    */
-
-  /*
-  setHighlightItem(item: string) {
-    //    console.log('setHiglightItem ', item);
-    this.currentHighlightItem = item;
-  }
-  */
 
   getSelectedTrainingIconClass(tid: string): string {
     //    console.log('getSelectedTrainingIconClass', tid);
@@ -1905,32 +1895,19 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
   createCSV() {
-    if (this.showCSV) {
-      this.showCSV = !this.showCSV;
-      return;
-    }
-
-    this.showCSV = !this.showCSV;
-
-    this.test = !this.test;
     this.usersCSV = '';
     let supervisorName: string;
-    if (this.myOrgUserHash) {
+    if (this.myOrgUserObjs) {
       for (let user of this.myOrgUserObjs) {
-        if (user.supervisorId) {
-          supervisorName = this.myOrgUserHash[user.supervisorId].firstName + ' ' + this.myOrgUserHash[user.supervisorId].lastName;
-        } else {
-          supervisorName = '';
-        }
-        this.usersCSV += user.firstName + ',' + user.lastName + ',' + user.email + ',' + user.jobTitle + ',' + user.userType + ',' + supervisorName + '\n';
+        //        if (user.supervisorId) {
+        //          supervisorName = this.myOrgUserHash[user.supervisorId].firstName + ' ' + this.myOrgUserHash[user.supervisorId].lastName;
+        //        } else {
+        //          supervisorName = '';
+        //        }
+        this.usersCSV += user.firstName + ',' + user.lastName + ',' + user.email + ',' + user._id + ',' + user.jobTitle + ',' + user.userType + ',' + user.supervisorId + '\n';
       }
     }
   }
-/*
-  orgChartFilterChanged(filters: string[]) {
-    this.currentJobTitleFilters = filters;
-  }
-  */
 
   jobTitleSelectedChanged(filters: string[]) {
     this.userIdsSelected = [];
@@ -1972,49 +1949,12 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     for (let node of this.collapsedNodes) {
       this.figureOrgStat(node);
     }
-    /*
-    if (this.authenticatedUser?.trainingStatus === 'pastDue') {
-      this.nodeStatHash[this.authenticatedUser?._id].pastDueCnt++;
-    } else if (this.authenticatedUser?.trainingStatus === 'none') {
-      this.nodeStatHash[this.authenticatedUser?._id].noneCnt++;
-    } else if (this.authenticatedUser?.trainingStatus === 'upToDate') {
-      this.nodeStatHash[this.authenticatedUser?._id].upToDateCnt++;
-    }
-  
-    if (this.currentTrainingSelected) {
-      let utList = this.uidUTHash[this.authenticatedUser?._id];
-      if (utList && utList.length > 0) {
-        for (let ut of utList) {
-          if (ut.tid === this.currentTrainingSelected) {
-            switch (ut.status) {
-              case 'upToDate':
-                this.nodeStatHash[this.authenticatedUser?._id].trainingHash['upToDate'] += 1;
-                break;
-              case 'pastDue':
-                this.nodeStatHash[this.authenticatedUser?._id].trainingHash['pastDue'] += 1;
-                break;
-              case 'completed':
-                this.nodeStatHash[this.authenticatedUser?._id].trainingHash['completed'] += 1;
-                break;
-              case 'pendingCertUpload':
-                this.nodeStatHash[this.authenticatedUser?._id].trainingHash['pendingCertUpload'] += 1;
-                break;
-              default:
-                this.nodeStatHash[this.authenticatedUser?._id].trainingHash['none'] += 1;
-                break;
-            }
-          }
-        }
-      }
-    }
-    */
 
   }
 
   zoomIn() {
     this.iconFontSize += 1;
     this.textFontSize += 1;
-    //    this.orgChartPadding += 1;
   }
 
   zoomOut() {
@@ -2024,16 +1964,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     if (this.textFontSize > 2) {
       this.textFontSize -= 1;
     }
-    //    if (this.orgChartPadding > 0) {
-    //      this.orgChartPadding -= 1;
-    //    }
   }
-  /*
-    filterMyTeam(listOfSupervisors) {
-      this.listOfSearchSupervisors = listOfSupervisors;
-      this.search();
-    }
-  */
   resetFilters(): void {
     this.listOfJobTitles = [];
     for (let jobTitle of this.jobTitles) {
@@ -2068,6 +1999,10 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     this.sortName = sort.key;
     this.sortValue = sort.value;
     this.search();
+  }
+
+  statusChanged(status) {
+
   }
 
   search(): void {
@@ -2133,9 +2068,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       email: 'gregl@teknetium.com',
       userType: 'supervisor',
       jobTitle: 'Manager',
-      empId: this.authenticatedUser._id,
-      supervisorEmpId: null,
-      level: 0
+      supervisorEmail: null
     }
 
     let teamSize = Math.floor(this.randn_bm(this.userMin, this.userMax, 2));
@@ -2151,7 +2084,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   }
 
 
-  buildNode(supervisorEmpId: string, level: number): UserBatchData {
+  buildNode(supervisorEmail: string, level: number): UserBatchData {
     let name: string;
     let teamSize: number;
     name = this.getTestUser();
@@ -2164,10 +2097,9 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       email: fullName[0] + '.' + fullName[1] + '@' + this.authenticatedUser.org + '.com',
       userType: 'individualContributor',
       jobTitle: 'coordinator',
-      empId: empId,
-      supervisorEmpId: supervisorEmpId,
-      level: level
+      supervisorEmail: supervisorEmail
     }
+
     if (level < this.maxLevel) {
       if (Math.random() < .7) {
         node.userType = 'supervisor';
@@ -2182,7 +2114,7 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           node.userType = 'individualContributor';
         }
         for (let i = 0; i < teamSize; i++) {
-//          let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], fullName[0] + '.' + fullName[1] + '@gmail.com', level);
+          //          let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], fullName[0] + '.' + fullName[1] + '@gmail.com', level);
           let childNode = this.buildNode(empId, level);
           this.testNodes.push(childNode);
         }
@@ -2242,18 +2174,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     }
   }
 
-  /*
-  setAuthenticatedUserHover(allActive: boolean) {
-    if (allActive) {
-      this.currentHoverUid = this.authenticatedUser._id;
-      this.allActive = true;
-    } else {
-      this.currentHoverUid = '';
-      this.allActive = false;
-    }
-  }
-  */
-
   checkUniqueEmail(data) {
     if (!this.selectedUser.email || this.selectedUser.email === '') {
       this.emailUnique = false;
@@ -2282,36 +2202,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     //    console.log('selectNode', event);
   }
 
-  toggleFilter(filter: string) {
-
-    if (filter === 'up-to-date') {
-      this.showUpToDate = !this.showUpToDate;
-    } else if (filter === 'past-due') {
-      this.showPastDue = !this.showPastDue;
-    } else if (filter === 'none') {
-      this.showNone = !this.showNone;
-    } else if (filter === 'individual-contributor') {
-      this.showIndividualContributors = !this.showIndividualContributors;
-    } else if (filter === 'supervisor') {
-      this.showSupervisors = !this.showSupervisors;
-    } else if (filter === 'volunteer') {
-      this.showVolunteers = !this.showVolunteers;
-    } else if (filter === 'customer') {
-      this.showCustomers = !this.showCustomers;
-    } else if (filter === 'trainingUpToDate') {
-      this.showUpToDateTrainings = !this.showUpToDateTrainings;
-    } else if (filter === 'trainingCompleted') {
-      this.showCompletedTrainings = !this.showCompletedTrainings;
-    } else if (filter === 'trainingPastDue') {
-      this.showPastDueTrainings = !this.showPastDueTrainings;
-    } else if (filter === 'onetime') {
-      this.showOnetime = !this.showOnetime;
-    } else if (filter === 'recurring') {
-      this.showRecurring = !this.showRecurring;
-    }
-
-  }
-
   async launchImporter() {
     try {
 
@@ -2321,12 +2211,19 @@ export class MyteamComponent extends BaseComponent implements OnInit {
       this.results = JSON.stringify(results.validData, null, 2);
 
       this.newUsers = JSON.parse(this.results);
-      this.userService.createNewUsersFromBatch(this.newUsers, false);
+      if (this.showBulkAddModal) {
+        this.next();
+      }
+//      this.userService.createNewUsersFromBatch(this.newUsers, false);
       //        this.trainingService.assignTrainingsForJobTitle(this.newTeamMember.jobTitle, this.newTeamMember._id, this.newTeamMember.teamId);
       //        this.newUsers = [{ firstName: '', lastName: '', email: '', jobTitle: '', supervisorName: '' }];
     } catch (e) {
       console.info(e || "window close");
     }
+  }
+
+  registerUsers() {
+    this.userService.createNewUsersFromBatch(this.newUsers, false);
   }
 
 
@@ -2344,11 +2241,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           validators: [{ validate: "required" }]
         },
         {
-          label: "Employee Id",
-          key: "empId",
-          validators: [{ validate: "required" }]
-        },
-        {
           label: "Email Address",
           key: "email",
           validators: [
@@ -2362,25 +2254,19 @@ export class MyteamComponent extends BaseComponent implements OnInit {
           ]
         },
         {
-          label: "Job Title",
-          key: "jobTitle",
-          validators: []
+          label: "Supervisor's Email Address",
+          key: "supervisorEmail",
+          validators: [
+            { validate: "required" },
+            {
+              validate: "regex_matches",
+              regex:
+                "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])",
+              error: "Must be in email format"
+            }
+          ]
         },
-        {
-          label: "User Type",
-          key: "userType",
-          validators: []
-        },
-        //        {
-        //          label: "Supervisor Name",
-        //          key: "supervisorName",
-        //          validators: []
-        //        }
-        {
-          label: "Supervisor Employee Id",
-          key: "supervisorEmpId",
-          validators: []
-        }
+
       ],
       type: "Users",
       allowInvalidSubmit: true,
@@ -2404,8 +2290,8 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     let index = userNameList.indexOf(value);
     if (index > -1) {
       this.setSelectionMode('Individual');
-//      this.selectionMode = 'Individual';
-//      this.userIdsSelected = [];
+      //      this.selectionMode = 'Individual';
+      //      this.userIdsSelected = [];
       this.selectUser(this.myOrgUserNameHash[value]._id, index);
       //      this.showAddToUserListButton = true;
     }
@@ -2549,10 +2435,18 @@ export class MyteamComponent extends BaseComponent implements OnInit {
   userStatusSelectedChanged(userStatus: string) {
     this.currentUserStatus = userStatus;
     this.userIdsSelected = [];
+    this.errorUIDs = [];
     for (let user of this.myOrgUserObjs) {
       if (this.currentUserStatus === user.userStatus) {
-        this.userIdsSelected.push(user._id);
+        if (user.userStatus === 'error') {
+          this.errorUIDs.push(user._id);
+        } else {
+          this.userIdsSelected.push(user._id);
+        }
       }
+    }
+    if (this.errorUIDs.length > 0) {
+      this.selectUser(this.errorUIDs[0], 0);
     }
     this.figureOrgStat(this.authenticatedUser._id);
     for (let node of this.collapsedNodes) {
@@ -2951,18 +2845,6 @@ export class MyteamComponent extends BaseComponent implements OnInit {
     } else if (this.myOrgUserHash[uid]) {
       return this.userTrainingStatusColorHash[this.myOrgUserHash[uid].trainingStatus];
     }
-
-    /*
-      let hash1 = this.uidTidUTHash[uid];
-      //    console.log('getStatusColor  ', this.userTrainingStatusColorHash[hash1[this.currentTrainingSelected].status]);
-      if (!hash1) {
-        return 'pink';
-      }
-      if (!hash1[this.currentTrainingSelected]) {
-        return 'cyan';
-      }
-      return this.userTrainingStatusColorHash[hash1[this.currentTrainingSelected].status];
-      */
   }
 
   confirmUserTrainingDelete() {

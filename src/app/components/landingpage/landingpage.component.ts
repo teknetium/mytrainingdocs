@@ -1,14 +1,16 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Location } from '@angular/common';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.type';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute, NavigationCancel, NavigationStart, NavigationError, Event as NavigationEvent } from '@angular/router';
 import { ScrollToAnimationEasing } from '@nicky-lenaers/ngx-scroll-to';
 import { VgAPI } from 'videogular2/compiled/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { TrainingService } from '../../shared/services/training.service';
+import { filter } from 'rxjs/operators';
 
 
 @Component({
@@ -227,6 +229,7 @@ export class LandingpageComponent implements OnInit {
   };
   placement = 'top';
 
+
   public ngxScrollToDestination: string;
   public ngxScrollToDuration: number;
   public ngxScrollToEasing: ScrollToAnimationEasing;
@@ -253,12 +256,35 @@ export class LandingpageComponent implements OnInit {
   explainerVidIsVisible = false;
   planSelected = false;
   plan = '';
+  userCnt = 0;
+  monthlyCost = 0;
+  planCostPerUserHash = {
+    basic: [10, 8, 6],
+    pro: [14, 11, 8],
+    expert: [18, 14, 10]
+  };
+  userRange = [100, 300];
+  discounts = {
+    nonProfit: .25,
+    conference: .15
+  }
+  monthlyCostHash = {
+    basic: 0,
+    pro: 0,
+    expert: 0
+  };
 
+  currentPage;
+  naydo = false;
+  //  route: string;
+  showPriceEditor = false;
 
   constructor(
     private auth: AuthService,
     private userService: UserService,
     private trainingService: TrainingService,
+    private location: Location,
+    private activatedRoute: ActivatedRoute,
     private router: Router) {
 
 
@@ -268,6 +294,20 @@ export class LandingpageComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+      this.currentPage = event.url.substring(1);
+      console.log('Route ', this.currentPage);
+      if (this.currentPage === 'naydo') {
+        this.naydo = true;
+      }
+    });
+
+    this.activatedRoute.url.subscribe(url => {
+      if (url.toString() === 'naydo') {
+        this.naydo = true;
+      }
+    });
+
     this.currentVideo = this.explainerUrl;
     /*
     this.taskVideo$.subscribe(safeUrl => {
@@ -286,9 +326,7 @@ export class LandingpageComponent implements OnInit {
       this.authenticatedUser = user;
       this.router.navigate(['/home']);
     });
-*/
 
-    /*
     setInterval(() => {
       this.setCurrentHowStep(this.timerCnt);
       this.timerCnt++;
@@ -299,6 +337,30 @@ export class LandingpageComponent implements OnInit {
     this.setCurrentHowStep(0);
 
      */
+  }
+
+  planPriceChanged(plan: string, rangeIndex: number, newPrice: number) {
+    this.userCntChanged(this.userCnt);
+  }
+
+  userCntChanged(userCnt) {
+    let plans: string[] = Object.keys(this.planCostPerUserHash);
+    let planCostHash = {};
+    let planCost = 0;
+    for (let plan of plans) {
+      let cost: number;
+      if (userCnt <= this.userRange[0]) {
+        this.monthlyCostHash[plan] = userCnt * this.planCostPerUserHash[plan][0];
+      } else if (userCnt <= this.userRange[1]) {
+        cost = ((this.userRange[0]) * this.planCostPerUserHash[plan][0]);
+        cost = cost + (userCnt - (this.userRange[0])) * (this.planCostPerUserHash[plan][1]);
+        this.monthlyCostHash[plan] = cost;
+      } else {
+        this.monthlyCostHash[plan] = (this.userRange[0] * this.planCostPerUserHash[plan][0]) +
+          (this.userRange[1] - this.userRange[0]) * this.planCostPerUserHash[plan][1] +
+          (userCnt - this.userRange[1]) * this.planCostPerUserHash[plan][2];
+      }
+    }
   }
 
   showLearnMore(index) {
@@ -369,7 +431,7 @@ export class LandingpageComponent implements OnInit {
 
   loadVideo(id) {
     this.currentVideo = id;
-    this.explainerVidIsVisible = true;    
+    this.explainerVidIsVisible = true;
   }
 
   playVideo() {

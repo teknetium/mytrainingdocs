@@ -254,7 +254,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   selectUser(uid: string) {
     this.router.navigate(['/myteam/' + uid]);
-    this.userService.selectUser(uid);
+//    this.userService.selectUser(uid);
   }
 /*
   startTour() {
