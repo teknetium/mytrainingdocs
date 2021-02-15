@@ -39,7 +39,7 @@ export class UserService {
   private myDomainUsersBS$ = new BehaviorSubject<UserModel[]>(null);
   private supervisorsBS$ = new BehaviorSubject<OrgChartNode[][][]>(null);
   private directReportsBS$ = new BehaviorSubject<OrgChartNode[][][][]>(null);
-  private buildOrgProgressBS$ = new BehaviorSubject<BuildOrgProgress>(null);
+  private orgProgressBS$ = new BehaviorSubject<BuildOrgProgress>(null);
   private uidReportChainHashBS$ = new BehaviorSubject<UserIdHash>(null);
   private authenticatedUserBS$ = new BehaviorSubject<UserModel>(null);
   private myTeamIdHashBS$ = new BehaviorSubject<UserIdHash>(null);
@@ -185,8 +185,8 @@ export class UserService {
                       let orgObject = <OrgModel>{
                         _id: String(new Date().getTime()),
                         domain: domain,
-                        adminIds: [profile.uid],
-                        owner: profile.uid,
+                        adminIds: [profile.email],
+                        owner: profile.email,
                         plan: 'none',
                         createDate: new Date().getTime(),
                         userCount: 1
@@ -195,8 +195,8 @@ export class UserService {
                       this.orgService.createOrg(cloneDeep(orgObject));
 
                       this.authenticatedUser = <UserModel>{
-                        _id: profile.uid,
-                        uid: profile.uid,
+                        _id: profile.email,
+                        uid: profile.email,
                         userType: 'supervisor',
                         firstName: '',
                         lastName: '',
@@ -204,7 +204,7 @@ export class UserService {
                         emailVerified: true,
                         teamId: null,
                         org: domain,
-                        empId: profile.uid,
+                        empId: profile.email,
                         teamAdmin: false,
                         orgAdmin: true,
                         appAdmin: true,
@@ -214,6 +214,7 @@ export class UserService {
                         profilePicUrl: '',
                         supervisorId: null,
                         directReports: [],
+                        userData: {},
                         settings: {
                           statusList: [],
                           showCSV: false,
@@ -584,7 +585,7 @@ export class UserService {
 
     for (let nUser of this.newUserList) {
 //      if (!this.fullNameHash[this.newUserHash[nUser._id].supervisorName]) {
-      if (!this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmpId]) {
+      if (!this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmail]) {
         //      if (!this.emailHash[this.newUserHash[nUser._id].supervisorEmail]) {
         nUser.settings.statusList.push('unknownSupervisor');
         nUser.supervisorId = this.authenticatedUser._id;
@@ -596,10 +597,10 @@ export class UserService {
 //        this.fullNameHash[this.newUserHash[nUser._id].supervisorName].userType = 'supervisor';
 //        nUser.supervisorId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
 //        nUser.teamId = this.fullNameHash[this.newUserHash[nUser._id].supervisorName]._id;
-        this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmpId].directReports.push(nUser._id);
-        this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmpId].userType = 'supervisor';
-        nUser.supervisorId = this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmpId]._id;
-        nUser.teamId = this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmpId]._id;
+        this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmail].directReports.push(nUser._id);
+        this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmail].userType = 'supervisor';
+        nUser.supervisorId = this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmail]._id;
+        nUser.teamId = this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmail]._id;
         //        this.emailHash[this.newUserHash[nUser._id].supervisorEmail].directReports.push(nUser._id);
         //        this.emailHash[this.newUserHash[nUser._id].supervisorEmail].userType = 'supervisor';
         //        nUser.supervisorId = this.emailHash[this.newUserHash[nUser._id].supervisorEmail]._id;
@@ -739,7 +740,7 @@ export class UserService {
   }
 
   getOrgProgressStream(): Observable<BuildOrgProgress> {
-    return this.buildOrgProgressBS$.asObservable();
+    return this.orgProgressBS$.asObservable();
   }
 
   setUserStatusPastDue(uid: string) {

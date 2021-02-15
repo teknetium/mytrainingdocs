@@ -201,7 +201,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     _id: '',
     teamId: '',
     org: '',
-    empId: '',
     firstName: '',
     lastName: '',
     email: '',
@@ -216,6 +215,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     profilePicUrl: '',
     supervisorId: null,
     directReports: [],
+    userData: {},
     settings: {
       statusList: [],
       showCSV: false,
@@ -1308,9 +1308,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
   ngOnInit() {
 
-    if (this.userListDisplay.length === 0) {
-      this.showBulkAddModal = true;
-    }
 
     this.today = String(new Date().getTime());
     this.orgChartTitle = 'User Status';
@@ -1415,6 +1412,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
       this.userList = [];
       this.userListDisplay = [];
+
 
       this.myOrgUserHash = orgUserHash;
       this.myOrgUserObjs = Object.values(this.myOrgUserHash);
@@ -1904,7 +1902,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         //        } else {
         //          supervisorName = '';
         //        }
-        this.usersCSV += user.firstName + ',' + user.lastName + ',' + user.email + ',' + user._id + ',' + user.jobTitle + ',' + user.userType + ',' + user.supervisorId + '\n';
+        this.usersCSV += user.firstName + ',' + user.lastName + ',' + user.email + ',' + user.supervisorId + ',' + user.jobTitle + ',' + user.userType + '\n';
       }
     }
   }
@@ -2056,7 +2054,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   testBulkAdd() {
-    let currentSupervisorEmpId = this.authenticatedUser._id;
+    let currentSupervisorEmail = this.authenticatedUser.email;
     let supervisorCnt = 1;
     let name: string = this.getTestUser();
     let fullName: string[] = name.trim().split(' ');
@@ -2073,7 +2071,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
     let teamSize = Math.floor(this.randn_bm(this.userMin, this.userMax, 2));
     for (let i = 0; i < teamSize; i++) {
-      let childNode = this.buildNode(currentSupervisorEmpId, level);
+      let childNode = this.buildNode(currentSupervisorEmail, level);
       this.testNodes.push(childNode);
     }
 
@@ -2089,7 +2087,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     let teamSize: number;
     name = this.getTestUser();
     let fullName: string[] = name.trim().split(' ');
-    let empId: string = String(new Date().getTime()) + String(this.nameCnt++).trim();
+//    let empId: string = String(new Date().getTime()) + String(this.nameCnt++).trim();
 
     let node = <UserBatchData>{
       firstName: fullName[0],
@@ -2115,7 +2113,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         }
         for (let i = 0; i < teamSize; i++) {
           //          let childNode = this.buildNode(fullName[0] + ' ' + fullName[1], fullName[0] + '.' + fullName[1] + '@gmail.com', level);
-          let childNode = this.buildNode(empId, level);
+          let childNode = this.buildNode(node.email, level);
           this.testNodes.push(childNode);
         }
       }
@@ -2266,6 +2264,31 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
             }
           ]
         },
+        {
+          label: "User Data 1",
+          key: "userData1",
+          validators: []
+        },
+        {
+          label: "User Data 2",
+          key: "userData2",
+          validators: []
+        },
+        {
+          label: "User Data 3",
+          key: "userData3",
+          validators: []
+        },
+        {
+          label: "User Data 4",
+          key: "userData4",
+          validators: []
+        },
+        {
+          label: "User Data 5",
+          key: "userData5",
+          validators: []
+        },
 
       ],
       type: "Users",
@@ -2344,6 +2367,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.newTeamMember.appAdmin = false;
     this.newTeamMember.profilePicUrl = '';
     this.newTeamMember.directReports = [];
+    this.newTeamMember.userData = {};
     this.newTeamMember.settings = {
       statusList: [],
       showCSV: false,

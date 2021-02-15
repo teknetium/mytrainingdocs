@@ -70,7 +70,7 @@ export class TeammemberComponent extends BaseComponent implements OnInit {
         let trainings = Object.values(this.allTrainingIdHash);
         this.teamTrainings = [];
         for (let training of trainings) {
-          if (training.teamId === this.authenticatedUser.uid) {
+          if (training.teamId === this.authenticatedUser._id) {
             this.teamTrainings.push(training);
           }
         }

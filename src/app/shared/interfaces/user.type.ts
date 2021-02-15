@@ -8,7 +8,6 @@ export interface UserModel {
   lastName: string,
   email: string,
   emailVerified: boolean,
-  empId: string,
   org: string,
   teamId: string,
   teamAdmin: boolean,
@@ -20,6 +19,7 @@ export interface UserModel {
   profilePicUrl: string,
   supervisorId: string,
   directReports: string[],
+  userData: {},
   settings: {
     statusList: string[],
     showCSV: boolean,

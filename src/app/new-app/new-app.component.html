@@ -387,7 +387,6 @@
         <br><br>
         If you choose to upgrade to the Expert plan now, you will be billed at the prorated Expert rate for the
         remainder of the billing period.
-        You will need to
     </div>
     <div *ngIf="!orgObj?.adminIds?.includes(authenticatedUser?._id)">
         Would you like to send a message to your software administrator requesting an upgrade to the Expert Plan?
@@ -399,7 +398,7 @@
     <div style="margin-bottom: 20px;">
         This feature is not available in the <span style="font-size:18px;font-weight: 500;">Basic</span> Plan.
     </div>
-    <div *ngIf="!orgObj?.adminIds?.includes(authenticatedUser._id)">
+    <div *ngIf="!orgObj?.adminIds?.includes(authenticatedUser?._id)">
         Would you like to send a message to your software administrator requesting an upgrade to the Pro Plan?
     </div>
 

@@ -1,9 +1,12 @@
 export interface EventModel {
   _id: string,
   title: string,
-  type: 'user' | 'training' | 'userTraining' | 'loginSession' | 'trainingSession' | 'notification',
+  url: string,
+  type: string,
   userId: string,
   teamId: string,
+  orgId: string,
+  page: string,
   desc: string,
   mark: {
     iconClass: string,

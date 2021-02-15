@@ -1105,6 +1105,7 @@ module.exports = function(app, config) {
       type: req.body.type,
       userId: req.body.userId,
       teamId: req.body.teamId,
+      orgId: req.body.teamId,
       desc: req.body.desc,
       mark: req.body.mark,
       creationDate: req.body.creationDate,

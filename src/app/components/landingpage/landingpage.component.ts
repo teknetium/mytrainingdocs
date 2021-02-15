@@ -10,7 +10,8 @@ import { VgAPI } from 'videogular2/compiled/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { TrainingService } from '../../shared/services/training.service';
-import { filter } from 'rxjs/operators';
+import { filter, takeUntil} from 'rxjs/operators';
+import { BaseComponent } from '../base.component';
 
 
 @Component({
@@ -37,7 +38,7 @@ import { filter } from 'rxjs/operators';
   ]
 })
 
-export class LandingpageComponent implements OnInit {
+export class LandingpageComponent extends BaseComponent  implements OnInit {
 
   vgApi: VgAPI;
   taskVideo$: Observable<SafeResourceUrl>;
@@ -279,6 +280,12 @@ export class LandingpageComponent implements OnInit {
   //  route: string;
   showPriceEditor = false;
 
+  subid;
+  fname;
+  lname;
+  email;
+  trialEnd;
+
   constructor(
     private auth: AuthService,
     private userService: UserService,
@@ -287,7 +294,7 @@ export class LandingpageComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router) {
 
-
+    super();
     this.ngxScrollToDuration = 2000;
     this.ngxScrollToEasing = 'easeOutCubic';
     this.ngxScrollToOffset = 0;
@@ -300,6 +307,15 @@ export class LandingpageComponent implements OnInit {
       if (this.currentPage === 'naydo') {
         this.naydo = true;
       }
+    });
+
+    this.activatedRoute.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+      this.subid = params.get('subid');
+      this.lname = params.get('lname');
+      this.fname = params.get('fname');
+      this.email = params.get('email');
+      this.trialEnd = params.get('trialend');
+      console.log('landignpage', this.subid, this.lname, this.fname, this.email, this.trialEnd);
     });
 
     this.activatedRoute.url.subscribe(url => {
@@ -337,6 +353,10 @@ export class LandingpageComponent implements OnInit {
     this.setCurrentHowStep(0);
 
      */
+  }
+
+  userRangeChanged(index, newVal) {
+    this.userCntChanged(this.userCnt);
   }
 
   planPriceChanged(plan: string, rangeIndex: number, newPrice: number) {

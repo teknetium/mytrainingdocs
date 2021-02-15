@@ -1113,11 +1113,50 @@ textarea.form-control {
 }
  .price-card {
    border-color: #e1e1e1;
-   height:700px;
+   height:fit-content;
    position:relative;
    background-color: #fdfdfd;
  }
 
  .price-card:hover {
    box-shadow: 5px 5px 10px #aaaaaa;
+ }
+
+ .pricing-line-item {
+   display:block;
+   padding-left:20px;
+   margin-top:10px;
+ }
+ .pricing-line-item-category {
+   display:block;
+   padding-left:20px;
+   margin-top:10px;
+   font-weight:600;
+   font-size:16px !important;
+ }
+ 
+ .pricing-line-item-indented {
+   display:block;
+   padding-left:40px;
+   margin-top:5px;
+ }
+ 
+ .pricing-line-item-icon {
+   font-size:14px !important;
+   display:inline-block;
+   width:40px;
+ }
+
+ .pricing-line-item-desc {
+   font-size:14px !important;
+   display:inline-block;
+   font-size:16px;
+   color:black;
+ }
+
+ .pricing-line-item-desc-indented {
+   font-size:14px !important;
+   display:inline-block;
+   font-size:16px;
+   color:black;
  }

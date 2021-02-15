@@ -14,6 +14,7 @@ const eventSchema = new Schema({
   type: { type: String, required: true },
   userId: { type: String, required: true },
   teamId: { type: String, required: false },
+  orgId: { type: String, required: false },
   desc: { type: String },
   mark: {
     iconClass: { type: String, required: true },

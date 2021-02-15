@@ -54,7 +54,7 @@
                                 This file will be uploaded into the system. The following is an example of the required
                                 formatting.
                                 <span style="font-weight:500;margin-left:20px;color:black;">
-                                    Frank,Smith,frank@company.com,123456789,volunteer,Programmer,0987654321
+                                    Frank,Smith,frank@company.com,my.supervisor@company.com
                                 </span>
                             </li>
                             <li>
@@ -519,46 +519,6 @@
                         </label>
                     </nz-radio-group>
                 </div>
-                <!--
-                <div *ngIf="selectionMode === 'Errors'" style="float:left;margin-right:20px;">
-                    <span style="display:block;font-size:14px;font-weight:500;width:fit-content;">User Data
-                        Errors</span>
-                    <nz-radio-group [(ngModel)]="currentUserDataError"
-                        (ngModelChange)="userDataErrorSelectedChanged($event)">
-                        <label nz-radio-button nzValue="duplicateEmail" nz-tooltip nzTooltipTitle="Duplicate Email">
-                            <i class="fas fa-at" style="font-size:16px;"></i>
-                        </label>
-                        <label nz-radio-button nzValue="unknownSupervisor" nz-tooltip
-                            nzTooltipTitle="Supervisor Not Found">
-                            <i class="fas fa-user-tie" style="font-size:16px;"></i>
-                        </label>
-                        <label nz-radio-button nzValue="accountPending" nz-tooltip
-                            nzTooltipTitle="User Account Pending">
-                            <i class="fas fa-exclamation-triangle" style="font-size:16px;"></i>
-                        </label>
-                    </nz-radio-group>
-                </div>
-                -->
-                <!--
-                <div *ngIf="selectionMode === 'Errors'">
-                    <button *ngIf="currentUserDataError === 'accountPending'" nz-button nzShape="round" nzType="primary"
-                        style="display:inline-block;margin-left:10px;" (click)="emailSelectedUsers()">
-                        Resend Registration Email
-                    </button>
-                    <div *ngIf="currentUserDataError === 'duplicateEmail'"
-                        style="display: inline-block;margin-left:10px;">
-                        <span style="display:block;font-size:14px;font-weight:500;">Duplcate Email</span>
-                        <input type="text" nz-input placeholder="input search text" [(ngModel)]="currentDuplicateEmail"
-                            (ngModelChange)="duplicateEmailChange($event)" style="width:200px;"
-                            [ngStyle]="{'color': emailColor}" />
-                        <button *ngIf="userIdsSelected.length > 0" nz-button nzShape="round" nzType="primary"
-                            style="display:inline-block;margin-left:10px;" (click)="saveCorrectedEmail()"
-                            [disabled]="emailColor === 'red'">
-                            Save
-                        </button>
-                    </div>
-                </div>
-            -->
                 <div style="float:left;">
                     <div *ngIf="selectionMode !== 'Individual' && !(selectionMode === 'UserStatus' && currentUserStatus === 'error')"
                         class="selected-node" style="padding:7px;display:inline-block;color:#444444;">
@@ -566,11 +526,13 @@
                     </div>
                     <div *ngIf="selectionMode !== 'Individual' && selectionMode !== 'Errors'"
                         style="border:1px solid #dddddd;border-radius:32px;margin-left:20px;padding:3px;display:inline-block;">
+                        <!--
                         <button *ngIf="selectionMode !== 'Individual'" nz-button nzShape="circle" nzType="default"
                             [disabled]="userIdsSelected.length === 0  || currentUserStatus === 'inactive' || currentUserStatus === 'pending' || currentUserStatus === 'error'"
                             style="display:inline-block;" (click)="processNextUser()" nz-tooltip
                             nzTooltipPlacement="bottomLeft" nzTooltipTitle="Next User">
                             <i class="fas fa-arrow-alt-to-right"></i></button>
+                            -->
                         <button *ngIf="selectionMode !== 'Individual'" nz-button nzShape="circle" nzType="default"
                             [disabled]="userIdsSelected.length === 0  || currentUserStatus === 'inactive' || currentUserStatus === 'pending' || currentUserStatus === 'error'"
                             style="display:inline-block;" (click)="showAssignTrainingModal()" nz-tooltip
@@ -783,10 +745,10 @@
 
         <div *ngIf="showOrgChart === 'true'" style="display:block;height:75%;overflow:scroll;margin-top:20px;">
 
-            <nz-modal [nzVisible]="showOrgChartImageModal" nzTitle="Org Chart" nzWidth="800"
+            <nz-modal [nzVisible]="showOrgChartImageModal" nzTitle="Org Chart" nzWidth="80%"
                 (nzOnCancel)="showOrgChartImageModal = false" (nzOnOk)="downloadPNGImage()" nzOkText="Download Image">
-                <div>
-                    <img #canvas width="700">
+                <div style="text-align: center;">
+                    <img #canvas width="100%">
                     <a #downloadPNGLink></a>
                 </div>
             </nz-modal>
@@ -3280,7 +3242,7 @@
             </div>
         </div>
         <nz-drawer [nzMaskClosable]="true" [nzVisible]="userPanelVisible" nzPlacement="right" nzTitle="User Profile"
-            [nzWidth]="700" (nzOnClose)="closeUserPanel()">
+            [nzWidth]="1000" (nzOnClose)="closeUserPanel()">
             <div *ngIf="selectedUser" style="display:block;width:100%;">
                 <div style="display:block;width:90%;margin-bottom:5px;">
                     <div style="display:inline-block;width:25%;text-align: right;">
@@ -3465,6 +3427,7 @@
                     </div>
                 </div>
             </div>
+            <app-profile></app-profile>
         </nz-drawer>
         <nz-modal [nzVisible]="showUserTrainingModal" nzTitle="Assign Training"
             [nzCancelDisabled]="assignableTrainings.length === 0" (nzOnCancel)="handleCancelUserTraining()"
