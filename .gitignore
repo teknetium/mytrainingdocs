@@ -1,7 +1,9 @@
 /dist
 .DS_Store
 /e2e
-/fontawesome-pro
+/src/assets/fontawesome-pro
 /mypkg.tar
 /node_modules
 sendgrid.env
+.env
+fontawesome-pro

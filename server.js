@@ -5,6 +5,7 @@
  */
 
 // Modules
+require('dotenv').config();
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -24,7 +25,8 @@ const config = require("./server/config");
  |--------------------------------------
  */
 
-mongoose.connect(config.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true});
+
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true});
 const monDb = mongoose.connection;
 
 monDb.on("error", function() {

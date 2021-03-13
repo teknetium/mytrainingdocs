@@ -12,8 +12,9 @@ import { BaseComponent } from '../base.component';
 import { FileService } from '../../shared/services/file.service';
 import { FileModel, FilePlusModel } from 'src/app/shared/interfaces/file.type';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { SendmailService } from '../../shared/services/sendmail.service';
+import { MessageService } from '../../shared/services/message.service';
 import { MessageModel, TemplateMessageModel } from '../../shared/interfaces/message.type';
+import * as cloneDeep from 'lodash/cloneDeep';
 
 
 @Component({
@@ -94,7 +95,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     private userTrainingService: UserTrainingService,
     private trainingService: TrainingService,
     private commentService: CommentService,
-    private mailService: SendmailService,
+    private messageService: MessageService,
     private sanitizer: DomSanitizer,
     private cd: ChangeDetectorRef,
   ) {
@@ -408,18 +409,31 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     this.markCompletedModalIsVisible = false;
     if (this.trainingIdHash[this.utIdHash[this.currentUserTraining].tid].type === 'recurring') {
       this.utIdHash[this.currentUserTraining].status = 'pendingCertUpload';
-      let msg = <TemplateMessageModel>{
-        to: this.authenticatedUser.email,
+      let dynamicTemplateData = {};
+      let msg = <MessageModel>{
+        _id: String(new Date().getTime()),
+        uid: this.authenticatedUser._id,
+        state: 'sent',
+        category: 'systemAlert',
+        subCategory: 'registration',
+        sentDate: new Date().getTime(),
+        to: null,
         from: 'support@mytrainingdocs.com',
         templateId: 'd-ad3c80c12a634f1dbd0c0fd9844fca77',
-        dynamicTemplateData: {
-          trainingTitle: this.trainingIdHash[this.currentTrainingId].title
-        }
+        dynamicTemplateData: null
       }
-      this.mailService.sendTemplateMessages([msg]);
+      dynamicTemplateData[this.authenticatedUser.email] = { trainingTitle: this.trainingIdHash[this.currentTrainingId].title };
+      this.messageService.sendMessages(msg, [this.authenticatedUser.email], cloneDeep(dynamicTemplateData), false);
+      dynamicTemplateData = {};
       let supervisorEmail: string = this.userService.getSupervisorEmailForUser(this.utIdHash[this.currentUserTraining].uid);
       if (supervisorEmail) {
-        let msg2 = <TemplateMessageModel>{
+        let msg2 = <MessageModel>{
+          _id: String(new Date().getTime()),
+          uid: this.authenticatedUser._id,
+          state: 'sent',
+          category: 'systemAlert',
+          subCategory: 'registration',
+          sentDate: new Date().getTime(),
           to: supervisorEmail,
           from: 'support@mytrainingdocs.com',
           templateId: 'd-ab1da847977d4959a2d2c8b58a498ce0',
@@ -429,7 +443,12 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
             uid: this.utIdHash[this.currentUserTraining].uid
           }
         }
-        this.mailService.sendTemplateMessages([msg2]);
+        dynamicTemplateData[supervisorEmail] = {
+          trainingTitle: this.selectedTraining.title,
+          teamMember: this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName,
+          uid: this.utIdHash[this.currentUserTraining].uid
+        }
+        this.messageService.sendMessages(msg2, [supervisorEmail], cloneDeep(dynamicTemplateData), false);
       }
 
       this.utIdHash[this.currentUserTraining].status = 'pendingCertUpload';

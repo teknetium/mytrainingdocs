@@ -1,6 +1,6 @@
 {
-  "name": "enlink",
-  "version": "2.0.0",
+  "name": "mytrainingdocs",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4200 -o",
@@ -35,6 +35,7 @@
     "core-js": "^2.6.11",
     "cors": "^2.8.5",
     "date-fns": "^2.15.0",
+    "dotenv": "^8.2.0",
     "express-jwt": "^5.3.1",
     "filestack-js": "^3.16.0",
     "flatfile-csv-importer": "^0.2.12",

@@ -41,7 +41,12 @@ export interface UserBatchData {
   email: string,
   supervisorEmail: string
   userType?: 'individualContributor' | 'supervisor' | 'volunteer' | 'contractor' | 'customer',
-  jobTitle?: string
+  jobTitle?: string,
+  userData1?: string,
+  userData2?: string,
+  userData3?: string,
+  userData4?: string,
+  userData5?: string,
 }
 
 

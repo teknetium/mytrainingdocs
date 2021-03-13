@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { UserTrainingService } from './userTraining.service';
-import { SendmailService } from './sendmail.service';
+import { MessageService } from './message.service';
 import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
@@ -13,7 +13,7 @@ import { EventModel } from '../interfaces/event.type';
 import { EventService } from './event.service';
 import { JobTitleService } from './jobtitle.service';
 import { OrgService } from './org.service';
-import { TemplateMessageModel } from '../../shared/interfaces/message.type';
+import { MessageModel } from '../../shared/interfaces/message.type';
 import * as cloneDeep from 'lodash/cloneDeep';
 import { OrgModel } from '../interfaces/org.type';
 import { NotificationService } from '../../shared/services/notification.service';
@@ -129,7 +129,7 @@ export class UserService {
     private auth: AuthService,
     private jobTitleService: JobTitleService,
     private userTrainingService: UserTrainingService,
-    private sendmailService: SendmailService,
+    private messageService: MessageService,
     private router: Router,
     private orgService: OrgService,
     private notifyService: NotificationService,
@@ -260,7 +260,13 @@ export class UserService {
   }
 
   sendVerifyEmailMsg(toAddr, uid) {
-    let message = <TemplateMessageModel>{
+    let message = <MessageModel>{
+      _id: String(new Date().getTime()),
+      uid: uid,
+      state: 'sent',
+      category: 'systemAlert',
+      subCategory: 'verifyEmail',
+      sentDate: new Date().getTime(),
       to: toAddr,
       from: 'support@mytrainingdocs.com',
       templateId: 'd-5559cf461838417887b8ffd247983c92',
@@ -268,11 +274,17 @@ export class UserService {
         uid: uid
       },
     }
-    this.sendmailService.sendTemplateMessages([message]);
+    this.messageService.sendMessages(message, [toAddr], null, false);
   }
 
   sendRegistrationMsg(toAddr, fromAddr) {
-    let message = <TemplateMessageModel>{
+    let message = <MessageModel>{
+      _id: String(new Date().getTime()),
+      uid: '',
+      state: 'sent',
+      category: 'systemAlert',
+      subCategory: 'registration',
+      sentDate: new Date().getTime(),
       to: toAddr,
       from: fromAddr,
       templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
@@ -280,7 +292,7 @@ export class UserService {
         email: toAddr
       },
     }
-    this.sendmailService.sendTemplateMessages([message]);
+    this.messageService.sendMessages(message, [toAddr], null, false);
   }
 
   loadData(org, userIdToSelect) {
@@ -515,8 +527,21 @@ export class UserService {
 //    this.fullNameHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
     this.emailHash[this.authenticatedUser.email] = this.authenticatedUser;
 
-    let message: TemplateMessageModel;
-    let msgs: TemplateMessageModel[] = [];
+    let message: MessageModel = {
+      _id: null,
+      uid: null,
+      state: 'sent',
+      category: 'systemAlert',
+      subCategory: 'registration',
+      sentDate: new Date().getTime(),
+      to: '',
+      from: 'greg@mytrainingdocs.com',
+      templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
+      dynamicTemplateData: null
+    }
+    let dynamicTemplateData = {};
+    let toAddrs: string[] = [];
+//    let msgs: MessageModel[] = [];
     let batchCnt = 1;
 //    let _id = String(new Date().getTime());
     
@@ -539,15 +564,12 @@ export class UserService {
       } else {
         this.newTeamMember.email = batchUser.email;
         if (!testing) {
-          message = {
-            to: this.newTeamMember.email,
-            from: 'greg@mytrainingdocs.com',
-            templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
-            dynamicTemplateData: {
-              email: this.newTeamMember.email
-            },
-          }
-          msgs.push(cloneDeep(message));
+          toAddrs.push(this.newTeamMember.email);
+          dynamicTemplateData[this.newTeamMember.email] = {
+            email: this.newTeamMember.email,
+            uid: this.newTeamMember._id,
+          };
+//          msgs.push(cloneDeep(message));
           statusList.push('accountPending');
         }
         this.newTeamMember.userStatus = 'pending';
@@ -579,8 +601,8 @@ export class UserService {
       this.allOrgUserHash[this.newTeamMember._id] = this.newTeamMember;
     }
 
-    if (msgs.length > 0) {
-      this.sendmailService.sendTemplateMessages(msgs);
+    if (toAddrs.length > 0) {
+      this.messageService.sendMessages(message, toAddrs, dynamicTemplateData, false);
     }
 
     for (let nUser of this.newUserList) {

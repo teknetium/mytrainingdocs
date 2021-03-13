@@ -77,7 +77,7 @@ opacity:1.0;
 }
 
 .opaque {
-  opacity: .3;
+  opacity: 1;
 }
 .opaque:hover {
   opacity: 1;
@@ -1119,7 +1119,8 @@ textarea.form-control {
  }
 
  .price-card:hover {
-   box-shadow: 5px 5px 10px #aaaaaa;
+  border: 1px solid #999999;
+  background:rgba(0, 0, 255, 0.04);
  }
 
  .pricing-line-item {

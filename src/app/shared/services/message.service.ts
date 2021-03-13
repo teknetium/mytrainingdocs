@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MessageModel, TemplateMessageModel } from '../interfaces/message.type';
+import { MessageModel } from '../interfaces/message.type';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';
@@ -13,7 +13,7 @@ import * as cloneDeep from 'lodash/cloneDeep';
 @Injectable({
   providedIn: 'root'
 })
-export class SendmailService {
+export class MessageService {
 
   msg: MessageModel;
   templateHash = {
@@ -25,23 +25,49 @@ export class SendmailService {
 
   }
 
-  sendMessages(msgs: MessageModel[], test: boolean) {
+  sendMessages(message: MessageModel, toList: string[], dynamicTemplateData: {}, test: boolean) {
     if (test) {
-      console.log('TEST MODE  sendmailService');
+      console.log('TEST MODE  MessageService');
       return;
     }
     let startIndex = 0;
     let chunckSize = 1000;
-    while (startIndex < msgs.length) {
-      console.log('sendMessages', chunckSize);
-      let tmpArray = cloneDeep(msgs.slice(startIndex, startIndex + chunckSize));
-      startIndex += chunckSize;
-      this.postMessages$(tmpArray).subscribe(item => {
-        console.log('sendmailService : sending messages ', item );
+    let messages: MessageModel[] = [];
+    for (let toAddr of toList) {
+      let msg = cloneDeep(message);
+      msg._id = String(new Date().getTime()) + String(messages.length);
+      msg.to = toAddr;
+      if (dynamicTemplateData) {
+        msg.dynamicTemplateData = dynamicTemplateData[toAddr];
+        msg.uid = msg.dynamicTemplateData.uid;
+      }
+      messages.push(msg);
+      if (messages.length === chunckSize) {
+        let msgList = cloneDeep(messages);
+        this.postMessages$(msgList).subscribe(item => {
+          console.log('messageService : sending messages ', item);
+        });
+        messages = [];
+      }
+    }
+    if (messages.length > 0) {
+      this.postMessages$(cloneDeep(messages)).subscribe(item => {
+        console.log('messageService : sending messages ', item);
       });
     }
+    /*
+    while (startIndex < toList.length) {
+      console.log('sendMessages', chunckSize);
+      let tmpArray = cloneDeep(.slice(startIndex, startIndex + chunckSize));
+      startIndex += chunckSize;
+      this.postMessages$(tmpArray).subscribe(item => {
+        console.log('MessageService : sending messages ', item );
+      });
+    }
+    */
   }
 
+  /*
   sendTemplateMessages(msgs: TemplateMessageModel[]) {
     let startIndex = 0;
     let chunckSize = 1000;
@@ -50,29 +76,32 @@ export class SendmailService {
       let tmpArray = cloneDeep(msgs.slice(startIndex, startIndex + chunckSize));
       startIndex += chunckSize;
       this.postTemplateMessages$(tmpArray).subscribe(item => {
-        console.log('sendmailService : sending template messages ', item);
+        console.log('MessageService : sending template messages ', item);
       });
     }
   }
+  */
 
   postMessages$(msgs: MessageModel[]): Observable<any> {
     return this.http
-      .post<MessageModel[]>(`${ENV.BASE_API}sendmail`, msgs, {
+      .post<MessageModel[]>(`${ENV.BASE_API}message`, msgs, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
         catchError((error) => this._handleError(error))
       );
   }
+  /*
   postTemplateMessages$(msgs: TemplateMessageModel[]): Observable<any> {
     return this.http
-      .post<TemplateMessageModel[]>(`${ENV.BASE_API}sendmail/template`, msgs, {
+      .post<TemplateMessageModel[]>(`${ENV.BASE_API}message/template`, msgs, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
         catchError((error) => this._handleError(error))
       );
   }
+  */
 
   private get _authHeader(): string {
     return `Bearer ${this.auth.accessToken}`;

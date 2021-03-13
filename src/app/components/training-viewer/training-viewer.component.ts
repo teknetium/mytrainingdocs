@@ -18,7 +18,7 @@ import { OrgService } from '../../shared/services/org.service';
 import { VgAPI } from 'videogular2/compiled/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { merge, take } from 'rxjs/operators';
-import { SendmailService } from '../../shared/services/sendmail.service';
+import { MessageService } from '../../shared/services/message.service';
 import { EventService } from '../../shared/services/event.service';
 import { MessageModel, TemplateMessageModel } from '../../shared/interfaces/message.type';
 import { NzMessageService } from 'ng-zorro-antd';
@@ -349,6 +349,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   showFroalaEditor = true;
   orgObj$: Observable<OrgModel>;
   orgObj: OrgModel;
+  userEmailHash = {};
 
 
   constructor(
@@ -362,7 +363,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     private route: ActivatedRoute,
     private userService: UserService,
     private userTrainingService: UserTrainingService,
-    private mailService: SendmailService,
+    private messageService: MessageService,
     private joyrideService: JoyrideService,
     private cd: ChangeDetectorRef,
     private message: NzMessageService,
@@ -631,6 +632,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.myOrgHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgHash => {
       console.log('myOrgHash$  ', myOrgHash);
       this.myOrgHash = myOrgHash;
+      let users = Object.values(this.myOrgHash);
+      for (let user of users) {
+        this.userEmailHash[user.email] = user;
+      }
     })
 
     this.orgObj$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgObj => {
@@ -970,7 +975,9 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   resetTrainingStatus(version: string) {
     this.userTrainingService.resetUserTrainingStatus(this.selectedTraining._id, version);
-    let messages: TemplateMessageModel[] = [];
+    let message: MessageModel;
+    let toAddrs: string[];
+    let dynamicTemplateData = {};
 
     this.subject = 'Urgent: Must retake a training'
     this.messageBody = "Training '" + this.selectedTraining.title + "' has been updated and you are required to retake it.";
@@ -983,37 +990,57 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
     this.notifyService.showAlert(alert);
 
+    let msg = <MessageModel>{
+      _id: null,
+      uid: null,
+      state: 'sent',
+      category: 'systemAlert',
+      subCategory: 'registration',
+      sentDate: new Date().getTime(),
+      to: null,
+      from: 'greg@mytrainingdocs.com',
+      templateId: 'd-b4679d4de1fb41e18d1e2487995f9bdf',
+      dynamicTemplateData: null
+    }
     for (let user of this.assignedToUsers) {
-      let msg = <TemplateMessageModel>{
-        to: this.myOrgHash[user].email,
-        from: 'greg@mytrainingdocs.com',
-        templateId: 'd-b4679d4de1fb41e18d1e2487995f9bdf',
-        dynamicTemplateData: {
-          firstName: this.myOrgHash[user].firstName,
-          trainingTitle: this.selectedTraining.title,
-        }
+      toAddrs.push(this.myOrgHash[user].email);
+      dynamicTemplateData[this.myOrgHash[user].email] = {
+        uid: user,
+        firstName: this.myOrgHash[user].firstName,
+        trainingTitle: this.selectedTraining.title,
       }
-      messages.push(Object.assign({}, msg));
+//      messages.push(Object.assign({}, msg));
     }
 
-    this.mailService.sendTemplateMessages(messages);
+    this.messageService.sendMessages(message, toAddrs, dynamicTemplateData, false );
   }
 
   sendNotifications() {
-    let messages: TemplateMessageModel[] = [];
-    for (let user of this.assignedToUsers) {
-      let msg = <TemplateMessageModel>{
-        to: this.myOrgHash[user].email,
-        from: 'greg@mytrainingdocs.com',
-        templateId: 'd-3d4ee355e8164a999bbd8a4dd3d106dc',
-        dynamicTemplateData: {
-          firstName: this.myOrgHash[user].firstName,
-          trainingTitle: this.selectedTraining.title,
-        }
-      }
-      messages.push(Object.assign({}, msg));
+    let message: MessageModel;
+    let toAddrs: string[];
+    let dynamicTemplateData = {};
+    let msg = <MessageModel>{
+      _id: null,
+      uid: null,
+      state: 'sent',
+      category: 'systemAlert',
+      subCategory: 'registration',
+      sentDate: new Date().getTime(),
+      to: null,
+      from: 'greg@mytrainingdocs.com',
+      templateId: 'd-3d4ee355e8164a999bbd8a4dd3d106dc',
+      dynamicTemplateData: null
     }
-    this.mailService.sendTemplateMessages(messages);
+    for (let user of this.assignedToUsers) {
+      toAddrs.push(this.myOrgHash[user].email);
+      dynamicTemplateData[this.myOrgHash[user].email] = {
+        uid: user,
+        firstName: this.myOrgHash[user].firstName,
+        trainingTitle: this.selectedTraining.title,
+      }
+//      messages.push(Object.assign({}, msg));
+    }
+    this.messageService.sendMessages(msg, toAddrs, dynamicTemplateData, false);
   }
 
   pageUrlChanged() {
@@ -1474,18 +1501,26 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   emailInterestList() {
-    let messages: MessageModel[] = [];
     let msg: MessageModel;
-    for (let email of this.selectedTraining.interestList) {
-      msg = <MessageModel>{
-        to: email,
-        from: this.authenticatedUser.email,
-        subject: this.subject,
-        text: this.messageBody
-      }
-      messages.push(Object.assign({}, msg));
+    let dynamicTemplateData = {};
+    msg = <MessageModel>{
+      _id: null,
+      uid: null,
+      state: 'sent',
+      category: 'systemAlert',
+      subCategory: 'registration',
+      sentDate: new Date().getTime(),
+      to: null,
+      from: this.authenticatedUser.email,
+      subject: this.subject,
+      text: this.messageBody
     }
-    this.mailService.sendMessages(messages, false);
+    for (let email of this.selectedTraining.interestList) {
+      dynamicTemplateData[email] = {
+        uid: this.userEmailHash[email]._id
+      }
+    }
+    this.messageService.sendMessages(msg, this.selectedTraining.interestList, dynamicTemplateData, false);
     this.messageDialogVisible = false;
   }
 

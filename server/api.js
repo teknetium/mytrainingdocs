@@ -18,6 +18,7 @@ const Doc = require("./models/Doc");
 const UTSession = require("./models/UTSession");
 const sgMail = require('@sendgrid/mail');
 const Org = require("./models/Org");
+const Message = require("./models/Message");
 
 /*
  |--------------------------------------
@@ -102,6 +103,7 @@ module.exports = function(app, config) {
   const docProjection = '_id productId productVersion author featureName sections images';
   const commentListProjection = "_id tid version author text rating date";
   const orgListProjection = "_id domain adminIds owner plan createDate userCount";
+  const messageProjection = "_id state category subCategory to from subject text html mbox trainingId";
   const assessmentListProjection = "_id type title owner description timeLimit isFinal passingGrade items";
   const utSessionProjection = "_id utId uid tid teamId startTime stopTime";
 
@@ -111,20 +113,26 @@ module.exports = function(app, config) {
   });
 
   
-  app.post("/api/sendmail", (req, res) => {
+  app.post("/api/message", (req, res) => {
     const msgs = req.body;
-    msgs.forEach(msg => {
-      sgMail.send(msg)
-        .then(() => {
-          console.log('Email sent')
-        })
-        .catch((error) => {
-          console.error(error)
-        });
+    Message.insertMany(msgs, { ordered: false }, (err, messages) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      res.send(messages);
     });
-    res.status(200).send({ count: msgs.length });
+//    msgs.forEach(msg => {
+//      sgMail.send(msg)
+//        .then(() => {
+//          console.log('Email sent')
+//        })
+//        .catch((error) => {
+//          console.error(error)
+//        });
+//    });
+//    res.status(200).send({ count: msgs.length });
   });
-  app.post("/api/sendmail/template", (req, res) => {
+  app.post("/api/message/template", (req, res) => {
     const msgs = req.body;
     msgs.forEach(msg => {
       sgMail.send(msg).then(() => {

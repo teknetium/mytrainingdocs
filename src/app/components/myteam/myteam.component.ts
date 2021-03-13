@@ -16,7 +16,7 @@ import { Observable, BehaviorSubject, Subscription, defer, from, timer, } from '
 import { UserModel, UserFail, UserIdHash, OrgChartNode, BuildOrgProgress, UserBatchData, NodeStat } from '../../shared/interfaces/user.type';
 import { OrgModel } from '../../shared/interfaces/org.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { SendmailService } from '../../shared/services/sendmail.service';
+import { MessageService } from '../../shared/services/message.service';
 import { JobTitleService } from '../../shared/services/jobtitle.service';
 import { MessageModel, TemplateMessageModel } from '../../shared/interfaces/message.type';
 import { takeUntil, filter, scan, map, concatMap, share } from 'rxjs/operators';
@@ -338,6 +338,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   listOfSearchTrainingStatus: string[] = [];
   listOfSearchUserTypes: string[] = [];
   listOfSearchJobTitles: string[] = [];
+  listOfSearchUserData1: string[] = [];
   userListDisplay: UserModel[] = [];
   hoverUid;
   rowSelected = 0;
@@ -1178,7 +1179,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   maxLevelSummary = true;
   includeFullName = false;
   useMaxWidth = true;
-  test = true;
+  test = false;
   userMin = 5;
   userMax = 9;
   maxLevelUserMin = 3;
@@ -1255,12 +1256,17 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   showCSVBuffer = false;
   errorUIDs = [];
   showBulkAddModal = false;
+  userDataProp1 = '';
+  userDataProp2 = '';
+  userDataProp3 = '';
+  userDataProp4 = '';
+  userDataProp5 = '';
 
   constructor(
     private cd: ChangeDetectorRef,
     private authService: AuthService,
     private userService: UserService,
-    private mailService: SendmailService,
+    private mailService: MessageService,
     private trainingService: TrainingService,
     private orgService: OrgService,
     private jobTitleService: JobTitleService,
@@ -1813,20 +1819,27 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   //  delayAndCall(arr:)
 
   sendMessage() {
-    let messages: MessageModel[] = [];
+    let toList = [];
+    let dynamicTemplateData = {};
     let msg = <MessageModel>{
-      to: '',
+      _id: null,
+      uid: null,
+      state: 'draft',
+      category: 'userMessage',
+      sentDate: new Date().getTime(),
+      to: null,
       from: this.authenticatedUser.email,
       subject: this.msgSubject,
       text: this.msgBody
     }
     for (let uid of this.recipientUidList) {
-      console.log("sending message to")
-      msg.to = this.myOrgUserHash[uid].email;
-      messages.push(Object.assign({}, msg));
+      toList.push(this.myOrgUserHash[uid].email);
+      dynamicTemplateData[this.myOrgUserHash[uid].email] = {
+        uid: uid
+      }
     }
     this.showMessageModal = false;
-    this.mailService.sendMessages(messages, this.test);
+    this.mailService.sendMessages(msg, toList, null, this.test);
   }
 
   currentRecipient(uid) {
@@ -1902,9 +1915,14 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         //        } else {
         //          supervisorName = '';
         //        }
-        this.usersCSV += user.firstName + ',' + user.lastName + ',' + user.email + ',' + user.supervisorId + ',' + user.jobTitle + ',' + user.userType + '\n';
+        this.usersCSV += user.firstName + ',' + user.lastName + ',' + user.email + ',' + user.supervisorId + ',' + user.jobTitle + ',' + user.userType + ',' + 'geo=' + this.getGeo() + '\n';
       }
     }
+  }
+
+  getGeo(): string {
+    let geo: string;
+    return geo;
   }
 
   jobTitleSelectedChanged(filters: string[]) {
@@ -1974,11 +1992,18 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.listOfSearchTrainingStatus = [];
     this.listOfSearchUserTypes = [];
     this.listOfSearchJobTitles = [];
+    this.listOfSearchUserData1 = [];
     this.search();
   }
 
   filterJobTitles(listOfSearchJobTitles: string[]): void {
     this.listOfSearchJobTitles = listOfSearchJobTitles;
+    //    console.log('filterJobTitles', this.listOfSearchJobTitles);
+    this.search();
+  }
+
+  filterUserData1(listOfSearchUserData1: string[]): void {
+    this.listOfSearchUserData1 = listOfSearchUserData1;
     //    console.log('filterJobTitles', this.listOfSearchJobTitles);
     this.search();
   }
@@ -2646,7 +2671,12 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         pending: 0,
         error: 0
       },
-      jobTitleHash: {}
+      jobTitleHash: {},
+      userData1Hash: {},
+      userData2Hash: {},
+      userData3Hash: {},
+      userData4Hash: {},
+      userData5Hash: {},
     }
 
     this.nodeStatHash[userId] = cloneDeep(nodeStatObj);

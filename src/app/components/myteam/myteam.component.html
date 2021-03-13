@@ -435,7 +435,7 @@
                             <button [disabled]="!userIdSelected" nz-button nzShape="circle"
                                 style="display:inline-block;margin-left:3px;" nz-popconfirm
                                 nzPopconfirmTitle="Resend Registration Message?"
-                                (nzOnConfirm)="resendRegistrationMsg(selectedUser.email, authenticatedUser.email)"
+                                (nzOnConfirm)="resendRegistrationMsg(selectedUser, authenticatedUser.email)"
                                 nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Resend Registration Email">
                                 <i class="fas fa-share"></i>
                             </button>
@@ -679,9 +679,6 @@
                 style="width:100%;background-color: #fafafa;font-size:12px;font-size:12px;display:inline-block;">
                 <thead (nzSortChange)="sort($event)" nzSingleSort>
                     <tr style="background-color: #fafafa;">
-                        <!--
-                    <th nzShowExpand></th>
-                    -->
                         <th nzShowSort nzSortKey="trainingStatus" [nzFilters]="listOfTrainingStatus"
                             (nzFilterChange)="filterTrainingStatus($event)" nzShowFilter style="width:10%;">Training
                             Status</th>
@@ -691,10 +688,9 @@
                             (nzFilterChange)="filterUserType($event)" nzShowFilter style="width:15%;">User Type</th>
                         <th nzShowSort nzSortKey="jobTitle" style="width:10%;" [nzFilters]="listOfJobTitles"
                             (nzFilterChange)="filterJobTitles($event)" nzShowFilter>Job Title</th>
+                        <th nzShowSort nzSortKey="userData[userDataProp1]" style="width:10%;" [nzFilters]="listOfUserData1"
+                            (nzFilterChange)="filterJobTitles($event)" nzShowFilter>Job Title</th>
                         <th style="width:15%;">Trainings</th>
-                        <!--
-                        <th style="width:15%;text-align: center;">Actions</th>
-                        -->
                     </tr>
                 </thead>
                 <tbody>
@@ -3427,7 +3423,9 @@
                     </div>
                 </div>
             </div>
+            <!--
             <app-profile></app-profile>
+            -->
         </nz-drawer>
         <nz-modal [nzVisible]="showUserTrainingModal" nzTitle="Assign Training"
             [nzCancelDisabled]="assignableTrainings.length === 0" (nzOnCancel)="handleCancelUserTraining()"
