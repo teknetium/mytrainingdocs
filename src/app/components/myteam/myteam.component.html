@@ -293,6 +293,7 @@
             </ng-template>
         </div>
     </div>
+    <!--
     <div style="position:fixed;bottom:5px;left:5px;z-index:1000;">
         <button *ngIf="!showLegend" nz-button nzType="primary" (click)="showLegend = true">
             Show Legend
@@ -301,18 +302,32 @@
             Hide Legend
         </button>
     </div>
+    -->
     <div style="position:relative;width:100%;height:100%;">
         <div
             style="position:relative;margin-left:-20px;margin-top:-20px;margin-right:-20px;background-color: #fafafa;border:1px solid #dddddd;padding:10px 20px;">
             <div>
-                <div style="float:left;width:20%;">
+                <div style="float:left;width:25%;">
+                    <div style="display:inline-block;margin-right:10px;vertical-align: middle;">
+                            <i *ngIf="!showLegend" nz-icon [nzType]="'menu-unfold'" style="cursor:pointer;font-size:24px;margin:5px;" (click)="showLegend = true" nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Show Legend"></i>
+                            <i *ngIf="showLegend" nz-icon [nzType]="'menu-fold'" style="cursor:pointer;font-size:24px;margin:5px;" (click)="showLegend = false" nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Hide Legend"></i>                        <!--
+                        <button *ngIf="!showLegend" nz-button nzSize="default" nzType="default" style="display:inline-block;" (click)="showLegend = true"
+                            nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Show Legend">
+                            <i nz-icon [nzType]="'menu-unfold'" style="font-size:18px;margin:5px;"></i>
+                        </button>
+                        <button *ngIf="showLegend" nz-button nzSize="default" nzType="default" style="display:inline-block;" (click)="showLegend = false"
+                            nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Hide Legend">
+                            <i nz-icon [nzType]="'menu-fold'" style="font-size:18px;margin:5px;"></i>
+                        </button>
+                        -->
+                    </div>
                     <nz-radio-group [(ngModel)]="showOrgChart" (ngModelChange)="toggleMainView($event)">
                         <label nz-radio-button nzValue="true" nz-tooltip nzTooltipTitle="Org Chart"><i nz-icon
                                 nzType="apartment" nzTheme="outline" style="font-size:18px;"></i></label>
                         <label nz-radio-button nzValue="false" nz-tooltip nzTooltipTitle="List"><i nz-icon
                                 nzType="unordered-list" nzTheme="outline" style="font-size:18px;"></i></label>
                     </nz-radio-group>
-                    <div style="display:inline-block;margin-left:20px;vertical-align: middle;">
+                    <div style="display:inline-block;margin-left:10px;vertical-align: middle;">
                         <button nz-button nzSize="default" nzType="default" style="display:inline-block;"
                             (click)="showBulkAddModal = true" nz-tooltip nzTooltipPlacement="top"
                             nzTooltipTitle="Add Users">
@@ -322,7 +337,7 @@
                     <div style="cursor:pointer;position:fixed;top:65px;left:220px;width:20px;height:60px;z-index:1000;"
                         (click)="showCSVBuffer = !showCSVBuffer"></div>
                 </div>
-                <div *ngIf="showOrgChart === 'true'" style="float:left;width:50%;">
+                <div *ngIf="showOrgChart === 'true'" style="float:left;width:45%;">
                     <div style="float:right;padding-right:10%;">
                         <nz-radio-group [(ngModel)]="selectionMode" (ngModelChange)="setSelectionMode($event)">
                             <label nz-radio-button nzValue="UserStatus" nz-tooltip
@@ -625,7 +640,7 @@
                 <div style="clear: both;"></div>
             </div>
             <div
-                style="position:fixed;bottom:5px;left:150px;right:150px;background:rgba(0,0,255,.09);padding:10px;border:2px solid #afbcf8;border-radius: 5px;">
+                style="position:fixed;bottom:5px;left:75px;right:75px;background:rgba(0,0,255,.09);padding:10px;border:2px solid #afbcf8;border-radius: 5px;">
                 <div
                     style="float:left;width:50%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;padding:5px;">
                     <div *ngIf="currentHoverUser" style="width:100%;">

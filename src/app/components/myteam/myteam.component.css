@@ -387,7 +387,7 @@ ul.ant-card-actions {
 .legend {
     position:fixed;
     left:10px;
-    bottom:50px;
+    top:200px;
     width:300px;
     z-index: 10000;
     color: black;

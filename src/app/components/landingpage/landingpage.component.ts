@@ -257,7 +257,7 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
   explainerVidIsVisible = false;
   planSelected = false;
   plan = '';
-  userCnt = 0;
+  userCnt = 150;
   monthlyCost = 0;
   planCostPerUserHash = {
     basic: [10, 8, 6],
@@ -308,6 +308,8 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
         this.naydo = true;
       }
     });
+
+    this.userCntChanged(this.userCnt);
 
     this.activatedRoute.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
       this.subid = params.get('subid');
