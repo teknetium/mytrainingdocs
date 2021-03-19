@@ -767,7 +767,7 @@
                     </div>
                     <div class="supervisor-node org-chart-node" style="text-align: center;margin-bottom:20px;"
                         id="{{authenticatedUser._id}}">
-                        <div style="display:inline-block;padding:5px 5px 0 5px;position:relative;border:2px solid white;cursor:pointer;border-radius:5px;"
+                        <div style="display:inline-block;padding:5px 5px 0 5px;position:relative;border:1px solid white;cursor:pointer;border-radius:5px;"
                             (mouseenter)="setHoverData(authenticatedUser._id)" (mouseleave)="setHoverData(null)"
                             (click)="selectUser(authenticatedUser._id)" joyrideStep="task1Step2"
                             [stepContent]="stepContent" [stepContentParams]="taskStepContentHash?.task1Step2"
@@ -3207,7 +3207,7 @@
                                                                                                                         (mouseleave)="setHoverData(null)"
                                                                                                                         class="org-chart-node">
                                                                                                                         <div (click)="selectUser(dr8)"
-                                                                                                                            style="border:2px solid white;margin:0 8px;"
+                                                                                                                            style="border:1px solid white;margin:0 8px;"
                                                                                                                             [ngClass]="{'selected-node': (selectionMode === 'Individual' && userIdSelected === dr8) || (selectionMode !== 'Indiviual' &&
                                                                                                                             userIdsSelected.includes(dr8)), 'hover-node': userIdSelected !== dr8 && allActive || dr8 === currentHoverUid ||
                                                                                                                             orgChartNodeHash[dr8]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr8)}">
