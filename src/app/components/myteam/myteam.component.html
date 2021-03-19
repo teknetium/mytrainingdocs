@@ -42,7 +42,7 @@
                     HRM systems typically have a way to export data to a text or spreadsheat format document.
                 </p>
                 <p>
-                    
+
                 </p>
                 <div style="padding-left:40px;">
 
@@ -94,7 +94,7 @@
             </div>
         </div>
         <div *ngIf="currentStep === 2" class="steps-content">
-            The upload process has completed.  {{newUsers.length}} users were uploaded.
+            The upload process has completed. {{newUsers.length}} users were uploaded.
             <button nz-button nzType="default" (click)="registerUsers()">
                 <span>Register Users</span>
             </button>
@@ -293,33 +293,18 @@
             </ng-template>
         </div>
     </div>
-    <!--
-    <div style="position:fixed;bottom:5px;left:5px;z-index:1000;">
-        <button *ngIf="!showLegend" nz-button nzType="primary" (click)="showLegend = true">
-            Show Legend
-        </button>
-        <button *ngIf="showLegend" nz-button nzType="primary" (click)="showLegend = false">
-            Hide Legend
-        </button>
-    </div>
-    -->
     <div style="position:relative;width:100%;height:100%;">
         <div
             style="position:relative;margin-left:-20px;margin-top:-20px;margin-right:-20px;background-color: #fafafa;border:1px solid #dddddd;padding:10px 20px;">
             <div>
                 <div style="float:left;width:25%;">
                     <div style="display:inline-block;margin-right:10px;vertical-align: middle;">
-                            <i *ngIf="!showLegend" nz-icon [nzType]="'menu-unfold'" style="cursor:pointer;font-size:24px;margin:5px;" (click)="showLegend = true" nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Show Legend"></i>
-                            <i *ngIf="showLegend" nz-icon [nzType]="'menu-fold'" style="cursor:pointer;font-size:24px;margin:5px;" (click)="showLegend = false" nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Hide Legend"></i>                        <!--
-                        <button *ngIf="!showLegend" nz-button nzSize="default" nzType="default" style="display:inline-block;" (click)="showLegend = true"
-                            nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Show Legend">
-                            <i nz-icon [nzType]="'menu-unfold'" style="font-size:18px;margin:5px;"></i>
-                        </button>
-                        <button *ngIf="showLegend" nz-button nzSize="default" nzType="default" style="display:inline-block;" (click)="showLegend = false"
-                            nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Hide Legend">
-                            <i nz-icon [nzType]="'menu-fold'" style="font-size:18px;margin:5px;"></i>
-                        </button>
-                        -->
+                        <i *ngIf="!showLegend" class="far fa-indent" style="cursor:pointer;font-size:24px;margin:5px;"
+                            (click)="showLegend = true" nz-tooltip nzTooltipPlacement="top"
+                            nzTooltipTitle="Show Legend"></i>
+                        <i *ngIf="showLegend" class="far fa-outdent" style="cursor:pointer;font-size:24px;margin:5px;"
+                            (click)="showLegend = false" nz-tooltip nzTooltipPlacement="top"
+                            nzTooltipTitle="Hide Legend"></i>
                     </div>
                     <nz-radio-group [(ngModel)]="showOrgChart" (ngModelChange)="toggleMainView($event)">
                         <label nz-radio-button nzValue="true" nz-tooltip nzTooltipTitle="Org Chart"><i nz-icon
@@ -450,8 +435,8 @@
                             <button [disabled]="!userIdSelected" nz-button nzShape="circle"
                                 style="display:inline-block;margin-left:3px;" nz-popconfirm
                                 nzPopconfirmTitle="Resend Registration Message?"
-                                (nzOnConfirm)="resendRegistrationMsg(selectedUser, authenticatedUser.email)"
-                                nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Resend Registration Email">
+                                (nzOnConfirm)="resendRegistrationMsg(selectedUser, authenticatedUser.email)" nz-tooltip
+                                nzTooltipPlacement="bottomLeft" nzTooltipTitle="Resend Registration Email">
                                 <i class="fas fa-share"></i>
                             </button>
                         </div>
@@ -703,8 +688,9 @@
                             (nzFilterChange)="filterUserType($event)" nzShowFilter style="width:15%;">User Type</th>
                         <th nzShowSort nzSortKey="jobTitle" style="width:10%;" [nzFilters]="listOfJobTitles"
                             (nzFilterChange)="filterJobTitles($event)" nzShowFilter>Job Title</th>
-                        <th nzShowSort nzSortKey="userData[userDataProp1]" style="width:10%;" [nzFilters]="listOfUserData1"
-                            (nzFilterChange)="filterJobTitles($event)" nzShowFilter>Job Title</th>
+                        <th nzShowSort nzSortKey="userData[userDataProp1]" style="width:10%;"
+                            [nzFilters]="listOfUserData1" (nzFilterChange)="filterJobTitles($event)" nzShowFilter>Job
+                            Title</th>
                         <th style="width:15%;">Trainings</th>
                     </tr>
                 </thead>
@@ -828,11 +814,10 @@
                                             {{nodeStatHash[authenticatedUser._id]?.selectedCnt}}
                                         </div>
                                     </div>
-                                    <!--
                                     <div
                                         style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
-                                        User Training Status</div>
-                                        -->
+                                        User Training Status
+                                    </div>
                                     <div nz-tooltip nzTooltipTitle="Users With No Trainings" nzTooltipPlacement="right"
                                         style="display:flex;justify-content:space-between;">
                                         <i class="fas fa-user" style="color:black;font-size:16px;padding-top:2px;"></i>
@@ -862,7 +847,8 @@
                                     </div>
                                     <div
                                         style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
-                                        Training Status</div>
+                                        Training Status
+                                    </div>
                                     <div nz-tooltip nzTooltipTitle="In Progress" nzTooltipPlacement="right"
                                         style="display:flex;justify-content:space-between;">
                                         <i class="fas fa-graduation-cap"
@@ -900,12 +886,13 @@
                                     </div>
                                     <div
                                         style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
-                                        Job Titles</div>
+                                        Job Titles
+                                    </div>
                                     <div *ngFor="let jobTitle of jobTitles"
                                         [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
-                                        style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                        style="display:flex;justify-content:space-between;margin-bottom: 3px;font-size:12px;">
                                         {{jobTitle}}
-                                        <div style="margin-left:20px;">
+                                        <div style="margin-left:20px;font-size: 12px;">
                                             {{ nodeStatHash[authenticatedUser._id]?.jobTitleHash[jobTitle] }}
                                         </div>
                                     </div>
@@ -922,7 +909,7 @@
                                     </div>
                                     <div
                                         style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
-                                        User Type</div>
+                                        User Types</div>
                                     <div nz-tooltip nzTooltipTitle="Individual Contributors"
                                         [ngClass]="{'selected-item': currentUserType === 'individualContributor'}"
                                         nzTooltipPlacement="right"
@@ -988,7 +975,8 @@
                                     </div>
                                     <div
                                         style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
-                                        User Status</div>
+                                        User Status
+                                    </div>
                                     <div nz-tooltip nzTooltipTitle="Active"
                                         [ngClass]="{'selected-item': currentUserStatus === 'active'}"
                                         nzTooltipPlacement="right"
@@ -1162,9 +1150,9 @@
                                                 </div>
                                                 <div *ngFor="let jobTitle of jobTitles"
                                                     [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
-                                                    style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                    style="display:flex;justify-content:space-between;margin-bottom: 3px;font-size:12px;">
                                                     {{jobTitle}}
-                                                    <div style="margin-left:20px;">
+                                                    <div style="margin-left:20px;font-size: 12px;">
                                                         {{ nodeStatHash[dr]?.jobTitleHash[jobTitle] }}
                                                     </div>
                                                 </div>
@@ -1244,9 +1232,11 @@
                                                         {{nodeStatHash[dr]?.selectedCnt}}
                                                     </div>
                                                 </div>
+                                                <!--
                                                 <div
                                                     style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
                                                     User Status</div>
+                                                    -->
                                                 <div nz-tooltip nzTooltipTitle="Active" nzTooltipPlacement="right"
                                                     style="display:flex;justify-content:space-between;margin-bottom:5px;">
                                                     <i class="fas fa-user"
@@ -1432,9 +1422,9 @@
                                                             </div>
                                                             <div *ngFor="let jobTitle of jobTitles"
                                                                 [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
-                                                                style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                                style="display:flex;justify-content:space-between;margin-bottom: 3px;font-size:12px;">
                                                                 {{jobTitle}}
-                                                                <div style="margin-left:20px;">
+                                                                <div style="margin-left:20px;font-size: 12px;">
                                                                     {{ nodeStatHash[dr2]?.jobTitleHash[jobTitle] }}
                                                                 </div>
                                                             </div>
@@ -1520,9 +1510,11 @@
                                                                     {{nodeStatHash[dr2]?.selectedCnt}}
                                                                 </div>
                                                             </div>
+                                                            <!--
                                                             <div
                                                                 style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
                                                                 User Status</div>
+                                                                -->
                                                             <div nz-tooltip nzTooltipTitle="Active"
                                                                 nzTooltipPlacement="right"
                                                                 style="display:flex;justify-content:space-between;margin-bottom:5px;">
@@ -1724,12 +1716,10 @@
                                                                         </div>
                                                                         <div *ngFor="let jobTitle of jobTitles"
                                                                             [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
-                                                                            style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                                            style="display:flex;justify-content:space-between;margin-bottom: 3px;font-size:12px;">
                                                                             {{jobTitle}}
-                                                                            <div style="margin-left:20px;">
-                                                                                {{
-                                                                                nodeStatHash[dr3]?.jobTitleHash[jobTitle]
-                                                                                }}
+                                                                            <div style="margin-left:20px;font-size: 12px;">
+                                                                                {{nodeStatHash[dr3]?.jobTitleHash[jobTitle]}}
                                                                             </div>
                                                                         </div>
 
@@ -1818,9 +1808,11 @@
                                                                                 {{nodeStatHash[dr3]?.selectedCnt}}
                                                                             </div>
                                                                         </div>
+                                                                        <!--
                                                                         <div
                                                                             style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
                                                                             User Status</div>
+                                                                            -->
                                                                         <div nz-tooltip nzTooltipTitle="Active"
                                                                             nzTooltipPlacement="right"
                                                                             style="display:flex;justify-content:space-between;margin-bottom:5px;">
@@ -2035,9 +2027,9 @@
                                                                                     </div>
                                                                                     <div *ngFor="let jobTitle of jobTitles"
                                                                                         [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
-                                                                                        style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                                                        style="display:flex;justify-content:space-between;margin-bottom: 3px;font-size:12px;">
                                                                                         {{jobTitle}}
-                                                                                        <div style="margin-left:20px;">
+                                                                                        <div style="margin-left:20px;font-size: 12px;">
                                                                                             {{
                                                                                             nodeStatHash[dr4]?.jobTitleHash[jobTitle]
                                                                                             }}
@@ -2140,9 +2132,11 @@
                                                                                             {{nodeStatHash[dr4]?.selectedCnt}}
                                                                                         </div>
                                                                                     </div>
+                                                                                    <!--
                                                                                     <div
                                                                                         style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
                                                                                         User Status</div>
+                                                                                        -->
                                                                                     <div nz-tooltip
                                                                                         nzTooltipTitle="Active"
                                                                                         nzTooltipPlacement="right"
@@ -2363,10 +2357,10 @@
                                                                                                 </div>
                                                                                                 <div *ngFor="let jobTitle of jobTitles"
                                                                                                     [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
-                                                                                                    style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                                                                    style="display:flex;justify-content:space-between;margin-bottom: 3px;font-size:12px;">
                                                                                                     {{jobTitle}}
                                                                                                     <div
-                                                                                                        style="margin-left:20px;">
+                                                                                                        style="margin-left:20px;font-size: 12px;">
                                                                                                         {{
                                                                                                         nodeStatHash[dr5]?.jobTitleHash[jobTitle]
                                                                                                         }}
@@ -2469,9 +2463,11 @@
                                                                                                         {{nodeStatHash[dr5]?.selectedCnt}}
                                                                                                     </div>
                                                                                                 </div>
+                                                                                                <!--
                                                                                                 <div
                                                                                                     style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
                                                                                                     User Status</div>
+                                                                                                    -->
                                                                                                 <div nz-tooltip
                                                                                                     nzTooltipTitle="Active"
                                                                                                     nzTooltipPlacement="right"
@@ -2697,10 +2693,10 @@
                                                                                                             </div>
                                                                                                             <div *ngFor="let jobTitle of jobTitles"
                                                                                                                 [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
-                                                                                                                style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                                                                                style="display:flex;justify-content:space-between;margin-bottom: 3px;font-size:12px;">
                                                                                                                 {{jobTitle}}
                                                                                                                 <div
-                                                                                                                    style="margin-left:20px;">
+                                                                                                                    style="margin-left:20px;font-size:12px;">
                                                                                                                     {{
                                                                                                                     nodeStatHash[dr6]?.jobTitleHash[jobTitle]
                                                                                                                     }}
@@ -3028,10 +3024,10 @@
                                                                                                                         </div>
                                                                                                                         <div *ngFor="let jobTitle of jobTitles"
                                                                                                                             [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
-                                                                                                                            style="display:flex;justify-content:space-between;margin-bottom: 3px;">
+                                                                                                                            style="display:flex;justify-content:space-between;margin-bottom: 3px;font-size:12px;">
                                                                                                                             {{jobTitle}}
                                                                                                                             <div
-                                                                                                                                style="margin-left:20px;">
+                                                                                                                                style="margin-left:20px;font-size:12px;">
                                                                                                                                 {{
                                                                                                                                 nodeStatHash[dr7]?.jobTitleHash[jobTitle]
                                                                                                                                 }}
