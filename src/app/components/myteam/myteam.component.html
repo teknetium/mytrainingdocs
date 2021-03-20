@@ -118,11 +118,8 @@
     </div>
 </nz-modal>
 <div *ngIf="authenticatedUser && !showBulkAddModal" style="height:100%;">
-    <div *ngIf="showOrgChart === 'true'" class="legend" [@legendSlide]="showLegend ? 'open' : 'closed'">
+    <nz-drawer [nzMaskClosable]="true" [nzVisible]="showLegend" nzPlacement="left" nzTitle="Legend" [nzWidth]="400" (nzOnClose)="showLegend = false">
         <div>
-            <div style="font-size:18px;text-align: center;margin-bottom:20px;font-weight: 500;">
-                Legend
-            </div>
             <div class="legend-header">
                 SELECTION MODE
             </div>
@@ -292,7 +289,7 @@
                 </div>
             </ng-template>
         </div>
-    </div>
+    </nz-drawer>
     <div style="position:relative;width:100%;height:100%;">
         <div
             style="position:relative;margin-left:-20px;margin-top:-20px;margin-right:-20px;background-color: #fafafa;border:1px solid #dddddd;padding:10px 20px;">
@@ -302,9 +299,6 @@
                         <i *ngIf="!showLegend" class="far fa-indent" style="cursor:pointer;font-size:24px;margin:5px;"
                             (click)="showLegend = true" nz-tooltip nzTooltipPlacement="top"
                             nzTooltipTitle="Show Legend"></i>
-                        <i *ngIf="showLegend" class="far fa-outdent" style="cursor:pointer;font-size:24px;margin:5px;"
-                            (click)="showLegend = false" nz-tooltip nzTooltipPlacement="top"
-                            nzTooltipTitle="Hide Legend"></i>
                     </div>
                     <nz-radio-group [(ngModel)]="showOrgChart" (ngModelChange)="toggleMainView($event)">
                         <label nz-radio-button nzValue="true" nz-tooltip nzTooltipTitle="Org Chart"><i nz-icon
@@ -1718,7 +1712,8 @@
                                                                             [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
                                                                             style="display:flex;justify-content:space-between;margin-bottom: 3px;font-size:12px;">
                                                                             {{jobTitle}}
-                                                                            <div style="margin-left:20px;font-size: 12px;">
+                                                                            <div
+                                                                                style="margin-left:20px;font-size: 12px;">
                                                                                 {{nodeStatHash[dr3]?.jobTitleHash[jobTitle]}}
                                                                             </div>
                                                                         </div>
@@ -2029,7 +2024,8 @@
                                                                                         [ngClass]="{'selected-item': currentJobTitlesSelected.includes(jobTitle)}"
                                                                                         style="display:flex;justify-content:space-between;margin-bottom: 3px;font-size:12px;">
                                                                                         {{jobTitle}}
-                                                                                        <div style="margin-left:20px;font-size: 12px;">
+                                                                                        <div
+                                                                                            style="margin-left:20px;font-size: 12px;">
                                                                                             {{
                                                                                             nodeStatHash[dr4]?.jobTitleHash[jobTitle]
                                                                                             }}
