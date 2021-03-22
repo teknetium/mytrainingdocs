@@ -193,6 +193,10 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
   duration: string = "month";
 
   pricingModel = {
+    'earlyAccess': {
+      monthly: 99,
+      yearly: 999
+    },
     'basic': {
       monthly: 99,
       yearly: 999
@@ -267,9 +271,10 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
   userRange = [100, 300];
   discounts = {
     nonProfit: .25,
-    conference: .15
+    conference: .20
   }
   monthlyCostHash = {
+    earlyAccess: 0,
     basic: 0,
     pro: 0,
     expert: 0
@@ -279,6 +284,8 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
   naydo = false;
   //  route: string;
   showPriceEditor = false;
+
+  earlyAccess = true;
 
   subid;
   fname;

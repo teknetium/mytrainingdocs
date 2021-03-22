@@ -327,7 +327,7 @@
   -->
     <!-- END CTA -->
     <section class="section" id="price">
-      <div class="container">
+      <div class="container" style="width:95%;">
         <div class="row">
           <div class="col-lg-12">
             <div class="text-center">
@@ -350,6 +350,26 @@
         <div class="row align-items-center">
           <div class="col-md-12">
             <div *ngIf="showPriceEditor">
+              <!--
+              <div style="margin-top:20px;">
+                <span style="font-size:24px;color:blue;">Early Access Plan</span>
+                <div style="display:inline-block;">
+                  <nz-input-number [(ngModel)]="planCostPerUserHash['earlyAccess'][0]" [nzMin]="0" [nzMax]="50"
+                    nzSize="large" [nzStep]="1" (ngModelChange)="planPriceChanged('earlyAccess', 0, $event)">
+                  </nz-input-number>
+                </div>
+                <div style="display:inline-block;">
+                  <nz-input-number [(ngModel)]="planCostPerUserHash['earlyAccess'][1]" [nzMin]="0" [nzMax]="50"
+                    nzSize="large" [nzStep]="1" (ngModelChange)="planPriceChanged('earlyAccess', 1, $event)">
+                  </nz-input-number>
+                </div>
+                <div style="display:inline-block;">
+                  <nz-input-number [(ngModel)]="planCostPerUserHash['earlyAccess'][2]" [nzMin]="0" [nzMax]="50"
+                    nzSize="large" [nzStep]="1" (ngModelChange)="planPriceChanged('earlyAccess', 2, $event)">
+                  </nz-input-number>
+                </div>
+              </div>
+              -->
               <div style="margin-top:20px;">
                 <span style="font-size:24px;color:blue;">Basic Plan</span>
                 <div style="display:inline-block;">
@@ -425,9 +445,10 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <nz-card class="price-card">
               <div style="text-align: center;">
+                <!--
                 <div
                   style="font-size:12px;width:100%;display: inline-block;margin-bottom:20px;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:10px;">
                   <h2>{{userCnt}} Users</h2>
@@ -477,40 +498,47 @@
                           <span style="color:#aaaaaa;">$</span>
                           <span *ngIf="userCnt === 0" style="color:blue;">0</span>
                           <span *ngIf="userCnt > 0"
-                            style="font-family: monospace;color:blue;">{{((monthlyCostHash['basic'] -
-                            (monthlyCostHash['basic'] *
+                            style="font-family: monospace;color:blue;">{{((monthlyCostHash['earlyAccess'] -
+                            (monthlyCostHash['earlyAccess'] *
                             discounts.nonProfit) -
-                            ((monthlyCostHash['basic'] - (monthlyCostHash['basic'] * discounts.nonProfit)) *
+                            ((monthlyCostHash['earlyAccess'] - (monthlyCostHash['earlyAccess'] * discounts.nonProfit)) *
                             discounts.conference)) / userCnt)?.toFixed(2)}}</span>
                         </td>
                         <td *ngIf="!naydo" style="font-size:14px;font-family: monospace;text-align: right;width:35%;">
                           <span style="color:#aaaaaa;">$</span>
                           <span *ngIf="userCnt === 0" style="color:blue;">0</span>
-                          <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{(monthlyCostHash['basic'] /
+                          <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{(monthlyCostHash['earlyAccess'] /
                             userCnt)?.toFixed(2)}}</span>
                         </td>
                       </tr>
                     </tbody>
                   </nz-table>
                 </div>
+                -->
                 <div class="media align-items-center" style="display:block;">
-                  <i class="fad fa-user" style="font-size:46px;color:green;margin-bottom:5px;"></i>
+                  <i class="fad fa-user-hard-hat" style="font-size:46px;color:cornflowerblue;margin-bottom:5px;"></i>
                   <div style="text-align: center;">
-                    <h3>Basic</h3>
+                    <h2>Early Access</h2>
                     <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
                       <div style="margin:20px 0 40px 0;">
                         <div style="display:block;width:100%;color:black;">
+                          <span style="color:#aaaaaa;font-size:30px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">1,250
+                          </span>
+                          <!--
                           <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['basic'][0]}}
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['earlyAccess'][1]}}
                           </span>
                           <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['basic'][1]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['basic'][2]}}
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['earlyAccess'][2]}}
                           </span>
                           <span style="color:#aaaaaa;font-size:14px;font-weight:300;"> /user /month</span>
+                          -->
                         </div>
+                        <div style="display:block;width:100%;color:#aaaaaa;">
+                          April 13, 2021 - June 30, 2021
+                        </div>
+                        <!--
                         <div style="display:block;width:100%;">
                           <span style="color:#aaaaaa;font-size:12px;font-weight:300;">
                             <= {{userRange[0]}}</span>
@@ -523,456 +551,14 @@
                               <span style="color:#aaaaaa;font-size:12px;font-weight:300;">> {{userRange[1]}}</span>
                               <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
                         </div>
+                        -->
                       </div>
-                    </div>
-                  </div>
-                  <div style="text-align: left;margin-top:20px;">
-                    <div style="width:100%;">
-                      <div class="pricing-line-item-category">
-                        Setup
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-check" style="color:#52c41a;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc">
-                          One Click Deploy
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-category">
-                        Trainings
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-check" style="color:#52c41a;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc">
-                          20 Trainings
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-times" style="color:red;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc">
-                          Assessments
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-category">
-                        Org Chart
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-check" style="color:#52c41a;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          User Training Status
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-times" style="color:red;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Collapsible Organization
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-times" style="color:red;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Save as PNG Image
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-times" style="color:red;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Group Assignment
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-times" style="color:red;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Group Messaging
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-category">
-                        Technical Support
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-check" style="color:#52c41a;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Knowledge Base
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-times" style="color:red;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Live Chat Support
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-times" style="color:red;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Prioritized Support
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div style="margin-top:40px;">
-                <h1>14 Day Free Trial</h1>
-                <span style="color:#aaaaaa;font-size:12px;">No Credit Card Required</span>
-                <br>
-                <span style="color:#aaaaaa;font-size:12px;">Cancel Anytime</span>
-              </div>
-              <div style="margin-top:10%;">
-                <div style="">
-                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="free-basic-plan"
-                    style="display: inline-block;">
-                    <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
-                      style="display: inline-block;">Select
-                      Plan
-                    </button>
-                  </a>
-                </div>
-              </div>
-            </nz-card>
-          </div>
-          <div class="col-md-4">
-            <nz-card class="price-card">
-              <div>
-                <div
-                  style="font-size:12px;width:100%;display: inline-block;margin-bottom:20px;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:10px;">
-                  <h2>{{userCnt}} Users</h2>
-                  <nz-table>
-                    <tbody>
-                      <tr>
-                        <td style="text-align: right;font-size:14px;">Monthly Subscription Fee</td>
-                        <td style="font-family: monospace;text-align: right;width:35%;">
-                          <span style="color:#aaaaaa;">$</span>
-                          <span>{{monthlyCostHash['pro']?.toFixed(2)}}</span>
-                        </td>
-                      </tr>
-                      <tr *ngIf="naydo">
-                        <td style="text-align: right;">Non-profit discount (<span style="color:red;">{{discounts.nonProfit *
-                            100}}%</span>)</td>
-                        <td style="font-size:12px;font-family: monospace;text-align: right;width:35%;">
-                          <span style="color:#aaaaaa;">- $</span>
-                          <span style="color:red;">{{(monthlyCostHash['pro'] *
-                            discounts.nonProfit)?.toFixed(2)}}</span>
-                        </td>
-                      </tr>
-                      <tr *ngIf="naydo">
-                        <td style="text-align: right;">Conference discount (<span style="color:red;">{{discounts.conference *
-                            100}}%</span>)</td>
-                        <td style="font-size:12px;font-family: monospace;text-align: right;width:35%;">
-                          <span style="color:#aaaaaa;">- $</span>
-                          <span style="font-size:12px;font-family: monospace;color:red;">{{((monthlyCostHash['pro'] -
-                            (monthlyCostHash['pro'] *
-                            discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
-                        </td>
-                      </tr>
-                      <tr *ngIf="naydo">
-                        <td style="text-align: right;font-size:14px;border-top: 1px solid #aaaaaa;">Monthly Total</td>
-                        <td
-                          style="font-size:12px;font-family: monospace;text-align: right;width:35%;font-size:14px;border-top: 1px solid #aaaaaa;">
-                          <span style="color:#aaaaaa;">$</span>
-                          <span style="font-family: monospace;color:blue;">{{((monthlyCostHash['pro'] -
-                            (monthlyCostHash['pro'] *
-                            discounts.nonProfit)) -
-                            ((monthlyCostHash['pro'] - (monthlyCostHash['pro'] * discounts.nonProfit)) *
-                            discounts.conference))?.toFixed(2)}}</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="text-align: right;font-size:14px;">Average Cost Per User</td>
-                        <td *ngIf="naydo" style="font-family: monospace;text-align: right;width:35%;font-size:14px;">
-                          <span style="color:#aaaaaa;">$</span>
-                          <span *ngIf="userCnt === 0" style="color:blue;">0</span>
-                          <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{((monthlyCostHash['pro'] -
-                            (monthlyCostHash['pro'] *
-                            discounts.nonProfit) -
-                            ((monthlyCostHash['pro'] - (monthlyCostHash['pro'] * discounts.nonProfit)) *
-                            discounts.conference)) / userCnt)?.toFixed(2)}}</span>
-                        </td>
-                        <td *ngIf="!naydo" style="font-size:14px;font-family: monospace;text-align: right;width:35%;">
-                          <span style="color:#aaaaaa;">$</span>
-                          <span *ngIf="userCnt === 0" style="color:blue;">0</span>
-                          <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{(monthlyCostHash['pro'] /
-                            userCnt)?.toFixed(2)}}</span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </nz-table>
-                </div>
-                <div class="media align-items-center" style="display:block;">
-                  <i class="fad fa-user-tie" style="font-size:46px;color:red;margin-bottom:5px;"></i>
-                  <div style="text-align: center;">
-                    <h3>Pro</h3>
-                    <div *ngIf="plans === 'monthly'" style="width:100%;display:inline-block;">
-                      <div style="margin:20px 0 40px 0;">
-                        <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['pro'][0]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['pro'][1]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['pro'][2]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:14px;font-weight:300;"> /user /month</span>
-                        </div>
-                        <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:12px;font-weight:300;">
-                            <= {{userRange[0]}}</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
-                              <span style="color:#aaaaaa;font-size:18px;font-weight:300;">&nbsp;|&nbsp;</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;">{{userRange[0] +
-                                1}}-{{userRange[1]}}</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
-                              <span style="color:#aaaaaa;font-size:16px;font-weight:300;">&nbsp;|&nbsp;</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;">> {{userRange[1]}}</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div style="text-align: left;margin-top:20px;">
-                    <div style="width:100%;">
-                      <div class="pricing-line-item-category">
-                        Setup
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-check" style="color:#52c41a;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc">
-                          One Click Deploy
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-category">
-                        Trainings
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-check" style="color:#52c41a;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc">
-                          40 Trainings
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-times" style="color:red;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc">
-                          Assessments
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-category">
-                        Org Chart
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-check" style="color:#52c41a;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          User Training Status
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-check" style="color:#52c41a;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Collapsible Organization
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-check" style="color:#52c41a;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Save as PNG Image
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-times" style="color:red;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Group Assignment
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-times" style="color:red;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Group Messaging
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-category">
-                        Technical Support
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-check" style="color:#52c41a;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Knowledge Base
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-check" style="color:#52c41a;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Live Chat Support
-                        </span>
-                      </div>
-                      <div class="pricing-line-item-indented">
-                        <span class="pricing-line-item-icon">
-                          <i class="fas fa-times" style="color:red;"></i>
-                        </span>
-                        <span class="pricing-line-item-desc-indented">
-                          Prioritized Support
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div style="margin-top:40px;">
-                <h1>14 Day Free Trial</h1>
-                <span style="color:#aaaaaa;font-size:12px;">No Credit Card Required</span>
-                <br>
-                <span style="color:#aaaaaa;font-size:12px;">Cancel Anytime</span>
-              </div>
-              <div style="">
-                <div style="margin-top:10%;">
-                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="free-pro-plan"
-                    style="display: inline-block;">
-                    <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
-                      style="display: inline-block;">Select
-                      Plan
-                    </button>
-                  </a>
-                </div>
-              </div>
-            </nz-card>
-          </div>
-          <div class="col-md-4">
-            <nz-card class="price-card">
-              <div>
-                <div
-                  style="font-size:12px;width:100%;display: inline-block;margin-bottom:20px;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:10px;">
-                  <h2>{{userCnt}} Users</h2>
-                  <nz-table>
-                    <tbody>
-                      <tr>
-                        <td style="text-align: right;font-size:14px;">Monthly Subscription Fee</td>
-                        <td style="font-family: monospace;text-align: right;width:35%;">
-                          <span style="color:#aaaaaa;">$</span>
-                          <span>{{monthlyCostHash['expert']?.toFixed(2)}}</span>
-                        </td>
-                      </tr>
-                      <tr *ngIf="naydo">
-                        <td style="text-align: right;">Non-profit discount (<span style="color:red;">{{discounts.nonProfit *
-                            100}}%</span>)</td>
-                        <td style="font-size:12px;font-family: monospace;text-align: right;width:35%;">
-                          <span style="color:#aaaaaa;">- $</span>
-                          <span style="color:red;">{{(monthlyCostHash['expert'] *
-                            discounts.nonProfit)?.toFixed(2)}}</span>
-                        </td>
-                      </tr>
-                      <tr *ngIf="naydo">
-                        <td style="text-align: right;">Conference discount (<span style="color:red;">{{discounts.conference *
-                            100}}%</span>)</td>
-                        <td style="font-size:12px;font-family: monospace;text-align: right;width:35%;">
-                          <span style="color:#aaaaaa;">- $</span>
-                          <span style="font-size:12px;font-family: monospace;color:red;">{{((monthlyCostHash['expert'] -
-                            (monthlyCostHash['expert'] *
-                            discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
-                        </td>
-                      </tr>
-                      <tr *ngIf="naydo">
-                        <td style="text-align: right;font-size:14px;border-top: 1px solid #aaaaaa;">Monthly Total</td>
-                        <td
-                          style="font-size:12px;font-family: monospace;text-align: right;width:35%;font-size:14px;border-top: 1px solid #aaaaaa;">
-                          <span style="color:#aaaaaa;">$</span>
-                          <span style="font-family: monospace;color:blue;">{{((monthlyCostHash['expert'] -
-                            (monthlyCostHash['expert'] *
-                            discounts.nonProfit)) -
-                            ((monthlyCostHash['expert'] - (monthlyCostHash['expert'] * discounts.nonProfit)) *
-                            discounts.conference))?.toFixed(2)}}</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="text-align: right;font-size:14px;">Average Cost Per User</td>
-                        <td *ngIf="naydo" style="font-family: monospace;text-align: right;width:35%;font-size:14px;">
-                          <span style="color:#aaaaaa;">$</span>
-                          <span *ngIf="userCnt === 0" style="color:blue;">0</span>
-                          <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{((monthlyCostHash['expert'] -
-                            (monthlyCostHash['expert'] *
-                            discounts.nonProfit) -
-                            ((monthlyCostHash['expert'] - (monthlyCostHash['expert'] * discounts.nonProfit)) *
-                            discounts.conference)) / userCnt)?.toFixed(2)}}</span>
-                        </td>
-                        <td *ngIf="!naydo" style="font-size:14px;font-family: monospace;text-align: right;width:35%;">
-                          <span style="color:#aaaaaa;">$</span>
-                          <span *ngIf="userCnt === 0" style="color:blue;">0</span>
-                          <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{(monthlyCostHash['expert'] /
-                            userCnt)?.toFixed(2)}}</span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </nz-table>
-                </div>
-                <div class="media align-items-center" style="display:block;">
-                  <i class="fad fa-user-graduate" style="font-size:46px;color:blueviolet;margin-bottom:5px;"></i>
-                  <div style="text-align: center;">
-                    <h3>Expert</h3>
-                    <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
-                      <div style="margin:20px 0 40px 0;">
-                        <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][0]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][1]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][2]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:14px;font-weight:300;"> /user /month</span>
-                        </div>
-                        <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:12px;font-weight:300;">
-                            <= {{userRange[0]}}</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
-                              <span style="color:#aaaaaa;font-size:18px;font-weight:300;">&nbsp;|&nbsp;</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;">{{userRange[0] +
-                                1}}-{{userRange[1]}}</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
-                              <span style="color:#aaaaaa;font-size:16px;font-weight:300;">&nbsp;|&nbsp;</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;">> {{userRange[1]}}</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
-                        </div>
+                      <div style="margin:20px;width:90%;text-align: left;font-size:16px;font-weight: 500;height:170px;">
+                        <ul>
+                          <li>4 hours consulting time</li>
+                          <li>20% discount for the first year</li>
+                          <li>Input on future features</li>
+                        </ul>
                       </div>
                     </div>
                   </div>
@@ -1082,20 +668,735 @@
                   </div>
                 </div>
               </div>
+              <!--
               <div style="margin-top:40px;">
                 <h1>14 Day Free Trial</h1>
                 <span style="color:#aaaaaa;font-size:12px;">No Credit Card Required</span>
                 <br>
                 <span style="color:#aaaaaa;font-size:12px;">Cancel Anytime</span>
               </div>
+              -->
               <div style="margin-top:10%;">
                 <div style="">
-                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="free-expert-plan"
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="earlyAccess-plan"
                     style="display: inline-block;">
+                    <button nz-button nzShape="round" nzType="primary" id="checkout-button" style="display: inline-block;">Select
+                      Plan
+                    </button>
+                    <!--
                     <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
                       style="display: inline-block;">Select
                       Plan
                     </button>
+                    -->
+                  </a>
+                </div>
+              </div>
+            </nz-card>
+          </div>
+          <div class="col-md-3">
+            <nz-card class="price-card">
+              <div style="text-align: center;">
+                <div class="media align-items-center" style="display:block;">
+                  <i class="fad fa-user" style="font-size:46px;color:green;margin-bottom:5px;"></i>
+                  <div style="text-align: center;">
+                    <h2>Basic</h2>
+                    <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
+                      <div style="margin:20px 0 40px 0;">
+                        <div style="display:block;width:100%;color:black;">
+                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['basic'][0]}}
+                          </span>
+                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['basic'][1]}}
+                          </span>
+                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['basic'][2]}}
+                          </span>
+                          <span style="color:#aaaaaa;font-size:14px;font-weight:300;"> /user /month</span>
+                        </div>
+                        <div style="display:block;width:100%;">
+                          <span style="color:#aaaaaa;font-size:12px;font-weight:300;">
+                            <= {{userRange[0]}}</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
+                              <span style="color:#aaaaaa;font-size:18px;font-weight:300;">&nbsp;|&nbsp;</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;">{{userRange[0] +
+                                1}}-{{userRange[1]}}</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
+                              <span style="color:#aaaaaa;font-size:16px;font-weight:300;">&nbsp;|&nbsp;</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;">> {{userRange[1]}}</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      style="font-size:12px;width:100%;display: inline-block;margin-bottom:20px;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:10px;">
+                      <h2>{{userCnt}} Users</h2>
+                      <nz-table>
+                        <tbody>
+                          <tr>
+                            <td style="text-align: right;font-size:14px;">Monthly Subscription Fee</td>
+                            <td style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span>{{monthlyCostHash['basic']?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="naydo">
+                            <td style="text-align: right;">Non-profit discount (<span
+                                style="color:red;">{{discounts.nonProfit *
+                                100}}%</span>)</td>
+                            <td style="font-size:12px;font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">- $</span>
+                              <span style="color:red;">{{(monthlyCostHash['basic'] *
+                                discounts.nonProfit)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="naydo">
+                            <td style="text-align: right;">Conference discount (<span
+                                style="color:red;">{{discounts.conference *
+                                100}}%</span>)</td>
+                            <td style="font-size:12px;font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">- $</span>
+                              <span
+                                style="font-size:12px;font-family: monospace;color:red;">{{((monthlyCostHash['basic'] -
+                                (monthlyCostHash['basic'] *
+                                discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="naydo">
+                            <td style="text-align: right;font-size:14px;border-top: 1px solid #aaaaaa;">Monthly Total
+                            </td>
+                            <td
+                              style="font-size:12px;font-family: monospace;text-align: right;width:35%;font-size:14px;border-top: 1px solid #aaaaaa;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span style="font-family: monospace;color:blue;">{{((monthlyCostHash['basic'] -
+                                (monthlyCostHash['basic'] *
+                                discounts.nonProfit)) -
+                                ((monthlyCostHash['basic'] - (monthlyCostHash['basic'] * discounts.nonProfit)) *
+                                discounts.conference))?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="text-align: right;font-size:14px;">Average Cost Per User</td>
+                            <td *ngIf="naydo"
+                              style="font-family: monospace;text-align: right;width:35%;font-size:14px;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span *ngIf="userCnt === 0" style="color:blue;">0</span>
+                              <span *ngIf="userCnt > 0"
+                                style="font-family: monospace;color:blue;">{{((monthlyCostHash['basic'] -
+                                (monthlyCostHash['basic'] *
+                                discounts.nonProfit) -
+                                ((monthlyCostHash['basic'] - (monthlyCostHash['basic'] * discounts.nonProfit)) *
+                                discounts.conference)) / userCnt)?.toFixed(2)}}</span>
+                            </td>
+                            <td *ngIf="!naydo"
+                              style="font-size:14px;font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span *ngIf="userCnt === 0" style="color:blue;">0</span>
+                              <span *ngIf="userCnt > 0"
+                                style="font-family: monospace;color:blue;">{{(monthlyCostHash['basic'] /
+                                userCnt)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </nz-table>
+                    </div>
+                  </div>
+                  <div style="text-align: left;margin-top:20px;">
+                    <div style="width:100%;">
+                      <div class="pricing-line-item-category">
+                        Setup
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc">
+                          One Click Deploy
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-category">
+                        Trainings
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc">
+                          20 Trainings
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-times" style="color:red;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc">
+                          Assessments
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-category">
+                        Org Chart
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          User Training Status
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-times" style="color:red;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Collapsible Organization
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-times" style="color:red;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Save as PNG Image
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-times" style="color:red;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Group Assignment
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-times" style="color:red;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Group Messaging
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-category">
+                        Technical Support
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Knowledge Base
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-times" style="color:red;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Live Chat Support
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-times" style="color:red;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Prioritized Support
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--
+              <div style="margin-top:40px;">
+                <h1>14 Day Free Trial</h1>
+                <span style="color:#aaaaaa;font-size:12px;">No Credit Card Required</span>
+                <br>
+                <span style="color:#aaaaaa;font-size:12px;">Cancel Anytime</span>
+              </div>
+            -->
+              <div style="margin-top:10%;">
+                <div style="">
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="free-basic-plan"
+                    style="display: inline-block;">
+                    <button nz-button nzShape="round" nzType="primary" id="checkout-button"
+                      style="display: inline-block;" disabled>Select
+                      Plan
+                    </button>
+                  </a>
+                </div>
+              </div>
+            </nz-card>
+          </div>
+          <div class="col-md-3">
+            <nz-card class="price-card">
+              <div>
+                <div class="media align-items-center" style="display:block;">
+                  <i class="fad fa-user-tie" style="font-size:46px;color:red;margin-bottom:5px;"></i>
+                  <div style="text-align: center;">
+                    <h3>Pro</h3>
+                    <div *ngIf="plans === 'monthly'" style="width:100%;display:inline-block;">
+                      <div style="margin:20px 0 40px 0;">
+                        <div style="display:block;width:100%;color:black;">
+                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['pro'][0]}}
+                          </span>
+                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['pro'][1]}}
+                          </span>
+                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['pro'][2]}}
+                          </span>
+                          <span style="color:#aaaaaa;font-size:14px;font-weight:300;"> /user /month</span>
+                        </div>
+                        <div style="display:block;width:100%;color:black;">
+                          <span style="color:#aaaaaa;font-size:12px;font-weight:300;">
+                            <= {{userRange[0]}}</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
+                              <span style="color:#aaaaaa;font-size:18px;font-weight:300;">&nbsp;|&nbsp;</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;">{{userRange[0] +
+                                1}}-{{userRange[1]}}</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
+                              <span style="color:#aaaaaa;font-size:16px;font-weight:300;">&nbsp;|&nbsp;</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;">> {{userRange[1]}}</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      style="font-size:12px;width:100%;display: inline-block;margin-bottom:20px;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:10px;">
+                      <h2>{{userCnt}} Users</h2>
+                      <nz-table>
+                        <tbody>
+                          <tr>
+                            <td style="text-align: right;font-size:14px;">Monthly Subscription Fee</td>
+                            <td style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span>{{monthlyCostHash['pro']?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="naydo">
+                            <td style="text-align: right;">Non-profit discount (<span
+                                style="color:red;">{{discounts.nonProfit *
+                                100}}%</span>)</td>
+                            <td style="font-size:12px;font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">- $</span>
+                              <span style="color:red;">{{(monthlyCostHash['pro'] *
+                                discounts.nonProfit)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="naydo">
+                            <td style="text-align: right;">Conference discount (<span
+                                style="color:red;">{{discounts.conference *
+                                100}}%</span>)</td>
+                            <td style="font-size:12px;font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">- $</span>
+                              <span style="font-size:12px;font-family: monospace;color:red;">{{((monthlyCostHash['pro']
+                                -
+                                (monthlyCostHash['pro'] *
+                                discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="naydo">
+                            <td style="text-align: right;font-size:14px;border-top: 1px solid #aaaaaa;">Monthly Total
+                            </td>
+                            <td
+                              style="font-size:12px;font-family: monospace;text-align: right;width:35%;font-size:14px;border-top: 1px solid #aaaaaa;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span style="font-family: monospace;color:blue;">{{((monthlyCostHash['pro'] -
+                                (monthlyCostHash['pro'] *
+                                discounts.nonProfit)) -
+                                ((monthlyCostHash['pro'] - (monthlyCostHash['pro'] * discounts.nonProfit)) *
+                                discounts.conference))?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="text-align: right;font-size:14px;">Average Cost Per User</td>
+                            <td *ngIf="naydo"
+                              style="font-family: monospace;text-align: right;width:35%;font-size:14px;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span *ngIf="userCnt === 0" style="color:blue;">0</span>
+                              <span *ngIf="userCnt > 0"
+                                style="font-family: monospace;color:blue;">{{((monthlyCostHash['pro'] -
+                                (monthlyCostHash['pro'] *
+                                discounts.nonProfit) -
+                                ((monthlyCostHash['pro'] - (monthlyCostHash['pro'] * discounts.nonProfit)) *
+                                discounts.conference)) / userCnt)?.toFixed(2)}}</span>
+                            </td>
+                            <td *ngIf="!naydo"
+                              style="font-size:14px;font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span *ngIf="userCnt === 0" style="color:blue;">0</span>
+                              <span *ngIf="userCnt > 0"
+                                style="font-family: monospace;color:blue;">{{(monthlyCostHash['pro']
+                                /
+                                userCnt)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </nz-table>
+                    </div>
+                  </div>
+                  <div style="text-align: left;margin-top:20px;">
+                    <div style="width:100%;">
+                      <div class="pricing-line-item-category">
+                        Setup
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc">
+                          One Click Deploy
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-category">
+                        Trainings
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc">
+                          40 Trainings
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-times" style="color:red;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc">
+                          Assessments
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-category">
+                        Org Chart
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          User Training Status
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Collapsible Organization
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Save as PNG Image
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-times" style="color:red;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Group Assignment
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-times" style="color:red;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Group Messaging
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-category">
+                        Technical Support
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Knowledge Base
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Live Chat Support
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-times" style="color:red;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Prioritized Support
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--
+              <div style="margin-top:40px;">
+                <h1>14 Day Free Trial</h1>
+                <span style="color:#aaaaaa;font-size:12px;">No Credit Card Required</span>
+                <br>
+                <span style="color:#aaaaaa;font-size:12px;">Cancel Anytime</span>
+              </div>
+              -->
+              <div style="">
+                <div style="margin-top:10%;">
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="free-pro-plan"
+                    style="display: inline-block;">
+                    <button nz-button nzShape="round" nzType="primary" id="checkout-button" style="display: inline-block;" disabled>Select
+                      Plan
+                    </button>
+                    <!--
+                    <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
+                      style="display: inline-block;" disabled="earlyAccess">Select
+                      Plan
+                    </button>
+                    -->
+                  </a>
+                </div>
+              </div>
+            </nz-card>
+          </div>
+          <div class="col-md-3">
+            <nz-card class="price-card">
+              <div>
+                <div class="media align-items-center" style="display:block;">
+                  <i class="fad fa-user-graduate" style="font-size:46px;color:blueviolet;margin-bottom:5px;"></i>
+                  <div style="text-align: center;">
+                    <h2>Expert</h2>
+                    <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
+                      <div style="margin:20px 0 40px 0;">
+                        <div style="display:block;width:100%;color:black;">
+                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][0]}}
+                          </span>
+                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][1]}}
+                          </span>
+                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
+                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][2]}}
+                          </span>
+                          <span style="color:#aaaaaa;font-size:14px;font-weight:300;"> /user /month</span>
+                        </div>
+                        <div style="display:block;width:100%;color:black;">
+                          <span style="color:#aaaaaa;font-size:12px;font-weight:300;">
+                            <= {{userRange[0]}}</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
+                              <span style="color:#aaaaaa;font-size:18px;font-weight:300;">&nbsp;|&nbsp;</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;">{{userRange[0] +
+                                1}}-{{userRange[1]}}</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
+                              <span style="color:#aaaaaa;font-size:16px;font-weight:300;">&nbsp;|&nbsp;</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;">> {{userRange[1]}}</span>
+                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
+                        </div>
+                      </div>
+                    </div>
+                <div
+                  style="font-size:12px;width:100%;display: inline-block;margin-bottom:20px;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:10px;">
+                  <h2>{{userCnt}} Users</h2>
+                  <nz-table>
+                    <tbody>
+                      <tr>
+                        <td style="text-align: right;font-size:14px;">Monthly Subscription Fee</td>
+                        <td style="font-family: monospace;text-align: right;width:35%;">
+                          <span style="color:#aaaaaa;">$</span>
+                          <span>{{monthlyCostHash['expert']?.toFixed(2)}}</span>
+                        </td>
+                      </tr>
+                      <tr *ngIf="naydo">
+                        <td style="text-align: right;">Non-profit discount (<span style="color:red;">{{discounts.nonProfit *
+                            100}}%</span>)</td>
+                        <td style="font-size:12px;font-family: monospace;text-align: right;width:35%;">
+                          <span style="color:#aaaaaa;">- $</span>
+                          <span style="color:red;">{{(monthlyCostHash['expert'] *
+                            discounts.nonProfit)?.toFixed(2)}}</span>
+                        </td>
+                      </tr>
+                      <tr *ngIf="naydo">
+                        <td style="text-align: right;">Conference discount (<span style="color:red;">{{discounts.conference *
+                            100}}%</span>)</td>
+                        <td style="font-size:12px;font-family: monospace;text-align: right;width:35%;">
+                          <span style="color:#aaaaaa;">- $</span>
+                          <span style="font-size:12px;font-family: monospace;color:red;">{{((monthlyCostHash['expert'] -
+                            (monthlyCostHash['expert'] *
+                            discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
+                        </td>
+                      </tr>
+                      <tr *ngIf="naydo">
+                        <td style="text-align: right;font-size:14px;border-top: 1px solid #aaaaaa;">Monthly Total</td>
+                        <td
+                          style="font-size:12px;font-family: monospace;text-align: right;width:35%;font-size:14px;border-top: 1px solid #aaaaaa;">
+                          <span style="color:#aaaaaa;">$</span>
+                          <span style="font-family: monospace;color:blue;">{{((monthlyCostHash['expert'] -
+                            (monthlyCostHash['expert'] *
+                            discounts.nonProfit)) -
+                            ((monthlyCostHash['expert'] - (monthlyCostHash['expert'] * discounts.nonProfit)) *
+                            discounts.conference))?.toFixed(2)}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="text-align: right;font-size:14px;">Average Cost Per User</td>
+                        <td *ngIf="naydo" style="font-family: monospace;text-align: right;width:35%;font-size:14px;">
+                          <span style="color:#aaaaaa;">$</span>
+                          <span *ngIf="userCnt === 0" style="color:blue;">0</span>
+                          <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{((monthlyCostHash['expert'] -
+                            (monthlyCostHash['expert'] *
+                            discounts.nonProfit) -
+                            ((monthlyCostHash['expert'] - (monthlyCostHash['expert'] * discounts.nonProfit)) *
+                            discounts.conference)) / userCnt)?.toFixed(2)}}</span>
+                        </td>
+                        <td *ngIf="!naydo" style="font-size:14px;font-family: monospace;text-align: right;width:35%;">
+                          <span style="color:#aaaaaa;">$</span>
+                          <span *ngIf="userCnt === 0" style="color:blue;">0</span>
+                          <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{(monthlyCostHash['expert'] /
+                            userCnt)?.toFixed(2)}}</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </nz-table>
+                </div>
+                  </div>
+                  <div style="text-align: left;margin-top:20px;">
+                    <div style="width:100%;">
+                      <div class="pricing-line-item-category">
+                        Setup
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc">
+                          One Click Deploy
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-category">
+                        Trainings
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc">
+                          Unliimited Trainings
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc">
+                          Assessments
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-category">
+                        Org Chart
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          User Training Status
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Collapsible Organization
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Save as PNG Image
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Group Assignment
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Group Messaging
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-category">
+                        Technical Support
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Knowledge Base
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Live Chat Support
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fas fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc-indented">
+                          Prioritized Support
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--
+              <div style="margin-top:40px;">
+                <h1>14 Day Free Trial</h1>
+                <span style="color:#aaaaaa;font-size:12px;">No Credit Card Required</span>
+                <br>
+                <span style="color:#aaaaaa;font-size:12px;">Cancel Anytime</span>
+              </div>
+              -->
+              <div style="margin-top:10%;">
+                <div style="">
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="free-expert-plan"
+                    style="display: inline-block;">
+                    <button nz-button nzShape="round" nzType="primary" id="checkout-button" style="display: inline-block;" disabled>Select
+                      Plan
+                    </button>
+                    <!--
+                    <button type="button" class="btn btn-custom btn-rounded" id="checkout-button"
+                      style="display: inline-block;" disabled="earlyAccess">Select
+                      Plan
+                    </button>
+                  -->
                   </a>
                 </div>
               </div>
@@ -1260,9 +1561,11 @@
         <div class="row">
           <div class="col-sm-12" style="height: 60px;">
             <div class="footer-alt text-center" style="margin-bottom:20px;">
-              <a href="https://www.termsfeed.com/live/1100a7d2-97e5-4e58-b93f-8351cdc4e152" style="display:inline-block;margin-right:20px;">Cookies
+              <a href="https://www.termsfeed.com/live/1100a7d2-97e5-4e58-b93f-8351cdc4e152"
+                style="display:inline-block;margin-right:20px;">Cookies
                 Policy</a>
-              <a href="https://www.termsfeed.com/live/6763b3fb-c1e2-4385-948c-842c57cebf8e" style="display:inline-block;">Privacy
+              <a href="https://www.termsfeed.com/live/6763b3fb-c1e2-4385-948c-842c57cebf8e"
+                style="display:inline-block;">Privacy
                 Policy</a>
               <p class="copy-rights" style="display:inline-block;">2020 &copy; Teknetium LLC</p>
             </div>

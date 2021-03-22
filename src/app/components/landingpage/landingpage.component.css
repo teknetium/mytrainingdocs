@@ -1113,14 +1113,9 @@ textarea.form-control {
 }
  .price-card {
    border-color: #e1e1e1;
-   height:fit-content;
+   height:1000px;
    position:relative;
    background-color: #fdfdfd;
- }
-
- .price-card:hover {
-  border: 1px solid #999999;
-  background:rgba(0, 0, 255, 0.04);
  }
 
  .pricing-line-item {
