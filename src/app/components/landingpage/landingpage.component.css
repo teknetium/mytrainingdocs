@@ -1111,18 +1111,19 @@ textarea.form-control {
     display: none;
   }
 }
- .price-card {
+
+.price-card {
    border-color: #e1e1e1;
    height:1000px;
    position:relative;
    background-color: #fdfdfd;
- }
+}
 
- .pricing-line-item {
+.pricing-line-item {
    display:block;
    padding-left:20px;
    margin-top:10px;
- }
+}
  .pricing-line-item-category {
    display:block;
    padding-left:20px;
@@ -1131,6 +1132,14 @@ textarea.form-control {
    font-size:16px !important;
  }
  
+ .naydo-box {
+  height:170px;
+ }
+
+ .regular-box {
+  height:120px;
+ }
+
  .pricing-line-item-indented {
    display:block;
    padding-left:40px;

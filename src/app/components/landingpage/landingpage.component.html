@@ -553,7 +553,7 @@
                         </div>
                         -->
                       </div>
-                      <div style="margin:20px;width:90%;text-align: left;font-size:16px;font-weight: 500;height:170px;">
+                      <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}" style="margin:20px;width:90%;text-align: left;font-size:16px;font-weight: 500;">
                         <ul>
                           <li>4 hours consulting time</li>
                           <li>20% discount for the first year</li>
@@ -729,7 +729,7 @@
                         </div>
                       </div>
                     </div>
-                    <div
+                    <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
                       style="font-size:12px;width:100%;display: inline-block;margin-bottom:20px;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:10px;">
                       <h2>{{userCnt}} Users</h2>
                       <nz-table>
@@ -964,7 +964,7 @@
                         </div>
                       </div>
                     </div>
-                    <div
+                    <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
                       style="font-size:12px;width:100%;display: inline-block;margin-bottom:20px;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:10px;">
                       <h2>{{userCnt}} Users</h2>
                       <nz-table>
@@ -1205,7 +1205,7 @@
                         </div>
                       </div>
                     </div>
-                <div
+                <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
                   style="font-size:12px;width:100%;display: inline-block;margin-bottom:20px;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:10px;">
                   <h2>{{userCnt}} Users</h2>
                   <nz-table>
