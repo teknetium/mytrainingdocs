@@ -271,7 +271,7 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
   userRange = [100, 300];
   discounts = {
     nonProfit: .25,
-    conference: .20
+    conference: .15
   }
   monthlyCostHash = {
     earlyAccess: 0,
