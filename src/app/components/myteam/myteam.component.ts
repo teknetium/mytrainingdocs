@@ -1915,10 +1915,11 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         //        } else {
         //          supervisorName = '';
         //        }
-        this.usersCSV += user.firstName + ',' + user.lastName + ',' + user.email + ',' + user.supervisorId + ',' + user.jobTitle + ',' + user.userType + ',' + 'geo=' + this.getGeo() + '\n';
+        this.usersCSV += user.firstName + ',' + user.lastName + ',' + user.email + ',' + user.supervisorId + ',' + user.jobTitle + ',' + user.userType  + '\n';
       }
     }
   }
+
 
   getGeo(): string {
     let geo: string;
@@ -2237,7 +2238,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       if (this.showBulkAddModal) {
         this.next();
       }
-//      this.userService.createNewUsersFromBatch(this.newUsers, false);
+      this.userService.createNewUsersFromBatch(this.newUsers, false);
       //        this.trainingService.assignTrainingsForJobTitle(this.newTeamMember.jobTitle, this.newTeamMember._id, this.newTeamMember.teamId);
       //        this.newUsers = [{ firstName: '', lastName: '', email: '', jobTitle: '', supervisorName: '' }];
     } catch (e) {
@@ -2290,15 +2291,16 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
           ]
         },
         {
-          label: "User Data 1",
-          key: "userData1",
+          label: "Job Title",
+          key: "jobTitle",
           validators: []
         },
         {
-          label: "User Data 2",
-          key: "userData2",
+          label: "User Type",
+          key: "userType",
           validators: []
         },
+        /*
         {
           label: "User Data 3",
           key: "userData3",
@@ -2314,7 +2316,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
           key: "userData5",
           validators: []
         },
-
+*/
       ],
       type: "Users",
       allowInvalidSubmit: true,
@@ -2402,7 +2404,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         secondary: '#999999',
         bgColor: '#e9e9e9',
       },
-      showLegend: true,
+      showLegend: false,
       showInactiveUsers: true,
       showAlerts: true,
       showTasks: true

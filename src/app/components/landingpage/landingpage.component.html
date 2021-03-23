@@ -198,10 +198,9 @@
         <div class="row">
           <div class="col-lg-6" style="padding:60px 50px 60px 10px;">
             <div class="text-center">
-              <h2>Status Tracking that SCALES!</h2>
+              <h2>Deploy to any size organization in minutes!</h2>
               <p>
-                Whether your organization has 50 employees or 50,000 employees, our unique org-chart gives you training
-                metrics and more at a glance.
+                Onboard 50 employees or 50,000 employees with just a few clicks in minutes!
             </div>
           </div>
           <div class="col-lg-6" style="height:fit-content;">
@@ -211,6 +210,27 @@
                 style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
                 (click)="loadVideo('onboarding')"></i>
                 -->
+              <img width="400" src="../../../assets/images/orgChart_1.29.21.png">
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-lg-6" style="padding:60px 50px 60px 10px;">
+            <div class="text-center">
+              <h2>Status Tracking that SCALES!</h2>
+              <p>
+                Whether your organization has 50 employees or 50,000 employees, our unique org-chart gives you training
+                metrics and more at a glance.
+            </div>
+          </div>
+          <div class="col-lg-6" style="height:fit-content;">
+            <div class="text-center" style="position:relative;">
+              <!--
+                      <i class="fas fa-play opaque"
+                        style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
+                        (click)="loadVideo('onboarding')"></i>
+                        -->
               <img width="400" src="../../../assets/images/orgChart_1.29.21.png">
             </div>
           </div>
@@ -350,26 +370,6 @@
         <div class="row align-items-center">
           <div class="col-md-12">
             <div *ngIf="showPriceEditor">
-              <!--
-              <div style="margin-top:20px;">
-                <span style="font-size:24px;color:blue;">Early Access Plan</span>
-                <div style="display:inline-block;">
-                  <nz-input-number [(ngModel)]="planCostPerUserHash['earlyAccess'][0]" [nzMin]="0" [nzMax]="50"
-                    nzSize="large" [nzStep]="1" (ngModelChange)="planPriceChanged('earlyAccess', 0, $event)">
-                  </nz-input-number>
-                </div>
-                <div style="display:inline-block;">
-                  <nz-input-number [(ngModel)]="planCostPerUserHash['earlyAccess'][1]" [nzMin]="0" [nzMax]="50"
-                    nzSize="large" [nzStep]="1" (ngModelChange)="planPriceChanged('earlyAccess', 1, $event)">
-                  </nz-input-number>
-                </div>
-                <div style="display:inline-block;">
-                  <nz-input-number [(ngModel)]="planCostPerUserHash['earlyAccess'][2]" [nzMin]="0" [nzMax]="50"
-                    nzSize="large" [nzStep]="1" (ngModelChange)="planPriceChanged('earlyAccess', 2, $event)">
-                  </nz-input-number>
-                </div>
-              </div>
-              -->
               <div style="margin-top:20px;">
                 <span style="font-size:24px;color:blue;">Basic Plan</span>
                 <div style="display:inline-block;">

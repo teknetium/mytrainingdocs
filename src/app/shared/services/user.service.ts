@@ -136,6 +136,7 @@ export class UserService {
 
   ) {
     this.action = 'init';
+
     this.org$ = this.orgService.getOrgStream();
     this.authenticatedUserProfile$ = this.auth.getAuthenticatedUserProfileStream();
     this.authenticatedUserProfile$.subscribe({
@@ -147,6 +148,7 @@ export class UserService {
               if (user) {
                 // This is the uid field is the user id from Auth0.  This is set for the initial supervisor registrant 
                 this.authenticatedUser = user;
+                this.allOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
                 //          this.getAllOrgUsers();
                 if (this.authenticatedUser.jobTitle) {
                   this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
