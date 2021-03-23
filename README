@@ -1,20 +1,21 @@
+// This README contains instructions on how to set up a dev environment and how to deploy to the staging and production servers.
+
+// After downloading the master branch from github...
+
+// install dependancies
+$ npm install
+
+// create a .env file in the root of your repo
+$ touch .env
+
+// Contact the owner of the repo to get the necessary environment variables and their values
+
+// Initialize git
+$ git init
+$ git add -A
+$ git commit
+
+
+
 // To start the dev server
-
 $ concurrently --kill-others "ng serve" "nodemon server.js"
-
-// build for production
-$ ng build --prod
-
-// Deploy process
-// from ~gregl
-$ ./mypkg.sh mytrainingdocs-ws
-
-// from ~gregl/mytrainingdocs-ws
-// Enter passphrase for key '/Users/gregorylayer/.ssh/id_rsa' ... 'cyrano1'
-$ sftp gregl@mytrainingdocs.com
-
-// login to mytrainingdocs using
-$ ssh gregl@mytrainingdocs.com
-
-// once on mytrainingdocs.com run the ~gregl/deploy script
-$ ./deploy
