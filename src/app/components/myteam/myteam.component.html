@@ -95,9 +95,6 @@
         </div>
         <div *ngIf="currentStep === 2" class="steps-content">
             The upload process has completed. {{newUsers.length}} users were uploaded.
-            <button nz-button nzType="default" (click)="registerUsers()">
-                <span>Register Users</span>
-            </button>
         </div>
         <div class="steps-action">
             <!--
@@ -668,7 +665,7 @@
                     {{userListDisplay.length}}</span>
                 <div style="clear:both;"></div>
             </div>
-            <nz-table #nestedTable [nzData]="userListDisplay" nzPageSize="10000" nzShowRowSelection="true"
+            <nz-table #nestedTable [nzData]="userListDisplay" nzPageSize="50000" nzShowRowSelection="true"
                 nzShowPagination="false" nzSize="small" [nzScroll]="{ y: '350px' }"
                 style="width:100%;background-color: #fafafa;font-size:12px;font-size:12px;display:inline-block;">
                 <thead (nzSortChange)="sort($event)" nzSingleSort>
@@ -682,9 +679,6 @@
                             (nzFilterChange)="filterUserType($event)" nzShowFilter style="width:15%;">User Type</th>
                         <th nzShowSort nzSortKey="jobTitle" style="width:10%;" [nzFilters]="listOfJobTitles"
                             (nzFilterChange)="filterJobTitles($event)" nzShowFilter>Job Title</th>
-                        <th nzShowSort nzSortKey="userData[userDataProp1]" style="width:10%;"
-                            [nzFilters]="listOfUserData1" (nzFilterChange)="filterJobTitles($event)" nzShowFilter>Job
-                            Title</th>
                         <th style="width:15%;">Trainings</th>
                     </tr>
                 </thead>
@@ -1031,7 +1025,7 @@
 
                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
                                             style="font-size:16px;" [ngStyle]="{'color': getStatusColor(dr)}"></i>
-                                        <span [ngStyle]="{'font-size.px': textFontSize}"
+                                        <span *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || includeFullName" [ngStyle]="{'font-size.px': textFontSize}"
                                             style="z-index:1000000;display: block;color:#666666;">
                                             {{orgChartNodeHash[dr]?.fName}}<br>{{orgChartNodeHash[dr]?.lName}}
                                         </span>

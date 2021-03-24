@@ -1429,6 +1429,10 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       let bulkAddFailFound = false;
       let listOfSupervisorIds = [];
 
+      if (this.authenticatedUser) {
+        this.myOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
+      }
+
       for (let user of this.myOrgUserObjs) {
         if (!user.supervisorId) {
           continue;
@@ -1625,9 +1629,12 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         return;
       }
 
+
       this.figureOrgStat(user._id);
 
       this.authenticatedUser = user;
+
+      this.myOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
 
       this.showLegend = this.authenticatedUser.settings.showLegend;
 
