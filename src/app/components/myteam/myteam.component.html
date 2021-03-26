@@ -1,5 +1,5 @@
-<nz-modal [(nzVisible)]="showBulkAddModal" nzTitle="Add Users Wizard" nzWidth="80%"
-    (nzOnCancel)="showBulkAddModal = false" (nzOnOk)="showBulkAddModal = false">
+<nz-modal [(nzVisible)]="showBulkAddModal" nzTitle="Deploy Wizard" nzWidth="80%" [nzFooter]="null" (nzOnCancel)="showBulkAddModal = false"
+    (nzOnOk)="showBulkAddModal = false">
     <ng-template #stepContent let-task="task" let-desc="description" let-title="title" let-content="content">
         <div style="width:500px;height:300px;">
             <div style="text-align:center;font-size:14px;color:blue;font-weight:500;">
@@ -16,12 +16,12 @@
     <div>
         <nz-steps [nzCurrent]="currentStep">
             <nz-step nzTitle="Data Requirements"></nz-step>
-            <nz-step nzTitle="Upload Data"></nz-step>
-            <nz-step nzTitle="Register Users"></nz-step>
+            <nz-step nzTitle="Upload User Data"></nz-step>
+            <nz-step nzTitle="Create User Accounts"></nz-step>
         </nz-steps>
         <div *ngIf="currentStep === 0" class="steps-content">
             <div style="text-align: center;">
-                <h2>Data Requirements for Onboarding your Team/Organization</h2>
+                <h2>Welcome to the Deploy Wizard</h2>
             </div>
             <div style="display:inline-block;font-size:16px;font-weight: 200;">
                 <p>
@@ -33,44 +33,54 @@
                         <li>Last Name</li>
                         <li>Email Address</li>
                         <li>Supervisor's Email Address</li>
+                        <li>Job Title (optional)</li>
+                        <!--
+                        <li>User Type (optional - one of 'individualContributor', 'supervisor', 'volunteer', 'contractor', 'customer')</li>
+                        -->
                     </ul>
 
-                    <p></p>
                 </div>
                 <p>
-                    The most convenient source of this data is from your company's Human Resources Management system.
-                    HRM systems typically have a way to export data to a text or spreadsheat format document.
+                    You can upload any .csv, .tsv, .xls, .xlsx, .xml file with any set of columns as long as it has 1
+                    record per row.
+                    <br>
+                    The wizard will allow you to match your spreadsheet columns to the above data points. You'll be able
+                    to clean up or
+                    remove any corrupted data before submitting your report.
                 </p>
                 <p>
 
                 </p>
-                <div style="padding-left:40px;">
-
-                    <div style="font-size: 16px;margin-bottom:20px;">
-                        <ol>
-                            <li style="margin-bottom:10px;">
-                                Create a text file with the required items separated by commas. One user per
-                                line.
-                                This file will be uploaded into the system. The following is an example of the required
-                                formatting.
-                                <span style="font-weight:500;margin-left:20px;color:black;">
-                                    Frank,Smith,frank@company.com,my.supervisor@company.com
-                                </span>
-                            </li>
-                            <li>
-                                Enter the information on the fly in the onboarding dialog.
-                            </li>
-                        </ol>
-                    </div>
-                </div>
             </div>
         </div>
         <div *ngIf="currentStep === 1" class="steps-content">
             <div style="display:block;margin-bottom:20px;">
-                <button nz-button nzShape="round" (click)="launchImporter()" nzType="primary">
+                <button nz-button nzShape="round" (click)="launchImporter()" nzType="primary" style="margin-bottom: 20px;">
                     Upload Data
                 </button>
+
+                <div style="background-color: white;padding:20px;">
+                <nz-table #smallTable nzSize="small" [nzData]="newUsers" [nzPageSize]="5000" [nzScroll]="{ y: '400px' }">
+                    <thead >
+                        <tr style="background-color: #f5f5f5;">
+                            <th nzWidth="200px" style="background-color: #f5f5f5;">First Name</th>
+                            <th  style="background-color: #f5f5f5;">Last Name</th>
+                            <th  style="background-color: #f5f5f5;">Email</th>
+                            <th  style="background-color: #f5f5f5;">Supervisor's Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of smallTable.data">
+                            <td>{{ data.firstName }}</td>
+                            <td>{{ data.lastName }}</td>
+                            <td>{{ data.email }}</td>
+                            <td>{{ data.supervisorEmail }}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+                </div>
             </div>
+            <!--
             <div *ngIf="authenticatedUser.appAdmin" style="float:left;">
                 <button nz-button nzShape="round" (click)="testBulkAdd()" nzType="primary"
                     style="display:inline-block;margin-right:10px;">
@@ -92,17 +102,27 @@
                     </nz-input-number>
                 </div>
             </div>
+            -->
         </div>
         <div *ngIf="currentStep === 2" class="steps-content">
-            The upload process has completed. {{newUsers.length}} users were uploaded.
+            <p>
+            Selecting the Register Users button will send an email to each user that
+            includes a link to complete the registration process.  The user's status will be set to 
+            </p>
+            <div>
+                <i class="fas fa-fw fa-user legend-icon" style="color:orange;"></i>
+                <span class="legend-text">Pending Registration Completion</span>
+            </div>
+            <br>
+            <button nz-button nzType="primary" (click)="registerUsers()">
+                <span>Register Users</span>
+            </button>
         </div>
         <div class="steps-action">
-            <!--
-            <button nz-button nzType="default" (click)="pre()" *ngIf="currentStep > 0">
+            <button nz-button nzType="default" (click)="pre()" *ngIf="currentStep !== 0">
                 <span>Previous</span>
             </button>
-            -->
-            <button nz-button nzType="default" (click)="next()" *ngIf="currentStep < 1">
+            <button *ngIf="currentStep !== 2" nz-button nzType="default" (click)="next()" [disabled]="currentStep === 1 && newUsers.length === 0">
                 <span>Next</span>
             </button>
             <!--
@@ -115,7 +135,8 @@
     </div>
 </nz-modal>
 <div *ngIf="authenticatedUser && !showBulkAddModal" style="height:100%;">
-    <nz-drawer [nzMaskClosable]="true" [nzVisible]="showLegend" nzPlacement="left" nzTitle="Legend" [nzWidth]="400" (nzOnClose)="showLegend = false">
+    <nz-drawer [nzMaskClosable]="true" [nzVisible]="showLegend" nzPlacement="left" nzTitle="Legend" [nzWidth]="400"
+        (nzOnClose)="showLegend = false">
         <div>
             <div class="legend-header">
                 SELECTION MODE
@@ -1025,7 +1046,8 @@
 
                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
                                             style="font-size:16px;" [ngStyle]="{'color': getStatusColor(dr)}"></i>
-                                        <span *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || includeFullName" [ngStyle]="{'font-size.px': textFontSize}"
+                                        <span *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || includeFullName"
+                                            [ngStyle]="{'font-size.px': textFontSize}"
                                             style="z-index:1000000;display: block;color:#666666;">
                                             {{orgChartNodeHash[dr]?.fName}}<br>{{orgChartNodeHash[dr]?.lName}}
                                         </span>

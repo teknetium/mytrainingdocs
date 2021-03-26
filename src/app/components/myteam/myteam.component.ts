@@ -2242,10 +2242,10 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       this.results = JSON.stringify(results.validData, null, 2);
 
       this.newUsers = JSON.parse(this.results);
-      if (this.showBulkAddModal) {
-        this.next();
-      }
-      this.userService.createNewUsersFromBatch(this.newUsers, false);
+//      if (this.showBulkAddModal) {
+//        this.next();
+//      }
+//      this.userService.createNewUsersFromBatch(this.newUsers, false);
       //        this.trainingService.assignTrainingsForJobTitle(this.newTeamMember.jobTitle, this.newTeamMember._id, this.newTeamMember.teamId);
       //        this.newUsers = [{ firstName: '', lastName: '', email: '', jobTitle: '', supervisorName: '' }];
     } catch (e) {
@@ -2254,7 +2254,8 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   registerUsers() {
-    this.userService.createNewUsersFromBatch(this.newUsers, false);
+    this.userService.createNewUsersFromBatch(this.newUsers, true);
+    this.showBulkAddModal = false;
   }
 
 
@@ -2301,12 +2302,14 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
           label: "Job Title",
           key: "jobTitle",
           validators: []
-        },
+        }
+        /*
         {
           label: "User Type",
           key: "userType",
           validators: []
         },
+        */
         /*
         {
           label: "User Data 3",
