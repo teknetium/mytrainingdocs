@@ -5,5 +5,5 @@ export interface OrgModel {
   createDate: number,
   owner: string,
   userCount: number,
-  plan: 'basic' | 'pro' | 'expert' | 'none',
+  plan: 'earlyAccess' | 'basic' | 'pro' | 'expert' | 'none',
 }
