@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Location } from '@angular/common';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.type';
 import { Router, NavigationEnd, ActivatedRoute, NavigationCancel, NavigationStart, NavigationError, Event as NavigationEvent } from '@angular/router';
 import { ScrollToAnimationEasing } from '@nicky-lenaers/ngx-scroll-to';
@@ -10,9 +10,17 @@ import { VgAPI } from 'videogular2/compiled/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { TrainingService } from '../../shared/services/training.service';
-import { filter, takeUntil} from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
+import { map, shareReplay } from "rxjs/operators";
 
+
+interface timeComponents {
+  secondsToDday: number;
+  minutesToDday: number;
+  hoursToDday: number;
+  daysToDday: number;
+}
 
 @Component({
   selector: 'app-landingpage',
@@ -38,7 +46,7 @@ import { BaseComponent } from '../base.component';
   ]
 })
 
-export class LandingpageComponent extends BaseComponent  implements OnInit {
+export class LandingpageComponent extends BaseComponent implements OnInit {
 
   vgApi: VgAPI;
   taskVideo$: Observable<SafeResourceUrl>;
@@ -87,7 +95,7 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
   benefits = [
     {
       focus: false,
-      title: 'One Click Deployment',
+      title: 'One Click Deploy',
       class: 'fal fa-rocket-launch red',
       blurb: 'Deploy to your entire organization in a matter of minutes, not weeks!',
       learnMore: '',
@@ -128,7 +136,7 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
     {
       focus: false,
       title: 'Automated Reporting',
-      class: 'fal fa-chart-bar',
+      class: 'fal fa-chart-bar gold',
       blurb: 'Track training status, due dates, certification expiration dates, ' +
         'and more.  All delivered to you at your timing without ever logging into the site.',
       learnMore: '',
@@ -137,7 +145,7 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
     {
       focus: false,
       title: 'Reduced Legal Liability',
-      class: 'fal fa-balance-scale-right',
+      class: 'fal fa-balance-scale-right chartreuse',
       blurb: 'Reduced legal exposure KNOWING that all employees and volunteers are appropriately trained/certified.',
       learnMore: '',
       videoLink: null
@@ -145,7 +153,7 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
     {
       focus: false,
       title: 'Not Just for Employees',
-      class: 'fal fa-hands-helping',
+      class: 'fal fa-hands-helping blueviolet',
       blurb: 'Lets you manage volunteer and customer training too!',
       learnMore: '',
       videoLink: null
@@ -153,7 +161,7 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
     {
       focus: false,
       title: 'Training Versioning',
-      class: 'fal fa-copy',
+      class: 'fal fa-copy darkturquoise',
       blurb: 'Robust versioning of trainings.',
       learnMore: '',
       videoLink: null
@@ -301,6 +309,7 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
   lname;
   email;
   trialEnd;
+  public timeLeft$: Observable<timeComponents>;
 
   constructor(
     private auth: AuthService,
@@ -342,6 +351,10 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
       }
     });
 
+    this.timeLeft$ = interval(1000).pipe(
+      map(x => this.calcDateDiff()),
+      shareReplay(1)
+    );
     this.currentVideo = this.explainerUrl;
     /*
     this.taskVideo$.subscribe(safeUrl => {
@@ -399,6 +412,38 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
           (userCnt - this.userRange[1]) * this.planCostPerUserHash[plan][2];
       }
     }
+  }
+
+  calcDateDiff(endDay: Date = new Date("2021-4-16")): timeComponents {
+    const dDay = endDay.valueOf();
+
+    const milliSecondsInASecond = 1000;
+    const hoursInADay = 24;
+    const minutesInAnHour = 60;
+    const secondsInAMinute = 60;
+
+    const timeDifference = dDay - Date.now();
+
+    const daysToDday = Math.floor(
+      timeDifference /
+      (milliSecondsInASecond * minutesInAnHour * secondsInAMinute * hoursInADay)
+    );
+
+    const hoursToDday = Math.floor(
+      (timeDifference /
+        (milliSecondsInASecond * minutesInAnHour * secondsInAMinute)) %
+      hoursInADay
+    );
+
+    const minutesToDday = Math.floor(
+      (timeDifference / (milliSecondsInASecond * minutesInAnHour)) %
+      secondsInAMinute
+    );
+
+    const secondsToDday =
+      Math.floor(timeDifference / milliSecondsInASecond) % secondsInAMinute;
+
+    return { secondsToDday, minutesToDday, hoursToDday, daysToDday };
   }
 
   showLearnMore(index) {

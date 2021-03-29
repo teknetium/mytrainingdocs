@@ -68,8 +68,20 @@ opacity:1.0;
   color:green;
 }
 
-.red {
-  color:red;
+.gold {
+  color:gold;
+}
+
+.chartreuse {
+  color:chartreuse;
+}
+
+.blueviolet {
+  color:blueviolet;
+}
+
+.darkturquoise {
+  color:darkturquoise;
 }
 
 .purple {
@@ -1150,18 +1162,15 @@ textarea.form-control {
   text-align: center;
   position:absolute;
   bottom:2%;
-  right:3%;
+  left:3%;
   z-index:1;
   width:30%;
   height:fit-content;
   padding:1vw;
   border:4px solid black;
-  background: rgba(60, 60, 60, .4);
+  background: rgba(60, 60, 60, .5);
 }
 
-.special-offer:hover {
-    background: rgba(60, 60, 60, .8);
-}
 
 .play-screencast {
   display:block;
