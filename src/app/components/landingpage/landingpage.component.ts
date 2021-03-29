@@ -87,68 +87,77 @@ export class LandingpageComponent extends BaseComponent  implements OnInit {
   benefits = [
     {
       focus: false,
-      title: 'Safe & Secure',
-      class: 'fal fa-shield-check text-yellow bg-yellow-opacity',
-      blurb: 'We have partnered with an industry leading content management company to ensure that your training content is safe and secure and available 24x7.',
-      learnMore: ''
+      title: 'One Click Deployment',
+      class: 'fal fa-rocket-launch red',
+      blurb: 'Deploy to your entire organization in a matter of minutes, not weeks!',
+      learnMore: '',
+      videoLink: 'onboarding'
+    },
+    {
+      focus: false,
+      title: 'Leverage Existing Content',
+      class: 'fal fa-file-pdf purple',
+      blurb: 'Our training template supports all common document formats without the application that created them.',
+      learnMore: '',
+      videoLink: 'onboarding'
+    },
+    {
+      focus: false,
+      title: 'Dynamic Interactive Org Chart',
+      class: 'fal fa-sitemap orange',
+      blurb: 'Manage users, assign trainings, monitor status, and send messages all from within our unique org chart.',
+      learnMore: '',
+      videoLink: 'onboarding'
     },
     {
       focus: false,
       title: 'Assessments Made Easy',
-      class: 'fal fa-file-certificate text-danger bg-danger-opacity',
+      class: 'fal fa-file-check blue',
       blurb: 'Quickly and easily add assessments to your trainings.  ',
-      learnMore: ''
+      learnMore: '',
+      videoLink: 'onboarding'
     },
     {
       focus: false,
-      title: 'Interactive Org Chart',
-      class: 'fal fa-sitemap text-blue bg-blue-opacity',
-      blurb: 'Manage users and trainings all from within our unique dynamic, interactive org chart.',
-      learnMore: ''
+      title: 'Safe & Secure',
+      class: 'fal fa-shield-check green',
+      blurb: 'We have partnered with an industry leading content management company to ensure that your training content is safe and secure and available 24x7.',
+      learnMore: '',
+      videoLink: null
     },
     {
       focus: false,
       title: 'Automated Reporting',
-      class: 'fal fa-chart-bar text-purple bg-purple-opacity',
+      class: 'fal fa-chart-bar',
       blurb: 'Track training status, due dates, certification expiration dates, ' +
         'and more.  All delivered to you at your timing without ever logging into the site.',
-      learnMore: ''
+      learnMore: '',
+      videoLink: null
     },
     {
       focus: false,
       title: 'Reduced Legal Liability',
-      class: 'fal fa-balance-scale-right text-danger bg-danger-opacity',
+      class: 'fal fa-balance-scale-right',
       blurb: 'Reduced legal exposure KNOWING that all employees and volunteers are appropriately trained/certified.',
-      learnMore: ''
+      learnMore: '',
+      videoLink: null
     },
     {
       focus: false,
       title: 'Not Just for Employees',
-      class: 'fal fa-hands-helping text-dark bg-dark-opacity',
+      class: 'fal fa-hands-helping',
       blurb: 'Lets you manage volunteer and customer training too!',
-      learnMore: ''
-    },
-    {
-      focus: false,
-      title: 'Supports Common Document Formats',
-      class: 'fal fa-file-check purple2',
-      blurb: 'View your training documents without the application that created them.',
-      learnMore: ''
+      learnMore: '',
+      videoLink: null
     },
     {
       focus: false,
       title: 'Training Versioning',
-      class: 'fal fa-copy text-yellow bg-yellow-opacity',
+      class: 'fal fa-copy',
       blurb: 'Robust versioning of trainings.',
-      learnMore: ''
+      learnMore: '',
+      videoLink: null
     },
-    {
-      focus: false,
-      title: 'One Click Deployment',
-      class: 'fal fa-shipping-fast orange',
-      blurb: 'Deploy to your entire organization in a matter of minutes, not weeks!',
-      learnMore: ''
-    }
     /*
     {
       focus: false,

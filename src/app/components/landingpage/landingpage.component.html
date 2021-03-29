@@ -124,7 +124,8 @@
       -->
     <div class="special-offer">
       <div style="color:chartreuse;height:10%;font-size:2.5vw;">
-        <span style="display:block;font-weight:400;opacity:1.0 !important;">Join Early Access!</span>
+        <span style="display:block;font-weight:400;color:white;">NAYDO Special</span>
+        <span style="display:block;font-weight:400;margin-top:5%;">Join Early Access!</span>
       </div>
       <div class="special-offer-text">
         <div style="text-align: left;">
@@ -135,7 +136,7 @@
           </ul>
         </div>
       </div>
-      <div style="">
+      <div>
         <span style="font-size:2vw;vertical-align:super;color:chartreuse;">only</span><br>
         <span style="font-size:2vw;vertical-align:super;color:chartreuse;">$</span>
         <span style="font-size:4vw;font-weight:400;color:chartreuse;">995</span><br>
@@ -158,10 +159,10 @@
   </div>
   <div style="width:100%;height:100%;">
     <div
-      style="background-color:rgba(220, 220, 220, .7);position:fixed;top:0;left:0;right:0;font-size: 12px;height: 64px;z-index: 100;text-align: center;width:100%;">
+      style="padding:1vw;background-color:rgba(220, 220, 220, .7);position:fixed;top:0;left:0;right:0;font-size: 1vw;z-index: 100;text-align: center;width:100%;">
       <div
-        style="position: absolute;left: 10px;top: 10px;height: 44px;border-radius: 24px;padding: 5px 8px; background: rgba(255,255,255,.3); width: 180px;">
-        <img height="35" src="assets/images/logo/logo.png">
+        style="position: absolute;left: 1vw;top: 1vw;border-radius:2vw;padding: .5vw 1vw; background: rgba(255,255,255,.3);margin-right:.2vw;">
+        <img width="100vw" src="assets/images/logo/logo.png">
       </div>
 
       <div class="nav-link">
@@ -176,12 +177,14 @@
           Features
         </a>
       </div>
+      <!--
       <div class="nav-link">
         <a [ngxScrollTo]="destinations['benefits'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
           [ngxScrollToEasing]="ngxScrollToEasing">
           Benefits
         </a>
       </div>
+      -->
       <!--
     <div class="nav-link">
       <a   [ngxScrollTo]="destinations['howitworks'].ngxScrollToDestination"
@@ -210,17 +213,60 @@
       </div>
       -->
 
-      <div class="nav-link" style="cursor:pointer;font-size: 12px;z-index: 100;float:right;" (click)="login()">
+      <div class="nav-link" style="float:right;" (click)="login()">
         Log In
       </div>
     </div>
-    <section class="section" id="features">
-      <div class="container">
+    <!--
+    <section class="section">
+      <div class="container" style="width:100%;">
         <div class="row">
           <div class="col-lg-12">
             <div class="text-center">
               <h2 class="mb-0 text-capitalize"><span class="font-weight-bold">Features</span></h2>
               <div class="main-title-border">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-3" style="margin-top:10px;">
+            <div class="text-center" style="position: relative;">
+              <i class="fal fa-rocket-launch" style="display:block;color:blue;font-size:5vw;"></i>
+              <i class="far fa-play-circle play-screencast" (click)="loadVideo('onboarding')" nz-tooltip
+                nzTooltipTitle="Play a short screencast"></i>
+              <div style="font-size:1.5vw;font-weight:400;">
+                Deploy to any size organization in minutes
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3" style="margin-top:10px;">
+            <div class="text-center">
+              <i class="fal fa-file-pdf" style="display:block;color:blue;font-size:5vw;"></i>
+              <i class="far fa-play-circle play-screencast" (click)="loadVideo('onboarding')" nz-tooltip
+                nzTooltipTitle="Play a short screencast"></i>
+              <div style="font-size:1.5vw;font-weight:400;">
+                Leverage existing content
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3" style="margin-top:10px;">
+            <div class="text-center">
+              <i class="fal fa-sitemap" style="display:block;color:blue;font-size:5vw;"></i>
+              <i class="far fa-play-circle play-screencast" (click)="loadVideo('onboarding')" nz-tooltip
+                nzTooltipTitle="Play a short screencast"></i>
+              <div style="font-size:1.5vw;font-weight:400;">
+                Status tracking that scales
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3" style="margin-top:10px;">
+            <div class="text-center">
+              <i class="fal fa-file-check" style="display:block;color:blue;font-size:5vw;"></i>
+              <i class="far fa-play-circle play-screencast" (click)="loadVideo('onboarding')" nz-tooltip
+                nzTooltipTitle="Play a short screencast"></i>
+              <div style="font-size:1.5vw;font-weight:400;">
+                Easily add assessments
               </div>
             </div>
           </div>
@@ -235,11 +281,11 @@
           </div>
           <div class="col-lg-6" style="height:fit-content;">
             <div class="text-center" style="position:relative;">
-              <!--
-              <i class="fas fa-play opaque"
-                style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
-                (click)="loadVideo('onboarding')"></i>
-                -->
+              < !--
+                      <i class="fas fa-play opaque"
+                        style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
+                        (click)="loadVideo('onboarding')"></i>
+                        -- >
               <img width="400" src="../../../assets/images/orgChart_1.29.21.png">
             </div>
           </div>
@@ -256,11 +302,11 @@
           </div>
           <div class="col-lg-6" style="height:fit-content;">
             <div class="text-center" style="position:relative;">
-              <!--
+              < !--
                       <i class="fas fa-play opaque"
                         style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
                         (click)="loadVideo('onboarding')"></i>
-                        -->
+                        -- >
               <img width="400" src="../../../assets/images/orgChart_1.29.21.png">
             </div>
           </div>
@@ -269,11 +315,11 @@
         <div class="row">
           <div class="col-lg-6" style="height:fit-content;">
             <div class="text-center" style="position:relative;">
-              <!--
+              < !--
               <i class="fas fa-play opaque"
                 style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
                 (click)="loadVideo('orgChart')"></i>
-                -->
+                -- >
               <img width="400" src="../../../assets/images/orgChart_1.29.21.png">
             </div>
           </div>
@@ -301,22 +347,23 @@
           </div>
           <div class="col-lg-6" style="height:fit-content;">
             <div class="text-center" style="position:relative;">
-              <!--
+              < !--
               <i class="fas fa-play opaque"
                 style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
                 (click)="explainerVidIsVisible = true"></i>
-                -->
+                -- >
               <img width="400" src="../../../assets/images/training-template.png">
             </div>
           </div>
         </div>
       </div>
     </section>
-    <section class="section bg-light" id="benefits">
+        -->
+    <section class="section bg-light" id="features">
       <div class="row">
         <div class="col-lg-12">
           <div class="text-center">
-            <h2 class="mb-0 text-capitalize"><span class="font-weight-bold">Benefits</span></h2>
+            <h2 class="mb-0 text-capitalize"><span class="font-weight-bold">Features</span></h2>
             <div class="main-title-border">
               <i class="mdi mdi-atom"></i>
             </div>
@@ -325,14 +372,18 @@
       </div>
       <div style="display: block;">
         <div class="benefit-container">
-          <div *ngFor="let item of benefits; let i = index" class="benefit-item lan_box_ser text-center p-4 mt-3"
+          <div *ngFor="let item of benefits; let i = index" class="benefit-item  text-center"
             (mouseleave)="loseFocus(i)" (mouseenter)="focus(i)">
-            <div class="ser_icon">
-              <i [ngClass]="item.class"></i>
+            <i [ngClass]="item.class" style="font-size:3vw;margin-bottom:5%;"></i>
+            <div style="margin-bottom:5%;font-size:1.2vw;font-weight:500;">
+              {{item.title}}
             </div>
-            <div class="service-content mt-4" style="margin-bottom: 10px;height: 80px;">
-              <h5>{{item.title}}</h5>
-              <p class="mt-3 text-muted mb-0" style="font-size: 12px;" [innerHTML]="item.blurb"></p>
+            <div style="font-size:.9vw;min-height:4vw;">
+              {{item.blurb}}
+            </div>
+            <div style="font-size:.9vw;min-height:4vw;">
+              <i *ngIf="item.videoLink" class="far fa-play-circle play-screencast" (click)="loadVideo('onboarding')"
+                nz-tooltip nzTooltipTitle="Play a short screencast"></i>
             </div>
             <!--
           <div>
@@ -463,13 +514,11 @@
 
               </div>
             </div>
-            <div style="width: 100%;text-align: center;margin:40px 0;">
-              <div style="display:inline;border:1px solid #dddddd;padding:40px;background-color:#f5f5f5;">
-                <div style="display:inline-block;font-size:24px;">
+            <div style="width: 100%;text-align: center;margin:2vw 0;">
+              <div style="width:100%;display:inline;border:1px solid #dddddd;padding:1vw;background-color:#f5f5f5;">
+                <div style="display:inline-block;font-size:2vw;">
                   How many people are in your organization?&nbsp;&nbsp;
-                </div>
-                <div style="display:inline-block;">
-                  <nz-input-number [(ngModel)]="userCnt" [nzMin]="0" [nzMax]="10000" nzSize="large" [nzStep]="10"
+                  <nz-input-number [(ngModel)]="userCnt" [nzMin]="0" [nzMax]="10000" nzSize="small" [nzStep]="10"
                     (ngModelChange)="userCntChanged($event)"></nz-input-number>
                 </div>
               </div>
@@ -479,22 +528,22 @@
             <nz-card class="price-card">
               <div style="text-align: center;">
                 <div class="media align-items-center" style="display:block;">
-                  <i class="fad fa-user-hard-hat" style="font-size:46px;color:cornflowerblue;margin-bottom:5px;"></i>
+                  <i class="fad fa-user-hard-hat" style="font-size:4vw;color:cornflowerblue;margin-bottom:5px;"></i>
                   <div style="text-align: center;">
-                    <h2>Early Access</h2>
-                    <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
-                      <div style="margin:20px 0 40px 0;">
+                    <span style="font-size:1.5vw;">Early Access</span>
+                    <div *ngIf="plans === 'monthly'" style="width:95%;display:inline-block;">
+                      <div style="margin:2vw 0 4vw 0;">
                         <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:20px;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">995
+                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                          <span style="color:black;font-size:2vw;font-weight:400;">995
                           </span>
                         </div>
-                        <div style="display:block;width:100%;color:#aaaaaa;font-size:12px;">
+                        <div style="display:block;width:100%;color:#aaaaaa;font-size:1vw;">
                           April 13, 2021 - June 30, 2021
                         </div>
                       </div>
                       <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
-                        style="text-align:center;font-size:12x;font-weight: 500;">
+                        style="text-align:center;font-size:1vw;font-weight: 500;">
                         <ul style="display: inline-block;">
                           <li>4 hours consulting time</li>
                           <li>15% discount for 1 year</li>
@@ -503,7 +552,7 @@
                       </div>
                     </div>
                   </div>
-                  <div style="text-align: left;margin-top:40px;">
+                  <div style="text-align: left;margin-top:2vw;">
                     <div style="width:100%;">
                       <div class="pricing-line-item-category">
                         Setup
@@ -524,7 +573,7 @@
                           <i class="fas fa-check" style="color:#52c41a;"></i>
                         </span>
                         <span class="pricing-line-item-desc">
-                          Unliimited Trainings
+                          Unlimited Trainings
                         </span>
                       </div>
                       <div class="pricing-line-item-indented">
@@ -623,36 +672,36 @@
             </nz-card>
           </div>
           <div class="col-md-3">
-            <nz-card class="price-card">
+            <nz-card class="price-card" style="padding;0 !important;">
               <div style="text-align: center;">
                 <div class="media align-items-center" style="display:block;">
-                  <i class="fad fa-user" style="font-size:46px;color:green;margin-bottom:5px;"></i>
+                  <i class="fad fa-user" style="font-size:4vw;color:green;margin-bottom:5px;"></i>
                   <div style="text-align: center;">
-                    <h2>Basic</h2>
+                    <span style="font-size:1.5vw;">Basic</span>
                     <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
-                      <div style="margin:20px 0 40px 0;width:100%;">
+                      <div style="margin:2vw 0 4vw 0;width:100%;">
                         <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:20px;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['basic'][0]}}
+                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['basic'][0]}}
                           </span>
-                          <span style="color:#aaaaaa;font-size:20px;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['basic'][1]}}
+                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['basic'][1]}}
                           </span>
-                          <span style="color:#aaaaaa;font-size:20px;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['basic'][2]}}
+                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['basic'][2]}}
                           </span>
-                          <span style="color:#aaaaaa;font-size:10px;font-weight:300;"> /user /mo</span>
+                          <span style="color:#aaaaaa;font-size:.8vw;font-weight:300;"> /user /mo</span>
                         </div>
-                        <div style="display:block;width:100%;font-size:10px;font-weight:300;color:#aaaaaa;">
+                        <div style="display:block;width:100%;font-size:.8vw;font-weight:300;color:#aaaaaa;">
                           <= {{userRange[0]}} users &nbsp;|&nbsp; {{userRange[0] + 1}}-{{userRange[1]}} users
                             &nbsp;|&nbsp;> {{userRange[1]}} users
                         </div>
                       </div>
                     </div>
                     <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
-                      style="width:100%;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:10px;">
-                      <h2>{{userCnt}} Users</h2>
-                      <nz-table style="font-size:10px;">
+                      style="width:100%;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:.5vw;">
+                      <span style="font-size:1.5vw;">{{userCnt}} Users</span>
+                      <nz-table style="font-size:.8vw;">
                         <tbody>
                           <tr>
                             <td style="text-align: right;">Monthly Subscription Fee</td>
@@ -850,24 +899,24 @@
             <nz-card class="price-card">
               <div>
                 <div class="media align-items-center" style="display:block;">
-                  <i class="fad fa-user-tie" style="font-size:46px;color:red;margin-bottom:5px;"></i>
+                  <i class="fad fa-user-tie" style="font-size:4vw;color:red;margin-bottom:5px;"></i>
                   <div style="text-align: center;">
-                    <h2>Pro</h2>
+                    <span style="font-size:1.5vw;">Pro</span>
                     <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
-                      <div style="margin:20px 0 40px 0;width:100%;">
+                      <div style="margin:2vw 0 4vw 0;width:100%;">
                         <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:20px;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['pro'][0]}}
+                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['pro'][0]}}
                           </span>
-                          <span style="color:#aaaaaa;font-size:20px;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['pro'][1]}}
+                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['pro'][1]}}
                           </span>
-                          <span style="color:#aaaaaa;font-size:20px;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['pro'][2]}}
+                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['pro'][2]}}
                           </span>
-                          <span style="color:#aaaaaa;font-size:10px;font-weight:300;"> /user /mo</span>
+                          <span style="color:#aaaaaa;font-size:.8vw;font-weight:300;"> /user /mo</span>
                         </div>
-                        <div style="display:block;width:100%;font-size:10px;font-weight:300;color:#aaaaaa;">
+                        <div style="display:block;width:100%;font-size:.8vw;font-weight:300;color:#aaaaaa;">
                           <= {{userRange[0]}} users &nbsp;|&nbsp; {{userRange[0] + 1}}-{{userRange[1]}} users
                             &nbsp;|&nbsp;>
                             {{userRange[1]}} users
@@ -875,9 +924,9 @@
                       </div>
                     </div>
                     <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
-                      style="width:100%;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:10px;">
-                      <h2>{{userCnt}} Users</h2>
-                      <nz-table style="font-size:10px;">
+                      style="width:100%;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:.5vw;">
+                      <span style="font-size:1.5vw;">{{userCnt}} Users</span>
+                      <nz-table style="font-size:.8vw;">
                         <tbody>
                           <tr>
                             <td style="text-align: right;">Monthly Subscription Fee</td>
@@ -1083,24 +1132,24 @@
             <nz-card class="price-card">
               <div>
                 <div class="media align-items-center" style="display:block;">
-                  <i class="fad fa-user-graduate" style="font-size:46px;color:blueviolet;margin-bottom:5px;"></i>
+                  <i class="fad fa-user-graduate" style="font-size:4vw;color:blueviolet;margin-bottom:5px;"></i>
                   <div style="text-align: center;">
-                    <h2>Expert</h2>
+                    <span style="font-size:1.5vw;">Expert</span>
                     <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
-                      <div style="margin:20px 0 40px 0;width:100%;">
+                      <div style="margin:2vw 0 4vw 0;width:100%;">
                         <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:20px;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][0]}}
+                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['expert'][0]}}
                           </span>
-                          <span style="color:#aaaaaa;font-size:20px;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][1]}}
+                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['expert'][1]}}
                           </span>
-                          <span style="color:#aaaaaa;font-size:20px;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][2]}}
+                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['expert'][2]}}
                           </span>
-                          <span style="color:#aaaaaa;font-size:10px;font-weight:300;"> /user /mo</span>
+                          <span style="color:#aaaaaa;font-size:.8vw;font-weight:300;"> /user /mo</span>
                         </div>
-                        <div style="display:block;width:100%;font-size:10px;font-weight:300;color:#aaaaaa;">
+                        <div style="display:block;width:100%;font-size:.8vw;font-weight:300;color:#aaaaaa;">
                           <= {{userRange[0]}} users &nbsp;|&nbsp; {{userRange[0] + 1}}-{{userRange[1]}} users
                             &nbsp;|&nbsp;>
                             {{userRange[1]}} users
@@ -1139,8 +1188,8 @@
                     -->
                     <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
                       style="width:100%;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:10px;">
-                      <h2>{{userCnt}} Users</h2>
-                      <nz-table style="font-size:10px;">
+                      <span style="font-size:1.5vw;">{{userCnt}} Users</span>
+                      <nz-table style="font-size:.8vw;">
                         <tbody>
                           <tr>
                             <td style="text-align: right;">Monthly Subscription Fee</td>
