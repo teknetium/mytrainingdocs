@@ -1017,7 +1017,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   sendNotifications() {
     let message: MessageModel;
-    let toAddrs: string[];
+    let toAddrs: string[] = [];
     let dynamicTemplateData = {};
     let msg = <MessageModel>{
       _id: null,

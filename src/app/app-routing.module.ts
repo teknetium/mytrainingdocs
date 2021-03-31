@@ -3,6 +3,7 @@ import { RouterModule, Routes, Router, PreloadingStrategy, PreloadAllModules } f
 import { NewAppComponent } from './new-app/new-app.component';
 import { LandingpageComponent } from './components/landingpage/landingpage.component';
 import { CallbackComponent } from './components/callback/callback.component';
+import { PaymentCallbackComponent } from './components/payment-callback/payment-callback.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { VerifyEmailComponent } from './components/verify-email/verify-email.component';
 import { AuthenticatedROUTES } from './authenticated.routes';
@@ -35,6 +36,10 @@ const appRoutes: Routes = [
     {
         path: 'callback',
         component: CallbackComponent,
+    },
+    {
+        path: 'paymentcallback',
+        component: PaymentCallbackComponent,
     },
     /*
     {

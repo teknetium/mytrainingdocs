@@ -29,6 +29,7 @@ import { LoaderInterceptor } from './shared/interceptor/loader-interceptor.servi
 import { LoaderService } from './shared/services/loader.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpErrorInterceptor } from './shared/interceptor/error-interceptor.service';
+import { PaymentCallbackModule } from './components/payment-callback/payment-callback.module';
 
 const ngZorroConfig: NzConfig = {
     message: { nzTop: 300 },
@@ -49,6 +50,7 @@ registerLocaleData(en);
         AppRoutingModule,
         SharedModule,
         CallbackModule,
+        PaymentCallbackModule,
         HomeModule,
         LoginModule,
         NzBadgeModule,
