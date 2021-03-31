@@ -1,4 +1,12 @@
-<div style="width:100%;padding-top:300px;display:inline-block;">
-    <h2>Thank you for subscribing to the {{planName}} plan.</h2>
-    {{fName}} {{lName}} {{email}}
+<div style="width:100%;padding:150px;text-align: center;">
+    <h2>Thank you for subscribing to the
+        <span style="color: red;">{{planName}}</span>
+        plan.
+    </h2>
+    <p>Please complete your registration...</p>
+
+    <button nz-button nzShape="round" nzType="primary" style="margin-top:20px;" (click)="register()">
+        Complete Registration
+    </button>
+
 </div>

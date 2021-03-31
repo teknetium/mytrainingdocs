@@ -313,9 +313,6 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private userService: UserService,
-    private trainingService: TrainingService,
-    private location: Location,
     private activatedRoute: ActivatedRoute,
     private router: Router) {
 
