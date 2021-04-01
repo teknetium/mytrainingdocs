@@ -67,9 +67,12 @@
                 </div>
 
                 <div *ngIf="newUsers.length > 0" style="margin: 20px 0;">
-                    You have successfully uploaded {{newUsers.length}} users.
+                    You have successfully uploaded
+                    <span style="color:red;">{{newUsers.length}}</span>
+                     users.
                 </div>
 
+                <!--
                 <div *ngIf="newUsers.length > 0" style="background-color: white;padding:20px;">
                     <nz-table #smallTable nzSize="small" [nzData]="newUsers" [nzPageSize]="5000"
                         [nzScroll]="{ y: '400px' }">
@@ -91,6 +94,7 @@
                         </tbody>
                     </nz-table>
                 </div>
+                -->
             </div>
             <!--
             <div *ngIf="authenticatedUser.appAdmin" style="float:left;">

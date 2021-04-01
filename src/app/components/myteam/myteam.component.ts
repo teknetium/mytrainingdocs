@@ -1952,7 +1952,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.userIdsSelected = [];
     this.uidTidUTHash = {};
     this.currentTrainingSelected = training;
-    this.orgChartTitle = this.allTrainingIdHash[training].title;
+    this.orgChartTitle = this.allTrainingIdHash[training].title + '  ' + this.versionFormatter(this.allTrainingIdHash[training].versions[0].version);
     for (let user of this.myOrgUserObjs) {
       let tidUTHash = {};
       let tids = [];

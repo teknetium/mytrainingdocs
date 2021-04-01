@@ -150,6 +150,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       learnMore: '',
       videoLink: null
     },
+    /*
     {
       focus: false,
       title: 'Not Just for Employees',
@@ -158,6 +159,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       learnMore: '',
       videoLink: null
     },
+    */
     {
       focus: false,
       title: 'Training Versioning',

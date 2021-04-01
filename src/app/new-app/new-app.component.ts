@@ -329,6 +329,11 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   listOfUsers = [];
   userNameHash = {};
   planHash = {
+    earlyAccess: {
+      name: 'Early Access',
+      icon: 'fad fa-user-hard-hat',
+      color: 'cornflowerblue'
+    },
     basic: {
       name: 'Basic',
       icon: 'fad fa-user',
