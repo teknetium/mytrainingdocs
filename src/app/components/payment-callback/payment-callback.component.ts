@@ -15,6 +15,7 @@ export class PaymentCallbackComponent extends BaseComponent implements OnInit {
   lName: string;
   planName: string;
   email: string;
+  title: string;
 
   private _auth0 = new auth0.WebAuth({
     clientID: AUTH_CONFIG.CLIENT_ID,
@@ -36,6 +37,7 @@ export class PaymentCallbackComponent extends BaseComponent implements OnInit {
       this.lName = params['firstname'];
       this.planName = params['planName'];
       this.email = params['email'];
+      this.title = "Thank you for subscribing to the " + this.planName + " plan.";
     });
   }
 

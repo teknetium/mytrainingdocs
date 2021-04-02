@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { MyteamComponent } from './components/myteam/myteam.component';
 import { DocsComponent } from './components/docs/docs.component';
+import { ContactUsComponent } from './components/contact-us/contact-us.component';
 
 
 export const AuthenticatedROUTES: Routes = [
@@ -52,8 +53,8 @@ export const AuthenticatedROUTES: Routes = [
         loadChildren: () => import('./components/my-trainings/my-trainings.module').then(m => m.MyTrainingsModule)
     },
     {
-        path: 'roadmap',
-        loadChildren: () => import('./components/my-trainings/my-trainings.module').then(m => m.MyTrainingsModule)
+        path: 'contactus',
+        component: ContactUsComponent,
     },
     /*
     {

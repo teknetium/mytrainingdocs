@@ -220,7 +220,7 @@ export class UserService {
                         settings: {
                           statusList: [],
                           showCSV: false,
-                          showLegend: true,
+                          showLegend: false,
                           showInactiveUsers: true,
                           showAlerts: true,
                           showTasks: true,
@@ -583,7 +583,7 @@ export class UserService {
       this.newTeamMember.settings = {
         statusList: cloneDeep(statusList),
         showCSV: true,
-        showLegend: true,
+        showLegend: false,
         showInactiveUsers: true,
         showAlerts: true,
         showTasks: true,

@@ -84,11 +84,14 @@
 
         <div [ngClass]="{'training-header': production === 'false', 'production-training-header': production === 'true'}"
             style="position:relative;">
+            <span *ngIf="production === 'false' && selectedTraining?.status === 'unlocked' && mode === 'Edit'" class="section-title">Header</span>
+            <!--
             <i *ngIf="production === 'false' && selectedTraining?.status === 'unlocked' && mode === 'Edit'" nz-icon
                 nzType="question-circle" theme="twotone"
                 style="font-size:20px;position:absolute;top:10px;left:10px;cursor:pointer;z-index:10;"
                 (click)="startTour('header')" nz-tooltip nzTooltipTitle="A little help">
             </i>
+            -->
             <nz-modal [(nzVisible)]="showAssessmentAlert" nzTitle="Assessment Error  xxx" nzCancelDisabled="true"
                 (nzOnOk)="assessmentErrorOk()">
                 <p></p>
@@ -475,11 +478,14 @@
         <div style="height:fit-content;background-color: white;border-bottom:1px solid #5488ee;position:relative;"
             joyrideStep="Step1-pn" stepPosition="bottom" title="Training Pages"
             text="This is the trainings Table of Contents.  Here you will find all of the pages that makeup this training.">
+            <span *ngIf="production === 'false' && selectedTraining?.status === 'unlocked' && mode === 'Edit'" class="section-title">Pages</span>
+            <!--
             <i *ngIf="production === 'false' && selectedTraining?.status === 'unlocked' && mode === 'Edit'" nz-icon
                 nzType="question-circle" theme="twotone"
                 style="font-size:20px;position:absolute;top:10px;left:10px;cursor:pointer;"
                 (click)="startTour('page-navigation')" nz-tooltip nzTooltipTitle="A little help">
             </i>
+            -->
             <div *ngIf="production === 'false' && selectedTraining?.status === 'unlocked' && mode === 'Edit'"
                 style="display:block;padding:5px;background-color: #fefbe7;text-align: center;">
                 <!--
@@ -790,11 +796,14 @@
             <div class="main-content">
                 <div class="page-container">
                     <div *ngFor="let page of selectedTraining?.pages; index as pageIndex">
+                        <span *ngIf="production === 'false' && selectedTraining?.status === 'unlocked' && mode === 'Edit'" class="section-title">Page Content</span>
+                        <!--
                         <i *ngIf="production === 'false' && selectedTraining?.status === 'unlocked' && mode === 'Edit'"
                             nz-icon nzType="question-circle" theme="twotone"
                             style="font-size:20px;position:absolute;top:10px;left:10px;z-index:10;cursor:pointer;"
                             (click)="startTour('training-intro')" nz-tooltip nzTooltipTitle="A little help">
                         </i>
+                        -->
                         <div *ngIf="currentPageId === page?._id" class="page">
                             <div [ngClass]="{'page-content': (mode === 'Edit' && selectedTraining?.status === 'unlocked' && production === 'false')}"
                                 style="text-align:center;">

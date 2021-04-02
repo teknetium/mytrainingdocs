@@ -155,6 +155,7 @@
 	height:fit-content;
 	width: 100%;
 	background-color: white;
+	position: relative;
 }
 
 .content-type-row {
@@ -339,4 +340,12 @@
 	float: right;
 	margin-bottom: 10px;
 	width: 94%;
+}
+
+.section-title {
+	 font-size:20px;
+	 position:absolute;
+	 top:10px;
+	 left:10px;
+	 color:blue;
 }

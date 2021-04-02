@@ -12,20 +12,6 @@
 	line-height: 64px;
 }
 
-.nav-badge-cell {
-  width:8px;
-  height: 8px;
-  border: 1px solid white;
-  border-radius: 50%;
-  background-color: #3e9c1c;
-  position: absolute;
-  top:10px;
-  right:4px;
-  font-size:10px;
-  color: white;
-  text-align: center;
-}
-
 .current-nav {
   background: rgba(255, 255, 255, .3);
   color:blue !important;
@@ -33,11 +19,17 @@
 
 .navbar-rhs {
   float:right;
-  margin-right: 20px;
+  margin-right: 10px;
 }
 
 .nav-badge {
-  padding: 0 10px;
+  padding: 0 20px;
+  top:0;
+}
+
+.nav-badge:hover {
+  background: rgba(255, 255, 255, .3);
+  color:blue !important;
 }
 
 p.nav-badge:hover {
@@ -67,7 +59,7 @@ nz-footer {
 }
 
 .ant-menu-item {
-  padding: 0 10px !important;
+
 }
 
 .footer {

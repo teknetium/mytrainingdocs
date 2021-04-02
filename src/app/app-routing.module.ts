@@ -67,10 +67,6 @@ const appRoutes: Routes = [
         path: 'naydo',
         component: LandingpageComponent,
     },
-    {
-        path: 'subscribesuccess',
-        component: LandingpageComponent,
-    }
 //    {
 //        path: 'docs',
 //        component: DocsComponent,

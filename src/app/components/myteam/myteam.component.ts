@@ -220,7 +220,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       statusList: [],
       showCSV: false,
       themeColor: {},
-      showLegend: true,
+      showLegend: false,
       showInactiveUsers: true,
       showAlerts: true,
       showTasks: true

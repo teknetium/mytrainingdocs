@@ -45,36 +45,34 @@
         </div>
         <ul nz-menu nzTheme="light" nzMode="horizontal"
             [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.bgColor, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary }">
-            <li nz-menu-item nzMatchRouter class="nav-badge" style="top:0;" joyrideStep="task0Step1" style="top:0;margin:0 10px;"
-                [ngClass]="{'current-nav': currentPage === 'home', 'nav-element': currentPage !== 'home'}" nz-tooltip nzTooltipTitle="Home" nzTooltipPlacement="bottom">
+            <li nz-menu-item nzMatchRouter class="nav-badge" joyrideStep="task0Step1" [ngClass]="{'current-nav': currentPage === 'home'}" nz-tooltip nzTooltipTitle="Home" nzTooltipPlacement="bottom">
                 <a routerLink="/home" routerLinkActive="active-link">
-                    <i class="far fa-home-lg" style="font-size:24px;vertical-align: middle;"></i>
+                    <i class="far fa-fw fa-home-lg" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
-                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'myteam'}" style="top:0;margin:0 10px;" nz-tooltip nzTooltipTitle="My Organization" nzTooltipPlacement="bottom">
+                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'myteam'}" nz-tooltip nzTooltipTitle="My Organization" nzTooltipPlacement="bottom">
                 <a routerLink="/myteam" routerLinkActive="active-link">
-                    <i class="far fa-sitemap" style="font-size:24px;vertical-align: middle;"></i>
+                    <i class="far fa-fw fa-sitemap" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
-                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'mytrainings'}" style="top:0;margin:0 10px;" nz-tooltip nzTooltipTitle="My Trainings" nzTooltipPlacement="bottom">
+                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'mytrainings'}" nz-tooltip nzTooltipTitle="My Trainings" nzTooltipPlacement="bottom">
                 <a routerLink="/mytrainings" routerLinkActive="active-link">
-                    <i class="far fa-file-certificate" style="font-size:24px;vertical-align: middle;"></i>
+                    <i class="far fa-fw fa-file-certificate" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor' || (authenticatedUser$ | async)?.teamAdmin"
                 nz-menu-item nzMatchRouter class="nav-badge" [ngClass]="{'current-nav': currentPage === 'trainings'}"
-                style="top:0;margin:0 10px;" nz-tooltip nzTooltipTitle="All Trainings" nzTooltipPlacement="bottom">
+                nz-tooltip nzTooltipTitle="All Trainings" nzTooltipPlacement="bottom">
                 <a routerLink="/trainings" routerLinkActive="active-link">
-                    <i class="far fa-graduation-cap" style="font-size:24px;vertical-align: middle;"></i>
+                    <i class="far fa-fw fa-graduation-cap" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
-            <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor' || (authenticatedUser$ | async)?.teamAdmin"
-                nz-menu-item nzMatchRouter class="nav-badge" [ngClass]="{'current-nav': currentPage === 'roadmap'}"
-                style="top:0;margin:0 10px;" nz-tooltip nzTooltipTitle="Roadmap" nzTooltipPlacement="bottom">
-                <a routerLink="/roadmap" routerLinkActive="active-link">
-                    <i class="far fa-road" style="font-size:24px;vertical-align: middle;"></i>
+            <li nz-menu-item nz-tooltip nzTooltipTitle="Contact Us"
+                nzTooltipPlacement="bottom" class="nav-badge" [ngClass]="{'current-nav': currentPage === 'contactus'}">
+                <a routerLink="/contactus" routerLinkActive="active-link">
+                    <i class="far fa-fw fa-user-headset" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
             <li nz-menu-item class="navbar-rhs" nz-dropdown [nzDropdownMenu]="profile" [nzTrigger]="'hover'"

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PaymentCallbackComponent } from './payment-callback.component';
-import { NzButtonModule, NzSpinModule } from 'ng-zorro-antd';
+import { NzButtonModule, NzResultModule, NzSpinModule } from 'ng-zorro-antd';
 
 @NgModule({
   declarations: [
@@ -10,7 +10,8 @@ import { NzButtonModule, NzSpinModule } from 'ng-zorro-antd';
   ],
   imports: [
     CommonModule,
-    NzButtonModule
+    NzButtonModule,
+    NzResultModule
   ],
   exports: [
     PaymentCallbackComponent
