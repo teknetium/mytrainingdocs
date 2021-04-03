@@ -19,7 +19,7 @@
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
 	color:red;
-	padding:5px 100px 0 100px;
+	padding:5px 100px 0 100px;	
 	border-bottom-width: 0;
 }
 .done-button:hover {
@@ -348,4 +348,5 @@
 	 top:10px;
 	 left:10px;
 	 color:blue;
+	 z-index: 10000;
 }
