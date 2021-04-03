@@ -145,7 +145,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Reduced Legal Liability',
-      class: 'fal fa-balance-scale-right chartreuse',
+      class: 'fal fa-balance-scale-right steelblue',
       blurb: 'Reduced legal exposure KNOWING that all employees and volunteers are appropriately trained/certified.',
       learnMore: '',
       videoLink: null
@@ -283,9 +283,9 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   userCnt = 150;
   monthlyCost = 0;
   planCostPerUserHash = {
-    basic: [10, 8, 6],
-    pro: [14, 11, 8],
-    expert: [18, 14, 10]
+    basic: [8, 6, 4],
+    pro: [12, 9, 6],
+    expert: [16, 12, 8]
   };
   userRange = [100, 300];
   discounts = {
