@@ -30,6 +30,8 @@ import { BaseComponent } from '../base.component';
 import { JoyrideService } from 'ngx-joyride';
 import { AssessmentResponse, UserTrainingModel } from 'src/app/shared/interfaces/userTraining.type';
 import { OrgModel } from 'src/app/shared/interfaces/org.type';
+import { environment } from '../../../environments/environment';
+
 
 
 @Component({
@@ -700,7 +702,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   getFroalaOptions(editorId: string, model: string): Object {
     return new Object({
       immediateAngularModelUpdate: true,
-      key: "0BA3jA11D9C4F6A3E4asftscjjlhi1lfixF6nablA3C11A8C6D2B4A4G2F3A3==",
+      key: environment.froalaKey,
       events: {
         'contentChanged': () => {
           console.log('contentChanged event');
