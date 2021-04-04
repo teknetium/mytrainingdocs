@@ -306,6 +306,8 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
 
   earlyAccess = true;
 
+  showContactModal = false;
+
   subid;
   fname;
   lname;
@@ -413,7 +415,11 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     }
   }
 
-  calcDateDiff(endDay: Date = new Date("2021-4-16")): timeComponents {
+  showContactUsModal() {
+    this.showContactModal = true;
+  }
+
+  calcDateDiff(endDay: Date = new Date("2021-4-17")): timeComponents {
     const dDay = endDay.valueOf();
 
     const milliSecondsInASecond = 1000;

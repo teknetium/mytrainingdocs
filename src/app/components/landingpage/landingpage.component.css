@@ -1145,7 +1145,7 @@ textarea.form-control {
 
 .price-card {
    border-color: #e1e1e1;
-   min-height:90vh;
+   height:fit-content;
    position:relative;
    background-color: #fdfdfd;
 }
@@ -1200,11 +1200,11 @@ textarea.form-control {
  }
  
  .naydo-box {
-  height:150px;
+  height:11vw;
  }
 
  .regular-box {
-  height:120px;
+  height:7vw;
  }
 
  .pricing-line-item-indented {

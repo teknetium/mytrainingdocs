@@ -391,8 +391,12 @@
               {{item.blurb}}
             </div>
             <div style="font-size:.9vw;min-height:4vw;">
-              <i *ngIf="item.videoLink" class="far fa-play-circle play-screencast" (click)="loadVideo('onboarding')"
-                nz-tooltip nzTooltipTitle="Play a short screencast"></i>
+              <!--
+              <i *ngIf="item.videoLink" class="far fa-play-circle play-screencast" (click)="loadVideo(item.videoLink)" nz-tooltip
+                nzTooltipTitle="Play a short screencast"></i>
+                -->
+              <i *ngIf="item.videoLink" class="far fa-play-circle play-screencast" nz-tooltip
+                nzTooltipTitle="Play a short screencast"></i>
             </div>
             <!--
           <div>
@@ -403,6 +407,13 @@
         </div>
       </div>
     </section>
+<!--
+    <nz-modal [(nzVisible)]="showContactModal" nzTitle="Coming Soon" (nzOnCancel)="" (nzOnOk)="">
+      <div>
+        
+      </div>
+    </nz-modal>
+    -->
     <!--
   <nz-drawer *ngIf="benefit$ | async as bene" nzClosable="true" [nzVisible]="visible" [nzPlacement]="placement"
     [nzTitle]="bene.title" (nzOnClose)="close()">
@@ -541,7 +552,7 @@
                   <div style="text-align: center;">
                     <span style="font-size:1.5vw;">Early Access</span>
                     <div *ngIf="plans === 'monthly'" style="width:95%;display:inline-block;">
-                      <div style="margin:2vw 0 4vw 0;">
+                      <div style="margin:20px 0;;">
                         <div style="display:block;width:100%;color:black;">
                           <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
                           <span style="color:black;font-size:2vw;font-weight:400;">995
@@ -551,17 +562,17 @@
                           April 13, 2021 - June 30, 2021
                         </div>
                       </div>
-                      <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
-                        style="text-align:center;font-size:1vw;font-weight: 500;">
-                        <ul style="display: inline-block;">
-                          <li>4 hours consulting time</li>
-                          <li>15% discount for 1 year</li>
-                          <li>Input on future features</li>
-                        </ul>
-                      </div>
+                    </div>
+                    <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
+                      style="text-align:center;font-size:1vw;font-weight: 500;">
+                      <ul style="display: inline-block;">
+                        <li>4 hours consulting time</li>
+                        <li>15% discount for 1 year</li>
+                        <li>Input on future features</li>
+                      </ul>
                     </div>
                   </div>
-                  <div style="text-align: left;margin-top:2vw;">
+                  <div style="text-align: left;margin-top:40px;">
                     <div style="width:100%;">
                       <div class="pricing-line-item-category">
                         Setup
@@ -668,7 +679,8 @@
                 </div>
               </div>
               <div style="margin-top:60px;">
-                <div style="">
+                <!--
+                <div>
                   <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="early-access"
                     style="display: inline-block;">
                     <button nz-button nzShape="round" nzType="primary" id="checkout-button"
@@ -676,6 +688,13 @@
                       Plan
                     </button>
                   </a>
+                </div>
+                -->
+                <div>
+                  <button nz-button nzShape="round" nzType="primary" id="checkout-button" style="display: inline-block;"
+                    (click)="showContactUsModal()">Select
+                    Plan
+                  </button>
                 </div>
               </div>
             </nz-card>
@@ -688,7 +707,7 @@
                   <div style="text-align: center;">
                     <span style="font-size:1.5vw;">Basic</span>
                     <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
-                      <div style="margin:2vw 0 4vw 0;width:100%;">
+                      <div style="margin:20px 0;width:100%;">
                         <div style="display:block;width:100%;color:black;">
                           <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
                           <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['basic'][0]}}
@@ -713,28 +732,26 @@
                       <nz-table style="font-size:.8vw;">
                         <tbody>
                           <tr>
-                            <td style="text-align: right;">Monthly Subscription Fee</td>
+                            <td style="text-align: right;">Monthly Fee</td>
                             <td style="font-family: monospace;text-align: right;width:35%;">
                               <span style="color:#aaaaaa;">$</span>
                               <span>{{monthlyCostHash['basic']?.toFixed(2)}}</span>
                             </td>
                           </tr>
                           <tr *ngIf="naydo">
-                            <td style="text-align:right;">Non-profit discount (<span
-                                style="color:red;">{{discounts.nonProfit *
+                            <td style="text-align:right;">Non-profit (<span style="color:red;">{{discounts.nonProfit *
                                 100}}%</span>)</td>
                             <td style="font-family: monospace;text-align: right;width:35%;">
-                              <span style="color:#aaaaaa;">- $</span>
+                              <span style="color:#aaaaaa;"> $</span>
                               <span style="color:red;">{{(monthlyCostHash['basic'] *
                                 discounts.nonProfit)?.toFixed(2)}}</span>
                             </td>
                           </tr>
                           <tr *ngIf="naydo">
-                            <td style="text-align: right;">Conference discount (<span
-                                style="color:red;">{{discounts.conference *
+                            <td style="text-align: right;">Conference (<span style="color:red;">{{discounts.conference *
                                 100}}%</span>)</td>
                             <td style="font-family: monospace;text-align: right;width:35%;">
-                              <span style="color:#aaaaaa;">- $</span>
+                              <span style="color:#aaaaaa;"> $</span>
                               <span style="font-family: monospace;color:red;">{{((monthlyCostHash['basic'] -
                                 (monthlyCostHash['basic'] *
                                 discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
@@ -912,7 +929,7 @@
                   <div style="text-align: center;">
                     <span style="font-size:1.5vw;">Pro</span>
                     <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
-                      <div style="margin:2vw 0 4vw 0;width:100%;">
+                      <div style="margin:20px 0;width:100%;">
                         <div style="display:block;width:100%;color:black;">
                           <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
                           <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['pro'][0]}}
@@ -938,28 +955,26 @@
                       <nz-table style="font-size:.8vw;">
                         <tbody>
                           <tr>
-                            <td style="text-align: right;">Monthly Subscription Fee</td>
-                            <td style="font-family: monospace;text-align: right;width:35%;">
+                            <td style="text-align: right;">Monthly Fee</td>
+                            <td style="font-family: monospace;text-align: right;">
                               <span style="color:#aaaaaa;">$</span>
                               <span>{{monthlyCostHash['pro']?.toFixed(2)}}</span>
                             </td>
                           </tr>
                           <tr *ngIf="naydo">
-                            <td style="text-align: right;">Non-profit discount (<span
-                                style="color:red;">{{discounts.nonProfit *
+                            <td style="text-align: right;">Non-profit (<span style="color:red;">{{discounts.nonProfit *
                                 100}}%</span>)</td>
-                            <td style="font-family: monospace;text-align: right;width:35%;">
-                              <span style="color:#aaaaaa;">- $</span>
+                            <td style="font-family: monospace;text-align: right;">
+                              <span style="color:#aaaaaa;"> $</span>
                               <span style="color:red;">{{(monthlyCostHash['pro'] *
                                 discounts.nonProfit)?.toFixed(2)}}</span>
                             </td>
                           </tr>
                           <tr *ngIf="naydo">
-                            <td style="text-align: right;">Conference discount (<span
-                                style="color:red;">{{discounts.conference *
+                            <td style="text-align: right;">Conference (<span style="color:red;">{{discounts.conference *
                                 100}}%</span>)</td>
-                            <td style="font-family: monospace;text-align: right;width:35%;">
-                              <span style="color:#aaaaaa;">- $</span>
+                            <td style="font-family: monospace;text-align: right;">
+                              <span style="color:#aaaaaa;"> $</span>
                               <span style="font-family: monospace;color:red;">{{((monthlyCostHash['pro']
                                 -
                                 (monthlyCostHash['pro'] *
@@ -969,8 +984,7 @@
                           <tr *ngIf="naydo">
                             <td style="text-align: right;border-top: 1px solid #aaaaaa;">Monthly Total
                             </td>
-                            <td
-                              style="font-family: monospace;text-align: right;width:35%;border-top: 1px solid #aaaaaa;">
+                            <td style="font-family: monospace;text-align: right;border-top: 1px solid #aaaaaa;">
                               <span style="color:#aaaaaa;">$</span>
                               <span style="font-family: monospace;color:blue;">{{((monthlyCostHash['pro'] -
                                 (monthlyCostHash['pro'] *
@@ -981,7 +995,7 @@
                           </tr>
                           <tr>
                             <td style="text-align: right;">Average Cost Per User</td>
-                            <td *ngIf="naydo" style="font-family: monospace;text-align: right;width:35%;">
+                            <td *ngIf="naydo" style="font-family: monospace;text-align: right;">
                               <span style="color:#aaaaaa;">$</span>
                               <span *ngIf="userCnt === 0" style="color:blue;">0</span>
                               <span *ngIf="userCnt > 0"
@@ -991,7 +1005,7 @@
                                 ((monthlyCostHash['pro'] - (monthlyCostHash['pro'] * discounts.nonProfit)) *
                                 discounts.conference)) / userCnt)?.toFixed(2)}}</span>
                             </td>
-                            <td *ngIf="!naydo" style="font-family: monospace;text-align: right;width:35%;">
+                            <td *ngIf="!naydo" style="font-family: monospace;text-align: right;">
                               <span style="color:#aaaaaa;">$</span>
                               <span *ngIf="userCnt === 0" style="color:blue;">0</span>
                               <span *ngIf="userCnt > 0"
@@ -1145,7 +1159,7 @@
                   <div style="text-align: center;">
                     <span style="font-size:1.5vw;">Expert</span>
                     <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
-                      <div style="margin:2vw 0 4vw 0;width:100%;">
+                      <div style="margin:20px 0;width:100%;">
                         <div style="display:block;width:100%;color:black;">
                           <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
                           <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['expert'][0]}}
@@ -1196,33 +1210,31 @@
                     </div>
                     -->
                     <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
-                      style="width:100%;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:10px;">
+                      style="width:100%;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:.5vw;">
                       <span style="font-size:1.5vw;">{{userCnt}} Users</span>
                       <nz-table style="font-size:.8vw;">
                         <tbody>
                           <tr>
-                            <td style="text-align: right;">Monthly Subscription Fee</td>
-                            <td style="font-family: monospace;text-align: right;width:35%;">
+                            <td style="text-align: right;">Monthly Fee</td>
+                            <td style="font-family: monospace;text-align: right;">
                               <span style="color:#aaaaaa;">$</span>
                               <span>{{monthlyCostHash['expert']?.toFixed(2)}}</span>
                             </td>
                           </tr>
                           <tr *ngIf="naydo">
-                            <td style="text-align: right;">Non-profit discount (<span
-                                style="color:red;">{{discounts.nonProfit *
+                            <td style="text-align: right;">Non-profit (<span style="color:red;">{{discounts.nonProfit *
                                 100}}%</span>)</td>
-                            <td style="font-family: monospace;text-align: right;width:35%;">
-                              <span style="color:#aaaaaa;">- $</span>
+                            <td style="font-family: monospace;text-align: right;">
+                              <span style="color:#aaaaaa;"> $</span>
                               <span style="color:red;">{{(monthlyCostHash['expert'] *
                                 discounts.nonProfit)?.toFixed(2)}}</span>
                             </td>
                           </tr>
                           <tr *ngIf="naydo">
-                            <td style="text-align: right;">Conference discount (<span
-                                style="color:red;">{{discounts.conference *
+                            <td style="text-align: right;">Conference (<span style="color:red;">{{discounts.conference *
                                 100}}%</span>)</td>
-                            <td style="font-family: monospace;text-align: right;width:35%;">
-                              <span style="color:#aaaaaa;">- $</span>
+                            <td style="font-family: monospace;text-align: right;">
+                              <span style="color:#aaaaaa;"> $</span>
                               <span style="font-family: monospace;color:red;">{{((monthlyCostHash['expert'] -
                                 (monthlyCostHash['expert'] *
                                 discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
@@ -1230,8 +1242,7 @@
                           </tr>
                           <tr *ngIf="naydo">
                             <td style="text-align: right;border-top: 1px solid #aaaaaa;">Monthly Total</td>
-                            <td
-                              style="font-family: monospace;text-align: right;width:35%;border-top: 1px solid #aaaaaa;">
+                            <td style="font-family: monospace;text-align: right;border-top: 1px solid #aaaaaa;">
                               <span style="color:#aaaaaa;">$</span>
                               <span style="font-family: monospace;color:blue;">{{((monthlyCostHash['expert'] -
                                 (monthlyCostHash['expert'] *
@@ -1242,7 +1253,7 @@
                           </tr>
                           <tr>
                             <td style="text-align: right;">Average Cost Per User</td>
-                            <td *ngIf="naydo" style="font-family: monospace;text-align: right;width:35%;">
+                            <td *ngIf="naydo" style="font-family: monospace;text-align: right;">
                               <span style="color:#aaaaaa;">$</span>
                               <span *ngIf="userCnt === 0" style="color:blue;">0</span>
                               <span *ngIf="userCnt > 0"
@@ -1252,7 +1263,7 @@
                                 ((monthlyCostHash['expert'] - (monthlyCostHash['expert'] * discounts.nonProfit)) *
                                 discounts.conference)) / userCnt)?.toFixed(2)}}</span>
                             </td>
-                            <td *ngIf="!naydo" style="font-family: monospace;text-align: right;width:35%;">
+                            <td *ngIf="!naydo" style="font-family: monospace;text-align: right;">
                               <span style="color:#aaaaaa;">$</span>
                               <span *ngIf="userCnt === 0" style="color:blue;">0</span>
                               <span *ngIf="userCnt > 0"
