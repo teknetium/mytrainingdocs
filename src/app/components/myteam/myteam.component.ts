@@ -1922,7 +1922,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         //        } else {
         //          supervisorName = '';
         //        }
-        this.usersCSV += user.firstName + ',' + user.lastName + ',' + user.email + ',' + user.supervisorId + ',' + user.jobTitle + ',' + user.userType  + '\n';
+        this.usersCSV += user.firstName + ',' + user.lastName + ',' + user.email + ',' + user.supervisorId + '\n';
       }
     }
   }
