@@ -348,11 +348,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       name: 'Expert',
       icon: 'fad fa-user-graduate',
       color: 'blueviolet'
-    },
-    none: {
-      name: 'None',
-      icon: 'fad fa-user-slash',
-      color: 'black'
     }
   }
 
@@ -713,7 +708,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
   handleUpgradeToProOk() {
     if (this.orgObj.adminIds.includes(this.authenticatedUser._id)) {
-      this.orgObj.plan = 'pro';
+      this.orgObj.planId = 'pro';
       this.orgService.setPlan('pro');
       let alert = <AlertModel>{
         type: 'success',
@@ -732,7 +727,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   }
   handleUpgradeToExpertOk() {
     if (this.orgObj.adminIds.includes(this.authenticatedUser._id)) {
-      this.orgObj.plan = 'expert';
+      this.orgObj.planId = 'expert';
       this.orgService.setPlan('expert');
       let alert = <AlertModel>{
         type: 'success',

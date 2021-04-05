@@ -102,7 +102,7 @@ module.exports = function(app, config) {
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const docProjection = '_id productId productVersion author featureName sections images';
   const commentListProjection = "_id tid version author text rating date";
-  const orgListProjection = "_id domain adminIds owner plan createDate userCount";
+  const orgListProjection = "_id domain adminIds owner planId planName createDate userCount";
   const messageProjection = "_id state category subCategory to from subject text html mbox trainingId";
   const assessmentListProjection = "_id type title owner description timeLimit isFinal passingGrade items";
   const utSessionProjection = "_id utId uid tid teamId startTime stopTime";
@@ -1258,7 +1258,8 @@ module.exports = function(app, config) {
       createDate: req.body.createDate,
       owner: req.body.owner,
       userCount: req.body.userCount,
-      plan: req.body.plan,
+      planId: req.body.planId,
+      planName: req.body.planName,
       _id: req.body._id,
     });
     Org.create(org, function (err2, orgObj) {
@@ -1275,7 +1276,8 @@ module.exports = function(app, config) {
       createDate: req.body.createDate,
       owner: req.body.owner,
       userCount: req.body.userCount,
-      plan: req.body.plan,
+      planId: req.body.planId,
+      planName: req.body.planName,
       _id: req.body._id,
     });
     Org.findById(req.body._id, (err, orgObj) => {
@@ -1291,7 +1293,8 @@ module.exports = function(app, config) {
       orgObj.createDate = req.body.createDate;
       orgObj.owner = req.body.owner;
       orgObj.userCount = req.body.userCount;
-      orgObj.plan = req.body.plan;
+      orgObj.planId = req.body.planId;
+      orgObj.planName = req.body.planName;
 
       orgObj.save(err2 => {
         if (err2) {

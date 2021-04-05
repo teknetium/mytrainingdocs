@@ -189,7 +189,8 @@ export class UserService {
                         domain: domain,
                         adminIds: [profile.email],
                         owner: profile.email,
-                        plan: 'none',
+                        planId: 'earlyAccess',
+                        planName: 'Early Access',
                         createDate: new Date().getTime(),
                         userCount: 1
                       }
