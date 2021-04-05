@@ -1343,7 +1343,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       }
 
       this.orgObj = orgObj;
-      this.myPlan = orgObj.plan;
+      this.myPlan = orgObj.planId;
       if (this.myPlan === 'basic') {
         this.collapsedNodes = [];
       }
@@ -1727,7 +1727,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   showDownloadPNGImageModal() {
-    if (this.orgObj.plan === 'basic') {
+    if (this.orgObj.planId === 'basic') {
       this.orgService.showUpgradeToProDialog(true);
     } else {
       this.canvas.nativeElement.src = '';
@@ -1781,7 +1781,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   collapseNode(uid: string, collapse: boolean) {
-    if (this.orgObj.plan === 'basic') {
+    if (this.orgObj.planId === 'basic') {
       this.orgService.showUpgradeToProDialog(true);
       //      this.showUpgradeToProDialog = true;
     } else {
@@ -1859,7 +1859,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
 
   showAssignTrainingModal() {
-    if (this.orgObj.plan === 'basic' || this.orgObj.plan === 'pro') {
+    if (this.orgObj.planId === 'basic' || this.orgObj.planId === 'pro') {
       //      this.showUpgradeToExpertDialog = true;
       this.orgService.showUpgradeToExpertDialog(true);
     } else {
@@ -1869,7 +1869,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
   showMsgModal() {
     console.log('showMsgModal', this.orgObj);
-    if (this.orgObj.plan === 'basic' || this.orgObj.plan === 'pro') {
+    if (this.orgObj.planId === 'basic' || this.orgObj.planId === 'pro') {
       //      this.showUpgradeToExpertDialog = true;
       this.orgService.showUpgradeToExpertDialog(true);
     } else {

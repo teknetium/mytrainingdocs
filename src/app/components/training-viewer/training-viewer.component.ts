@@ -1081,7 +1081,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
   addNewPage(pageType: string, contentType: string) {
 
-    if (pageType === 'assessment' && (this.orgObj.plan === 'basic' || this.orgObj.plan === 'pro')) {
+    if (pageType === 'assessment' && (this.orgObj.planId === 'basic' || this.orgObj.planId === 'pro')) {
       this.orgService.showUpgradeToExpertDialog(true);
       return;
     }
