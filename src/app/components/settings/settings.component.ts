@@ -49,6 +49,13 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     },
   ]
 
+  disabledPlanHash = {
+    earlyAccess: false,
+    basic: true,
+    pro: true,
+    expert: true
+  }
+
 
   constructor(private userService: UserService) {
     super();
@@ -65,7 +72,18 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
       this.authenticatedUser = user;
     });
-
+/*
+    let earlyAccessEndDate = new Date("2021-7-1").getTime();
+    let today = new Date().getTime();
+    let plans: string[] = Object.keys(this.disabledPlanHash);
+    for (let plan of plans) {
+      if (plan !== 'earlyAccess' && today > earlyAccessEndDate) {
+        this.disabledPlanHash[plan] = false;
+      } else if (plan !== 'earlyAccess' && today <= earlyAccessEndDate) {
+        this.disabledPlanHash[plan] = true;
+      }
+    }
+    */
   }
 
   updateUserSettings(event, property, value) {

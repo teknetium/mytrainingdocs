@@ -93,12 +93,11 @@
                                 <div>
                                     <div
                                         style="display:table-cell;font-size:18px;font-weight: 500;vertical-align: baseline;">
-                                        {{planHash[(org$ | async)?.plan]?.name}}&nbsp;&nbsp;
+                                        {{planHash[(org$ | async)?.planId]?.name}}&nbsp;&nbsp;
                                     </div>
-                                    <div style="display:table-cell;color:#aaaaaa;vertical-align: baseline;">Plan</div>
-                                    <i [ngClass]="planHash[(org$ | async)?.plan]?.icon"
+                                    <i [ngClass]="planHash[(org$ | async)?.planId]?.icon"
                                         style="display:table-cell;font-size:20px;vertical-align: middle;padding-left: 30px;"
-                                        [ngStyle]="{'color': planHash[(org$ | async)?.plan]?.color}"></i>
+                                        [ngStyle]="{'color': planHash[(org$ | async)?.planId]?.color}"></i>
                                 </div>
                             </div>
                         </li>
@@ -313,18 +312,21 @@
                                     {{planHash[(org$ | async)?.plan]?.name}}
                                 </span>
                             </div>
-                            <div style="display:table-cell;">
+                            <div style="display:table-cell;width:50%;">
                                 <nz-radio-group [(ngModel)]="orgObj.plan" (ngModelChange)="planChanged($event)"
                                     style="float:right;">
-                                    <label nz-radio-button nzValue="basic" style="" nz-tooltip
-                                        nzTooltipTitle="Basic Plan">
-                                        <i class="fad fa-user" style="font-size:22px;color:green;"></i>
+                                    <label nz-radio-button nzValue="earlyAccess"  [nzDisabled]="disabledPlanHash?.earlyAccess" nz-tooltip
+                                        nzTooltipTitle="Early Access">
+                                        <i class="fad fa-user-hard-hat" style="font-size:16px;color:cornflowerblue;"></i>
                                     </label>
-                                    <label nz-radio-button nzValue="pro" nz-tooltip nzTooltipTitle="Pro Plan">
-                                        <i class="fad fa-user-tie" style="font-size:22px;color:red;"></i>
+                                    <label nz-radio-button nzValue="basic" [nzDisabled]="'true'" nz-tooltip nzTooltipTitle="Basic Plan">
+                                        <i class="fad fa-user" style="font-size:16px;color:green;"></i>
                                     </label>
-                                    <label nz-radio-button nzValue="expert" nz-tooltip nzTooltipTitle="Expert Plan">
-                                        <i class="fad fa-user-graduate" style="font-size:22px;color:blueviolet;"></i>
+                                    <label nz-radio-button nzValue="pro"  [nzDisabled]="'true'" nz-tooltip nzTooltipTitle="Pro Plan">
+                                        <i class="fad fa-user-tie" style="font-size:16px;color:red;"></i>
+                                    </label>
+                                    <label nz-radio-button nzValue="expert"  [nzDisabled]="'true'" nz-tooltip nzTooltipTitle="Expert Plan">
+                                        <i class="fad fa-user-graduate" style="font-size:16px;color:blueviolet;"></i>
                                     </label>
                                 </nz-radio-group>
                             </div>

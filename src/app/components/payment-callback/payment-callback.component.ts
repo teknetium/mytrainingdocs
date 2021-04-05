@@ -38,6 +38,8 @@ export class PaymentCallbackComponent extends BaseComponent implements OnInit {
       this.planName = params['planName'];
       this.email = params['email'];
       this.title = "Thank you for subscribing to the " + this.planName + " plan.";
+
+      localStorage.setItem(this.email, this.fName + ' ' + this.lName);
     });
   }
 

@@ -513,10 +513,25 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       this.currentEmail = this.authenticatedUser.email;
       if (this.authenticatedUser.firstName === '') {
         this.firstTimer = true;
-        this.showNewUserModal = true;
+        let fullName = localStorage.getItem(this.authenticatedUser.email);
+        console.log('local storage for ', this.authenticatedUser.email, fullName);
+
+        if (fullName) {
+          let nameParts: string[] = fullName.split(' ');
+          if (nameParts.length === 2) {
+            this.authenticatedUser.firstName = nameParts[0];
+            this.authenticatedUser.lastName = nameParts[1];
+          }
+          localStorage.removeItem(this.authenticatedUser.email);
+        } else {
+          this.showNewUserModal = true;
+        }
+
+          //        this.showNewUserModal = true;
         //        this.playTaskVideo('gettingStarted');
       }
-      this.authenticatedUser = user;
+// commented out the next line on 4/5/21      
+//      this.authenticatedUser = user;
       this.listOfSelectedUsers.push(this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName);
       //      this.userTrainingService.initUserTrainingsForUser(user._id);
       //      this.teamTrainingCnt$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(cnt => {
