@@ -61,7 +61,7 @@ export class OrgService {
 
   setPlan(plan) {
     console.log('setPlan', this.currentOrg);
-    this.currentOrg.plan = plan;
+    this.currentOrg.planId = plan;
     this.updateOrg(this.currentOrg);
     this.orgBS$.next(this.currentOrg);
   }
