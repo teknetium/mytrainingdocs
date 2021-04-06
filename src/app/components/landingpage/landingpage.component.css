@@ -13,7 +13,7 @@
    box-shadow: 5px 5px 10px #aaaaaa;
 }
 .benefit-item {
-  min-height: 30%;
+  min-height: 10vw;
   width: 24%;
   margin:.5% .5%;
   padding: 1vw;
@@ -60,12 +60,42 @@ opacity:1.0;
   color:red;
 }
 
+.small {
+  margin-top:1.5vw;
+  font-size:2vw;
+  font-weight:lighter;
+}
+
+.medium {
+  font-size:3vw;
+  margin-top:1vw;
+  font-weight:lighter;
+}
+
+.large {
+  font-size:4vw;
+  margin-top:.5vw;
+  font-weight:lighter;
+}
+
+.firebrick {
+  color:#ba4c30;
+}
+
 .blue {
   color:blue;
 }
 
 .green {
   color:green;
+}
+
+.skyblue {
+  color:deepskyblue;
+}
+
+.dodgerblue {
+  color:dodgerblue;
 }
 
 .gold {
@@ -89,7 +119,11 @@ opacity:1.0;
 }
 
 .purple {
-  color: purple
+  color: purple;
+}
+
+.fuchsia {
+  color: fuchsia;
 }
 
 .orange {
@@ -1178,13 +1212,9 @@ textarea.form-control {
 
 .play-screencast {
   display:block;
-  opacity: .2;
-  font-size:3vw;
-  margin:5px 0;
-}
-.play-screencast:hover {
-  opacity:1.0;
-  cursor:pointer;
+  font-size:2vw;
+  margin:20px 0 0 0;
+  color: black;
 }
 
 .pricing-line-item {

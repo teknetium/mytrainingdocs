@@ -96,7 +96,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'One Click Deploy',
-      class: 'fal fa-rocket-launch red',
+      class: ['fal fa-rocket-launch red medium'],
       blurb: 'Deploy to your entire organization in a matter of minutes, not weeks!',
       learnMore: '',
       videoLink: 'onboarding'
@@ -104,15 +104,15 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Leverage Existing Content',
-      class: 'fal fa-file-pdf purple',
-      blurb: 'Our training template supports all common document formats without the application that created them.',
+      class: ['fal fa-file-powerpoint firebrick small', 'fal fa-file-word dodgerblue small', 'fal fa-file-pdf red small', 'fal fa-file-excel green small'],
+      blurb: 'Our training template supports all common document formats (17 in all) without the application that created them.',
       learnMore: '',
       videoLink: 'onboarding'
     },
     {
       focus: false,
       title: 'Dynamic Interactive Org Chart',
-      class: 'fal fa-sitemap orange',
+      class: ['fal fa-sitemap orange medium'],
       blurb: 'Manage users, assign trainings, monitor status, and send messages all from within our unique org chart.',
       learnMore: '',
       videoLink: 'onboarding'
@@ -120,23 +120,23 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Assessments Made Easy',
-      class: 'fal fa-file-check blue',
+      class: ['fal fa-file-check fuchsia medium'],
       blurb: 'Quickly and easily add assessments to your trainings.  ',
       learnMore: '',
       videoLink: 'onboarding'
     },
-    {
+    { 
       focus: false,
-      title: 'Safe & Secure',
-      class: 'fal fa-shield-check green',
-      blurb: 'We have partnered with an industry leading content management company to ensure that your training content is safe and secure and available 24x7.',
+      title: 'Cloud Based',
+      class: ['fal fa-cloud skyblue medium'],
+      blurb: 'No software to install locally.  Your employees, volunteers, and customers can access their training from anywhere at any time.',
       learnMore: '',
       videoLink: null
     },
     {
       focus: false,
       title: 'Automated Reporting',
-      class: 'fal fa-chart-bar gold',
+      class: ['fal fa-chart-bar gold medium'],
       blurb: 'Track training status, due dates, certification expiration dates, ' +
         'and more.  All delivered to you at your timing without ever logging into the site.',
       learnMore: '',
@@ -145,7 +145,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Reduced Legal Liability',
-      class: 'fal fa-balance-scale-right steelblue',
+      class: ['fal fa-balance-scale-right steelblue medium'],
       blurb: 'Reduced legal exposure KNOWING that all employees and volunteers are appropriately trained/certified.',
       learnMore: '',
       videoLink: null
@@ -162,9 +162,9 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     */
     {
       focus: false,
-      title: 'Training Versioning',
-      class: 'fal fa-copy darkturquoise',
-      blurb: 'Robust versioning of trainings.',
+      title: 'Version Tracking',
+      class: ['fal fa-copy darkturquoise medium'],
+      blurb: 'Automatically reset training status on content changes',
       learnMore: '',
       videoLink: null
     },
@@ -313,6 +313,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   lname;
   email;
   trialEnd;
+  showEarlyAccessDetails = false;
   public timeLeft$: Observable<timeComponents>;
 
   constructor(
@@ -451,10 +452,6 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     return { secondsToDday, minutesToDday, hoursToDday, daysToDday };
   }
 
-  showLearnMore(index) {
-    this.benefitBS$.next(this.benefits[index]);
-    this.visible = true;
-  }
   /*
     setCurrentHowStep(index): void {
       this.currentHowStep = index;

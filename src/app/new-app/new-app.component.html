@@ -309,7 +309,7 @@
                                     Current Plan&nbsp;&nbsp;:&nbsp;&nbsp;
                                 </span>
                                 <span style="font-size:16px;color:blue;">
-                                    {{planHash[(org$ | async)?.plan]?.name}}
+                                    {{planHash[(org$ | async)?.planId]?.name}}
                                 </span>
                             </div>
                             <div style="display:table-cell;width:50%;">
@@ -317,7 +317,7 @@
                                     style="float:right;">
                                     <label nz-radio-button nzValue="earlyAccess"  [nzDisabled]="disabledPlanHash?.earlyAccess" nz-tooltip
                                         nzTooltipTitle="Early Access">
-                                        <i class="fad fa-user-hard-hat" style="font-size:16px;color:cornflowerblue;"></i>
+                                        <i class="fad fa-user-hard-hat" style="font-size:16px;color:deepskyblue;"></i>
                                     </label>
                                     <label nz-radio-button nzValue="basic" [nzDisabled]="'true'" nz-tooltip nzTooltipTitle="Basic Plan">
                                         <i class="fad fa-user" style="font-size:16px;color:green;"></i>

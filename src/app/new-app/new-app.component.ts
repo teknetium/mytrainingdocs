@@ -332,7 +332,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     earlyAccess: {
       name: 'Early Access',
       icon: 'fad fa-user-hard-hat',
-      color: 'cornflowerblue'
+      color: 'deepskyblue'
     },
     basic: {
       name: 'Basic',

@@ -126,7 +126,14 @@
       <div style="color:chartreuse;height:10%;font-size:2.5vw;">
         <span style="display:block;font-weight:400;color:white;">NAYDO Special</span>
         <span style="display:block;font-weight:400;">Join Early Access!</span>
-        <span style="display:block;font-size:1vw;font-weight:400;">April 13, 2021 - June 30, 2021</span>
+        <span style="display:block;font-size:1vw;font-weight:400;margin-bottom:5px;">April 13, 2021 - June 30,
+          2021</span>
+      </div>
+      <div style="display:block;text-align:center;">
+        <button nz-button nzShape="round" nzType="default" nzGhost nzSize="small"
+          style="color:black;font-size:vw;border:1px solid black;" (click)="showEarlyAccessDetails = true">
+          Learn More
+        </button>
       </div>
       <div class="special-offer-text">
         <div style="text-align: left;">
@@ -137,8 +144,11 @@
           </ul>
         </div>
       </div>
+      <!--
+          <div style="display:block;font-size:1vw;color:black;">Learn More</div>
+          -->
       <div>
-        <span style="font-size:1vw;vertical-align:super;color:chartreuse;">only</span><br>
+        <span style="font-size:1vw;vertical-align:super;color:chartreuse;">only </span>
         <span style="font-size:1.5vw;vertical-align:super;color:chartreuse;">$</span>
         <span style="font-size:2.5vw;font-weight:400;color:chartreuse;">995</span><br>
         <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="earlyAccess">
@@ -226,156 +236,25 @@
         Log In
       </div>
     </div>
-    <!--
-    <section class="section">
-      <div class="container" style="width:100%;">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="text-center">
-              <h2 class="mb-0 text-capitalize"><span class="font-weight-bold">Features</span></h2>
-              <div class="main-title-border">
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-3" style="margin-top:10px;">
-            <div class="text-center" style="position: relative;">
-              <i class="fal fa-rocket-launch" style="display:block;color:blue;font-size:5vw;"></i>
-              <i class="far fa-play-circle play-screencast" (click)="loadVideo('onboarding')" nz-tooltip
-                nzTooltipTitle="Play a short screencast"></i>
-              <div style="font-size:1.5vw;font-weight:400;">
-                Deploy to any size organization in minutes
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3" style="margin-top:10px;">
-            <div class="text-center">
-              <i class="fal fa-file-pdf" style="display:block;color:blue;font-size:5vw;"></i>
-              <i class="far fa-play-circle play-screencast" (click)="loadVideo('onboarding')" nz-tooltip
-                nzTooltipTitle="Play a short screencast"></i>
-              <div style="font-size:1.5vw;font-weight:400;">
-                Leverage existing content
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3" style="margin-top:10px;">
-            <div class="text-center">
-              <i class="fal fa-sitemap" style="display:block;color:blue;font-size:5vw;"></i>
-              <i class="far fa-play-circle play-screencast" (click)="loadVideo('onboarding')" nz-tooltip
-                nzTooltipTitle="Play a short screencast"></i>
-              <div style="font-size:1.5vw;font-weight:400;">
-                Status tracking that scales
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3" style="margin-top:10px;">
-            <div class="text-center">
-              <i class="fal fa-file-check" style="display:block;color:blue;font-size:5vw;"></i>
-              <i class="far fa-play-circle play-screencast" (click)="loadVideo('onboarding')" nz-tooltip
-                nzTooltipTitle="Play a short screencast"></i>
-              <div style="font-size:1.5vw;font-weight:400;">
-                Easily add assessments
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-6" style="padding:60px 50px 60px 10px;">
-            <div class="text-center">
-              <h2>Deploy to any size organization in minutes!</h2>
-              <p>
-                Onboard 50 employees or 50,000 employees with just a few clicks in minutes!
-            </div>
-          </div>
-          <div class="col-lg-6" style="height:fit-content;">
-            <div class="text-center" style="position:relative;">
-              < !--
-                      <i class="fas fa-play opaque"
-                        style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
-                        (click)="loadVideo('onboarding')"></i>
-                        -- >
-              <img width="400" src="../../../assets/images/orgChart_1.29.21.png">
-            </div>
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="col-lg-6" style="padding:60px 50px 60px 10px;">
-            <div class="text-center">
-              <h2>Status Tracking that SCALES!</h2>
-              <p>
-                Whether your organization has 50 employees or 50,000 employees, our unique org-chart gives you training
-                metrics and more at a glance.
-            </div>
-          </div>
-          <div class="col-lg-6" style="height:fit-content;">
-            <div class="text-center" style="position:relative;">
-              < !--
-                      <i class="fas fa-play opaque"
-                        style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
-                        (click)="loadVideo('onboarding')"></i>
-                        -- >
-              <img width="400" src="../../../assets/images/orgChart_1.29.21.png">
-            </div>
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="col-lg-6" style="height:fit-content;">
-            <div class="text-center" style="position:relative;">
-              < !--
-              <i class="fas fa-play opaque"
-                style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
-                (click)="loadVideo('orgChart')"></i>
-                -- >
-              <img width="400" src="../../../assets/images/orgChart_1.29.21.png">
-            </div>
-          </div>
-          <div class="col-lg-6" style="padding:60px 10px 60px 50px;">
-            <div class="text-center">
-              <h2>Interactive Organization Chart</h2>
-              <p>
-                This screencast shows the power of our dynamic, interactive Organization Chart.
-                The ability to visualize user related data across an entire organization all at once is game changing.
-              </p>
-            </div>
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="col-lg-6" style="padding:60px 50px 60px 10px;">
-            <div class="text-center">
-              <h2>Training Template</h2>
-              <p>
-                Our training template supports all common document formats as well as embedding external web pages and
-                creating custom HTML on the fly.
-                The template also includes an assessment wizard that makes adding assessments a breeze.
-              </p>
-            </div>
-          </div>
-          <div class="col-lg-6" style="height:fit-content;">
-            <div class="text-center" style="position:relative;">
-              < !--
-              <i class="fas fa-play opaque"
-                style="position:absolute;cursor:pointer;top:42%;left:45%;font-size:50px;color:red;display:inline-block;"
-                (click)="explainerVidIsVisible = true"></i>
-                -- >
-              <img width="400" src="../../../assets/images/training-template.png">
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-        -->
     <section class="section bg-light" id="features">
       <div class="row">
         <div class="col-lg-12">
-          <div class="text-center">
+          <div class="text-center" style="font-size:1.5vw;padding:0 5% 2% 5%;">
+            <!--
             <h2 class="mb-0 text-capitalize"><span class="font-weight-bold">Features</span></h2>
+            -->
+            <span style="color:red;font-size:2vw;">my</span>
+            <span style="color:black;font-size:2vw;">Training</span>
+            <span style="color:red;font-size:2vw;">docs</span>
+            has been designed from the ground up to solve the
+            <span style="color:black;font-size:2vw;">training management</span>
+            needs of the
+            <span style="color:black;font-size:2vw;">YMCA</span> world.
+            <!--
             <div class="main-title-border">
               <i class="mdi mdi-atom"></i>
             </div>
+            -->
           </div>
         </div>
       </div>
@@ -383,20 +262,24 @@
         <div class="benefit-container">
           <div *ngFor="let item of benefits; let i = index" class="benefit-item  text-center"
             (mouseleave)="loseFocus(i)" (mouseenter)="focus(i)">
-            <i [ngClass]="item.class" style="font-size:3vw;margin-bottom:5%;"></i>
+            <div *ngFor="let iconClass of item.class" style="display:inline-block;height:5vw;">
+              <i [ngClass]="iconClass" style="margin-bottom:5%;margin-right:3px;"></i>
+            </div>
             <div style="margin-bottom:5%;font-size:1.2vw;font-weight:500;">
               {{item.title}}
             </div>
             <div style="font-size:.9vw;min-height:4vw;">
               {{item.blurb}}
             </div>
-            <div style="font-size:.9vw;min-height:4vw;">
+            <div style="font-size:.9vw;">
               <!--
               <i *ngIf="item.videoLink" class="far fa-play-circle play-screencast" (click)="loadVideo(item.videoLink)" nz-tooltip
                 nzTooltipTitle="Play a short screencast"></i>
                 -->
-              <i *ngIf="item.videoLink" class="far fa-play-circle play-screencast" nz-tooltip
-                nzTooltipTitle="Play a short screencast"></i>
+              <div class="play-screencast" style="height:2vw;">
+                <i *ngIf="item.videoLink" class="fas fa-play-circle" nz-tooltip
+                  nzTooltipTitle="Play a short screencast"></i>
+              </div>
             </div>
             <!--
           <div>
@@ -407,7 +290,7 @@
         </div>
       </div>
     </section>
-<!--
+    <!--
     <nz-modal [(nzVisible)]="showContactModal" nzTitle="Coming Soon" (nzOnCancel)="" (nzOnOk)="">
       <div>
         
@@ -548,7 +431,7 @@
             <nz-card class="price-card">
               <div style="text-align: center;">
                 <div class="media align-items-center" style="display:block;">
-                  <i class="fad fa-user-hard-hat" style="font-size:4vw;color:cornflowerblue;margin-bottom:5px;"></i>
+                  <i class="fad fa-user-hard-hat" style="font-size:4vw;color:deepskyblue;margin-bottom:5px;"></i>
                   <div style="text-align: center;">
                     <span style="font-size:1.5vw;">Early Access</span>
                     <div *ngIf="plans === 'monthly'" style="width:95%;display:inline-block;">
