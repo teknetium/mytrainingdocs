@@ -143,39 +143,20 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     },
     {
       focus: false,
+      title: 'Manage Training Versions',
+      class: ['fal fa-copy darkturquoise medium'],
+      blurb: 'Browse training update history.  Multiple types of training updates: major (reset status), minor (notify only) and bug fix (silent)',
+      learnMore: '',
+      videoLink: null
+    },
+    {
+      focus: false,
       title: 'Reduced Legal Liability',
       class: ['fal fa-balance-scale-right steelblue medium'],
-      blurb: 'Reduced legal exposure KNOWING that all employees and volunteers are appropriately trained/certified.',
+      blurb: 'Reduced legal exposure when all employees and volunteers are appropriately trained/certified.',
       learnMore: '',
       videoLink: null
-    },
-    /*
-    {
-      focus: false,
-      title: 'Not Just for Employees',
-      class: 'fal fa-hands-helping blueviolet',
-      blurb: 'Lets you manage volunteer and customer training too!',
-      learnMore: '',
-      videoLink: null
-    },
-    */
-    {
-      focus: false,
-      title: 'Version Tracking',
-      class: ['fal fa-copy darkturquoise medium'],
-      blurb: 'Automatically reset training status on content changes',
-      learnMore: '',
-      videoLink: null
-    },
-    /*
-    {
-      focus: false,
-      title: 'Simple and Easy',
-      class: 'fal fa-pie text-green bg-green-opacity',
-      blurb: 'Simplicity and ease-of-use are at the heart of each one of the benefits enumerated here.',
-      learnMore: ''
-    },
-     */
+    }
   ];
 
   panels = [

@@ -31,6 +31,7 @@
     </ng-template>
     <div *ngIf="authenticatedUser?.userType === 'supervisor'">
         <div style="width:100%;display:block;height:60%;">
+    <!--
             <div *ngIf="authenticatedUser.settings.showTasks" style="margin-bottom:40px;">
                 <div style="padding-left:40px;">
                 </div>
@@ -49,13 +50,14 @@
                     </div>
                 </div>
             </div>
+        -->
             <nz-card style="float:left;width:48%;" [nzTitle]="userCardTitle" joyrideStep="task0Step2"
                 [stepContent]="stepContent" [stepContentParams]="taskStepContentHash?.task0Step2"
                 [nzExtra]="extraTemplate">
                 <div *ngIf="myTeam.length === 0">
                     <span style="font-weight:200;" (click)="goTo('/myteam')">
                         You have not onboarded your team/organization yet!<br>
-                        Head over to the <span style="color:blue;cursor: pointer;">My Team</span> page.
+                        Head over to the <span style="color:blue;cursor:pointer;font-size:18px;">My Organization</span> page.
                     </span>
                 </div>
                 <div *ngIf="myOrgUsers.length > 0" style="width:100%;">
@@ -143,10 +145,10 @@
             </ng-template>
             <nz-card style="float:right;width:48%;" nzTitle="Trainings" joyrideStep="task0Step3"
                 [stepContent]="stepContent" [stepContentParams]="taskStepContentHash?.task0Step2">
-                <div *ngIf="trainings.length === 0" style="padding:40px">
+                <div *ngIf="trainings.length === 0" style="padding24px">
                     <span style="font-weight:200;" (click)="goTo('/trainings')">
                         You have not created any trainings yet!<br>
-                        Head over to the <span style="color:blue;cursor: pointer;">All Trainings</span> page.
+                        Head over to the <span style="font-size:18px;color:blue;cursor: pointer;">All Trainings</span> page.
                     </span>
                 </div>
                 <div *ngIf="trainings.length > 0" style="width:100%;max-height:60%;overflow: scroll;">

@@ -150,6 +150,15 @@ opacity:1.0;
   color: orange
 }
 
+.link-string {
+  color:blue;
+  cursor:pointer;
+}
+
+.link-string:hover {
+  text-decoration: underline;
+}
+
 .how-container {
   text-align: center;
   flex-flow: row wrap !important;
