@@ -96,7 +96,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'One Click Deploy',
-      class: ['fal fa-rocket-launch red medium'],
+      class: ['fal fa-rocket-launch red medium super'],
       blurb: 'Deploy to your entire organization in a matter of minutes, not weeks!',
       learnMore: '',
       videoLink: 'onboarding'
@@ -104,7 +104,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Leverage Existing Content',
-      class: ['fal fa-file-powerpoint firebrick small', 'fal fa-file-word dodgerblue small', 'fal fa-file-pdf red small', 'fal fa-file-excel green small'],
+      class: ['fal fa-file-word dodgerblue small super small-gap-right', 'fal fa-file-powerpoint firebrick small super small-gap-right', 'fal fa-file-excel green small super small-gap-right', 'fal fa-file-pdf red small super small-gap-right', 'far fa-ellipsis-h black small sub' ],
       blurb: 'Our training template supports all common document formats (17 in all) without the application that created them.',
       learnMore: '',
       videoLink: 'onboarding'
@@ -112,7 +112,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Dynamic Interactive Org Chart',
-      class: ['fal fa-sitemap orange medium'],
+      class: ['fal fa-sitemap orange medium super'],
       blurb: 'Manage users, assign trainings, monitor status, and send messages all from within our unique org chart.',
       learnMore: '',
       videoLink: 'onboarding'
@@ -120,7 +120,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Assessments Made Easy',
-      class: ['fal fa-file-check fuchsia medium'],
+      class: ['fal fa-file-check fuchsia medium super'],
       blurb: 'Quickly and easily add assessments to your trainings.  ',
       learnMore: '',
       videoLink: 'onboarding'
@@ -135,10 +135,9 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     },
     {
       focus: false,
-      title: 'Automated Reporting',
-      class: ['fal fa-chart-bar gold medium'],
-      blurb: 'Track training status, due dates, certification expiration dates, ' +
-        'and more.  All delivered to you at your timing without ever logging into the site.',
+      title: 'Custom Notifications',
+      class: ['fal fa-bell-on green medium'],
+      blurb: 'You control who receives notifications and when they receive them.',
       learnMore: '',
       videoLink: null
     },

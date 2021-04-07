@@ -60,6 +60,26 @@ opacity:1.0;
   color:red;
 }
 
+.small-gap-right {
+  margin-right:3px;
+}
+
+.sub {
+  vertical-align: sub;
+}
+
+.bottom {
+  vertical-align: bottom;
+}
+
+.super {
+  vertical-align: super;
+}
+
+.bottom {
+  vertical-align: bottom;
+}
+
 .small {
   margin-top:1.5vw;
   font-size:2vw;
@@ -1204,11 +1224,21 @@ textarea.form-control {
   z-index:1;
   width:30%;
   height:fit-content;
-  padding:1vw;
   border:4px solid black;
   background: rgba(60, 60, 60, .5);
 }
-
+.early-access-details {
+  text-align: center;
+  position:absolute;
+  top:0;
+  left:0;
+  z-index:2;
+  width:100%;
+  height:100%;
+  background: cornsilk;
+  padding: 2vw;
+  font-size:1vw;
+}
 
 .play-screencast {
   display:block;
