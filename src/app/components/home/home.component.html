@@ -145,8 +145,8 @@
             </ng-template>
             <nz-card style="float:right;width:48%;" nzTitle="Trainings" joyrideStep="task0Step3"
                 [stepContent]="stepContent" [stepContentParams]="taskStepContentHash?.task0Step2">
-                <div *ngIf="trainings.length === 0" style="padding24px">
-                    <span style="font-weight:200;" (click)="goTo('/trainings')">
+                <div *ngIf="trainings.length === 0">
+                    <span style="font-weight:300;" (click)="goTo('/trainings')">
                         You have not created any trainings yet!<br>
                         Head over to the <span style="font-size:18px;color:blue;cursor: pointer;">All Trainings</span> page.
                     </span>
