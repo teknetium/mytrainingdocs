@@ -1,6 +1,6 @@
 <div style="width:100%;padding:10%;text-align: center;">
     <img width="200" src="assets/images/logo/logo.png" style="margin-bottom: 10%;">
-<!--
+
     <h3>Thank you for subscribing to the
         <span style="color: red;">{{planName}}</span>
         plan.
@@ -10,11 +10,5 @@
     <button nz-button nzShape="round" nzType="primary" style="margin-top:20px;" (click)="register()">
         Complete Registration
     </button>
-    -->
-    <nz-result nzStatus="success" [nzTitle]="title"
-        [nzSubTitle]="'Please complete your registration...'">
-        <div nz-result-extra>
-            <button nz-button nzType="primary" (click)="register()">Complete Registration</button>
-        </div>
-    </nz-result>
+
 </div>

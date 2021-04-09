@@ -10,8 +10,7 @@ import { NzButtonModule, NzResultModule, NzSpinModule } from 'ng-zorro-antd';
   ],
   imports: [
     CommonModule,
-    NzButtonModule,
-    NzResultModule
+    NzButtonModule
   ],
   exports: [
     PaymentCallbackComponent

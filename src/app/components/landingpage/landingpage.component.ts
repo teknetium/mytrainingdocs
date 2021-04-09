@@ -104,7 +104,14 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Leverage Existing Content',
-      class: ['fal fa-file-word dodgerblue small super small-gap-right', 'fal fa-file-powerpoint firebrick small super small-gap-right', 'fal fa-file-excel green small super small-gap-right', 'fal fa-file-pdf red small super small-gap-right', 'far fa-ellipsis-h black small sub' ],
+      class: ['fal fa-file-word dodgerblue small super small-gap-right',
+        'fal fa-file-powerpoint firebrick small super small-gap-right',
+        'fal fa-file-excel green small super small-gap-right',
+        'fal fa-file-pdf red small super small-gap-right',
+        'fal fa-file-video red small super small-gap-right',
+        'fal fa-file-image orange small super small-gap-right',
+        'fal fa-file-code black small super small-gap-right',
+        'far fa-ellipsis-h black small sub'],
       blurb: 'Our training template supports all common document formats (17 in all) without the application that created them.',
       learnMore: '',
       videoLink: 'onboarding'
@@ -280,7 +287,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   };
 
   currentPage;
-  naydo = false;
+  naydo = true;
   //  route: string;
   showPriceEditor = false;
 
