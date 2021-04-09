@@ -108,7 +108,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
         'fal fa-file-powerpoint firebrick small super small-gap-right',
         'fal fa-file-excel green small super small-gap-right',
         'fal fa-file-pdf red small super small-gap-right',
-        'fal fa-file-video red small super small-gap-right',
+        'fal fa-file-video blueviolet small super small-gap-right',
         'fal fa-file-image orange small super small-gap-right',
         'fal fa-file-code black small super small-gap-right',
         'far fa-ellipsis-h black small sub'],
