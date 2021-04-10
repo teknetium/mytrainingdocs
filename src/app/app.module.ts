@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgZorroAntdModule, NZ_I18N, en_US, NzBadgeModule, NzConfig, NZ_CONFIG, NzStepsModule, NzSpinModule, NzAlertModule, NzRadioModule } from 'ng-zorro-antd';
+import { NgZorroAntdModule, NZ_I18N, en_US, NzBadgeModule, NzConfig, NZ_CONFIG, NzStepsModule, NzSpinModule, NzAlertModule, NzRadioModule, NzTabsModule } from 'ng-zorro-antd';
 import { registerLocaleData,  } from '@angular/common';
 import en from '@angular/common/locales/en';
 
@@ -57,6 +57,7 @@ registerLocaleData(en);
         LoginModule,
         NzBadgeModule,
         NzAlertModule,
+        NzTabsModule,
         VgOverlayPlayModule,
         SettingsModule,
         LandingpageModule,

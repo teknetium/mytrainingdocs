@@ -127,7 +127,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Assessments Made Easy',
-      class: ['fal fa-file-check fuchsia medium super'],
+      class: ['fal fa-ballot-check fuchsia medium super'],
       blurb: 'Quickly and easily add assessments to your trainings.  ',
       learnMore: '',
       videoLink: 'onboarding'
@@ -151,7 +151,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Manage Training Versions',
-      class: ['fal fa-copy darkturquoise medium'],
+      class: ['fal fa-code-branch blueviolet medium'],
       blurb: 'Browse training update history.  Multiple types of training updates: major (reset status), minor (notify only) and bug fix (silent)',
       learnMore: '',
       videoLink: null
@@ -159,7 +159,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Reduced Legal Liability',
-      class: ['fal fa-balance-scale-right steelblue medium'],
+      class: ['fal fa-balance-scale-right redorange medium'],
       blurb: 'Reduced legal exposure when all employees and volunteers are appropriately trained/certified.',
       learnMore: '',
       videoLink: null
@@ -302,6 +302,8 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   trialEnd;
   showEarlyAccessDetails = false;
   public timeLeft$: Observable<timeComponents>;
+
+  showPlanInfo = false;
 
   constructor(
     private auth: AuthService,

@@ -45,19 +45,23 @@
         </div>
         <ul nz-menu nzTheme="light" nzMode="horizontal"
             [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.bgColor, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary }">
-            <li nz-menu-item nzMatchRouter class="nav-badge" joyrideStep="task0Step1" [ngClass]="{'current-nav': currentPage === 'home'}" nz-tooltip nzTooltipTitle="Home" nzTooltipPlacement="bottom">
+            <li nz-menu-item nzMatchRouter class="nav-badge" joyrideStep="task0Step1"
+                [ngClass]="{'current-nav': currentPage === 'home'}" nz-tooltip nzTooltipTitle="Home"
+                nzTooltipPlacement="bottom">
                 <a routerLink="/home" routerLinkActive="active-link">
                     <i class="far fa-fw fa-home-lg" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
-                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'myteam'}" nz-tooltip nzTooltipTitle="My Organization" nzTooltipPlacement="bottom">
+                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'myteam'}" nz-tooltip
+                nzTooltipTitle="My Organization" nzTooltipPlacement="bottom">
                 <a routerLink="/myteam" routerLinkActive="active-link">
                     <i class="far fa-fw fa-sitemap" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
-                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'mytrainings'}" nz-tooltip nzTooltipTitle="My Trainings" nzTooltipPlacement="bottom">
+                class="nav-badge" [ngClass]="{'current-nav': currentPage === 'mytrainings'}" nz-tooltip
+                nzTooltipTitle="My Trainings" nzTooltipPlacement="bottom">
                 <a routerLink="/mytrainings" routerLinkActive="active-link">
                     <i class="far fa-fw fa-file-certificate" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
@@ -69,8 +73,8 @@
                     <i class="far fa-fw fa-graduation-cap" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
-            <li nz-menu-item nz-tooltip nzTooltipTitle="Contact Us"
-                nzTooltipPlacement="bottom" class="nav-badge" [ngClass]="{'current-nav': currentPage === 'contactus'}">
+            <li nz-menu-item nz-tooltip nzTooltipTitle="Contact Us" nzTooltipPlacement="bottom" class="nav-badge"
+                [ngClass]="{'current-nav': currentPage === 'contactus'}">
                 <a routerLink="/contactus" routerLinkActive="active-link">
                     <i class="far fa-fw fa-user-headset" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
@@ -317,34 +321,620 @@
                             <div style="display:table-cell;width:50%;">
                                 <nz-radio-group [(ngModel)]="orgObj.plan" (ngModelChange)="planChanged($event)"
                                     style="float:right;">
-                                    <label nz-radio-button nzValue="earlyAccess"  [nzDisabled]="disabledPlanHash?.earlyAccess" nz-tooltip
+                                    <label nz-radio-button nzValue="earlyAccess"
+                                        [nzDisabled]="disabledPlanHash?.earlyAccess" nz-tooltip
                                         nzTooltipTitle="Early Access">
                                         <i class="fad fa-user-hard-hat" style="font-size:16px;color:deepskyblue;"></i>
                                     </label>
-                                    <label nz-radio-button nzValue="basic" [nzDisabled]="'true'" nz-tooltip nzTooltipTitle="Basic Plan">
+                                    <label nz-radio-button nzValue="basic" [nzDisabled]="'true'" nz-tooltip
+                                        nzTooltipTitle="Basic Plan">
                                         <i class="fad fa-user" style="font-size:16px;color:green;"></i>
                                     </label>
-                                    <label nz-radio-button nzValue="pro"  [nzDisabled]="'true'" nz-tooltip nzTooltipTitle="Pro Plan">
+                                    <label nz-radio-button nzValue="pro" [nzDisabled]="'true'" nz-tooltip
+                                        nzTooltipTitle="Pro Plan">
                                         <i class="fad fa-user-tie" style="font-size:16px;color:red;"></i>
                                     </label>
-                                    <label nz-radio-button nzValue="expert"  [nzDisabled]="'true'" nz-tooltip nzTooltipTitle="Expert Plan">
+                                    <label nz-radio-button nzValue="expert" [nzDisabled]="'true'" nz-tooltip
+                                        nzTooltipTitle="Expert Plan">
                                         <i class="fad fa-user-graduate" style="font-size:16px;color:blueviolet;"></i>
                                     </label>
                                 </nz-radio-group>
                             </div>
                             <div style="clear:both;"></div>
-                        </div>
-                        <div>
-                            <div>
-                            <div>
+                            <div *ngIf="!showPlanInfo" style="display:block;font-size:12px;color:blue;cursor:pointer;"
+                                (click)="showPlanInfo = !showPlanInfo">
+                                show plan info
+                            </div>
+                            <div *ngIf="showPlanInfo" style="display:block;font-size:12px;color:blue;cursor:pointer;"
+                                (click)="showPlanInfo = !showPlanInfo">
+                                hide plan info
+                            </div>
+                            <div *ngIf="showPlanInfo" style="display:block;margin-top:10px;">
+                                <nz-tabset>
 
-                            </div>
-                            </div>
-                            <div>
-                            
-                            </div>
-                            <div>
-                            
+                                    <nz-tab [nzTitle]="earlyAccessTitleTemplate">
+                                        <div style="text-align:center;">
+                                            <nz-card class="price-card">
+                                                <div style="text-align: center;">
+                                                    <span style="font-size:22px;color:black;">Early Access</span>
+                                                    <div style="width:95%;display:inline-block;">
+                                                        <div style="margin:20px 0;;">
+                                                            <div style="display:block;width:100%;color:black;">
+                                                                <span
+                                                                    style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                                                                <span
+                                                                    style="color:black;font-size:2vw;font-weight:400;">995
+                                                                </span>
+                                                            </div>
+                                                            <div
+                                                                style="display:block;width:100%;color:#aaaaaa;font-size:1vw;">
+                                                                April 13, 2021 - June 30, 2021
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
+                                                        style="text-align:center;font-size:1vw;font-weight: 500;">
+                                                        <ul style="display: inline-block;">
+                                                            <li>4 hours consulting time</li>
+                                                            <li>15% discount for 1 year</li>
+                                                            <li>Input on future features</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div style="text-align: left;margin-top:40px;">
+                                                    <div style="width:100%;">
+                                                        <div class="pricing-line-item-category">
+                                                            Setup
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc">
+                                                                One Click Deploy
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-category">
+                                                            Trainings
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc">
+                                                                Unlimited Trainings
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc">
+                                                                Assessments
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-category">
+                                                            Org Chart
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                User Training Status
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Collapsible Organization
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Save as PNG Image
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Group Assignment
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Group Messaging
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-category">
+                                                            Technical Support
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Knowledge Base
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Live Chat Support
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Prioritized Support
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </nz-card>
+                                        </div>
+                                    </nz-tab>
+                                    <ng-template #earlyAccessTitleTemplate>
+                                        <i class="fad fa-user-hard-hat" style="font-size:16px;color:deepskyblue;"
+                                            nz-tooltip nzTooltipTitle="Early Access Plan"></i>
+                                    </ng-template>
+                                    <nz-tab [nzTitle]="basicTitleTemplate">
+                                        <div style="text-align: center;">
+                                            <nz-card class="price-card">
+                                                <div style="text-align: center;">
+                                                    <span style="font-size:22px;color:black;">Basic</span>
+                                                    <div style="width:90%;display:inline-block;">
+                                                        <div style="margin:20px 0;width:100%;">
+                                                            <div style="display:block;width:100%;color:black;">
+                                                                <span
+                                                                    style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                                                                <span
+                                                                    style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['basic'][0]}}
+                                                                </span>
+                                                                <span
+                                                                    style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                                                                <span
+                                                                    style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['basic'][1]}}
+                                                                </span>
+                                                                <span
+                                                                    style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                                                                <span
+                                                                    style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['basic'][2]}}
+                                                                </span>
+                                                                <span
+                                                                    style="color:#aaaaaa;font-size:.8vw;font-weight:300;">
+                                                                    /user /mo</span>
+                                                            </div>
+                                                            <div
+                                                                style="display:block;width:100%;font-size:.8vw;font-weight:300;color:#aaaaaa;">
+                                                                <= {{userRange[0]}} users &nbsp;|&nbsp; {{userRange[0] +
+                                                                    1}}-{{userRange[1]}} users &nbsp;|&nbsp;>
+                                                                    {{userRange[1]}} users
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="text-align: left;margin-top:40px;">
+                                                    <div style="width:100%;">
+                                                        <div class="pricing-line-item-category">
+                                                            Setup
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc">
+                                                                One Click Deploy
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-category">
+                                                            Trainings
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc">
+                                                                20 Trainings
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-times" style="color:red;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc">
+                                                                Assessments
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-category">
+                                                            Org Chart
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                User Training Status
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-times" style="color:red;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Collapsible Organization
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-times" style="color:red;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Save as PNG Image
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-times" style="color:red;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Group Assignment
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-times" style="color:red;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Group Messaging
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-category">
+                                                            Technical Support
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Knowledge Base
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-times" style="color:red;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Live Chat Support
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-times" style="color:red;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Prioritized Support
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </nz-card>
+                                        </div>
+                                    </nz-tab>
+                                    <ng-template #basicTitleTemplate>
+                                        <i class="fad fa-user" style="font-size:16px;color:green;" nz-tooltip
+                                            nzTooltipTitle="Basic Plan"></i>
+                                    </ng-template>
+                                    <nz-tab [nzTitle]="proTitleTemplate">
+                                        <div style="text-align: center;">
+                                            <nz-card class="price-card">
+                                                <div style="text-align: center;">
+                                                    <span style="font-size:22px;color:black;display: block;">Pro</span>
+                                                    <div style="width:90%;display:inline-block;">
+                                                        <div style="margin:20px 0;width:100%;">
+                                                            <div style="display:block;width:100%;color:black;">
+                                                                <span
+                                                                    style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                                                                <span
+                                                                    style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['pro'][0]}}
+                                                                </span>
+                                                                <span
+                                                                    style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                                                                <span
+                                                                    style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['pro'][1]}}
+                                                                </span>
+                                                                <span
+                                                                    style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                                                                <span
+                                                                    style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['pro'][2]}}
+                                                                </span>
+                                                                <span
+                                                                    style="color:#aaaaaa;font-size:.8vw;font-weight:300;">
+                                                                    /user /mo</span>
+                                                            </div>
+                                                            <div
+                                                                style="display:block;width:100%;font-size:.8vw;font-weight:300;color:#aaaaaa;">
+                                                                <= {{userRange[0]}} users &nbsp;|&nbsp; {{userRange[0] +
+                                                                    1}}-{{userRange[1]}} users &nbsp;|&nbsp;>
+                                                                    {{userRange[1]}} users
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="text-align: left;margin-top:40px;">
+                                                    <div style="width:100%;">
+                                                        <div class="pricing-line-item-category">
+                                                            Setup
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc">
+                                                                One Click Deploy
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-category">
+                                                            Trainings
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc">
+                                                                40 Trainings
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-times" style="color:red;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc">
+                                                                Assessments
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-category">
+                                                            Org Chart
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                User Training Status
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Collapsible Organization
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Save as PNG Image
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-times" style="color:red;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Group Assignment
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-times" style="color:red;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Group Messaging
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-category">
+                                                            Technical Support
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Knowledge Base
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Live Chat Support
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-times" style="color:red;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Prioritized Support
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </nz-card>
+                                        </div>
+                                    </nz-tab>
+                                    <ng-template #proTitleTemplate>
+                                        <i class="fad fa-user-tie" style="font-size:16px;color:red;" nz-tooltip
+                                            nzTooltipTitle="Pro Plan"></i>
+                                    </ng-template>
+                                    <nz-tab [nzTitle]="expertTitleTemplate">
+                                        <div style="text-align: center;">
+                                            <nz-card class="price-card">
+                                                <div style="text-align: center;display:block;">
+                                                    <span style="font-size:22px;color:black;">Expert</span>
+                                                    <div style="width:90%;display:inline-block;">
+                                                        <div style="margin:20px 0;width:100%;">
+                                                            <div style="display:block;width:100%;color:black;">
+                                                                <span
+                                                                    style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                                                                <span
+                                                                    style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['expert'][0]}}
+                                                                </span>
+                                                                <span
+                                                                    style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                                                                <span
+                                                                    style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['expert'][1]}}
+                                                                </span>
+                                                                <span
+                                                                    style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
+                                                                <span
+                                                                    style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['expert'][2]}}
+                                                                </span>
+                                                                <span
+                                                                    style="color:#aaaaaa;font-size:.8vw;font-weight:300;">
+                                                                    /user /mo</span>
+                                                            </div>
+                                                            <div
+                                                                style="display:block;width:100%;font-size:.8vw;font-weight:300;color:#aaaaaa;">
+                                                                <= {{userRange[0]}} users &nbsp;|&nbsp; {{userRange[0] +
+                                                                    1}}-{{userRange[1]}} users &nbsp;|&nbsp;>
+                                                                    {{userRange[1]}} users
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="text-align: left;margin-top:40px;">
+                                                    <div style="width:100%;">
+                                                        <div class="pricing-line-item-category">
+                                                            Setup
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc">
+                                                                One Click Deploy
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-category">
+                                                            Trainings
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc">
+                                                                Unliimited Trainings
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc">
+                                                                Assessments
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-category">
+                                                            Org Chart
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                User Training Status
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Collapsible Organization
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Save as PNG Image
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Group Assignment
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Group Messaging
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-category">
+                                                            Technical Support
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Knowledge Base
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Live Chat Support
+                                                            </span>
+                                                        </div>
+                                                        <div class="pricing-line-item-indented">
+                                                            <span class="pricing-line-item-icon">
+                                                                <i class="fas fa-check" style="color:#52c41a;"></i>
+                                                            </span>
+                                                            <span class="pricing-line-item-desc-indented">
+                                                                Prioritized Support
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </nz-card>
+                                        </div>
+                                    </nz-tab>
+                                    <ng-template #expertTitleTemplate>
+                                        <i class="fad fa-user-graduate" style="font-size:16px;color:blueviolet;"
+                                            nz-tooltip nzTooltipTitle="Expert Plan"></i>
+                                    </ng-template>
+
+                                </nz-tabset>
                             </div>
                         </div>
                     </div>
@@ -359,7 +949,8 @@
                                 nzPlaceHolder="Please select" (ngModelChange)="adminUserListChanged($event)"
                                 [(ngModel)]="listOfSelectedUsers" style="width:100%;">
                                 <nz-option *ngFor="let option of listOfUsers" [nzLabel]="option.label"
-                                    [nzValue]="option.value"></nz-option>
+                                    [nzValue]="option.value">
+                                </nz-option>
                             </nz-select>
                             <ng-template #tagPlaceHolder let-selectedList> and {{ selectedList.length }} more selected
                             </ng-template>

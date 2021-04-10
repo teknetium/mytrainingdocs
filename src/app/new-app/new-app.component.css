@@ -100,3 +100,55 @@ nz-footer {
  .top {
    z-index: 10000000 !important;
  }
+
+ .pricing-line-item {
+   display:block;
+   padding-left:10px;
+   margin-top:10px;
+}
+ .pricing-line-item-category {
+   display:block;
+   margin-top:5px;
+   font-weight:600;
+   font-size:12px;
+ }
+ 
+ .naydo-box {
+  height:fit-content;
+ }
+
+ .regular-box {
+  height:fit-content;
+ }
+
+ .pricing-line-item-indented {
+   display:block;
+   padding-left:10px;
+   margin-top:5px;
+ }
+ 
+ .pricing-line-item-icon {
+   font-size:12px !important;
+   display:inline-block;
+   width:20px;
+ }
+
+ .pricing-line-item-desc {
+   font-size:12px !important;
+   display:inline-block;
+   color:black;
+ }
+
+ .pricing-line-item-desc-indented {
+   font-size:12px !important;
+   display:inline-block;
+   color:black;
+ }
+ .price-card {
+   border-color: #e1e1e1;
+   display:inline-block;
+   height:fit-content;
+   width: 60%;
+   position:relative;
+   background-color: #fdfdfd;
+}

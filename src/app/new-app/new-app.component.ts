@@ -384,6 +384,29 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   warningAlertPercentComplete: number = 0;
   successAlertPercentComplete: number = 0;
 
+  planSelected = false;
+  plan = '';
+  userCnt = 150;
+  monthlyCost = 0;
+  planCostPerUserHash = {
+    basic: [8, 6, 4],
+    pro: [12, 9, 6],
+    expert: [16, 12, 8]
+  };
+  userRange = [100, 300];
+  discounts = {
+    nonProfit: .25,
+    conference: .15
+  }
+  naydo = true;
+
+  monthlyCostHash = {
+    earlyAccess: 0,
+    basic: 0,
+    pro: 0,
+    expert: 0
+  };
+
 
   constructor(
     private authService: AuthService,
