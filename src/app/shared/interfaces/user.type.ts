@@ -13,7 +13,7 @@ export interface UserModel {
   teamAdmin: boolean,
   appAdmin: boolean,
   orgAdmin: boolean,
-  userStatus: 'pending' | 'active' | 'inactive' | 'error' | 'none'
+  userStatus: 'notInvited' | 'pending' | 'active' | 'inactive' | 'error' | 'none'
   trainingStatus: 'upToDate' | 'pastDue' | 'none',
   jobTitle: string,
   profilePicUrl: string,

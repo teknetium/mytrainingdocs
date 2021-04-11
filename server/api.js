@@ -144,6 +144,47 @@ module.exports = function(app, config) {
     });
     res.status(200).send({ count: msgs.length });
   });
+  app.get("/api/registrationmessage/:org", (req, res) => {
+    let msg = {
+      to: null,
+      from: 'greg@mytrainingdocs.com',
+      subject: 'Please Register',
+      templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
+      dynamicTemplateData: {
+        email: null
+      }
+    };
+  
+    User.find({org: req.params.org, userStatus: 'notInvited'},
+      userListProjection, (err, users) => {
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        if (users) {
+          users.forEach(user => {
+            user.userStatus = 'pending'
+            msg.to = user.email;
+            msg.dynamicTemplateData.email = user.email;
+            sgMail.send(msg)
+              .then(() => {
+                console.log('/api/registrationmessage ... success', user.email);
+              })
+              .catch((error) => {
+                console.error(error)
+              });
+          });
+
+          User.updateMany({ org: req.params.org, userStatus: 'notInvited' }, { userStatus: 'pending' }, (err2, responseObj) => {
+            if (err2) {
+              return res.status(500).send({ message: err2.message });
+            }
+          });
+          res.send(users);
+        } else {
+          res.send([]);
+        }
+      });
+  });
 
   app.get("/api/verifyemail/:uid", (req, res) => {
     User.findById(req.params.uid, userListProjection, (err, user) => {

@@ -163,7 +163,8 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   userStatusColorHash = {
     active: 'blue',
     inactive: '#aaaaaa',
-    pending: '#feb90b',
+    pending: 'orange',
+    notInvited: 'fuchsia',
     error: 'red'
   }
   includeNewSupervisorsTeam = true;
@@ -1262,6 +1263,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   userDataProp4 = '';
   userDataProp5 = '';
 
+  batchUsersCreated = false;
+  registrationInvitationsSent = false;
+
   constructor(
     private cd: ChangeDetectorRef,
     private authService: AuthService,
@@ -1715,6 +1719,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   done(): void {
+
     this.showBulkAddModal = false;
 //      this.userService.createNewUsersFromBatch(this.newUsers, false);
   }
@@ -2085,7 +2090,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   deleteAllUsers() {
 
   }
-
+/*
   testBulkAdd() {
     let currentSupervisorEmail = this.authenticatedUser.email;
     let supervisorCnt = 1;
@@ -2113,6 +2118,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
     this.userService.createNewUsersFromBatch(this.newUsers, true);
   }
+  */
 
 
   buildNode(supervisorEmail: string, level: number): UserBatchData {
@@ -2253,9 +2259,14 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     }
   }
 
-  registerUsers() {
-    this.userService.createNewUsersFromBatch(this.newUsers, true);
-    this.showBulkAddModal = false;
+  createNewUsersFromBatch() {
+    this.userService.createNewUsersFromBatch(this.newUsers);
+    this.batchUsersCreated = true;
+  }
+
+  sendRegistrationEmail() {
+    this.userService.sendRegistrationInvitation(this.authenticatedUser.org);
+    this.registrationInvitationsSent = true;
   }
 
 
@@ -2397,7 +2408,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.newTeamMember.teamId = this.teamId;
     this.newTeamMember.supervisorId = this.authenticatedUser._id;
     this.newTeamMember.teamAdmin = false;
-    this.newTeamMember.userStatus = 'pending';
+    this.newTeamMember.userStatus = 'notInvited';
     this.newTeamMember.trainingStatus = 'none';
     this.newTeamMember.teamAdmin = false;
     this.newTeamMember.orgAdmin = false;
@@ -2680,6 +2691,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       userStatusHash: {
         active: 0,
         inactive: 0,
+        notInvited: 0,
         pending: 0,
         error: 0
       },
@@ -2755,6 +2767,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
           break;
         case 'inactive':
           nodeStat.userStatusHash['inactive'] += 1;
+          break;
+        case 'notInvited':
+          nodeStat.userStatusHash['notInvited'] += 1;
           break;
         case 'pending':
           nodeStat.userStatusHash['pending'] += 1;

@@ -13,90 +13,87 @@
             </div>
         </div>
     </ng-template>
-    <div>
-        <nz-steps [nzCurrent]="currentStep">
-            <nz-step nzTitle="Data Requirements"></nz-step>
-            <nz-step nzTitle="Upload User Data"></nz-step>
-            <nz-step nzTitle="Create User Accounts"></nz-step>
-        </nz-steps>
-        <div *ngIf="currentStep === 0" class="steps-content">
-            <div style="text-align: center;">
-                <h2>Welcome to the Deploy Wizard</h2>
+    <div style="width:100%;background-color: white;">
+        <div style="float:left;width:30%;">
+            <nz-steps nzDirection="vertical" [nzCurrent]="currentStep">
+                <nz-step nzTitle="Overview"></nz-step>
+                <nz-step nzTitle="Data Requirements"></nz-step>
+                <nz-step nzTitle="Upload User Data"></nz-step>
+                <nz-step nzTitle="Create User Accounts"></nz-step>
+                <nz-step nzTitle="Invite Users"></nz-step>
+            </nz-steps>
+        </div>
+        <div style="float:right;width:70%;">
+            <div *ngIf="currentStep === 0" class="steps-content">
+                <div>
+                    <h2 style="text-align: center;" >Welcome to the Deploy Wizard</h2>
+                    <p>
+                        This wizard will walk you through onboarding your entire organization.
+                    </p>
+                    <p>
+                        Note: step 5 is optional and can be completed later. If you choose to exit the wizard after
+                        completing step 4, the users added
+                        will have a user status of <span style="color:fuchsia;">Not Invited</span>.
+                    </p>
+                    <p> This will be useful if you would prefer to onboard subsets of your organization instead of your
+                        entire organization all at once.
+                    </p>
+                </div>
             </div>
-            <div style="display:inline-block;font-size:16px;font-weight: 200;">
-                <p>
-                    You will need the following data for each user:
-                </p>
-                <div style="padding-left:40px;">
-                    <ul style="list-style-type:none;">
-                        <li>First Name</li>
-                        <li>Last Name</li>
-                        <li>Email Address</li>
-                        <li>Supervisor's Email Address</li>
-                        <li>Job Title (optional)</li>
-                        <!--
+            <div *ngIf="currentStep === 1" class="steps-content">
+                <div style="display:inline-block;font-size:16px;font-weight: 200;">
+                    <p>
+                        You will need the following data for each user:
+                    </p>
+                    <div style="padding-left:40px;">
+                        <ul style="list-style-type:none;">
+                            <li>First Name</li>
+                            <li>Last Name</li>
+                            <li>Email Address</li>
+                            <li>Supervisor's Email Address</li>
+                            <li>Job Title (optional)</li>
+                            <!--
                         <li>User Type (optional - one of 'individualContributor', 'supervisor', 'volunteer', 'contractor', 'customer')</li>
                         -->
-                    </ul>
+                        </ul>
 
+                    </div>
+                    <p>
+                        You can upload any .csv, .tsv, .xls, .xlsx, .xml file with any set of columns as long as it has
+                        1
+                        record per row.
+                        <br>
+                        The wizard will allow you to match your spreadsheet columns to the above data points. You'll be
+                        able
+                        to clean up or
+                        remove any corrupted data before submitting your report.
+                    </p>
+                    <p>
+
+                    </p>
                 </div>
-                <p>
-                    You can upload any .csv, .tsv, .xls, .xlsx, .xml file with any set of columns as long as it has 1
-                    record per row.
-                    <br>
-                    The wizard will allow you to match your spreadsheet columns to the above data points. You'll be able
-                    to clean up or
-                    remove any corrupted data before submitting your report.
-                </p>
-                <p>
-
-                </p>
             </div>
-        </div>
-        <div *ngIf="currentStep === 1" class="steps-content">
-            <div style="display:block;margin-bottom:20px;">
-                <div style="margin-bottom: 20px;">
-                    <button nz-button nzShape="round" (click)="launchImporter()" nzType="primary"
-                        style="display:inline-block;margin-right: 10px;" [disabled]="newUsers.length > 0">
-                        Upload Data
-                    </button>
-                    <button [disabled]="newUsers.length === 0" nz-button nzShape="round" (click)="newUsers = []" nzType="primary"
-                        style="display:inline-block;">
-                        reset
-                    </button>
-                </div>
+            <div *ngIf="currentStep === 2" class="steps-content">
+                <div style="display:block;margin-bottom:20px;">
+                    <div style="margin-bottom: 20px;">
+                        <button nz-button nzShape="round" (click)="launchImporter()" nzType="primary"
+                            style="display:inline-block;margin-right: 10px;" [disabled]="newUsers.length > 0">
+                            Upload Data
+                        </button>
+                        <button [disabled]="newUsers.length === 0" nz-button nzShape="round" (click)="newUsers = []"
+                            nzType="primary" style="display:inline-block;">
+                            reset
+                        </button>
+                    </div>
 
-                <div *ngIf="newUsers.length > 0" style="margin: 20px 0;">
-                    You have successfully uploaded
-                    <span style="color:red;">{{newUsers.length}}</span>
-                     users.
-                </div>
+                    <div *ngIf="newUsers.length > 0" style="margin: 20px 0;">
+                        You have successfully uploaded
+                        <span style="color:red;">{{newUsers.length}}</span>
+                        users.
+                    </div>
 
+                </div>
                 <!--
-                <div *ngIf="newUsers.length > 0" style="background-color: white;padding:20px;">
-                    <nz-table #smallTable nzSize="small" [nzData]="newUsers" [nzPageSize]="5000"
-                        [nzScroll]="{ y: '400px' }">
-                        <thead>
-                            <tr style="background-color: #f5f5f5;">
-                                <th nzWidth="200px" style="background-color: #f5f5f5;">First Name</th>
-                                <th style="background-color: #f5f5f5;">Last Name</th>
-                                <th style="background-color: #f5f5f5;">Email</th>
-                                <th style="background-color: #f5f5f5;">Supervisor's Email</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let data of smallTable.data">
-                                <td>{{ data.firstName }}</td>
-                                <td>{{ data.lastName }}</td>
-                                <td>{{ data.email }}</td>
-                                <td>{{ data.supervisorEmail }}</td>
-                            </tr>
-                        </tbody>
-                    </nz-table>
-                </div>
-                -->
-            </div>
-            <!--
             <div *ngIf="authenticatedUser.appAdmin" style="float:left;">
                 <button nz-button nzShape="round" (click)="testBulkAdd()" nzType="primary"
                     style="display:inline-block;margin-right:10px;">
@@ -119,36 +116,54 @@
                 </div>
             </div>
             -->
-        </div>
-        <div *ngIf="currentStep === 2" class="steps-content">
-            <p>
-                Selecting the Register Users button will send an email to each user that
-                includes a link to complete the registration process. The user's status will be set to
-            </p>
-            <div>
-                <i class="fas fa-fw fa-user legend-icon" style="color:orange;"></i>
-                <span class="legend-text">Pending Registration Completion</span>
             </div>
-            <br>
-            <button nz-button nzType="primary" (click)="registerUsers()">
-                <span>Register Users</span>
-            </button>
+            <div *ngIf="currentStep === 3" class="steps-content">
+                <div *ngIf="!batchUsersCreated">
+                    <p>
+                        This step creates user accounts for the uploaded users.
+                    </p>
+                    <button nz-button nzType="primary" (click)="createNewUsersFromBatch()"
+                        [disabled]="batchUsersCreated">
+                        <span>Create User Accounts</span>
+                    </button>
+                </div>
+                <div *ngIf="batchUsersCreated">
+                    <p>
+                        User accounts have been created for the users uploaded.
+                    </p>
+                </div>
+
+            </div>
+            <div *ngIf="currentStep === 4" class="steps-content">
+                <div *ngIf="!registrationInvitationsSent">
+                    <p>
+                        This step sends registration invitations to the user accounts created in the previous step.
+                    </p>
+                    <button nz-button nzType="primary" (click)="sendRegistrationEmail()">
+                        <span>Send invitations</span>
+                    </button>
+                </div>
+                <div *ngIf="registrationInvitationsSent">
+                    <p>
+                        Registrations invitations sent!
+                    </p>
+                </div>
+            </div>
         </div>
+        <div style="clear:both;"></div>
         <div class="steps-action">
-            <button nz-button nzType="default" (click)="pre()" *ngIf="currentStep !== 0">
+            <button nz-button nzType="default" (click)="pre()" [disabled]="currentStep === 0">
                 <span>Previous</span>
             </button>
-            <button *ngIf="currentStep !== 2" nz-button nzType="default" (click)="next()"
-                [disabled]="currentStep === 1 && newUsers.length === 0">
+            <button nz-button nzType="default" (click)="next()"
+                [disabled]="(currentStep === 2 && newUsers.length === 0) || (currentStep === 3 && !batchUsersCreated) || currentStep === 4">
                 <span>Next</span>
             </button>
-            <!--
-            <button nz-button nzType="primary" (click)="done()" *ngIf="currentStep === 2">
+            <button nz-button nzType="primary" (click)="done()"
+                [disabled]="currentStep === 0 || currentStep === 1 || currentStep === 2 || (currentStep === 3 && !batchUsersCreated) || (currentStep === 4 && registrationInvitationsSent)">
                 <span>Done</span>
             </button>
-            -->
         </div>
-
     </div>
 </nz-modal>
 <div *ngIf="authenticatedUser && !showBulkAddModal" style="height:100%;">
@@ -195,6 +210,12 @@
                 nzPopoverContent="A blue user icon indicates that this user is active" nzPopoverPlacement="right">
                 <i class="fas fa-fw fa-user legend-icon" style="color:blue;"></i>
                 <span class="legend-text">Active User</span>
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Not Invited"
+                nzPopoverContent="A fucshia user icon indicates that the user has not been invited to complete their registration."
+                nzPopoverPlacement="right">
+                <i class="fas fa-fw fa-user legend-icon" style="color:fuchsia;"></i>
+                <span class="legend-text">Not Invited</span>
             </div>
             <div class="legend-item" nz-popover nzPopoverTitle="Inactive User"
                 nzPopoverContent="A grey user icon indicates that this user has been marked as inactive."
@@ -538,9 +559,13 @@
                             nzTooltipTitle="Inactive">
                             <i class="fas fa-fw fa-user" style="color:#aaaaaa;font-size:18px;"></i>
                         </label>
+                        <label nz-radio-button nzValue="notInvited" nzTooltipPlacement="bottomLeft" nz-tooltip
+                            nzTooltipTitle="Not Invited">
+                            <i class="fas fa-fw fa-user" style="color:fuchsia;font-size:18px;"></i>
+                        </label>
                         <label nz-radio-button nzValue="pending" nzTooltipPlacement="bottomLeft" nz-tooltip
                             nzTooltipTitle="Pending">
-                            <i class="fas fa-fw fa-user" style="color:#feb90b;font-size:18px;"></i>
+                            <i class="fas fa-fw fa-user" style="color:orange;font-size:18px;"></i>
                         </label>
                         <label nz-radio-button nzValue="error" nzTooltipPlacement="bottomLeft" nz-tooltip
                             nzTooltipTitle="Error">
@@ -563,7 +588,7 @@
                             <i class="fas fa-arrow-alt-to-right"></i></button>
                             -->
                         <button *ngIf="selectionMode !== 'Individual'" nz-button nzShape="circle" nzType="default"
-                            [disabled]="userIdsSelected.length === 0  || currentUserStatus === 'inactive' || currentUserStatus === 'pending' || currentUserStatus === 'error'"
+                            [disabled]="userIdsSelected.length === 0  || currentUserStatus === 'inactive' || currentUserStatus === 'pending' || currentUserStatus === 'error' || currentUserStatus === 'notInvited'"
                             style="display:inline-block;" (click)="showAssignTrainingModal()" nz-tooltip
                             nzTooltipPlacement="bottomLeft" nzTooltipTitle="Assign Training to Users">
                             <i class="fas fa-plus"></i></button>
@@ -574,10 +599,15 @@
                             nzTooltipTitle="Remove Training from Users">
                             <i class="fas fa-trash"></i></button>
                         <button *ngIf="selectionMode !== 'Individual'" nz-button nzShape="circle" nzType="default"
-                            [disabled]="userIdsSelected.length === 0 || currentUserStatus === 'inactive' || currentUserStatus === 'pending' || currentUserStatus === 'error'"
+                            [disabled]="userIdsSelected.length === 0 || currentUserStatus === 'inactive' || currentUserStatus === 'pending' || currentUserStatus === 'error' || currentUserStatus === 'notInvited'"
                             style="display:inline-block;margin-left:3px;" (click)="showMsgModal()" nz-tooltip
                             nzTooltipPlacement="bottomLeft" nzTooltipTitle="Send Message to Selected Users">
                             <i class="fas fa-envelope"></i></button>
+                        <button *ngIf="selectionMode === 'UserStatus' && currentUserStatus === 'notInvited'" nz-button
+                            nzShape="circle" nzType="default" [disabled]="currentUserStatus !== 'notInvited'"
+                            style="display:inline-block;margin-left:3px;" (click)="sendRegistrationEmail()" nz-tooltip
+                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="Send Registration Invitation Message to the Selected Users">
+                            <i class="fas fa-mail-bulk"></i></button>
                     </div>
                     <nz-modal [(nzVisible)]="showMessageModal" nzTitle="Send a Message to the Selected Users"
                         (nzOnCancel)="handleSendMessageCancel()" (nzOnOk)="sendMessage()" nzOkText="Send">
@@ -1020,10 +1050,17 @@
                                             {{nodeStatHash[authenticatedUser._id]?.userStatusHash.inactive}}
                                         </div>
                                     </div>
-                                    <div nz-tooltip nzTooltipTitle="Pending" nzTooltipPlacement="right"
+                                    <div nz-tooltip nzTooltipTitle="Not Invited" nzTooltipPlacement="right"
                                         style="display:flex;justify-content:space-between;margin-bottom:5px;">
                                         <i class="fas fa-user"
-                                            style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                            style="color:fuchsia;font-size:16px;padding-top:2px;"></i>
+                                        <div style="justify-content: right;color:black;">
+                                            {{nodeStatHash[authenticatedUser._id]?.userStatusHash.notInvited}}
+                                        </div>
+                                    </div>
+                                    <div nz-tooltip nzTooltipTitle="Pending" nzTooltipPlacement="right"
+                                        style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                        <i class="fas fa-user" style="color:orange;font-size:16px;padding-top:2px;"></i>
                                         <div style="justify-content: right;color:black;">
                                             {{nodeStatHash[authenticatedUser._id]?.userStatusHash.pending}}
                                         </div>
@@ -1160,7 +1197,7 @@
                                                     nzTooltipPlacement="right"
                                                     style="display:flex;justify-content:space-between;">
                                                     <i class="fas fa-graduation-cap"
-                                                        style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                                        style="color:orange;font-size:16px;padding-top:2px;"></i>
                                                     {{nodeStatHash[dr]?.trainingHash.pendingCertUpload}}
                                                 </div>
                                             </div>
@@ -1280,6 +1317,14 @@
                                                         {{nodeStatHash[dr]?.userStatusHash.inactive}}
                                                     </div>
                                                 </div>
+                                                <div nz-tooltip nzTooltipTitle="Not Invited" nzTooltipPlacement="right"
+                                                    style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                                    <i class="fas fa-user"
+                                                        style="color:fuchsia;font-size:16px;padding-top:2px;"></i>
+                                                    <div style="justify-content: right;color:black;">
+                                                        {{nodeStatHash[dr]?.userStatusHash.notInvited}}
+                                                    </div>
+                                                </div>
                                                 <div nz-tooltip nzTooltipTitle="Pending" nzTooltipPlacement="right"
                                                     style="display:flex;justify-content:space-between;margin-bottom:5px;">
                                                     <i class="fas fa-user"
@@ -1356,7 +1401,8 @@
                                                             nzTooltipPlacement="right"
                                                             style="display:flex;justify-content:space-between;">
                                                             <i class="fas fa-users" style="font-size:18px;"></i>
-                                                            <div style="vertical-align: top;margin-left:20px;padding-right:5px;">
+                                                            <div
+                                                                style="vertical-align: top;margin-left:20px;padding-right:5px;">
                                                                 {{nodeStatHash[dr2]?.userCnt}}
                                                             </div>
                                                         </div>
@@ -1558,6 +1604,15 @@
                                                                     style="color:#aaaaaa;font-size:16px;padding-top:2px;"></i>
                                                                 <div style="justify-content: right;color:black;">
                                                                     {{nodeStatHash[dr2]?.userStatusHash.inactive}}
+                                                                </div>
+                                                            </div>
+                                                            <div nz-tooltip nzTooltipTitle="Not Invited"
+                                                                nzTooltipPlacement="right"
+                                                                style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                                                <i class="fas fa-user"
+                                                                    style="color:fuchsia;font-size:16px;padding-top:2px;"></i>
+                                                                <div style="justify-content: right;color:black;">
+                                                                    {{nodeStatHash[dr2]?.userStatusHash.notInvited}}
                                                                 </div>
                                                             </div>
                                                             <div nz-tooltip nzTooltipTitle="Pending"
@@ -1861,11 +1916,21 @@
                                                                                 {{nodeStatHash[dr3]?.userStatusHash.inactive}}
                                                                             </div>
                                                                         </div>
+                                                                        <div nz-tooltip nzTooltipTitle="Not Invited"
+                                                                            nzTooltipPlacement="right"
+                                                                            style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                                                            <i class="fas fa-user"
+                                                                                style="color:fuchsia;font-size:16px;padding-top:2px;"></i>
+                                                                            <div
+                                                                                style="justify-content: right;color:black;">
+                                                                                {{nodeStatHash[dr3]?.userStatusHash.notInvited}}
+                                                                            </div>
+                                                                        </div>
                                                                         <div nz-tooltip nzTooltipTitle="Pending"
                                                                             nzTooltipPlacement="right"
                                                                             style="display:flex;justify-content:space-between;margin-bottom:5px;">
                                                                             <i class="fas fa-user"
-                                                                                style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                                                                style="color:orange;font-size:16px;padding-top:2px;"></i>
                                                                             <div
                                                                                 style="justify-content: right;color:black;">
                                                                                 {{nodeStatHash[dr3]?.userStatusHash.pending}}
@@ -2189,11 +2254,22 @@
                                                                                         </div>
                                                                                     </div>
                                                                                     <div nz-tooltip
+                                                                                        nzTooltipTitle="Not Invited"
+                                                                                        nzTooltipPlacement="right"
+                                                                                        style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                                                                        <i class="fas fa-user"
+                                                                                            style="color:fuchsia;font-size:16px;padding-top:2px;"></i>
+                                                                                        <div
+                                                                                            style="justify-content: right;color:black;">
+                                                                                            {{nodeStatHash[dr4]?.userStatusHash.notInvited}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div nz-tooltip
                                                                                         nzTooltipTitle="Pending"
                                                                                         nzTooltipPlacement="right"
                                                                                         style="display:flex;justify-content:space-between;margin-bottom:5px;">
                                                                                         <i class="fas fa-user"
-                                                                                            style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                                                                            style="color:orange;font-size:16px;padding-top:2px;"></i>
                                                                                         <div
                                                                                             style="justify-content: right;color:black;">
                                                                                             {{nodeStatHash[dr4]?.userStatusHash.pending}}
@@ -2520,11 +2596,22 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <div nz-tooltip
+                                                                                                    nzTooltipTitle="Not Invited"
+                                                                                                    nzTooltipPlacement="right"
+                                                                                                    style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                                                                                    <i class="fas fa-user"
+                                                                                                        style="color:fuchsia;font-size:16px;padding-top:2px;"></i>
+                                                                                                    <div
+                                                                                                        style="justify-content: right;color:black;">
+                                                                                                        {{nodeStatHash[dr5]?.userStatusHash.notInvited}}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div nz-tooltip
                                                                                                     nzTooltipTitle="Pending"
                                                                                                     nzTooltipPlacement="right"
                                                                                                     style="display:flex;justify-content:space-between;margin-bottom:5px;">
                                                                                                     <i class="fas fa-user"
-                                                                                                        style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                                                                                        style="color:orange;font-size:16px;padding-top:2px;"></i>
                                                                                                     <div
                                                                                                         style="justify-content: right;color:black;">
                                                                                                         {{nodeStatHash[dr5]?.userStatusHash.pending}}
@@ -2856,11 +2943,22 @@
                                                                                                                 </div>
                                                                                                             </div>
                                                                                                             <div nz-tooltip
+                                                                                                                nzTooltipTitle="Not Invited"
+                                                                                                                nzTooltipPlacement="right"
+                                                                                                                style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                                                                                                <i class="fas fa-user"
+                                                                                                                    style="color:fuchsia;font-size:16px;padding-top:2px;"></i>
+                                                                                                                <div
+                                                                                                                    style="justify-content: right;color:black;">
+                                                                                                                    {{nodeStatHash[dr6]?.userStatusHash.notInvited}}
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div nz-tooltip
                                                                                                                 nzTooltipTitle="Pending"
                                                                                                                 nzTooltipPlacement="right"
                                                                                                                 style="display:flex;justify-content:space-between;margin-bottom:5px;">
                                                                                                                 <i class="fas fa-user"
-                                                                                                                    style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
+                                                                                                                    style="color:orange;font-size:16px;padding-top:2px;"></i>
                                                                                                                 <div
                                                                                                                     style="justify-content: right;color:black;">
                                                                                                                     {{nodeStatHash[dr6]?.userStatusHash.pending}}
@@ -3189,6 +3287,17 @@
                                                                                                                             </div>
                                                                                                                         </div>
                                                                                                                         <div nz-tooltip
+                                                                                                                            nzTooltipTitle="Not Invited"
+                                                                                                                            nzTooltipPlacement="right"
+                                                                                                                            style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                                                                                                                            <i class="fas fa-user"
+                                                                                                                                style="color:fuchsia;font-size:16px;padding-top:2px;"></i>
+                                                                                                                            <div
+                                                                                                                                style="justify-content: right;color:black;">
+                                                                                                                                {{nodeStatHash[dr7]?.userStatusHash.notInvited}}
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        <div nz-tooltip
                                                                                                                             nzTooltipTitle="Pending"
                                                                                                                             [ngClass]="{'selected-item': currentUserStatus === 'pending'}"
                                                                                                                             nzTooltipPlacement="right"
@@ -3296,14 +3405,19 @@
                                 [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error'">
                                 Inactive
                             </label>
+                            <label nz-radio-button nzValue="notInvited" nz-tooltip
+                                nzTooltipTitle="This status indicates that the registration invitation has not been sent."
+                                [nzDisabled]="selectedUser.userStatus === 'error' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive' || selectedUser.userStatus === 'pending'">
+                                Pending
+                            </label>
                             <label nz-radio-button nzValue="pending" nz-tooltip
                                 nzTooltipTitle="This status indicates the user has not completed the registration process."
-                                [nzDisabled]="selectedUser.userStatus === 'error' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive'">
+                                [nzDisabled]="selectedUser.userStatus === 'error' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive' || selectedUser.userStatus === 'notInvited'">
                                 Pending
                             </label>
                             <label nz-radio-button nzValue="error" nz-tooltip
                                 nzTooltipTitle="This status indicates the user has either a bad email address or a bad supervisor id."
-                                [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive'">
+                                [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive' || selectedUser.userStatus === 'notInvited'">
                                 Error
                             </label>
                         </nz-radio-group>

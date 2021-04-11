@@ -281,21 +281,43 @@ export class UserService {
   }
 
   sendRegistrationMsg(toAddr, fromAddr) {
-    let message = <MessageModel>{
-      _id: String(new Date().getTime()),
-      uid: '',
-      state: 'sent',
-      category: 'systemAlert',
-      subCategory: 'registration',
-      sentDate: new Date().getTime(),
-      to: toAddr,
-      from: fromAddr,
-      templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
-      dynamicTemplateData: {
-        email: toAddr
-      },
+      let message = <MessageModel>{
+        _id: String(new Date().getTime()),
+        uid: '',
+        state: 'sent',
+        category: 'systemAlert',
+        subCategory: 'registration',
+        sentDate: new Date().getTime(),
+        to: toAddr,
+        from: fromAddr,
+        templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
+        dynamicTemplateData: {
+          email: toAddr
+        },
     }
     this.messageService.sendMessages(message, [toAddr], null, false);
+  }
+  sendRegistrationInvitation(org: string) {
+    this.sendRegistrationInvitations$(org).subscribe(users => {
+
+      if (users) {
+        for (let user of users) {
+          this.allOrgUserHash[user._id] = user;
+        }
+        this.myOrgHashBS$.next(this.allOrgUserHash);
+      }
+
+      console.log('sendRegistrationInvitation...', users);
+    });
+  }
+  sendRegistrationInvitations$(org: string): Observable<UserModel[]> {
+    return this.http
+      .get<UserModel[]>(`${ENV.BASE_API}registrationmessage/${org}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
   }
 
   loadData(org, userIdToSelect) {
@@ -522,14 +544,15 @@ export class UserService {
     return /\S+@\S+\.\S+/.test(email)
   }
 
-  createNewUsersFromBatch(batchUsers: UserBatchData[], testing: boolean) {
+  createNewUsersFromBatch(batchUsers: UserBatchData[]) {
     let emailList = [];
     let statusList: string[] = [];
     let supervisorMatchFail = [];
     this.newTeamMember.org = this.authenticatedUser.org;
+    this.newTeamMember.userStatus = 'notInvited';
 //    this.fullNameHash[this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName] = this.authenticatedUser;
     this.emailHash[this.authenticatedUser.email] = this.authenticatedUser;
-
+/*
     let message: MessageModel = {
       _id: null,
       uid: null,
@@ -544,6 +567,7 @@ export class UserService {
     }
     let dynamicTemplateData = {};
     let toAddrs: string[] = [];
+    */
 //    let msgs: MessageModel[] = [];
     let batchCnt = 1;
 //    let _id = String(new Date().getTime());
@@ -566,6 +590,7 @@ export class UserService {
         this.newTeamMember.userStatus = 'error';
       } else {
         this.newTeamMember.email = batchUser.email;
+        /*
         if (!testing) {
           toAddrs.push(this.newTeamMember.email);
           dynamicTemplateData[this.newTeamMember.email] = {
@@ -577,6 +602,7 @@ export class UserService {
         }
         this.newTeamMember.userStatus = 'pending';
         emailList.push(batchUser.email);
+        */
       }
       this.newTeamMember.jobTitle = batchUser.jobTitle;
       this.newTeamMember.trainingStatus = 'none';
@@ -603,11 +629,11 @@ export class UserService {
       this.emailHash[this.newTeamMember.email] = this.newTeamMember;
       this.allOrgUserHash[this.newTeamMember._id] = this.newTeamMember;
     }
-
+/*
     if (toAddrs.length > 0) {
-      this.messageService.sendMessages(message, toAddrs, dynamicTemplateData, false);
+      this.messageService.sendMessages(message, toAddrs, dynamicTemplateData, testing);
     }
-
+*/
     for (let nUser of this.newUserList) {
 //      if (!this.fullNameHash[this.newUserHash[nUser._id].supervisorName]) {
       if (!this.allOrgUserHash[this.newUserHash[nUser._id].supervisorEmail]) {
@@ -633,7 +659,7 @@ export class UserService {
       }
     }
 
-    this.updateUser(this.authenticatedUser, false);
+//    this.updateUser(this.authenticatedUser, false);
 
     let dbCnt = 0;
     let batchUserAddedCount = 0;

@@ -67,6 +67,7 @@ export class MessageService {
     */
   }
 
+
   /*
   sendTemplateMessages(msgs: TemplateMessageModel[]) {
     let startIndex = 0;
