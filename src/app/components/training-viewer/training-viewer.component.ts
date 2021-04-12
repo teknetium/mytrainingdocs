@@ -1223,13 +1223,21 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     */
 
   loadNextPage() {
-    this.currentPageIndex++;
-    this.setCurrentPage(this.selectedTraining.pages[this.currentPageIndex]._id, undefined);
+    if (this.currentPageIndex < this.selectedTraining.pages.length - 1) {
+      this.currentPageIndex++;
+    }
+    if (this.selectedTraining.pages[this.currentPageIndex]) {
+      this.setCurrentPage(this.selectedTraining.pages[this.currentPageIndex]._id, undefined);
+    }
   }
 
   loadPrevPage() {
-    this.currentPageIndex--;
-    this.setCurrentPage(this.selectedTraining.pages[this.currentPageIndex]._id, undefined);
+    if (this.currentPageIndex > 0) {
+      this.currentPageIndex--;
+      if (this.selectedTraining.pages[this.currentPageIndex]) {
+        this.setCurrentPage(this.selectedTraining.pages[this.currentPageIndex]._id, undefined);
+      }
+    }
   }
 
   setCurrentPageFromIcon(pageId) {
