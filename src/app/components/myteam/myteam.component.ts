@@ -1170,6 +1170,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   userStatusHash = {
     active: 'Active',
     inactive: 'Inactive',
+    notInvited: 'Not Invited',
     pending: 'Pending',
     error: 'Error'
   };

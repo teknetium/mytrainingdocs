@@ -606,7 +606,7 @@
                         <button *ngIf="selectionMode === 'UserStatus' && currentUserStatus === 'notInvited'" nz-button
                             nzShape="circle" nzType="default" [disabled]="currentUserStatus !== 'notInvited'"
                             style="display:inline-block;margin-left:3px;" (click)="sendRegistrationEmail()" nz-tooltip
-                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="Send Registration Invitation Message to the Selected Users">
+                            nzTooltipPlacement="bottomLeft" nzTooltipTitle="Send the Registration Invitation Message to the Selected Users">
                             <i class="fas fa-mail-bulk"></i></button>
                     </div>
                     <nz-modal [(nzVisible)]="showMessageModal" nzTitle="Send a Message to the Selected Users"
