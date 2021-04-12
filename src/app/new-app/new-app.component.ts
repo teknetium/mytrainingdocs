@@ -385,8 +385,8 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   successAlertPercentComplete: number = 0;
 
   planSelected = false;
+  userCnt = 0;
   plan = '';
-  userCnt = 150;
   monthlyCost = 0;
   planCostPerUserHash = {
     basic: [8, 6, 4],
@@ -399,7 +399,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     conference: .15
   }
   naydo = true;
-
+  foo = [2,2,2];
   monthlyCostHash = {
     earlyAccess: 0,
     basic: 0,
@@ -550,11 +550,15 @@ export class NewAppComponent extends BaseComponent implements OnInit {
           this.showNewUserModal = true;
         }
 
-          //        this.showNewUserModal = true;
+        //        this.showNewUserModal = true;
         //        this.playTaskVideo('gettingStarted');
       }
+      // commented out the next line on 4/5/21      
 // commented out the next line on 4/5/21      
-//      this.authenticatedUser = user;
+      // commented out the next line on 4/5/21      
+// commented out the next line on 4/5/21      
+      // commented out the next line on 4/5/21      
+      //      this.authenticatedUser = user;
       this.listOfSelectedUsers.push(this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName);
       //      this.userTrainingService.initUserTrainingsForUser(user._id);
       //      this.teamTrainingCnt$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(cnt => {
@@ -657,11 +661,28 @@ export class NewAppComponent extends BaseComponent implements OnInit {
         return;
       }
 
+
       this.myOrgUsers = users;
       for (let user of this.myOrgUsers) {
         let name = user.firstName + ' ' + user.lastName;
         this.userNameHash[name] = user;
         this.listOfUsers.push({ label: name, value: name });
+      }
+      let plans: string[] = Object.keys(this.planCostPerUserHash);
+      this.userCnt = this.myOrgUsers.length;
+      for (let plan of plans) {
+        let cost: number;
+        if (this.userCnt <= this.userRange[0]) {
+          this.monthlyCostHash[plan] = this.userCnt * this.planCostPerUserHash[plan][0];
+        } else if (this.userCnt <= this.userRange[1]) {
+          cost = ((this.userRange[0]) * this.planCostPerUserHash[plan][0]);
+          cost = cost + (this.userCnt - (this.userRange[0])) * (this.planCostPerUserHash[plan][1]);
+          this.monthlyCostHash[plan] = cost;
+        } else {
+          this.monthlyCostHash[plan] = (this.userRange[0] * this.planCostPerUserHash[plan][0]) +
+            (this.userRange[1] - this.userRange[0]) * this.planCostPerUserHash[plan][1] +
+            (this.userCnt - this.userRange[1]) * this.planCostPerUserHash[plan][2];
+        }
       }
     })
     this.alert$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(alert => {
