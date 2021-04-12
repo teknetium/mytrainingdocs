@@ -19,7 +19,7 @@ import { catchError } from 'rxjs/operators';
         'opacity': '0'
       })),
       state('open', style({
-        'height': '50vh',
+        'height': '40vh',
         'opacity': '1'
       })),
       transition('open => closed', [
