@@ -412,7 +412,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     this.showContactModal = true;
   }
 
-  calcDateDiff(endDay: Date = new Date("2021-4-17")): timeComponents {
+  calcDateDiff(endDay: Date = new Date("2021-4-24")): timeComponents {
     const dDay = endDay.valueOf();
 
     const milliSecondsInASecond = 1000;
