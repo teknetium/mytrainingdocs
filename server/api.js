@@ -40,7 +40,7 @@ module.exports = function(app, config) {
     algorithm: "RS256",
   });
 
-  let icon
+// let icon;
 
   // Check for an authenticated admin user
   const adminCheck = (req, res, next) => {

@@ -89,7 +89,7 @@
         <source [src]="onboardingUrl" type="video/mp4">
       </video>
     </vg-player>
-    <vg-player *ngIf="currentVideo === 'trainingTemplate'" (onPlayerReady)="onPlayerReady($event)">
+    <vg-player *ngIf="currentVideo === 'leverageExistingContent'" (onPlayerReady)="onPlayerReady($event)">
 
       <vg-controls>
         <vg-play-pause></vg-play-pause>
@@ -113,7 +113,34 @@
       </vg-controls>
 
       <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
-        <source [src]="trainingTemplateUrl" type="video/mp4">
+        <source [src]="leverageContentUrl" type="video/mp4">
+      </video>
+    </vg-player>
+    <vg-player *ngIf="currentVideo === 'assessment'" (onPlayerReady)="onPlayerReady($event)">
+    
+      <vg-controls>
+        <vg-play-pause></vg-play-pause>
+        <vg-playback-button></vg-playback-button>
+    
+        <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+    
+        <vg-scrub-bar>
+          <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+          <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+        </vg-scrub-bar>
+    
+        <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+        <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+    
+        <vg-track-selector></vg-track-selector>
+        <vg-mute></vg-mute>
+        <vg-volume></vg-volume>
+    
+        <vg-fullscreen></vg-fullscreen>
+      </vg-controls>
+    
+      <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
+        <source [src]="assessmentUrl" type="video/mp4">
       </video>
     </vg-player>
   </div>
@@ -330,7 +357,7 @@
                 -->
               <div class="play-screencast" style="height:2vw;">
                 <i *ngIf="item.videoLink" class="fas fa-play-circle" nz-tooltip
-                  nzTooltipTitle="Play a short screencast"></i>
+                  nzTooltipTitle="Play a short screencast" (click)="loadVideo(item.videoLink)"></i>
               </div>
             </div>
             <!--

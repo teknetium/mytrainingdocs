@@ -114,7 +114,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
         'far fa-ellipsis-h black small sub'],
       blurb: 'Our training template supports all common document formats (17 in all) without the application that created them.',
       learnMore: '',
-      videoLink: 'onboarding'
+      videoLink: 'leverageExistingContent'
     },
     {
       focus: false,
@@ -122,7 +122,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       class: ['fal fa-sitemap orange medium super'],
       blurb: 'Manage users, assign trainings, monitor status, and send messages all from within our unique org chart.',
       learnMore: '',
-      videoLink: 'onboarding'
+      videoLink: 'orgChart'
     },
     {
       focus: false,
@@ -130,7 +130,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       class: ['fal fa-ballot-check fuchsia medium super'],
       blurb: 'Quickly and easily add assessments to your trainings.  ',
       learnMore: '',
-      videoLink: 'onboarding'
+      videoLink: 'assessment'
     },
     { 
       focus: false,
@@ -181,7 +181,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     },
     {
       active: false,
-      question: 'Do I have to manage my training content locally after I have uploaded it into myTrainingdocs?',
+      question: '',
       answer: `No, you do not need to keep your local copy.  You can download the file from the training template.`
     }
     /*
@@ -258,9 +258,12 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   timerCnt = 0;
   currentHowMsg: string;
   sub1: Subscription;
+  assessmentUrl = 'https://cdn.filestackcontent.com/scOJhgySQn4oic7eiCXA';
+  orgChartUrl = 'https://cdn.filestackcontent.com/kN7mQ5O3T6tfgXAnhdf5';
+  leverageContentUrl = 'https://cdn.filestackcontent.com/jT9krZqAReOwNO3zGmaA';
   explainerUrl = 'https://cdn.filestackcontent.com/kiKtqljARoygXbEeCN6V';
-  orgChartUrl = 'https://cdn.filestackcontent.com/kSCuMFNzQ3q8Lr8rxDI0';
-  onboardingUrl = 'https://cdn.filestackcontent.com/7EDYT7rQjOwjLAmZg9Gm';
+//  orgChartUrl = 'https://cdn.filestackcontent.com/kSCuMFNzQ3q8Lr8rxDI0';
+  onboardingUrl = 'https://cdn.filestackcontent.com/gmktG01nSI2yuMhZg1sM';
   trainingTemplateUrl = 'https://cdn.filestackcontent.com/';
   currentVideo;
   showYouTubeIcon = true;
