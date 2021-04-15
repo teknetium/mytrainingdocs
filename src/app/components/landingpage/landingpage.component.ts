@@ -31,10 +31,10 @@ interface timeComponents {
     trigger('videoSlide', [
       // ...
       state('closed', style({
-        'margin-top': '-900px'
+        'margin-top': '-100vw'
       })),
       state('open', style({
-        'margin-top': '200px',
+        'margin-top': '2vw',
       })),
       transition('open => closed', [
         animate('300ms')
