@@ -73,12 +73,10 @@ export interface NodeStat {
   rootUid: string,
   userCnt: number,
   selectedCnt: number,
-  noneCnt: number,
-  upToDateCnt: number,
-  pastDueCnt: number,
   trainingHash: Object,
   userTypeHash: Object,
   userStatusHash: Object,
+  userTrainingStatusHash: Object,
   jobTitleHash: Object
 }
 
