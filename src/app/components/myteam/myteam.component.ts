@@ -1275,7 +1275,11 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   registrationInvitationsSent = false;
 
   displayMode = 'UserStatus';
-  orgChartSelectMode = 'Individual';
+  orgChartSelectMode = 'Org';
+  nodeStatObj: NodeStat;
+  supervisorMenuHash = {};
+
+  currentSupervisorMenu: string;
 
 
   constructor(
@@ -1330,6 +1334,43 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
   ngOnInit() {
 
+    this.nodeStatObj = <NodeStat>{
+      rootUid: null,
+      userCnt: 0,
+      selectedCnt: 0,
+      trainingHash: {
+        none: 0,
+        upToDate: 0,
+        pastDue: 0,
+        completed: 0,
+        pendingCertUpload: 0
+      },
+      userTypeHash: {
+        individualContributor: 0,
+        supervisor: 0,
+        volunteer: 0,
+        contractor: 0,
+        customer: 0
+      },
+      userStatusHash: {
+        active: 0,
+        inactive: 0,
+        notInvited: 0,
+        pending: 0,
+        error: 0
+      },
+      userTrainingStatusHash: {
+        none: 0,
+        upToDate: 0,
+        pastDue: 0
+      },
+      jobTitleHash: {},
+      userData1Hash: {},
+      userData2Hash: {},
+      userData3Hash: {},
+      userData4Hash: {},
+      userData5Hash: {},
+    }
 
     this.today = String(new Date().getTime());
     this.orgChartTitle = 'User Status';
@@ -1453,6 +1494,16 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         if (!user.supervisorId) {
           continue;
         }
+
+        this.supervisorMenuHash[user._id] = {};
+        this.supervisorMenuHash[user._id].main = false;
+        this.supervisorMenuHash[user._id].userStatus = false;
+        this.supervisorMenuHash[user._id].userTrainingStatus = false;
+        this.supervisorMenuHash[user._id].userType = false;
+        this.supervisorMenuHash[user._id].jobTitle = false;
+        this.supervisorMenuHash[user._id].training = false;
+
+        this.nodeStatHash[user._id] = cloneDeep(this.nodeStatObj);
 
         if (user.settings.statusList.includes('duplicateEmail')) {
           this.duplicateEmailHash[user._id] = user.email;
@@ -1649,10 +1700,22 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         return;
       }
 
+      this.supervisorMenuHash[user._id] = {};
+      this.supervisorMenuHash[user._id].main = false;
+      this.supervisorMenuHash[user._id].userStatus = false;
+      this.supervisorMenuHash[user._id].userTrainingStatus = false;
+      this.supervisorMenuHash[user._id].userType = false;
+      this.supervisorMenuHash[user._id].jobTitle = false;
+      this.supervisorMenuHash[user._id].training = false;
 
       this.figureOrgStat(user._id);
+      for (let node of this.collapsedNodes) {
+        this.figureOrgStat(node);
+      }
 
       this.authenticatedUser = user;
+
+      this.nodeStatHash[this.authenticatedUser._id] = cloneDeep(this.nodeStatObj);
 
       this.myOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
 
@@ -1703,7 +1766,18 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       }
       this.matchingJobTitles = this.jobTitles;
       this.userIdsSelected = [];
+      let jobTitleHash = {};
+      for (let jobTitle of this.jobTitles) {
+        jobTitleHash[jobTitle] = 0;
+      }
+      for (let user of this.userList) {
+        this.nodeStatHash[user._id].jobTitleHash = cloneDeep(jobTitleHash);
+      }
       this.figureOrgStat(this.authenticatedUser._id);
+      for (let node of this.collapsedNodes) {
+        this.figureOrgStat(node);
+      }
+
     })
 
     this.userFail$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userFail => {
@@ -1740,6 +1814,28 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
     this.showBulkAddModal = false;
     //      this.userService.createNewUsersFromBatch(this.newUsers, false);
+  }
+
+  showSupervisorMenu(uid: string) {
+    if (this.currentSupervisorMenu) {
+      this.supervisorMenuHash[this.currentSupervisorMenu].main = false;
+    }
+    this.currentSupervisorMenu = uid;
+    this.supervisorMenuHash[uid].main = true;
+  }
+
+  hideSupervisorMenu(uid: string) {
+    this.supervisorMenuHash[uid].main = false;
+  }
+
+  assignTrainingToUser(uid: string) {
+    this.selectUser(uid, -1);
+    this.showUserTrainingModal = true;
+  }
+
+  manageCurrentTrainings(uid: string) {
+    this.selectUser(uid, -1);
+    this.manageCurrentTrainingsModal = true;
   }
 
   downloadPNGImage() {
@@ -1784,6 +1880,14 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         break;
       }
     }
+  }
+
+  collapseOrg(uid: string) {
+
+  }
+
+  expandOrg(uid: string) {
+
   }
 
   collapseAllSubOrgs(collapseAll) {
@@ -2484,7 +2588,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.userPanelVisible = false;
     let newSupervisorObj = this.myOrgUserNameHash[this.supervisorName];
     let currentSupervisorObj = this.myOrgUserHash[this.selectedUser.supervisorId];
-    if (this.selectedUser.supervisorId !== newSupervisorObj._id) {
+    if (newSupervisorObj && this.selectedUser.supervisorId !== newSupervisorObj._id) {
       this.selectedUser.supervisorId = newSupervisorObj._id;
       this.selectedUser.teamId = newSupervisorObj._id;
       newSupervisorObj.directReports.push(this.selectedUser._id);
@@ -2531,26 +2635,56 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       }
     }
   */
+  
+  showSupervisorSubMenu(uid: string, menu: string) {
+    this.supervisorMenuHash[uid].userStatus = false;
+    this.supervisorMenuHash[uid].userTrainingStatus = false;
+    this.supervisorMenuHash[uid].jobTitle = false;
+    this.supervisorMenuHash[uid].userType = false;
+    this.supervisorMenuHash[uid].training = false;
+    this.supervisorMenuHash[uid][menu] = true;
+  }
 
-  filterChanged(item: string, value: string) {
+  clearSelectedUserList(uid: string) {
+    this.currentJobTitle = null;
+    this.currentUserStatus = null;
+    this.currentUserType = null;
+    this.currentTrainingSelected = null;
+    this.currentUserTrainingStatus = null;
+    this.userIdsSelected = [];
+
+    this.figureOrgStat(uid);
+    for (let node of this.collapsedNodes) {
+      this.figureOrgStat(node);
+    }
+
+  }
+
+  filterChanged(uid: string, item: string, value: string) {
     console.log('filterChanged  ', item, value);
     this.userIdsSelected = [];
     switch (item) {
       case 'JobTitle': {
+        this.displayMode = 'JobTitle';
+        this.orgChartTitle = 'Job Titles';
         this.currentJobTitle = value;
         this.currentUserStatus = null;
         this.currentUserType = null;
         this.currentTrainingSelected = null;
         this.currentUserTrainingStatus = null;
         this.userIdsSelected = [];
+        /*
         for (let user of this.myOrgUserObjs) {
           if (user.jobTitle === this.currentJobTitle) {
             this.userIdsSelected.push(user._id);
           }
         }
+        */
         break;
       }
       case 'Training': {
+        this.displayMode = 'Training';
+        this.orgChartTitle = 'Trainings';
         this.currentTrainingSelected = value;
         this.currentUserStatus = null;
         this.currentUserType = null;
@@ -2558,6 +2692,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         this.currentUserTrainingStatus = null;
         this.userIdsSelected = [];
         this.uidTidUTHash = {};
+        /*
         if (this.currentTrainingSelected) {
           this.orgChartTitle = this.allTrainingIdHash[this.currentTrainingSelected].title + '  ' + this.versionFormatter(this.allTrainingIdHash[this.currentTrainingSelected].versions[0].version);
           for (let user of this.myOrgUserObjs) {
@@ -2577,6 +2712,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
             }
           }
         }
+        */
         /*
         for (let user of this.myOrgUserObjs) {
           if (user.jobTitle === this.currentJobTitle) {
@@ -2587,55 +2723,67 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         break;
       }
       case 'UserStatus': {
+        this.displayMode = 'UserStatus';
+        this.orgChartTitle = 'User Status';
         this.currentUserStatus = value;
         this.currentUserTrainingStatus = null;
         this.currentJobTitle = null;
         this.currentUserType = null;
         this.currentTrainingSelected = null;
         this.userIdsSelected = [];
+        /*
         for (let user of this.myOrgUserObjs) {
           if (user.userStatus === this.currentUserStatus) {
             this.userIdsSelected.push(user._id);
           }
         }
+        */
         break;
       }
       case 'UserTrainingStatus': {
+        this.displayMode = 'UserTrainingStatus';
+        this.orgChartTitle = 'User Training Status';
         this.currentUserTrainingStatus = value;
         this.currentUserStatus = null;
         this.currentJobTitle = null;
         this.currentUserType = null;
         this.currentTrainingSelected = null;
         this.userIdsSelected = [];
+        /*
         for (let user of this.myOrgUserObjs) {
           if (user.trainingStatus === this.currentUserTrainingStatus) {
             this.userIdsSelected.push(user._id);
           }
         }
+        */
         break;
       }
       case 'UserType': {
+        this.displayMode = 'UserType';
+        this.orgChartTitle = 'User Type';
         this.currentUserType = value;
         this.currentUserTrainingStatus = null;
         this.currentUserStatus = null;
         this.currentJobTitle = null;
         this.currentTrainingSelected = null;
         this.userIdsSelected = [];
+        /*
         for (let user of this.myOrgUserObjs) {
           if (user.userType === this.currentUserType) {
             this.userIdsSelected.push(user._id);
           }
         }
+        */
         break;
       }
     }
 
-    this.figureOrgStat(this.authenticatedUser._id);
-
+    this.figureOrgStat(uid);
     for (let node of this.collapsedNodes) {
-      this.figureOrgStat(node);
+      if (this.orgChartNodeHash[node].extra.reportChain.includes(uid)) {
+        this.figureOrgStat(node);
+      }
     }
-
   }
 
   /*
@@ -2806,30 +2954,31 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
   */
 
-  selectUser(userId: string, i: number) {
-    if (this.orgChartSelectMode === 'Individual') {
-      if (this.userIdSelected === userId) {
-        this.userService.selectUser(null);
-        this.userDetailIsVisible = false;
-        this.rowSelected = -1;
-      } else {
-        this.userService.selectUser(userId);
-        this.rowSelected = i;
-        this.userDetailIsVisible = true;
-      }
-      this.figureOrgStat(this.authenticatedUser._id);
-      /*
-      for (let node of this.collapsedNodes) {
-        this.figureOrgStat(node);
-      }
-      */
-    } else if (this.orgChartSelectMode === 'Org') {
-      if (this.userIdsSelected.includes(userId)) {
-        this.removeFromSelectedList(userId);
-      } else {
-        this.buildSelectedList(userId);
-      }
+  selectOrg(userId: string) {
+    if (this.userIdsSelected.includes(userId)) {
+      this.removeFromSelectedList(userId);
+    } else {
+      this.buildSelectedList(userId);
     }
+    this.supervisorMenuHash[userId].main = false;
+  }
+
+  selectUser(userId: string, i: number) {
+    this.userIdsSelected = [];
+    if (this.userIdSelected === userId) {
+      this.userService.selectUser(null);
+      this.userDetailIsVisible = false;
+      this.rowSelected = -1;
+    } else {
+      this.userService.selectUser(userId);
+      this.rowSelected = i;
+      this.userDetailIsVisible = true;
+    }
+    this.figureOrgStat(this.authenticatedUser._id);
+    for (let node of this.collapsedNodes) {
+      this.figureOrgStat(node);
+    }
+    this.supervisorMenuHash[userId].main = false;
   }
 
   removeFromSelectedList(userId: string) {
@@ -2843,64 +2992,65 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   buildSelectedList(userId: string) {
     this.userIdsSelected.push(userId);
     this.addDirectReportsToSelectedList(this.myOrgUserHash[userId])
-    /*
+
+    this.figureOrgStat(this.authenticatedUser._id);
     for (let node of this.collapsedNodes) {
       this.figureOrgStat(node);
     }
-    */
+
   }
 
   figureOrgStat(userId: string) {
-    let nodeStatObj = <NodeStat>{
-      rootUid: userId,
-      userCnt: 0,
-      selectedCnt: 0,
-      trainingHash: {
-        none: 0,
-        upToDate: 0,
-        pastDue: 0,
-        completed: 0,
-        pendingCertUpload: 0
-      },
-      userTypeHash: {
+    console.log("figureOrgStat  ", this.jobTitles);
+    let nodeStatObj = this.nodeStatHash[userId];
+    if (nodeStatObj) {
+      nodeStatObj.userCnt = 0;
+      nodeStatObj.selectedCnt = 0;
+      nodeStatObj.userTypeHash = {
         individualContributor: 0,
         supervisor: 0,
         volunteer: 0,
         contractor: 0,
         customer: 0
-      },
-      userStatusHash: {
+      };
+      nodeStatObj.userStatusHash = {
         active: 0,
         inactive: 0,
         notInvited: 0,
         pending: 0,
         error: 0
-      },
-      userTrainingStatusHash: {
+      };
+      nodeStatObj.userTrainingStatusHash = {
         none: 0,
         upToDate: 0,
         pastDue: 0
-      },
-      jobTitleHash: {},
-      userData1Hash: {},
-      userData2Hash: {},
-      userData3Hash: {},
-      userData4Hash: {},
-      userData5Hash: {},
-    }
-    console.log("figureOrgStat  ",this.jobTitles);
+      };
+      nodeStatObj.trainingHash = {
+        none: 0,
+        upToDate: 0,
+        pastDue: 0,
+        completed: 0,
+        pendingCertUpload: 0
+      };
+      for (let jobTitle of this.jobTitles) {
+        nodeStatObj.jobTitleHash[jobTitle] = 0;
+      }
 
-    for (let jobTitle of this.jobTitles) {
-      nodeStatObj.jobTitleHash[jobTitle] = 0;
     }
-    this.nodeStatHash[userId] = cloneDeep(nodeStatObj);
+/*
+    for (let jobTitle of this.jobTitles) {
+      this.nodeStatObj.jobTitleHash[jobTitle] = 0;
+    }
+    this.nodeStatHash[userId] = cloneDeep(this.nodeStatObj);
+    */
     this.processDirectReports(this.myOrgUserHash[userId], this.nodeStatHash[userId])
   }
 
   processDirectReports(user: UserModel, nodeStat: NodeStat) {
-    if (!user) {
+    if (!user || !nodeStat) {
       return;
     }
+
     for (let dr of user.directReports) {
       nodeStat.userCnt++;
       let drUser = this.myOrgUserHash[dr];
@@ -2909,79 +3059,24 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       nodeStat.jobTitleHash[drUser.jobTitle] += 1;
       nodeStat.userStatusHash[drUser.userStatus] += 1;
       nodeStat.userTypeHash[drUser.userType] += 1;
-/*
-      if (this.orgChartSelectMode === 'Individual') {
-        if (this.userIdSelected === dr) {
-          nodeStat.selectedCnt++;
-        }
-      }
 
-      if (this.orgChartSelectMode === 'Org') {
-        if (this.userIdsSelected.includes(dr)) {
-          nodeStat.selectedCnt++;
-        }
-      }
-      */
-
-      /*
-      switch (drUser.userType) {
-        case 'individualContributor':
-          nodeStat.userTypeHash['individualContributor'] += 1;
-          break;
-        case 'supervisor':
-          nodeStat.userTypeHash['supervisor'] += 1;
-          break;
-        case 'volunteer':
-          nodeStat.userTypeHash['volunteer'] += 1;
-          break;
-        case 'contractor':
-          nodeStat.userTypeHash['contractor'] += 1;
-          break;
-        case 'customer':
-          nodeStat.userTypeHash['customer'] += 1;
-          break;
-        default:
-          break;
-      }
-      */
-      /*
-      switch (drUser.userStatus) {
-        case 'active':
-          nodeStat.userStatusHash['active'] += 1;
-          break;
-        case 'inactive':
-          nodeStat.userStatusHash['inactive'] += 1;
-          break;
-        case 'notInvited':
-          nodeStat.userStatusHash['notInvited'] += 1;
-          break;
-        case 'pending':
-          nodeStat.userStatusHash['pending'] += 1;
-          break;
-        case 'error':
-          nodeStat.userStatusHash['error'] += 1;
-          break;
-        default:
-          break;
-      }
-      */
       if (this.currentJobTitle === drUser.jobTitle) {
-//        this.userIdsSelected.push(dr);
+        this.userIdsSelected.push(dr);
         nodeStat.selectedCnt++;
       }
 
       if (this.currentUserType === drUser.userType) {
-//        this.userIdsSelected.push(dr);
+        this.userIdsSelected.push(dr);
         nodeStat.selectedCnt++;
       }
 
       if (this.currentUserStatus === drUser.userStatus) {
-//        this.userIdsSelected.push(dr);
+        this.userIdsSelected.push(dr);
         nodeStat.selectedCnt++;
       }
 
       if (this.currentUserTrainingStatus === drUser.trainingStatus) {
-//        this.userIdsSelected.push(dr);
+        this.userIdsSelected.push(dr);
         nodeStat.selectedCnt++;
       }
 
@@ -2993,25 +3088,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
               this.userIdsSelected.push(dr);
               nodeStat.selectedCnt++;
               nodeStat.trainingHash[ut.status] += 1;
-              /*
-              switch (ut.status) {
-                case 'upToDate':
-                  nodeStat.trainingHash['upToDate'] += 1;
-                  break;
-                case 'pastDue':
-                  nodeStat.trainingHash['pastDue'] += 1;
-                  break;
-                case 'completed':
-                  nodeStat.trainingHash['completed'] += 1;
-                  break;
-                case 'pendingCertUpload':
-                  nodeStat.trainingHash['pendingCertUpload'] += 1;
-                  break;
-                default:
-                  nodeStat.trainingHash['none'] += 1;
-                  break;
-              }
-              */
             }
           }
         }
@@ -3027,6 +3103,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       return;
     }
     for (let userId of user.directReports) {
+      if (this.nodeStatHash[userId]) {
+        this.nodeStatHash[userId].selectedCnt--;
+      }
       let drUser = this.myOrgUserHash[userId];
       this.userIdsSelected.splice(this.userIdsSelected.indexOf(userId), 1);
       if (drUser.directReports.length > 0) {
@@ -3040,6 +3119,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     }
     for (let userId of user.directReports) {
       if (!this.userIdsSelected.includes(userId)) {
+        if (this.nodeStatHash[userId]) {
+          this.nodeStatHash[userId].selectedCnt++;
+        }
         let drUser = this.myOrgUserHash[userId];
         this.userIdsSelected.push(userId);
         if (drUser.directReports.length > 0) {
@@ -3068,7 +3150,8 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.selectedTrainingId = null;
   }
 
-  editUser() {
+  editUser(uid) {
+    this.selectUser(uid, -1);
     this.userPanelVisible = true;
   }
 
@@ -3104,10 +3187,10 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
     let ut: UserTrainingModel;
 
-    if (this.displayMode === 'Training' && this.userIdsSelected.includes(uid)) {
+    if (this.displayMode === 'Training' && this.currentTrainingSelected && this.userIdsSelected.includes(uid)) {
       let tidUTHash = this.uidTidUTHash[uid];
-      if (tidUTHash) {
-        ut = tidUTHash[this.currentTrainingSelected];
+      ut = tidUTHash[this.currentTrainingSelected];
+      if (ut) {
         return this.userTrainingStatusColorHash[ut.status];
       } else {
         return 'orange';
