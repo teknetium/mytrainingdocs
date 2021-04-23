@@ -515,10 +515,10 @@ ul.ant-card-actions {
 	top:0;
 	left:100%;
 	width:300px;
-	border:1px solid #dddddd;
+	border:1px solid #bbbbbb;
 	border-radius: 10px;
 	padding:10px 5px;
-	background-color: #f1f1f1;
+	background-color: #e1e1e1;
 	color:black;
 	z-index:100000;
 }
@@ -545,12 +545,17 @@ ul.no-bullets {
 
 .supervisor-menu-item {
 	font-size: 14px;
-	padding:1px 10px;
-	margin:5px;
+	margin:3px;
+	padding:3px;
 	cursor: pointer;
 }
 
 .supervisor-menu-item:hover {
 	background: rgba(255,255,255,1.0);
+	border-radius: 5px;
+}
+
+.option-selected {
+	border: 2px solid #feb90b;
 	border-radius: 5px;
 }
