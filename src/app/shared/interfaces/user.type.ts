@@ -96,3 +96,11 @@ export class UserSessionModel {
     public endTime: number,
   ) {}
 }
+
+export interface OrgChartSelection {
+  rootUid: string,
+  name: string,
+  type: string,
+  value: string,
+  userIdsSelected: string[]
+}

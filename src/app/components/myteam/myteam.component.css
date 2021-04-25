@@ -555,7 +555,19 @@ ul.no-bullets {
 	border-radius: 5px;
 }
 
-.option-selected {
-	border: 2px solid #feb90b;
+.node-selected {
+	border: 1px solid #feb90b;
 	border-radius: 5px;
+}
+
+.selection-table-row {
+
+}
+
+.selection-table-row:hover {
+	color: #f3bb42;
+}
+
+.selection-hover {
+	border:3px solid #f3bb42;
 }
