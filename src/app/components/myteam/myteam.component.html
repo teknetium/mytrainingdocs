@@ -358,14 +358,19 @@
                             <i class="fas fa-list" style="font-size:18px;"></i></label>
                     </nz-radio-group>
                     <div style="display:inline-block;margin-left:10px;">
-                        <button nz-button nzSize="default" nzType="default" style="display:inline-block;"
-                            (click)="showBulkAddModal = true" nz-tooltip nzTooltipPlacement="top"
-                            nzTooltipTitle="Add Users">
-                            <i class="fas fa-user-plus" style="font-size:18px;"></i>
+                        <button nz-button nzSize="default" nzShape="circle" nzType="primary" style="display:inline-block;margin-right:5px;" (click)="showBulkAddModal = true"
+                            nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Add Users">
+                            <i class="fas fa-user-plus"></i>
+                        </button>
+                        <button nz-button nzSize="default" nzShape="circle" nzType="primary" style="display:inline-block;" (click)="showDownloadPNGImageModal()"
+                            nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Download the Org Chart as a PNG image (with preview)">
+                            <i class="fas fa-camera"></i>
                         </button>
                     </div>
+                    <!--
                     <div style="cursor:pointer;position:fixed;top:65px;left:220px;width:20px;height:60px;z-index:1000;"
                         (click)="showCSVBuffer = !showCSVBuffer"></div>
+                        -->
                 </div>
                 <div *ngIf="showOrgChart === 'true'" style="display:inline-block;">
                     <!--

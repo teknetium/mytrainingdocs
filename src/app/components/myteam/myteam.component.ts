@@ -2931,6 +2931,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.orgSelected = true;
     this.userIdsSelected = [];
     this.currentFilterHash[userId] = '';
+
+    this.addToOrgSelection
+
     this.figureOrgStat(userId, userId);
     for (let node of this.collapsedNodes) {
       if (this.orgChartNodeHash[node].extra.reportChain.includes(userId)) {
@@ -3025,14 +3028,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       for (let jobTitle of this.jobTitles) {
         nodeStatObj.jobTitleHash[jobTitle] = 0;
       }
-
     }
-    /*
-        for (let jobTitle of this.jobTitles) {
-          this.nodeStatObj.jobTitleHash[jobTitle] = 0;
-        }
-        this.nodeStatHash[userId] = cloneDeep(this.nodeStatObj);
-        */
+
+    console.log("figureOrgStat", this.currentFilterHash[rootUid]);
     this.processDirectReports(rootUid, this.myOrgUserHash[userId], this.nodeStatHash[userId])
 
   }

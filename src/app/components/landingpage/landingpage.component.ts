@@ -103,7 +103,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     },
     {
       focus: false,
-      title: 'Leverage Existing Content',
+      title: 'Use Existing Content',
       class: ['fal fa-file-word dodgerblue small super small-gap-right',
         'fal fa-file-powerpoint firebrick small super small-gap-right',
         'fal fa-file-excel green small super small-gap-right',
@@ -412,7 +412,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     this.showContactModal = true;
   }
 
-  calcDateDiff(endDay: Date = new Date("2021-4-24")): timeComponents {
+  calcDateDiff(endDay: Date = new Date("2021-5-1")): timeComponents {
     const dDay = endDay.valueOf();
 
     const milliSecondsInASecond = 1000;
