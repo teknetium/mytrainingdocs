@@ -1902,6 +1902,27 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
   }
 
+  getMenuPlacement(uid: string): string {
+    let bWidth = window.innerWidth;
+    let rect;
+    let left;
+    let element: Element;
+    let elementWidth;
+    element = document.getElementById(uid);
+    elementWidth = element.clientWidth;
+    if (element) {
+      rect = element.getBoundingClientRect();
+      left = String(rect.x);
+      if (rect.x + 600 + elementWidth >= bWidth) {
+        left =  String((bWidth - 600 - elementWidth) - rect.x);
+        return (left + 'px');
+      } else {
+        left = String((elementWidth));
+        return (left + 'px');
+      }
+    }
+  }
+
   collapseAllSubOrgs(collapseAll) {
     //    this.myLoader.setLoading(true, 'https://localhost:4200/myteam');
     if (collapseAll) {
@@ -1938,7 +1959,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     let element: Element;
     element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'center' });
+      element.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'center' });
     }
   }
 
@@ -2757,6 +2778,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.supervisorMenuHash[uid].training = false;
     this.supervisorMenuHash[uid].main = false;
 
+    this.centerIt(uid);
   }
 
   /*
@@ -3030,7 +3052,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       }
     }
 
-    console.log("figureOrgStat", this.currentFilterHash[rootUid]);
     this.processDirectReports(rootUid, this.myOrgUserHash[userId], this.nodeStatHash[userId])
 
   }

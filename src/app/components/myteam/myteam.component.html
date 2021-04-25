@@ -983,11 +983,26 @@
                         <td style="text-align: center;padding:5px;"
                             (mouseenter)="currentOrgSelection = selection.rootUid"
                             (mouseleave)="currentOrgSelection = null">
+                        <button nz-button nzSize="default" nzShape="circle" nzType="default" style="display:inline-block;margin-right:5px;"
+                            nz-tooltip nzTooltipPlacement="top"
+                            nzTooltipTitle="Assign a training to the selected users">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button nz-button nzSize="default" nzShape="circle" nzType="default" style="display:inline-block;margin-right:5px;" nz-tooltip
+                            nzTooltipPlacement="top" nzTooltipTitle="Assign a training to the selected users" (click)="removeSelection(selectionIndex, selection.rootUid)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button nz-button nzSize="default" nzShape="circle" nzType="default" style="display:inline-block;margin-right:5px;" nz-tooltip
+                            nzTooltipPlacement="top" nzTooltipTitle="Email selected users">
+                            <i class="fas fa-envelope"></i>
+                        </button>
+                        <!--
                             <i class="fas fa-fw fa-plus" style="margin-right:5px;" nz-tooltip
                                 nzTooltipTitle="Assign a training to the selected users" nzTooltipPlacement="top"></i>
                             <i class="fas fa-fw fa-trash" nz-tooltip nzTooltipTitle="Remove this selection"
                                 (click)="removeSelection(selectionIndex, selection.rootUid)"
                                 nzTooltipPlacement="top"></i>
+                                -->
                         </td>
                     </tr>
                 </table>
@@ -1029,7 +1044,7 @@
                         <div class="supervisor-node org-chart-node"
                             style="text-align: center;margin-bottom:20px;position:relative;"
                             id="{{authenticatedUser._id}}">
-                            <div *ngIf="supervisorMenuHash[authenticatedUser._id].main" class="supervisor-menu">
+                            <div *ngIf="supervisorMenuHash[authenticatedUser._id].main" class="supervisor-menu" [ngStyle]="{'left': getMenuPlacement(authenticatedUser._id)}">
                                 <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                     (click)="hideSupervisorMenu(authenticatedUser._id)">
                                     <i class="fal fa-times" style="font-size:20px;color:red;"></i>
@@ -1077,8 +1092,7 @@
                                             style="float:right;font-size:18px;margin-right:5px;"></i>
                                         <div style="clear:both;"></div>
                                         <div *ngIf="supervisorMenuHash[authenticatedUser._id].userStatus"
-                                            (mouseleave)="supervisorMenuHash[authenticatedUser._id].userStatus = false"
-                                            style="z-index:1000;padding:5px;position:absolute;left:280px;top:0;width:150px;background-color:#e1e1e1;border:1px solid #bbbbbb;border-radius: 5px;">
+                                            (mouseleave)="supervisorMenuHash[authenticatedUser._id].userStatus = false" class="supervisor-sub-menu" >
                                             <div *ngFor="let userStatus of listOfUserStatus"
                                                 class="supervisor-menu-item"
                                                 (click)="filterChanged(authenticatedUser._id, 'UserStatus', userStatus.value)">
@@ -1496,7 +1510,7 @@
                                     [ngClass]="{'node-selected': orgChartSelectionList.includes(dr), 'selection-hover': currentOrgSelection === dr}">
                                     <div class="org-chart-node" [ngStyle]="{'padding.px': orgChartPadding}" id="{{dr}}"
                                         [ngClass]="{'supervisor-node': myOrgUserHash[dr]?.userType === 'supervisor'}">
-                            <div *ngIf="supervisorMenuHash[dr].main" class="supervisor-menu">
+                            <div *ngIf="supervisorMenuHash[dr].main" class="supervisor-menu"  [ngStyle]="{'left': getMenuPlacement(dr)}">
                                 <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                     (click)="hideSupervisorMenu(dr)">
                                     <i class="fal fa-times" style="font-size:20px;color:red;"></i>
@@ -1539,7 +1553,7 @@
                                         <div style="clear:both;"></div>
                                         <div *ngIf="supervisorMenuHash[dr].userStatus"
                                             (mouseleave)="supervisorMenuHash[dr].userStatus = false"
-                                            style="z-index:1000;padding:5px;position:absolute;left:280px;top:0;width:150px;background-color:#e1e1e1;border:1px solid #bbbbbb;border-radius: 5px;">
+                                             class="supervisor-sub-menu">
                                             <div *ngFor="let userStatus of listOfUserStatus" class="supervisor-menu-item"
                                                 (click)="filterChanged(dr, 'UserStatus', userStatus.value)">
                                                 <i class="fas fa-user" [ngStyle]="{'color': userStatusColorHash[userStatus.value]}"
@@ -1947,7 +1961,7 @@
                                                 <div [ngStyle]="{'padding.px': orgChartPadding}" class="org-chart-node"
                                                     id="{{dr2}}"
                                                     [ngClass]="{'supervisor-node': myOrgUserHash[dr2]?.userType === 'supervisor'}">
-                            <div *ngIf="supervisorMenuHash[dr2].main" class="supervisor-menu">
+                            <div *ngIf="supervisorMenuHash[dr2].main" class="supervisor-menu" [ngStyle]="{'left': getMenuPlacement(dr2)}">
                                 <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                     (click)="hideSupervisorMenu(dr2)">
                                     <i class="fal fa-times" style="font-size:20px;color:red;"></i>
@@ -1990,7 +2004,7 @@
                                         <div style="clear:both;"></div>
                                         <div *ngIf="supervisorMenuHash[dr2].userStatus"
                                             (mouseleave)="supervisorMenuHash[dr2].userStatus = false"
-                                            style="z-index:1000;padding:5px;position:absolute;left:280px;top:0;width:150px;background-color:#e1e1e1;border:1px solid #bbbbbb;border-radius: 5px;">
+                                             class="supervisor-sub-menu">
                                             <div *ngFor="let userStatus of listOfUserStatus" class="supervisor-menu-item"
                                                 (click)="filterChanged(dr2, 'UserStatus', userStatus.value)">
                                                 <i class="fas fa-user" [ngStyle]="{'color': userStatusColorHash[userStatus.value]}"
@@ -2417,7 +2431,7 @@
                                                             <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                 class="org-chart-node" id="{{dr3}}"
                                                                 [ngClass]="{'supervisor-node': myOrgUserHash[dr3]?.userType === 'supervisor'}">
-                            <div *ngIf="supervisorMenuHash[dr3].main" class="supervisor-menu">
+                            <div *ngIf="supervisorMenuHash[dr3].main" class="supervisor-menu" [ngStyle]="{'left': getMenuPlacement(dr3)}">
                                 <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                     (click)="hideSupervisorMenu(dr3)">
                                     <i class="fal fa-times" style="font-size:20px;color:red;"></i>
@@ -2460,7 +2474,7 @@
                                         <div style="clear:both;"></div>
                                         <div *ngIf="supervisorMenuHash[dr3].userStatus"
                                             (mouseleave)="supervisorMenuHash[dr3].userStatus = false"
-                                            style="z-index:1000;padding:5px;position:absolute;left:280px;top:0;width:150px;background-color:#e1e1e1;border:1px solid #bbbbbb;border-radius: 5px;">
+                                             class="supervisor-sub-menu">
                                             <div *ngFor="let userStatus of listOfUserStatus" class="supervisor-menu-item"
                                                 (click)="filterChanged(dr3, 'UserStatus', userStatus.value)">
                                                 <i class="fas fa-user" [ngStyle]="{'color': userStatusColorHash[userStatus.value]}"
@@ -2911,7 +2925,7 @@
                                                                         <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                             class="org-chart-node" id="{{dr4}}"
                                                                             [ngClass]="{'supervisor-node': myOrgUserHash[dr4]?.userType === 'supervisor'}">
-                            <div *ngIf="supervisorMenuHash[dr4].main" class="supervisor-menu">
+                            <div *ngIf="supervisorMenuHash[dr4].main" class="supervisor-menu" [ngStyle]="{'left': getMenuPlacement(dr4)}">
                                 <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                     (click)="hideSupervisorMenu(dr4)">
                                     <i class="fal fa-times" style="font-size:20px;color:red;"></i>
@@ -2954,7 +2968,7 @@
                                         <div style="clear:both;"></div>
                                         <div *ngIf="supervisorMenuHash[dr4].userStatus"
                                             (mouseleave)="supervisorMenuHash[dr4].userStatus = false"
-                                            style="z-index:1000;padding:5px;position:absolute;left:280px;top:0;width:150px;background-color:#e1e1e1;border:1px solid #bbbbbb;border-radius: 5px;">
+                                             class="supervisor-sub-menu">
                                             <div *ngFor="let userStatus of listOfUserStatus" class="supervisor-menu-item"
                                                 (click)="filterChanged(dr4, 'UserStatus', userStatus.value)">
                                                 <i class="fas fa-user" [ngStyle]="{'color': userStatusColorHash[userStatus.value]}"
@@ -3429,7 +3443,7 @@
                                                                                     <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                         class="org-chart-node"
                                                                                         [ngClass]="{'supervisor-node': myOrgUserHash[dr5]?.userType === 'supervisor'}">
-                            <div *ngIf="supervisorMenuHash[dr5].main" class="supervisor-menu">
+                            <div *ngIf="supervisorMenuHash[dr5].main" class="supervisor-menu" [ngStyle]="{'left': getMenuPlacement(dr5)}">
                                 <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                     (click)="hideSupervisorMenu(dr5)">
                                     <i class="fal fa-times" style="font-size:20px;color:red;"></i>
@@ -3472,7 +3486,7 @@
                                         <div style="clear:both;"></div>
                                         <div *ngIf="supervisorMenuHash[dr5].userStatus"
                                             (mouseleave)="supervisorMenuHash[dr5].userStatus = false"
-                                            style="z-index:1000;padding:5px;position:absolute;left:280px;top:0;width:150px;background-color:#e1e1e1;border:1px solid #bbbbbb;border-radius: 5px;">
+                                            class="supervisor-sub-menu">
                                             <div *ngFor="let userStatus of listOfUserStatus" class="supervisor-menu-item"
                                                 (click)="filterChanged(dr5, 'UserStatus', userStatus.value)">
                                                 <i class="fas fa-user" [ngStyle]="{'color': userStatusColorHash[userStatus.value]}"
@@ -3944,7 +3958,7 @@
                                                                                                 <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                     class="org-chart-node"
                                                                                                     [ngClass]="{'supervisor-node': myOrgUserHash[dr6]?.userType === 'supervisor'}">
-                            <div *ngIf="supervisorMenuHash[dr6].main" class="supervisor-menu">
+                            <div *ngIf="supervisorMenuHash[dr6].main" class="supervisor-menu"  [ngStyle]="{'left': getMenuPlacement(dr6)}">
                                 <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                     (click)="hideSupervisorMenu(dr6)">
                                     <i class="fal fa-times" style="font-size:20px;color:red;"></i>
@@ -3987,7 +4001,7 @@
                                         <div style="clear:both;"></div>
                                         <div *ngIf="supervisorMenuHash[dr6].userStatus"
                                             (mouseleave)="supervisorMenuHash[dr6].userStatus = false"
-                                            style="z-index:1000;padding:5px;position:absolute;left:280px;top:0;width:150px;background-color:#e1e1e1;border:1px solid #bbbbbb;border-radius: 5px;">
+                                            class="supervisor-sub-menu">
                                             <div *ngFor="let userStatus of listOfUserStatus" class="supervisor-menu-item"
                                                 (click)="filterChanged(dr6, 'UserStatus', userStatus.value)">
                                                 <i class="fas fa-user" [ngStyle]="{'color': userStatusColorHash[userStatus.value]}"
@@ -4461,7 +4475,7 @@
                                                                                                             <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                                 class="org-chart-node"
                                                                                                                 [ngClass]="{'supervisor-node': myOrgUserHash[dr7]?.userType === 'supervisor'}">
-                            <div *ngIf="supervisorMenuHash[dr7].main" class="supervisor-menu">
+                            <div *ngIf="supervisorMenuHash[dr7].main" class="supervisor-menu" [ngStyle]="{'left': getMenuPlacement(dr7)}">
                                 <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                     (click)="hideSupervisorMenu(dr7)">
                                     <i class="fal fa-times" style="font-size:20px;color:red;"></i>
@@ -4504,7 +4518,7 @@
                                         <div style="clear:both;"></div>
                                         <div *ngIf="supervisorMenuHash[dr7].userStatus"
                                             (mouseleave)="supervisorMenuHash[dr7].userStatus = false"
-                                            style="z-index:1000;padding:5px;position:absolute;left:280px;top:0;width:150px;background-color:#e1e1e1;border:1px solid #bbbbbb;border-radius: 5px;">
+                                            class="supervisor-sub-menu">
                                             <div *ngFor="let userStatus of listOfUserStatus" class="supervisor-menu-item"
                                                 (click)="filterChanged(dr7, 'UserStatus', userStatus.value)">
                                                 <i class="fas fa-user" [ngStyle]="{'color': userStatusColorHash[userStatus.value]}"

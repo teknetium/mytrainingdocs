@@ -518,9 +518,21 @@ ul.ant-card-actions {
 	border:1px solid #bbbbbb;
 	border-radius: 10px;
 	padding:10px 5px;
-	background-color: #e1e1e1;
+	background-color: #eee;
 	color:black;
 	z-index:100000;
+}
+
+.supervisor-sub-menu {
+	z-index:1000;
+	padding:5px;
+	position:absolute;
+	left:280px;
+	top:0;
+	width:150px;
+	background-color:#eee;
+	border:1px solid #bbb;
+	border-radius: 5px;
 }
 
 .supervisor-menu-icon {
@@ -561,7 +573,7 @@ ul.no-bullets {
 }
 
 .selection-table-row {
-
+	border-bottom: 1px solid #dddddd;
 }
 
 .selection-table-row:hover {
