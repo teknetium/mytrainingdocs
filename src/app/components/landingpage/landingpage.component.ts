@@ -112,7 +112,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
         'fal fa-file-image orange small super small-gap-right',
         'fal fa-file-code black small super small-gap-right',
         'far fa-ellipsis-h black small sub'],
-      blurb: 'Our training template supports all common document formats (17 in all) without the application that created them.',
+      blurb: 'Our training template supports the viewing of all common document formats (17 in all) without the application that created them.',
       learnMore: '',
       videoLink: 'leverageExistingContent'
     },

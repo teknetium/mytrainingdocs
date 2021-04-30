@@ -73,6 +73,7 @@ export interface NodeStat {
   rootUid: string,
   userCnt: number,
   selectedCnt: number,
+  userIdsSelected: string[],
   trainingHash: Object,
   userTypeHash: Object,
   userStatusHash: Object,

@@ -276,7 +276,6 @@ ul.ant-card-actions {
 	position: absolute;
 	top: -10px;
 	left: -1px;
-	z-index: 11;
 	height: 10px;
 	width: 50%;
 	border-top: 1px solid black;
@@ -513,14 +512,14 @@ ul.ant-card-actions {
 .supervisor-menu {
 	position: absolute;
 	top:0;
-	left:100%;
 	width:300px;
+	right:300px;
 	border:1px solid #bbbbbb;
 	border-radius: 10px;
 	padding:10px 5px;
 	background-color: #eee;
 	color:black;
-	z-index:100000;
+	z-index:1000000;
 }
 
 .supervisor-sub-menu {

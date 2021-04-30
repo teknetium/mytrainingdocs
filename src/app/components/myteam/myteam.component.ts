@@ -1280,7 +1280,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   nodeStatObj: NodeStat;
   supervisorMenuHash = {};
 
-  currentSupervisorMenu: string;
+  currentSupervisorMenu: string = null;
 
   orgSelected = false;
 
@@ -1290,7 +1290,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   orgChartSelections: OrgChartSelection[] = [];
   orgChartSelectionList: string[] = [];
   currentOrgSelection: string;
-  rootDisplayMode = 'UserStatus;'
+  rootDisplayMode = 'UserStatus';
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1348,6 +1348,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       rootUid: null,
       userCnt: 0,
       selectedCnt: 0,
+      userIdsSelected: [],
       trainingHash: {
         none: 0,
         upToDate: 0,
@@ -1515,6 +1516,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
         this.displayMode[user._id] = 'UserStatus';
 
+        this.nodeStatObj.rootUid = user._id; 
         this.nodeStatHash[user._id] = cloneDeep(this.nodeStatObj);
 
         if (user.settings.statusList.includes('duplicateEmail')) {
@@ -1565,9 +1567,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         return;
       }
       if (this.authenticatedUser) {
-        this.figureOrgStat(this.authenticatedUser._id, this.authenticatedUser._id);
+        this.figureOrgStat(this.authenticatedUser._id);
         for (let node of this.collapsedNodes) {
-          this.figureOrgStat(this.authenticatedUser._id, node);
+          this.figureOrgStat(node);
         }
       }
     });
@@ -1718,15 +1720,16 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       this.supervisorMenuHash[user._id].jobTitle = false;
       this.supervisorMenuHash[user._id].training = false;
 
-      this.figureOrgStat(user._id, user._id);
+      this.figureOrgStat(user._id);
       for (let node of this.collapsedNodes) {
-        this.figureOrgStat(user._id, node);
+        this.figureOrgStat(node);
       }
 
       this.authenticatedUser = user;
 
       this.displayMode[this.authenticatedUser._id] = 'UserStatus';
 
+      this.nodeStatObj.rootUid = this.authenticatedUser._id;
       this.nodeStatHash[this.authenticatedUser._id] = cloneDeep(this.nodeStatObj);
 
       this.myOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
@@ -1785,9 +1788,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       for (let user of this.userList) {
         this.nodeStatHash[user._id].jobTitleHash = cloneDeep(jobTitleHash);
       }
-      this.figureOrgStat(this.authenticatedUser._id, this.authenticatedUser._id);
+      this.figureOrgStat(this.authenticatedUser._id);
       for (let node of this.collapsedNodes) {
-        this.figureOrgStat(this.authenticatedUser._id, node);
+        this.figureOrgStat(node);
       }
 
     })
@@ -1829,23 +1832,33 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   showSupervisorMenu(uid: string) {
+    /*
     if (this.currentSupervisorMenu) {
       this.supervisorMenuHash[this.currentSupervisorMenu].main = false;
     }
+    */
     this.currentSupervisorMenu = uid;
     this.supervisorMenuHash[uid].main = true;
   }
 
   hideSupervisorMenu(uid: string) {
+    this.supervisorMenuHash[uid].userStatus = false;
+    this.supervisorMenuHash[uid].userTrainingStatus = false;
+    this.supervisorMenuHash[uid].jobTitle = false;
+    this.supervisorMenuHash[uid].userType = false;
+    this.supervisorMenuHash[uid].training = false;
     this.supervisorMenuHash[uid].main = false;
+    this.currentSupervisorMenu = null;
   }
 
   assignTrainingToUser(uid: string) {
+    this.hideSupervisorMenu(uid);
     this.selectUser(uid, -1);
     this.showUserTrainingModal = true;
   }
 
   manageCurrentTrainings(uid: string) {
+    this.hideSupervisorMenu(uid);
     this.selectUser(uid, -1);
     this.manageCurrentTrainingsModal = true;
   }
@@ -1912,9 +1925,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     elementWidth = element.clientWidth;
     if (element) {
       rect = element.getBoundingClientRect();
-      left = String(rect.x);
-      if (rect.x + 600 + elementWidth >= bWidth) {
-        left =  String((bWidth - 600 - elementWidth) - rect.x);
+      left = String(elementWidth);
+      if (rect.x + 650 + elementWidth >= bWidth) {
+        left = String((bWidth - 650) - rect.x);
         return (left + 'px');
       } else {
         left = String((elementWidth));
@@ -1931,7 +1944,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       for (let user of this.userListDisplay) {
         if (user.userType === 'supervisor') {
           this.collapsedNodes.push(user._id);
-          this.figureOrgStat(user._id, user._id);
+//          this.figureOrgStat(user._id);
         }
       }
     } else {
@@ -1947,7 +1960,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     } else {
       if (collapse) {
         this.collapsedNodes.push(uid);
-        this.figureOrgStat(uid, uid);
+        this.figureOrgStat(uid);
       } else {
         this.collapsedNodes.splice(this.collapsedNodes.indexOf(uid), 1);
       }
@@ -2363,9 +2376,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       this.currentHoverReportChain = [];
       return;
     }
-    if (!this.nodeStatHash[uid]) {
-      this.figureOrgStat(uid, uid);
-    }
+//    if (!this.nodeStatHash[uid]) {
+//      this.figureOrgStat(uid);
+//    }
     this.currentHoverUid = uid;
     this.currentHoverUser = this.myOrgUserHash[uid];
     if (this.orgChartNodeHash[uid]) {
@@ -2693,9 +2706,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.currentFilterHash[uid] = '';
     this.userIdsSelected = [];
 
-    this.figureOrgStat(uid, uid);
+    this.figureOrgStat(uid);
     for (let node of this.collapsedNodes) {
-      this.figureOrgStat(uid, node);
+      this.figureOrgStat(node);
     }
   }
 
@@ -2715,10 +2728,16 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.currentOrgSelection = '';
   }
 
+  showSupervisorMenuIcon(uid: string): boolean {
+    if (this.currentHoverUid === uid && this.myOrgUserHash[uid]?.userType === 'supervisor') {
+      return true;
+    }
+  }
+
   filterChanged(uid: string, item: string, value: string) {
     console.log('filterChanged  ', item, value);
 
-//    this.userIdsSelected = [];
+    this.userIdsSelected = [];
     
     let userSelectionObj = {
       rootUid: uid,
@@ -2727,7 +2746,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       value: value,
       userIdsSelected: []
     }
-    this.orgChartSelections.push(userSelectionObj);
+    this.orgChartSelections.push(cloneDeep(userSelectionObj));
     this.orgChartSelectionList.push(uid);
     this.userSelectionHash[uid] = cloneDeep(userSelectionObj);
     switch (item) {
@@ -2763,20 +2782,19 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         break;
       }
     }
+    /*
 
-    this.figureOrgStat(uid, uid);
+    this.figureOrgStat(uid);
     for (let node of this.collapsedNodes) {
       if (this.orgChartNodeHash[node].extra.reportChain.includes(uid)) {
-        this.figureOrgStat(uid, node);
+        this.figureOrgStat(node);
       }
     }
+    */
+    
+    this.getOrgStats(uid, item + ':' + value, []);
 
-    this.supervisorMenuHash[uid].userStatus = false;
-    this.supervisorMenuHash[uid].userTrainingStatus = false;
-    this.supervisorMenuHash[uid].jobTitle = false;
-    this.supervisorMenuHash[uid].userType = false;
-    this.supervisorMenuHash[uid].training = false;
-    this.supervisorMenuHash[uid].main = false;
+    this.hideSupervisorMenu(uid);
 
     this.centerIt(uid);
   }
@@ -2893,11 +2911,12 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.userIdsSelected = [];
 
     this.assignableTrainings = cloneDeep(this.teamTrainings);
-
+/*
     this.figureOrgStat(this.authenticatedUser._id, this.authenticatedUser._id);
     for (let node of this.collapsedNodes) {
       this.figureOrgStat(this.authenticatedUser._id, node);
     }
+    */
   }
 
   /*
@@ -2956,10 +2975,10 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
     this.addToOrgSelection
 
-    this.figureOrgStat(userId, userId);
+    this.figureOrgStat(userId);
     for (let node of this.collapsedNodes) {
       if (this.orgChartNodeHash[node].extra.reportChain.includes(userId)) {
-        this.figureOrgStat(userId, node);
+        this.figureOrgStat(node);
       }
     }
     this.orgSelected = false;
@@ -2988,10 +3007,12 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       this.rowSelected = i;
       this.userDetailIsVisible = true;
     }
+    /*
     this.figureOrgStat(this.authenticatedUser._id, this.authenticatedUser._id);
     for (let node of this.collapsedNodes) {
       this.figureOrgStat(this.authenticatedUser._id, node);
     }
+    */
     this.supervisorMenuHash[userId].main = false;
   }
 
@@ -3005,22 +3026,26 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
   */
 
+  /*
+
   buildSelectedList(userId: string) {
     this.userIdsSelected.push(userId);
     this.addDirectReportsToSelectedList(this.myOrgUserHash[userId])
 
-    this.figureOrgStat(this.authenticatedUser._id, this.authenticatedUser._id);
+    this.figureOrgStat(this.authenticatedUser._id);
     for (let node of this.collapsedNodes) {
-      this.figureOrgStat(this.authenticatedUser._id, node);
+      this.figureOrgStat(node);
     }
-
   }
+  */
+  
 
-  figureOrgStat(rootUid: string, userId: string) {
-    let nodeStatObj = this.nodeStatHash[userId];
+  figureOrgStat(uid: string) {
+    let nodeStatObj = this.nodeStatHash[uid];
     if (nodeStatObj) {
       nodeStatObj.userCnt = 0;
       nodeStatObj.selectedCnt = 0;
+      nodeStatObj.userIdsSelected = [];
       nodeStatObj.userTypeHash = {
         individualContributor: 0,
         supervisor: 0,
@@ -3052,9 +3077,37 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       }
     }
 
-    this.processDirectReports(rootUid, this.myOrgUserHash[userId], this.nodeStatHash[userId])
+    this.userIdsSelected = [];
 
+    let nodeStats = this.nodeStatHash[uid];
+    if (!nodeStats) {
+      console.log("figureOrgStat...nodeStat object bad", uid);
+      this.nodeStatHash[uid] = nodeStatObj;
+    }
+
+    this.processDirectReports(uid, this.myOrgUserHash[uid], this.nodeStatHash[uid])
   }
+
+  isUserSelected(uid: string): boolean {
+
+    console.log('isUserSelected', this.orgChartSelectMode);
+    for (let orgChartSelectionObj of this.orgChartSelections) {
+      if (orgChartSelectionObj.userIdsSelected.includes(uid)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getOrgStats(uid: string, selectProp: string, supervisorList: string[]) {
+    for (let dr of this.myOrgUserHash[uid].directReports) {
+      let drUser = this.myOrgUserHash[dr];
+      if (drUser) {
+        this.nodeStatHash[uid].userCnt++;
+      }
+    }
+  }
+
 
   processDirectReports(rootUid:string, user: UserModel, nodeStat: NodeStat) {
     if (!user || !nodeStat) {
@@ -3071,50 +3124,76 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       nodeStat.userTypeHash[drUser.userType] += 1;
 
       if (this.currentFilterHash[rootUid] === 'JobTitle:' + drUser.jobTitle) {
-        this.userSelectionHash[rootUid].userIdsSelected.push(dr);
-//        this.userIdsSelected.push(dr);
-        nodeStat.selectedCnt++;
-      }
-
-      if (this.currentFilterHash[rootUid] === 'UserType:' + drUser.userType) {
-        this.userSelectionHash[rootUid].userIdsSelected.push(dr);
-//        this.userIdsSelected.push(dr);
-        nodeStat.selectedCnt++;
-      }
-
-      if (this.currentFilterHash[rootUid] === 'UserStatus:' + drUser.userStatus) {
-        this.userSelectionHash[rootUid].userIdsSelected.push(dr);
-//        this.userIdsSelected.push(dr);
-        nodeStat.selectedCnt++;
-      }
-
-      if (this.currentFilterHash[rootUid] === 'UserTrainingStatus:' + drUser.trainingStatus) {
-        this.userSelectionHash[rootUid].userIdsSelected.push(dr);
-//        this.userIdsSelected.push(dr);
-        nodeStat.selectedCnt++;
-      }
-
-      if (this.currentFilterHash[rootUid] && this.currentFilterHash[rootUid].startsWith('Training')) {
-        let utList = this.uidUTHash[dr];
-        let trainingSelected = this.currentFilterHash[rootUid].split(':')[1];
-        console.log("processDirectReports ", trainingSelected);
-        if (utList && utList.length > 0) {
-          for (let ut of utList) {
-            if (ut.tid === trainingSelected) {
-              this.userSelectionHash[rootUid].userIdsSelected.push(dr);
-//              this.userIdsSelected.push(dr);
-              nodeStat.selectedCnt++;
-              nodeStat.trainingHash[ut.status] += 1;
-            }
-          }
+        if (this.userSelectionHash[rootUid]) {
+          this.userSelectionHash[rootUid].userIdsSelected.push(dr);
+          this.userIdsSelected.push(dr);
+          nodeStat.selectedCnt++;
+        } else {
+          console.log("processDirectReports...userSelectionHash is undefined");
         }
       }
 
+      if (this.currentFilterHash[rootUid] === 'UserType:' + drUser.userType) {
+        if (this.userSelectionHash[rootUid]) {
+          this.userSelectionHash[rootUid].userIdsSelected.push(dr);
+          this.userIdsSelected.push(dr);
+          nodeStat.selectedCnt++;
+        } else {
+          console.log("processDirectReports...userSelectionHash is undefined");
+        }
+      }
+
+      if (this.currentFilterHash[rootUid] === 'UserStatus:' + drUser.userStatus) {
+        if (this.userSelectionHash[rootUid]) {
+          this.userSelectionHash[rootUid].userIdsSelected.push(dr);
+          this.userIdsSelected.push(dr);
+          nodeStat.selectedCnt++;
+        } else {
+          console.log("processDirectReports...userSelectionHash is undefined");
+        }
+      }
+
+      if (this.currentFilterHash[rootUid] === 'UserTrainingStatus:' + drUser.trainingStatus) {
+        if (this.userSelectionHash[rootUid]) {
+          this.userSelectionHash[rootUid].userIdsSelected.push(dr);
+          this.userIdsSelected.push(dr);
+          nodeStat.selectedCnt++;
+        } else {
+          console.log("processDirectReports...userSelectionHash is undefined");
+        }
+      }
+
+      if (this.currentFilterHash[rootUid] && this.currentFilterHash[rootUid].startsWith('Training')) {
+        if (this.userSelectionHash[rootUid]) {
+          let utList = this.uidUTHash[dr];
+          let trainingSelected = this.currentFilterHash[rootUid].split(':')[1];
+          console.log("processDirectReports ", trainingSelected);
+          if (utList && utList.length > 0) {
+            for (let ut of utList) {
+              if (ut.tid === trainingSelected) {
+                this.userSelectionHash[rootUid].userIdsSelected.push(dr);
+                this.userIdsSelected.push(dr);
+                nodeStat.selectedCnt++;
+                nodeStat.trainingHash[ut.status] += 1;
+              }
+            }
+          }
+        } else {
+          console.log("processDirectReports...userSelectionHash is undefined");
+        }
+      }
+
+      /*
       if (this.orgSelected) {
         this.userSelectionHash[rootUid].userIdsSelected.push(dr);
 //        this.userIdsSelected.push(dr);
         nodeStat.selectedCnt++;
       }
+      */
+      
+      
+//      this.userSelectionHash[rootUid].userIdsSelected.push(dr);
+//      this.userIdsSelected.push(dr);
 
       if (drUser.directReports.length > 0) {
         this.processDirectReports(rootUid, drUser, nodeStat);
@@ -3175,6 +3254,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   editUser(uid) {
+    this.hideSupervisorMenu(uid);
     this.selectUser(uid, -1);
     this.userPanelVisible = true;
   }
@@ -3265,9 +3345,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.userService.setUsersStatusUpToDate(upToDateUIDs);
     this.userTrainingService.bulkDeleteTraining(this.userIdsSelected, this.currentTrainingSelected);
     //    this.userTrainingService.deleteUTForTid(this.currentTrainingSelected);
-    this.figureOrgStat(this.authenticatedUser._id, this.authenticatedUser._id);
+    this.figureOrgStat(this.authenticatedUser._id);
     for (let node of this.collapsedNodes) {
-      this.figureOrgStat(this.authenticatedUser._id, node);
+      this.figureOrgStat(node);
     }
 
     this.currentTrainingSelected = null;
@@ -3304,9 +3384,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         }
       }
     }
-    this.figureOrgStat(this.authenticatedUser._id, this.authenticatedUser._id);
+    this.figureOrgStat(this.authenticatedUser._id);
     for (let node of this.collapsedNodes) {
-      this.figureOrgStat(this.authenticatedUser._id, node);
+      this.figureOrgStat(node);
     }
     this.showUserTrainingModal = false;
     this.selectedTrainingId = null;
