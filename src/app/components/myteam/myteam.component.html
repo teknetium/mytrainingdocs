@@ -436,7 +436,7 @@
                     <div style="clear:both;"></div>
                 </div>
                 <div style="float:right;width:33%;">
-                    <div style="float:right;width:25vw;">
+                    <div style="float:right;width:25vw;z-index: 1;">
                         <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" class="user-search">
                             <input type="text" nz-input placeholder="User Search" [(ngModel)]="userNameToSearchFor"
                                 (ngModelChange)="onUserSearchChange($event)" [nzAutocomplete]="autoUserSearch"
@@ -444,7 +444,7 @@
                         </nz-input-group>
                         <nz-autocomplete [nzDataSource]="matchingUsers" #autoUserSearch></nz-autocomplete>
                         <ng-template #suffixIconButton>
-                            <button nz-button nzType="primary" nzSearch style="z-index: 1000;height:41px;"><i nz-icon
+                            <button nz-button nzType="primary" nzSearch style="height:41px;"><i nz-icon
                                     nzType="search"></i></button>
                         </ng-template>
                     </div>
@@ -1085,13 +1085,6 @@
                                         <i class="fas fa-fw fa-user-edit" style="font-size:14px;margin-right:10px;"></i>
                                         Edit User Data
                                     </li>
-                                    <!--
-                                                                                                    <li (click)="expandOrg(authenticatedUser._id)" class="supervisor-menu-item">
-                                                                                                        Expand Organization</li>
-                                                                                                    <li (click)="collapseOrg(authenticatedUser._id)" class="supervisor-menu-item">
-                                                                                                        Collapse Organization</li>
-                                                                                                        -->
-
                                     <li>
                                         <div
                                             style="font-size:14px;border-bottom:1px solid #ddd;margin-top:20px;color:blue;text-align: center;">
@@ -1223,8 +1216,7 @@
                                             </div>
                                         </div>
                                     </li>
-                                    <li (click)="selectOrg(authenticatedUser._id)" class="supervisor-menu-item"
-                                        style="">
+                                    <li (click)="selectOrg(authenticatedUser._id)" class="supervisor-menu-item">
                                         <i class="fas fa-fw fa-users" style="font-size:14px;margin-right:10px;"></i>
                                         Select Entire Suborganization
                                     </li>
@@ -1244,7 +1236,7 @@
                                 joyrideStep="task1Step2" [stepContent]="stepContent"
                                 [stepContentParams]="taskStepContentHash?.task1Step2"
                                 (next)="onTaskWizardNext('task1Step2')"
-                                [ngClass]="{'selected-node': (orgChartSelectMode === 'Individual' && userIdSelected === authenticatedUser._id) || (userIdsSelected.includes(authenticatedUser._id)), 'hover-node': authenticatedUser._id === currentHoverUid  || currentHoverReportChain.includes(authenticatedUser._id), 'non-supervisor-icon-node': myOrgUserHash[authenticatedUser._id]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[authenticatedUser._id]?.userType === 'supervisor'}">
+                                [ngClass]="{'selected-node': (userIdsSelected.includes(authenticatedUser._id)), 'hover-node': authenticatedUser._id === currentHoverUid  || currentHoverReportChain.includes(authenticatedUser._id), 'non-supervisor-icon-node': myOrgUserHash[authenticatedUser._id]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[authenticatedUser._id]?.userType === 'supervisor'}">
                                 <div *ngIf="authenticatedUser._id === currentHoverUid && authenticatedUser.userType === 'supervisor'"
                                     class="supervisor-menu-icon" (click)="showSupervisorMenu(authenticatedUser._id)">
                                     <i class="far fa-fw fa-ellipsis-v"></i>
@@ -1568,13 +1560,13 @@
                                                                 Collapse Organization</li>
                                                                 -->
 
-                                                <li>
+                                                <li *ngIf="myOrgUserHash[dr]?.userType === 'supervisor'">
                                                     <div
                                                         style="font-size:14px;border-bottom:1px solid #ddd;margin-top:20px;color:blue;text-align: center;">
                                                         Select Users in this suborganization by
                                                     </div>
                                                 </li>
-                                                <li class="supervisor-menu-item" style="position:relative;"
+                                                <li *ngIf="myOrgUserHash[dr]?.userType === 'supervisor'" class="supervisor-menu-item" style="position:relative;"
                                                     (mouseover)="showSupervisorSubMenu(dr, 'userStatus')"
                                                     (mouseleave)="hideSupervisorSubMenu(dr, 'userStatus')">
                                                     <i class="fas fa-fw fa-user-check"
@@ -1600,7 +1592,7 @@
                                                         </div>
                                                     </div>
                                                 </li>
-                                                <li class="supervisor-menu-item" style="position:relative;"
+                                                <li *ngIf="myOrgUserHash[dr]?.userType === 'supervisor'" class="supervisor-menu-item" style="position:relative;"
                                                     (mouseover)="showSupervisorSubMenu(dr, 'userTrainingStatus')"
                                                     (mouseleave)="hideSupervisorSubMenu(dr, 'userTrainingStatus')">
                                                     <i class="fas fa-fw fa-user-graduate"
@@ -1626,7 +1618,7 @@
                                                         </div>
                                                     </div>
                                                 </li>
-                                                <li class="supervisor-menu-item" style="position:relative;"
+                                                <li *ngIf="myOrgUserHash[dr]?.userType === 'supervisor'" class="supervisor-menu-item" style="position:relative;"
                                                     (mouseover)="showSupervisorSubMenu(dr, 'jobTitle')"
                                                     (mouseleave)="hideSupervisorSubMenu(dr, 'jobTitle')">
                                                     <i class="fas fa-fw fa-briefcase"
@@ -1648,7 +1640,7 @@
                                                         </div>
                                                     </div>
                                                 </li>
-                                                <li class="supervisor-menu-item" style="position:relative;"
+                                                <li *ngIf="myOrgUserHash[dr]?.userType === 'supervisor'" class="supervisor-menu-item" style="position:relative;"
                                                     (mouseover)="showSupervisorSubMenu(dr, 'userType')"
                                                     (mouseleave)="hideSupervisorSubMenu(dr, 'userType')">
                                                     <i class="fas fa-fw fa-user-cowboy"
@@ -1673,7 +1665,7 @@
                                                         </div>
                                                     </div>
                                                 </li>
-                                                <li class="supervisor-menu-item" style="position:relative;"
+                                                <li *ngIf="myOrgUserHash[dr]?.userType === 'supervisor'" class="supervisor-menu-item" style="position:relative;"
                                                     (mouseover)="showSupervisorSubMenu(dr, 'training')"
                                                     (mouseleave)="hideSupervisorSubMenu(dr, 'training')">
                                                     <i class="fas fa-fw fa-graduation-cap"
@@ -1700,7 +1692,7 @@
                                                         </div>
                                                     </div>
                                                 </li>
-                                                <li (click)="selectOrg(dr)" class="supervisor-menu-item" style="">
+                                                <li *ngIf="myOrgUserHash[dr]?.userType === 'supervisor'" (click)="selectOrg(dr)" class="supervisor-menu-item">
                                                     <i class="fas fa-fw fa-users"
                                                         style="font-size:14px;margin-right:10px;"></i>
                                                     Select Entire Suborganization
@@ -1717,17 +1709,16 @@
                                             </ul>
                                         </div>
                                         <div (mouseenter)="setHoverData(dr)" (mouseleave)="setHoverData(null)"
-                                            [ngClass]="{'selected-node': (userIdSelected === dr) || (userIdsSelected.includes(dr)), 'hover-node': userIdSelected !== dr && allActive || dr === currentHoverUid ||
+                                            [ngClass]="{'selected-node': userIdsSelected.includes(dr), 'hover-node': dr === currentHoverUid ||
                                         orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr), 'non-supervisor-icon-node': myOrgUserHash[dr]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr]?.userType === 'supervisor'}">
 
-                                            <div *ngIf="dr === currentHoverUid && myOrgUserHash[dr]?.userType === 'supervisor'"
+                                            <div *ngIf="dr === currentHoverUid"
                                                 class="supervisor-menu-icon" (click)="showSupervisorMenu(dr)">
                                                 <i class="far fa-fw fa-ellipsis-v"></i>
                                             </div>
                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
                                                 [ngStyle]="{'color': getStatusColor(dr)}"></i>
                                             <span
-                                                *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || includeFullName"
                                                 [ngStyle]="{'font-size.px': textFontSize}"
                                                 style="z-index:1000000;display: block;color:#666666;">
                                                 {{orgChartNodeHash[dr]?.fName}}<br>{{orgChartNodeHash[dr]?.lName}}
@@ -2043,20 +2034,13 @@
                                                                     style="font-size:14px;margin-right:10px;"></i>
                                                                 Edit User Data
                                                             </li>
-                                                            <!--
-                                                                                                    <li (click)="expandOrg(dr2)" class="supervisor-menu-item">
-                                                                                                        Expand Organization</li>
-                                                                                                    <li (click)="collapseOrg(dr2)" class="supervisor-menu-item">
-                                                                                                        Collapse Organization</li>
-                                                                                                        -->
-
-                                                            <li>
+                                                            <li *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor'">
                                                                 <div
                                                                     style="font-size:14px;border-bottom:1px solid #ddd;margin-top:20px;color:blue;text-align: center;">
                                                                     Select Users in this suborganization by
                                                                 </div>
                                                             </li>
-                                                            <li class="supervisor-menu-item" style="position:relative;"
+                                                            <li *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor'" class="supervisor-menu-item" style="position:relative;"
                                                                 (mouseover)="showSupervisorSubMenu(dr2, 'userStatus')"
                                                                 (mouseleave)="hideSupervisorSubMenu(dr2, 'userStatus')">
                                                                 <i class="fas fa-fw fa-user-check"
@@ -2083,7 +2067,7 @@
                                                                     </div>
                                                                 </div>
                                                             </li>
-                                                            <li class="supervisor-menu-item" style="position:relative;"
+                                                            <li *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor'" class="supervisor-menu-item" style="position:relative;"
                                                                 (mouseover)="showSupervisorSubMenu(dr2, 'userTrainingStatus')"
                                                                 (mouseleave)="hideSupervisorSubMenu(dr2, 'userTrainingStatus')">
                                                                 <i class="fas fa-fw fa-user-graduate"
@@ -2111,7 +2095,7 @@
                                                                     </div>
                                                                 </div>
                                                             </li>
-                                                            <li class="supervisor-menu-item" style="position:relative;"
+                                                            <li *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor'" class="supervisor-menu-item" style="position:relative;"
                                                                 (mouseover)="showSupervisorSubMenu(dr2, 'jobTitle')"
                                                                 (mouseleave)="hideSupervisorSubMenu(dr2, 'jobTitle')">
                                                                 <i class="fas fa-fw fa-briefcase"
@@ -2135,7 +2119,7 @@
                                                                     </div>
                                                                 </div>
                                                             </li>
-                                                            <li class="supervisor-menu-item" style="position:relative;"
+                                                            <li *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor'" class="supervisor-menu-item" style="position:relative;"
                                                                 (mouseover)="showSupervisorSubMenu(dr2, 'userType')"
                                                                 (mouseleave)="hideSupervisorSubMenu(dr2, 'userType')">
                                                                 <i class="fas fa-fw fa-user-cowboy"
@@ -2163,7 +2147,7 @@
                                                                     </div>
                                                                 </div>
                                                             </li>
-                                                            <li class="supervisor-menu-item" style="position:relative;"
+                                                            <li *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor'" class="supervisor-menu-item" style="position:relative;"
                                                                 (mouseover)="showSupervisorSubMenu(dr2, 'training')"
                                                                 (mouseleave)="hideSupervisorSubMenu(dr2, 'training')">
                                                                 <i class="fas fa-fw fa-graduation-cap"
@@ -2191,8 +2175,7 @@
                                                                     </div>
                                                                 </div>
                                                             </li>
-                                                            <li (click)="selectOrg(dr2)" class="supervisor-menu-item"
-                                                                style="">
+                                                            <li *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor'" (click)="selectOrg(dr2)" class="supervisor-menu-item">
                                                                 <i class="fas fa-fw fa-users"
                                                                     style="font-size:14px;margin-right:10px;"></i>
                                                                 Select Entire Suborganization
@@ -2211,9 +2194,9 @@
 
                                                     <div (mouseenter)="setHoverData(dr2)"
                                                         (mouseleave)="setHoverData(null)"
-                                                        [ngClass]="{'selected-node': (userIdSelected === dr2) || (userIdsSelected.includes(dr2)) , 'hover-node': userIdSelected !== dr2 && allActive || dr2 === currentHoverUid ||
+                                                        [ngClass]="{'selected-node': userIdsSelected.includes(dr2) , 'hover-node': dr2 === currentHoverUid ||
                                                     orgChartNodeHash[dr2]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2), 'non-supervisor-icon-node': myOrgUserHash[dr2]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr2]?.userType === 'supervisor'}">
-                                                        <div *ngIf="dr2 === currentHoverUid && myOrgUserHash[dr2]?.userType === 'supervisor'"
+                                                        <div *ngIf="dr2 === currentHoverUid"
                                                             class="supervisor-menu-icon"
                                                             (click)="showSupervisorMenu(dr2)">
                                                             <i class="far fa-fw fa-ellipsis-v"></i>
@@ -2221,7 +2204,6 @@
                                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr2]?.userType]"
                                                             [ngStyle]="{'color': getStatusColor(dr2)}"></i>
                                                         <span
-                                                            *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor' || includeFullName"
                                                             [ngStyle]="{'font-size.px': textFontSize}"
                                                             style="display: block;color:#666666;">
                                                             {{orgChartNodeHash[dr2]?.fName}}<br>{{orgChartNodeHash[dr2]?.lName}}
@@ -2445,11 +2427,6 @@
                                                                         {{nodeStatHash[dr2]?.selectedCnt}}
                                                                     </div>
                                                                 </div>
-                                                                <!--
-                                                            <div
-                                                                style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
-                                                                User Status</div>
-                                                                -->
                                                                 <div nz-tooltip nzTooltipTitle="Active"
                                                                     nzTooltipPlacement="right"
                                                                     style="display:flex;justify-content:space-between;margin-bottom:5px;"
@@ -2558,20 +2535,13 @@
                                                                                 style="font-size:14px;margin-right:10px;"></i>
                                                                             Edit User Data
                                                                         </li>
-                                                                        <!--
-                                                                                                    <li (click)="expandOrg(dr3)" class="supervisor-menu-item">
-                                                                                                        Expand Organization</li>
-                                                                                                    <li (click)="collapseOrg(dr3)" class="supervisor-menu-item">
-                                                                                                        Collapse Organization</li>
-                                                                                                        -->
-
-                                                                        <li>
+                                                                        <li *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor'">
                                                                             <div
                                                                                 style="font-size:14px;border-bottom:1px solid #ddd;margin-top:20px;color:blue;text-align: center;">
                                                                                 Select Users in this suborganization by
                                                                             </div>
                                                                         </li>
-                                                                        <li class="supervisor-menu-item"
+                                                                        <li *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                             style="position:relative;"
                                                                             (mouseover)="showSupervisorSubMenu(dr3, 'userStatus')"
                                                                             (mouseleave)="hideSupervisorSubMenu(dr3, 'userStatus')">
@@ -2599,7 +2569,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </li>
-                                                                        <li class="supervisor-menu-item"
+                                                                        <li *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                             style="position:relative;"
                                                                             (mouseover)="showSupervisorSubMenu(dr3, 'userTrainingStatus')"
                                                                             (mouseleave)="hideSupervisorSubMenu(dr3, 'userTrainingStatus')">
@@ -2629,7 +2599,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </li>
-                                                                        <li class="supervisor-menu-item"
+                                                                        <li *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                             style="position:relative;"
                                                                             (mouseover)="showSupervisorSubMenu(dr3, 'jobTitle')"
                                                                             (mouseleave)="hideSupervisorSubMenu(dr3, 'jobTitle')">
@@ -2654,7 +2624,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </li>
-                                                                        <li class="supervisor-menu-item"
+                                                                        <li *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                             style="position:relative;"
                                                                             (mouseover)="showSupervisorSubMenu(dr3, 'userType')"
                                                                             (mouseleave)="hideSupervisorSubMenu(dr3, 'userType')">
@@ -2683,7 +2653,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </li>
-                                                                        <li class="supervisor-menu-item"
+                                                                        <li *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                             style="position:relative;"
                                                                             (mouseover)="showSupervisorSubMenu(dr3, 'training')"
                                                                             (mouseleave)="hideSupervisorSubMenu(dr3, 'training')">
@@ -2712,8 +2682,8 @@
                                                                                 </div>
                                                                             </div>
                                                                         </li>
-                                                                        <li (click)="selectOrg(dr3)"
-                                                                            class="supervisor-menu-item" style="">
+                                                                        <li *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor'" (click)="selectOrg(dr3)"
+                                                                            class="supervisor-menu-item">
                                                                             <i class="fas fa-fw fa-users"
                                                                                 style="font-size:14px;margin-right:10px;"></i>
                                                                             Select Entire Suborganization
@@ -2730,13 +2700,11 @@
                                                                         </li>
                                                                     </ul>
                                                                 </div>
-
-
                                                                 <div (mouseenter)="setHoverData(dr3)"
                                                                     (mouseleave)="setHoverData(null)"
-                                                                    [ngClass]="{'selected-node': (userIdSelected === dr3) || (userIdsSelected.includes(dr3)), 'hover-node': userIdSelected !== dr3 && allActive || dr3 === currentHoverUid ||
+                                                                    [ngClass]="{'selected-node': userIdsSelected.includes(dr3), 'hover-node': dr3 === currentHoverUid ||
                                                                 orgChartNodeHash[dr3]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr3), 'non-supervisor-icon-node': myOrgUserHash[dr3]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr3]?.userType === 'supervisor'}">
-                                                                    <div *ngIf="dr3 === currentHoverUid && myOrgUserHash[dr3]?.userType === 'supervisor'"
+                                                                    <div *ngIf="dr3 === currentHoverUid"
                                                                         class="supervisor-menu-icon"
                                                                         (click)="showSupervisorMenu(dr3)">
                                                                         <i class="far fa-fw fa-ellipsis-v"></i>
@@ -2744,7 +2712,6 @@
                                                                     <i [ngClass]="userTypeIconHash[myOrgUserHash[dr3]?.userType]"
                                                                         [ngStyle]="{'color': getStatusColor(dr3)}"></i>
                                                                     <span
-                                                                        *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor' || includeFullName"
                                                                         style="display: block;color:#666666;"
                                                                         [ngStyle]="{'font-size.px': textFontSize}">
                                                                         {{orgChartNodeHash[dr3]?.fName}}<br>{{orgChartNodeHash[dr3]?.lName}}
@@ -3104,21 +3071,14 @@
                                                                                             style="font-size:14px;margin-right:10px;"></i>
                                                                                         Edit User Data
                                                                                     </li>
-                                                                                    <!--
-                                                                                                    <li (click)="expandOrg(dr4)" class="supervisor-menu-item">
-                                                                                                        Expand Organization</li>
-                                                                                                    <li (click)="collapseOrg(dr4)" class="supervisor-menu-item">
-                                                                                                        Collapse Organization</li>
-                                                                                                        -->
-
-                                                                                    <li>
+                                                                                    <li *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor'">
                                                                                         <div
                                                                                             style="font-size:14px;border-bottom:1px solid #ddd;margin-top:20px;color:blue;text-align: center;">
                                                                                             Select Users in this
                                                                                             suborganization by
                                                                                         </div>
                                                                                     </li>
-                                                                                    <li class="supervisor-menu-item"
+                                                                                    <li *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                         style="position:relative;"
                                                                                         (mouseover)="showSupervisorSubMenu(dr4, 'userStatus')"
                                                                                         (mouseleave)="hideSupervisorSubMenu(dr4, 'userStatus')">
@@ -3149,7 +3109,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </li>
-                                                                                    <li class="supervisor-menu-item"
+                                                                                    <li *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                         style="position:relative;"
                                                                                         (mouseover)="showSupervisorSubMenu(dr4, 'userTrainingStatus')"
                                                                                         (mouseleave)="hideSupervisorSubMenu(dr4, 'userTrainingStatus')">
@@ -3181,7 +3141,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </li>
-                                                                                    <li class="supervisor-menu-item"
+                                                                                    <li *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                         style="position:relative;"
                                                                                         (mouseover)="showSupervisorSubMenu(dr4, 'jobTitle')"
                                                                                         (mouseleave)="hideSupervisorSubMenu(dr4, 'jobTitle')">
@@ -3209,7 +3169,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </li>
-                                                                                    <li class="supervisor-menu-item"
+                                                                                    <li *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                         style="position:relative;"
                                                                                         (mouseover)="showSupervisorSubMenu(dr4, 'userType')"
                                                                                         (mouseleave)="hideSupervisorSubMenu(dr4, 'userType')">
@@ -3241,7 +3201,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </li>
-                                                                                    <li class="supervisor-menu-item"
+                                                                                    <li *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                         style="position:relative;"
                                                                                         (mouseover)="showSupervisorSubMenu(dr4, 'training')"
                                                                                         (mouseleave)="hideSupervisorSubMenu(dr4, 'training')">
@@ -3273,9 +3233,8 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </li>
-                                                                                    <li (click)="selectOrg(dr4)"
-                                                                                        class="supervisor-menu-item"
-                                                                                        style="">
+                                                                                    <li *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor'" (click)="selectOrg(dr4)"
+                                                                                        class="supervisor-menu-item">
                                                                                         <i class="fas fa-fw fa-users"
                                                                                             style="font-size:14px;margin-right:10px;"></i>
                                                                                         Select Entire Suborganization
@@ -3292,13 +3251,11 @@
                                                                                     </li>
                                                                                 </ul>
                                                                             </div>
-
-
                                                                             <div (mouseenter)="setHoverData(dr4)"
                                                                                 (mouseleave)="setHoverData(null)"
-                                                                                [ngClass]="{'selected-node': (userIdSelected === dr4) || (userIdsSelected.includes(dr4)), 'hover-node': userIdSelected !== dr4 && allActive || dr4 === currentHoverUid ||
+                                                                                [ngClass]="{'selected-node': userIdsSelected.includes(dr4), 'hover-node': dr4 === currentHoverUid ||
                                                                             orgChartNodeHash[dr4]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr4), 'non-supervisor-icon-node': myOrgUserHash[dr4]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr4]?.userType === 'supervisor'}">
-                                                                                <div *ngIf="dr4 === currentHoverUid && myOrgUserHash[dr4]?.userType === 'supervisor'"
+                                                                                <div *ngIf="dr4 === currentHoverUid"
                                                                                     class="supervisor-menu-icon"
                                                                                     (click)="showSupervisorMenu(dr4)">
                                                                                     <i
@@ -3307,7 +3264,6 @@
                                                                                 <i [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
                                                                                     [ngStyle]="{'color': getStatusColor(dr4)}"></i>
                                                                                 <span
-                                                                                    *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor' || includeFullName"
                                                                                     style="display: block;color:#666666;"
                                                                                     [ngStyle]="{'font-size.px': textFontSize}">
                                                                                     {{orgChartNodeHash[dr4]?.fName}}<br>{{orgChartNodeHash[dr4]?.lName}}
@@ -3465,7 +3421,6 @@
                                                                                                 }}
                                                                                             </div>
                                                                                         </div>
-
                                                                                     </div>
                                                                                     <div *ngIf="displayMode[dr4] === 'UserType'"
                                                                                         style="padding:5px;">
@@ -3691,14 +3646,7 @@
                                                                                                         style="font-size:14px;margin-right:10px;"></i>
                                                                                                     Edit User Data
                                                                                                 </li>
-                                                                                                <!--
-                                                                                                    <li (click)="expandOrg(dr5)" class="supervisor-menu-item">
-                                                                                                        Expand Organization</li>
-                                                                                                    <li (click)="collapseOrg(dr5)" class="supervisor-menu-item">
-                                                                                                        Collapse Organization</li>
-                                                                                                        -->
-
-                                                                                                <li>
+                                                                                                <li *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor'">
                                                                                                     <div
                                                                                                         style="font-size:14px;border-bottom:1px solid #ddd;margin-top:20px;color:blue;text-align: center;">
                                                                                                         Select Users in
@@ -3707,7 +3655,7 @@
                                                                                                         by
                                                                                                     </div>
                                                                                                 </li>
-                                                                                                <li class="supervisor-menu-item"
+                                                                                                <li *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                     style="position:relative;"
                                                                                                     (mouseover)="showSupervisorSubMenu(dr5, 'userStatus')"
                                                                                                     (mouseleave)="hideSupervisorSubMenu(dr5, 'userStatus')">
@@ -3741,7 +3689,7 @@
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </li>
-                                                                                                <li class="supervisor-menu-item"
+                                                                                                <li *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                     style="position:relative;"
                                                                                                     (mouseover)="showSupervisorSubMenu(dr5, 'userTrainingStatus')"
                                                                                                     (mouseleave)="hideSupervisorSubMenu(dr5, 'userTrainingStatus')">
@@ -3777,7 +3725,7 @@
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </li>
-                                                                                                <li class="supervisor-menu-item"
+                                                                                                <li *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                     style="position:relative;"
                                                                                                     (mouseover)="showSupervisorSubMenu(dr5, 'jobTitle')"
                                                                                                     (mouseleave)="hideSupervisorSubMenu(dr5, 'jobTitle')">
@@ -3808,7 +3756,7 @@
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </li>
-                                                                                                <li class="supervisor-menu-item"
+                                                                                                <li *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                     style="position:relative;"
                                                                                                     (mouseover)="showSupervisorSubMenu(dr5, 'userType')"
                                                                                                     (mouseleave)="hideSupervisorSubMenu(dr5, 'userType')">
@@ -3843,7 +3791,7 @@
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </li>
-                                                                                                <li class="supervisor-menu-item"
+                                                                                                <li *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                     style="position:relative;"
                                                                                                     (mouseover)="showSupervisorSubMenu(dr5, 'training')"
                                                                                                     (mouseleave)="hideSupervisorSubMenu(dr5, 'training')">
@@ -3877,9 +3825,8 @@
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </li>
-                                                                                                <li (click)="selectOrg(dr5)"
-                                                                                                    class="supervisor-menu-item"
-                                                                                                    style="">
+                                                                                                <li *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor'" (click)="selectOrg(dr5)"
+                                                                                                    class="supervisor-menu-item">
                                                                                                     <i class="fas fa-fw fa-users"
                                                                                                         style="font-size:14px;margin-right:10px;"></i>
                                                                                                     Select Entire
@@ -3897,14 +3844,12 @@
                                                                                                 </li>
                                                                                             </ul>
                                                                                         </div>
-
-
                                                                                         <div (mouseenter)="setHoverData(dr5)"
                                                                                             id="{{dr5}}"
                                                                                             (mouseleave)="setHoverData(null)"
-                                                                                            [ngClass]="{'selected-node': (userIdSelected === dr5) || (userIdsSelected.includes(dr5)), 'hover-node': userIdSelected !== dr5 && allActive || dr5 === currentHoverUid ||
+                                                                                            [ngClass]="{'selected-node': userIdsSelected.includes(dr5), 'hover-node': dr5 === currentHoverUid ||
                                                                                         orgChartNodeHash[dr5]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr5), 'non-supervisor-icon-node': myOrgUserHash[dr5]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr5]?.userType === 'supervisor'}">
-                                                                                            <div *ngIf="dr5 === currentHoverUid && myOrgUserHash[dr5]?.userType === 'supervisor'"
+                                                                                            <div *ngIf="dr5 === currentHoverUid"
                                                                                                 class="supervisor-menu-icon"
                                                                                                 (click)="showSupervisorMenu(dr5)">
                                                                                                 <i
@@ -3913,7 +3858,6 @@
                                                                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr5].userType]"
                                                                                                 [ngStyle]="{'color': getStatusColor(dr5)}"></i>
                                                                                             <span
-                                                                                                *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor' || includeFullName"
                                                                                                 style="display: block;color:#666666;"
                                                                                                 [ngStyle]="{'font-size.px': textFontSize}">
                                                                                                 {{orgChartNodeHash[dr5]?.fName}}<br>{{orgChartNodeHash[dr5]?.lName}}
@@ -4068,7 +4012,6 @@
                                                                                                             }}
                                                                                                         </div>
                                                                                                     </div>
-
                                                                                                 </div>
                                                                                                 <div *ngIf="displayMode[dr5] === 'UserType'"
                                                                                                     style="padding:5px;">
@@ -4165,11 +4108,6 @@
                                                                                                             {{nodeStatHash[dr5]?.selectedCnt}}
                                                                                                         </div>
                                                                                                     </div>
-                                                                                                    <!--
-                                                                                                <div
-                                                                                                    style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
-                                                                                                    User Status</div>
-                                                                                                    -->
                                                                                                     <div nz-tooltip
                                                                                                         nzTooltipTitle="Active"
                                                                                                         nzTooltipPlacement="right"
@@ -4298,14 +4236,7 @@
                                                                                                                 User
                                                                                                                 Data
                                                                                                             </li>
-                                                                                                            <!--
-                                                                                                    <li (click)="expandOrg(dr6)" class="supervisor-menu-item">
-                                                                                                        Expand Organization</li>
-                                                                                                    <li (click)="collapseOrg(dr6)" class="supervisor-menu-item">
-                                                                                                        Collapse Organization</li>
-                                                                                                        -->
-
-                                                                                                            <li>
+                                                                                                            <li *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor'">
                                                                                                                 <div
                                                                                                                     style="font-size:14px;border-bottom:1px solid #ddd;margin-top:20px;color:blue;text-align: center;">
                                                                                                                     Select
@@ -4316,7 +4247,7 @@
                                                                                                                     by
                                                                                                                 </div>
                                                                                                             </li>
-                                                                                                            <li class="supervisor-menu-item"
+                                                                                                            <li *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                                 style="position:relative;"
                                                                                                                 (mouseover)="showSupervisorSubMenu(dr6, 'userStatus')"
                                                                                                                 (mouseleave)="hideSupervisorSubMenu(dr6, 'userStatus')">
@@ -4350,7 +4281,7 @@
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </li>
-                                                                                                            <li class="supervisor-menu-item"
+                                                                                                            <li *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                                 style="position:relative;"
                                                                                                                 (mouseover)="showSupervisorSubMenu(dr6, 'userTrainingStatus')"
                                                                                                                 (mouseleave)="hideSupervisorSubMenu(dr6, 'userTrainingStatus')">
@@ -4386,7 +4317,7 @@
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </li>
-                                                                                                            <li class="supervisor-menu-item"
+                                                                                                            <li *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                                 style="position:relative;"
                                                                                                                 (mouseover)="showSupervisorSubMenu(dr6, 'jobTitle')"
                                                                                                                 (mouseleave)="hideSupervisorSubMenu(dr6, 'jobTitle')">
@@ -4417,7 +4348,7 @@
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </li>
-                                                                                                            <li class="supervisor-menu-item"
+                                                                                                            <li *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                                 style="position:relative;"
                                                                                                                 (mouseover)="showSupervisorSubMenu(dr6, 'userType')"
                                                                                                                 (mouseleave)="hideSupervisorSubMenu(dr6, 'userType')">
@@ -4452,7 +4383,7 @@
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </li>
-                                                                                                            <li class="supervisor-menu-item"
+                                                                                                            <li *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                                 style="position:relative;"
                                                                                                                 (mouseover)="showSupervisorSubMenu(dr6, 'training')"
                                                                                                                 (mouseleave)="hideSupervisorSubMenu(dr6, 'training')">
@@ -4486,9 +4417,8 @@
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </li>
-                                                                                                            <li (click)="selectOrg(dr6)"
-                                                                                                                class="supervisor-menu-item"
-                                                                                                                style="">
+                                                                                                            <li *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor'" (click)="selectOrg(dr6)"
+                                                                                                                class="supervisor-menu-item">
                                                                                                                 <i class="fas fa-fw fa-users"
                                                                                                                     style="font-size:14px;margin-right:10px;"></i>
                                                                                                                 Select
@@ -4508,14 +4438,12 @@
                                                                                                             </li>
                                                                                                         </ul>
                                                                                                     </div>
-
-
                                                                                                     <div id="{{dr6}}"
                                                                                                         (mouseenter)="setHoverData(dr6)"
                                                                                                         (mouseleave)="setHoverData(null)"
-                                                                                                        [ngClass]="{'selected-node': (userIdSelected === dr6) || (userIdsSelected.includes(dr6)), 'hover-node': userIdSelected !== dr6 && allActive || dr6 === currentHoverUid ||
+                                                                                                        [ngClass]="{'selected-node': userIdsSelected.includes(dr6), 'hover-node': dr6 === currentHoverUid ||
                                                                                                     orgChartNodeHash[dr6]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr6), 'non-supervisor-icon-node': myOrgUserHash[dr6]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr6]?.userType === 'supervisor'}">
-                                                                                                        <div *ngIf="dr6 === currentHoverUid && myOrgUserHash[dr6]?.userType === 'supervisor'"
+                                                                                                        <div *ngIf="dr6 === currentHoverUid"
                                                                                                             class="supervisor-menu-icon"
                                                                                                             (click)="showSupervisorMenu(dr6)">
                                                                                                             <i
@@ -4525,7 +4453,6 @@
                                                                                                             [ngStyle]="{'color': getStatusColor(dr6)}"></i>
 
                                                                                                         <span
-                                                                                                            *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor' || includeFullName"
                                                                                                             style="display: block;color:#666666;"
                                                                                                             [ngStyle]="{'font-size.px': textFontSize}">
                                                                                                             {{orgChartNodeHash[dr6]?.fName}}<br>{{orgChartNodeHash[dr6]?.lName}}
@@ -4684,7 +4611,6 @@
                                                                                                                         }}
                                                                                                                     </div>
                                                                                                                 </div>
-
                                                                                                             </div>
                                                                                                             <div *ngIf="displayMode[dr6] === 'UserType'"
                                                                                                                 style="padding:5px;">
@@ -4911,14 +4837,7 @@
                                                                                                                             User
                                                                                                                             Data
                                                                                                                         </li>
-                                                                                                                        <!--
-                                                                                                    <li (click)="expandOrg(dr7)" class="supervisor-menu-item">
-                                                                                                        Expand Organization</li>
-                                                                                                    <li (click)="collapseOrg(dr7)" class="supervisor-menu-item">
-                                                                                                        Collapse Organization</li>
-                                                                                                        -->
-
-                                                                                                                        <li>
+                                                                                                                        <li *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor'">
                                                                                                                             <div
                                                                                                                                 style="font-size:14px;border-bottom:1px solid #ddd;margin-top:20px;color:blue;text-align: center;">
                                                                                                                                 Select
@@ -4929,7 +4848,7 @@
                                                                                                                                 by
                                                                                                                             </div>
                                                                                                                         </li>
-                                                                                                                        <li class="supervisor-menu-item"
+                                                                                                                        <li *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                                             style="position:relative;"
                                                                                                                             (mouseover)="showSupervisorSubMenu(dr7, 'userStatus')"
                                                                                                                             (mouseleave)="hideSupervisorSubMenu(dr7, 'userStatus')">
@@ -4963,7 +4882,7 @@
                                                                                                                                 </div>
                                                                                                                             </div>
                                                                                                                         </li>
-                                                                                                                        <li class="supervisor-menu-item"
+                                                                                                                        <li *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                                             style="position:relative;"
                                                                                                                             (mouseover)="showSupervisorSubMenu(dr7, 'userTrainingStatus')"
                                                                                                                             (mouseleave)="hideSupervisorSubMenu(dr7, 'userTrainingStatus')">
@@ -4999,7 +4918,7 @@
                                                                                                                                 </div>
                                                                                                                             </div>
                                                                                                                         </li>
-                                                                                                                        <li class="supervisor-menu-item"
+                                                                                                                        <li *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                                             style="position:relative;"
                                                                                                                             (mouseover)="showSupervisorSubMenu(dr7, 'jobTitle')"
                                                                                                                             (mouseleave)="hideSupervisorSubMenu(dr7, 'jobTitle')">
@@ -5030,7 +4949,7 @@
                                                                                                                                 </div>
                                                                                                                             </div>
                                                                                                                         </li>
-                                                                                                                        <li class="supervisor-menu-item"
+                                                                                                                        <li *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                                             style="position:relative;"
                                                                                                                             (mouseover)="showSupervisorSubMenu(dr7, 'userType')"
                                                                                                                             (mouseleave)="hideSupervisorSubMenu(dr7, 'userType')">
@@ -5065,7 +4984,7 @@
                                                                                                                                 </div>
                                                                                                                             </div>
                                                                                                                         </li>
-                                                                                                                        <li class="supervisor-menu-item"
+                                                                                                                        <li *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor'" class="supervisor-menu-item"
                                                                                                                             style="position:relative;"
                                                                                                                             (mouseover)="showSupervisorSubMenu(dr7, 'training')"
                                                                                                                             (mouseleave)="hideSupervisorSubMenu(dr7, 'training')">
@@ -5099,9 +5018,8 @@
                                                                                                                                 </div>
                                                                                                                             </div>
                                                                                                                         </li>
-                                                                                                                        <li (click)="selectOrg(dr7)"
-                                                                                                                            class="supervisor-menu-item"
-                                                                                                                            style="">
+                                                                                                                        <li *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor'" (click)="selectOrg(dr7)"
+                                                                                                                            class="supervisor-menu-item">
                                                                                                                             <i class="fas fa-fw fa-users"
                                                                                                                                 style="font-size:14px;margin-right:10px;"></i>
                                                                                                                             Select
@@ -5121,14 +5039,12 @@
                                                                                                                         </li>
                                                                                                                     </ul>
                                                                                                                 </div>
-
-
                                                                                                                 <div id="{{dr7}}"
                                                                                                                     (mouseenter)="setHoverData(dr7)"
                                                                                                                     (mouseleave)="setHoverData(null)"
-                                                                                                                    [ngClass]="{'selected-node': (userIdSelected === dr7) || (userIdsSelected.includes(dr7)), 'hover-node': userIdSelected !== dr7 && allActive || dr7 === currentHoverUid ||
+                                                                                                                    [ngClass]="{'selected-node': userIdsSelected.includes(dr7), 'hover-node': dr7 === currentHoverUid ||
                                                                                                                 orgChartNodeHash[dr7]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr7), 'non-supervisor-icon-node': myOrgUserHash[dr7]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr7]?.userType === 'supervisor'}">
-                                                                                                                    <div *ngIf="dr7 === currentHoverUid && myOrgUserHash[dr7]?.userType === 'supervisor'"
+                                                                                                                    <div *ngIf="dr7 === currentHoverUid"
                                                                                                                         class="supervisor-menu-icon"
                                                                                                                         (click)="showSupervisorMenu(dr7)">
                                                                                                                         <i
@@ -5137,7 +5053,6 @@
                                                                                                                     <i [ngClass]="userTypeIconHash[myOrgUserHash[dr7]?.userType]"
                                                                                                                         [ngStyle]="{'color': getStatusColor(dr7)}"></i>
                                                                                                                     <span
-                                                                                                                        *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor' || includeFullName"
                                                                                                                         style="display: block;color:#666666;"
                                                                                                                         [ngStyle]="{'font-size.px': textFontSize}">
                                                                                                                         {{orgChartNodeHash[dr7]?.fName}}<br>{{orgChartNodeHash[dr7]?.lName}}
@@ -5483,10 +5398,9 @@
                                                                                                                             (mouseleave)="setHoverData(null)"
                                                                                                                             class="org-chart-node">
                                                                                                                             <div style="border:1px solid white;margin:0 8px;"
-                                                                                                                                [ngClass]="{'selected-node': (orgChartSelectMode === 'Individual' && userIdSelected === dr8) || (orgChartSelectMode !== 'Individual' &&
-                                                                                                                            userIdsSelected.includes(dr8)), 'hover-node': userIdSelected !== dr8 && allActive || dr8 === currentHoverUid ||
+                                                                                                                                [ngClass]="{'selected-node':  userIdsSelected.includes(dr8), 'hover-node': dr8 === currentHoverUid ||
                                                                                                                             orgChartNodeHash[dr8]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr8), 'non-supervisor-icon-node': myOrgUserHash[dr8]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr8]?.userType === 'supervisor'}">
-                                                                                                                                <div *ngIf="dr8 === currentHoverUid && myOrgUserHash[dr8]?.userType === 'supervisor'"
+                                                                                                                                <div *ngIf="dr8 === currentHoverUid"
                                                                                                                                     class="supervisor-menu-icon"
                                                                                                                                     (click)="showSupervisorMenu(dr8)">
                                                                                                                                     <i
@@ -5725,7 +5639,7 @@
             <app-profile></app-profile>
             -->
             </nz-drawer>
-            <nz-modal [nzVisible]="showUserTrainingModal" nzTitle="Assign Training"
+            <nz-modal [nzVisible]="showUserTrainingModal" [nzTitle]="assignTrainingTitle"
                 [nzCancelDisabled]="assignableTrainings.length === 0" (nzOnCancel)="handleCancelUserTraining()"
                 [nzOkDisabled]="!selectedTrainingId" (nzOnOk)="handleAssignUserTraining()"
                 style="width:500px;padding:10px;float:left;">
@@ -5760,7 +5674,7 @@
                     </div>
                 </div>
             </nz-modal>
-            <nz-modal [nzVisible]="manageCurrentTrainingsModal" nzTitle="Manage Training" [nzCancelText]="null"
+            <nz-modal [nzVisible]="manageCurrentTrainingsModal" [nzTitle]="manageTrainingsTitle" [nzCancelText]="null"
                 (nzOnOk)="handleOkManageCurrentTrainings()" nzWidth="1200" style="padding:10px;float:left;">
                 <div>
                     <div
