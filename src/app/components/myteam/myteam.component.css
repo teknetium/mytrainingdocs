@@ -578,7 +578,8 @@ ul.no-bullets {
 }
 
 .selection-table-row:hover {
-	color: #f3bb42;
+	color: #feb90b;
+	cursor:pointer;
 }
 
 .selection-hover {

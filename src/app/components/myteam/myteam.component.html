@@ -970,32 +970,27 @@
                         <th>Actions</th>
                     </tr>
                     <tr *ngFor="let selection of orgChartSelections; let selectionIndex = index" style="width:100%;"
-                        class="selection-table-row">
-                        <td style="text-align: left;padding:5px;" (mouseenter)="currentOrgSelection = selection.rootUid"
-                            (mouseleave)="currentOrgSelection = null">
+                        class="selection-table-row" (click)="openToUser(selection.rootUid)">
+                        <td style="text-align: left;padding:5px;" (click)="openToUser(selection.rootUid)">
                             {{ selection?.name }}
                         </td>
-                        <td style="text-align: center;padding:5px;"
-                            (mouseenter)="currentOrgSelection = selection.rootUid"
-                            (mouseleave)="currentOrgSelection = null">
+                        <td style="text-align: center;padding:5px;" (click)="openToUser(selection.rootUid)">
                             {{ selectionModeHash[selection?.type] }}
                         </td>
-                        <td style="text-align: center;padding:5px;"
-                            (mouseenter)="currentOrgSelection = selection.rootUid"
-                            (mouseleave)="currentOrgSelection = null">
+                        <td style="text-align: center;padding:5px;" (click)="openToUser(selection.rootUid)">
                             {{ selection?.value }}
                         </td>
-                        <td style="text-align: center;padding:5px;"
-                            (mouseenter)="currentOrgSelection = selection.rootUid"
-                            (mouseleave)="currentOrgSelection = null">
+                        <td style="text-align: center;padding:5px;" (click)="openToUser(selection.rootUid)">
                             {{ userIdsSelected.length }}
                         </td>
-                        <td style="text-align: center;padding:5px;"
-                            (mouseenter)="currentOrgSelection = selection.rootUid"
-                            (mouseleave)="currentOrgSelection = null">
+                        <td style="text-align: center;padding:5px;">
                             <button nz-button nzSize="default" nzShape="circle" nzType="default"
                                 style="display:inline-block;margin-right:5px;" nz-tooltip nzTooltipPlacement="top"
-                                nzTooltipTitle="Assign a training to the selected users">
+                                nzTooltipTitle="Open to the selected suborganization" (click)="openToUser(selection.rootUid)">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button nz-button nzSize="default" nzShape="circle" nzType="default" style="display:inline-block;margin-right:5px;"
+                                nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Assign a training to the selected users" (click)="showUserTrainingModal = true">
                                 <i class="fas fa-plus"></i>
                             </button>
                             <button nz-button nzSize="default" nzShape="circle" nzType="default"
@@ -1006,8 +1001,12 @@
                             </button>
                             <button nz-button nzSize="default" nzShape="circle" nzType="default"
                                 style="display:inline-block;margin-right:5px;" nz-tooltip nzTooltipPlacement="top"
-                                nzTooltipTitle="Email selected users">
+                                nzTooltipTitle="Email selected users" (click)="sendRegistrationEmail()">
                                 <i class="fas fa-envelope"></i>
+                            </button>
+                            <button nz-button nzSize="default" nzShape="circle" nzType="default" style="display:inline-block;margin-right:5px;"
+                                nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Send the Registration Invitation Message to the Selected Users" (click)="sendRegistrationEmail()">
+                                <i class="fas fa-mail-bulk"></i>
                             </button>
                             <!--
                             <i class="fas fa-fw fa-plus" style="margin-right:5px;" nz-tooltip
@@ -1044,7 +1043,7 @@
                 </div>
                 -->
                     <div #orgChart style="background-color:white;display:inline-block;white-space: nowrap;"
-                        [ngClass]="{'node-selected': orgChartSelectionList.includes(authenticatedUser._id), 'selection-hover': currentOrgSelection === authenticatedUser._id}">
+                        [ngClass]="{'node-selected': orgChartSelectionList.includes(authenticatedUser._id)}">
                         <div style="margin-bottom: 20px;">
                             <i *ngIf="selectionMode === 'Training'"
                                 [ngClass]="getSelectedTrainingIconClass(currentTrainingSelected)"
@@ -1530,7 +1529,7 @@
                                     </div>
                                 </div>
                                 <div style="text-align: center;" id="{{dr}}-container"
-                                    [ngClass]="{'node-selected': orgChartSelectionList.includes(dr), 'selection-hover': currentOrgSelection === dr}">
+                                    [ngClass]="{'node-selected': orgChartSelectionList.includes(dr)}">
                                     <div class="org-chart-node" [ngStyle]="{'padding.px': orgChartPadding}" id="{{dr}}"
                                         [ngClass]="{'supervisor-node': myOrgUserHash[dr]?.userType === 'supervisor'}">
                                         <div *ngIf="supervisorMenuHash[dr].main" class="supervisor-menu"
@@ -2006,7 +2005,7 @@
                                                 </div>
                                             </div>
                                             <div style="text-align: center;" id="{{dr2}}-container"
-                                                [ngClass]="{'node-selected': orgChartSelectionList.includes(dr2), 'selection-hover': currentOrgSelection === dr2}">
+                                                [ngClass]="{'node-selected': orgChartSelectionList.includes(dr2)}">
                                                 <div [ngStyle]="{'padding.px': orgChartPadding}" class="org-chart-node"
                                                     id="{{dr2}}"
                                                     [ngClass]="{'supervisor-node': myOrgUserHash[dr2]?.userType === 'supervisor'}">
@@ -2504,7 +2503,7 @@
                                                             </div>
                                                         </div>
                                                         <div style="text-align: center;" id="{{dr3}}-container"
-                                                            [ngClass]="{'node-selected': orgChartSelectionList.includes(dr3), 'selection-hover': currentOrgSelection === dr3}">
+                                                            [ngClass]="{'node-selected': orgChartSelectionList.includes(dr3)}">
                                                             <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                 class="org-chart-node" id="{{dr3}}"
                                                                 [ngClass]="{'supervisor-node': myOrgUserHash[dr3]?.userType === 'supervisor'}">
@@ -3040,7 +3039,7 @@
                                                                     </div>
                                                                     <div style="text-align: center;"
                                                                         id="{{dr4}}-container"
-                                                                        [ngClass]="{'node-selected': orgChartSelectionList.includes(dr4), 'selection-hover': currentOrgSelection === dr4}">
+                                                                        [ngClass]="{'node-selected': orgChartSelectionList.includes(dr4)}">
                                                                         <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                             class="org-chart-node" id="{{dr4}}"
                                                                             [ngClass]="{'supervisor-node': myOrgUserHash[dr4]?.userType === 'supervisor'}">
@@ -3614,7 +3613,7 @@
 
                                                                                 <div style="text-align: center;"
                                                                                     id="{{dr5}}-container"
-                                                                                    [ngClass]="{'node-selected': orgChartSelectionList.includes(dr5), 'selection-hover': currentOrgSelection === dr5}">
+                                                                                    [ngClass]="{'node-selected': orgChartSelectionList.includes(dr5)}">
                                                                                     <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                         class="org-chart-node"
                                                                                         [ngClass]="{'supervisor-node': myOrgUserHash[dr5]?.userType === 'supervisor'}">
@@ -4199,7 +4198,7 @@
                                                                                             </div>
                                                                                             <div style="text-align: center;"
                                                                                                 id="{{dr6}}-container"
-                                                                                                [ngClass]="{'node-selected': orgChartSelectionList.includes(dr6), 'selection-hover': currentOrgSelection === dr6}">
+                                                                                                [ngClass]="{'node-selected': orgChartSelectionList.includes(dr6)}">
                                                                                                 <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                     class="org-chart-node"
                                                                                                     [ngClass]="{'supervisor-node': myOrgUserHash[dr6]?.userType === 'supervisor'}">
@@ -4800,7 +4799,7 @@
                                                                                                         </div>
                                                                                                         <div style="text-align: center;"
                                                                                                             id="{{dr7}}-container"
-                                                                                                            [ngClass]="{'node-selected': orgChartSelectionList.includes(dr7), 'selection-hover': currentOrgSelection === dr7}">
+                                                                                                            [ngClass]="{'node-selected': orgChartSelectionList.includes(dr7)}">
                                                                                                             <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                                 class="org-chart-node"
                                                                                                                 [ngClass]="{'supervisor-node': myOrgUserHash[dr7]?.userType === 'supervisor'}">

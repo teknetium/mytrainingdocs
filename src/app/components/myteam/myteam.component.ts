@@ -1951,6 +1951,14 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     }
   }
 
+  openToUser(userId: string) {
+    this.collapseAllSubOrgs(true);
+    let reportChain = this.orgChartNodeHash[userId].extra.reportChain;
+    for (let uid of reportChain) {
+      this.collapsedNodes.splice(this.collapsedNodes.indexOf(uid), 1);
+    }
+  }
+
   collapseAllSubOrgs(collapseAll) {
     //    this.myLoader.setLoading(true, 'https://localhost:4200/myteam');
     if (collapseAll) {
@@ -3135,6 +3143,10 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       }
     }
     this.selectUsersFromDirectReports(this.myOrgUserHash[uid], []);
+    /// remove uid from the list of selected users cause thats what we wamt
+    if (this.userIdsSelected.indexOf(uid) >= 0) {
+      this.userIdsSelected.splice(this.userIdsSelected.indexOf(uid), 1);
+    }
     let reportChain = this.orgChartNodeHash[uid].extra.reportChain;
     for (let userId of reportChain) {
       let nodeStatsObj = this.nodeStatHash[userId];
