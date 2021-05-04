@@ -3133,12 +3133,16 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     return false;
   }
 
-  selectUsersFromOrg(uid, filter) {
-    this.selectUsersFromDirectReports(this.myOrgUserHash[uid]);
+  selectUsersFromOrg(uid: string, filter: string) {
+    let filterArray: string[] = filter.split(':');
+    if (filterArray.length === 2) {
+      this.selectUsersFromDirectReports(this.myOrgUserHash[uid], filterArray[0]);
+    }
   }
 
-  selectUsersFromDirectReports(user: UserModel) {
+  selectUsersFromDirectReports(user: UserModel, filter: string) {
     for (let dr of user.directReports) {
+      this.displayMode[dr] = filter;
       let drUser = this.myOrgUserHash[dr];
       for (let supervisorUid of this.orgChartNodeHash[dr].extra.reportChain) {
         let nodeStatObj = this.nodeStatHash[supervisorUid];
@@ -3159,7 +3163,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
           nodeStatObj.selectedCnt++;
         }
       }
-      this.selectUsersFromDirectReports(drUser);
+      this.selectUsersFromDirectReports(drUser, filter);
     }
   }
 
@@ -3175,7 +3179,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
     for (let dr of user.directReports) {
       let drUser = this.myOrgUserHash[dr];
-      console.log('getStatsFromDirectReports ...', user._id, this.orgChartNodeHash[dr].extra.reportChain);
+      console.log('getStatsFromDirectReports ...', dr, this.orgChartNodeHash[dr].extra.reportChain);
 //      let userIndex = this
       for (let supervisorUid of this.orgChartNodeHash[dr].extra.reportChain) {
         let nodeStatObj = this.nodeStatHash[supervisorUid];

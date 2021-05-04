@@ -1085,6 +1085,14 @@
                                         <i class="fas fa-fw fa-user-edit" style="font-size:14px;margin-right:10px;"></i>
                                         Edit User Data
                                     </li>
+                                    <li (click)="removeSelectionByUid(authenticatedUser._id)" class="supervisor-menu-item">
+                                        <div>
+                                            <div class="selected-node"
+                                                style="display:inline-block;margin-right:10px;width:16px;height:16px;vertical-align: middle;">
+                                            </div>
+                                            Unselect this User
+                                        </div>
+                                    </li>
                                     <li>
                                         <div
                                             style="font-size:14px;border-bottom:1px solid #ddd;margin-top:20px;color:blue;text-align: center;">

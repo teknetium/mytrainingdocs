@@ -21,6 +21,14 @@
   background-color: white;
 }
 
+[nz-carousel-content] {
+        text-align: center;
+        height: 400px;
+        line-height: 400px;
+        overflow: hidden;
+        background: white;
+      }
+
 .visible {
   visibility: visible;
 }

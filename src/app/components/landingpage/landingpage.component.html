@@ -117,28 +117,28 @@
       </video>
     </vg-player>
     <vg-player *ngIf="currentVideo === 'assessment'" (onPlayerReady)="onPlayerReady($event)">
-    
+
       <vg-controls>
         <vg-play-pause></vg-play-pause>
         <vg-playback-button></vg-playback-button>
-    
+
         <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
-    
+
         <vg-scrub-bar>
           <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
           <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
         </vg-scrub-bar>
-    
+
         <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
         <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
-    
+
         <vg-track-selector></vg-track-selector>
         <vg-mute></vg-mute>
         <vg-volume></vg-volume>
-    
+
         <vg-fullscreen></vg-fullscreen>
       </vg-controls>
-    
+
       <video [vgMedia]="media2" #media2 id="singleVideo" preload="auto" crossorigin>
         <source [src]="assessmentUrl" type="video/mp4">
       </video>
@@ -193,7 +193,7 @@
           </div>
         </div>
 
-        <div>
+        <div style="padding:2vw;">
           <div style="color:chartreuse;height:10%;font-size:2.5vw;">
             <span style="display:block;font-weight:400;color:white;">NAYDO Special</span>
             <span style="display:block;font-weight:400;">Join Early Access!</span>
@@ -230,6 +230,7 @@
             </a>
           </div>
         </div>
+        <!--
         <div class="timer" *ngIf="(timeLeft$ | async) as t; else sorry" style="color:black;">
           <br>
           <span style="font-size: 1.1vw;"> Offer Expires May 1, 2021 </span>
@@ -245,6 +246,7 @@
             {{t.secondsToDday}}</span>
           <span style="font-size:1vw;">sec</span>
         </div>
+-->
       </div>
     </div>
 
@@ -327,6 +329,8 @@
             <span style="color:black;font-size:2vw;">training management</span>
             needs of the
             <span style="color:black;font-size:2vw;">YMCA</span> world.
+
+
             <!--
             <div class="main-title-border">
               <i class="mdi mdi-atom"></i>
@@ -335,6 +339,98 @@
           </div>
         </div>
       </div>
+    </section>
+    <section class="section">
+      <div class="row">
+        <nz-carousel [nzEffect]="'scrollx'" nzAutoPlay="true" nzAutoPlaySpeed="8000" style="height:35vw;"
+          (nzBeforeChange)="beforeUpdateDot($event)">
+          <div nz-carousel-content *ngFor="let item of featureSlides; index as featureIndex" >
+            <img style="float:left;padding-left:10vw;width:45%;" [src]="item.image" width="350vw">
+            <p style="float:right;width:50%;height:20vw;font-size:2vw;color:black;padding:10% 5%;">
+                {{item.text}}
+            </p>
+            <div style="clear: both;"></div>
+          </div>
+        </nz-carousel>
+        <div style="text-align: center;width:100%;margin-top:5px;">
+          <div style="display:inline-block;margin-right:5px;">
+            <i *ngIf="currentSlide === 0" class="fas fa-circle" style="font-size:1vw;"></i>
+            <i *ngIf="currentSlide !== 0" class="far fa-circle" style="font-size:1vw;"></i>
+          </div>
+          <div style="display:inline-block;margin-right:5px">
+            <i *ngIf="currentSlide === 1" class="fas fa-circle" style="font-size:1vw;"></i>
+            <i *ngIf="currentSlide !== 1" class="far fa-circle" style="font-size:1vw;"></i>
+          </div>
+          <div style="display:inline-block;">
+            <i *ngIf="currentSlide === 2" class="fas fa-circle" style="font-size:1vw;"></i>
+            <i *ngIf="currentSlide !== 2" class="far fa-circle" style="font-size:1vw;"></i>
+          </div>
+        </div>
+        <!--
+            <div style="width:100%;position:relative;height:400vw;">
+          <div *ngFor="let item of featureSlides; index as itemIndex" [@featureSlide]="currentSlideHash[itemIndex] ? 'open' : 'closed'" style="display:inline-block;width:100%;height:30%;background-color: white;" [ngStyle]="{'z-index': 10000 - itemIndex}">
+            <img style="float:left;padding-left:10vw;width:50%;" [src]="item.image" width="350vw">
+            <h3 style="float:right;width:50%;margin-top: 10vw;padding:4vw;">
+              {{item.text}}
+            </h3>
+            <div style="clear:both;"></div>
+          </div>
+          -->
+        <!--
+          <div [@featureSlide]="currentSlideHash['1'] ? 'open' : 'closed'" style="position:absolute;top:0;left:100%;width:100%;height:30%;background-color: white;" [ngStyle]="{'z-index': 10000 - currentSlide}">
+            <img style="float:left;padding-left:10vw;width:50%;" src="assets/images/teams.jpeg" width="350vw">
+            <h3 style="float:right;width:50%;margin-top: 10vw;padding:4vw;">
+              Empower your teams to easily and quickly create
+              thier own trainings  2
+            </h3>
+            <div style="clear:both;"></div>
+          </div>
+          <div [@featureSlide]="currentSlideHash['2'] ? 'open' : 'closed'" style="position:absolute;top:0;left:100%;width:100%;height:30%;background-color: white;" [ngStyle]="{'z-index': 10000 - currentSlide}">
+            <img style="float:left;padding-left:10vw;width:50%;" src="assets/images/teams.jpeg" width="350vw">
+            <h3 style="float:right;width:50%;margin-top: 10vw;padding:4vw;">
+              Blah Blah Blah  3
+            </h3>
+            <div style="clear:both;"></div>
+          </div>
+          -->
+
+        <!--
+        <nz-carousel nzEffect="scrollx" nzAutoPlay="true" nzAutoPlaySpeed="8000" [nzDotRender]="dots" style="height:30%;">
+          <div nz-carousel-content style="width:100%;height:30%;" >
+            <img style="float:left;padding-left:10vw;width:50%;" src="assets/images/teams.jpeg" width="350vw">
+            <h3 style="float:right;width:50%;margin-top: 10vw;padding:4vw;">
+              Empower your teams to easily and quickly create
+              thier own trainings
+            </h3>
+            <div style="clear:both;"></div>
+          </div>
+          <div nz-carousel-content style="width:50%;">
+            <img style="float:left;padding-left:4%;width:50%;" src="assets/images/myOrgChart.png" width="350vw">
+            <h3 style="float:right;width:50%;margin-top: 10vw;">
+              Track the status of trainings across your entire organization at a glance
+              thier own trainings.
+            </h3>
+            <div style="clear:both;"></div>
+          </div>
+          <div nz-carousel-content>
+            <img style="float:left;" src="assets/images/myOrgChart.png" height="300" >
+            <h3 style="float:right;margin-top: 10vw;">
+              Empower your teams to easily and quickly create
+              thier own trainings.
+            </h3>
+            <div style="clear:both;"></div>
+          </div>
+        </nz-carousel>
+        <ng-template #dots let-index="index">
+          <div style="height:40px;">
+            {{index}}
+          <i class="fas fa-circle" style="height:3vw;font-size:1vw;margin-right:1vw;"></i>
+          </div>
+        </ng-template>
+        -->
+      </div>
+    </section>
+    <section>
       <div style="display: block;">
         <div class="benefit-container">
           <div *ngFor="let item of benefits; let i = index" class="benefit-item  text-center"
@@ -356,8 +452,8 @@
                 nzTooltipTitle="Play a short screencast"></i>
                 -->
               <div class="play-screencast" style="height:2vw;">
-                <i *ngIf="item.videoLink" class="fas fa-play-circle" nz-tooltip
-                  nzTooltipTitle="Play a short screencast" (click)="loadVideo(item.videoLink)"></i>
+                <i *ngIf="item.videoLink" class="fas fa-play-circle" nz-tooltip nzTooltipTitle="Play a short screencast"
+                  (click)="loadVideo(item.videoLink)"></i>
               </div>
             </div>
             <!--
@@ -938,7 +1034,8 @@
                           <tr *ngIf="naydo">
                             <td style="text-align: right;border-top: 1px solid #aaaaaa;">Monthly Total
                             </td>
-                            <td style="font-family: monospace;text-align: right;border-top: 1px solid #aaaaaa;width:35%">
+                            <td
+                              style="font-family: monospace;text-align: right;border-top: 1px solid #aaaaaa;width:35%">
                               <span style="color:#aaaaaa;">$</span>
                               <span style="font-family: monospace;color:blue;">{{((monthlyCostHash['pro'] -
                                 (monthlyCostHash['pro'] *
@@ -1196,7 +1293,8 @@
                           </tr>
                           <tr *ngIf="naydo">
                             <td style="text-align: right;border-top: 1px solid #aaaaaa;">Monthly Total</td>
-                            <td style="font-family: monospace;text-align: right;border-top: 1px solid #aaaaaa;width:35%">
+                            <td
+                              style="font-family: monospace;text-align: right;border-top: 1px solid #aaaaaa;width:35%">
                               <span style="color:#aaaaaa;">$</span>
                               <span style="font-family: monospace;color:blue;">{{((monthlyCostHash['expert'] -
                                 (monthlyCostHash['expert'] *

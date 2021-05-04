@@ -42,6 +42,23 @@ interface timeComponents {
       transition('closed => open', [
         animate('300ms')
       ]),
+    ]),
+    trigger('featureSlide', [
+      // ...
+      state('closed', style({
+        'left': '0',
+        'opacity': '1'
+      })),
+      state('open', style({
+        'left': ' 100%',
+        'opacity': '0'
+      })),
+      transition('open => closed', [
+        animate('300ms')
+      ]),
+      transition('closed => open', [
+        animate('300ms')
+      ]),
     ])
   ]
 })
@@ -308,6 +325,23 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
 
   showPlanInfo = false;
 
+  currentSlide = 0;
+  featureSlides = [
+    {
+      image: "assets/images/teams.jpeg",
+      text: "Empower your teams to easily and quickly create thier own trainings."
+    },
+    {
+      image: "assets/images/myOrgChart.png",
+      text: "Track training status across your entire organization at a glance."
+    },
+    {
+      image: "assets/images/launch.png",
+      text: "blah blah blah"
+    }
+  ]
+
+
   constructor(
     private auth: AuthService,
     private activatedRoute: ActivatedRoute,
@@ -376,8 +410,13 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       }
     }, 7000);
     this.setCurrentHowStep(0);
-
      */
+
+  }
+
+  beforeUpdateDot(event) {
+    this.currentSlide = event.to;
+    console.log('beforeUpdateDot', event);
   }
 
   userRangeChanged(index, newVal) {

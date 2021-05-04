@@ -37,6 +37,7 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
     VgControlsModule,
     VgCoreModule,
     NzModalModule,
+    NzCarouselModule
   ],
   exports: [
     LandingpageComponent
