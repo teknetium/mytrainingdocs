@@ -29,6 +29,14 @@
         background: white;
       }
 
+.current-slide {
+  color:blue;
+}
+
+.dot {
+  color:darkgray;
+}
+
 .visible {
   visibility: visible;
 }

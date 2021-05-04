@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
@@ -13,6 +13,7 @@ import { TrainingService } from '../../shared/services/training.service';
 import { filter, takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
 import { map, shareReplay } from "rxjs/operators";
+import { NzCarouselComponent } from 'ng-zorro-antd/carousel';
 
 
 interface timeComponents {
@@ -332,14 +333,20 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       text: "Empower your teams to easily and quickly create thier own trainings."
     },
     {
+      image: "assets/images/binders.jpeg",
+      text: "Turn any set of documents into a trackable training complete with assesments in minutes."
+    },
+    {
       image: "assets/images/myOrgChart.png",
       text: "Track training status across your entire organization at a glance."
     },
     {
       image: "assets/images/launch.png",
-      text: "blah blah blah"
+      text: "Deploy to any size organization in minutes not weeks."
     }
   ]
+
+  @ViewChild(NzCarouselComponent, { static: false }) myCarousel: NzCarouselComponent;
 
 
   constructor(
@@ -379,6 +386,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       }
     });
 
+
     this.timeLeft$ = interval(1000).pipe(
       map(x => this.calcDateDiff()),
       shareReplay(1)
@@ -413,6 +421,11 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
      */
 
   }
+
+  goTo(index) {
+    this.myCarousel.goTo(index);
+  }
+
 
   beforeUpdateDot(event) {
     this.currentSlide = event.to;
