@@ -295,10 +295,12 @@
         <a [ngxScrollTo]="destinations['price'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
           [ngxScrollToEasing]="ngxScrollToEasing">Pricing</a>
       </div>
+      <!--
       <div class="nav-link">
         <a [ngxScrollTo]="destinations['faq'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
           [ngxScrollToEasing]="ngxScrollToEasing">FAQ</a>
       </div>
+      -->
       <div class="nav-link">
         <a [ngxScrollTo]="destinations['contact'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
           [ngxScrollToEasing]="ngxScrollToEasing">Contact Us</a>
@@ -315,7 +317,7 @@
         Log In
       </div>
     </div>
-    <section class="section bg-light" id="features">
+    <section class="section bg-light" >
       <div class="row">
         <div class="col-lg-12">
           <div class="text-center" style="font-size:1.5vw;padding:0 5% 2% 5%;">
@@ -342,11 +344,11 @@
     </section>
     <section class="section">
       <div class="row">
-        <nz-carousel [nzEffect]="'scrollx'" nzAutoPlay="true" nzAutoPlaySpeed="4000" style="height:35vw;"
+        <nz-carousel [nzEffect]="'scrollx'" nzAutoPlay="true" nzAutoPlaySpeed="5000" style="height:35vw;"
           (nzBeforeChange)="beforeUpdateDot($event)" [nzDotRender]="dotTemplate" nzDotPosition="top">
-          <div nz-carousel-content *ngFor="let item of featureSlides; index as featureIndex">
-            <img style="float:left;padding-left:10vw;width:45%;padding-top:80px;" [src]="item.image" width="350vw">
-            <p style="float:right;width:50%;height:20vw;font-size:2vw;color:black;padding:10% 5%;">
+          <div nz-carousel-content *ngFor="let item of featureSlides; index as featureIndex" style="height:100%;">
+            <img style="float:left;padding-left:10vw;height:100%;padding-top:80px;" [src]="item.image" height="350vw">
+            <p style="float:right;width:50%;height:20vw;font-size:2vw;color:black;padding:15% 5%;">
               {{item.text}}
             </p>
             <div style="clear: both;"></div>
@@ -354,9 +356,7 @@
         </nz-carousel>
         <ng-template #dotTemplate let-index>
           <div style="text-align: center;width:100%;margin-top:5px;margin-bottom: 20px;background-color: white;">
-            <div style="display:inline-block;margin-right:10px;background-color: white;" (click)="goTo(index)">
-              <i class="fas fa-circle" style="font-size:18px;cursor:pointer;" [ngClass]="{'current-slide': currentSlide === index, 'dot': currentSlide !== index }"></i>
-            </div>
+                <i class="fa-circle" style="display:inline-block;font-size:16px;cursor:pointer;background-color: white;margin-right:5px;" [ngClass]="{'current-slide': currentSlide === index, 'fas': currentSlide === index, 'far': currentSlide !== index }" (click)="goTo(index)"></i>
           </div>
         </ng-template>
         <!--
@@ -423,7 +423,25 @@
         -->
       </div>
     </section>
-    <section class="section bg-light">
+    <section class="section bg-light" id="features">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="text-center">
+              <h2 class="mb-0 text-capitalize"> <span class="font-weight-bold">Features</span></h2>
+              <div class="main-title-border" style="margin-bottom: 10px;">
+              </div>
+              <!--
+                      <div class="m-b-10">
+                        <h6>Billing Cycle</h6>
+                        <nz-radio-group [(ngModel)]="plans">
+                          <label nz-radio-button nzValue="monthly" (click)="planChange()">Monthly</label>
+                          <label nz-radio-button nzValue="annually" (click)="planChange()">Annually</label>
+                        </nz-radio-group>
+                      </div>
+                      -->
+            </div>
+          </div>
+        </div>
       <div style="display: block;">
         <div class="benefit-container">
           <div *ngFor="let item of benefits; let i = index" class="benefit-item  text-center"
@@ -1223,36 +1241,6 @@
                         </div>
                       </div>
                     </div>
-                    <!--
-                    <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
-                      <div style="margin:20px 0 40px 0;">
-                        <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][0]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][1]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:24px;font-weight:300;">$</span>
-                          <span style="color:black;font-size:34px;font-weight:400;">{{planCostPerUserHash['expert'][2]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:14px;font-weight:300;"> /user /mo</span>
-                        </div>
-                        <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:12px;font-weight:300;">
-                            <= {{userRange[0]}}</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
-                              <span style="color:#aaaaaa;font-size:18px;font-weight:300;">&nbsp;|&nbsp;</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;">{{userRange[0] +
-                                1}}-{{userRange[1]}}</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
-                              <span style="color:#aaaaaa;font-size:16px;font-weight:300;">&nbsp;|&nbsp;</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;">> {{userRange[1]}}</span>
-                              <span style="color:#aaaaaa;font-size:12px;font-weight:300;"> users</span>
-                        </div>
-                      </div>
-                    </div>
-                    -->
                     <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
                       style="width:100%;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:.5vw;">
                       <span style="font-size:1.5vw;">{{userCnt}} Users</span>
@@ -1460,6 +1448,7 @@
 
 
     <!-- START FAQ -->
+    <!--
     <section class="section bg-light" id="faq">
       <div class="container">
         <div class="row">
@@ -1485,6 +1474,7 @@
         </nz-collapse>
       </div>
     </section>
+    -->
     <!-- END FAQ -->
 
     <!-- START CTA -->
@@ -1514,8 +1504,8 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-12">
-            <div class="text-center">
-              <h2 class="mb-0 text-capitalize">Get in <span class="font-weight-bold">Touch</span></h2>
+            <div class="text-center"> 
+              <h2 class="mb-0 text-capitalize"><span class="font-weight-bold">Contact Us</span></h2>
               <div class="main-title-border">
                 <i class="mdi mdi-atom"></i>
               </div>

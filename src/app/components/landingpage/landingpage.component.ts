@@ -117,7 +117,8 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       class: ['fal fa-rocket-launch red medium super'],
       blurb: 'Deploy to your entire organization in a matter of minutes, not weeks!',
       learnMore: '',
-      videoLink: 'onboarding'
+//      videoLink: 'onboarding'
+      videoLink: null
     },
     {
       focus: false,
@@ -132,7 +133,8 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
         'far fa-ellipsis-h black small sub'],
       blurb: 'Our training template supports the viewing of all common document formats (17 in all) without the application that created them.',
       learnMore: '',
-      videoLink: 'leverageExistingContent'
+//      videoLink: 'leverageExistingContent'
+      videoLink: null
     },
     {
       focus: false,
@@ -140,7 +142,8 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       class: ['fal fa-sitemap orange medium super'],
       blurb: 'Manage users, assign trainings, monitor status, and send messages all from within our unique org chart.',
       learnMore: '',
-      videoLink: 'orgChart'
+//      videoLink: 'orgChart'
+      videoLink: null
     },
     {
       focus: false,
@@ -148,7 +151,8 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       class: ['fal fa-ballot-check fuchsia medium super'],
       blurb: 'Quickly and easily add assessments to your trainings.  ',
       learnMore: '',
-      videoLink: 'assessment'
+//      videoLink: 'assessment'
+      videoLink: null
     },
     { 
       focus: false,
