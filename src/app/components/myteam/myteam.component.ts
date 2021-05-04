@@ -2776,7 +2776,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       value: value,
       userIdsSelected: []
     }
+    this.orgChartSelections = [];
     this.orgChartSelections.push(cloneDeep(userSelectionObj));
+    this.orgChartSelectionList = [];
     this.orgChartSelectionList.push(uid);
     this.userSelectionHash[uid] = cloneDeep(userSelectionObj);
     switch (item) {
@@ -2812,19 +2814,10 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         break;
       }
     }
-    /*
-
-    this.figureOrgStat(uid);
-    for (let node of this.collapsedNodes) {
-      if (this.orgChartNodeHash[node].extra.reportChain.includes(uid)) {
-        this.figureOrgStat(node);
-      }
-    }
-    */
 
     this.getOrgStats();
 
-    this.selectUsersFromOrg(uid, item + ':' + value)
+    this.selectUsersFromOrg(uid)
 
     this.hideSupervisorMenu(uid);
 
@@ -3125,22 +3118,63 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   isUserSelected(uid: string): boolean {
 
     //    console.log('isUserSelected', this.orgChartSelectMode);
-    for (let orgChartSelectionObj of this.orgChartSelections) {
-      if (orgChartSelectionObj.userIdsSelected.includes(uid)) {
-        return true;
-      }
+    if (this.userIdsSelected.includes(uid)) {
+      return true;
     }
     return false;
   }
 
-  selectUsersFromOrg(uid: string, filter: string) {
-    let filterArray: string[] = filter.split(':');
-    if (filterArray.length === 2) {
-      this.selectUsersFromDirectReports(this.myOrgUserHash[uid], filterArray[0]);
+  selectUsersFromOrg(uid: string) {
+    this.userIdsSelected = [];
+    if (this.myOrgUserObjs.length > 0) {
+      for (let user of this.myOrgUserObjs) {
+        let nodeStatsObj = this.nodeStatHash[user._id];
+        if (nodeStatsObj) {
+          nodeStatsObj.selectedCnt = 0;
+        }
+      }
+    }
+    this.selectUsersFromDirectReports(this.myOrgUserHash[uid], []);
+    let reportChain = this.orgChartNodeHash[uid].extra.reportChain;
+    for (let userId of reportChain) {
+      let nodeStatsObj = this.nodeStatHash[userId];
+      nodeStatsObj.selectedCnt = this.nodeStatHash[uid].selectedCnt;
     }
   }
 
-  selectUsersFromDirectReports(user: UserModel, filter: string) {
+  selectUsersFromDirectReports(user: UserModel, uidList: string[]) {
+    let found = false;
+    if (this.currentFilter === 'JobTitle:' + user.jobTitle) {
+      this.userIdsSelected.push(user._id);
+      found = true;
+    }
+    if (this.currentFilter === 'UserType:' + user.userType) {
+      this.userIdsSelected.push(user._id);
+      found = true;
+    }
+    if (this.currentFilter === 'UserStatus:' + user.userStatus) {
+      this.userIdsSelected.push(user._id);
+      found = true;
+    }
+    if (this.currentFilter === 'UserTrainingStatus:' + user.trainingStatus) {
+      this.userIdsSelected.push(user._id);
+      found = true;
+    }
+    if (found) {
+      for (let uid of uidList) {
+        let nodeStatsObj = this.nodeStatHash[uid];
+        nodeStatsObj.selectedCnt++;
+      }
+    }
+
+    if (user.directReports.length > 0) {
+      uidList.push(user._id);
+      for (let dr of user.directReports) {
+        let drUser = this.myOrgUserHash[dr];
+        this.selectUsersFromDirectReports(drUser, cloneDeep(uidList));
+      }
+    }
+    /*
     for (let dr of user.directReports) {
       this.displayMode[dr] = filter;
       let drUser = this.myOrgUserHash[dr];
@@ -3165,110 +3199,73 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       }
       this.selectUsersFromDirectReports(drUser, filter);
     }
+    */
   }
 
 
   getOrgStats() {
-    this.getStatsFromDirectReports(this.authenticatedUser);
+    let uidList: string[] = [];
+    this.userIdsSelected = []
+    if (this.myOrgUserObjs.length > 0) {
+      for (let user of this.myOrgUserObjs) {
+        let nodeStatsObj = this.nodeStatHash[user._id];
+        if (nodeStatsObj) {
+          nodeStatsObj.userCnt = 0;
+          nodeStatsObj.selectedCnt = 0;
+          nodeStatsObj.trainingHash = {
+            none: 0,
+            upToDate: 0,
+            pastDue: 0,
+            completed: 0,
+            pendingCertUpload: 0
+          };
+          nodeStatsObj.userTypeHash = {
+            individualContributor: 0,
+            supervisor: 0,
+            volunteer: 0,
+            contractor: 0,
+            customer: 0
+          };
+          nodeStatsObj.userStatusHash = {
+            active: 0,
+            inactive: 0,
+            notInvited: 0,
+            pending: 0,
+            error: 0
+          };
+          nodeStatsObj.userTrainingStatusHash = {
+            none: 0,
+            upToDate: 0,
+            pastDue: 0
+          };
+          nodeStatsObj.jobTitleHash = {};
+        }
+      }
+    }
+    this.getStatsFromDirectReports(this.authenticatedUser, uidList);
   }
 
-  getStatsFromDirectReports(user: UserModel) {
+  getStatsFromDirectReports(user: UserModel, uidList: string[]) {
     if (!user) {
       return;
     }
 
-    for (let dr of user.directReports) {
-      let drUser = this.myOrgUserHash[dr];
-      console.log('getStatsFromDirectReports ...', dr, this.orgChartNodeHash[dr].extra.reportChain);
-//      let userIndex = this
-      for (let supervisorUid of this.orgChartNodeHash[dr].extra.reportChain) {
-        let nodeStatObj = this.nodeStatHash[supervisorUid];
-        nodeStatObj.userCnt++;
+    for (let uid of uidList) {
+      let nodeStatsObj = this.nodeStatHash[uid];
+      nodeStatsObj.userCnt++;
+      nodeStatsObj.userTrainingStatusHash[user.trainingStatus] += 1;
+      nodeStatsObj.jobTitleHash[user.jobTitle] += 1;
+      nodeStatsObj.userStatusHash[user.userStatus] += 1;
+      nodeStatsObj.userTypeHash[user.userType] += 1;
+    }
 
-        nodeStatObj.userTrainingStatusHash[drUser.trainingStatus] += 1;
-        nodeStatObj.jobTitleHash[drUser.jobTitle] += 1;
-        nodeStatObj.userStatusHash[drUser.userStatus] += 1;
-        nodeStatObj.userTypeHash[drUser.userType] += 1;
+    if (user.directReports.length > 0) {
+      uidList.push(user._id);
+      for (let dr of user.directReports ) {
+        let drUser = this.myOrgUserHash[dr];
+        this.getStatsFromDirectReports(drUser, cloneDeep(uidList));
       }
-      if (drUser.directReports.length > 0) {
-        this.getStatsFromDirectReports(drUser);
-      }
-
     }
-
-    /*
-  if (this.currentFilterHash[rootUid] === 'JobTitle:' + drUser.jobTitle) {
-    if (this.userSelectionHash[rootUid]) {
-      this.userSelectionHash[rootUid].userIdsSelected.push(dr);
-      this.userIdsSelected.push(dr);
-      nodeStat.selectedCnt++;
-    } else {
-      console.log("processDirectReports...userSelectionHash is undefined");
-    }
-  }
-
-  if (this.currentFilterHash[rootUid] === 'UserType:' + drUser.userType) {
-    if (this.userSelectionHash[rootUid]) {
-      this.userSelectionHash[rootUid].userIdsSelected.push(dr);
-      this.userIdsSelected.push(dr);
-      nodeStat.selectedCnt++;
-    } else {
-      console.log("processDirectReports...userSelectionHash is undefined");
-    }
-  }
-
-  if (this.currentFilterHash[rootUid] === 'UserStatus:' + drUser.userStatus) {
-    if (this.userSelectionHash[rootUid]) {
-      this.userSelectionHash[rootUid].userIdsSelected.push(dr);
-      this.userIdsSelected.push(dr);
-      nodeStat.selectedCnt++;
-    } else {
-      console.log("processDirectReports...userSelectionHash is undefined");
-    }
-  }
-
-  if (this.currentFilterHash[rootUid] === 'UserTrainingStatus:' + drUser.trainingStatus) {
-    if (this.userSelectionHash[rootUid]) {
-      this.userSelectionHash[rootUid].userIdsSelected.push(dr);
-      this.userIdsSelected.push(dr);
-      nodeStat.selectedCnt++;
-    } else {
-      console.log("processDirectReports...userSelectionHash is undefined");
-    }
-  }
-
-  if (this.currentFilterHash[rootUid] && this.currentFilterHash[rootUid].startsWith('Training')) {
-    if (this.userSelectionHash[rootUid]) {
-      let utList = this.uidUTHash[dr];
-      let trainingSelected = this.currentFilterHash[rootUid].split(':')[1];
-      console.log("processDirectReports ", trainingSelected);
-      if (utList && utList.length > 0) {
-        for (let ut of utList) {
-          if (ut.tid === trainingSelected) {
-            this.userSelectionHash[rootUid].userIdsSelected.push(dr);
-            this.userIdsSelected.push(dr);
-            nodeStat.selectedCnt++;
-            nodeStat.trainingHash[ut.status] += 1;
-          }
-        }
-      }
-    } else {
-      console.log("processDirectReports...userSelectionHash is undefined");
-    }
-  }
-*/
-    /*
-    if (this.orgSelected) {
-      this.userSelectionHash[rootUid].userIdsSelected.push(dr);
-//        this.userIdsSelected.push(dr);
-      nodeStat.selectedCnt++;
-    }
-    */
-
-
-    //      this.userSelectionHash[rootUid].userIdsSelected.push(dr);
-    //      this.userIdsSelected.push(dr);
-
   }
 
   removeDirectReportsFromSelectedList(user: UserModel) {
