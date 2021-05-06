@@ -213,7 +213,6 @@
 .hover-node {
 	background: rgba(0, 0, 255, .09) !important;
 	border: 1px solid #afbcf8 !important;
-	min-width: 80px;
 }
 
 .inactive-node {
@@ -479,8 +478,12 @@ ul.ant-card-actions {
 	border-radius: 5px;
 	cursor: pointer;
 	font-size: 20px;
+}
+
+.wide-node {
 	min-width: 70px;
 }
+
 .supervisor-icon-node {
 	position:relative;
 	border: 1px solid white;

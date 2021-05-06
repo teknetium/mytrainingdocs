@@ -1549,13 +1549,15 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         */
         if (user.userType === 'supervisor') {
           this.myOrgSupervisors.push(user.firstName + ' ' + user.lastName);
+
+          if (this.myPlan && this.myPlan !== 'basic') {
+            this.collapsedNodes.push(user._id);
+          }
         }
       }
       this.matchingSupervisors = this.myOrgSupervisors;
-      if (this.myPlan && this.myPlan !== 'basic') {
-        this.collapseAllSubOrgs(true);
-      }
       this.createCSV();
+      this.getOrgStats();
     });
     /*
     this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgUsers => {
@@ -1678,7 +1680,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
           this.collapsedNodes.splice(this.collapsedNodes.indexOf(uid), 1);
         }
       }
-      this.centerIt(this.selectedUser);
+      setTimeout(() => this.centerIt(this.selectedUser._id), 500);
       this.setHoverData(this.selectedUser._id);
     });
 
@@ -1953,28 +1955,49 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   openToUser(userId: string) {
-    this.collapseAllSubOrgs(true);
+    this.collapseAllSubOrgs(this.authenticatedUser._id);
     let reportChain = this.orgChartNodeHash[userId].extra.reportChain;
     for (let uid of reportChain) {
       this.collapsedNodes.splice(this.collapsedNodes.indexOf(uid), 1);
     }
   }
 
-  collapseAllSubOrgs(collapseAll) {
-    //    this.myLoader.setLoading(true, 'https://localhost:4200/myteam');
-    if (collapseAll) {
+  collapseAllSubOrgs(uid: string) {
+    this.collapseDirectReports(uid);
+    this.hideSupervisorMenu(uid);
+    setTimeout(() => this.centerIt(uid), 500);
+  }
 
-      this.collapsedNodes = [];
-      for (let user of this.userListDisplay) {
-        if (user.userType === 'supervisor') {
-          this.collapsedNodes.push(user._id);
-          //          this.figureOrgStat(user._id);
+  collapseDirectReports(uid: string) {
+    for (let dr of this.myOrgUserHash[uid].directReports) {
+      let drUser = this.myOrgUserHash[dr];
+      if (drUser.userType === 'supervisor') {
+        this.collapsedNodes.push(dr);
+        if (drUser.directReports.length > 0) {
+          this.collapseDirectReports(dr);
         }
       }
-    } else {
-      this.collapsedNodes = [];
     }
-    //    this.myLoader.setLoading(false, 'https://localhost:4200/myteam');
+
+  }
+
+  expandAllSubOrgs(uid: string) {
+    this.collapsedNodes.splice(this.collapsedNodes.indexOf(uid), 1);
+    this.expandDirectReports(uid);
+    this.hideSupervisorMenu(uid);
+    setTimeout(() => this.centerIt(uid), 500);
+  }
+
+  expandDirectReports(uid: string) {
+    for (let dr of this.myOrgUserHash[uid].directReports) {
+      let drUser = this.myOrgUserHash[dr];
+      if (drUser.userType === 'supervisor') {
+        this.collapsedNodes.splice(this.collapsedNodes.indexOf(dr), 1);
+        if (drUser.directReports.length > 0) {
+          this.expandDirectReports(dr);
+        }
+      }
+    }
   }
 
   collapseNode(uid: string, collapse: boolean) {
@@ -1992,11 +2015,11 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     }
   }
 
-  centerIt(id) {
+  centerIt(id: string) {
     let element: Element;
     element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'center' });
+      element.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'center' });
     }
   }
 
@@ -2848,7 +2871,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
     this.hideSupervisorMenu(uid);
 
-    this.centerIt(uid);
+    setTimeout(() => this.centerIt(uid), 500);
   }
 
   /*
@@ -3242,11 +3265,30 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     }
   }
 
+  addToSelectedUsers(uid: string) {
+    this.userIdsSelected.push(uid);
+    let reportChain = this.orgChartNodeHash[uid].extra.reportChain;
+    for (let userId of reportChain) {
+      let nodeStatsObj = this.nodeStatHash[userId];
+      nodeStatsObj.selectedCnt++;
+    }
+    this.hideSupervisorMenu(uid);
+  }
+
+  removeFromSelectedUsers(uid: string) {
+    this.userIdsSelected.splice(this.userIdsSelected.indexOf(uid), 1);
+    let reportChain = this.orgChartNodeHash[uid].extra.reportChain;
+    for (let userId of reportChain) {
+      let nodeStatsObj = this.nodeStatHash[userId];
+      nodeStatsObj.selectedCnt--;
+    }
+    this.hideSupervisorMenu(uid);
+  }
 
   getOrgStats() {
     let uidList: string[] = [];
     this.userIdsSelected = []
-    if (this.myOrgUserObjs.length > 0) {
+    if (this.myOrgUserObjs && this.myOrgUserObjs.length > 0) {
       for (let user of this.myOrgUserObjs) {
         let nodeStatsObj = this.nodeStatHash[user._id];
         if (nodeStatsObj) {
@@ -3304,7 +3346,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
     if (user.directReports.length > 0) {
       uidList.push(user._id);
-      for (let dr of user.directReports ) {
+      for (let dr of user.directReports) {
         let drUser = this.myOrgUserHash[dr];
         this.getStatsFromDirectReports(drUser, cloneDeep(uidList));
       }
