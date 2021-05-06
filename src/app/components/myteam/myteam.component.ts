@@ -2748,23 +2748,27 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   removeSelectionByUid(uid: string) {
-    this.userIdsSelected = [];
-    let index = this.orgChartSelectionList.indexOf(uid);
-    this.orgChartSelections.splice(index, 1);
-    this.orgChartSelectionList.splice(index, 1);
+    if (this.myOrgUserHash[uid].userType === 'individualContributor') {
+      this.userIdsSelected.splice(this.userIdsSelected.indexOf(uid), 1);
+    } else {
+      this.userIdsSelected = [];
+      let index = this.orgChartSelectionList.indexOf(uid);
+      this.orgChartSelections.splice(index, 1);
+      this.orgChartSelectionList.splice(index, 1);
 
-    this.userSelectionHash[uid] = null;
-    this.currentOrgSelection = '';
-    let index2 = this.userIdsSelected.indexOf(uid);
-    if (index2 >= 0) {
-      this.userIdsSelected.splice(index2, 1);
-    }
-    if (this.myOrgUserObjs.length > 0) {
-      for (let user of this.myOrgUserObjs) {
-        this.displayMode[user._id] = this.displayMode[this.authenticatedUser._id];
-        let nodeStatsObj = this.nodeStatHash[user._id];
-        if (nodeStatsObj) {
-          nodeStatsObj.selectedCnt = 0;
+      this.userSelectionHash[uid] = null;
+      this.currentOrgSelection = '';
+      let index2 = this.userIdsSelected.indexOf(uid);
+      if (index2 >= 0) {
+        this.userIdsSelected.splice(index2, 1);
+      }
+      if (this.myOrgUserObjs.length > 0) {
+        for (let user of this.myOrgUserObjs) {
+          this.displayMode[user._id] = this.displayMode[this.authenticatedUser._id];
+          let nodeStatsObj = this.nodeStatHash[user._id];
+          if (nodeStatsObj) {
+            nodeStatsObj.selectedCnt = 0;
+          }
         }
       }
     }
@@ -3275,6 +3279,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
             pastDue: 0
           };
           nodeStatsObj.jobTitleHash = {};
+          for (let jobTitle of this.jobTitles) {
+            nodeStatsObj.jobTitleHash[jobTitle] = 0;
+          }
         }
       }
     }
