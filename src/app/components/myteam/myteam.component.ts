@@ -2751,25 +2751,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.supervisorMenuHash[uid][menu] = false;
   }
 
-  clearSelectedUserList(uid: string) {
-    /*
-    this.currentJobTitle = null;
-    this.currentUserStatus = null;
-    this.currentUserType = null;
-    this.currentTrainingSelected = null;
-    this.currentUserTrainingStatus = null;
-    */
-    this.currentFilter = null;
-    this.userIdsSelected = [];
-    this.getOrgStats();
-    /*
-    this.figureOrgStat(uid);
-    for (let node of this.collapsedNodes) {
-      this.figureOrgStat(node);
-    }
-    */
-  }
-
   removeSelectionByUid(uid: string) {
     if (this.myOrgUserHash[uid].userType === 'individualContributor') {
       this.userIdsSelected.splice(this.userIdsSelected.indexOf(uid), 1);

@@ -1089,6 +1089,7 @@
                                         <i class="fas fa-fw fa-user-edit" style="font-size:14px;margin-right:10px;"></i>
                                         Edit User Data
                                     </li>
+                                    <!--
                                     <li *ngIf="!userIdsSelected.includes(authenticatedUser._id)"
                                         (click)="addToSelectedUsers(authenticatedUser._id)"
                                         class="supervisor-menu-item">
@@ -1113,6 +1114,7 @@
                                             Unselect this User
                                         </div>
                                     </li>
+                                    -->
                                     <li (click)="collapseAllSubOrgs(authenticatedUser._id)"
                                         class="supervisor-menu-item">
                                         <i class="fas fa-fw fa-angle-double-up"
@@ -1594,6 +1596,7 @@
                                                         style="font-size:14px;margin-right:10px;"></i>
                                                     Edit User Data
                                                 </li>
+                                                <!--
                                                 <li *ngIf="!userIdsSelected.includes(dr)"
                                                     (click)="addToSelectedUsers(dr)" class="supervisor-menu-item">
                                                     <div>
@@ -1616,6 +1619,7 @@
                                                         Unselect this User
                                                     </div>
                                                 </li>
+                                                -->
                                                 <li *ngIf="myOrgUserHash[dr]?.userType === 'supervisor'"
                                                     (click)="collapseAllSubOrgs(dr)" class="supervisor-menu-item">
                                                     <i class="fas fa-fw fa-angle-double-up"
@@ -2110,6 +2114,7 @@
                                                                     style="font-size:14px;margin-right:10px;"></i>
                                                                 Edit User Data
                                                             </li>
+                                                            <!--
                                                             <li *ngIf="!userIdsSelected.includes(dr2)"
                                                                 (click)="addToSelectedUsers(dr2)"
                                                                 class="supervisor-menu-item">
@@ -2134,6 +2139,7 @@
                                                                     Unselect this User
                                                                 </div>
                                                             </li>
+                                                            -->
                                                             <li *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor'"
                                                                 (click)="collapseAllSubOrgs(dr2)"
                                                                 class="supervisor-menu-item">
@@ -2659,6 +2665,7 @@
                                                                                 style="font-size:14px;margin-right:10px;"></i>
                                                                             Edit User Data
                                                                         </li>
+                                                                        <!--
                                                                         <li *ngIf="!userIdsSelected.includes(dr3)"
                                                                             (click)="addToSelectedUsers(dr3)"
                                                                             class="supervisor-menu-item">
@@ -2683,6 +2690,7 @@
                                                                                 Unselect this User
                                                                             </div>
                                                                         </li>
+                                                                        -->
                                                                         <li *ngIf="myOrgUserHash[dr3]?.userType === 'supervisor'"
                                                                             (click)="collapseAllSubOrgs(dr3)"
                                                                             class="supervisor-menu-item">
@@ -3244,6 +3252,7 @@
                                                                                             style="font-size:14px;margin-right:10px;"></i>
                                                                                         Edit User Data
                                                                                     </li>
+                                                                                    <!--
                                                                                     <li *ngIf="!userIdsSelected.includes(dr4)"
                                                                                         (click)="addToSelectedUsers(dr4)"
                                                                                         class="supervisor-menu-item">
@@ -3268,6 +3277,7 @@
                                                                                             Unselect this User
                                                                                         </div>
                                                                                     </li>
+                                                                                -->
                                                                                     <li *ngIf="myOrgUserHash[dr4]?.userType === 'supervisor'"
                                                                                         (click)="collapseAllSubOrgs(dr4)"
                                                                                         class="supervisor-menu-item">
@@ -3867,6 +3877,7 @@
                                                                                                         style="font-size:14px;margin-right:10px;"></i>
                                                                                                     Edit User Data
                                                                                                 </li>
+                                                                                                <!--
                                                                                                 <li *ngIf="!userIdsSelected.includes(dr5)"
                                                                                                     (click)="addToSelectedUsers(dr5)"
                                                                                                     class="supervisor-menu-item">
@@ -3893,6 +3904,7 @@
                                                                                                         User
                                                                                                     </div>
                                                                                                 </li>
+                                                                                                -->
                                                                                                 <li *ngIf="myOrgUserHash[dr5]?.userType === 'supervisor'"
                                                                                                     (click)="collapseAllSubOrgs(dr5)"
                                                                                                     class="supervisor-menu-item">
@@ -4509,6 +4521,7 @@
                                                                                                                 User
                                                                                                                 Data
                                                                                                             </li>
+                                                                                                            <!--
                                                                                                             <li *ngIf="!userIdsSelected.includes(dr6)"
                                                                                                                 (click)="addToSelectedUsers(dr6)"
                                                                                                                 class="supervisor-menu-item">
@@ -4538,6 +4551,7 @@
                                                                                                                     User
                                                                                                                 </div>
                                                                                                             </li>
+                                                                                                            -->
                                                                                                             <li *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor'"
                                                                                                                 (click)="collapseAllSubOrgs(dr6)"
                                                                                                                 class="supervisor-menu-item">
@@ -5167,6 +5181,7 @@
                                                                                                                             User
                                                                                                                             Data
                                                                                                                         </li>
+                                                                                                                        <!--
                                                                                                                         <li *ngIf="!userIdsSelected.includes(dr7)"
                                                                                                                             (click)="addToSelectedUsers(dr7)"
                                                                                                                             class="supervisor-menu-item">
@@ -5196,6 +5211,7 @@
                                                                                                                                 User
                                                                                                                             </div>
                                                                                                                         </li>
+                                                                                                                        -->
                                                                                                                         <li *ngIf="myOrgUserHash[dr7]?.userType === 'supervisor'"
                                                                                                                             (click)="collapseAllSubOrgs(dr7)"
                                                                                                                             class="supervisor-menu-item">
