@@ -1293,6 +1293,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   manageTrainingsTitle: string;
 
   currentFilter: string;
+  currentFilterItem: string = null;
 
 
   constructor(
@@ -2747,6 +2748,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   removeSelectionByUid(uid: string) {
+    this.userIdsSelected = [];
     let index = this.orgChartSelectionList.indexOf(uid);
     this.orgChartSelections.splice(index, 1);
     this.orgChartSelectionList.splice(index, 1);
@@ -2757,14 +2759,26 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     if (index2 >= 0) {
       this.userIdsSelected.splice(index2, 1);
     }
+    if (this.myOrgUserObjs.length > 0) {
+      for (let user of this.myOrgUserObjs) {
+        this.displayMode[user._id] = this.displayMode[this.authenticatedUser._id];
+        let nodeStatsObj = this.nodeStatHash[user._id];
+        if (nodeStatsObj) {
+          nodeStatsObj.selectedCnt = 0;
+        }
+      }
+    }
+    this.hideSupervisorMenu(uid);
   }
 
+  /*
   removeSelection(index: number, uid: string) {
     this.orgChartSelections.splice(index, 1);
     this.orgChartSelectionList.splice(index, 1);
     this.userSelectionHash[uid] = null;
     this.currentOrgSelection = '';
   }
+  */
 
   showSupervisorMenuIcon(uid: string): boolean {
     if (this.currentHoverUid === uid && this.myOrgUserHash[uid]?.userType === 'supervisor') {
@@ -2776,6 +2790,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     console.log('filterChanged  ', item, value);
 
     this.userIdsSelected = [];
+    this.currentFilterItem = item;
 
     let userSelectionObj = {
       rootUid: uid,
@@ -3000,17 +3015,51 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   selectOrg(userId: string) {
     this.userIdsSelected = [];
     this.currentFilterHash[userId] = '';
+    let userSelectionObj = {
+      rootUid: userId,
+      name: this.myOrgUserHash[userId].firstName + ' ' + this.myOrgUserHash[userId].lastName,
+      type: null,
+      value: null,
+      userIdsSelected: []
+    }
+    this.orgChartSelections = [];
+    this.orgChartSelections.push(cloneDeep(userSelectionObj));
+    this.orgChartSelectionList = [];
+    this.orgChartSelectionList.push(userId);
+    this.userSelectionHash[userId] = cloneDeep(userSelectionObj);
+    if (this.myOrgUserObjs.length > 0) {
+      for (let user of this.myOrgUserObjs) {
+        let nodeStatsObj = this.nodeStatHash[user._id];
+        if (nodeStatsObj) {
+          nodeStatsObj.selectedCnt = 0;
+        }
+      }
+    }
 
-    this.addToOrgSelection(this.myOrgUserHash[userId]);
-    this.supervisorMenuHash[userId].main = false;
+
+    this.addDirectReportsToOrgSelection(this.myOrgUserHash[userId], []);
+    if (this.userIdsSelected.indexOf(userId) >= 0) {
+      this.userIdsSelected.splice(this.userIdsSelected.indexOf(userId), 1);
+    }
+    let reportChain = this.orgChartNodeHash[userId].extra.reportChain;
+    for (let uid of reportChain) {
+      let nodeStatsObj = this.nodeStatHash[uid];
+      nodeStatsObj.selectedCnt = this.nodeStatHash[userId].selectedCnt;
+    }
+    this.hideSupervisorMenu(userId);
   }
 
-  addToOrgSelection(user: UserModel) {
-    for (let dr of user.directReports) {
-      this.userIdsSelected.push(dr);
-      let drUser = this.myOrgUserHash[dr];
-      if (drUser.directReports.length > 0) {
-        this.addToOrgSelection(drUser);
+  addDirectReportsToOrgSelection(user: UserModel, uidList: string[]) {
+    this.userIdsSelected.push(user._id);
+    for (let uid of uidList) {
+      let nodeStatsObj = this.nodeStatHash[uid];
+      nodeStatsObj.selectedCnt++;
+    }
+    if (user.directReports.length > 0) {
+      uidList.push(user._id);
+      for (let dr of user.directReports) {
+        let drUser = this.myOrgUserHash[dr];
+        this.addDirectReportsToOrgSelection(drUser, cloneDeep(uidList));
       }
     }
   }
@@ -3183,35 +3232,10 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       uidList.push(user._id);
       for (let dr of user.directReports) {
         let drUser = this.myOrgUserHash[dr];
+        this.displayMode[dr] = this.currentFilterItem;
         this.selectUsersFromDirectReports(drUser, cloneDeep(uidList));
       }
     }
-    /*
-    for (let dr of user.directReports) {
-      this.displayMode[dr] = filter;
-      let drUser = this.myOrgUserHash[dr];
-      for (let supervisorUid of this.orgChartNodeHash[dr].extra.reportChain) {
-        let nodeStatObj = this.nodeStatHash[supervisorUid];
-        if (this.currentFilter === 'JobTitle:' + drUser.jobTitle) {
-          this.userIdsSelected.push(dr);
-          nodeStatObj.selectedCnt++;
-        }
-        if (this.currentFilter === 'UserType:' + drUser.userType) {
-          this.userIdsSelected.push(dr);
-          nodeStatObj.selectedCnt++;
-        }
-        if (this.currentFilter === 'UserStatus:' + drUser.userStatus) {
-          this.userIdsSelected.push(dr);
-          nodeStatObj.selectedCnt++;
-        }
-        if (this.currentFilter === 'UserTrainingStatus:' + drUser.trainingStatus) {
-          this.userIdsSelected.push(dr);
-          nodeStatObj.selectedCnt++;
-        }
-      }
-      this.selectUsersFromDirectReports(drUser, filter);
-    }
-    */
   }
 
 

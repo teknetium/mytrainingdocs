@@ -959,14 +959,14 @@
         </div>
         <div style="display:block;padding:20px;text-align:center;width:100%;height:90%;">
             <div *ngIf="orgChartSelections.length > 0">
-                <h4>Selections</h4>
+                <h4>Selection</h4>
                 <table *ngIf="orgChartSelections.length > 0"
                     style="font-size:12px;width:80%;border:1px solid #dddddd;margin:0 10%;">
                     <tr style="background-color: #f1f1f1;border-bottom: 1px solid #dddddd;">
                         <th>Name</th>
                         <th>Type</th>
                         <th>Value</th>
-                        <th>Count</th>
+                        <th>Users selected</th>
                         <th>Actions</th>
                     </tr>
                     <tr *ngFor="let selection of orgChartSelections; let selectionIndex = index" style="width:100%;"
@@ -995,18 +995,17 @@
                             </button>
                             <button nz-button nzSize="default" nzShape="circle" nzType="default"
                                 style="display:inline-block;margin-right:5px;" nz-tooltip nzTooltipPlacement="top"
-                                nzTooltipTitle="Remove this selection"
-                                (click)="removeSelection(selectionIndex, selection.rootUid)">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            <button nz-button nzSize="default" nzShape="circle" nzType="default"
-                                style="display:inline-block;margin-right:5px;" nz-tooltip nzTooltipPlacement="top"
                                 nzTooltipTitle="Email selected users" (click)="sendRegistrationEmail()">
                                 <i class="fas fa-envelope"></i>
                             </button>
                             <button nz-button nzSize="default" nzShape="circle" nzType="default" style="display:inline-block;margin-right:5px;"
                                 nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Send the Registration Invitation Message to the Selected Users" (click)="sendRegistrationEmail()">
                                 <i class="fas fa-mail-bulk"></i>
+                            </button>
+                            <button nz-button nzSize="default" nzShape="circle" nzType="default" style="display:inline-block;margin-right:5px;color:red;"
+                                nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Remove this selection"
+                                (click)="removeSelectionByUid(selection.rootUid)">
+                                <i class="fas fa-times"></i>
                             </button>
                             <!--
                             <i class="fas fa-fw fa-plus" style="margin-right:5px;" nz-tooltip
