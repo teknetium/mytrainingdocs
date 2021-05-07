@@ -1198,7 +1198,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   chartOrientationIsVertical = 'true';
   isVertical = true;
   false = false;
-  userDetailIsVisible = false;
   isOrgView = true;
   listOfJobFilters: Array<{ label: string; value: string }> = [];
   listOfFilterJobTitles = [];
@@ -1933,23 +1932,56 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
   }
 
-  getMenuPlacement(uid: string): string {
+  getMenuXPlacement(uid: string): string {
+    let totalMenuWidth: number;
     let bWidth = window.innerWidth;
     let rect;
     let left;
     let element: Element;
     let elementWidth;
+
+    if (this.myOrgUserHash[uid].userType === 'supervisor') {
+      totalMenuWidth = 650;
+    } else {
+      totalMenuWidth = 400;
+    }
     element = document.getElementById(uid);
     elementWidth = element.clientWidth;
     if (element) {
       rect = element.getBoundingClientRect();
       left = String(elementWidth);
-      if (rect.x + 650 + elementWidth >= bWidth) {
-        left = String((bWidth - 650) - rect.x);
+      if (rect.x + totalMenuWidth + elementWidth >= bWidth) {
+        left = String((bWidth - totalMenuWidth) - rect.x);
         return (left + 'px');
       } else {
         left = String((elementWidth));
         return (left + 'px');
+      }
+    }
+  }
+
+  getMenuYPlacement(uid: string): string {
+    let totalMenuHeight: number;
+    let bHeight = window.innerHeight;
+    let rect;
+    let top: string;
+    let element: Element;
+    if (this.myOrgUserHash[uid].userType === 'supervisor') {
+      totalMenuHeight = 750;
+    } else {
+      totalMenuHeight = 400;
+    }
+    element = document.getElementById(uid);
+    if (element) {
+      rect = element.getBoundingClientRect();
+      console.log('getMenuYPlacement', rect.y, bHeight);
+      top = String(0);
+      if (rect.y + totalMenuHeight >= bHeight) {
+        top = String((bHeight - totalMenuHeight) - rect.y);
+        return (top + 'px');
+      } else {
+        top = String(0);
+        return (top + 'px');
       }
     }
   }
@@ -2087,15 +2119,17 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     }
   }
 
-  showMsgModal() {
-    console.log('showMsgModal', this.orgObj);
+  showMsgModal(uid: string) {
+    this.userIdsSelected.push(uid);
     if (this.orgObj.planId === 'basic' || this.orgObj.planId === 'pro') {
       //      this.showUpgradeToExpertDialog = true;
       this.orgService.showUpgradeToExpertDialog(true);
     } else {
       this.showMessageModal = true;
-      this.recipientUidList = Object.assign(this.recipientUidList, this.userIdsSelected);
+      this.recipientUidList = cloneDeep(this.userIdsSelected);
     }
+    this.hideSupervisorMenu(uid);
+    this.userIdsSelected = [];
   }
 
   getSelectedTrainingIconClass(tid: string): string {
@@ -2118,14 +2152,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.userService.sendRegistrationMsg(to, from);
     let msg = 'Registration messasge resent.';
     this.createBasicMessage(msg);
-  }
-
-  closeUserDetails() {
-    this.userDetailIsVisible = false;
-  }
-
-  openUserDetails() {
-    this.userDetailIsVisible = true;
   }
 
   createBasicMessage(msg: string) {
@@ -2589,10 +2615,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     let index = userNameList.indexOf(value);
     if (index > -1) {
 
-      //      this.toggleOrgChartSelectMode('Individual');
-      //      this.setSelectionMode('Individual');
-      //      this.selectionMode = 'Individual';
-      //      this.userIdsSelected = [];
       this.selectUser(this.myOrgUserNameHash[value]._id, index);
       //      this.showAddToUserListButton = true;
     }
@@ -3080,31 +3102,24 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         this.userIdsSelected.splice(index, 1);
       }
       this.userService.selectUser(null);
-      this.userDetailIsVisible = false;
       this.rowSelected = -1;
       return;
     }
 
     this.userIdsSelected = [];
     this.userIdsSelected.push(userId);
-    /*
-    if (this.userIdSelected === userId) {
-      this.userService.selectUser(null);
-      this.userDetailIsVisible = false;
-      this.rowSelected = -1;
-    } else {
-    */
     this.userService.selectUser(userId);
+
     this.rowSelected = i;
-    this.userDetailIsVisible = true;
-    //    }
-    /*
-    this.figureOrgStat(this.authenticatedUser._id, this.authenticatedUser._id);
-    for (let node of this.collapsedNodes) {
-      this.figureOrgStat(this.authenticatedUser._id, node);
+    let reportChain = this.orgChartNodeHash[userId].extra.reportChain;
+    let supervisorNode = reportChain[reportChain.length - 1];
+    
+    for (let uid of reportChain) {
+      let nodeStatsObj = this.nodeStatHash[uid];
+      nodeStatsObj.selectedCnt = 1;
     }
-    */
-    this.supervisorMenuHash[userId].main = false;
+    this.hideSupervisorMenu(userId);
+//    this.supervisorMenuHash[userId].main = false;
   }
 
   /*

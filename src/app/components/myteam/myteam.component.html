@@ -676,33 +676,6 @@
                             nzTooltipTitle="Send the Registration Invitation Message to the Selected Users">
                             <i class="fas fa-mail-bulk"></i></button>
                     </div>
-                    <nz-modal [(nzVisible)]="showMessageModal" nzTitle="Send a Message to the Selected Users"
-                        (nzOnCancel)="handleSendMessageCancel()" (nzOnOk)="sendMessage()" nzOkText="Send">
-                        <label style="margin-bottom: 3px;font-size:12px;color:#999999;">Recipients ( {{
-                            recipientUidList.length }} )</label>
-                        <div
-                            style="display:block;margin-bottom:10px;padding-top:5px;max-height:200px;height:fit-content;overflow: scroll;border:1px solid #999999;border-radius: 5px;">
-                            <div style="display:block;padding:4px 20px 0 10px;"
-                                *ngFor="let uid of recipientUidList; index as i" (mouseenter)="currentRecipient(uid)"
-                                [ngClass]="{'current-recipient': currentRecipientUid === uid}">
-                                {{ myOrgUserHash[uid].firstName }} {{ myOrgUserHash[uid].lastName }}
-
-                                <i *ngIf="currentRecipientUid === uid" nz-icon nzType="close-circle"
-                                    [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-popconfirm
-                                    nzPopconfirmTitle="Remove this recipient?" [nzPopconfirmTrigger]="'click'"
-                                    [nzPopconfirmPlacement]="'right'" (nzOnConfirm)="removeRecipient(i)"
-                                    style="float:right;font-size:16px;cursor:pointer;vertical-align: middle;"></i>
-
-                            </div>
-                        </div>
-                        <div style="z-index: 1000;background-color: white;" (mouseenter)="currentRecipient('')">
-                            <label style="margin-bottom: 3px;font-size:12px;color:#999999;">Subject</label>
-                            <input nz-input type="text" placeholder="Subject" ngDefaultControl [(ngModel)]="msgSubject"
-                                style="margin-bottom:10px;">
-                            <label style="margin-bottom: 3px;font-size:12px;color:#999999;">Message</label>
-                            <textarea rows="4" nz-input [(ngModel)]="msgBody"></textarea>
-                        </div>
-                    </nz-modal>
                     <div style="clear:both;"></div>
                 </div>
             </div>
@@ -846,6 +819,33 @@
                 <div style="clear: both;"></div>
             </div>
         -->
+            <nz-modal [(nzVisible)]="showMessageModal" nzTitle="Send a Message to the Selected Users"
+                (nzOnCancel)="handleSendMessageCancel()" (nzOnOk)="sendMessage()" nzOkText="Send">
+                <label style="margin-bottom: 3px;font-size:12px;color:#999999;">Recipients ( {{
+                    recipientUidList.length }} )</label>
+                <div
+                    style="display:block;margin-bottom:10px;padding:5px;max-height:200px;height:fit-content;overflow: scroll;border:1px solid #999999;border-radius: 5px;">
+                    <div style="display:block;padding:4px 20px 0 10px;" *ngFor="let uid of recipientUidList; index as i"
+                        (mouseenter)="currentRecipient(uid)"
+                        [ngClass]="{'current-recipient': currentRecipientUid === uid}">
+                        {{ myOrgUserHash[uid].firstName }} {{ myOrgUserHash[uid].lastName }}
+
+                        <i *ngIf="currentRecipientUid === uid" nz-icon nzType="close-circle" [nzTheme]="'twotone'"
+                            [nzTwotoneColor]="'red'" nz-popconfirm nzPopconfirmTitle="Remove this recipient?"
+                            [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'right'"
+                            (nzOnConfirm)="removeRecipient(i)"
+                            style="float:right;font-size:16px;cursor:pointer;vertical-align: middle;"></i>
+
+                    </div>
+                </div>
+                <div style="z-index: 1000;background-color: white;" (mouseenter)="currentRecipient('')">
+                    <label style="margin-bottom: 3px;font-size:12px;color:#999999;">Subject</label>
+                    <input nz-input type="text" placeholder="Subject" ngDefaultControl [(ngModel)]="msgSubject"
+                        style="margin-bottom:10px;">
+                    <label style="margin-bottom: 3px;font-size:12px;color:#999999;">Message</label>
+                    <textarea rows="4" nz-input [(ngModel)]="msgBody"></textarea>
+                </div>
+            </nz-modal>
             <div
                 style="position:fixed;bottom:5px;left:75px;right:75px;background:rgba(0,0,255,.09);padding:10px;border:2px solid #afbcf8;border-radius: 5px;">
                 <div
@@ -864,6 +864,7 @@
                                 style="display:inline-block;font-size:12px;font-weight: 300;color:#444444;vertical-align: middle;margin-right:20px;">({{currentHoverUser?.jobTitle}})
                             </span>
                         </div>
+                        <!--
                         <div *ngIf="currentHoverUser?.userType === 'supervisor'" style="float:right;">
                             <i class="fas fa-user"
                                 style="font-size:16px;color:black;vertical-align: middle;margin-right:3px;" nz-tooltip
@@ -880,6 +881,7 @@
                                 nzTooltipPlacement="bottomLeft" nzTooltipTitle="Past Due"></i>
                             <span style="vertical-align: middle;">{{ nodeStatHash[currentHoverUid]?.pastDueCnt}}</span>
                         </div>
+                        -->
                     </div>
                 </div>
                 <div style="float:right;width:48%;background: rgba(255,255,255, .9);border-radius: 5px;height:35px;">
@@ -998,7 +1000,7 @@
                             </button>
                             <button nz-button nzSize="default" nzShape="circle" nzType="default"
                                 style="display:inline-block;margin-right:5px;" nz-tooltip nzTooltipPlacement="top"
-                                nzTooltipTitle="Email selected users" (click)="sendRegistrationEmail()">
+                                nzTooltipTitle="Email selected users" (click)="showMsgModal()">
                                 <i class="fas fa-envelope"></i>
                             </button>
                             <button nz-button nzSize="default" nzShape="circle" nzType="default"
@@ -1062,7 +1064,7 @@
                             style="text-align: center;margin-bottom:20px;position:relative;"
                             id="{{authenticatedUser._id}}">
                             <div *ngIf="supervisorMenuHash[authenticatedUser._id].main" class="supervisor-menu"
-                                [ngStyle]="{'left': getMenuPlacement(authenticatedUser._id)}">
+                                [ngStyle]="{'left': getMenuXPlacement(authenticatedUser._id), 'top': getMenuYPlacement(authenticatedUser._id)}">
                                 <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                     (click)="hideSupervisorMenu(authenticatedUser._id)">
                                     <i class="fal fa-times" style="font-size:20px;color:red;"></i>
@@ -1088,6 +1090,10 @@
                                     <li (click)="editUser(authenticatedUser._id)" class="supervisor-menu-item">
                                         <i class="fas fa-fw fa-user-edit" style="font-size:14px;margin-right:10px;"></i>
                                         Edit User Data
+                                    </li>
+                                    <li (click)="showMsgModal(authenticatedUser._id)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
+                                        Email User
                                     </li>
                                     <!--
                                     <li *ngIf="!userIdsSelected.includes(authenticatedUser._id)"
@@ -1569,7 +1575,7 @@
                                     <div class="org-chart-node" [ngStyle]="{'padding.px': orgChartPadding}" id="{{dr}}"
                                         [ngClass]="{'supervisor-node': myOrgUserHash[dr]?.userType === 'supervisor'}">
                                         <div *ngIf="supervisorMenuHash[dr].main" class="supervisor-menu"
-                                            [ngStyle]="{'left': getMenuPlacement(dr)}">
+                                            [ngStyle]="{'left': getMenuXPlacement(dr), 'top': getMenuYPlacement(dr)}">
                                             <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                 (click)="hideSupervisorMenu(dr)">
                                                 <i class="fal fa-times" style="font-size:20px;color:red;"></i>
@@ -1596,6 +1602,10 @@
                                                         style="font-size:14px;margin-right:10px;"></i>
                                                     Edit User Data
                                                 </li>
+                                    <li (click)="showMsgModal(dr)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
+                                        Email User
+                                    </li>
                                                 <!--
                                                 <li *ngIf="!userIdsSelected.includes(dr)"
                                                     (click)="addToSelectedUsers(dr)" class="supervisor-menu-item">
@@ -2083,7 +2093,7 @@
                                                     id="{{dr2}}"
                                                     [ngClass]="{'supervisor-node': myOrgUserHash[dr2]?.userType === 'supervisor'}">
                                                     <div *ngIf="supervisorMenuHash[dr2].main" class="supervisor-menu"
-                                                        [ngStyle]="{'left': getMenuPlacement(dr2)}">
+                                                        [ngStyle]="{'left': getMenuXPlacement(dr2), 'top': getMenuYPlacement(dr2)}">
                                                         <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                             (click)="hideSupervisorMenu(dr2)">
                                                             <i class="fal fa-times"
@@ -2114,6 +2124,10 @@
                                                                     style="font-size:14px;margin-right:10px;"></i>
                                                                 Edit User Data
                                                             </li>
+                                    <li (click)="showMsgModal(dr2)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
+                                        Email User
+                                    </li>
                                                             <!--
                                                             <li *ngIf="!userIdsSelected.includes(dr2)"
                                                                 (click)="addToSelectedUsers(dr2)"
@@ -2632,7 +2646,7 @@
                                                                 [ngClass]="{'supervisor-node': myOrgUserHash[dr3]?.userType === 'supervisor'}">
                                                                 <div *ngIf="supervisorMenuHash[dr3].main"
                                                                     class="supervisor-menu"
-                                                                    [ngStyle]="{'left': getMenuPlacement(dr3)}">
+                                                                    [ngStyle]="{'left': getMenuXPlacement(dr3), 'top': getMenuYPlacement(dr3)}">
                                                                     <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                                         (click)="hideSupervisorMenu(dr3)">
                                                                         <i class="fal fa-times"
@@ -2665,6 +2679,10 @@
                                                                                 style="font-size:14px;margin-right:10px;"></i>
                                                                             Edit User Data
                                                                         </li>
+                                    <li (click)="showMsgModal(dr3)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
+                                        Email User
+                                    </li>
                                                                         <!--
                                                                         <li *ngIf="!userIdsSelected.includes(dr3)"
                                                                             (click)="addToSelectedUsers(dr3)"
@@ -3219,7 +3237,7 @@
                                                                             [ngClass]="{'supervisor-node': myOrgUserHash[dr4]?.userType === 'supervisor'}">
                                                                             <div *ngIf="supervisorMenuHash[dr4].main"
                                                                                 class="supervisor-menu"
-                                                                                [ngStyle]="{'left': getMenuPlacement(dr4)}">
+                                                                                [ngStyle]="{'left': getMenuXPlacement(dr4), 'top': getMenuYPlacement(dr4)}">
                                                                                 <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                                                     (click)="hideSupervisorMenu(dr4)">
                                                                                     <i class="fal fa-times"
@@ -3252,6 +3270,10 @@
                                                                                             style="font-size:14px;margin-right:10px;"></i>
                                                                                         Edit User Data
                                                                                     </li>
+                                    <li (click)="showMsgModal(dr4)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
+                                        Email User
+                                    </li>
                                                                                     <!--
                                                                                     <li *ngIf="!userIdsSelected.includes(dr4)"
                                                                                         (click)="addToSelectedUsers(dr4)"
@@ -3843,7 +3865,7 @@
                                                                                         [ngClass]="{'supervisor-node': myOrgUserHash[dr5]?.userType === 'supervisor'}">
                                                                                         <div *ngIf="supervisorMenuHash[dr5].main"
                                                                                             class="supervisor-menu"
-                                                                                            [ngStyle]="{'left': getMenuPlacement(dr5)}">
+                                                                                            [ngStyle]="{'left': getMenuXPlacement(dr5), 'top': getMenuYPlacement(dr5)}">
                                                                                             <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                                                                 (click)="hideSupervisorMenu(dr5)">
                                                                                                 <i class="fal fa-times"
@@ -3877,6 +3899,10 @@
                                                                                                         style="font-size:14px;margin-right:10px;"></i>
                                                                                                     Edit User Data
                                                                                                 </li>
+                                    <li (click)="showMsgModal(dr5)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
+                                        Email User
+                                    </li>
                                                                                                 <!--
                                                                                                 <li *ngIf="!userIdsSelected.includes(dr5)"
                                                                                                     (click)="addToSelectedUsers(dr5)"
@@ -4482,7 +4508,7 @@
                                                                                                     [ngClass]="{'supervisor-node': myOrgUserHash[dr6]?.userType === 'supervisor'}">
                                                                                                     <div *ngIf="supervisorMenuHash[dr6].main"
                                                                                                         class="supervisor-menu"
-                                                                                                        [ngStyle]="{'left': getMenuPlacement(dr6)}">
+                                                                                                        [ngStyle]="{'left': getMenuXPlacement(dr6), 'top': getMenuYPlacement(dr6)}">
                                                                                                         <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                                                                             (click)="hideSupervisorMenu(dr6)">
                                                                                                             <i class="fal fa-times"
@@ -4521,6 +4547,10 @@
                                                                                                                 User
                                                                                                                 Data
                                                                                                             </li>
+                                    <li (click)="showMsgModal(dr6)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
+                                        Email User
+                                    </li>
                                                                                                             <!--
                                                                                                             <li *ngIf="!userIdsSelected.includes(dr6)"
                                                                                                                 (click)="addToSelectedUsers(dr6)"
@@ -5142,7 +5172,7 @@
                                                                                                                 [ngClass]="{'supervisor-node': myOrgUserHash[dr7]?.userType === 'supervisor'}">
                                                                                                                 <div *ngIf="supervisorMenuHash[dr7].main"
                                                                                                                     class="supervisor-menu"
-                                                                                                                    [ngStyle]="{'left': getMenuPlacement(dr7)}">
+                                                                                                                    [ngStyle]="{'left': getMenuXPlacement(dr7), 'top': getMenuYPlacement(dr7)}">
                                                                                                                     <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                                                                                         (click)="hideSupervisorMenu(dr7)">
                                                                                                                         <i class="fal fa-times"
@@ -5181,6 +5211,10 @@
                                                                                                                             User
                                                                                                                             Data
                                                                                                                         </li>
+                                    <li (click)="showMsgModal(dr7)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
+                                        Email User
+                                    </li>
                                                                                                                         <!--
                                                                                                                         <li *ngIf="!userIdsSelected.includes(dr7)"
                                                                                                                             (click)="addToSelectedUsers(dr7)"
