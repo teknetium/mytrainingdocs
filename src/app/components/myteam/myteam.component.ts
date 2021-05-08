@@ -1900,10 +1900,15 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   assignTrainingToUser(uid: string) {
-    this.hideSupervisorMenu(uid);
-    this.selectUser(uid, -1);
-    this.showUserTrainingModal = true;
-    this.assignTrainingTitle = "Assign Training - " + this.myOrgUserHash[uid].firstName + ' ' + this.myOrgUserHash[uid].lastName;
+    if (!uid) {
+      this.showUserTrainingModal = true;
+      this.assignTrainingTitle = "Assign Training";
+    } else {
+      this.hideSupervisorMenu(uid);
+      this.selectUser(uid, -1);
+      this.showUserTrainingModal = true;
+      this.assignTrainingTitle = "Assign Training - " + this.myOrgUserHash[uid].firstName + ' ' + this.myOrgUserHash[uid].lastName;
+    }
   }
 
   manageCurrentTrainings(uid: string) {
@@ -3620,7 +3625,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       }
     }
     //    }
-
+    this.userTrainingService.getOrgUserTrainings(this.authenticatedUser.org);
     this.getOrgStats();
     /*
     this.figureOrgStat(this.authenticatedUser._id);

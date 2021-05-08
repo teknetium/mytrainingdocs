@@ -995,7 +995,7 @@
                             <button nz-button nzSize="default" nzShape="circle" nzType="default"
                                 style="display:inline-block;margin-right:5px;" nz-tooltip nzTooltipPlacement="top"
                                 nzTooltipTitle="Assign a training to the selected users"
-                                (click)="showUserTrainingModal = true">
+                                (click)="assignTrainingToUser(null)">
                                 <i class="fas fa-plus"></i>
                             </button>
                             <button nz-button nzSize="default" nzShape="circle" nzType="default"
@@ -1283,7 +1283,7 @@
 
                             <div (mouseenter)="setHoverData(authenticatedUser._id)" (mouseleave)="setHoverData(null)"
                                 joyrideStep="task1Step2" [stepContent]="stepContent" nz-tooltip
-                                nzTooltipTitle="Right Click to bring up menu (control-click on single"
+                                nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                 [stepContentParams]="taskStepContentHash?.task1Step2"
                                 (next)="onTaskWizardNext('task1Step2')"
                                 (contextmenu)="showSupervisorMenu(authenticatedUser._id)"
@@ -1377,7 +1377,8 @@
                                             style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
                                             Training Status
                                         </div>
-                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                        <div *ngFor="let training of assignableTrainings" nz-tooltip
+                                            [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
                                             <div style="float:left;padding:2px;">
                                                 <i [ngClass]="training.iconClass"
                                                     [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
@@ -1792,7 +1793,7 @@
                                             </ul>
                                         </div>
                                         <div (mouseenter)="setHoverData(dr)" (mouseleave)="setHoverData(null)"
-                                            (contextmenu)="showSupervisorMenu(dr)"
+                                            (contextmenu)="showSupervisorMenu(dr)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                             [ngClass]="{'selected-node': userIdsSelected.includes(dr), 'hover-node': dr === currentHoverUid ||
                                         orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr), 'non-supervisor-icon-node': myOrgUserHash[dr]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr]?.userType === 'supervisor', 'wide-node': myOrgUserHash[dr]?.userType !== 'supervisor' && currentHoverUid === dr}">
                                             <!--
@@ -1883,22 +1884,24 @@
                                                             {{nodeStatHash[dr]?.selectedCnt}}
                                                         </div>
                                                     </div>
-                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
-                                            <div style="float:left;padding:2px;">
-                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
-                                            </div>
-                                            <div style="float:right;margin-left:20px;">
-                                                <span
-                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.upToDate}}</span>
-                                                <span
-                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.pastDue}}</span>
-                                                <span
-                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.completed}}</span>
-                                                <span
-                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.pendingCertUpload}}</span>
-                                            </div>
-                                            <div style="clear: both;"></div>
-                                        </div>
+                                                    <div *ngFor="let training of assignableTrainings" nz-tooltip
+                                                        [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                                        <div style="float:left;padding:2px;">
+                                                            <i [ngClass]="training.iconClass"
+                                                                [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                                        </div>
+                                                        <div style="float:right;margin-left:20px;">
+                                                            <span
+                                                                style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.upToDate}}</span>
+                                                            <span
+                                                                style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.pastDue}}</span>
+                                                            <span
+                                                                style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.completed}}</span>
+                                                            <span
+                                                                style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                                        </div>
+                                                        <div style="clear: both;"></div>
+                                                    </div>
                                                 </div>
                                                 <div *ngIf="displayMode[dr] === 'JobTitle'" style="padding:5px;">
                                                     <div nz-tooltip nzTooltipTitle="Selected Users"
@@ -2318,7 +2321,7 @@
                                                     </div>
 
                                                     <div (mouseenter)="setHoverData(dr2)"
-                                                        (mouseleave)="setHoverData(null)"
+                                                        (mouseleave)="setHoverData(null)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                                         (contextmenu)="showSupervisorMenu(dr2)"
                                                         [ngClass]="{'selected-node': userIdsSelected.includes(dr2) , 'hover-node': dr2 === currentHoverUid ||
                                                     orgChartNodeHash[dr2]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2), 'non-supervisor-icon-node': myOrgUserHash[dr2]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr2]?.userType === 'supervisor', 'wide-node': myOrgUserHash[dr2]?.userType !== 'supervisor' && currentHoverUid === dr2}">
@@ -2418,22 +2421,25 @@
                                                                         {{nodeStatHash[dr2]?.selectedCnt}}
                                                                     </div>
                                                                 </div>
-                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
-                                            <div style="float:left;">
-                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
-                                            </div>
-                                            <div style="float:right;margin-left:20px;">
-                                                <span
-                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.upToDate}}</span>
-                                                <span
-                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.pastDue}}</span>
-                                                <span
-                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.completed}}</span>
-                                                <span
-                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.pendingCertUpload}}</span>
-                                            </div>
-                                            <div style="clear: both;"></div>
-                                        </div>
+                                                                <div *ngFor="let training of assignableTrainings"
+                                                                    nz-tooltip [nzTooltipTitle]="training.title"
+                                                                    nzTooltipPlacement="right">
+                                                                    <div style="float:left;">
+                                                                        <i [ngClass]="training.iconClass"
+                                                                            [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                                                    </div>
+                                                                    <div style="float:right;margin-left:20px;">
+                                                                        <span
+                                                                            style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.upToDate}}</span>
+                                                                        <span
+                                                                            style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.pastDue}}</span>
+                                                                        <span
+                                                                            style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.completed}}</span>
+                                                                        <span
+                                                                            style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                                                    </div>
+                                                                    <div style="clear: both;"></div>
+                                                                </div>
                                                             </div>
                                                             <div *ngIf="displayMode[dr2] === 'JobTitle'"
                                                                 style="padding:5px;">
@@ -2867,7 +2873,7 @@
                                                                         </li>
                                                                     </ul>
                                                                 </div>
-                                                                <div (mouseenter)="setHoverData(dr3)"
+                                                                <div (mouseenter)="setHoverData(dr3)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                                                     (mouseleave)="setHoverData(null)"
                                                                     (contextmenu)="showSupervisorMenu(dr3)"
                                                                     [ngClass]="{'selected-node': userIdsSelected.includes(dr3), 'hover-node': dr3 === currentHoverUid ||
@@ -2977,22 +2983,27 @@
                                                                                     {{nodeStatHash[dr3]?.selectedCnt}}
                                                                                 </div>
                                                                             </div>
-                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
-                                            <div style="float:left;padding:3px;">
-                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
-                                            </div>
-                                            <div style="float:right;margin-left:20px;">
-                                                <span
-                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.upToDate}}</span>
-                                                <span
-                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.pastDue}}</span>
-                                                <span
-                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.completed}}</span>
-                                                <span
-                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.pendingCertUpload}}</span>
-                                            </div>
-                                            <div style="clear: both;"></div>
-                                        </div>
+                                                                            <div *ngFor="let training of assignableTrainings"
+                                                                                nz-tooltip
+                                                                                [nzTooltipTitle]="training.title"
+                                                                                nzTooltipPlacement="right">
+                                                                                <div style="float:left;padding:3px;">
+                                                                                    <i [ngClass]="training.iconClass"
+                                                                                        [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                                                                </div>
+                                                                                <div
+                                                                                    style="float:right;margin-left:20px;">
+                                                                                    <span
+                                                                                        style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.upToDate}}</span>
+                                                                                    <span
+                                                                                        style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.pastDue}}</span>
+                                                                                    <span
+                                                                                        style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.completed}}</span>
+                                                                                    <span
+                                                                                        style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                                                                </div>
+                                                                                <div style="clear: both;"></div>
+                                                                            </div>
                                                                         </div>
                                                                         <div *ngIf="displayMode[dr3] === 'JobTitle'"
                                                                             style="padding:5px;">
@@ -3461,7 +3472,7 @@
                                                                                     </li>
                                                                                 </ul>
                                                                             </div>
-                                                                            <div (mouseenter)="setHoverData(dr4)"
+                                                                            <div (mouseenter)="setHoverData(dr4)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                                                                 (mouseleave)="setHoverData(null)"
                                                                                 (contextmenu)="showSupervisorMenu(dr4)"
                                                                                 [ngClass]="{'selected-node': userIdsSelected.includes(dr4), 'hover-node': dr4 === currentHoverUid ||
@@ -3572,22 +3583,29 @@
                                                                                                 {{nodeStatHash[dr4]?.selectedCnt}}
                                                                                             </div>
                                                                                         </div>
-                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
-                                            <div style="float:left;padding:3px;">
-                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
-                                            </div>
-                                            <div style="float:right;margin-left:20px;">
-                                                <span
-                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.upToDate}}</span>
-                                                <span
-                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.pastDue}}</span>
-                                                <span
-                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.completed}}</span>
-                                                <span
-                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.pendingCertUpload}}</span>
-                                            </div>
-                                            <div style="clear: both;"></div>
-                                        </div>
+                                                                                        <div *ngFor="let training of assignableTrainings"
+                                                                                            nz-tooltip
+                                                                                            [nzTooltipTitle]="training.title"
+                                                                                            nzTooltipPlacement="right">
+                                                                                            <div
+                                                                                                style="float:left;padding:3px;">
+                                                                                                <i [ngClass]="training.iconClass"
+                                                                                                    [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                                                                            </div>
+                                                                                            <div
+                                                                                                style="float:right;margin-left:20px;">
+                                                                                                <span
+                                                                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.upToDate}}</span>
+                                                                                                <span
+                                                                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.pastDue}}</span>
+                                                                                                <span
+                                                                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.completed}}</span>
+                                                                                                <span
+                                                                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                                                                            </div>
+                                                                                            <div style="clear: both;">
+                                                                                            </div>
+                                                                                        </div>
                                                                                     </div>
                                                                                     <div *ngIf="displayMode[dr4] === 'JobTitle'"
                                                                                         style="padding:5px;">
@@ -4097,7 +4115,7 @@
                                                                                                 </li>
                                                                                             </ul>
                                                                                         </div>
-                                                                                        <div (mouseenter)="setHoverData(dr5)"
+                                                                                        <div (mouseenter)="setHoverData(dr5)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                                                                             id="{{dr5}}"
                                                                                             (mouseleave)="setHoverData(null)"
                                                                                             (contextmenu)="showSupervisorMenu(dr5)"
@@ -4207,22 +4225,30 @@
                                                                                                             {{nodeStatHash[dr5]?.selectedCnt}}
                                                                                                         </div>
                                                                                                     </div>
-                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
-                                            <div style="float:left;padding:3px;">
-                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
-                                            </div>
-                                            <div style="float:right;margin-left:20px;">
-                                                <span
-                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.upToDate}}</span>
-                                                <span
-                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.pastDue}}</span>
-                                                <span
-                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.completed}}</span>
-                                                <span
-                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.pendingCertUpload}}</span>
-                                            </div>
-                                            <div style="clear: both;"></div>
-                                        </div>
+                                                                                                    <div *ngFor="let training of assignableTrainings"
+                                                                                                        nz-tooltip
+                                                                                                        [nzTooltipTitle]="training.title"
+                                                                                                        nzTooltipPlacement="right">
+                                                                                                        <div
+                                                                                                            style="float:left;padding:3px;">
+                                                                                                            <i [ngClass]="training.iconClass"
+                                                                                                                [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                                                                                        </div>
+                                                                                                        <div
+                                                                                                            style="float:right;margin-left:20px;">
+                                                                                                            <span
+                                                                                                                style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.upToDate}}</span>
+                                                                                                            <span
+                                                                                                                style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.pastDue}}</span>
+                                                                                                            <span
+                                                                                                                style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.completed}}</span>
+                                                                                                            <span
+                                                                                                                style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                                                                                        </div>
+                                                                                                        <div
+                                                                                                            style="clear: both;">
+                                                                                                        </div>
+                                                                                                    </div>
                                                                                                 </div>
                                                                                                 <div *ngIf="displayMode[dr5] === 'JobTitle'"
                                                                                                     style="padding:5px;">
@@ -4741,7 +4767,7 @@
                                                                                                         </ul>
                                                                                                     </div>
                                                                                                     <div id="{{dr6}}"
-                                                                                                        (mouseenter)="setHoverData(dr6)"
+                                                                                                        (mouseenter)="setHoverData(dr6)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                                                                                         (mouseleave)="setHoverData(null)"
                                                                                                         (contextmenu)="showSupervisorMenu(dr6)"
                                                                                                         [ngClass]="{'selected-node': userIdsSelected.includes(dr6), 'hover-node': dr6 === currentHoverUid ||
@@ -4855,22 +4881,30 @@
                                                                                                                         {{nodeStatHash[dr6]?.selectedCnt}}
                                                                                                                     </div>
                                                                                                                 </div>
-                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
-                                            <div style="float:left;padding:3px;">
-                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
-                                            </div>
-                                            <div style="float:right;margin-left:20px;">
-                                                <span
-                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.upToDate}}</span>
-                                                <span
-                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.pastDue}}</span>
-                                                <span
-                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.completed}}</span>
-                                                <span
-                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.pendingCertUpload}}</span>
-                                            </div>
-                                            <div style="clear: both;"></div>
-                                        </div>
+                                                                                                                <div *ngFor="let training of assignableTrainings"
+                                                                                                                    nz-tooltip
+                                                                                                                    [nzTooltipTitle]="training.title"
+                                                                                                                    nzTooltipPlacement="right">
+                                                                                                                    <div
+                                                                                                                        style="float:left;padding:3px;">
+                                                                                                                        <i [ngClass]="training.iconClass"
+                                                                                                                            [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                                                                                                    </div>
+                                                                                                                    <div
+                                                                                                                        style="float:right;margin-left:20px;">
+                                                                                                                        <span
+                                                                                                                            style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.upToDate}}</span>
+                                                                                                                        <span
+                                                                                                                            style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.pastDue}}</span>
+                                                                                                                        <span
+                                                                                                                            style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.completed}}</span>
+                                                                                                                        <span
+                                                                                                                            style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                                                                                                    </div>
+                                                                                                                    <div
+                                                                                                                        style="clear: both;">
+                                                                                                                    </div>
+                                                                                                                </div>
                                                                                                             </div>
                                                                                                             <div *ngIf="displayMode[dr6] === 'JobTitle'"
                                                                                                                 style="padding:5px;">
@@ -5391,7 +5425,7 @@
                                                                                                                     </ul>
                                                                                                                 </div>
                                                                                                                 <div id="{{dr7}}"
-                                                                                                                    (mouseenter)="setHoverData(dr7)"
+                                                                                                                    (mouseenter)="setHoverData(dr7)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                                                                                                     (mouseleave)="setHoverData(null)"
                                                                                                                     (contextmenu)="showSupervisorMenu(dr7)"
                                                                                                                     [ngClass]="{'selected-node': userIdsSelected.includes(dr7), 'hover-node': dr7 === currentHoverUid ||
@@ -5503,22 +5537,30 @@
                                                                                                                                     {{nodeStatHash[dr7]?.selectedCnt}}
                                                                                                                                 </div>
                                                                                                                             </div>
-                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
-                                            <div style="float:left;padding:3px;">
-                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
-                                            </div>
-                                            <div style="float:right;margin-left:20px;">
-                                                <span
-                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.upToDate}}</span>
-                                                <span
-                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.pastDue}}</span>
-                                                <span
-                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.completed}}</span>
-                                                <span
-                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.pendingCertUpload}}</span>
-                                            </div>
-                                            <div style="clear: both;"></div>
-                                        </div>
+                                                                                                                            <div *ngFor="let training of assignableTrainings"
+                                                                                                                                nz-tooltip
+                                                                                                                                [nzTooltipTitle]="training.title"
+                                                                                                                                nzTooltipPlacement="right">
+                                                                                                                                <div
+                                                                                                                                    style="float:left;padding:3px;">
+                                                                                                                                    <i [ngClass]="training.iconClass"
+                                                                                                                                        [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                                                                                                                </div>
+                                                                                                                                <div
+                                                                                                                                    style="float:right;margin-left:20px;">
+                                                                                                                                    <span
+                                                                                                                                        style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.upToDate}}</span>
+                                                                                                                                    <span
+                                                                                                                                        style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.pastDue}}</span>
+                                                                                                                                    <span
+                                                                                                                                        style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.completed}}</span>
+                                                                                                                                    <span
+                                                                                                                                        style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                                                                                                                </div>
+                                                                                                                                <div
+                                                                                                                                    style="clear: both;">
+                                                                                                                                </div>
+                                                                                                                            </div>
                                                                                                                         </div>
                                                                                                                         <div *ngIf="displayMode[dr7] === 'JobTitle'"
                                                                                                                             style="padding:5px;">
@@ -5985,25 +6027,28 @@
                                 Trainings</span> page to create your
                             trainings.
                         </div>
-                        <div *ngIf="userIdsSelected?.length === 1 && (assignableTrainings.length > 0 && assignableTrainings.length === 0)">
+                        <div
+                            *ngIf="userIdsSelected?.length === 1 && (assignableTrainings.length > 0 && assignableTrainings.length === 0)">
                             You have already assigned all trainings to this user!
                         </div>
                         <div *ngIf="assignableTrainings.length > 0">
                             Select the training you would like to assign.
                         </div>
-                        <div *ngFor="let training of assignableTrainings" class="all-training-list-entry"
-                            style="padding:10px 20px;width:100%;"
-                            [ngClass]="{'selected-training': selectedTrainingId === training._id, 'disabled': training?.versions.length === 1, 'active-training': training?.versions.length > 1 }"
-                            (click)="selectTraining(training._id)">
-                            <i [ngClass]="allTrainingIdHash[training._id]?.versions[0].iconClass"
-                                style="display:inline-block;font-size:20px;margin-right:10px;vertical-align: middle;"
-                                [ngStyle]="{'color': allTrainingIdHash[training._id]?.versions[0].iconColor}">
-                            </i>
-                            <div style="display:inline-block;font-size:14px;">
-                                {{ training.versions[0].title }}
-                            </div>
-                            <div style="float:right;font-size:14px;margin-left:20px;">
-                                version {{ versionFormatter(training.versions[0].version) }}
+                        <div style="margin-top:40px;">
+                            <div *ngFor="let training of assignableTrainings" class="all-training-list-entry"
+                                style="padding:10px 20px;width:100%;"
+                                [ngClass]="{'selected-training': selectedTrainingId === training._id, 'disabled': training?.versions.length === 1, 'active-training': training?.versions.length > 1 }"
+                                (click)="selectTraining(training._id)">
+                                <i [ngClass]="allTrainingIdHash[training._id]?.versions[0].iconClass"
+                                    style="display:inline-block;font-size:20px;margin-right:10px;vertical-align: middle;"
+                                    [ngStyle]="{'color': allTrainingIdHash[training._id]?.versions[0].iconColor}">
+                                </i>
+                                <div style="display:inline-block;font-size:14px;">
+                                    {{ training.versions[0].title }}
+                                </div>
+                                <div style="float:right;font-size:14px;margin-left:20px;">
+                                    version {{ versionFormatter(training.versions[0].version) }}
+                                </div>
                             </div>
                         </div>
                     </div>
