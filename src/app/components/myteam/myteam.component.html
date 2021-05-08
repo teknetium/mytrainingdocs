@@ -1377,7 +1377,7 @@
                                             style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
                                             Training Status
                                         </div>
-                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
                                             <div style="float:left;padding:2px;">
                                                 <i [ngClass]="training.iconClass"
                                                     [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
@@ -1883,7 +1883,7 @@
                                                             {{nodeStatHash[dr]?.selectedCnt}}
                                                         </div>
                                                     </div>
-                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
                                             <div style="float:left;padding:2px;">
                                                 <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                             </div>
@@ -2418,7 +2418,7 @@
                                                                         {{nodeStatHash[dr2]?.selectedCnt}}
                                                                     </div>
                                                                 </div>
-                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
                                             <div style="float:left;">
                                                 <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                             </div>
@@ -2977,7 +2977,7 @@
                                                                                     {{nodeStatHash[dr3]?.selectedCnt}}
                                                                                 </div>
                                                                             </div>
-                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
                                             <div style="float:left;padding:3px;">
                                                 <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                             </div>
@@ -3572,7 +3572,7 @@
                                                                                                 {{nodeStatHash[dr4]?.selectedCnt}}
                                                                                             </div>
                                                                                         </div>
-                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
                                             <div style="float:left;padding:3px;">
                                                 <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                             </div>
@@ -4207,7 +4207,7 @@
                                                                                                             {{nodeStatHash[dr5]?.selectedCnt}}
                                                                                                         </div>
                                                                                                     </div>
-                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
                                             <div style="float:left;padding:3px;">
                                                 <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                             </div>
@@ -4855,7 +4855,7 @@
                                                                                                                         {{nodeStatHash[dr6]?.selectedCnt}}
                                                                                                                     </div>
                                                                                                                 </div>
-                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
                                             <div style="float:left;padding:3px;">
                                                 <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                             </div>
@@ -5503,7 +5503,7 @@
                                                                                                                                     {{nodeStatHash[dr7]?.selectedCnt}}
                                                                                                                                 </div>
                                                                                                                             </div>
-                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                        <div *ngFor="let training of assignableTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
                                             <div style="float:left;padding:3px;">
                                                 <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                             </div>
@@ -5980,18 +5980,18 @@
                 style="width:500px;padding:10px;float:left;">
                 <div>
                     <div style="background-color:white;display:inline-block;width:100%;">
-                        <div *ngIf="teamTrainings?.length === 0">
+                        <div *ngIf="assignableTrainings?.length === 0">
                             You have not created any trainings yet!<br> Head over to the <span style="color:blue;">All
                                 Trainings</span> page to create your
                             trainings.
                         </div>
-                        <div *ngIf="userIdsSelected?.length === 1 && (teamTrainings.length > 0 && assignableTrainings.length === 0)">
+                        <div *ngIf="userIdsSelected?.length === 1 && (assignableTrainings.length > 0 && assignableTrainings.length === 0)">
                             You have already assigned all trainings to this user!
                         </div>
                         <div *ngIf="assignableTrainings.length > 0">
                             Select the training you would like to assign.
                         </div>
-                        <div *ngFor="let training of teamTrainings" class="all-training-list-entry"
+                        <div *ngFor="let training of assignableTrainings" class="all-training-list-entry"
                             style="padding:10px 20px;width:100%;"
                             [ngClass]="{'selected-training': selectedTrainingId === training._id, 'disabled': training?.versions.length === 1, 'active-training': training?.versions.length > 1 }"
                             (click)="selectTraining(training._id)">
