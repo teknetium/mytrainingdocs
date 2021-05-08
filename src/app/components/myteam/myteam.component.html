@@ -577,7 +577,7 @@
                         </ng-template>
                     </div>
                     <div *ngIf="displayMode === 'JobTitle'" style="float:left;margin-right:5px;">
-                        <!--
+                        < !--
                         <div style="display:block;font-size:12px;">
                             Job Titles
                         </div>
@@ -595,7 +595,7 @@
                         </ng-template>
                     </div>
                     <div *ngIf="displayMode === 'Training'" style="float:left;margin-right:5px;">
-                        <!--
+                        < !--
                         <div style="display:block;font-size:12px;">
                             Trainings
                         </div>
@@ -634,7 +634,7 @@
                         </ng-template>
                     </div>
                     <div style="float:left;margin-left:10px;">
-                        <!--
+                        < !--
                         <div style="display:block;font-size:12px;">
                             &nbsp;
                         </div>
@@ -645,7 +645,7 @@
                         </div>
                     </div>
                     <div style="float:right;border:1px solid #dddddd;border-radius:32px;padding:3px;">
-                        <!--
+                        < !--
                                             <button *ngIf="selectionMode !== 'Individual'" nz-button nzShape="circle" nzType="default"
                                                 [disabled]="userIdsSelected.length === 0  || currentUserStatus === 'inactive' || currentUserStatus === 'pending' || currentUserStatus === 'error'"
                                                 style="display:inline-block;" (click)="processNextUser()" nz-tooltip
@@ -973,16 +973,16 @@
                     </tr>
                     <tr *ngFor="let selection of orgChartSelections; let selectionIndex = index" style="width:100%;"
                         class="selection-table-row" (click)="openToUser(selection.rootUid)">
-                        <td style="text-align: left;padding:5px;" (click)="openToUser(selection.rootUid)">
+                        <td style="text-align: left;padding:5px;">
                             {{ selection?.name }}
                         </td>
-                        <td style="text-align: center;padding:5px;" (click)="openToUser(selection.rootUid)">
+                        <td style="text-align: center;padding:5px;">
                             {{ selectionModeHash[selection?.type] }}
                         </td>
-                        <td style="text-align: center;padding:5px;" (click)="openToUser(selection.rootUid)">
+                        <td style="text-align: center;padding:5px;">
                             {{ selection?.value }}
                         </td>
-                        <td style="text-align: center;padding:5px;" (click)="openToUser(selection.rootUid)">
+                        <td style="text-align: center;padding:5px;">
                             {{ userIdsSelected.length }}
                         </td>
                         <td style="text-align: center;padding:5px;">
@@ -1282,14 +1282,18 @@
                             </div>
 
                             <div (mouseenter)="setHoverData(authenticatedUser._id)" (mouseleave)="setHoverData(null)"
-                                joyrideStep="task1Step2" [stepContent]="stepContent"
+                                joyrideStep="task1Step2" [stepContent]="stepContent" nz-tooltip
+                                nzTooltipTitle="Right Click to bring up menu (control-click on single"
                                 [stepContentParams]="taskStepContentHash?.task1Step2"
                                 (next)="onTaskWizardNext('task1Step2')"
+                                (contextmenu)="showSupervisorMenu(authenticatedUser._id)"
                                 [ngClass]="{'selected-node': (userIdsSelected.includes(authenticatedUser._id)), 'hover-node': authenticatedUser._id === currentHoverUid  || currentHoverReportChain.includes(authenticatedUser._id), 'non-supervisor-icon-node': myOrgUserHash[authenticatedUser._id]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[authenticatedUser._id]?.userType === 'supervisor'}">
+                                <!--
                                 <div *ngIf="authenticatedUser._id === currentHoverUid && authenticatedUser.userType === 'supervisor'"
                                     class="supervisor-menu-icon" (click)="showSupervisorMenu(authenticatedUser._id)">
                                     <i class="far fa-fw fa-ellipsis-v"></i>
                                 </div>
+                                -->
                                 <i [ngClass]="userTypeIconHash[authenticatedUser.userType]"
                                     [ngStyle]="{'color': getStatusColor(authenticatedUser._id)}"></i>
                                 <span style="display: block;color:#666666;" [ngStyle]="{'font-size.px': textFontSize}">
@@ -1373,34 +1377,22 @@
                                             style="font-size:12px;text-align: center;margin-bottom:5px;font-weight:500;color:#aaaaaa;">
                                             Training Status
                                         </div>
-                                        <div nz-tooltip nzTooltipTitle="In Progress" nzTooltipPlacement="right"
-                                            style="display:flex;justify-content:space-between;"
-                                            [ngClass]="{'option-selected': currentFilterHash[authenticatedUser._id] === 'TrainingStatus:upToDate'}">
-                                            <i class="fas fa-graduation-cap"
-                                                style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
-                                            {{nodeStatHash[authenticatedUser._id]?.trainingHash.upToDate}}
-                                        </div>
-                                        <div nz-tooltip nzTooltipTitle="Past Due" nzTooltipPlacement="right"
-                                            style="display:flex;justify-content:space-between;"
-                                            [ngClass]="{'option-selected': currentFilterHash[authenticatedUser._id] === 'TrainingStatus:pastDue'}">
-                                            <i class="fas fa-graduation-cap"
-                                                style="color:red;font-size:16px;padding-top:2px;"></i>
-                                            {{nodeStatHash[authenticatedUser._id]?.trainingHash.pastDue}}
-                                        </div>
-                                        <div nz-tooltip nzTooltipTitle="Completed" nzTooltipPlacement="right"
-                                            style="display:flex;justify-content:space-between;"
-                                            [ngClass]="{'option-selected': currentFilterHash[authenticatedUser._id] === 'TrainingStatus:completed'}">
-                                            <i class="fas fa-graduation-cap"
-                                                style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
-                                            {{nodeStatHash[authenticatedUser._id]?.trainingHash.completed}}
-                                        </div>
-                                        <div nz-tooltip nzTooltipTitle="Pending Certification Approval"
-                                            nzTooltipPlacement="right"
-                                            style="display:flex;justify-content:space-between;"
-                                            [ngClass]="{'option-selected': currentFilterHash[authenticatedUser._id] === 'TrainingStatus:pendingCertUpload'}">
-                                            <i class="fas fa-graduation-cap"
-                                                style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
-                                            {{nodeStatHash[authenticatedUser._id]?.trainingHash.pendingCertUpload}}
+                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                            <div style="float:left;padding:2px;">
+                                                <i [ngClass]="training.iconClass"
+                                                    [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                            </div>
+                                            <div style="float:right;margin-left:20px;">
+                                                <span
+                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[authenticatedUser._id]?.trainingHash[training._id]?.upToDate}}</span>
+                                                <span
+                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[authenticatedUser._id]?.trainingHash[training._id]?.pastDue}}</span>
+                                                <span
+                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[authenticatedUser._id]?.trainingHash[training._id]?.completed}}</span>
+                                                <span
+                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[authenticatedUser._id]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                            </div>
+                                            <div style="clear: both;"></div>
                                         </div>
                                     </div>
                                     <div *ngIf="displayMode[authenticatedUser._id] === 'JobTitle'" style="padding:5px;">
@@ -1574,7 +1566,7 @@
                                     [ngClass]="{'node-selected': orgChartSelectionList.includes(dr)}">
                                     <div class="org-chart-node" [ngStyle]="{'padding.px': orgChartPadding}" id="{{dr}}"
                                         [ngClass]="{'supervisor-node': myOrgUserHash[dr]?.userType === 'supervisor'}">
-                                        <div *ngIf="supervisorMenuHash[dr].main" class="supervisor-menu"
+                                        <div *ngIf="supervisorMenuHash[dr]?.main" class="supervisor-menu"
                                             [ngStyle]="{'left': getMenuXPlacement(dr), 'top': getMenuYPlacement(dr)}">
                                             <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                 (click)="hideSupervisorMenu(dr)">
@@ -1602,10 +1594,11 @@
                                                         style="font-size:14px;margin-right:10px;"></i>
                                                     Edit User Data
                                                 </li>
-                                    <li (click)="showMsgModal(dr)" class="supervisor-menu-item">
-                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
-                                        Email User
-                                    </li>
+                                                <li (click)="showMsgModal(dr)" class="supervisor-menu-item">
+                                                    <i class="fas fa-fw fa-envelope"
+                                                        style="font-size:14px;margin-right:10px;"></i>
+                                                    Email User
+                                                </li>
                                                 <!--
                                                 <li *ngIf="!userIdsSelected.includes(dr)"
                                                     (click)="addToSelectedUsers(dr)" class="supervisor-menu-item">
@@ -1799,13 +1792,15 @@
                                             </ul>
                                         </div>
                                         <div (mouseenter)="setHoverData(dr)" (mouseleave)="setHoverData(null)"
+                                            (contextmenu)="showSupervisorMenu(dr)"
                                             [ngClass]="{'selected-node': userIdsSelected.includes(dr), 'hover-node': dr === currentHoverUid ||
                                         orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr), 'non-supervisor-icon-node': myOrgUserHash[dr]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr]?.userType === 'supervisor', 'wide-node': myOrgUserHash[dr]?.userType !== 'supervisor' && currentHoverUid === dr}">
-
+                                            <!--
                                             <div *ngIf="dr === currentHoverUid" class="supervisor-menu-icon"
                                                 (click)="showSupervisorMenu(dr)">
                                                 <i class="far fa-fw fa-ellipsis-v"></i>
                                             </div>
+                                            -->
                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
                                                 [ngStyle]="{'color': getStatusColor(dr)}"></i>
                                             <span *ngIf="myOrgUserHash[dr].userType === 'supervisor' || includeFullName"
@@ -1888,37 +1883,22 @@
                                                             {{nodeStatHash[dr]?.selectedCnt}}
                                                         </div>
                                                     </div>
-                                                    <div nz-tooltip nzTooltipTitle="In Progress"
-                                                        nzTooltipPlacement="right"
-                                                        style="display:flex;justify-content:space-between;"
-                                                        [ngClass]="{'option-selected': currentFilterHash[dr] === 'Training:upToDate'}">
-                                                        <i class="fas fa-graduation-cap"
-                                                            style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
-                                                        {{nodeStatHash[dr]?.trainingHash.upToDate}}
-                                                    </div>
-                                                    <div nz-tooltip nzTooltipTitle="Past Due" nzTooltipPlacement="right"
-                                                        style="display:flex;justify-content:space-between;"
-                                                        [ngClass]="{'option-selected': currentFilterHash[dr] === 'Training:pastDue'}">
-                                                        <i class="fas fa-graduation-cap"
-                                                            style="color:red;font-size:16px;padding-top:2px;"></i>
-                                                        {{nodeStatHash[dr]?.trainingHash.pastDue}}
-                                                    </div>
-                                                    <div nz-tooltip nzTooltipTitle="Completed"
-                                                        nzTooltipPlacement="right"
-                                                        style="display:flex;justify-content:space-between;"
-                                                        [ngClass]="{'option-selected': currentFilterHash[dr] === 'Training:upToDate'}">
-                                                        <i class="fas fa-graduation-cap"
-                                                            style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
-                                                        {{nodeStatHash[dr]?.trainingHash.completed}}
-                                                    </div>
-                                                    <div nz-tooltip nzTooltipTitle="Pending Certification Approval"
-                                                        nzTooltipPlacement="right"
-                                                        style="display:flex;justify-content:space-between;"
-                                                        [ngClass]="{'option-selected': currentFilterHash[dr] === 'Training:pendingCertUpload'}">
-                                                        <i class="fas fa-graduation-cap"
-                                                            style="color:orange;font-size:16px;padding-top:2px;"></i>
-                                                        {{nodeStatHash[dr]?.trainingHash.pendingCertUpload}}
-                                                    </div>
+                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                            <div style="float:left;padding:2px;">
+                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                            </div>
+                                            <div style="float:right;margin-left:20px;">
+                                                <span
+                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.upToDate}}</span>
+                                                <span
+                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.pastDue}}</span>
+                                                <span
+                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.completed}}</span>
+                                                <span
+                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                            </div>
+                                            <div style="clear: both;"></div>
+                                        </div>
                                                 </div>
                                                 <div *ngIf="displayMode[dr] === 'JobTitle'" style="padding:5px;">
                                                     <div nz-tooltip nzTooltipTitle="Selected Users"
@@ -2092,7 +2072,7 @@
                                                 <div [ngStyle]="{'padding.px': orgChartPadding}" class="org-chart-node"
                                                     id="{{dr2}}"
                                                     [ngClass]="{'supervisor-node': myOrgUserHash[dr2]?.userType === 'supervisor'}">
-                                                    <div *ngIf="supervisorMenuHash[dr2].main" class="supervisor-menu"
+                                                    <div *ngIf="supervisorMenuHash[dr2]?.main" class="supervisor-menu"
                                                         [ngStyle]="{'left': getMenuXPlacement(dr2), 'top': getMenuYPlacement(dr2)}">
                                                         <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                             (click)="hideSupervisorMenu(dr2)">
@@ -2124,10 +2104,12 @@
                                                                     style="font-size:14px;margin-right:10px;"></i>
                                                                 Edit User Data
                                                             </li>
-                                    <li (click)="showMsgModal(dr2)" class="supervisor-menu-item">
-                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
-                                        Email User
-                                    </li>
+                                                            <li (click)="showMsgModal(dr2)"
+                                                                class="supervisor-menu-item">
+                                                                <i class="fas fa-fw fa-envelope"
+                                                                    style="font-size:14px;margin-right:10px;"></i>
+                                                                Email User
+                                                            </li>
                                                             <!--
                                                             <li *ngIf="!userIdsSelected.includes(dr2)"
                                                                 (click)="addToSelectedUsers(dr2)"
@@ -2337,13 +2319,16 @@
 
                                                     <div (mouseenter)="setHoverData(dr2)"
                                                         (mouseleave)="setHoverData(null)"
+                                                        (contextmenu)="showSupervisorMenu(dr2)"
                                                         [ngClass]="{'selected-node': userIdsSelected.includes(dr2) , 'hover-node': dr2 === currentHoverUid ||
                                                     orgChartNodeHash[dr2]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2), 'non-supervisor-icon-node': myOrgUserHash[dr2]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr2]?.userType === 'supervisor', 'wide-node': myOrgUserHash[dr2]?.userType !== 'supervisor' && currentHoverUid === dr2}">
+                                                        <!--
                                                         <div *ngIf="dr2 === currentHoverUid"
                                                             class="supervisor-menu-icon"
                                                             (click)="showSupervisorMenu(dr2)">
                                                             <i class="far fa-fw fa-ellipsis-v"></i>
                                                         </div>
+                                                        -->
                                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr2]?.userType]"
                                                             [ngStyle]="{'color': getStatusColor(dr2)}"></i>
                                                         <span
@@ -2433,39 +2418,22 @@
                                                                         {{nodeStatHash[dr2]?.selectedCnt}}
                                                                     </div>
                                                                 </div>
-                                                                <div nz-tooltip nzTooltipTitle="In Progress"
-                                                                    nzTooltipPlacement="right"
-                                                                    style="display:flex;justify-content:space-between;"
-                                                                    [ngClass]="{'option-selected': currentFilterHash[dr2] === 'Training:upToDate'}">
-                                                                    <i class="fas fa-graduation-cap"
-                                                                        style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
-                                                                    {{nodeStatHash[dr2]?.trainingHash.upToDate}}
-                                                                </div>
-                                                                <div nz-tooltip nzTooltipTitle="Past Due"
-                                                                    nzTooltipPlacement="right"
-                                                                    style="display:flex;justify-content:space-between;"
-                                                                    [ngClass]="{'option-selected': currentFilterHash[dr2] === 'Training:pastDue'}">
-                                                                    <i class="fas fa-graduation-cap"
-                                                                        style="color:red;font-size:16px;padding-top:2px;"></i>
-                                                                    {{nodeStatHash[dr2]?.trainingHash.pastDue}}
-                                                                </div>
-                                                                <div nz-tooltip nzTooltipTitle="Completed"
-                                                                    nzTooltipPlacement="right"
-                                                                    style="display:flex;justify-content:space-between;"
-                                                                    [ngClass]="{'option-selected': currentFilterHash[dr2] === 'Training:completed'}">
-                                                                    <i class="fas fa-graduation-cap"
-                                                                        style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
-                                                                    {{nodeStatHash[dr2]?.trainingHash.completed}}
-                                                                </div>
-                                                                <div nz-tooltip
-                                                                    nzTooltipTitle="Pending Certification Approval"
-                                                                    nzTooltipPlacement="right"
-                                                                    style="display:flex;justify-content:space-between;"
-                                                                    [ngClass]="{'option-selected': currentFilterHash[dr2] === 'Training:pendingCertUpload'}">
-                                                                    <i class="fas fa-graduation-cap"
-                                                                        style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
-                                                                    {{nodeStatHash[dr2]?.trainingHash.pendingCertUpload}}
-                                                                </div>
+                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                            <div style="float:left;">
+                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                            </div>
+                                            <div style="float:right;margin-left:20px;">
+                                                <span
+                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.upToDate}}</span>
+                                                <span
+                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.pastDue}}</span>
+                                                <span
+                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.completed}}</span>
+                                                <span
+                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                            </div>
+                                            <div style="clear: both;"></div>
+                                        </div>
                                                             </div>
                                                             <div *ngIf="displayMode[dr2] === 'JobTitle'"
                                                                 style="padding:5px;">
@@ -2644,7 +2612,7 @@
                                                             <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                 class="org-chart-node" id="{{dr3}}"
                                                                 [ngClass]="{'supervisor-node': myOrgUserHash[dr3]?.userType === 'supervisor'}">
-                                                                <div *ngIf="supervisorMenuHash[dr3].main"
+                                                                <div *ngIf="supervisorMenuHash[dr3]?.main"
                                                                     class="supervisor-menu"
                                                                     [ngStyle]="{'left': getMenuXPlacement(dr3), 'top': getMenuYPlacement(dr3)}">
                                                                     <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
@@ -2679,10 +2647,12 @@
                                                                                 style="font-size:14px;margin-right:10px;"></i>
                                                                             Edit User Data
                                                                         </li>
-                                    <li (click)="showMsgModal(dr3)" class="supervisor-menu-item">
-                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
-                                        Email User
-                                    </li>
+                                                                        <li (click)="showMsgModal(dr3)"
+                                                                            class="supervisor-menu-item">
+                                                                            <i class="fas fa-fw fa-envelope"
+                                                                                style="font-size:14px;margin-right:10px;"></i>
+                                                                            Email User
+                                                                        </li>
                                                                         <!--
                                                                         <li *ngIf="!userIdsSelected.includes(dr3)"
                                                                             (click)="addToSelectedUsers(dr3)"
@@ -2899,14 +2869,17 @@
                                                                 </div>
                                                                 <div (mouseenter)="setHoverData(dr3)"
                                                                     (mouseleave)="setHoverData(null)"
+                                                                    (contextmenu)="showSupervisorMenu(dr3)"
                                                                     [ngClass]="{'selected-node': userIdsSelected.includes(dr3), 'hover-node': dr3 === currentHoverUid ||
                                                                 orgChartNodeHash[dr3]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr3), 'non-supervisor-icon-node': myOrgUserHash[dr3]?.userType !== 'supervisor',
                                                                 'supervisor-icon-node': myOrgUserHash[dr3]?.userType === 'supervisor', 'wide-node': myOrgUserHash[dr3]?.userType !== 'supervisor' && currentHoverUid === dr3}">
+                                                                    <!--
                                                                     <div *ngIf="dr3 === currentHoverUid"
                                                                         class="supervisor-menu-icon"
                                                                         (click)="showSupervisorMenu(dr3)">
                                                                         <i class="far fa-fw fa-ellipsis-v"></i>
                                                                     </div>
+                                                                    -->
                                                                     <i [ngClass]="userTypeIconHash[myOrgUserHash[dr3]?.userType]"
                                                                         [ngStyle]="{'color': getStatusColor(dr3)}"></i>
                                                                     <span
@@ -3004,39 +2977,22 @@
                                                                                     {{nodeStatHash[dr3]?.selectedCnt}}
                                                                                 </div>
                                                                             </div>
-                                                                            <div nz-tooltip nzTooltipTitle="In Progress"
-                                                                                nzTooltipPlacement="right"
-                                                                                style="display:flex;justify-content:space-between;"
-                                                                                [ngClass]="{'option-selected': currentFilterHash[dr3] === 'Training:upToDate'}">
-                                                                                <i class="fas fa-graduation-cap"
-                                                                                    style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
-                                                                                {{nodeStatHash[dr3]?.trainingHash.upToDate}}
-                                                                            </div>
-                                                                            <div nz-tooltip nzTooltipTitle="Past Due"
-                                                                                nzTooltipPlacement="right"
-                                                                                style="display:flex;justify-content:space-between;"
-                                                                                [ngClass]="{'option-selected': currentFilterHash[dr3] === 'Training:pastDue'}">
-                                                                                <i class="fas fa-graduation-cap"
-                                                                                    style="color:red;font-size:16px;padding-top:2px;"></i>
-                                                                                {{nodeStatHash[dr3]?.trainingHash.pastDue}}
-                                                                            </div>
-                                                                            <div nz-tooltip nzTooltipTitle="Completed"
-                                                                                nzTooltipPlacement="right"
-                                                                                style="display:flex;justify-content:space-between;"
-                                                                                [ngClass]="{'option-selected': currentFilterHash[dr3] === 'Training:completed'}">
-                                                                                <i class="fas fa-graduation-cap"
-                                                                                    style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
-                                                                                {{nodeStatHash[dr3]?.trainingHash.completed}}
-                                                                            </div>
-                                                                            <div nz-tooltip
-                                                                                nzTooltipTitle="Pending Certification Approval"
-                                                                                nzTooltipPlacement="right"
-                                                                                style="display:flex;justify-content:space-between;"
-                                                                                [ngClass]="{'option-selected': currentFilterHash[dr3] === 'Training:pendingCertUpload'}">
-                                                                                <i class="fas fa-graduation-cap"
-                                                                                    style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
-                                                                                {{nodeStatHash[dr3]?.trainingHash.pendingCertUpload}}
-                                                                            </div>
+                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                            <div style="float:left;padding:3px;">
+                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                            </div>
+                                            <div style="float:right;margin-left:20px;">
+                                                <span
+                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.upToDate}}</span>
+                                                <span
+                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.pastDue}}</span>
+                                                <span
+                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.completed}}</span>
+                                                <span
+                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                            </div>
+                                            <div style="clear: both;"></div>
+                                        </div>
                                                                         </div>
                                                                         <div *ngIf="displayMode[dr3] === 'JobTitle'"
                                                                             style="padding:5px;">
@@ -3235,7 +3191,7 @@
                                                                         <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                             class="org-chart-node" id="{{dr4}}"
                                                                             [ngClass]="{'supervisor-node': myOrgUserHash[dr4]?.userType === 'supervisor'}">
-                                                                            <div *ngIf="supervisorMenuHash[dr4].main"
+                                                                            <div *ngIf="supervisorMenuHash[dr4]?.main"
                                                                                 class="supervisor-menu"
                                                                                 [ngStyle]="{'left': getMenuXPlacement(dr4), 'top': getMenuYPlacement(dr4)}">
                                                                                 <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
@@ -3270,10 +3226,12 @@
                                                                                             style="font-size:14px;margin-right:10px;"></i>
                                                                                         Edit User Data
                                                                                     </li>
-                                    <li (click)="showMsgModal(dr4)" class="supervisor-menu-item">
-                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
-                                        Email User
-                                    </li>
+                                                                                    <li (click)="showMsgModal(dr4)"
+                                                                                        class="supervisor-menu-item">
+                                                                                        <i class="fas fa-fw fa-envelope"
+                                                                                            style="font-size:14px;margin-right:10px;"></i>
+                                                                                        Email User
+                                                                                    </li>
                                                                                     <!--
                                                                                     <li *ngIf="!userIdsSelected.includes(dr4)"
                                                                                         (click)="addToSelectedUsers(dr4)"
@@ -3505,14 +3463,17 @@
                                                                             </div>
                                                                             <div (mouseenter)="setHoverData(dr4)"
                                                                                 (mouseleave)="setHoverData(null)"
+                                                                                (contextmenu)="showSupervisorMenu(dr4)"
                                                                                 [ngClass]="{'selected-node': userIdsSelected.includes(dr4), 'hover-node': dr4 === currentHoverUid ||
                                                                             orgChartNodeHash[dr4]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr4), 'non-supervisor-icon-node': myOrgUserHash[dr4]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr4]?.userType === 'supervisor', 'wide-node': myOrgUserHash[dr4]?.userType !== 'supervisor' && currentHoverUid === dr4}">
+                                                                                <!--
                                                                                 <div *ngIf="dr4 === currentHoverUid"
                                                                                     class="supervisor-menu-icon"
                                                                                     (click)="showSupervisorMenu(dr4)">
                                                                                     <i
                                                                                         class="far fa-fw fa-ellipsis-v"></i>
                                                                                 </div>
+                                                                                -->
                                                                                 <i [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
                                                                                     [ngStyle]="{'color': getStatusColor(dr4)}"></i>
                                                                                 <span
@@ -3611,42 +3572,22 @@
                                                                                                 {{nodeStatHash[dr4]?.selectedCnt}}
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div nz-tooltip
-                                                                                            nzTooltipTitle="In Progress"
-                                                                                            nzTooltipPlacement="right"
-                                                                                            style="display:flex;justify-content:space-between;"
-                                                                                            [ngClass]="{'option-selected': currentFilterHash[dr4] === 'Training:upToDate'}">
-                                                                                            <i class="fas fa-graduation-cap"
-                                                                                                style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
-                                                                                            {{nodeStatHash[dr4]?.trainingHash.upToDate}}
-                                                                                        </div>
-                                                                                        <div nz-tooltip
-                                                                                            nzTooltipTitle="Past Due"
-                                                                                            nzTooltipPlacement="right"
-                                                                                            style="display:flex;justify-content:space-between;"
-                                                                                            [ngClass]="{'option-selected': currentFilterHash[dr4] === 'Training:pastDue'}">
-                                                                                            <i class="fas fa-graduation-cap"
-                                                                                                style="color:red;font-size:16px;padding-top:2px;"></i>
-                                                                                            {{nodeStatHash[dr4]?.trainingHash.pastDue}}
-                                                                                        </div>
-                                                                                        <div nz-tooltip
-                                                                                            nzTooltipTitle="Completed"
-                                                                                            nzTooltipPlacement="right"
-                                                                                            style="display:flex;justify-content:space-between;"
-                                                                                            [ngClass]="{'option-selected': currentFilterHash[dr4] === 'Training:completed'}">
-                                                                                            <i class="fas fa-graduation-cap"
-                                                                                                style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
-                                                                                            {{nodeStatHash[dr4]?.trainingHash.completed}}
-                                                                                        </div>
-                                                                                        <div nz-tooltip
-                                                                                            nzTooltipTitle="Pending Certification Approval"
-                                                                                            nzTooltipPlacement="right"
-                                                                                            style="display:flex;justify-content:space-between;"
-                                                                                            [ngClass]="{'option-selected': currentFilterHash[dr4] === 'Training:pendingCertUpload'}">
-                                                                                            <i class="fas fa-graduation-cap"
-                                                                                                style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
-                                                                                            {{nodeStatHash[dr4]?.trainingHash.pendingCertUpload}}
-                                                                                        </div>
+                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                            <div style="float:left;padding:3px;">
+                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                            </div>
+                                            <div style="float:right;margin-left:20px;">
+                                                <span
+                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.upToDate}}</span>
+                                                <span
+                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.pastDue}}</span>
+                                                <span
+                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.completed}}</span>
+                                                <span
+                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                            </div>
+                                            <div style="clear: both;"></div>
+                                        </div>
                                                                                     </div>
                                                                                     <div *ngIf="displayMode[dr4] === 'JobTitle'"
                                                                                         style="padding:5px;">
@@ -3863,7 +3804,7 @@
                                                                                     <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                         class="org-chart-node"
                                                                                         [ngClass]="{'supervisor-node': myOrgUserHash[dr5]?.userType === 'supervisor'}">
-                                                                                        <div *ngIf="supervisorMenuHash[dr5].main"
+                                                                                        <div *ngIf="supervisorMenuHash[dr5]?.main"
                                                                                             class="supervisor-menu"
                                                                                             [ngStyle]="{'left': getMenuXPlacement(dr5), 'top': getMenuYPlacement(dr5)}">
                                                                                             <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
@@ -3899,10 +3840,12 @@
                                                                                                         style="font-size:14px;margin-right:10px;"></i>
                                                                                                     Edit User Data
                                                                                                 </li>
-                                    <li (click)="showMsgModal(dr5)" class="supervisor-menu-item">
-                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
-                                        Email User
-                                    </li>
+                                                                                                <li (click)="showMsgModal(dr5)"
+                                                                                                    class="supervisor-menu-item">
+                                                                                                    <i class="fas fa-fw fa-envelope"
+                                                                                                        style="font-size:14px;margin-right:10px;"></i>
+                                                                                                    Email User
+                                                                                                </li>
                                                                                                 <!--
                                                                                                 <li *ngIf="!userIdsSelected.includes(dr5)"
                                                                                                     (click)="addToSelectedUsers(dr5)"
@@ -4157,14 +4100,17 @@
                                                                                         <div (mouseenter)="setHoverData(dr5)"
                                                                                             id="{{dr5}}"
                                                                                             (mouseleave)="setHoverData(null)"
+                                                                                            (contextmenu)="showSupervisorMenu(dr5)"
                                                                                             [ngClass]="{'selected-node': userIdsSelected.includes(dr5), 'hover-node': dr5 === currentHoverUid ||
                                                                                         orgChartNodeHash[dr5]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr5), 'non-supervisor-icon-node': myOrgUserHash[dr5]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr5]?.userType === 'supervisor', 'wide-node': myOrgUserHash[dr5]?.userType !== 'supervisor' && currentHoverUid === dr5}">
+                                                                                            <!--
                                                                                             <div *ngIf="dr5 === currentHoverUid"
                                                                                                 class="supervisor-menu-icon"
                                                                                                 (click)="showSupervisorMenu(dr5)">
                                                                                                 <i
                                                                                                     class="far fa-fw fa-ellipsis-v"></i>
                                                                                             </div>
+                                                                                            -->
                                                                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr5].userType]"
                                                                                                 [ngStyle]="{'color': getStatusColor(dr5)}"></i>
                                                                                             <span
@@ -4261,42 +4207,22 @@
                                                                                                             {{nodeStatHash[dr5]?.selectedCnt}}
                                                                                                         </div>
                                                                                                     </div>
-                                                                                                    <div nz-tooltip
-                                                                                                        nzTooltipTitle="In Progress"
-                                                                                                        nzTooltipPlacement="right"
-                                                                                                        style="display:flex;justify-content:space-between;"
-                                                                                                        [ngClass]="{'option-selected': currentFilterHash[dr5] === 'Training:upToDate'}">
-                                                                                                        <i class="fas fa-graduation-cap"
-                                                                                                            style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
-                                                                                                        {{nodeStatHash[dr5]?.trainingHash.upToDate}}
-                                                                                                    </div>
-                                                                                                    <div nz-tooltip
-                                                                                                        nzTooltipTitle="Past Due"
-                                                                                                        nzTooltipPlacement="right"
-                                                                                                        style="display:flex;justify-content:space-between;"
-                                                                                                        [ngClass]="{'option-selected': currentFilterHash[dr5] === 'Training:pastDue'}">
-                                                                                                        <i class="fas fa-graduation-cap"
-                                                                                                            style="color:red;font-size:16px;padding-top:2px;"></i>
-                                                                                                        {{nodeStatHash[dr5]?.trainingHash.pastDue}}
-                                                                                                    </div>
-                                                                                                    <div nz-tooltip
-                                                                                                        nzTooltipTitle="Completed"
-                                                                                                        nzTooltipPlacement="right"
-                                                                                                        style="display:flex;justify-content:space-between;"
-                                                                                                        [ngClass]="{'option-selected': currentFilterHash[dr5] === 'Training:completed'}">
-                                                                                                        <i class="fas fa-graduation-cap"
-                                                                                                            style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
-                                                                                                        {{nodeStatHash[dr5]?.trainingHash.completed}}
-                                                                                                    </div>
-                                                                                                    <div nz-tooltip
-                                                                                                        nzTooltipTitle="Pending Certification Approval"
-                                                                                                        nzTooltipPlacement="right"
-                                                                                                        style="display:flex;justify-content:space-between;"
-                                                                                                        [ngClass]="{'option-selected': currentFilterHash[dr5] === 'Training:pendingCertUpload'}">
-                                                                                                        <i class="fas fa-graduation-cap"
-                                                                                                            style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
-                                                                                                        {{nodeStatHash[dr5]?.trainingHash.pendingCertUpload}}
-                                                                                                    </div>
+                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                            <div style="float:left;padding:3px;">
+                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                            </div>
+                                            <div style="float:right;margin-left:20px;">
+                                                <span
+                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.upToDate}}</span>
+                                                <span
+                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.pastDue}}</span>
+                                                <span
+                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.completed}}</span>
+                                                <span
+                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                            </div>
+                                            <div style="clear: both;"></div>
+                                        </div>
                                                                                                 </div>
                                                                                                 <div *ngIf="displayMode[dr5] === 'JobTitle'"
                                                                                                     style="padding:5px;">
@@ -4506,7 +4432,7 @@
                                                                                                 <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                     class="org-chart-node"
                                                                                                     [ngClass]="{'supervisor-node': myOrgUserHash[dr6]?.userType === 'supervisor'}">
-                                                                                                    <div *ngIf="supervisorMenuHash[dr6].main"
+                                                                                                    <div *ngIf="supervisorMenuHash[dr6]?.main"
                                                                                                         class="supervisor-menu"
                                                                                                         [ngStyle]="{'left': getMenuXPlacement(dr6), 'top': getMenuYPlacement(dr6)}">
                                                                                                         <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
@@ -4547,10 +4473,13 @@
                                                                                                                 User
                                                                                                                 Data
                                                                                                             </li>
-                                    <li (click)="showMsgModal(dr6)" class="supervisor-menu-item">
-                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
-                                        Email User
-                                    </li>
+                                                                                                            <li (click)="showMsgModal(dr6)"
+                                                                                                                class="supervisor-menu-item">
+                                                                                                                <i class="fas fa-fw fa-envelope"
+                                                                                                                    style="font-size:14px;margin-right:10px;"></i>
+                                                                                                                Email
+                                                                                                                User
+                                                                                                            </li>
                                                                                                             <!--
                                                                                                             <li *ngIf="!userIdsSelected.includes(dr6)"
                                                                                                                 (click)="addToSelectedUsers(dr6)"
@@ -4814,14 +4743,17 @@
                                                                                                     <div id="{{dr6}}"
                                                                                                         (mouseenter)="setHoverData(dr6)"
                                                                                                         (mouseleave)="setHoverData(null)"
+                                                                                                        (contextmenu)="showSupervisorMenu(dr6)"
                                                                                                         [ngClass]="{'selected-node': userIdsSelected.includes(dr6), 'hover-node': dr6 === currentHoverUid ||
                                                                                                     orgChartNodeHash[dr6]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr6), 'non-supervisor-icon-node': myOrgUserHash[dr6]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr6]?.userType === 'supervisor', 'wide-node': myOrgUserHash[dr6]?.userType !== 'supervisor' && currentHoverUid === dr6}">
+                                                                                                        <!--
                                                                                                         <div *ngIf="dr6 === currentHoverUid"
                                                                                                             class="supervisor-menu-icon"
                                                                                                             (click)="showSupervisorMenu(dr6)">
                                                                                                             <i
                                                                                                                 class="far fa-fw fa-ellipsis-v"></i>
                                                                                                         </div>
+                                                                                                        -->
                                                                                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
                                                                                                             [ngStyle]="{'color': getStatusColor(dr6)}"></i>
 
@@ -4923,42 +4855,22 @@
                                                                                                                         {{nodeStatHash[dr6]?.selectedCnt}}
                                                                                                                     </div>
                                                                                                                 </div>
-                                                                                                                <div nz-tooltip
-                                                                                                                    nzTooltipTitle="In Progress"
-                                                                                                                    nzTooltipPlacement="right"
-                                                                                                                    style="display:flex;justify-content:space-between;"
-                                                                                                                    [ngClass]="{'option-selected': currentFilterHash[dr6] === 'Training:upToDate'}">
-                                                                                                                    <i class="fas fa-graduation-cap"
-                                                                                                                        style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
-                                                                                                                    {{nodeStatHash[dr6]?.trainingHash.upToDate}}
-                                                                                                                </div>
-                                                                                                                <div nz-tooltip
-                                                                                                                    nzTooltipTitle="Past Due"
-                                                                                                                    nzTooltipPlacement="right"
-                                                                                                                    style="display:flex;justify-content:space-between;"
-                                                                                                                    [ngClass]="{'option-selected': currentFilterHash[dr6] === 'Training:pastDue'}">
-                                                                                                                    <i class="fas fa-graduation-cap"
-                                                                                                                        style="color:red;font-size:16px;padding-top:2px;"></i>
-                                                                                                                    {{nodeStatHash[dr6]?.trainingHash.pastDue}}
-                                                                                                                </div>
-                                                                                                                <div nz-tooltip
-                                                                                                                    nzTooltipTitle="Completed"
-                                                                                                                    nzTooltipPlacement="right"
-                                                                                                                    style="display:flex;justify-content:space-between;"
-                                                                                                                    [ngClass]="{'option-selected': currentFilterHash[dr6] === 'Training:completed'}">
-                                                                                                                    <i class="fas fa-graduation-cap"
-                                                                                                                        style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
-                                                                                                                    {{nodeStatHash[dr6]?.trainingHash.completed}}
-                                                                                                                </div>
-                                                                                                                <div nz-tooltip
-                                                                                                                    nzTooltipTitle="Pending Certification Approval"
-                                                                                                                    nzTooltipPlacement="right"
-                                                                                                                    style="display:flex;justify-content:space-between;"
-                                                                                                                    [ngClass]="{'option-selected': currentFilterHash[dr6] === 'Training:pendingCertUpload'}">
-                                                                                                                    <i class="fas fa-graduation-cap"
-                                                                                                                        style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
-                                                                                                                    {{nodeStatHash[dr6]?.trainingHash.pendingCertUpload}}
-                                                                                                                </div>
+                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                            <div style="float:left;padding:3px;">
+                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                            </div>
+                                            <div style="float:right;margin-left:20px;">
+                                                <span
+                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.upToDate}}</span>
+                                                <span
+                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.pastDue}}</span>
+                                                <span
+                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.completed}}</span>
+                                                <span
+                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                            </div>
+                                            <div style="clear: both;"></div>
+                                        </div>
                                                                                                             </div>
                                                                                                             <div *ngIf="displayMode[dr6] === 'JobTitle'"
                                                                                                                 style="padding:5px;">
@@ -5170,7 +5082,7 @@
                                                                                                             <div [ngStyle]="{'padding.px': orgChartPadding}"
                                                                                                                 class="org-chart-node"
                                                                                                                 [ngClass]="{'supervisor-node': myOrgUserHash[dr7]?.userType === 'supervisor'}">
-                                                                                                                <div *ngIf="supervisorMenuHash[dr7].main"
+                                                                                                                <div *ngIf="supervisorMenuHash[dr7]?.main"
                                                                                                                     class="supervisor-menu"
                                                                                                                     [ngStyle]="{'left': getMenuXPlacement(dr7), 'top': getMenuYPlacement(dr7)}">
                                                                                                                     <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
@@ -5211,10 +5123,13 @@
                                                                                                                             User
                                                                                                                             Data
                                                                                                                         </li>
-                                    <li (click)="showMsgModal(dr7)" class="supervisor-menu-item">
-                                        <i class="fas fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
-                                        Email User
-                                    </li>
+                                                                                                                        <li (click)="showMsgModal(dr7)"
+                                                                                                                            class="supervisor-menu-item">
+                                                                                                                            <i class="fas fa-fw fa-envelope"
+                                                                                                                                style="font-size:14px;margin-right:10px;"></i>
+                                                                                                                            Email
+                                                                                                                            User
+                                                                                                                        </li>
                                                                                                                         <!--
                                                                                                                         <li *ngIf="!userIdsSelected.includes(dr7)"
                                                                                                                             (click)="addToSelectedUsers(dr7)"
@@ -5478,14 +5393,17 @@
                                                                                                                 <div id="{{dr7}}"
                                                                                                                     (mouseenter)="setHoverData(dr7)"
                                                                                                                     (mouseleave)="setHoverData(null)"
+                                                                                                                    (contextmenu)="showSupervisorMenu(dr7)"
                                                                                                                     [ngClass]="{'selected-node': userIdsSelected.includes(dr7), 'hover-node': dr7 === currentHoverUid ||
                                                                                                                 orgChartNodeHash[dr7]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr7), 'non-supervisor-icon-node': myOrgUserHash[dr7]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr7]?.userType === 'supervisor', 'wide-node': myOrgUserHash[dr7]?.userType !== 'supervisor' && currentHoverUid === dr7}">
+                                                                                                                    <!--
                                                                                                                     <div *ngIf="dr7 === currentHoverUid"
                                                                                                                         class="supervisor-menu-icon"
                                                                                                                         (click)="showSupervisorMenu(dr7)">
                                                                                                                         <i
                                                                                                                             class="far fa-fw fa-ellipsis-v"></i>
                                                                                                                     </div>
+                                                                                                                -->
                                                                                                                     <i [ngClass]="userTypeIconHash[myOrgUserHash[dr7]?.userType]"
                                                                                                                         [ngStyle]="{'color': getStatusColor(dr7)}"></i>
                                                                                                                     <span
@@ -5585,42 +5503,22 @@
                                                                                                                                     {{nodeStatHash[dr7]?.selectedCnt}}
                                                                                                                                 </div>
                                                                                                                             </div>
-                                                                                                                            <div nz-tooltip
-                                                                                                                                nzTooltipTitle="In Progress"
-                                                                                                                                nzTooltipPlacement="right"
-                                                                                                                                [ngClass]="{'option-selected': currentFilterHash[dr7] === 'Training:upToDate'}"
-                                                                                                                                style="display:flex;justify-content:space-between;">
-                                                                                                                                <i class="fas fa-graduation-cap"
-                                                                                                                                    style="color:#46bd15;font-size:16px;padding-top:2px;"></i>
-                                                                                                                                {{nodeStatHash[dr7]?.trainingHash.upToDate}}
-                                                                                                                            </div>
-                                                                                                                            <div nz-tooltip
-                                                                                                                                nzTooltipTitle="Past Due"
-                                                                                                                                nzTooltipPlacement="right"
-                                                                                                                                [ngClass]="{'option-selected': currentFilterHash[dr7] === 'Training:pastDue'}"
-                                                                                                                                style="display:flex;justify-content:space-between;">
-                                                                                                                                <i class="fas fa-graduation-cap"
-                                                                                                                                    style="color:red;font-size:16px;padding-top:2px;"></i>
-                                                                                                                                {{nodeStatHash[dr7]?.trainingHash.pastDue}}
-                                                                                                                            </div>
-                                                                                                                            <div nz-tooltip
-                                                                                                                                nzTooltipTitle="Completed"
-                                                                                                                                nzTooltipPlacement="right"
-                                                                                                                                [ngClass]="{'option-selected': currentFilterHash[dr7] === 'Training:completed'}"
-                                                                                                                                style="display:flex;justify-content:space-between;">
-                                                                                                                                <i class="fas fa-graduation-cap"
-                                                                                                                                    style="color:#4891f7;font-size:16px;padding-top:2px;"></i>
-                                                                                                                                {{nodeStatHash[dr7]?.trainingHash.completed}}
-                                                                                                                            </div>
-                                                                                                                            <div nz-tooltip
-                                                                                                                                nzTooltipTitle="Pending Certification Approval"
-                                                                                                                                nzTooltipPlacement="right"
-                                                                                                                                [ngClass]="{'option-selected': currentFilterHash[dr7] === 'Training:pendingCertUpload'}"
-                                                                                                                                style="display:flex;justify-content:space-between;">
-                                                                                                                                <i class="fas fa-graduation-cap"
-                                                                                                                                    style="color:#feb90b;font-size:16px;padding-top:2px;"></i>
-                                                                                                                                {{nodeStatHash[dr7]?.trainingHash.pendingCertUpload}}
-                                                                                                                            </div>
+                                        <div *ngFor="let training of teamTrainings" nz-tooltip [nzTooltipTitle]="training.title" nzTooltipPlacement="right">
+                                            <div style="float:left;padding:3px;">
+                                                <i [ngClass]="training.iconClass" [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
+                                            </div>
+                                            <div style="float:right;margin-left:20px;">
+                                                <span
+                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.upToDate}}</span>
+                                                <span
+                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.pastDue}}</span>
+                                                <span
+                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.completed}}</span>
+                                                <span
+                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.pendingCertUpload}}</span>
+                                            </div>
+                                            <div style="clear: both;"></div>
+                                        </div>
                                                                                                                         </div>
                                                                                                                         <div *ngIf="displayMode[dr7] === 'JobTitle'"
                                                                                                                             style="padding:5px;">
@@ -6082,18 +5980,18 @@
                 style="width:500px;padding:10px;float:left;">
                 <div>
                     <div style="background-color:white;display:inline-block;width:100%;">
-                        <div *ngIf="teamTrainings.length === 0">
+                        <div *ngIf="teamTrainings?.length === 0">
                             You have not created any trainings yet!<br> Head over to the <span style="color:blue;">All
                                 Trainings</span> page to create your
                             trainings.
                         </div>
-                        <div *ngIf="teamTrainings.length > 0 && assignableTrainings.length === 0">
+                        <div *ngIf="userIdsSelected?.length === 1 && (teamTrainings.length > 0 && assignableTrainings.length === 0)">
                             You have already assigned all trainings to this user!
                         </div>
                         <div *ngIf="assignableTrainings.length > 0">
                             Select the training you would like to assign.
                         </div>
-                        <div *ngFor="let training of assignableTrainings" class="all-training-list-entry"
+                        <div *ngFor="let training of teamTrainings" class="all-training-list-entry"
                             style="padding:10px 20px;width:100%;"
                             [ngClass]="{'selected-training': selectedTrainingId === training._id, 'disabled': training?.versions.length === 1, 'active-training': training?.versions.length > 1 }"
                             (click)="selectTraining(training._id)">

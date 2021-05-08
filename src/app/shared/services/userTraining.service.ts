@@ -20,6 +20,7 @@ export class UserTrainingService {
 
   private userTrainingForTidBS$ = new BehaviorSubject<UserTrainingModel[]>([]);
   private userTrainings$BS = new BehaviorSubject<UserTrainingModel[]>(null);
+  private orgUserTrainingsBS$ = new BehaviorSubject<UserTrainingModel[]>(null);
   private userTrainingCompletedBS$ = new BehaviorSubject<UserTrainingModel>(null);
   private allUserTrainingHash: UserTrainingHash = {};
   //  private userTrainingHashBS$ = new BehaviorSubject<UserTrainingHash>({});
@@ -76,6 +77,10 @@ export class UserTrainingService {
         }
       }
     }
+  }
+
+  getOrgUserTrainingsStream(): Observable<UserTrainingModel[]> {
+    return this.orgUserTrainingsBS$.asObservable();
   }
 
   getSessionLogStream(): Observable<UTSession[]> {
@@ -238,6 +243,7 @@ export class UserTrainingService {
       tid: training._id,
       uid: user._id,
       teamId: user._id,
+      orgId: user.org,
       status: 'upToDate',
       trainingVersion: training.versions[0].version,
       dueDate: new Date().getTime() + training.expirationDate,
@@ -276,7 +282,7 @@ export class UserTrainingService {
     })
   }
 
-  bulkAssignTraining(uids: string[], training: TrainingModel, teamId: string) {
+  bulkAssignTraining(uids: string[], training: TrainingModel, teamId: string, orgId: string) {
     let userTrainings: UserTrainingModel[] = [];
     let id = String(new Date().getTime());
     let dueDate = new Date().getTime() + (training.expirationDate * 86400000);
@@ -315,6 +321,7 @@ export class UserTrainingService {
           tid: training._id,
           uid: uid,
           teamId: teamId,
+          orgId: orgId,
           status: 'upToDate',
           trainingVersion: training.versions[0].version,
           dueDate: dueDate,
@@ -463,6 +470,12 @@ export class UserTrainingService {
         this.uidUTHashBS$.next(this.uidUTHash);
         this.userTrainings$BS.next(utList);
       });
+    })
+  }
+
+  getOrgUserTrainings(orgId: string) {
+    this.getUTForOrg$(orgId).subscribe(utList => {
+      this.orgUserTrainingsBS$.next(utList);
     })
   }
 
@@ -629,6 +642,15 @@ export class UserTrainingService {
   getUTForTeam$(teamId: string): Observable<UserTrainingModel[]> {
     return this.http
       .get<UserTrainingModel[]>(`${ENV.BASE_API}usertraining/teamid/${teamId}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+  getUTForOrg$(orgId: string): Observable<UserTrainingModel[]> {
+    return this.http
+      .get<UserTrainingModel[]>(`${ENV.BASE_API}usertraining/orgid/${orgId}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader),
       })
       .pipe(

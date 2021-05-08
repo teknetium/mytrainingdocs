@@ -157,7 +157,7 @@ export class UserService {
 
                 this.orgService.getOrg(this.authenticatedUser.org);
 
-                this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
+                this.userTrainingService.getOrgUserTrainings(this.authenticatedUser.org);
 
                 if (this.authenticatedUser.userType === 'supervisor') {
                   //            this.org = this.authenticatedUser.org;
@@ -181,7 +181,7 @@ export class UserService {
                       }
                       this.orgService.getOrg(this.authenticatedUser.org);
                       this.authenticatedUserBS$.next(this.authenticatedUser);
-                      this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
+                      this.userTrainingService.getOrgUserTrainings(this.authenticatedUser.org);
                     } else {
                       let domain: string = profile.email.substring(profile.email.indexOf('@') + 1, profile.email.indexOf('.'));
                       let orgObject = <OrgModel>{
@@ -241,7 +241,7 @@ export class UserService {
                             this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
                           }
                           this.authenticatedUserBS$.next(this.authenticatedUser);
-                          this.userTrainingService.initUserTrainingsForUser(this.authenticatedUser._id);
+                          this.userTrainingService.getOrgUserTrainings(this.authenticatedUser.org);
                           this.loadData(this.authenticatedUser.org, null);
                         },
                         error: (err) => { }

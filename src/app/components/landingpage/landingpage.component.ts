@@ -433,7 +433,6 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
 
   beforeUpdateDot(event) {
     this.currentSlide = event.to;
-    console.log('beforeUpdateDot', event);
   }
 
   userRangeChanged(index, newVal) {

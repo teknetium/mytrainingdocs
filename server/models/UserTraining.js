@@ -31,6 +31,7 @@ const userTrainingSchema = new Schema({
   tid: { type: String, required: true },
   uid: { type: String, required: true },
   teamId: { type: String, required: true },
+  orgId: { type: String, required: true },
   trainingVersion: { type: String, required: false },
   status: { type: String, required: true },
   dueDate: { type: Number, required: false },

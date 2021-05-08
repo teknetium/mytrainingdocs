@@ -96,7 +96,7 @@ module.exports = function(app, config) {
 
   const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId org iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const trainingListProjection = "_id title versions type category subcategory owner description teamId org iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
-  const userTrainingListProjection = "_id tid uid teamId status notifySchedule dueDate timeToDate dateCompleted assessmentResponses trainingVersion certImage";
+  const userTrainingListProjection = "_id tid uid teamId orgId status notifySchedule dueDate timeToDate dateCompleted assessmentResponses trainingVersion certImage";
   const userListProjection = "_id uid empId userType userStatus jobTitle trainingStatus firstName lastName email emailVerified teamAdmin orgAdmin appAdmin teamId org supervisorId directReports profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
@@ -609,6 +609,22 @@ module.exports = function(app, config) {
   });
   app.get("/api/usertraining/teamid/:teamId", (req, res) => {
     UserTraining.find({ teamId: req.params.teamId },
+      userTrainingListProjection, (err, userTrainings) => {
+        let userTrainingsArr = [];
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        if (userTrainings) {
+          userTrainings.forEach(userTraining => {
+            userTrainingsArr.push(userTraining);
+          });
+        }
+        res.send(userTrainingsArr);
+      },
+    );
+  });
+  app.get("/api/usertraining/orgid/:orgId", (req, res) => {
+    UserTraining.find({ orgId: req.params.orgId },
       userTrainingListProjection, (err, userTrainings) => {
         let userTrainingsArr = [];
         if (err) {

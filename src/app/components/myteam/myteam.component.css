@@ -481,7 +481,6 @@ ul.ant-card-actions {
 }
 
 .wide-node {
-	min-width: 70px;
 }
 
 .supervisor-icon-node {
@@ -578,11 +577,6 @@ ul.no-bullets {
 
 .selection-table-row {
 	border-bottom: 1px solid #dddddd;
-}
-
-.selection-table-row:hover {
-	color: #feb90b;
-	cursor:pointer;
 }
 
 .selection-hover {
