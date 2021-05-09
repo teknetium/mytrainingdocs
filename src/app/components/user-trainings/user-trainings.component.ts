@@ -389,6 +389,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
     ut.dueDate = newDueDate;
     this.userTrainingService.saveUserTraining(ut);
     this.userTrainingService.getUTForUser(ut.uid);
+    this.userTrainingService.getOrgUserTrainings(this.authenticatedUser.org);
   }
 
   markTrainingAsComplete(selectedTraining: TrainingModel) {

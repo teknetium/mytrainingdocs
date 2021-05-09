@@ -1612,6 +1612,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         return;
       }
       if (this.authenticatedUser) {
+        this.userTrainingService.getOrgUserTrainings(this.authenticatedUser.org);
         this.getOrgStats();
         /*
         this.figureOrgStat(this.authenticatedUser._id);

@@ -403,10 +403,9 @@ export class UserTrainingService {
         }
       });
     }
-
-    
-    
+    this.getOrgUserTrainings(orgId);
   }
+
   deleteUTForTid(tid: string) {
     this.deleteUTForTid$(tid).subscribe();
   }
