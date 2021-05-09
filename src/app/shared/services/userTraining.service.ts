@@ -534,9 +534,11 @@ export class UserTrainingService {
           let utList: UserTrainingModel[];
           for (let uid of uids) {
             utList = this.uidUTHash[uid];
-            for (let ut of utList) {
-              if (ut.tid !== tid) {
-                newUTList.push(ut);
+            if (utList && utList.length > 0) {
+              for (let ut of utList) {
+                if (ut.tid !== tid) {
+                  newUTList.push(ut);
+                }
               }
             }
             this.uidUTHash[uid] = cloneDeep(newUTList);

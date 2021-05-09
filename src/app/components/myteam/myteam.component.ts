@@ -153,6 +153,21 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     }
   }
   */
+  
+  userTrainingStatusHash = {
+    none: 'None',
+    upToDate: 'Up To Date',
+    pastDue: 'Past Due'
+  }
+
+  userTypeHash = {
+    individualConributor: 'Individual Contributor',
+    supervisor: 'Supervisor',
+    volunteer: 'Volunteer',
+    contractor: 'Contractor',
+    customer: 'Customer'
+  }
+
   userTrainingStatusColorHash = {
     none: 'black',
     upToDate: '#52c41a',
@@ -2892,7 +2907,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         this.currentFilter = item + ':' + value;
         this.displayMode[uid] = 'Training';
         this.currentTrainingSelected = value;
-        this.orgChartTitle = 'Trainings';
+        this.orgChartTitle = 'Training - ' + ' ' + this.allTrainingIdHash[value].title;
         //        this.uidTidUTHash = {};
         break;
       }

@@ -206,17 +206,17 @@
                 <i class="fas fa-fw fa-user legend-icon" style="color:blue;"></i>
                 <span class="legend-text">Active User</span>
             </div>
-            <div class="legend-item" nz-popover nzPopoverTitle="Not Invited"
-                nzPopoverContent="A fucshia user icon indicates that the user has not been invited to complete their registration."
-                nzPopoverPlacement="right">
-                <i class="fas fa-fw fa-user legend-icon" style="color:fuchsia;"></i>
-                <span class="legend-text">Not Invited</span>
-            </div>
             <div class="legend-item" nz-popover nzPopoverTitle="Inactive User"
                 nzPopoverContent="A grey user icon indicates that this user has been marked as inactive."
                 nzPopoverPlacement="right">
                 <i class="fas fa-fw fa-user legend-icon" style="color:#aaaaaa;"></i>
                 <span class="legend-text">Inactive User</span>
+            </div>
+            <div class="legend-item" nz-popover nzPopoverTitle="Not Invited"
+                nzPopoverContent="A fucshia user icon indicates that the user has not been invited to complete their registration."
+                nzPopoverPlacement="right">
+                <i class="fas fa-fw fa-user legend-icon" style="color:fuchsia;"></i>
+                <span class="legend-text">Not Invited</span>
             </div>
             <div class="legend-item" nz-popover nzPopoverTitle="Pending"
                 nzPopoverContent="An orange user icon indicates that this user has not completed the registration process."
@@ -980,10 +980,42 @@
                             {{ selectionModeHash[selection?.type] }}
                         </td>
                         <td style="text-align: center;padding:5px;">
-                            {{ selection?.value }}
+                            <div *ngIf="selection?.type === 'UserStatus'">
+                                <div style="display: inline-block;vertical-align: middle;">
+                                    <i class="fas fa-user" [ngStyle]="{'color': userStatusColorHash[selection.value]}"
+                                        style="font-size:16px;z-index:1;float:left;line-height:16px;margin-right:10px;">
+                                    </i>
+                                </div>
+                                <span>{{ userStatusHash[selection?.value] }}</span>
+                            </div>
+                            <div *ngIf="selection?.type === 'UserTrainingStatus'">
+                                <div style="display: inline-block;vertical-align: middle;">
+                                    <i class="fas fa-user"
+                                        [ngStyle]="{'color': userTrainingStatusColorHash[selection.value]}"
+                                        style="font-size:16px;z-index:1;float:left;line-height:16px;margin-right:10px;">
+                                    </i>
+                                </div>
+                                <span>{{ userTrainingStatusHash[selection?.value] }}</span>
+                            </div>
+                            <div *ngIf="selection?.type === 'UserType'">
+                                <div style="display: inline-block;vertical-align: middle;">
+                                    <i [ngClass]="userTypeIconHash[selection.value]"
+                                        style="font-size:16px;margin-right:10px;"></i>
+                                </div>
+                                <span>{{ userTypeHash[selection?.value] }}</span>
+                            </div>
+                            <div *ngIf="selection?.type === 'Training'">
+                                <div style="display: inline-block;vertical-align: middle;">
+                                    <i [ngClass]="getSelectedTrainingIconClass(selection.value)"
+                                        [ngStyle]="{'color': getTrainingIconColor(selection.value)}"
+                                        style="font-size:16px;z-index:1;line-height:16px;margin-right:10px;float:left;">
+                                    </i>
+                                </div>
+                                <span>{{ allTrainingIdHash[selection?.value]?.title }}</span>
+                            </div>
                         </td>
                         <td style="text-align: center;padding:5px;">
-                            {{ userIdsSelected.length }}
+                            {{ userIdsSelected?.length }}
                         </td>
                         <td style="text-align: center;padding:5px;">
                             <button nz-button nzSize="default" nzShape="circle" nzType="default"
@@ -993,22 +1025,26 @@
                                 <i class="fas fa-search"></i>
                             </button>
                             <button nz-button nzSize="default" nzShape="circle" nzType="default"
-                                style="display:inline-block;margin-right:5px;" nz-tooltip nzTooltipPlacement="top"
+                                [disabled]="userIdsSelected.length === 0" style="display:inline-block;margin-right:5px;"
+                                nz-tooltip nzTooltipPlacement="top"
                                 nzTooltipTitle="Assign a training to the selected users"
                                 (click)="assignTrainingToUser(null)">
                                 <i class="fas fa-plus"></i>
                             </button>
-                        <button nz-button nzShape="circle" [disabled]="userIdsSelected.length === 0 || !currentTrainingSelected"
-                            style="display:inline-block;margin-right:5px;" nz-popconfirm
-                            nzPopconfirmTitle="Remove this training from all users selected?" (nzOnConfirm)="confirmUserTrainingDelete()"
-                            nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Remove Training from Users">
-                            <i class="fas fa-trash"></i></button>
+                            <button nz-button nzShape="circle"
+                                [disabled]="userIdsSelected.length === 0 || !currentTrainingSelected"
+                                style="display:inline-block;margin-right:5px;" nz-popconfirm
+                                nzPopconfirmTitle="Remove this training from all users selected?"
+                                (nzOnConfirm)="confirmUserTrainingDelete()" nz-tooltip nzTooltipPlacement="bottomLeft"
+                                nzTooltipTitle="Remove Training from Users">
+                                <i class="fas fa-trash"></i></button>
                             <button nz-button nzSize="default" nzShape="circle" nzType="default"
-                                style="display:inline-block;margin-right:5px;" nz-tooltip nzTooltipPlacement="top"
-                                nzTooltipTitle="Email selected users" (click)="showMsgModal()">
+                                [disabled]="userIdsSelected.length === 0" style="display:inline-block;margin-right:5px;"
+                                nz-tooltip nzTooltipPlacement="top" nzTooltipTitle="Email selected users"
+                                (click)="showMsgModal()">
                                 <i class="fas fa-envelope"></i>
                             </button>
-                            <button nz-button nzSize="default" nzShape="circle" nzType="default"
+                            <button nz-button nzSize="default" nzShape="circle" nzType="default" [disabled]="userIdsSelected.length === 0 || selection.value !== 'notInvited'"
                                 style="display:inline-block;margin-right:5px;" nz-tooltip nzTooltipPlacement="top"
                                 nzTooltipTitle="Send the Registration Invitation Message to the Selected Users"
                                 (click)="sendRegistrationEmail()">
@@ -1420,7 +1456,8 @@
                                             style="display:flex;justify-content:space-between;margin-bottom: 3px;font-size:12px;">
                                             {{jobTitle}}
                                             <div style="margin-left:20px;font-size: 12px;">
-                                                {{ nodeStatHash[authenticatedUser._id]?.jobTitleHash[jobTitle]?.length }}
+                                                {{ nodeStatHash[authenticatedUser._id]?.jobTitleHash[jobTitle]?.length
+                                                }}
                                             </div>
                                         </div>
                                     </div>
@@ -1798,7 +1835,8 @@
                                             </ul>
                                         </div>
                                         <div (mouseenter)="setHoverData(dr)" (mouseleave)="setHoverData(null)"
-                                            (contextmenu)="showSupervisorMenu(dr)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
+                                            (contextmenu)="showSupervisorMenu(dr)" nz-tooltip
+                                            nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                             [ngClass]="{'selected-node': userIdsSelected.includes(dr), 'hover-node': dr === currentHoverUid ||
                                         orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr), 'non-supervisor-icon-node': myOrgUserHash[dr]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr]?.userType === 'supervisor', 'wide-node': myOrgUserHash[dr]?.userType !== 'supervisor' && currentHoverUid === dr}">
                                             <!--
@@ -1809,7 +1847,8 @@
                                             -->
                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
                                                 [ngStyle]="{'color': getStatusColor(dr)}"></i>
-                                            <span *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || includeFullName"
+                                            <span
+                                                *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || includeFullName"
                                                 [ngStyle]="{'font-size.px': textFontSize}"
                                                 style="z-index:1000000;display: block;color:#666666;">
                                                 {{orgChartNodeHash[dr]?.fName}}<br>{{orgChartNodeHash[dr]?.lName}}
@@ -2326,7 +2365,8 @@
                                                     </div>
 
                                                     <div (mouseenter)="setHoverData(dr2)"
-                                                        (mouseleave)="setHoverData(null)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
+                                                        (mouseleave)="setHoverData(null)" nz-tooltip
+                                                        nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                                         (contextmenu)="showSupervisorMenu(dr2)"
                                                         [ngClass]="{'selected-node': userIdsSelected.includes(dr2) , 'hover-node': dr2 === currentHoverUid ||
                                                     orgChartNodeHash[dr2]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr2), 'non-supervisor-icon-node': myOrgUserHash[dr2]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr2]?.userType === 'supervisor', 'wide-node': myOrgUserHash[dr2]?.userType !== 'supervisor' && currentHoverUid === dr2}">
@@ -2464,7 +2504,9 @@
                                                                     style="display:flex;justify-content:space-between;margin-bottom: 3px;font-size:12px;">
                                                                     {{jobTitle}}
                                                                     <div style="margin-left:20px;font-size: 12px;">
-                                                                        {{ nodeStatHash[dr2]?.jobTitleHash[jobTitle]?.length }}
+                                                                        {{
+                                                                        nodeStatHash[dr2]?.jobTitleHash[jobTitle]?.length
+                                                                        }}
                                                                     </div>
                                                                 </div>
 
@@ -2878,7 +2920,8 @@
                                                                         </li>
                                                                     </ul>
                                                                 </div>
-                                                                <div (mouseenter)="setHoverData(dr3)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
+                                                                <div (mouseenter)="setHoverData(dr3)" nz-tooltip
+                                                                    nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                                                     (mouseleave)="setHoverData(null)"
                                                                     (contextmenu)="showSupervisorMenu(dr3)"
                                                                     [ngClass]="{'selected-node': userIdsSelected.includes(dr3), 'hover-node': dr3 === currentHoverUid ||
@@ -3477,7 +3520,9 @@
                                                                                     </li>
                                                                                 </ul>
                                                                             </div>
-                                                                            <div (mouseenter)="setHoverData(dr4)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
+                                                                            <div (mouseenter)="setHoverData(dr4)"
+                                                                                nz-tooltip
+                                                                                nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                                                                 (mouseleave)="setHoverData(null)"
                                                                                 (contextmenu)="showSupervisorMenu(dr4)"
                                                                                 [ngClass]="{'selected-node': userIdsSelected.includes(dr4), 'hover-node': dr4 === currentHoverUid ||
@@ -4120,7 +4165,9 @@
                                                                                                 </li>
                                                                                             </ul>
                                                                                         </div>
-                                                                                        <div (mouseenter)="setHoverData(dr5)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
+                                                                                        <div (mouseenter)="setHoverData(dr5)"
+                                                                                            nz-tooltip
+                                                                                            nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                                                                             id="{{dr5}}"
                                                                                             (mouseleave)="setHoverData(null)"
                                                                                             (contextmenu)="showSupervisorMenu(dr5)"
@@ -4772,7 +4819,9 @@
                                                                                                         </ul>
                                                                                                     </div>
                                                                                                     <div id="{{dr6}}"
-                                                                                                        (mouseenter)="setHoverData(dr6)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
+                                                                                                        (mouseenter)="setHoverData(dr6)"
+                                                                                                        nz-tooltip
+                                                                                                        nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                                                                                         (mouseleave)="setHoverData(null)"
                                                                                                         (contextmenu)="showSupervisorMenu(dr6)"
                                                                                                         [ngClass]="{'selected-node': userIdsSelected.includes(dr6), 'hover-node': dr6 === currentHoverUid ||
@@ -5430,7 +5479,9 @@
                                                                                                                     </ul>
                                                                                                                 </div>
                                                                                                                 <div id="{{dr7}}"
-                                                                                                                    (mouseenter)="setHoverData(dr7)" nz-tooltip nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
+                                                                                                                    (mouseenter)="setHoverData(dr7)"
+                                                                                                                    nz-tooltip
+                                                                                                                    nzTooltipTitle="Right Click to bring up menu (control-click on single button mice)"
                                                                                                                     (mouseleave)="setHoverData(null)"
                                                                                                                     (contextmenu)="showSupervisorMenu(dr7)"
                                                                                                                     [ngClass]="{'selected-node': userIdsSelected.includes(dr7), 'hover-node': dr7 === currentHoverUid ||
