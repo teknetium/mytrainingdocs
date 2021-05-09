@@ -1890,13 +1890,15 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   hideSupervisorMenu(uid: string) {
-    this.supervisorMenuHash[uid].userStatus = false;
-    this.supervisorMenuHash[uid].userTrainingStatus = false;
-    this.supervisorMenuHash[uid].jobTitle = false;
-    this.supervisorMenuHash[uid].userType = false;
-    this.supervisorMenuHash[uid].training = false;
-    this.supervisorMenuHash[uid].main = false;
-    this.currentSupervisorMenu = null;
+    if (this.supervisorMenuHash[uid]) {
+      this.supervisorMenuHash[uid].userStatus = false;
+      this.supervisorMenuHash[uid].userTrainingStatus = false;
+      this.supervisorMenuHash[uid].jobTitle = false;
+      this.supervisorMenuHash[uid].userType = false;
+      this.supervisorMenuHash[uid].training = false;
+      this.supervisorMenuHash[uid].main = false;
+      this.currentSupervisorMenu = null;
+    }
   }
 
   assignTrainingToUser(uid: string) {
@@ -3635,6 +3637,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     */
     this.showUserTrainingModal = false;
     this.selectedTrainingId = null;
+    this.hideSupervisorMenu(null);
   }
 
   onDragStart(event) {

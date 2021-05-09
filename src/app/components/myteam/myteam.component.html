@@ -1804,7 +1804,7 @@
                                             -->
                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
                                                 [ngStyle]="{'color': getStatusColor(dr)}"></i>
-                                            <span *ngIf="myOrgUserHash[dr].userType === 'supervisor' || includeFullName"
+                                            <span *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || includeFullName"
                                                 [ngStyle]="{'font-size.px': textFontSize}"
                                                 style="z-index:1000000;display: block;color:#666666;">
                                                 {{orgChartNodeHash[dr]?.fName}}<br>{{orgChartNodeHash[dr]?.lName}}
@@ -2335,7 +2335,7 @@
                                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr2]?.userType]"
                                                             [ngStyle]="{'color': getStatusColor(dr2)}"></i>
                                                         <span
-                                                            *ngIf="myOrgUserHash[dr2].userType === 'supervisor' || includeFullName"
+                                                            *ngIf="myOrgUserHash[dr2]?.userType === 'supervisor' || includeFullName"
                                                             [ngStyle]="{'font-size.px': textFontSize}"
                                                             style="display: block;color:#666666;">
                                                             {{orgChartNodeHash[dr2]?.fName}}<br>{{orgChartNodeHash[dr2]?.lName}}
@@ -2803,7 +2803,7 @@
                                                                             <i class="fal fa-angle-right"
                                                                                 style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                             <div style="clear:both;"></div>
-                                                                            <div *ngIf="supervisorMenuHash[dr3].userType"
+                                                                            <div *ngIf="supervisorMenuHash[dr3]?.userType"
                                                                                 style="padding:5px;position:absolute;left:280px;top:0;width:200px;background-color:#e1e1e1;border:1px solid #bbbbbb;border-radius: 5px;"
                                                                                 (mouseleave)="supervisorMenuHash[dr3].userType = false">
                                                                                 <div *ngFor="let userType of listOfUserTypes"
