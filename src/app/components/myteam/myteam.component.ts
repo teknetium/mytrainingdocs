@@ -2891,6 +2891,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       case 'Training': {
         this.currentFilter = item + ':' + value;
         this.displayMode[uid] = 'Training';
+        this.currentTrainingSelected = value;
         this.orgChartTitle = 'Trainings';
         //        this.uidTidUTHash = {};
         break;

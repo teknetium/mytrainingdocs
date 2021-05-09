@@ -998,6 +998,11 @@
                                 (click)="assignTrainingToUser(null)">
                                 <i class="fas fa-plus"></i>
                             </button>
+                        <button nz-button nzShape="circle" [disabled]="userIdsSelected.length === 0 || !currentTrainingSelected"
+                            style="display:inline-block;margin-right:5px;" nz-popconfirm
+                            nzPopconfirmTitle="Remove this training from all users selected?" (nzOnConfirm)="confirmUserTrainingDelete()"
+                            nz-tooltip nzTooltipPlacement="bottomLeft" nzTooltipTitle="Remove Training from Users">
+                            <i class="fas fa-trash"></i></button>
                             <button nz-button nzSize="default" nzShape="circle" nzType="default"
                                 style="display:inline-block;margin-right:5px;" nz-tooltip nzTooltipPlacement="top"
                                 nzTooltipTitle="Email selected users" (click)="showMsgModal()">
