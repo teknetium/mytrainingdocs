@@ -160,14 +160,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     pastDue: 'Past Due'
   }
 
-  userTypeHash = {
-    individualConributor: 'Individual Contributor',
-    supervisor: 'Supervisor',
-    volunteer: 'Volunteer',
-    contractor: 'Contractor',
-    customer: 'Customer'
-  }
-
   userTrainingStatusColorHash = {
     none: 'black',
     upToDate: '#52c41a',
@@ -1309,6 +1301,14 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
   currentFilter: string;
   currentFilterItem: string = null;
+
+  displayModeTitleHash = {
+    UserStatus: 'User Status',
+    UserType: 'User Type',
+    Training: 'Training Status',
+    JobTitle: 'Job Titles',
+    UserTrainingStatus: 'User Training Status'
+  }
 
 
   constructor(
@@ -2845,7 +2845,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       this.orgChartSelectionList.splice(index, 1);
 
       this.userSelectionHash[uid] = null;
-      this.currentOrgSelection = '';
+//      this.currentOrgSelection = '';
       let index2 = this.userIdsSelected.indexOf(uid);
       if (index2 >= 0) {
         this.userIdsSelected.splice(index2, 1);
@@ -2861,6 +2861,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       }
     }
     this.hideSupervisorMenu(uid);
+    this.orgChartTitle = this.displayModeTitleHash[this.currentFilterItem];
   }
 
   /*
@@ -2891,6 +2892,8 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       value: value,
       userIdsSelected: []
     }
+
+    this.orgChartTitle = this.displayModeTitleHash[this.currentFilterItem];
     this.orgChartSelections = [];
     this.orgChartSelections.push(cloneDeep(userSelectionObj));
     this.orgChartSelectionList = [];
@@ -2900,7 +2903,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       case 'JobTitle': {
         this.currentFilter = item + ':' + value;
         this.displayMode[uid] = 'JobTitle';
-        this.orgChartTitle = 'Job Titles';
         break;
       }
       case 'Training': {
@@ -2914,19 +2916,16 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       case 'UserStatus': {
         this.currentFilter = item + ':' + value;
         this.displayMode[uid] = 'UserStatus';
-        this.orgChartTitle = 'User Status';
         break;
       }
       case 'UserTrainingStatus': {
         this.currentFilter = item + ':' + value;
         this.displayMode[uid] = 'UserTrainingStatus';
-        this.orgChartTitle = 'User Training Status';
         break;
       }
       case 'UserType': {
         this.currentFilter = item + ':' + value;
         this.displayMode[uid] = 'UserType';
-        this.orgChartTitle = 'User Type';
         break;
       }
     }
@@ -3115,6 +3114,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       value: null,
       userIdsSelected: []
     }
+    this.orgChartTitle = this.myOrgUserHash[userId].firstName + ' ' + this.myOrgUserHash[userId].lastName;
     this.orgChartSelections = [];
     this.orgChartSelections.push(cloneDeep(userSelectionObj));
     this.orgChartSelectionList = [];
