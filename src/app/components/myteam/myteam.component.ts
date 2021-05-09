@@ -3363,42 +3363,34 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
           nodeStatsObj.selectedCnt = 0;
           for (let training of this.assignableTrainings) {
             nodeStatsObj.trainingHash[training._id] = {
-              upToDate: 0,
-              pastDue: 0,
-              completed: 0,
-              pendingCertUpload: 0
+              upToDate: [],
+              pastDue: [],
+              completed: [],
+              pendingCertUpload: []
             };
           };
-          //          nodeStatsObj.trainingHash = {};
-          /*
-            upToDate: 0,
-            pastDue: 0,
-            completed: 0,
-            pendingCertUpload: 0
-          };
-          */
           nodeStatsObj.userTypeHash = {
-            individualContributor: 0,
-            supervisor: 0,
-            volunteer: 0,
-            contractor: 0,
-            customer: 0
+            individualContributor: [],
+            supervisor: [],
+            volunteer: [],
+            contractor: [],
+            customer: []
           };
           nodeStatsObj.userStatusHash = {
-            active: 0,
-            inactive: 0,
-            notInvited: 0,
-            pending: 0,
-            error: 0
+            active: [],
+            inactive: [],
+            notInvited: [],
+            pending: [],
+            error: []
           };
           nodeStatsObj.userTrainingStatusHash = {
-            none: 0,
-            upToDate: 0,
-            pastDue: 0
+            none: [],
+            upToDate: [],
+            pastDue: []
           };
           nodeStatsObj.jobTitleHash = {};
           for (let jobTitle of this.jobTitles) {
-            nodeStatsObj.jobTitleHash[jobTitle] = 0;
+            nodeStatsObj.jobTitleHash[jobTitle] = [];
           }
         }
       }
@@ -3414,14 +3406,24 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     for (let uid of uidList) {
       let nodeStatsObj = this.nodeStatHash[uid];
       nodeStatsObj.userCnt++;
-      nodeStatsObj.userTrainingStatusHash[user.trainingStatus] += 1;
-      nodeStatsObj.jobTitleHash[user.jobTitle] += 1;
-      nodeStatsObj.userStatusHash[user.userStatus] += 1;
-      nodeStatsObj.userTypeHash[user.userType] += 1;
+      if (nodeStatsObj.userTrainingStatusHash[user.trainingStatus].indexOf(user._id) < 0) {
+        nodeStatsObj.userTrainingStatusHash[user.trainingStatus].push(user._id);
+      }
+      if (nodeStatsObj.jobTitleHash[user.jobTitle].indexOf(user._id) < 0) {
+        nodeStatsObj.jobTitleHash[user.jobTitle].push(user._id);
+      }
+      if (nodeStatsObj.userStatusHash[user.userStatus].indexOf(user._id) < 0) {
+        nodeStatsObj.userStatusHash[user.userStatus].push(user._id);
+      }
+      if (nodeStatsObj.userTypeHash[user.userType].indexOf(user._id) < 0) {
+        nodeStatsObj.userTypeHash[user.userType].push(user._id);
+      }
       let utList = this.uidUTHash[user._id];
       if (utList) {
         for (let ut of utList) {
-          nodeStatsObj.trainingHash[ut.tid][ut.status] += 1;
+          if (nodeStatsObj.trainingHash[ut.tid][ut.status].indexOf(user._id) < 0) {
+            nodeStatsObj.trainingHash[ut.tid][ut.status].push(user._id);
+          }
         }
       }
     }
