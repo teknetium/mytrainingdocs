@@ -1425,14 +1425,14 @@
                                                     [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                             </div>
                                             <div style="float:right;margin-left:20px;">
-                                                <span
-                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[authenticatedUser._id]?.trainingHash[training._id]?.upToDate?.length}}</span>
-                                                <span
-                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[authenticatedUser._id]?.trainingHash[training._id]?.pastDue?.length}}</span>
-                                                <span
-                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[authenticatedUser._id]?.trainingHash[training._id]?.completed?.length}}</span>
-                                                <span
-                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[authenticatedUser._id]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
+                                                <span class="training-status-values"
+                                                    style="color:#46bd15;">{{nodeStatHash[authenticatedUser._id]?.trainingHash[training._id]?.upToDate?.length}}</span>
+                                                <span class="training-status-values"
+                                                    style="color:red;">{{nodeStatHash[authenticatedUser._id]?.trainingHash[training._id]?.pastDue?.length}}</span>
+                                                <span class="training-status-values"
+                                                    style="color:#4891f7;">{{nodeStatHash[authenticatedUser._id]?.trainingHash[training._id]?.completed?.length}}</span>
+                                                <span class="training-status-values"
+                                                    style="color:#feb90b;">{{nodeStatHash[authenticatedUser._id]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
                                             </div>
                                             <div style="clear: both;"></div>
                                         </div>
@@ -1935,14 +1935,14 @@
                                                                 [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                         </div>
                                                         <div style="float:right;margin-left:20px;">
-                                                            <span
-                                                                style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.upToDate?.length}}</span>
-                                                            <span
-                                                                style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.pastDue?.length}}</span>
-                                                            <span
-                                                                style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.completed?.length}}</span>
-                                                            <span
-                                                                style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
+                                                            <span class="training-status-values"
+                                                                style="color:#46bd15;">{{nodeStatHash[dr]?.trainingHash[training._id]?.upToDate?.length}}</span>
+                                                            <span class="training-status-values"
+                                                                style="color:red;">{{nodeStatHash[dr]?.trainingHash[training._id]?.pastDue?.length}}</span>
+                                                            <span class="training-status-values"
+                                                                style="color:#4891f7;">{{nodeStatHash[dr]?.trainingHash[training._id]?.completed?.length}}</span>
+                                                            <span class="training-status-values"
+                                                                style="color:#feb90b;">{{nodeStatHash[dr]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
                                                         </div>
                                                         <div style="clear: both;"></div>
                                                     </div>
@@ -2474,14 +2474,14 @@
                                                                             [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                                     </div>
                                                                     <div style="float:right;margin-left:20px;">
-                                                                        <span
-                                                                            style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.upToDate?.length}}</span>
-                                                                        <span
-                                                                            style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.pastDue?.length}}</span>
-                                                                        <span
-                                                                            style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.completed?.length}}</span>
-                                                                        <span
-                                                                            style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
+                                                                        <span class="training-status-values"
+                                                                            style="color:#46bd15;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.upToDate?.length}}</span>
+                                                                        <span class="training-status-values"
+                                                                            style="color:red;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.pastDue?.length}}</span>
+                                                                        <span class="training-status-values"
+                                                                            style="color:#4891f7;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.completed?.length}}</span>
+                                                                        <span class="training-status-values"
+                                                                            style="color:#feb90b;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
                                                                     </div>
                                                                     <div style="clear: both;"></div>
                                                                 </div>
@@ -3041,14 +3041,14 @@
                                                                                 </div>
                                                                                 <div
                                                                                     style="float:right;margin-left:20px;">
-                                                                                    <span
-                                                                                        style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.upToDate?.length}}</span>
-                                                                                    <span
-                                                                                        style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.pastDue?.length}}</span>
-                                                                                    <span
-                                                                                        style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.completed?.length}}</span>
-                                                                                    <span
-                                                                                        style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
+                                                                                    <span class="training-status-values"
+                                                                                        style="color:#46bd15;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.upToDate?.length}}</span>
+                                                                                    <span class="training-status-values"
+                                                                                        style="color:red;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.pastDue?.length}}</span>
+                                                                                    <span class="training-status-values"
+                                                                                        style="color:#4891f7;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.completed?.length}}</span>
+                                                                                    <span class="training-status-values"
+                                                                                        style="color:#feb90b;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
                                                                                 </div>
                                                                                 <div style="clear: both;"></div>
                                                                             </div>
@@ -3644,14 +3644,14 @@
                                                                                             </div>
                                                                                             <div
                                                                                                 style="float:right;margin-left:20px;">
-                                                                                                <span
-                                                                                                    style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.upToDate?.length}}</span>
-                                                                                                <span
-                                                                                                    style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.pastDue?.length}}</span>
-                                                                                                <span
-                                                                                                    style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.completed?.length}}</span>
-                                                                                                <span
-                                                                                                    style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
+                                                                                                <span class="training-status-values"
+                                                                                                    style="color:#46bd15;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.upToDate?.length}}</span>
+                                                                                                <span class="training-status-values"
+                                                                                                    style="color:red;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.pastDue?.length}}</span>
+                                                                                                <span class="training-status-values"
+                                                                                                    style="color:#4891f7;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.completed?.length}}</span>
+                                                                                                <span class="training-status-values"
+                                                                                                    style="color:#feb90b;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
                                                                                             </div>
                                                                                             <div style="clear: both;">
                                                                                             </div>
@@ -4288,14 +4288,14 @@
                                                                                                         </div>
                                                                                                         <div
                                                                                                             style="float:right;margin-left:20px;">
-                                                                                                            <span
-                                                                                                                style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.upToDate?.length}}</span>
-                                                                                                            <span
-                                                                                                                style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.pastDue?.length}}</span>
-                                                                                                            <span
-                                                                                                                style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.completed?.length}}</span>
-                                                                                                            <span
-                                                                                                                style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
+                                                                                                            <span class="training-status-values"
+                                                                                                                style="color:#46bd15;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.upToDate?.length}}</span>
+                                                                                                            <span class="training-status-values"
+                                                                                                                style="color:red;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.pastDue?.length}}</span>
+                                                                                                            <span class="training-status-values"
+                                                                                                                style="color:#4891f7;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.completed?.length}}</span>
+                                                                                                            <span class="training-status-values"
+                                                                                                                style="color:#feb90b;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
                                                                                                         </div>
                                                                                                         <div
                                                                                                             style="clear: both;">
@@ -4946,14 +4946,14 @@
                                                                                                                     </div>
                                                                                                                     <div
                                                                                                                         style="float:right;margin-left:20px;">
-                                                                                                                        <span
-                                                                                                                            style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.upToDate?.length}}</span>
-                                                                                                                        <span
-                                                                                                                            style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.pastDue?.length}}</span>
-                                                                                                                        <span
-                                                                                                                            style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.completed?.length}}</span>
-                                                                                                                        <span
-                                                                                                                            style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
+                                                                                                                        <span  class="training-status-values"
+                                                                                                                            style="color:#46bd15;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.upToDate?.length}}</span>
+                                                                                                                        <span class="training-status-values"
+                                                                                                                            style="color:red;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.pastDue?.length}}</span>
+                                                                                                                        <span class="training-status-values"
+                                                                                                                            style="color:#4891f7;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.completed?.length}}</span>
+                                                                                                                        <span class="training-status-values"
+                                                                                                                            style="color:#feb90b;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
                                                                                                                     </div>
                                                                                                                     <div
                                                                                                                         style="clear: both;">
@@ -5604,14 +5604,14 @@
                                                                                                                                 </div>
                                                                                                                                 <div
                                                                                                                                     style="float:right;margin-left:20px;">
-                                                                                                                                    <span
-                                                                                                                                        style="color:#46bd15;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.upToDate?.length}}</span>
-                                                                                                                                    <span
-                                                                                                                                        style="color:red;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.pastDue?.length}}</span>
-                                                                                                                                    <span
-                                                                                                                                        style="color:#4891f7;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.completed?.length}}</span>
-                                                                                                                                    <span
-                                                                                                                                        style="color:#feb90b;font-size:16px;margin-left:3px;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
+                                                                                                                                    <span class="training-status-values"
+                                                                                                                                        style="color:#46bd15;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.upToDate?.length}}</span>
+                                                                                                                                    <span class="training-status-values"
+                                                                                                                                        style="color:red;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.pastDue?.length}}</span>
+                                                                                                                                    <span class="training-status-values"
+                                                                                                                                        style="color:#4891f7;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.completed?.length}}</span>
+                                                                                                                                    <span class="training-status-values"
+                                                                                                                                        style="color:#feb90b;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
                                                                                                                                 </div>
                                                                                                                                 <div
                                                                                                                                     style="clear: both;">

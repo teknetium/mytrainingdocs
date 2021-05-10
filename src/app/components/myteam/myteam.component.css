@@ -582,3 +582,9 @@ ul.no-bullets {
 .selection-hover {
 	border:3px solid #f3bb42;
 }
+
+.training-status-values {
+	font-size:14px;
+	margin-left:3px;
+	margin-top:5px;
+}
