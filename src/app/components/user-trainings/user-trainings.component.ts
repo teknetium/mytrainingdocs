@@ -53,7 +53,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   //  userTrainingHash$: Observable<UserTrainingHash>;
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
-  uidUTHash$: Observable<UidUTHash>;
+//  uidUTHash$: Observable<UidUTHash>;
   userTrainings$: Observable<UserTrainingModel[]>;
   bulkUserStatusUpdate$: Observable<string[]>;
   userTrainingCompleted$: Observable<UserTrainingModel>;
@@ -88,6 +88,8 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   certImageUrl;
   certificateModalVisible = false;
   tableFontSize = 12;
+  orgUserTrainings$: Observable<UserTrainingModel[]>;
+
 
   constructor(
     private userService: UserService,
@@ -101,9 +103,10 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
   ) {
     super();
     this.authenticatedUser$ = this.userService.getAuthenticatedUserStream();
+    this.orgUserTrainings$ = this.userTrainingService.getOrgUserTrainingsStream();
     this.userTrainingCompleted$ = this.userTrainingService.getUserTrainingCompletedStream();
     this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
-    this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
+//    this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.selectedUser$ = this.userService.getSelectedUserStream();
     this.fileUploaded$ = this.fileService.getUploadedFileStream();
@@ -170,13 +173,24 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
 
       this.trainingIdHash = trainingIdHash;
     })
-    this.uidUTHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uidUTHash => {
-      if (!uidUTHash) {
+    this.orgUserTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(utList => {
+
+      if (!utList) {
         return;
       }
 
-      this.uidUTHash = uidUTHash;
-    })
+      this.uidUTHash = {};
+
+      for (let ut of utList) {
+        if (!this.uidUTHash[ut.uid]) {
+          this.uidUTHash[ut.uid] = [];
+        }
+        let tmpUTList = this.uidUTHash[ut.uid];
+        tmpUTList.push(cloneDeep(ut));
+        this.uidUTHash[ut.uid] = cloneDeep(tmpUTList);
+      }
+
+    });
 
     this.userTrainings$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(userTrainings => {
       if (!userTrainings) {

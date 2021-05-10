@@ -366,10 +366,15 @@
                                 <i class="fas fa-user-plus"></i>
                             </button>
                             <button nz-button nzSize="default" nzShape="circle" nzType="primary"
-                                style="display:inline-block;" (click)="showDownloadPNGImageModal()" nz-tooltip
+                                style="display:inline-block;margin-right:5px;" (click)="showDownloadPNGImageModal()" nz-tooltip
                                 nzTooltipPlacement="top"
                                 nzTooltipTitle="Download the Org Chart as a PNG image (with preview)">
                                 <i class="fas fa-camera"></i>
+                            </button>
+                            <button nz-button nzSize="default" nzShape="circle" nzType="primary" style="display:inline-block;margin-right:5px;"
+                                (click)="centerIt(authenticatedUser._id)" nz-tooltip nzTooltipPlacement="top"
+                                nzTooltipTitle="Center Yourself in the Browser Window">
+                                <i class="fas fa-align-center"></i>
                             </button>
                         </div>
                         <div style="clear: both;"></div>
@@ -456,6 +461,9 @@
             <textarea rows="10" nz-input [(ngModel)]="usersCSV"></textarea>
         </div>
         <div *ngIf="showOrgChart === 'true'" style="position:relative;z-index:1;">
+            <div>
+
+            </div>
             <div *ngIf="currentSupervisorMenu"
                 style="position: fixed;top:0;bottom:0;left:0;right:0;background: rgba(0,0,0,0.6);z-index:999999;">
             </div>
@@ -2104,8 +2112,8 @@
                                     <div *ngIf="!collapsedNodes.includes(dr)" style="display:block;">
                                         <div *ngFor="let dr2 of myOrgUserHash[dr]?.directReports; let dr2Index = index"
                                             style="vertical-align: top;position:relative;"
-                                            [ngClass]="{'inline-block': maxLevel > 2, 'block': maxLevel === 2}">
-                                            <div *ngIf="maxLevel > 2" style="position:relative;">
+                                            [ngClass]="{'inline-block': orgChartDirectionHash[dr] === 'inline-block', 'block': orgChartDirectionHash[dr] === 'block'}">
+                                            <div *ngIf="orgChartDirectionHash[dr] === 'inline-block'" style="position:relative;">
                                                 <div class="org-chart-vert-connector">
                                                 </div>
                                                 <div *ngIf="!isLast(myOrgUserHash[dr]?.directReports, dr2Index)"
@@ -2649,8 +2657,8 @@
                                                 <div *ngIf="!collapsedNodes.includes(dr2)" style="display:block;">
                                                     <div *ngFor="let dr3 of myOrgUserHash[dr2]?.directReports; let dr3Index = index"
                                                         style="vertical-align: top;position:relative;display:inline-block;"
-                                                        [ngClass]="{'inline-block': maxLevel > 3, 'block': maxLevel === 3}">
-                                                        <div *ngIf="maxLevel > 3" style="position:relative;">
+                                                        [ngClass]="{'inline-block': orgChartDirectionHash[dr2] === 'inline-block', 'block': orgChartDirectionHash[dr2] === 'block'}">
+                                                        <div *ngIf="orgChartDirectionHash[dr2] === 'inline-block'" style="position:relative;">
                                                             <div class="org-chart-vert-connector">
                                                             </div>
                                                             <div *ngIf="!isLast(myOrgUserHash[dr2]?.directReports, dr3Index)"
@@ -3232,8 +3240,8 @@
                                                                 style="display:block;">
                                                                 <div *ngFor="let dr4 of myOrgUserHash[dr3]?.directReports; let dr4Index = index"
                                                                     style="vertical-align: top;position:relative;"
-                                                                    [ngClass]="{'inline-block': maxLevel > 4, 'block': maxLevel === 4}">
-                                                                    <div *ngIf="maxLevel > 4"
+                                                                    [ngClass]="{'inline-block': orgChartDirectionHash[dr3] === 'inline-block', 'block': orgChartDirectionHash[dr3] === 'block'}">
+                                                                    <div *ngIf="orgChartDirectionHash[dr3] === 'inline-block'"
                                                                         style="position:relative;">
                                                                         <div class="org-chart-vert-connector">
                                                                         </div>
@@ -3852,8 +3860,8 @@
                                                                             style="display:block;">
                                                                             <div *ngFor="let dr5 of myOrgUserHash[dr4]?.directReports; let dr5Index = index"
                                                                                 style="vertical-align: top;position:relative;"
-                                                                                [ngClass]="{'inline-block': maxLevel > 5, 'block': maxLevel === 5}">
-                                                                                <div *ngIf="maxLevel > 5"
+                                                                                [ngClass]="{'inline-block': orgChartDirectionHash[dr4] === 'inline-block', 'block': orgChartDirectionHash[dr4] === 'block'}">
+                                                                                <div *ngIf="orgChartDirectionHash[dr4] === 'inline-block'"
                                                                                     style="position:relative;">
                                                                                     <div
                                                                                         class="org-chart-vert-connector">
@@ -4491,8 +4499,8 @@
                                                                                         style="display: block;text-align: center;">
                                                                                         <div *ngFor="let dr6 of myOrgUserHash[dr5]?.directReports; let dr6Index = index"
                                                                                             style="vertical-align: top;display: inline-block;"
-                                                                                            [ngClass]="{'inline-block': maxLevel > 6, 'block': maxLevel === 6}">
-                                                                                            <div *ngIf="maxLevel > 6"
+                                                                                            [ngClass]="{'inline-block': orgChartDirectionHash[dr5] === 'inline-block', 'block': orgChartDirectionHash[dr5] === 'block'}">
+                                                                                            <div *ngIf="orgChartDirectionHash[dr5] === 'inline-block'"
                                                                                                 style="position:relative;">
                                                                                                 <div
                                                                                                     class="org-chart-vert-connector">
@@ -4838,7 +4846,7 @@
                                                                                                             [ngStyle]="{'color': getStatusColor(dr6)}"></i>
 
                                                                                                         <span
-                                                                                                            *ngIf="myOrgUserHash[dr6].userType === 'supervisor' || includeFullName"
+                                                                                                            *ngIf="myOrgUserHash[dr6]?.userType === 'supervisor' || includeFullName"
                                                                                                             style="display: block;color:#666666;"
                                                                                                             [ngStyle]="{'font-size.px': textFontSize}">
                                                                                                             {{orgChartNodeHash[dr6]?.fName}}<br>{{orgChartNodeHash[dr6]?.lName}}
@@ -5154,7 +5162,7 @@
                                                                                                     style="display: block;">
                                                                                                     <div *ngFor="let dr7 of myOrgUserHash[dr6]?.directReports"
                                                                                                         style="vertical-align: top;"
-                                                                                                        [ngClass]="{'inline-block': maxLevel > 7, 'block': maxLevel === 7}">
+                                                                                                        [ngClass]="{'inline-block': orgChartDirectionHash[dr6] === 'inline-block', 'block': orgChartDirectionHash[dr6] === 'block'}">
                                                                                                         <div
                                                                                                             class="org-chart-vert-connector">
                                                                                                         </div>
@@ -5814,7 +5822,7 @@
                                                                                                                 style="display: block;">
                                                                                                                 <div *ngFor="let dr8 of myOrgUserHash[dr7]?.directReports"
                                                                                                                     style="vertical-align: top;"
-                                                                                                                    [ngClass]="{'inline-block': maxLevel > 8, 'block': maxLevel === 8}">
+                                                                                                                    [ngClass]="{'inline-block': orgChartDirectionHash[dr7] === 'inline-block', 'block': orgChartDirectionHash[dr7] === 'block'}">
                                                                                                                     <div
                                                                                                                         class="org-chart-vert-connector">
                                                                                                                     </div>

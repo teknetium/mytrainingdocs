@@ -271,7 +271,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   showPastDueTrainings = true;
   showOnetime = true;
   showRecurring = true;
-  uidUTHash$: Observable<UidUTHash>;
+//  uidUTHash$: Observable<UidUTHash>;
   uidUTHash = {};
   showTrainingHash = {};
   trainingStatusFilterVal: string;
@@ -1309,7 +1309,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     JobTitle: 'Job Titles',
     UserTrainingStatus: 'User Training Status'
   }
-
+  orgChartDirectionHash = {};
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1340,7 +1340,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.uidReportChainHash$ = this.userService.getUIDReportChainHashStream();
     this.myOrgChartData$ = this.userService.getMyOrgStream();
     this.myOrgUserHash$ = this.userService.getOrgHashStream();
-    this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
+//    this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
     this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.myTeam$ = this.userService.getMyTeamStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
@@ -1560,6 +1560,20 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
           continue;
         }
 
+        if (user.directReports.length > 0) {
+          let supervisorFound = false;
+          for (let dr of user.directReports) {
+            if (this.myOrgUserHash[dr].userType === 'supervisor') {
+              supervisorFound = true;
+              break;
+            }
+          }
+          if (supervisorFound) {
+            this.orgChartDirectionHash[user._id] = 'inline-block';
+          } else {
+            this.orgChartDirectionHash[user._id] = 'block';
+          }
+        }
 
         this.supervisorMenuHash[user._id] = {};
         this.supervisorMenuHash[user._id].main = false;
@@ -1612,6 +1626,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       this.matchingSupervisors = this.myOrgSupervisors;
       this.createCSV();
       this.getOrgStats();
+      console.log('myOrgUserHash', this.orgChartDirectionHash);
     });
     /*
     this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgUsers => {

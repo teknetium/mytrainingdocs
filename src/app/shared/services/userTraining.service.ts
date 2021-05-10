@@ -474,6 +474,17 @@ export class UserTrainingService {
 
   getOrgUserTrainings(orgId: string) {
     this.getUTForOrg$(orgId).subscribe(utList => {
+
+      for (let ut of utList) {
+        if (!this.uidUTHash[ut.uid]) {
+          this.uidUTHash[ut.uid] = [];
+        }
+        let tmpUTList = this.uidUTHash[ut.uid];
+        tmpUTList.push(cloneDeep(ut));
+        this.uidUTHash[ut.uid] = cloneDeep(tmpUTList);
+      }
+      this.uidUTHashBS$.next(this.uidUTHash);
+
       this.orgUserTrainingsBS$.next(utList);
     })
   }
