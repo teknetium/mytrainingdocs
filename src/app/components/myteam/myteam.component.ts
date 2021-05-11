@@ -3569,11 +3569,13 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
     if (this.displayMode[uid] === 'Training' && this.currentTrainingSelected) {
       let tidUTHash = this.uidTidUTHash[uid];
-      ut = tidUTHash[this.currentTrainingSelected];
-      if (ut) {
-        return this.userTrainingStatusColorHash[ut.status];
-      } else {
-        return 'orange';
+      if (tidUTHash) {
+        ut = tidUTHash[this.currentTrainingSelected];
+        if (ut) {
+          return this.userTrainingStatusColorHash[ut.status];
+        } else {
+          return 'orange';
+        }
       }
     } else if (this.displayMode[uid] === 'UserStatus') {
       return this.userStatusColorHash[this.myOrgUserHash[uid].userStatus];

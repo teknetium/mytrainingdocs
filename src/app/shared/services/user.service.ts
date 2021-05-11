@@ -396,7 +396,7 @@ export class UserService {
   buildMyOrgUserList(user: UserModel, allOrgUsers: UserModel[]) {
     this.myOrgUserHash[user._id] = user;
     this.myOrgUsers.push(user);
-    this.userTrainingService.initUserTrainingsForUser(user._id);
+//    this.userTrainingService.initUserTrainingsForUser(user._id);
     let level = 1;
     this.addDirectReportsToMyOrgUserHash(user, level++);
 
