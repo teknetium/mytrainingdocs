@@ -3673,6 +3673,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.showUserTrainingModal = false;
     this.selectedTrainingId = null;
     this.hideSupervisorMenu(null);
+    this.removeSelectionByUid(this.orgChartSelectionList[0]);
   }
 
   onDragStart(event) {
