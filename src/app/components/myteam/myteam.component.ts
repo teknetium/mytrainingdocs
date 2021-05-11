@@ -1310,6 +1310,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     UserTrainingStatus: 'User Training Status'
   }
   orgChartDirectionHash = {};
+  myOrgUserIds: string[] = [];
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1370,31 +1371,25 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       selectedCnt: 0,
       userIdsSelected: [],
       trainingHash: {},
-      /*
-        upToDate: 0,
-        pastDue: 0,
-        completed: 0,
-        pendingCertUpload: 0
-      },
-      */
+
       userTypeHash: {
-        individualContributor: 0,
-        supervisor: 0,
-        volunteer: 0,
-        contractor: 0,
-        customer: 0
+        individualContributor: [],
+        supervisor: [],
+        volunteer: [],
+        contractor: [],
+        customer: []
       },
       userStatusHash: {
-        active: 0,
-        inactive: 0,
-        notInvited: 0,
-        pending: 0,
-        error: 0
+        active: [],
+        inactive: [],
+        notInvited: [],
+        pending: [],
+        error: []
       },
       userTrainingStatusHash: {
-        none: 0,
-        upToDate: 0,
-        pastDue: 0
+        none: [],
+        upToDate: [],
+        pastDue: []
       },
       jobTitleHash: {},
       userData1Hash: {},
@@ -1543,6 +1538,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
 
       this.myOrgUserHash = orgUserHash;
+      this.myOrgUserIds = Object.keys(this.myOrgUserHash);
       this.myOrgUserObjs = Object.values(this.myOrgUserHash);
       console.log('myOrgUserHash$ ', this.myOrgUserObjs);
       this.userList = this.myOrgUserObjs;
@@ -1555,7 +1551,8 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         this.myOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
       }
 
-      for (let user of this.myOrgUserObjs) {
+      for (let uid of this.myOrgUserIds) {
+        let user = this.myOrgUserHash[uid];
         if (!user.supervisorId) {
           continue;
         }
@@ -1586,7 +1583,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         this.displayMode[user._id] = 'UserStatus';
 
         this.nodeStatObj.rootUid = user._id;
-        this.nodeStatHash[user._id] = cloneDeep(this.nodeStatObj);
+        if (!this.nodeStatHash[user._id]) {
+          this.nodeStatHash[user._id] = cloneDeep(this.nodeStatObj);
+        }
 
         if (user.settings.statusList.includes('duplicateEmail')) {
           this.duplicateEmailHash[user._id] = user.email;
@@ -2870,8 +2869,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       if (index2 >= 0) {
         this.userIdsSelected.splice(index2, 1);
       }
-      if (this.myOrgUserObjs.length > 0) {
-        for (let user of this.myOrgUserObjs) {
+      if (this.myOrgUserIds.length > 0) {
+        for (let uid of this.myOrgUserIds) {
+          let user = this.myOrgUserHash[uid];
           this.displayMode[user._id] = this.displayMode[this.authenticatedUser._id];
           let nodeStatsObj = this.nodeStatHash[user._id];
           if (nodeStatsObj) {
@@ -3140,8 +3140,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.orgChartSelectionList = [];
     this.orgChartSelectionList.push(userId);
     this.userSelectionHash[userId] = cloneDeep(userSelectionObj);
-    if (this.myOrgUserObjs.length > 0) {
-      for (let user of this.myOrgUserObjs) {
+    if (this.myOrgUserIds.length > 0) {
+      for (let uid of this.myOrgUserIds) {
+        let user = this.myOrgUserHash[uid];
         let nodeStatsObj = this.nodeStatHash[user._id];
         if (nodeStatsObj) {
           nodeStatsObj.selectedCnt = 0;
@@ -3663,22 +3664,10 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     }
     this.notifyService.showAlert(alert);
     this.userTrainingService.bulkAssignTraining(this.userIdsSelected, training, this.authenticatedUser._id, this.authenticatedUser.org);
-    for (let uid of this.userIdsSelected) {
-      let user = this.myOrgUserHash[uid];
-      if (user.trainingStatus === 'none') {
-        user.trainingStatus = 'upToDate';
-      }
-    }
 
     this.userService.setUsersStatusUpToDate(this.userIdsSelected);
-    this.userTrainingService.getOrgUserTrainings(this.authenticatedUser.org);
-    this.getOrgStats();
-    /*
-    this.figureOrgStat(this.authenticatedUser._id);
-    for (let node of this.collapsedNodes) {
-      this.figureOrgStat(node);
-    }
-    */
+//    this.userTrainingService.getOrgUserTrainings(this.authenticatedUser.org);
+    setTimeout(() => { this.getOrgStats(); }, 5000);
     this.showUserTrainingModal = false;
     this.selectedTrainingId = null;
     this.hideSupervisorMenu(null);

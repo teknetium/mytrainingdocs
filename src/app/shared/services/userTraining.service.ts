@@ -401,9 +401,9 @@ export class UserTrainingService {
           }
           this.notifyService.showAlert(errorAlert);
         }
+        this.getOrgUserTrainings(orgId);
       });
     }
-    this.getOrgUserTrainings(orgId);
   }
 
   deleteUTForTid(tid: string) {
