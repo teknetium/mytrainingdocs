@@ -243,7 +243,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
   message: TemplateMessageModel;
   //  userIdSelected = '';
-  userIdsSelected = [];
+  userIdsSelected:string[] = [];
   matchingJobTitles: string[] = [];
   matchingUsers: string[] = [];
   matchingSupervisors: string[] = [];
@@ -1626,7 +1626,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       this.matchingSupervisors = this.myOrgSupervisors;
       this.createCSV();
       this.getOrgStats();
-      console.log('myOrgUserHash', this.orgChartDirectionHash);
+//      console.log('myOrgUserHash', this.orgChartDirectionHash);
     });
     /*
     this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgUsers => {
@@ -2363,7 +2363,11 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   statusChanged(status) {
+    console.log('statusChanged', status);
+  }
 
+  trainingStatusChanged(status) {
+    console.log('trainingStatusChanged', status);
   }
 
   search(): void {
@@ -3563,7 +3567,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
     let ut: UserTrainingModel;
 
-    if (this.displayMode[uid] === 'Training' && this.currentTrainingSelected && this.userIdsSelected.includes(uid)) {
+    if (this.displayMode[uid] === 'Training' && this.currentTrainingSelected) {
       let tidUTHash = this.uidTidUTHash[uid];
       ut = tidUTHash[this.currentTrainingSelected];
       if (ut) {
@@ -3661,7 +3665,8 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         user.trainingStatus = 'upToDate';
       }
     }
-    //    }
+
+    this.userService.setUsersStatusUpToDate(this.userIdsSelected);
     this.userTrainingService.getOrgUserTrainings(this.authenticatedUser.org);
     this.getOrgStats();
     /*

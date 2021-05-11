@@ -383,7 +383,7 @@ export class UserTrainingService {
           this.allUserTrainingHash[ut._id] = ut;
         }
 //        console.log('bulk assign returns ...', userTrainingList);
-        this.bulkUserStatusUpdateBS$.next(cloneDeep(this.uidList));
+//        this.bulkUserStatusUpdateBS$.next(cloneDeep(this.uidList));
         this.uidList = [];
 
         if ((loopCnt === iterationCnt) && (batchAddedCount === userTrainings.length)) {

@@ -5891,28 +5891,51 @@
                         <div style="display:inline-block;width:70%;margin-left:20px;">
                             <nz-radio-group [(ngModel)]="selectedUser.userStatus"
                                 (ngModelChange)="statusChanged($event)">
-                                <label nz-radio-button nzValue="active"
-                                    [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error'">
+                                <label nz-radio-button nzValue="active" style="color:blue;"
+                                    [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error' || selectedUser.userStatus === 'notInvited'">
                                     Active
                                 </label>
-                                <label nz-radio-button nzValue="inactive"
-                                    [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error'">
+                                <label nz-radio-button nzValue="inactive" style="color:#aaaaaa;"
+                                    [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error' || selectedUser.userStatus === 'notInvited'">
                                     Inactive
                                 </label>
-                                <label nz-radio-button nzValue="notInvited" nz-tooltip
+                                <label nz-radio-button nzValue="notInvited" nz-tooltip style="color:fuchsia;"
                                     nzTooltipTitle="This status indicates that the registration invitation has not been sent."
-                                    [nzDisabled]="selectedUser.userStatus === 'error' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive' || selectedUser.userStatus === 'pending'">
-                                    Pending
+                                    [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive'">
+                                    Not Invited
                                 </label>
-                                <label nz-radio-button nzValue="pending" nz-tooltip
+                                <label nz-radio-button nzValue="pending" nz-tooltip style="color:orange;"
                                     nzTooltipTitle="This status indicates the user has not completed the registration process."
-                                    [nzDisabled]="selectedUser.userStatus === 'error' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive' || selectedUser.userStatus === 'notInvited'">
+                                    [nzDisabled]="selectedUser.userStatus === 'notInvited' || selectedUser.userStatus === 'error' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive'">
                                     Pending
                                 </label>
-                                <label nz-radio-button nzValue="error" nz-tooltip
+                                <label nz-radio-button nzValue="error" nz-tooltip style="color:red;"
                                     nzTooltipTitle="This status indicates the user has either a bad email address or a bad supervisor id."
-                                    [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive' || selectedUser.userStatus === 'notInvited'">
+                                    [nzDisabled]="selectedUser.userStatus === 'notInvited' || selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive'">
                                     Error
+                                </label>
+                            </nz-radio-group>
+                        </div>
+                    </div>
+                    <div style="display:block;width:90%;margin-bottom:5px;">
+                        <div style="display:inline-block;width:25%;text-align: right;">
+                            <label style="font-size:14px;color:#000000;">
+                                Training Status
+                            </label>
+                        </div>
+                        <div style="display:inline-block;width:70%;margin-left:20px;">
+                            <nz-radio-group [(ngModel)]="selectedUser.trainingStatus" (ngModelChange)="trainingStatusChanged($event)">
+                                <label nz-radio-button nzValue="none" style="color:black;">
+                                    None
+                                </label>
+                                <label nz-radio-button nzValue="upToDate" style="color:#52c41a;"
+                                    >
+                                    Up To Date
+                                </label>
+                                <label nz-radio-button nzValue="pastDue" nz-tooltip style="color:red;"
+                                    nzTooltipTitle="This status indicates that the registration invitation has not been sent."
+                                    >
+                                    Past Due
                                 </label>
                             </nz-radio-group>
                         </div>
