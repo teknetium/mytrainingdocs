@@ -1546,7 +1546,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       this.myOrgUserObjs = Object.values(this.myOrgUserHash);
       console.log('myOrgUserHash$ ', this.myOrgUserObjs);
       this.userList = this.myOrgUserObjs;
-      this.userListDisplay = cloneDeep(this.userList);
+      this.userListDisplay = this.userList;
       this.myOrgSupervisors = [];
       let bulkAddFailFound = false;
       let listOfSupervisorIds = [];
