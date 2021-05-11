@@ -2896,7 +2896,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   filterChanged(uid: string, item: string, value: string) {
-    console.log('filterChanged  ', item, value);
+//    console.log('filterChanged  ', item, value);
 
     this.userIdsSelected = [];
     this.currentFilterItem = item;
@@ -3331,7 +3331,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       let utList = this.uidUTHash[user._id];
 
       if (utList) {
-        console.log('selectUsersFromDirectReports', utList);
+//        console.log('selectUsersFromDirectReports', utList);
 
         for (let ut of utList) {
           if (ut.tid === tid) {
