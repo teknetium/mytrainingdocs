@@ -320,7 +320,7 @@
         Log In
       </div>
     </div>
-    <section class="section bg-light" >
+    <section class="section bg-light">
       <div class="row">
         <div class="col-lg-12">
           <div class="text-center" style="font-size:1.5vw;padding:0 5% 2% 5%;">
@@ -359,7 +359,10 @@
         </nz-carousel>
         <ng-template #dotTemplate let-index>
           <div style="text-align: center;width:100%;margin-top:5px;margin-bottom: 20px;background-color: white;">
-                <i class="fa-circle" style="display:inline-block;font-size:16px;cursor:pointer;background-color: white;margin-right:5px;" [ngClass]="{'current-slide': currentSlide === index, 'fas': currentSlide === index, 'far': currentSlide !== index }" (click)="goTo(index)"></i>
+            <i class="fa-circle"
+              style="display:inline-block;font-size:16px;cursor:pointer;background-color: white;margin-right:5px;"
+              [ngClass]="{'current-slide': currentSlide === index, 'fas': currentSlide === index, 'far': currentSlide !== index }"
+              (click)="goTo(index)"></i>
           </div>
         </ng-template>
         <!--
@@ -427,13 +430,13 @@
       </div>
     </section>
     <section class="section bg-light" id="features">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="text-center">
-              <h2 class="mb-0 text-capitalize"> <span class="font-weight-bold">Features</span></h2>
-              <div class="main-title-border" style="margin-bottom: 10px;">
-              </div>
-              <!--
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="text-center">
+            <h2 class="mb-0 text-capitalize"> <span class="font-weight-bold">Features</span></h2>
+            <div class="main-title-border" style="margin-bottom: 10px;">
+            </div>
+            <!--
                       <div class="m-b-10">
                         <h6>Billing Cycle</h6>
                         <nz-radio-group [(ngModel)]="plans">
@@ -442,9 +445,9 @@
                         </nz-radio-group>
                       </div>
                       -->
-            </div>
           </div>
         </div>
+      </div>
       <div style="display: block;">
         <div class="benefit-container">
           <div *ngFor="let item of benefits; let i = index" class="benefit-item  text-center"
@@ -614,6 +617,17 @@
                     (ngModelChange)="userCntChanged($event)"></nz-input-number>
                 </div>
               </div>
+            </div>
+            <div style="width: 100%;text-align: center;margin:2vw 0;">
+              <nz-radio-group [(ngModel)]="nonProfitVar" (ngModelChange)="toggleNonProfit($event)"
+                style="display:inline-block;">
+                <label nz-radio-button nzValue="true">
+                  Nonprofit
+                </label>
+                <label nz-radio-button nzValue="false">
+                  For Profit
+                </label>
+              </nz-radio-group>
             </div>
           </div>
           <!--
@@ -990,13 +1004,15 @@
                         -->
               <div style="margin-top:60px;">
                 <div>
-                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="earlyAccess" style="display: inline-block;">
-                    <button nz-button nzShape="round" nzType="primary" id="checkout-button" style="display: inline-block;">Select
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="earlyAccess"
+                    style="display: inline-block;">
+                    <button nz-button nzShape="round" nzType="primary" id="checkout-button"
+                      style="display: inline-block;">Select
                       Plan
                     </button>
                   </a>
                 </div>
-<!--
+                <!--
                 <div>
                   <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="earlyAccess"
                     style="display: inline-block;">
@@ -1050,8 +1066,9 @@
                               <span>{{monthlyCostHash['basic']?.toFixed(2)}}</span>
                             </td>
                           </tr>
-                          <tr *ngIf="naydo">
-                            <td style="text-align:right;">Non-profit (<span style="color:red;">{{discounts.nonProfit *
+                          <tr *ngIf="nonProfitVar === 'true'">
+                            <td style="text-align:right;">Non-profit (<span style="color:red;">{{discounts.nonProfit
+                                *
                                 100}}%</span>)</td>
                             <td style="font-family: monospace;text-align: right;width:35%;">
                               <span style="color:#aaaaaa;"> $</span>
@@ -1059,32 +1076,49 @@
                                 discounts.nonProfit)?.toFixed(2)}}</span>
                             </td>
                           </tr>
-                          <tr *ngIf="naydo">
+                          <tr *ngIf="nonProfitVar !== 'true'">
                             <td style="text-align: right;">Conference (<span style="color:red;">{{discounts.conference *
                                 100}}%</span>)</td>
                             <td style="font-family: monospace;text-align: right;width:35%;">
                               <span style="color:#aaaaaa;"> $</span>
-                              <span style="font-family: monospace;color:red;">{{((monthlyCostHash['basic'] -
-                                (monthlyCostHash['basic'] *
-                                discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
+                              <span style="font-family: monospace;color:red;">{{(monthlyCostHash['basic'] *
+                                discounts.conference)?.toFixed(2)}}</span>
                             </td>
                           </tr>
-                          <tr *ngIf="naydo">
+                          <tr *ngIf="nonProfitVar === 'true'">
+                            <td style="text-align: right;">Conference (<span style="color:red;">{{discounts.conference *
+                                100}}%</span>)</td>
+                            <td style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;"> $</span>
+                              <span style="font-family: monospace;color:red;">{{((monthlyCostHash['basic'] - (monthlyCostHash['basic'] *
+                              discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+
+                          <tr *ngIf="nonProfitVar !== 'true'">
+                            <td style="text-align: right;border-top: 1px solid #aaaaaa;">Monthly Total
+                             </td>
+                            <td style="font-family: monospace;text-align: right;width:35%;border-top: 1px solid #aaaaaa;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span style="font-family: monospace;color:blue;">{{(monthlyCostHash['basic'] -                            
+                                (monthlyCostHash['basic'] * discounts.conference))?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="nonProfitVar === 'true'">
                             <td style="text-align: right;border-top: 1px solid #aaaaaa;">Monthly Total
                             </td>
-                            <td
-                              style="font-family: monospace;text-align: right;width:35%;border-top: 1px solid #aaaaaa;">
+                            <td style="font-family: monospace;text-align: right;width:35%;border-top: 1px solid #aaaaaa;">
                               <span style="color:#aaaaaa;">$</span>
-                              <span style="font-family: monospace;color:blue;">{{((monthlyCostHash['basic'] -
+                              <span style="font-family: monospace;color:blue;">{{ (monthlyCostHash['basic'] -
                                 (monthlyCostHash['basic'] *
-                                discounts.nonProfit)) -
-                                ((monthlyCostHash['basic'] - (monthlyCostHash['basic'] * discounts.nonProfit)) *
-                                discounts.conference))?.toFixed(2)}}</span>
+                                discounts.nonProfit) -
+                                (monthlyCostHash['basic'] - (monthlyCostHash['basic'] * discounts.nonProfit)) *
+                                discounts.conference)?.toFixed(2)}}</span>
                             </td>
                           </tr>
                           <tr>
                             <td style="text-align: right;">Average Cost Per User</td>
-                            <td *ngIf="naydo" style="font-family: monospace;text-align: right;width:35%;">
+                            <td *ngIf="nonProfitVar === 'true'" style="font-family: monospace;text-align: right;width:35%;">
                               <span style="color:#aaaaaa;">$</span>
                               <span *ngIf="userCnt === 0" style="color:blue;">0</span>
                               <span *ngIf="userCnt > 0"
@@ -1094,7 +1128,7 @@
                                 ((monthlyCostHash['basic'] - (monthlyCostHash['basic'] * discounts.nonProfit)) *
                                 discounts.conference)) / userCnt)?.toFixed(2)}}</span>
                             </td>
-                            <td *ngIf="!naydo" style="font-family: monospace;text-align: right;width:35%;">
+                            <td *ngIf="nonProfitVar !== 'true'" style="font-family: monospace;text-align: right;width:35%;">
                               <span style="color:#aaaaaa;">$</span>
                               <span *ngIf="userCnt === 0" style="color:blue;">0</span>
                               <span *ngIf="userCnt > 0"
@@ -1269,6 +1303,86 @@
                         <tbody>
                           <tr>
                             <td style="text-align: right;">Monthly Fee</td>
+                            <td style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span>{{monthlyCostHash['pro']?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="nonProfitVar === 'true'">
+                            <td style="text-align:right;">Non-profit (<span style="color:red;">{{discounts.nonProfit
+                                *
+                                100}}%</span>)</td>
+                            <td style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;"> $</span>
+                              <span style="color:red;">{{(monthlyCostHash['pro'] *
+                                discounts.nonProfit)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="nonProfitVar !== 'true'">
+                            <td style="text-align: right;">Conference (<span style="color:red;">{{discounts.conference *
+                                100}}%</span>)</td>
+                            <td style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;"> $</span>
+                              <span style="font-family: monospace;color:red;">{{(monthlyCostHash['pro'] *
+                                discounts.conference)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="nonProfitVar === 'true'">
+                            <td style="text-align: right;">Conference (<span style="color:red;">{{discounts.conference *
+                                100}}%</span>)</td>
+                            <td style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;"> $</span>
+                              <span style="font-family: monospace;color:red;">{{((monthlyCostHash['pro'] - (monthlyCostHash['pro'] *
+                                discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                      
+                          <tr *ngIf="nonProfitVar !== 'true'">
+                            <td style="text-align: right;border-top: 1px solid #aaaaaa;">Monthly Total
+                            </td>
+                            <td style="font-family: monospace;text-align: right;width:35%;border-top: 1px solid #aaaaaa;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span style="font-family: monospace;color:blue;">{{(monthlyCostHash['pro'] -
+                                (monthlyCostHash['pro'] * discounts.conference))?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="nonProfitVar === 'true'">
+                            <td style="text-align: right;border-top: 1px solid #aaaaaa;">Monthly Total
+                            </td>
+                            <td style="font-family: monospace;text-align: right;width:35%;border-top: 1px solid #aaaaaa;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span style="font-family: monospace;color:blue;">{{ (monthlyCostHash['pro'] -
+                                (monthlyCostHash['pro'] *
+                                discounts.nonProfit) -
+                                (monthlyCostHash['pro'] - (monthlyCostHash['pro'] * discounts.nonProfit)) *
+                                discounts.conference)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="text-align: right;">Average Cost Per User</td>
+                            <td *ngIf="nonProfitVar === 'true'" style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span *ngIf="userCnt === 0" style="color:blue;">0</span>
+                              <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{((monthlyCostHash['pro'] -
+                                (monthlyCostHash['pro'] *
+                                discounts.nonProfit) -
+                                ((monthlyCostHash['pro'] - (monthlyCostHash['pro'] * discounts.nonProfit)) *
+                                discounts.conference)) / userCnt)?.toFixed(2)}}</span>
+                            </td>
+                            <td *ngIf="nonProfitVar !== 'true'" style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span *ngIf="userCnt === 0" style="color:blue;">0</span>
+                              <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{(monthlyCostHash['pro'] /
+                                userCnt)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </nz-table>
+                      <!--
+                      <nz-table style="font-size:.8vw;">
+                        <tbody>
+                          <tr>
+                            <td style="text-align: right;">Monthly Fee</td>
                             <td style="font-family: monospace;text-align: right;">
                               <span style="color:#aaaaaa;">$</span>
                               <span>{{monthlyCostHash['pro']?.toFixed(2)}}</span>
@@ -1294,22 +1408,22 @@
                                 discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
                             </td>
                           </tr>
-                          <tr *ngIf="naydo">
+                          <tr *ngIf="nonProfitVar === 'true'">
                             <td style="text-align: right;border-top: 1px solid #aaaaaa;">Monthly Total
                             </td>
                             <td
                               style="font-family: monospace;text-align: right;border-top: 1px solid #aaaaaa;width:35%">
                               <span style="color:#aaaaaa;">$</span>
-                              <span style="font-family: monospace;color:blue;">{{((monthlyCostHash['pro'] -
-                                (monthlyCostHash['pro'] *
-                                discounts.nonProfit)) -
-                                ((monthlyCostHash['pro'] - (monthlyCostHash['pro'] * discounts.nonProfit)) *
-                                discounts.conference))?.toFixed(2)}}</span>
+                                  <span style="font-family: monospace;color:blue;">{{((monthlyCostHash['pro'] -
+                                    (monthlyCostHash['pro'] *
+                                    discounts.nonProfit)) -
+                                    ((monthlyCostHash['pro'] - (monthlyCostHash['pro'] * discounts.nonProfit)) *
+                                    discounts.conference))?.toFixed(2)}}</span>
                             </td>
                           </tr>
                           <tr>
                             <td style="text-align: right;">Average Cost Per User</td>
-                            <td *ngIf="naydo" style="font-family: monospace;text-align: right;width:35%">
+                            <td *ngIf="nonProfitVar === 'true'" style="font-family: monospace;text-align: right;width:35%">
                               <span style="color:#aaaaaa;">$</span>
                               <span *ngIf="userCnt === 0" style="color:blue;">0</span>
                               <span *ngIf="userCnt > 0"
@@ -1330,6 +1444,7 @@
                           </tr>
                         </tbody>
                       </nz-table>
+                      -->
                     </div>
                   </div>
                   <div style="text-align: left;margin-top:40px;">
@@ -1501,6 +1616,86 @@
                         <tbody>
                           <tr>
                             <td style="text-align: right;">Monthly Fee</td>
+                            <td style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span>{{monthlyCostHash['expert']?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="nonProfitVar === 'true'">
+                            <td style="text-align:right;">Non-profit (<span style="color:red;">{{discounts.nonProfit
+                                *
+                                100}}%</span>)</td>
+                            <td style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;"> $</span>
+                              <span style="color:red;">{{(monthlyCostHash['expert'] *
+                                discounts.nonProfit)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="nonProfitVar !== 'true'">
+                            <td style="text-align: right;">Conference (<span style="color:red;">{{discounts.conference *
+                                100}}%</span>)</td>
+                            <td style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;"> $</span>
+                              <span style="font-family: monospace;color:red;">{{(monthlyCostHash['expert'] *
+                                discounts.conference)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="nonProfitVar === 'true'">
+                            <td style="text-align: right;">Conference (<span style="color:red;">{{discounts.conference *
+                                100}}%</span>)</td>
+                            <td style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;"> $</span>
+                              <span style="font-family: monospace;color:red;">{{((monthlyCostHash['expert'] - (monthlyCostHash['expert'] *
+                                discounts.nonProfit)) * discounts.conference)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                      
+                          <tr *ngIf="nonProfitVar !== 'true'">
+                            <td style="text-align: right;border-top: 1px solid #aaaaaa;">Monthly Total
+                            </td>
+                            <td style="font-family: monospace;text-align: right;width:35%;border-top: 1px solid #aaaaaa;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span style="font-family: monospace;color:blue;">{{(monthlyCostHash['expert'] -
+                                (monthlyCostHash['expert'] * discounts.conference))?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr *ngIf="nonProfitVar === 'true'">
+                            <td style="text-align: right;border-top: 1px solid #aaaaaa;">Monthly Total
+                            </td>
+                            <td style="font-family: monospace;text-align: right;width:35%;border-top: 1px solid #aaaaaa;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span style="font-family: monospace;color:blue;">{{ (monthlyCostHash['expert'] -
+                                (monthlyCostHash['expert'] *
+                                discounts.nonProfit) -
+                                (monthlyCostHash['expert'] - (monthlyCostHash['expert'] * discounts.nonProfit)) *
+                                discounts.conference)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="text-align: right;">Average Cost Per User</td>
+                            <td *ngIf="nonProfitVar === 'true'" style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span *ngIf="userCnt === 0" style="color:blue;">0</span>
+                              <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{((monthlyCostHash['expert'] -
+                                (monthlyCostHash['expert'] *
+                                discounts.nonProfit) -
+                                ((monthlyCostHash['expert'] - (monthlyCostHash['expert'] * discounts.nonProfit)) *
+                                discounts.conference)) / userCnt)?.toFixed(2)}}</span>
+                            </td>
+                            <td *ngIf="nonProfitVar !== 'true'" style="font-family: monospace;text-align: right;width:35%;">
+                              <span style="color:#aaaaaa;">$</span>
+                              <span *ngIf="userCnt === 0" style="color:blue;">0</span>
+                              <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{(monthlyCostHash['expert'] /
+                                userCnt)?.toFixed(2)}}</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </nz-table>
+                      <!--
+                      <nz-table style="font-size:.8vw;">
+                        <tbody>
+                          <tr>
+                            <td style="text-align: right;">Monthly Fee</td>
                             <td style="font-family: monospace;text-align: right;width:35%">
                               <span style="color:#aaaaaa;">$</span>
                               <span>{{monthlyCostHash['expert']?.toFixed(2)}}</span>
@@ -1559,6 +1754,7 @@
                           </tr>
                         </tbody>
                       </nz-table>
+                      -->
                     </div>
                   </div>
                   <div style="text-align: left;margin-top:40px;">

@@ -329,6 +329,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   public timeLeft$: Observable<timeComponents>;
 
   showPlanInfo = false;
+  nonProfitVar = 'true';
 
   currentSlide = 0;
   featureSlides = [
@@ -430,6 +431,10 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     this.myCarousel.goTo(index);
   }
 
+  toggleNonProfit(val: string) {
+    this.nonProfitVar = val;
+    console.log('toggleNonProfit', this.nonProfitVar);
+  }
 
   beforeUpdateDot(event) {
     this.currentSlide = event.to;

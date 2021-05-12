@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { VgCoreModule } from 'videogular2/compiled/core';
 import { VgControlsModule } from 'videogular2/compiled/controls';
 
+
 @NgModule({
   declarations: [
     LandingpageComponent
@@ -37,7 +38,8 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
     VgControlsModule,
     VgCoreModule,
     NzModalModule,
-    NzCarouselModule
+    NzCarouselModule,
+    NzRadioModule
   ],
   exports: [
     LandingpageComponent
