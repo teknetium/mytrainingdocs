@@ -3622,10 +3622,10 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
       //      this.userTrainingService.deleteUserTrainingByTidUid(this.currentTrainingSelected, uid);
     }
+    this.userTrainingService.bulkDeleteTraining(this.userIdsSelected, this.currentTrainingSelected, this.authenticatedUser.org);
+    //    this.userTrainingService.deleteUTForTid(this.currentTrainingSelected);
     this.userService.setUsersStatusNone(noneUIDs);
     this.userService.setUsersStatusUpToDate(upToDateUIDs);
-    this.userTrainingService.bulkDeleteTraining(this.userIdsSelected, this.currentTrainingSelected);
-    //    this.userTrainingService.deleteUTForTid(this.currentTrainingSelected);
 
     this.getOrgStats();
     /*

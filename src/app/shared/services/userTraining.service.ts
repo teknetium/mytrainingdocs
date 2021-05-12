@@ -501,7 +501,7 @@ export class UserTrainingService {
     })
   }
 
-  bulkDeleteTraining(uids: string[], tid: string) {
+  bulkDeleteTraining(uids: string[], tid: string, orgId: string) {
     /*
     let utIds: string[] = [];
     let utList: UserTrainingModel[] = [];
@@ -555,6 +555,7 @@ export class UserTrainingService {
             this.uidUTHash[uid] = cloneDeep(newUTList);
           }
           this.uidUTHashBS$.next(this.uidUTHash);
+          this.getOrgUserTrainings(orgId);
         }
       })
     }

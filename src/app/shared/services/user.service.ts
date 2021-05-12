@@ -807,6 +807,7 @@ export class UserService {
     for (let uid of uids) {
       this.allOrgUserHash[uid].trainingStatus = 'pastDue';
     }
+    this.myOrgHashBS$.next(this.allOrgUserHash);
   }
 
   setUserStatusUpToDate(uid: string) {
@@ -821,6 +822,7 @@ export class UserService {
     for (let uid of uids) {
       this.allOrgUserHash[uid].trainingStatus = 'upToDate';
     }
+    this.myOrgHashBS$.next(this.allOrgUserHash);
   }
 
   setUserStatusNone(uid: string) {
@@ -834,6 +836,7 @@ export class UserService {
     for (let uid of uids) {
       this.allOrgUserHash[uid].trainingStatus = 'none';
     }
+    this.myOrgHashBS$.next(this.allOrgUserHash);
   }
 
   getUIDReportChainHashStream(): Observable<UserIdHash> {
