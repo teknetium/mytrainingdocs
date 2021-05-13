@@ -1005,6 +1005,9 @@
                                 </div>
                                 <span>{{ userTrainingStatusHash[selection?.value] }}</span>
                             </div>
+                            <div *ngIf="selection?.type === 'JobTitle'">
+                                <span>{{ selection?.value }}</span>
+                            </div>
                             <div *ngIf="selection?.type === 'UserType'">
                                 <div style="display: inline-block;vertical-align: middle;">
                                     <i [ngClass]="userTypeIconHash[selection.value]"

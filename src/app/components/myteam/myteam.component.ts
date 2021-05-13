@@ -1857,7 +1857,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       this.userIdsSelected = [];
       let jobTitleHash = {};
       for (let jobTitle of this.jobTitles) {
-        jobTitleHash[jobTitle] = 0;
+        jobTitleHash[jobTitle] = [];
       }
       for (let user of this.userList) {
         this.nodeStatHash[user._id].jobTitleHash = cloneDeep(jobTitleHash);
