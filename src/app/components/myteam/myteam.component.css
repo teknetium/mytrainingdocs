@@ -588,3 +588,8 @@ ul.no-bullets {
 	margin-left:3px;
 	margin-top:5px;
 }
+
+.collapsed-training-status-node {
+	max-height: 150px;
+	overflow: scroll;
+}

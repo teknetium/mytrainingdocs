@@ -615,10 +615,10 @@ export class UserService {
         showAlerts: true,
         showTasks: true,
         themeColor: {
-          name: 'orange ',
-          bgColor: 'orange',
+          name: 'blue',
+          bgColor: '#2db7f5',
           primary: 'white',
-          secondary: '#c54f0a',
+          secondary: '#0c0cc1',
         }
       }
       statusList = [];
