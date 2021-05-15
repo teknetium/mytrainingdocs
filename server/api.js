@@ -18,6 +18,7 @@ const Doc = require("./models/Doc");
 const UTSession = require("./models/UTSession");
 const sgMail = require('@sendgrid/mail');
 const Org = require("./models/Org");
+const Watchlist = require("./models/Watchlist");
 const Message = require("./models/Message");
 
 /*
@@ -103,6 +104,7 @@ module.exports = function(app, config) {
   const docProjection = '_id productId productVersion author featureName sections images';
   const commentListProjection = "_id tid version author text rating date";
   const orgListProjection = "_id domain adminIds owner planId planName createDate userCount";
+  const watchListProjection = "_id type items ownerId createDate listName";
   const messageProjection = "_id state category subCategory to from subject text html mbox trainingId";
   const assessmentListProjection = "_id type title owner description timeLimit isFinal passingGrade items";
   const utSessionProjection = "_id utId uid tid teamId startTime stopTime";
@@ -368,6 +370,42 @@ module.exports = function(app, config) {
         return res.send(response);
       }
       return res.status(500).send({ message: "no userTraining records found" });
+    });
+  });
+
+  //
+  // WatchList API
+  //
+  app.get("/api/watchlist/:ownerId", (req, res) => {
+    Watchlist.find({ ownerId: req.params.ownerId },
+      watchListProjection, (err, watchList) => {
+        let watchItemArr = [];
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        if (watchList) {
+          watchList.forEach(watchItem => {
+            watchItemArr.push(watchItem);
+          });
+        }
+        res.send(watchItemArr);
+      },
+    );
+  });
+  app.post("/api/watchlist/new/", jwtCheck, (req, res) => {
+    const watchList = new Watchlist({
+      type: req.body.type,
+      items: req.body.items,
+      createDate: req.body.createDate,
+      ownerId: req.body.ownerId,
+      listName: req.body.listName,
+      _id: req.body._id,
+    });
+    Watchlist.create(watchList, function (err2, watchListObj) {
+      if (err2) {
+        return res.status(500).send({ message: err2.message });
+      }
+      res.send(watchListObj);
     });
   });
 

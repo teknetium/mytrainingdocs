@@ -15,6 +15,7 @@ import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.
 import { Observable, BehaviorSubject, Subscription, defer, from, timer, bindCallback, } from 'rxjs';
 import { UserModel, UserFail, UserIdHash, OrgChartNode, BuildOrgProgress, UserBatchData, NodeStat, OrgChartSelection } from '../../shared/interfaces/user.type';
 import { OrgModel } from '../../shared/interfaces/org.type';
+import { WatchListModel } from '../../shared/interfaces/watchlist.type';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { MessageService } from '../../shared/services/message.service';
 import { JobTitleService } from '../../shared/services/jobtitle.service';
@@ -3003,6 +3004,18 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         this.userIdsSelected.push(user._id);
       }
     }
+  }
+  
+  addToWatchList(listType: string, userList: string[]) {
+    let watchListObj:WatchListModel = {
+      _id: String(new Date().getTime()),
+      type: listType,
+      listName: '',
+      items: userList,
+      ownerId: this.authenticatedUser._id,
+      createDate: new Date().getTime()
+    }
+    this.userService.addToWatchList(watchListObj);
   }
 
   emailIsValid(email: string): boolean {

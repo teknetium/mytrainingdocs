@@ -1064,6 +1064,12 @@
                                 <i class="fas fa-mail-bulk"></i>
                             </button>
                             <button nz-button nzSize="default" nzShape="circle" nzType="default"
+                                [disabled]="userIdsSelected.length === 0"
+                                style="display:inline-block;margin-right:5px;" nz-tooltip nzTooltipPlacement="top"
+                                nzTooltipTitle="Add Users to Watch List" (click)="addToWatchList('user', userIdsSelected)">
+                                <i class="fas fa-watch"></i>
+                            </button>
+                            <button nz-button nzSize="default" nzShape="circle" nzType="default"
                                 style="display:inline-block;margin-right:5px;color:red;" nz-tooltip
                                 nzTooltipPlacement="top" nzTooltipTitle="Remove this selection"
                                 (click)="removeSelectionByUid(selection.rootUid)">
@@ -1670,6 +1676,10 @@
                                                         style="font-size:14px;margin-right:10px;"></i>
                                                     Email User
                                                 </li>
+                                    <li (click)="addToWatchList('user', dr)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-watch" style="font-size:14px;margin-right:10px;"></i>
+                                        Add To Watch List
+                                    </li>
                                                 <!--
                                                 <li *ngIf="!userIdsSelected.includes(dr)"
                                                     (click)="addToSelectedUsers(dr)" class="supervisor-menu-item">
@@ -2220,6 +2230,10 @@
                                                                     style="font-size:14px;margin-right:10px;"></i>
                                                                 Email User
                                                             </li>
+                                    <li (click)="addToWatchList('user', dr2)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-watch" style="font-size:14px;margin-right:10px;"></i>
+                                        Add To Watch List
+                                    </li>
                                                             <!--
                                                             <li *ngIf="!userIdsSelected.includes(dr2)"
                                                                 (click)="addToSelectedUsers(dr2)"
@@ -2772,6 +2786,10 @@
                                                                                 style="font-size:14px;margin-right:10px;"></i>
                                                                             Email User
                                                                         </li>
+                                    <li (click)="addToWatchList('user', dr3)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-watch" style="font-size:14px;margin-right:10px;"></i>
+                                        Add To Watch List
+                                    </li>
                                                                         <!--
                                                                         <li *ngIf="!userIdsSelected.includes(dr3)"
                                                                             (click)="addToSelectedUsers(dr3)"
@@ -3362,6 +3380,10 @@
                                                                                             style="font-size:14px;margin-right:10px;"></i>
                                                                                         Email User
                                                                                     </li>
+                                    <li (click)="addToWatchList('user', dr4)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-watch" style="font-size:14px;margin-right:10px;"></i>
+                                        Add To Watch List
+                                    </li>
                                                                                     <!--
                                                                                     <li *ngIf="!userIdsSelected.includes(dr4)"
                                                                                         (click)="addToSelectedUsers(dr4)"
@@ -3989,6 +4011,10 @@
                                                                                                         style="font-size:14px;margin-right:10px;"></i>
                                                                                                     Email User
                                                                                                 </li>
+                                    <li (click)="addToWatchList('user', dr5)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-watch" style="font-size:14px;margin-right:10px;"></i>
+                                        Add To Watch List
+                                    </li>
                                                                                                 <!--
                                                                                                 <li *ngIf="!userIdsSelected.includes(dr5)"
                                                                                                     (click)="addToSelectedUsers(dr5)"
@@ -4636,6 +4662,10 @@
                                                                                                                 Email
                                                                                                                 User
                                                                                                             </li>
+                                    <li (click)="addToWatchList('user', dr6)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-watch" style="font-size:14px;margin-right:10px;"></i>
+                                        Add To Watch List
+                                    </li>
                                                                                                             <!--
                                                                                                             <li *ngIf="!userIdsSelected.includes(dr6)"
                                                                                                                 (click)="addToSelectedUsers(dr6)"
@@ -5300,6 +5330,10 @@
                                                                                                                             Email
                                                                                                                             User
                                                                                                                         </li>
+                                    <li (click)="addToWatchList('user', dr7)" class="supervisor-menu-item">
+                                        <i class="fas fa-fw fa-watch" style="font-size:14px;margin-right:10px;"></i>
+                                        Add To Watch List
+                                    </li>
                                                                                                                         <!--
                                                                                                                         <li *ngIf="!userIdsSelected.includes(dr7)"
                                                                                                                             (click)="addToSelectedUsers(dr7)"

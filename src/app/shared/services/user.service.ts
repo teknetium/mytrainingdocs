@@ -6,6 +6,7 @@ import { MessageService } from './message.service';
 import { throwError as ObservableThrowError, Observable, AsyncSubject, BehaviorSubject, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ENV } from './env.config';
+import { WatchListModel } from '../interfaces/watchlist.type'
 import { UserModel, UserFail, UserIdHash, OrgChartNode, UserBatchData, BuildOrgProgress } from '../interfaces/user.type';
 import { Auth0ProfileModel } from '../interfaces/auth0Profile.type';
 import { Router } from '@angular/router';
@@ -49,6 +50,7 @@ export class UserService {
   private myTeamCntBS$ = new BehaviorSubject<number>(0);
   private selectedUserBS$ = new BehaviorSubject<UserModel>(null);
   private newUserBS$ = new BehaviorSubject<UserModel>(null);
+  private watchListBS$ = new BehaviorSubject<WatchListModel[]>(null);
   // allOrgUserHash contains all users matching authenticatedUser.org
   private allOrgUserHash: UserIdHash = {};
   // myOrgUserHash contains only the users in the sub-org of authenticatedUser
@@ -123,6 +125,8 @@ export class UserService {
   uidStatusHash: {};
   orgObj: OrgModel;
   org$: Observable<OrgModel>;
+//  watchList$: Observable<WatchListModel[]>;
+  watchList: WatchListModel[];
 
   constructor(
     private http: HttpClient,
@@ -148,6 +152,7 @@ export class UserService {
               if (user) {
                 // This is the uid field is the user id from Auth0.  This is set for the initial supervisor registrant 
                 this.authenticatedUser = user;
+                this.getWatchList(this.authenticatedUser._id);
                 this.allOrgUserHash[this.authenticatedUser._id] = this.authenticatedUser;
                 //          this.getAllOrgUsers();
                 if (this.authenticatedUser.jobTitle) {
@@ -176,6 +181,7 @@ export class UserService {
                       user.emailVerified = true;
                       this.updateUser(user, false);
                       this.authenticatedUser = user;
+                      this.getWatchList(this.authenticatedUser._id);
                       if (this.authenticatedUser.jobTitle) {
                         this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
                       }
@@ -237,6 +243,7 @@ export class UserService {
                       this.postUser$(this.authenticatedUser).subscribe({
                         next: (data) => {
                           this.authenticatedUser = data;
+                          this.getWatchList(this.authenticatedUser._id);
                           if (this.authenticatedUser.jobTitle) {
                             this.jobTitleService.addJobTitle(this.authenticatedUser.jobTitle);
                           }
@@ -259,7 +266,20 @@ export class UserService {
       error: () => {
       }
     })
+  }
 
+  addToWatchList(watchListObj: WatchListModel) {
+    this.postWatchList$(watchListObj).subscribe(newWatchListObj => {
+      this.watchList.push(newWatchListObj);
+    });
+  }
+
+  getWatchList(uid: string) {
+    this.getWatchList$(uid).subscribe(watchList => {
+      console.log("getWatchList ", watchList);
+      this.watchList = watchList;
+      this.watchListBS$.next(watchList);
+    });
   }
 
   sendVerifyEmailMsg(toAddr, uid) {
@@ -770,6 +790,10 @@ export class UserService {
     });
   }
 
+  getWatchListStream(): Observable<WatchListModel[]> {
+    return this.watchListBS$.asObservable();
+  }
+
   getTrainingStatusChangeStream(): Observable<string> {
     return this.trainingStatusChangeBS$.asObservable();
   }
@@ -956,6 +980,25 @@ export class UserService {
     return `Bearer ${this.auth.accessToken}`;
   }
 
+  postWatchList$(watchItem: WatchListModel): Observable<WatchListModel> {
+    return this.http
+      .post<WatchListModel>(`${ENV.BASE_API}watchlist/new/`, watchItem, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader),
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
+
+  getWatchList$(userId: string): Observable<WatchListModel[]> {
+    return this.http
+      .get<WatchListModel[]>(`${ENV.BASE_API}watchlist/${userId}`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
   // POST new User (login required)
   postUser$(user: UserModel): Observable<UserModel> {
     return this.http
