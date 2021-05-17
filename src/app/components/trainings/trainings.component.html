@@ -8,70 +8,78 @@
   <div *ngIf="trainingsDisplay?.length > 0" style="display:block;">
     <nz-table #nestedTable [nzData]="trainingsDisplay" nzSize="small" [nzShowPagination]="false"
       style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
-      <thead >
+      <thead (nzSortChange)="sort($event)" nzSingleSort>
         <tr>
+          <!--
           <th nzShowExpand></th>
-          <th >State</th>
-          <th >Type</th>
-          <th >Title</th>
-          <th >Category</th>
-          <th >Subcategory</th>
-          <th >Rating</th>
+          -->
+          <th nzShowSort nzSortKey="status">State</th>
+          <th nzShowSort nzSortKey="type">Type</th>
+          <th nzShowSort nzSortKey="title">Title</th>
+          <th nzShowSort nzSortKey="category">Category</th>
+          <th nzShowSort nzSortKey="subcategory">Subcategory</th>
+          <th>Rating</th>
           <th>Version</th>
-          <th >Date Created</th>
+          <th nzShowSort nzSortKey="dateCreated">Date Created</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <ng-template ngFor let-data [ngForOf]="nestedTable.data">
-          <tr style="font-size:12px;background-color: white;line-height:10px;">
+        <tr *ngFor="let data of nestedTable.data" style="font-size:12px;background-color: white;line-height:10px;">
+          <!--
             <td nzShowExpand [(nzExpand)]="data.expand" nz-tooltip nzTooltipTitle="Show Version History"></td>
-            <td style="width:3%;">
-              <i *ngIf="data.status === 'unlocked'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
-                style="display:inline-block;font-size:16px;vertical-align: middle;" nz-tooltip
-                nzTooltipTitle="This training is being edited." [nzTwotoneColor]="'#52c41a'"></i>
-              <i *ngIf="data.status === 'locked'" nz-icon nzType="lock" [nzTheme]="'twotone'"
-                style="display:inline-block;font-size:16px;vertical-align: middle;" [nzTwotoneColor]="'red'" nz-tooltip
-                nzTooltipTitle="This training is locked."></i>
-            </td>
-            <td style="width:3%;">
-              <div *ngIf="data.type === 'onetime'" style="border:1px solid black;border-radius: 8px;width:16px;height:16px;text-align: center;padding-top:2px;" nz-tooltip nzTooltipTitle="One-Time Training">
-                <span style="font-size:10px;">1</span>
-              </div>
-              <i *ngIf="data.type === 'recurring'" class="far fa-redo-alt" style="font-size:16px;vertical-align: middle;"
-                nz-tooltip nzTooltipTitle="Recurring Training"></i>
-            </td>
-            <td>
-              <i [ngClass]="data.iconClass" style="font-size:22px;margin-right:10px;vertical-align: middle;"
-                [ngStyle]="{'color': data.iconColor}">
-              </i>
-              {{ data.title }}
-            </td>
-            <td>
-              {{ data.category }}
-            </td>
-            <td>
-              {{ data.subcategory }}
-            </td>
-            <td>
-              <nz-rate ngDefaultControl nzDisabled [(ngModel)]="ratingHash[data._id]" class="small"></nz-rate>
-            </td>
-            <td>{{ versionFormatter(data.versions[0].version) }}</td>
-            <td>{{ data.dateCreated | date:'mediumDate' }}</td>
-            <td>
-              <i nz-icon nzType="edit" [nzTheme]="'twotone'" class="action" (click)="selectTraining(data._id)"
-                nz-tooltip nzTooltipTitle="Edit Training">
-              </i>
-              <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'" class="action"
-                (click)="showComments(data._id)" nz-tooltip nzTooltipTitle="View Comments">
-              </i>
-              <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" class="action" nz-popconfirm
-                nzPopconfirmTitle="Delete this Training?" [nzPopconfirmTrigger]="'click'"
-                [nzPopconfirmPlacement]="'top'" (nzOnConfirm)="deleteTraining(data._id)" nz-tooltip
-                nzTooltipTitle="Delete Training">
-              </i>
-            </td>
-          </tr>
+            -->
+          <td style="width:3%;">
+            <i *ngIf="data.status === 'unlocked'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
+              style="display:inline-block;font-size:16px;vertical-align: middle;" nz-tooltip
+              nzTooltipTitle="This training is being edited." [nzTwotoneColor]="'#52c41a'"></i>
+            <i *ngIf="data.status === 'locked'" nz-icon nzType="lock" [nzTheme]="'twotone'"
+              style="display:inline-block;font-size:16px;vertical-align: middle;" [nzTwotoneColor]="'red'" nz-tooltip
+              nzTooltipTitle="This training is locked."></i>
+          </td>
+          <td style="width:3%;">
+            <div *ngIf="data.type === 'onetime'"
+              style="border:1px solid black;border-radius: 8px;width:16px;height:16px;text-align: center;padding-top:2px;"
+              nz-tooltip nzTooltipTitle="One-Time Training">
+              <span style="font-size:10px;">1</span>
+            </div>
+            <i *ngIf="data.type === 'recurring'" class="far fa-redo-alt" style="font-size:16px;vertical-align: middle;"
+              nz-tooltip nzTooltipTitle="Recurring Training"></i>
+          </td>
+          <td>
+            <i [ngClass]="data.iconClass" style="font-size:22px;margin-right:10px;vertical-align: middle;"
+              [ngStyle]="{'color': data.iconColor}">
+            </i>
+            {{ data.title }}
+          </td>
+          <td>
+            {{ data.category }}
+          </td>
+          <td>
+            {{ data.subcategory }}
+          </td>
+          <td>
+            <nz-rate ngDefaultControl nzDisabled [(ngModel)]="ratingHash[data._id]" class="small"></nz-rate>
+          </td>
+          <td>{{ versionFormatter(data.versions[0].version) }}</td>
+          <td>{{ data.dateCreated | date:'mediumDate' }}</td>
+          <td>
+            <i nz-icon nzType="edit" [nzTheme]="'twotone'" class="action" (click)="selectTraining(data._id)" nz-tooltip
+              nzTooltipTitle="Edit Training">
+            </i>
+            <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'" class="action"
+              (click)="showComments(data._id)" nz-tooltip nzTooltipTitle="View Comments">
+            </i>
+            <i class="action fal fa-history" style="color:blueviolet;" (click)="showHistory(data._id)" nz-tooltip
+              nzTooltipTitle="Show Version History">
+            </i>
+            <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" class="action" nz-popconfirm
+              nzPopconfirmTitle="Delete this Training?" [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'top'"
+              (nzOnConfirm)="deleteTraining(data._id)" nz-tooltip nzTooltipTitle="Delete Training">
+            </i>
+          </td>
+        </tr>
+        <!--
           <tr [nzExpand]="data.expand" style="background-color: #fffcf1;border:1px solid #e7c076">
             <td style="border-top:1px solid #e7c076;border-left:1px solid #e7c076;border-bottom:1px solid #e7c076;">
             </td>
@@ -106,8 +114,8 @@
     </nz-table>
     </td>
     </tr>
-    </ng-template>
-    </tbody>
+    -->
+      </tbody>
     </nz-table>
     <ng-template #versionTableTitle>
       <div style="font-size:14px;text-align: center;color: blue;font-weight:500;">
@@ -115,6 +123,45 @@
       </div>
     </ng-template>
   </div>
+  <nz-drawer nzHeight="40%" [nzTitle]="versionHistorytitleTemplate" [nzClosable]="true" [nzVisible]="showHistoryPanel"
+    nzPlacement="bottom" (nzOnClose)="showHistoryPanel = false">
+    <nz-table #innerTable [nzData]="teamTrainingHash[currentTrainingId]?.versions" nzSize="small"
+      [nzShowPagination]="false" [nzTitle]="versionTableTitle"
+      style="width:100%;background-color: #f5f5f5;font-size:10px;display:inline-block;margin:10px 0;border:1px solid #cccccc;">
+      <thead>
+        <tr style="font-size:12px;">
+          <th style="font-size:12px;color:blue;">Title</th>
+          <th style="font-size:12px;color:blue;">Version</th>
+          <th style="font-size:12px;color:blue;">Change Comment</th>
+          <th style="font-size:12px;color:blue;">Date Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of innerTable.data" (click)="data.version"
+          style="cursor: pointer;font-size:12px;background-color: white;line-height:10px;">
+          <td style="font-size:12px;color:#1a22a0;">
+            <i [ngClass]="data.iconClass" style="font-size:20px;margin-right:10px;vertical-align: middle;"
+              [ngStyle]="{'color': data.iconColor}">
+            </i>
+            {{ data.title }}
+          </td>
+          <td style="font-size:12px;color:#1a22a0;">{{ versionFormatter(data.version) }}</td>
+          <td style="font-size:12px;color:#1a22a0;">{{ data.changeLog }}</td>
+          <td style="font-size:12px;color:#1a22a0;">{{ data.dateCreated | date:'mediumDate' }}</td>
+          <td style="font-size:12px;color:#1a22a0;"></td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-drawer>
+  <ng-template #versionHistorytitleTemplate>
+    <div style="text-align: center;">
+      <i [ngClass]="teamTrainingHash[currentTrainingId]?.iconClass"
+        style="font-size:22px;margin-right:10px;vertical-align: middle;"
+        [ngStyle]="{'color': teamTrainingHash[currentTrainingId]?.iconColor}">
+      </i>
+      {{ teamTrainingHash[currentTrainingId]?.title }}
+    </div>
+  </ng-template>
   <nz-drawer [nzWidth]="600" nzTitle="Ratings & Comments" [nzClosable]="true" [nzVisible]="showCommentsPanel"
     nzPlacement="right" (nzOnClose)="showCommentsPanel = false">
     <div *ngIf="currentTrainingId" style="display: block;padding:10px;text-align: center;">
@@ -177,4 +224,4 @@
     </button>
   </div>
 </div>
-<app-training-viewer *ngIf="selectedTraining" style="display:block;height:100%;width:100%;" ></app-training-viewer>
+<app-training-viewer *ngIf="selectedTraining" style="display:block;height:100%;width:100%;"></app-training-viewer>

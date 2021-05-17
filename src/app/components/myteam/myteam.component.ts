@@ -2392,7 +2392,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       this.userListDisplay = data;
     }
     //    this.selectUser(this.userIdSelected, this.userListDisplay.indexOf(this.selectedUser, 0));
-    this.userService.selectUser(this.selectedUser._id);
+    if (this.selectedUser) {
+      this.userService.selectUser(this.selectedUser._id);
+    }
     this.rowSelected = this.userListDisplay.indexOf(this.selectedUser, 0);
   }
 
@@ -3006,7 +3008,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     }
   }
   
-  addToWatchList(listType: string, userList: string[]) {
+  addToWatchList(listType: string, userList: string[], uid: string) {
     let watchListObj:WatchListModel = {
       _id: String(new Date().getTime()),
       type: listType,
@@ -3016,6 +3018,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       createDate: new Date().getTime()
     }
     this.userService.addToWatchList(watchListObj);
+    this.hideSupervisorMenu(uid);
   }
 
   emailIsValid(email: string): boolean {

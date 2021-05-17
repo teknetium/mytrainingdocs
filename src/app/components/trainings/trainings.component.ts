@@ -10,6 +10,7 @@ import { take, takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
 import { CommentService } from 'src/app/shared/services/comment.service';
 import { UserTrainingModel } from 'src/app/shared/interfaces/userTraining.type';
+import * as cloneDeep from 'lodash/cloneDeep';
 
 
 @Component({
@@ -43,7 +44,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
   teamTrainingHash$: Observable<TrainingIdHash>;
   teamTrainingHash = {};
   trainingIdHash: TrainingIdHash;
-  trainingSelected: TrainingModel;
+//  trainingSelected: TrainingModel;
   trainings: TrainingModel[] = [];
   trainingsDisplay: TrainingModel[] = [];
   myTeamIdHash$: Observable<UserIdHash>;
@@ -53,6 +54,9 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
   tid: string = null;
   selectedTraining = false;
   showAssessmentPanel = false;
+  sortName: string | null = null;
+  sortValue: string | null = null;
+  showHistoryPanel = false;
 
   
   constructor(
@@ -186,7 +190,38 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
 
   showComments(tid) {
     this.currentTrainingId = tid;
-    console.log('showComments', tid, this.trainingIdHash);
     this.showCommentsPanel = true;
+  }
+
+  showHistory(tid: string) {
+//    this.trainingService.selectTraining(tid);
+    this.selectedTrainingId = tid;
+    this.currentTrainingId = tid;
+    this.showHistoryPanel = true;
+  }
+
+  sort(sort: { key: string; value: string }): void {
+    this.sortName = sort.key;
+    this.sortValue = sort.value;
+    this.search();
+  }
+
+  search(): void {
+    console.log('search', this.sortName, this.sortValue);
+    const data = cloneDeep(this.trainingsDisplay);
+    this.trainingsDisplay = [];
+    if (this.sortName && this.sortValue) {
+      this.trainingsDisplay = data.sort((a, b) =>
+        this.sortValue === 'ascend'
+          ? a[this.sortName!] > b[this.sortName!]
+            ? 1
+            : -1
+          : b[this.sortName!] > a[this.sortName!]
+            ? 1
+            : -1
+      );
+    } else {
+      this.trainingsDisplay = data;
+    }
   }
 }

@@ -274,7 +274,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   visible = false;
   authenticatedUser: UserModel;
   currentFocusIndex = -1;
-  carouselDelay = 5000;
+  carouselDelay = 7000;
   currentHowStep = 0;
   howStepCount;
   timerCnt = 0;
@@ -342,6 +342,10 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       text: "Turn any set of documents into a trackable training complete with assesments in minutes."
     },
     {
+      image: "assets/images/orgWisdom.jpeg",
+      text: "Capture organization wisdom and turn your new employees into your best employees"
+    },
+    {
       image: "assets/images/myOrgChart.png",
       text: "Track training status across your entire organization at a glance."
     },
@@ -352,6 +356,8 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   ]
 
   @ViewChild(NzCarouselComponent, { static: false }) myCarousel: NzCarouselComponent;
+
+  carouselState: string = 'active';
 
 
   constructor(
@@ -437,7 +443,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   }
 
   beforeUpdateDot(event) {
-    this.currentSlide = event.to;
+      this.currentSlide = event.to;
   }
 
   userRangeChanged(index, newVal) {
@@ -510,6 +516,8 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       this.currentHowMsg = this.howItWorks[index].description;
     }
   */
+
+  /*
   start() {
     this.carouselDelay = 6000;
   }
@@ -517,7 +525,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   stop() {
     this.carouselDelay = 0;
   }
-
+*/
   open(): void {
     this.visible = true;
   }

@@ -346,7 +346,7 @@
     </section>
     <section class="section">
       <div class="row">
-        <nz-carousel [nzEffect]="'scrollx'" nzAutoPlay="true" nzAutoPlaySpeed="6000" style="height:35vw;"
+        <nz-carousel [nzEffect]="'scrollx'" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" style="height:35vw;"
           (nzBeforeChange)="beforeUpdateDot($event)" [nzDotRender]="dotTemplate" nzDotPosition="top">
           <div nz-carousel-content *ngFor="let item of featureSlides; index as featureIndex" style="height:100%;">
             <img style="float:left;padding-left:2vw;height:100%;padding-top:80px;" [src]="item.image" height="350vw">
@@ -359,7 +359,7 @@
         <ng-template #dotTemplate let-index>
           <div style="text-align: center;width:100%;margin-top:5px;margin-bottom: 20px;background-color: white;">
             <i class="fa-circle"
-              style="display:inline-block;font-size:16px;cursor:pointer;background-color: white;margin-right:5px;"
+              style="display:inline-block;font-size:16px;cursor:pointer;background-color: white;margin-right:5px;color:blueviolet;"
               [ngClass]="{'current-slide': currentSlide === index, 'fas': currentSlide === index, 'far': currentSlide !== index }"
               (click)="goTo(index)"></i>
           </div>
