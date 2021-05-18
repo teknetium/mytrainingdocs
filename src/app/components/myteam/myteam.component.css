@@ -585,11 +585,32 @@ ul.no-bullets {
 
 .training-status-values {
 	font-size:12px;
-	margin-left:3px;
+	margin-left:5px;
 	margin-top:5px;
+	font-weight:400;
 }
 
 .collapsed-training-status-node {
 	max-height: 150px;
 	overflow: scroll;
+}
+
+.training-status-row {
+	position:relative;
+	display: block;
+	height:25px;
+	width:110px;
+}
+
+.training-status-icon {
+	margin-right:10px;
+	position:absolute;
+	left: 0;
+	text-align: left;;
+}
+
+.training-status-rhs {
+	position:absolute;
+	right:0;
+	text-align: right;
 }

@@ -1452,12 +1452,12 @@
                                         <div class="collapsed-training-status-node">
                                             <div *ngFor="let training of assignableTrainings" nz-tooltip
                                                 [nzTooltipTitle]="training.title" nzTooltipPlacement="right"
-                                                style="display:flex;justify-content:space-between;">
-                                                <div style="margin-right:10px;">
+                                                class="training-status-row">
+                                                <div class="training-status-icon">
                                                     <i [ngClass]="training.iconClass" style="font-size:16px;"
                                                         [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                 </div>
-                                                <div>
+                                                <div class="training-status-rhs">
                                                     <span class="training-status-values"
                                                         style="color:#46bd15;">{{nodeStatHash[authenticatedUser._id]?.trainingHash[training._id]?.upToDate?.length}}</span>
                                                     <span class="training-status-values"
@@ -1969,13 +1969,13 @@
                                                     <div class="collapsed-training-status-node">
                                                         <div *ngFor="let training of assignableTrainings" nz-tooltip
                                                             [nzTooltipTitle]="training.title" nzTooltipPlacement="right"
-                                                            style="display:flex;justify-content:space-between;">
-                                                            <div style="margin-right:10px;">
+                                                            class="training-status-row">
+                                                            <div class="training-status-icon">
                                                                 <i [ngClass]="training.iconClass"
                                                                     style="font-size:16px;"
                                                                     [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                             </div>
-                                                            <div>
+                                                            <div class="training-status-rhs">
                                                                 <span class="training-status-values"
                                                                     style="color:#46bd15;">{{nodeStatHash[dr]?.trainingHash[training._id]?.upToDate?.length}}</span>
                                                                 <span class="training-status-values"
@@ -1985,6 +1985,7 @@
                                                                 <span class="training-status-values"
                                                                     style="color:#feb90b;">{{nodeStatHash[dr]?.trainingHash[training._id]?.pendingCertUpload?.length}}</span>
                                                             </div>
+                                                            <div style="clear:both;"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2549,13 +2550,13 @@
                                                                     <div *ngFor="let training of assignableTrainings"
                                                                         nz-tooltip [nzTooltipTitle]="training.title"
                                                                         nzTooltipPlacement="right"
-                                                                        style="display:flex;justify-content:space-between;">
-                                                                        <div style="margin-right:10px;">
+                                                                        class="training-status-row">
+                                                                        <div class="training-status-icon">
                                                                             <i [ngClass]="training.iconClass"
                                                                                 style="font-size:16px;"
                                                                                 [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                                         </div>
-                                                                        <div>
+                                                                        <div class="training-status-rhs">
                                                                             <span class="training-status-values"
                                                                                 style="color:#46bd15;">{{nodeStatHash[dr2]?.trainingHash[training._id]?.upToDate?.length}}</span>
                                                                             <span class="training-status-values"
@@ -3124,13 +3125,13 @@
                                                                                     nz-tooltip
                                                                                     [nzTooltipTitle]="training.title"
                                                                                     nzTooltipPlacement="right"
-                                                                                    style="display:flex;justify-content:space-between;">
-                                                                                    <div style="margin-right:10px;">
+                                                                                    class="training-status-row">
+                                                                                    <div class="training-status-icon">
                                                                                         <i [ngClass]="training.iconClass"
                                                                                             style="font-size:16px;"
                                                                                             [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                                                     </div>
-                                                                                    <div>
+                                                                                    <div class="training-status-rhs">
                                                                                         <span
                                                                                             class="training-status-values"
                                                                                             style="color:#46bd15;">{{nodeStatHash[dr3]?.trainingHash[training._id]?.upToDate?.length}}</span>
@@ -3737,14 +3738,14 @@
                                                                                                 nz-tooltip
                                                                                                 [nzTooltipTitle]="training.title"
                                                                                                 nzTooltipPlacement="right"
-                                                                                                style="display:flex;justify-content:space-between;">
+                                                                                                class="training-status-row">
                                                                                                 <div
-                                                                                                    style="margin-right:10px;">
+                                                                                                    class="training-status-icon">
                                                                                                     <i [ngClass]="training.iconClass"
                                                                                                         style="font-size:16px;"
                                                                                                         [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                                                                 </div>
-                                                                                                <div>
+                                                                                                <div class="training-status-rhs">
                                                                                                     <span
                                                                                                         class="training-status-values"
                                                                                                         style="color:#46bd15;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.upToDate?.length}}</span>
@@ -4391,14 +4392,14 @@
                                                                                                             nz-tooltip
                                                                                                             [nzTooltipTitle]="training.title"
                                                                                                             nzTooltipPlacement="right"
-                                                                                                            style="display:flex;justify-content:space-between;">
+                                                                                                            class="training-status-row">
                                                                                                             <div
-                                                                                                                style="margin-right:10px;">
+                                                                                                                class="training-status-icon">
                                                                                                                 <i [ngClass]="training.iconClass"
                                                                                                                     style="font-size:16px;"
                                                                                                                     [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                                                                             </div>
-                                                                                                            <div>
+                                                                                                            <div class="training-status-rhs">
                                                                                                                 <span
                                                                                                                     class="training-status-values"
                                                                                                                     style="color:#46bd15;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.upToDate?.length}}</span>
@@ -5060,14 +5061,14 @@
                                                                                                                         nz-tooltip
                                                                                                                         [nzTooltipTitle]="training.title"
                                                                                                                         nzTooltipPlacement="right"
-                                                                                                                        style="display:flex;justify-content:space-between;">
+                                                                                                                        class="training-status-row">
                                                                                                                         <div
-                                                                                                                            style="margin-right:10px;">
+                                                                                                                            class="training-status-icon">
                                                                                                                             <i [ngClass]="training.iconClass"
                                                                                                                                 style="font-size:16px;"
                                                                                                                                 [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                                                                                         </div>
-                                                                                                                        <div>
+                                                                                                                        <div class="training-status-rhs">
                                                                                                                             <span
                                                                                                                                 class="training-status-values"
                                                                                                                                 style="color:#46bd15;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.upToDate?.length}}</span>
@@ -5731,14 +5732,14 @@
                                                                                                                                     nz-tooltip
                                                                                                                                     [nzTooltipTitle]="training.title"
                                                                                                                                     nzTooltipPlacement="right"
-                                                                                                                                    style="display:flex;justify-content:space-between;;">
+                                                                                                                                    class="training-status-row">
                                                                                                                                     <div
-                                                                                                                                        style="margin-right:10px;">
+                                                                                                                                        class="training-status-icon">
                                                                                                                                         <i [ngClass]="training.iconClass"
                                                                                                                                             style="font-size:16px;"
                                                                                                                                             [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                                                                                                     </div>
-                                                                                                                                    <div>
+                                                                                                                                    <div class="training-status-rhs">
                                                                                                                                         <span
                                                                                                                                             class="training-status-values"
                                                                                                                                             style="color:#46bd15;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.upToDate?.length}}</span>

@@ -338,7 +338,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       text: "Empower your teams to easily and quickly create thier own trainings."
     },
     {
-      image: "assets/images/toomanydocuments.jpeg",
+      image: "assets/images/binders.jpeg",
       text: "Turn any set of documents into a trackable training complete with assesments in minutes."
     },
     {
@@ -346,7 +346,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       text: "Easily capture organization wisdom and quickly turn your new employees into your best employees."
     },
     {
-      image: "assets/images/myOrgChart.png",
+      image: "assets/images/myOrgChart.jpeg",
       text: "Track training status across your entire organization at a glance."
     },
     {
