@@ -2858,7 +2858,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   removeSelectionByUid(uid: string) {
-    if (this.myOrgUserHash[uid].userType === 'individualContributor') {
+    if (this.myOrgUserHash[uid] && this.myOrgUserHash[uid].userType === 'individualContributor') {
       this.userIdsSelected.splice(this.userIdsSelected.indexOf(uid), 1);
     } else {
       this.userIdsSelected = [];

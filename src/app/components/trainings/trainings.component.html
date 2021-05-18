@@ -16,8 +16,9 @@
           <th nzShowSort nzSortKey="status">State</th>
           <th nzShowSort nzSortKey="type">Type</th>
           <th nzShowSort nzSortKey="title">Title</th>
+          <th nzShowSort nzSortKey="owner">Owner</th>
           <th nzShowSort nzSortKey="category">Category</th>
-          <th nzShowSort nzSortKey="subcategory">Subcategory</th>
+          <th nzShowSort nzSortKey="subcategory">Subcat</th>
           <th>Rating</th>
           <th>Version</th>
           <th nzShowSort nzSortKey="dateCreated">Date Created</th>
@@ -51,6 +52,9 @@
               [ngStyle]="{'color': data.iconColor}">
             </i>
             {{ data.title }}
+          </td>
+          <td>
+            {{ orgUserHash[data.owner]?.firstName }} {{ orgUserHash[data.owner]?.lastName }}
           </td>
           <td>
             {{ data.category }}
@@ -117,16 +121,18 @@
     -->
       </tbody>
     </nz-table>
+    <!--
     <ng-template #versionTableTitle>
       <div style="font-size:14px;text-align: center;color: blue;font-weight:500;">
         <span style="font-size:14px;text-align: center;color: blue;">Version History</span>
       </div>
     </ng-template>
+    -->
   </div>
   <nz-drawer nzHeight="40%" [nzTitle]="versionHistorytitleTemplate" [nzClosable]="true" [nzVisible]="showHistoryPanel"
     nzPlacement="bottom" (nzOnClose)="showHistoryPanel = false">
     <nz-table #innerTable [nzData]="teamTrainingHash[currentTrainingId]?.versions" nzSize="small"
-      [nzShowPagination]="false" [nzTitle]="versionTableTitle"
+      [nzShowPagination]="false" 
       style="width:100%;background-color: #f5f5f5;font-size:10px;display:inline-block;margin:10px 0;border:1px solid #cccccc;">
       <thead>
         <tr style="font-size:12px;">
@@ -155,6 +161,7 @@
   </nz-drawer>
   <ng-template #versionHistorytitleTemplate>
     <div style="text-align: center;">
+      Version History &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
       <i [ngClass]="teamTrainingHash[currentTrainingId]?.iconClass"
         style="font-size:22px;margin-right:10px;vertical-align: middle;"
         [ngStyle]="{'color': teamTrainingHash[currentTrainingId]?.iconColor}">

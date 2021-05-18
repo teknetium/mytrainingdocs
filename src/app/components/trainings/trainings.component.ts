@@ -57,7 +57,8 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
   sortName: string | null = null;
   sortValue: string | null = null;
   showHistoryPanel = false;
-
+  orgUserHash$: Observable<UserIdHash>;
+  orgUserHash = {};
   
   constructor(
     private trainingService: TrainingService,
@@ -66,6 +67,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
     private userTrainingService: UserTrainingService,
     private userService: UserService) {
     super();
+    this.orgUserHash$ = this.userService.getOrgHashStream();
     this.userTrainingForTid$ = this.userTrainingService.getUserTrainingForTidStream();
     this.trainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.teamTrainingHash$ = this.trainingService.getTeamTrainingHashStream();
@@ -91,6 +93,13 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
         return;
       }
       this.authenticatedUser = user;
+
+    });
+    this.orgUserHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((orgUserHash) => {
+      if (!orgUserHash) {
+        return;
+      }
+      this.orgUserHash = orgUserHash;
 
     });
     this.trainingIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(trainingIdHash => {
