@@ -2048,7 +2048,12 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       rect = element.getBoundingClientRect();
       top = String(0);
       if (rect.y + totalMenuHeight >= bHeight) {
-        top = String((bHeight - totalMenuHeight) - rect.y);
+        let yPos = (bHeight - totalMenuHeight) - rect.y;
+        if (yPos < 0) {
+          top = String(0);
+        } else {
+          top = String(yPos);
+        }
         return (top + 'px');
       } else {
         top = String(0);
