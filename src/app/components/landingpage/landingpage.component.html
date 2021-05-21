@@ -159,7 +159,7 @@
           </div>
           <span style="display:block;font-size:1.1vw;font-weight:400;margin-bottom:1vw;">Ends July 31,
             2021</span>
-          <p style="font-size:1vw;color:black;text-align: left;">Participants in the early access program will not only
+          <p style="font-size:.85vw;color:black;text-align: left;">Participants in the early access program will not only
             have use of the full feature
             set of
             <span style="color:red;font-weight:600;">my</span>
@@ -170,7 +170,7 @@
           </p>
           <div style="text-align: left;">
             <div style="text-align:center;">
-              <ul style="display:inline-block;">
+              <ul style="display:inline-block;font-size:.85vw;">
                 <li style="text-align: left;color:blue;">Recurring Training Work Flow</li>
                 <li style="text-align: left;color:blue;">Live Streaming</li>
                 <li style="text-align: left;color:blue;">Compliance Auditing</li>
@@ -180,9 +180,9 @@
               </ul>
             </div>
           </div>
-          <div style="text-align: left;">
+          <div style="text-align: left;font-size:.85vw;">
             Other perks include
-            <div style="text-align: left;">
+            <div style="text-align: left;font-size:.85vw;">
               <div style="text-align:center;">
                 <ul style="display:inline-block;">
                   <li style="text-align: left;color:blue;">4 hours of consulting time</li>
@@ -195,11 +195,10 @@
 
         <div style="padding:2vw;">
           <div style="color:chartreuse;height:10%;font-size:2.5vw;">
-            <span style="display:block;font-weight:400;color:white;">NAYDO Special</span>
             <span style="display:block;font-weight:400;">Join Early Access!</span>
             <span style="display:block;font-size:1vw;font-weight:400;margin-bottom:5px;">Ends July 31, 2021</span>
           </div>
-          <div style="display:block;text-align:center;">
+          <div style="display:block;text-align:center;margin-top:2vw;">
             <button nz-button nzShape="round" nzType="default" nzGhost nzSize="small"
               style="color:black;font-size:vw;border:1px solid black;" (click)="showEarlyAccessDetails = true">
               Learn More
@@ -329,10 +328,9 @@
             <span style="color:red;font-size:2vw;">my</span>
             <span style="color:black;font-size:2vw;">Training</span>
             <span style="color:red;font-size:2vw;">docs</span>
-            has been designed from the ground up to meet the
+            has been designed from the ground up to meet the most demanding
             <span style="color:black;font-size:2vw;">training management</span>
-            needs of the
-            <span style="color:black;font-size:2vw;">YMCA</span> world.
+            needs of both large and small businesses.
 
 
             <!--
@@ -349,8 +347,8 @@
         <nz-carousel [nzEffect]="'scrollx'" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" style="height:35vw;"
           (nzBeforeChange)="beforeUpdateDot($event)" [nzDotRender]="dotTemplate" nzDotPosition="top">
           <div nz-carousel-content *ngFor="let item of featureSlides; index as featureIndex" style="height:100%;">
-            <img style="float:left;padding-left:2vw;height:100%;padding-top:80px;background-color: white;" [src]="item.image" height="350vw">
-            <p style="float:right;width:50%;height:20vw;font-size:2vw;color:black;padding:15% 5%;">
+            <img style="float:left;padding-left:4vw;height:100%;padding-top:80px;background-color: white;" [src]="item.image" height="350vw">
+            <p style="float:right;width:50%;height:20vw;font-size:2vw;color:black;padding:15% 5%; margin-right:3vw;">
               {{item.text}}
             </p>
             <div style="clear: both;"></div>
@@ -608,9 +606,9 @@
 
               </div>
             </div>
-            <div style="width: 100%;text-align: center;margin:2vw 0;">
+            <div style="width: 100%;text-align: center;padding:1.5vw;">
               <div style="width:100%;display:inline;border:1px solid #dddddd;padding:1vw;background-color:#f5f5f5;">
-                <div style="display:inline-block;font-size:2vw;">
+                <div style="display:inline-block;font-size:1.3vw;">
                   How many people are in your organization?&nbsp;&nbsp;
                   <nz-input-number [(ngModel)]="userCnt" [nzMin]="0" [nzMax]="10000" nzSize="small" [nzStep]="10"
                     (ngModelChange)="userCntChanged($event)"></nz-input-number>

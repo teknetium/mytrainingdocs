@@ -334,12 +334,12 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   currentSlide = 0;
   featureSlides = [
     {
-      image: "assets/images/teamwork4.jpeg",
+      image: "assets/images/teamworkX.jpeg",
       text: "Empower your teams to easily and quickly create thier own trainings."
     },
     {
       image: "assets/images/binders.jpeg",
-      text: "Turn any set of documents into a trackable training complete with assesments in minutes."
+      text: "Turn any set of documents into a trackable training complete with assessments in minutes."
     },
     {
       image: "assets/images/brainstorming.jpeg",
