@@ -338,8 +338,16 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
       text: "Empower your teams to easily and quickly create thier own trainings."
     },
     {
+      image: "assets/images/work-from-home3.jpeg",
+      text: "Access your training from anywhere at anytime."
+    },
+    {
       image: "assets/images/binders.jpeg",
       text: "Turn any set of documents into a trackable training complete with assessments in minutes."
+    },
+    {
+      image: "assets/images/pageEditor.jpeg",
+      text: "Easily and Quickly create custom content using our built-in content editor."
     },
     {
       image: "assets/images/brainstorming.jpeg",
