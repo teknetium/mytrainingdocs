@@ -347,7 +347,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     },
     {
       image: "assets/images/pageEditor.jpeg",
-      text: "Easily and Quickly create custom content using our built-in content editor."
+      text: "Easily and quickly create custom content using our built-in content editor."
     },
     {
       image: "assets/images/brainstorming.jpeg",
