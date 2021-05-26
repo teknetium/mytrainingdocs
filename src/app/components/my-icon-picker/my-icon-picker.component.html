@@ -20,8 +20,8 @@
                     <div class="color-chip" style="float:left"
                         [ngStyle]="{'background-color': currentColor}"></div>
                     <span style="float:right;margin-right:10px;">
-                        <icon *ngIf="!showColorPalette" class="fal fa-angle-down" style="font-size:22px;line-height:30px;"></icon>
-                        <icon *ngIf="showColorPalette" class="fal fa-angle-up" style="font-size:22px;line-height:30px;"></icon>
+                        <icon *ngIf="!showColorPalette" class="fa-light fa-angle-down" style="font-size:22px;line-height:30px;"></icon>
+                        <icon *ngIf="showColorPalette" class="fa-light fa-angle-up" style="font-size:22px;line-height:30px;"></icon>
                     </span>
                 </div>
                 <div [@colorSlide]="showColorPalette ? 'open' : 'closed'"
@@ -38,16 +38,19 @@
                 </div>
                 <nz-radio-group [(ngModel)]="iconStyle" (ngModelChange)="iconStyleChanged($event)">
                     <label nz-radio-button nzValue="solid" nz-tooltip nzTooltipTitle="Solid">
-                        <i class="fas fa-user" style="font-size:16px;"></i>
+                        <i class="fa-solid fa-user" style="font-size:16px;"></i>
                     </label>
                     <label nz-radio-button nzValue="regular" nz-tooltip nzTooltipTitle="Regular">
-                        <i class="far fa-user" style="font-size:16px;"></i>
+                        <i class="fa-regular fa-user" style="font-size:16px;"></i>
                     </label>
                     <label nz-radio-button nzValue="light" nz-tooltip nzTooltipTitle="Light">
-                        <i class="fal fa-user" style="font-size:16px;"></i>
+                        <i class="fa-light fa-user" style="font-size:16px;"></i>
+                    </label>
+                    <label nz-radio-button nzValue="thin" nz-tooltip nzTooltipTitle="Thin">
+                        <i class="fa-thin fa-user" style="font-size:16px;"></i>
                     </label>
                     <label nz-radio-button nzValue="duotone" nz-tooltip nzTooltipTitle="Two Tone">
-                        <i class="fad fa-user" style="font-size:16px;"></i>
+                        <i class="fa-duotone fa-user" style="font-size:16px;"></i>
                     </label>
                 </nz-radio-group>
             </div>
@@ -59,13 +62,13 @@
                 <button
                     style="display:inline-block;cursor:pointer;padding:0 2px;border-radius:4px;border:1px solid #bbbbbb;margin-right:3px;"
                     (click)="smaller()" nz-tooltip nzTooltipTitle="Smaller">
-                    <i class="far fa-fw fa-angle-down"
+                    <i class="fa-regular fa-fw fa-angle-down"
                         style="font-size:14px;display:inline-block;vertical-align: middle;"></i>
                 </button>
                 <button
                     style="display:inline-block;cursor:pointer;padding:0 2px;border-radius:4px;border:1px solid #bbbbbb;"
                     (click)="bigger()" nz-tooltip nzTooltipTitle="Bigger">
-                    <i class="far fa-fw fa-angle-up"
+                    <i class="fa-regular fa-fw fa-angle-up"
                         style="font-size:14px;display:inline-block;vertical-align: middle;"></i>
                 </button>
             </span>

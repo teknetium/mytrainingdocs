@@ -63,11 +63,11 @@ export class UserService {
   private userFailBS$ = new BehaviorSubject<UserFail>(null);
 
   userTypeIconHash = {
-    supervisor: 'fas fa-user-tie',
-    individualContributor: 'fas fa-user',
-    volunteer: 'fas fa-user-cowboy',
-    contractor: 'fas fa-user-hard-hat',
-    customer: 'fas fa-user-crown'
+    supervisor: 'fa-solid fa-user-tie',
+    individualContributor: 'fa-solid fa-user',
+    volunteer: 'fa-solid fa-user-cowboy',
+    contractor: 'fa-solid fa-user-hard-hat',
+    customer: 'fa-solid fa-user-crown'
   }
 
   // Observables

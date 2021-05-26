@@ -311,11 +311,12 @@ export class MyIconPickerComponent implements OnInit, AfterViewInit {
   ];
 
   iconStyleHash = {
-    solid: 'fas',
-    regular: 'far',
-    light: 'fal',
-    duotone: 'fad',
-    brands: 'fab'
+    solid: 'fa-solid',
+    regular: 'fa-regular',
+    light: 'fa-light',
+    thin: 'fa-thin',
+    duotone: 'fa-duotone',
+    brands: 'fa-brands'
   };
 
   iconNames = [];
@@ -510,7 +511,8 @@ if (this.currentColor.indexOf('#') === 0) {
       return;
     }
     this.currentIcon = i;
-    this.iconName = this.matchingIcons[i].substring(13);
+//    this.iconName = this.matchingIcons[i];
+    this.iconName = this.matchingIcons[i].substring(this.matchingIcons[i].lastIndexOf('fa-') + 3);
   }
 
   mouseLeave(i) {

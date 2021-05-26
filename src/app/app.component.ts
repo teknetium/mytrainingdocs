@@ -95,15 +95,15 @@ export class AppComponent implements OnInit {
   userTypes = [
     {
       name: 'employee',
-      iconClass: 'fa-fw fas fa-user',
+      iconClass: 'fa-fw fa-solid fa-user',
     },
     {
       name: 'volunteer',
-      iconClass: 'fa-fw far fa-user',
+      iconClass: 'fa-fw fa-solid fa-user',
     },
     {
       name: 'customer',
-      iconClass: 'fa-fw fas fa-user-tie',
+      iconClass: 'fa-fw fa-solid fa-user-tie',
     },
   ];
   userTypeHash: {} = {};

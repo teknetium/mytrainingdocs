@@ -67,6 +67,7 @@ module.exports = function(app, config) {
   let duotoneIconNames = [];
   let regularIconNames = [];
   let lightIconNames = [];
+  let thinIconNames = [];
   let solidIconNames = [];
   let matchingIcons = [];
 
@@ -74,22 +75,27 @@ module.exports = function(app, config) {
   for (iconName of iconNames) {
     if (icons[iconName].styles.includes('solid')) {
       solidIconNames.push(iconName);
-      matchingIcons.push('fas fa-fw fa-' + iconName);
+      matchingIcons.push('fa-solid fa-fw fa-' + iconName);
       iconSearchTermHash[iconName] = icons[iconName].search.terms;
     }
     if (icons[iconName].styles.includes('light')) {
       lightIconNames.push(iconName);
-      matchingIcons.push('fal fa-fw fa-' + iconName);
+      matchingIcons.push('fa-light fa-fw fa-' + iconName);
+      iconSearchTermHash[iconName] = icons[iconName].search.terms;
+    }
+    if (icons[iconName].styles.includes('thin')) {
+      thinIconNames.push(iconName);
+      matchingIcons.push('fa-thin fa-fw fa-' + iconName);
       iconSearchTermHash[iconName] = icons[iconName].search.terms;
     }
     if (icons[iconName].styles.includes('regular')) {
       regularIconNames.push(iconName);
-      matchingIcons.push('fad fa-fw fa-' + iconName);
+      matchingIcons.push('fa-regular fa-fw fa-' + iconName);
       iconSearchTermHash[iconName] = icons[iconName].search.terms;
     }
     if (icons[iconName].styles.includes('duotone')) {
       duotoneIconNames.push(iconName);
-      matchingIcons.push('fad fa-fw fa-' + iconName);
+      matchingIcons.push('fa-duotone fa-fw fa-' + iconName);
       iconSearchTermHash[iconName] = icons[iconName].search.terms;
     }
   }
@@ -224,34 +230,39 @@ module.exports = function(app, config) {
     if (iconSearchStr === '*') {
       if (styles.includes('solid')) {
         for (iconStr of solidIconNames) {
-          matchingIcons.push('fas fa-fw fa-' + iconStr);
+          matchingIcons.push('fa-solid fa-fw fa-' + iconStr);
         }
       }
       if (styles.includes('regular')) {
         for (iconStr of regularIconNames) {
-          matchingIcons.push('far fa-fw fa-' + iconStr);
+          matchingIcons.push('fa-regular fa-fw fa-' + iconStr);
         }
       }
       if (styles.includes('light')) {
         for (iconStr of lightIconNames) {
-          matchingIcons.push('fal fa-fw fa-' + iconStr);
+          matchingIcons.push('fa-light fa-fw fa-' + iconStr);
         }
       }
       if (styles.includes('duotone')) {
         for (iconStr of duotoneIconNames) {
-          matchingIcons.push('fad fa-fw fa-' + iconStr);
+          matchingIcons.push('fa-duotone fa-fw fa-' + iconStr);
+        }
+      }
+      if (styles.includes('thin')) {
+        for (iconStr of duotoneIconNames) {
+          matchingIcons.push('fa-thin fa-fw fa-' + iconStr);
         }
       }
     } else {
       if (styles.includes('solid')) {
         for (iconStr of solidIconNames) {
           if (iconStr.indexOf(iconSearchStr) >= 0) {
-            matchingIcons.push('fas fa-fw fa-' + iconStr);
+            matchingIcons.push('fa-solid fa-fw fa-' + iconStr);
             continue;
           }
           for (term of iconSearchTermHash[iconStr]) {
             if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
-              matchingIcons.push('fas fa-fw fa-' + iconStr);
+              matchingIcons.push('fa-solid fa-fw fa-' + iconStr);
               break;
             }
           }
@@ -260,12 +271,12 @@ module.exports = function(app, config) {
       if (styles.includes('regular')) {
         for (iconStr of regularIconNames) {
           if (iconStr.indexOf(iconSearchStr) >= 0) {
-            matchingIcons.push('far fa-fw fa-' + iconStr);
+            matchingIcons.push('fa-regular fa-fw fa-' + iconStr);
             continue;
           }
           for (term of iconSearchTermHash[iconStr]) {
             if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
-              matchingIcons.push('far fa-fw fa-' + iconStr);
+              matchingIcons.push('fa-regular fa-fw fa-' + iconStr);
               break;
             }
           }
@@ -274,12 +285,26 @@ module.exports = function(app, config) {
       if (styles.includes('light')) {
         for (iconStr of lightIconNames) {
           if (iconStr.indexOf(iconSearchStr) >= 0) {
-            matchingIcons.push('fal fa-fw fa-' + iconStr);
+            matchingIcons.push('fa-light fa-fw fa-' + iconStr);
             continue;
           }
           for (term of iconSearchTermHash[iconStr]) {
             if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
-              matchingIcons.push('fal fa-fw fa-' + iconStr);
+              matchingIcons.push('fa-light fa-fw fa-' + iconStr);
+              break;
+            }
+          }
+        }
+      }
+      if (styles.includes('thin')) {
+        for (iconStr of lightIconNames) {
+          if (iconStr.indexOf(iconSearchStr) >= 0) {
+            matchingIcons.push('fa-thin fa-fw fa-' + iconStr);
+            continue;
+          }
+          for (term of iconSearchTermHash[iconStr]) {
+            if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
+              matchingIcons.push('fa-thin fa-fw fa-' + iconStr);
               break;
             }
           }
@@ -288,12 +313,12 @@ module.exports = function(app, config) {
       if (styles.includes('duotone')) {
         for (iconStr of duotoneIconNames) {
           if (iconStr.indexOf(iconSearchStr) >= 0) {
-            matchingIcons.push('fad fa-fw fa-' + iconStr);
+            matchingIcons.push('fa-duotone fa-fw fa-' + iconStr);
             continue;
           }
           for (term of iconSearchTermHash[iconStr]) {
             if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
-              matchingIcons.push('fad fa-fw fa-' + iconStr);
+              matchingIcons.push('fa-duotone fa-fw fa-' + iconStr);
               break;
             }
           }

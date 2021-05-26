@@ -6,7 +6,7 @@
                 style="font-size:18px;vertical-align: middle;display:inline-block;"
                 [ngStyle]="{'color': trainingIdHash[userTraining?.tid]?.versions[0].iconColor}">
             </i>
-            <i *ngIf="trainingIdHash[userTraining?.tid]?.type === 'recurring'" class="fas fa-redo-alt"
+            <i *ngIf="trainingIdHash[userTraining?.tid]?.type === 'recurring'" class="fa-solid fa-redo-alt"
                 style="font-size:10px;vertical-align: top;display:inline-block;">
             </i>
             <span style="font-size:12px;margin-left:3px;vertical-align: middle;">{{trainingIdHash[userTraining?.tid]?.versions[0].title}}</span>
@@ -54,7 +54,7 @@
                         style="font-size:24px;vertical-align: middle;"
                         [ngStyle]="{'color': trainingIdHash[userTraining?.tid]?.versions[0].iconColor}">
                     </i>
-                    <i *ngIf="trainingIdHash[userTraining?.tid]?.type === 'recurring'" class="fas fa-redo-alt"
+                    <i *ngIf="trainingIdHash[userTraining?.tid]?.type === 'recurring'" class="fa-solid fa-redo-alt"
                         style="font-size:10px;vertical-align: top;">
                     </i>
                     <span style="margin-left:10px;">{{ trainingIdHash[userTraining?.tid]?.versions[0].title }}</span>
@@ -98,7 +98,7 @@
                         </i>
                     </div>
                     <div *ngIf="userTraining.certImage" class="action">
-                        <i class="fad fa-eye action" style="font-size:18px;color:blue;vertical-align: middle;"
+                        <i class="fa-duotone fa-eye action" style="font-size:18px;color:blue;vertical-align: middle;"
                             (click)="viewCertImageFunc(userTraining)" nz-tooltip
                             nzTooltipTitle="View Certificate Image">
                         </i>

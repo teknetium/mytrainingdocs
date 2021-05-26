@@ -201,7 +201,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   userTypes = [
     {
       name: 'employee',
-      iconClass: 'fa-fw fas fa-user',
+      iconClass: 'fa-fw fa-solid fa-user',
     },
     {
       name: 'volunteer',
@@ -209,7 +209,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     },
     {
       name: 'customer',
-      iconClass: 'fa-fw fas fa-user-tie',
+      iconClass: 'fa-fw fa-solid fa-user-tie',
     },
   ];
   userTypeHash: {} = {};
@@ -282,10 +282,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   ];
   alert$: Observable<AlertModel>;
   icon = {
-    info: 'fas fa-info-circle',
-    warning: 'fas fa-exclamation-circle',
-    success: 'fas fa-check-circle',
-    error: 'fas fa-times-circle'
+    info: 'fa-solid fa-info-circle',
+    warning: 'fa-solid fa-exclamation-circle',
+    success: 'fa-solid fa-check-circle',
+    error: 'fa-solid fa-times-circle'
   }
   iconColor = {
     info: '#4891f7',
@@ -331,22 +331,22 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   planHash = {
     earlyAccess: {
       name: 'Early Access',
-      icon: 'fad fa-user-hard-hat',
+      icon: 'fa-duotone fa-user-hard-hat',
       color: 'deepskyblue'
     },
     basic: {
       name: 'Basic',
-      icon: 'fad fa-user',
+      icon: 'fa-duotone fa-user',
       color: 'green'
     },
     pro: {
       name: 'Pro',
-      icon: 'fad fa-user-tie',
+      icon: 'fa-duotone fa-user-tie',
       color: 'red'
     },
     expert: {
       name: 'Expert',
-      icon: 'fad fa-user-graduate',
+      icon: 'fa-duotone fa-user-graduate',
       color: 'blueviolet'
     }
   }

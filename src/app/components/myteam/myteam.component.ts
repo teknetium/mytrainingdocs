@@ -140,12 +140,12 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   private importer: FlatfileImporter;
 
   userTypeIconHash = {
-    none: 'fas fa-user',
-    individualContributor: 'fas fa-fw fa-user',
-    supervisor: 'fas fa-fw fa-user-tie',
-    volunteer: 'fas fa-fw fa-user-cowboy',
-    customer: 'fas fa-fw fa-user-alien',
-    contractor: 'fas fa-fw fa-user-hard-hat'
+    none: 'fa-solid fa-user',
+    individualContributor: 'fa-solid fa-fw fa-user',
+    supervisor: 'fa-solid fa-fw fa-user-tie',
+    volunteer: 'fa-solid fa-fw fa-user-cowboy',
+    customer: 'fa-solid fa-fw fa-user-alien',
+    contractor: 'fa-solid fa-fw fa-user-hard-hat'
   }
   /*
   trainingStatusHash = {
@@ -2218,7 +2218,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   getSelectedTrainingIconClass(tid: string): string {
     //    console.log('getSelectedTrainingIconClass', tid);
     if (!this.allTrainingIdHash[tid]) {
-      return 'fas fa-graduation-cap';
+      return 'fa-solid fa-graduation-cap';
     }
     return this.allTrainingIdHash[tid].versions[0].iconClass;
   }
