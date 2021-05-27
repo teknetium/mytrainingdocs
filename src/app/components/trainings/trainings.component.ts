@@ -34,7 +34,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
 
   userTrainings: UserTrainingModel[];
   iconColor = 'red';
-  iconClass = 'far fa-fw fa-file';
+  iconClass = 'fa-regular fa-fw fa-file';
   authenticatedUser$: Observable<UserModel>;
   authenticatedUser: UserModel;
   selectedTraining$: Observable<TrainingModel>;
@@ -107,7 +107,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
       if (trainingIdHash) {
         this.trainingIdHash = trainingIdHash;
         allTrainings = Object.values(trainingIdHash);
-        console.log('trainings component:init');
+//        console.log('trainings component:init');
         this.trainings = [];
         for (let training of allTrainings) {
           if (training.teamId === 'mytrainingdocs' || training.teamId === 'shared') {
@@ -124,7 +124,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
             })
           }
         }
-        this.trainingsDisplay = this.trainings;
+//        this.trainingsDisplay = this.trainings;
       } else {
         this.trainings = [];
       }
@@ -132,7 +132,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
     this.teamTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(teamTrainingHash => {
       this.teamTrainingHash = teamTrainingHash;
       this.trainings = Object.values(this.teamTrainingHash);
-      this.trainingsDisplay = this.trainings;
+      this.trainingsDisplay = cloneDeep(this.trainings);
     })
     /*
     this.userTrainingForTid$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(uts => {
@@ -217,10 +217,10 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
 
   search(): void {
     console.log('search', this.sortName, this.sortValue);
-    const data = cloneDeep(this.trainingsDisplay);
-    this.trainingsDisplay = [];
+    const data = cloneDeep(this.trainings);
+    this.trainings = [];
     if (this.sortName && this.sortValue) {
-      this.trainingsDisplay = data.sort((a, b) =>
+      this.trainings = data.sort((a, b) =>
         this.sortValue === 'ascend'
           ? a[this.sortName!] > b[this.sortName!]
             ? 1
@@ -230,7 +230,7 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
             : -1
       );
     } else {
-      this.trainingsDisplay = data;
+      this.trainings = data;
     }
   }
 }

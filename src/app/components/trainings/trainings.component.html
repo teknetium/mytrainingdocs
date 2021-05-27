@@ -5,8 +5,8 @@
       Create a New Training
     </button>
   </div>
-  <div *ngIf="trainingsDisplay?.length > 0" style="display:block;">
-    <nz-table #nestedTable [nzData]="trainingsDisplay" nzSize="small" [nzShowPagination]="false"
+  <div *ngIf="trainings?.length > 0" style="display:block;">
+    <nz-table #nestedTable [nzData]="trainings" nzSize="small" [nzShowPagination]="false"
       style="width:100%;background-color: #fafafa;font-size:12px;display:inline-block;">
       <thead (nzSortChange)="sort($event)" nzSingleSort>
         <tr>
@@ -44,7 +44,7 @@
               nz-tooltip nzTooltipTitle="One-Time Training">
               <span style="font-size:10px;">1</span>
             </div>
-            <i *ngIf="data.type === 'recurring'" class="far fa-redo-alt" style="font-size:16px;vertical-align: middle;"
+            <i *ngIf="data.type === 'recurring'" class="fa-regular fa-redo-alt" style="font-size:16px;vertical-align: middle;"
               nz-tooltip nzTooltipTitle="Recurring Training"></i>
           </td>
           <td>
@@ -74,7 +74,7 @@
             <i nz-icon nzType="message" [nzTheme]="'twotone'" [nzTwotoneColor]="'orange'" class="action"
               (click)="showComments(data._id)" nz-tooltip nzTooltipTitle="View Comments">
             </i>
-            <i class="action fal fa-history" style="color:blueviolet;" (click)="showHistory(data._id)" nz-tooltip
+            <i class="action fa-light fa-history" style="color:blueviolet;" (click)="showHistory(data._id)" nz-tooltip
               nzTooltipTitle="Show Version History">
             </i>
             <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" class="action" nz-popconfirm

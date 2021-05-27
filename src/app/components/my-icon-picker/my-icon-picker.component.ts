@@ -511,7 +511,7 @@ if (this.currentColor.indexOf('#') === 0) {
       return;
     }
     this.currentIcon = i;
-//    this.iconName = this.matchingIcons[i];
+    //    this.iconName = this.matchingIcons[i];
     this.iconName = this.matchingIcons[i].substring(this.matchingIcons[i].lastIndexOf('fa-') + 3);
   }
 

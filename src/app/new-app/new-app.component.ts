@@ -205,7 +205,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     },
     {
       name: 'volunteer',
-      iconClass: 'fa-fw far fa-user',
+      iconClass: 'fa-fw fa-regular fa-user',
     },
     {
       name: 'customer',

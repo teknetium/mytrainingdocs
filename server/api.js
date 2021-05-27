@@ -69,10 +69,16 @@ module.exports = function(app, config) {
   let lightIconNames = [];
   let thinIconNames = [];
   let solidIconNames = [];
+  let brandsIconNames = [];
   let matchingIcons = [];
 
   iconNames = Object.keys(icons);
   for (iconName of iconNames) {
+    if (icons[iconName].styles.includes('brands')) {
+      brandsIconNames.push(iconName);
+      matchingIcons.push('fa-brands fa-fw fa-' + iconName);
+      iconSearchTermHash[iconName] = icons[iconName].search.terms;
+    }
     if (icons[iconName].styles.includes('solid')) {
       solidIconNames.push(iconName);
       matchingIcons.push('fa-solid fa-fw fa-' + iconName);
@@ -233,6 +239,11 @@ module.exports = function(app, config) {
           matchingIcons.push('fa-solid fa-fw fa-' + iconStr);
         }
       }
+      if (styles.includes('brands')) {
+        for (iconStr of brandsIconNames) {
+          matchingIcons.push('fa-brands fa-fw fa-' + iconStr);
+        }
+      }
       if (styles.includes('regular')) {
         for (iconStr of regularIconNames) {
           matchingIcons.push('fa-regular fa-fw fa-' + iconStr);
@@ -249,7 +260,7 @@ module.exports = function(app, config) {
         }
       }
       if (styles.includes('thin')) {
-        for (iconStr of duotoneIconNames) {
+        for (iconStr of thinIconNames) {
           matchingIcons.push('fa-thin fa-fw fa-' + iconStr);
         }
       }
@@ -263,6 +274,20 @@ module.exports = function(app, config) {
           for (term of iconSearchTermHash[iconStr]) {
             if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
               matchingIcons.push('fa-solid fa-fw fa-' + iconStr);
+              break;
+            }
+          }
+        }
+      }
+      if (styles.includes('brands')) {
+        for (iconStr of brandsIconNames) {
+          if (iconStr.indexOf(iconSearchStr) >= 0) {
+            matchingIcons.push('fa-brands fa-fw fa-' + iconStr);
+            continue;
+          }
+          for (term of iconSearchTermHash[iconStr]) {
+            if (typeof term === 'string' && term.indexOf(iconSearchStr) >= 0) {
+              matchingIcons.push('fa-brands fa-fw fa-' + iconStr);
               break;
             }
           }

@@ -348,7 +348,7 @@
                 <div style="float:left;width:33%;">
                     <div style="vertical-align: middle;">
                         <div style="float:left;margin-top:10px;">
-                            <i *ngIf="!showLegend" class="far fa-indent" style="cursor:pointer;font-size:24px;"
+                            <i *ngIf="!showLegend" class="fa-regular fa-indent" style="cursor:pointer;font-size:24px;"
                                 (click)="showLegend = true" nz-tooltip nzTooltipPlacement="top"
                                 nzTooltipTitle="Show Legend"></i>
                         </div>
@@ -801,7 +801,7 @@
                             nzTooltipTitle="Hide Individual Contributor's Name">
                             <span class="fa-stack fa-2x" style="font-size:12px;">
                                 <i class="fa-solid fa-tag fa-stack-1x"></i>
-                                <i class="fal fa-ban fa-stack-2x"></i>
+                                <i class="fa-light fa-ban fa-stack-2x"></i>
                             </span>
                         </button>
                         <button *ngIf="(org$ | async)?.plan !== 'basic'" nz-button nzShape="circle"
@@ -1126,7 +1126,7 @@
                                 [ngStyle]="{'left': getMenuXPlacement(authenticatedUser._id), 'top': getMenuYPlacement(authenticatedUser._id)}">
                                 <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                     (click)="hideSupervisorMenu(authenticatedUser._id)">
-                                    <i class="fal fa-times" style="font-size:20px;color:red;"></i>
+                                    <i class="fa-light fa-times" style="font-size:20px;color:red;"></i>
                                 </div>
                                 <div style="display: block;width:100%;border-bottom:1px solid #dddddd;">
                                     <div style="font-weight:300;font-size:18px;color:blue;">
@@ -1203,7 +1203,7 @@
                                         <i class="fa-solid fa-fw fa-user-check"
                                             style="float:left;margin-top:3px;font-size:14px;margin-right:10px;"></i>
                                         <span style="float:left;">User Status</span>
-                                        <i class="fal fa-angle-right"
+                                        <i class="fa-light fa-angle-right"
                                             style="float:right;font-size:18px;margin-right:5px;"></i>
                                         <div style="clear:both;"></div>
                                         <div *ngIf="supervisorMenuHash[authenticatedUser._id].userStatus"
@@ -1229,7 +1229,7 @@
                                         <i class="fa-solid fa-fw fa-user-graduate"
                                             style="float:left;margin-top:3px;font-size:14px;margin-right:10px;"></i>
                                         <span style="float:left;">User Training Status</span>
-                                        <i class="fal fa-angle-right"
+                                        <i class="fa-light fa-angle-right"
                                             style="float:right;font-size:18px;margin-right:5px;"></i>
                                         <div style="clear:both;"></div>
                                         <div *ngIf="supervisorMenuHash[authenticatedUser._id].userTrainingStatus"
@@ -1255,7 +1255,7 @@
                                         <i class="fa-solid fa-fw fa-briefcase"
                                             style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                         <span style="float:left;">Job Title</span>
-                                        <i class="fal fa-angle-right"
+                                        <i class="fa-light fa-angle-right"
                                             style="float:right;font-size:18px;margin-right:5px;"></i>
                                         <div style="clear:both;"></div>
                                         <div *ngIf="supervisorMenuHash[authenticatedUser._id].jobTitle"
@@ -1277,7 +1277,7 @@
                                         <i class="fa-solid fa-fw fa-user-cowboy"
                                             style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                         <span style="float:left;">User Type</span>
-                                        <i class="fal fa-angle-right"
+                                        <i class="fa-light fa-angle-right"
                                             style="float:right;font-size:18px;margin-right:5px;"></i>
                                         <div style="clear:both;"></div>
                                         <div *ngIf="supervisorMenuHash[authenticatedUser._id].userType"
@@ -1302,7 +1302,7 @@
                                         <i class="fa-solid fa-fw fa-graduation-cap"
                                             style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                         <span style="float:left;">Training</span>
-                                        <i class="fal fa-angle-right"
+                                        <i class="fa-light fa-angle-right"
                                             style="float:right;font-size:18px;margin-right:5px;"></i>
                                         <div style="clear:both;"></div>
                                         <div *ngIf="supervisorMenuHash[authenticatedUser._id].training"
@@ -1349,7 +1349,7 @@
                                 <!--
                                 <div *ngIf="authenticatedUser._id === currentHoverUid && authenticatedUser.userType === 'supervisor'"
                                     class="supervisor-menu-icon" (click)="showSupervisorMenu(authenticatedUser._id)">
-                                    <i class="far fa-fw fa-ellipsis-v"></i>
+                                    <i class="fa-regular fa-fw fa-ellipsis-v"></i>
                                 </div>
                                 -->
                                 <i [ngClass]="userTypeIconHash[authenticatedUser.userType]"
@@ -1364,12 +1364,12 @@
                             <div *ngIf="!collapsedNodes.includes(authenticatedUser._id) && myOrgUserHash[authenticatedUser._id]?.userType === 'supervisor'"
                                 (click)="collapseNode(authenticatedUser._id, true)" nz-tooltip
                                 nzTooltipTitle="Collapse Suborganization" nzTooltipPlacement="right">
-                                <i class="fal fa-minus-circle" style="font-size:14px;cursor:pointer;"></i>
+                                <i class="fa-light fa-minus-circle" style="font-size:14px;cursor:pointer;"></i>
                             </div>
                             <div *ngIf="collapsedNodes.includes(authenticatedUser._id) && myOrgUserHash[authenticatedUser._id]?.userType === 'supervisor'"
                                 (click)="collapseNode(authenticatedUser._id, false)" style="margin:0 8px;"
                                 [ngClass]="{'option-selected': orgChartSelectionList.includes(authenticatedUser._id)}">
-                                <i class="far fa-plus-circle" nz-tooltip nzTooltipTitle="Expand Suborganization"
+                                <i class="fa-regular fa-plus-circle" nz-tooltip nzTooltipTitle="Expand Suborganization"
                                     nzTooltipPlacement="right"
                                     style="margin-top:4px;font-size:16px;color:red;cursor:pointer;"></i>
                                 <div (mouseenter)="setHoverData(authenticatedUser._id)"
@@ -1646,7 +1646,7 @@
                                             [ngStyle]="{'left': getMenuXPlacement(dr), 'top': getMenuYPlacement(dr)}">
                                             <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                 (click)="hideSupervisorMenu(dr)">
-                                                <i class="fal fa-times" style="font-size:20px;color:red;"></i>
+                                                <i class="fa-light fa-times" style="font-size:20px;color:red;"></i>
                                             </div>
                                             <div style="display: block;width:100%;border-bottom:1px solid #dddddd;">
                                                 <div style="font-weight:300;font-size:18px;color:blue;">
@@ -1730,7 +1730,7 @@
                                                     <i class="fa-solid fa-fw fa-user-check"
                                                         style="float:left;margin-top:3px;font-size:14px;margin-right:10px;"></i>
                                                     <span style="float:left;">User Status</span>
-                                                    <i class="fal fa-angle-right"
+                                                    <i class="fa-light fa-angle-right"
                                                         style="float:right;font-size:18px;margin-right:5px;"></i>
                                                     <div style="clear:both;"></div>
                                                     <div *ngIf="supervisorMenuHash[dr].userStatus"
@@ -1757,7 +1757,7 @@
                                                     <i class="fa-solid fa-fw fa-user-graduate"
                                                         style="float:left;margin-top:3px;font-size:14px;margin-right:10px;"></i>
                                                     <span style="float:left;">User Training Status</span>
-                                                    <i class="fal fa-angle-right"
+                                                    <i class="fa-light fa-angle-right"
                                                         style="float:right;font-size:18px;margin-right:5px;"></i>
                                                     <div style="clear:both;"></div>
                                                     <div *ngIf="supervisorMenuHash[dr].userTrainingStatus"
@@ -1784,7 +1784,7 @@
                                                     <i class="fa-solid fa-fw fa-briefcase"
                                                         style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                     <span style="float:left;">Job Title</span>
-                                                    <i class="fal fa-angle-right"
+                                                    <i class="fa-light fa-angle-right"
                                                         style="float:right;font-size:18px;margin-right:5px;"></i>
                                                     <div style="clear:both;"></div>
                                                     <div *ngIf="supervisorMenuHash[dr].jobTitle"
@@ -1807,7 +1807,7 @@
                                                     <i class="fa-solid fa-fw fa-user-cowboy"
                                                         style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                     <span style="float:left;">User Type</span>
-                                                    <i class="fal fa-angle-right"
+                                                    <i class="fa-light fa-angle-right"
                                                         style="float:right;font-size:18px;margin-right:5px;"></i>
                                                     <div style="clear:both;"></div>
                                                     <div *ngIf="supervisorMenuHash[dr].userType"
@@ -1833,7 +1833,7 @@
                                                     <i class="fa-solid fa-fw fa-graduation-cap"
                                                         style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                     <span style="float:left;">Training</span>
-                                                    <i class="fal fa-angle-right"
+                                                    <i class="fa-light fa-angle-right"
                                                         style="float:right;font-size:18px;margin-right:5px;"></i>
                                                     <div style="clear:both;"></div>
                                                     <div *ngIf="supervisorMenuHash[dr].training"
@@ -1880,7 +1880,7 @@
                                             <!--
                                             <div *ngIf="dr === currentHoverUid" class="supervisor-menu-icon"
                                                 (click)="showSupervisorMenu(dr)">
-                                                <i class="far fa-fw fa-ellipsis-v"></i>
+                                                <i class="fa-regular fa-fw fa-ellipsis-v"></i>
                                             </div>
                                             -->
                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
@@ -1898,12 +1898,12 @@
                                         <div *ngIf="!collapsedNodes.includes(dr) && myOrgUserHash[dr]?.userType === 'supervisor'"
                                             (click)="collapseNode(dr, true)" nz-tooltip
                                             nzTooltipTitle="Collapse Suborganization" nzTooltipPlacement="right">
-                                            <i class="fal fa-minus-circle" style="font-size:14px;cursor:pointer;"></i>
+                                            <i class="fa-light fa-minus-circle" style="font-size:14px;cursor:pointer;"></i>
                                         </div>
                                         <div *ngIf="collapsedNodes.includes(dr) && myOrgUserHash[dr]?.userType === 'supervisor'"
                                             (click)="collapseNode(dr, false)" style="margin:0 8px;"
                                             [ngClass]="{'option-selected': orgChartSelectionList.includes(dr)}">
-                                            <i class="far fa-plus-circle" nz-tooltip
+                                            <i class="fa-regular fa-plus-circle" nz-tooltip
                                                 nzTooltipTitle="Expand Suborganization" nzTooltipPlacement="right"
                                                 style="margin-top:4px;font-size:16px;color:red;cursor:pointer;"></i>
                                             <div (mouseenter)="setHoverData(dr)" (mouseleave)="setHoverData(null)"
@@ -2198,7 +2198,7 @@
                                                         [ngStyle]="{'left': getMenuXPlacement(dr2), 'top': getMenuYPlacement(dr2)}">
                                                         <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                             (click)="hideSupervisorMenu(dr2)">
-                                                            <i class="fal fa-times"
+                                                            <i class="fa-light fa-times"
                                                                 style="font-size:20px;color:red;"></i>
                                                         </div>
                                                         <div
@@ -2291,7 +2291,7 @@
                                                                 <i class="fa-solid fa-fw fa-user-check"
                                                                     style="float:left;margin-top:3px;font-size:14px;margin-right:10px;"></i>
                                                                 <span style="float:left;">User Status</span>
-                                                                <i class="fal fa-angle-right"
+                                                                <i class="fa-light fa-angle-right"
                                                                     style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                 <div style="clear:both;"></div>
                                                                 <div *ngIf="supervisorMenuHash[dr2].userStatus"
@@ -2319,7 +2319,7 @@
                                                                 <i class="fa-solid fa-fw fa-user-graduate"
                                                                     style="float:left;margin-top:3px;font-size:14px;margin-right:10px;"></i>
                                                                 <span style="float:left;">User Training Status</span>
-                                                                <i class="fal fa-angle-right"
+                                                                <i class="fa-light fa-angle-right"
                                                                     style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                 <div style="clear:both;"></div>
                                                                 <div *ngIf="supervisorMenuHash[dr2].userTrainingStatus"
@@ -2348,7 +2348,7 @@
                                                                 <i class="fa-solid fa-fw fa-briefcase"
                                                                     style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                                 <span style="float:left;">Job Title</span>
-                                                                <i class="fal fa-angle-right"
+                                                                <i class="fa-light fa-angle-right"
                                                                     style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                 <div style="clear:both;"></div>
                                                                 <div *ngIf="supervisorMenuHash[dr2].jobTitle"
@@ -2373,7 +2373,7 @@
                                                                 <i class="fa-solid fa-fw fa-user-cowboy"
                                                                     style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                                 <span style="float:left;">User Type</span>
-                                                                <i class="fal fa-angle-right"
+                                                                <i class="fa-light fa-angle-right"
                                                                     style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                 <div style="clear:both;"></div>
                                                                 <div *ngIf="supervisorMenuHash[dr2].userType"
@@ -2402,7 +2402,7 @@
                                                                 <i class="fa-solid fa-fw fa-graduation-cap"
                                                                     style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                                 <span style="float:left;">Training</span>
-                                                                <i class="fal fa-angle-right"
+                                                                <i class="fa-light fa-angle-right"
                                                                     style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                 <div style="clear:both;"></div>
                                                                 <div *ngIf="supervisorMenuHash[dr2].training"
@@ -2454,7 +2454,7 @@
                                                         <div *ngIf="dr2 === currentHoverUid"
                                                             class="supervisor-menu-icon"
                                                             (click)="showSupervisorMenu(dr2)">
-                                                            <i class="far fa-fw fa-ellipsis-v"></i>
+                                                            <i class="fa-regular fa-fw fa-ellipsis-v"></i>
                                                         </div>
                                                         -->
                                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr2]?.userType]"
@@ -2473,13 +2473,13 @@
                                                         (click)="collapseNode(dr2, true)" nz-tooltip
                                                         nzTooltipTitle="Collapse Suborganization"
                                                         nzTooltipPlacement="right">
-                                                        <i class="fal fa-minus-circle"
+                                                        <i class="fa-light fa-minus-circle"
                                                             style="font-size:14px;cursor:pointer;"></i>
                                                     </div>
                                                     <div *ngIf="collapsedNodes.includes(dr2) && myOrgUserHash[dr2]?.userType === 'supervisor'"
                                                         (click)="collapseNode(dr2, false)" style="margin:0 8px;"
                                                         [ngClass]="{'option-selected': orgChartSelectionList.includes(dr2)}">
-                                                        <i class="far fa-plus-circle" nz-tooltip
+                                                        <i class="fa-regular fa-plus-circle" nz-tooltip
                                                             nzTooltipTitle="Expand Suborganization"
                                                             nzTooltipPlacement="right"
                                                             style="margin-top:4px;font-size:16px;color:red;cursor:pointer;">
@@ -2754,7 +2754,7 @@
                                                                     [ngStyle]="{'left': getMenuXPlacement(dr3), 'top': getMenuYPlacement(dr3)}">
                                                                     <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                                         (click)="hideSupervisorMenu(dr3)">
-                                                                        <i class="fal fa-times"
+                                                                        <i class="fa-light fa-times"
                                                                             style="font-size:20px;color:red;"></i>
                                                                     </div>
                                                                     <div
@@ -2851,7 +2851,7 @@
                                                                             <i class="fa-solid fa-fw fa-user-check"
                                                                                 style="float:left;margin-top:3px;font-size:14px;margin-right:10px;"></i>
                                                                             <span style="float:left;">User Status</span>
-                                                                            <i class="fal fa-angle-right"
+                                                                            <i class="fa-light fa-angle-right"
                                                                                 style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                             <div style="clear:both;"></div>
                                                                             <div *ngIf="supervisorMenuHash[dr3].userStatus"
@@ -2881,7 +2881,7 @@
                                                                                 style="float:left;margin-top:3px;font-size:14px;margin-right:10px;"></i>
                                                                             <span style="float:left;">User Training
                                                                                 Status</span>
-                                                                            <i class="fal fa-angle-right"
+                                                                            <i class="fa-light fa-angle-right"
                                                                                 style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                             <div style="clear:both;"></div>
                                                                             <div *ngIf="supervisorMenuHash[dr3].userTrainingStatus"
@@ -2911,7 +2911,7 @@
                                                                             <i class="fa-solid fa-fw fa-briefcase"
                                                                                 style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                                             <span style="float:left;">Job Title</span>
-                                                                            <i class="fal fa-angle-right"
+                                                                            <i class="fa-light fa-angle-right"
                                                                                 style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                             <div style="clear:both;"></div>
                                                                             <div *ngIf="supervisorMenuHash[dr3].jobTitle"
@@ -2937,7 +2937,7 @@
                                                                             <i class="fa-solid fa-fw fa-user-cowboy"
                                                                                 style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                                             <span style="float:left;">User Type</span>
-                                                                            <i class="fal fa-angle-right"
+                                                                            <i class="fa-light fa-angle-right"
                                                                                 style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                             <div style="clear:both;"></div>
                                                                             <div *ngIf="supervisorMenuHash[dr3]?.userType"
@@ -2967,7 +2967,7 @@
                                                                             <i class="fa-solid fa-fw fa-graduation-cap"
                                                                                 style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                                             <span style="float:left;">Training</span>
-                                                                            <i class="fal fa-angle-right"
+                                                                            <i class="fa-light fa-angle-right"
                                                                                 style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                             <div style="clear:both;"></div>
                                                                             <div *ngIf="supervisorMenuHash[dr3].training"
@@ -3020,7 +3020,7 @@
                                                                     <div *ngIf="dr3 === currentHoverUid"
                                                                         class="supervisor-menu-icon"
                                                                         (click)="showSupervisorMenu(dr3)">
-                                                                        <i class="far fa-fw fa-ellipsis-v"></i>
+                                                                        <i class="fa-regular fa-fw fa-ellipsis-v"></i>
                                                                     </div>
                                                                     -->
                                                                     <i [ngClass]="userTypeIconHash[myOrgUserHash[dr3]?.userType]"
@@ -3039,14 +3039,14 @@
                                                                     (click)="collapseNode(dr3, true)" nz-tooltip
                                                                     nzTooltipTitle="Collapse Suborganization"
                                                                     nzTooltipPlacement="right">
-                                                                    <i class="fal fa-minus-circle"
+                                                                    <i class="fa-light fa-minus-circle"
                                                                         style="font-size:14px;cursor:pointer;"></i>
                                                                 </div>
                                                                 <div *ngIf="collapsedNodes.includes(dr3) && myOrgUserHash[dr3]?.userType === 'supervisor'"
                                                                     (click)="collapseNode(dr3, false)"
                                                                     style="margin:0 8px;"
                                                                     [ngClass]="{'option-selected': orgChartSelectionList.includes(dr3)}">
-                                                                    <i class="far fa-plus-circle" nz-tooltip
+                                                                    <i class="fa-regular fa-plus-circle" nz-tooltip
                                                                         nzTooltipTitle="Expand Suborganization"
                                                                         nzTooltipPlacement="right"
                                                                         style="margin-top:4px;font-size:16px;color:red;cursor:pointer;"></i>
@@ -3350,7 +3350,7 @@
                                                                                 [ngStyle]="{'left': getMenuXPlacement(dr4), 'top': getMenuYPlacement(dr4)}">
                                                                                 <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                                                     (click)="hideSupervisorMenu(dr4)">
-                                                                                    <i class="fal fa-times"
+                                                                                    <i class="fa-light fa-times"
                                                                                         style="font-size:20px;color:red;"></i>
                                                                                 </div>
                                                                                 <div
@@ -3449,7 +3449,7 @@
                                                                                             style="float:left;margin-top:3px;font-size:14px;margin-right:10px;"></i>
                                                                                         <span style="float:left;">User
                                                                                             Status</span>
-                                                                                        <i class="fal fa-angle-right"
+                                                                                        <i class="fa-light fa-angle-right"
                                                                                             style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                         <div style="clear:both;"></div>
                                                                                         <div *ngIf="supervisorMenuHash[dr4].userStatus"
@@ -3481,7 +3481,7 @@
                                                                                             style="float:left;margin-top:3px;font-size:14px;margin-right:10px;"></i>
                                                                                         <span style="float:left;">User
                                                                                             Training Status</span>
-                                                                                        <i class="fal fa-angle-right"
+                                                                                        <i class="fa-light fa-angle-right"
                                                                                             style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                         <div style="clear:both;"></div>
                                                                                         <div *ngIf="supervisorMenuHash[dr4].userTrainingStatus"
@@ -3514,7 +3514,7 @@
                                                                                             style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                                                         <span style="float:left;">Job
                                                                                             Title</span>
-                                                                                        <i class="fal fa-angle-right"
+                                                                                        <i class="fa-light fa-angle-right"
                                                                                             style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                         <div style="clear:both;"></div>
                                                                                         <div *ngIf="supervisorMenuHash[dr4].jobTitle"
@@ -3543,7 +3543,7 @@
                                                                                             style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                                                         <span style="float:left;">User
                                                                                             Type</span>
-                                                                                        <i class="fal fa-angle-right"
+                                                                                        <i class="fa-light fa-angle-right"
                                                                                             style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                         <div style="clear:both;"></div>
                                                                                         <div *ngIf="supervisorMenuHash[dr4].userType"
@@ -3576,7 +3576,7 @@
                                                                                             style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                                                         <span
                                                                                             style="float:left;">Training</span>
-                                                                                        <i class="fal fa-angle-right"
+                                                                                        <i class="fa-light fa-angle-right"
                                                                                             style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                         <div style="clear:both;"></div>
                                                                                         <div *ngIf="supervisorMenuHash[dr4].training"
@@ -3631,7 +3631,7 @@
                                                                                     class="supervisor-menu-icon"
                                                                                     (click)="showSupervisorMenu(dr4)">
                                                                                     <i
-                                                                                        class="far fa-fw fa-ellipsis-v"></i>
+                                                                                        class="fa-regular fa-fw fa-ellipsis-v"></i>
                                                                                 </div>
                                                                                 -->
                                                                                 <i [ngClass]="userTypeIconHash[myOrgUserHash[dr4]?.userType]"
@@ -3651,13 +3651,13 @@
                                                                                 nz-tooltip
                                                                                 nzTooltipTitle="Collapse Suborganization"
                                                                                 nzTooltipPlacement="right">
-                                                                                <i class="fal fa-minus-circle"
+                                                                                <i class="fa-light fa-minus-circle"
                                                                                     style="font-size:14px;cursor:pointer;"></i>
                                                                             </div>
                                                                             <div *ngIf="collapsedNodes.includes(dr4) && myOrgUserHash[dr4]?.userType === 'supervisor'"
                                                                                 (click)="collapseNode(dr4, false)"
                                                                                 style="margin:0 8px;">
-                                                                                <i class="far fa-plus-circle" nz-tooltip
+                                                                                <i class="fa-regular fa-plus-circle" nz-tooltip
                                                                                     nzTooltipTitle="Expand Suborganization"
                                                                                     nzTooltipPlacement="right"
                                                                                     style="margin-top:4px;font-size:16px;color:red;cursor:pointer;"></i>
@@ -3982,7 +3982,7 @@
                                                                                             [ngStyle]="{'left': getMenuXPlacement(dr5), 'top': getMenuYPlacement(dr5)}">
                                                                                             <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                                                                 (click)="hideSupervisorMenu(dr5)">
-                                                                                                <i class="fal fa-times"
+                                                                                                <i class="fa-light fa-times"
                                                                                                     style="font-size:20px;color:red;"></i>
                                                                                             </div>
                                                                                             <div
@@ -4089,7 +4089,7 @@
                                                                                                     <span
                                                                                                         style="float:left;">User
                                                                                                         Status</span>
-                                                                                                    <i class="fal fa-angle-right"
+                                                                                                    <i class="fa-light fa-angle-right"
                                                                                                         style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                     <div
                                                                                                         style="clear:both;">
@@ -4125,7 +4125,7 @@
                                                                                                         style="float:left;">User
                                                                                                         Training
                                                                                                         Status</span>
-                                                                                                    <i class="fal fa-angle-right"
+                                                                                                    <i class="fa-light fa-angle-right"
                                                                                                         style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                     <div
                                                                                                         style="clear:both;">
@@ -4161,7 +4161,7 @@
                                                                                                     <span
                                                                                                         style="float:left;">Job
                                                                                                         Title</span>
-                                                                                                    <i class="fal fa-angle-right"
+                                                                                                    <i class="fa-light fa-angle-right"
                                                                                                         style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                     <div
                                                                                                         style="clear:both;">
@@ -4193,7 +4193,7 @@
                                                                                                     <span
                                                                                                         style="float:left;">User
                                                                                                         Type</span>
-                                                                                                    <i class="fal fa-angle-right"
+                                                                                                    <i class="fa-light fa-angle-right"
                                                                                                         style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                     <div
                                                                                                         style="clear:both;">
@@ -4228,7 +4228,7 @@
                                                                                                         style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                                                                     <span
                                                                                                         style="float:left;">Training</span>
-                                                                                                    <i class="fal fa-angle-right"
+                                                                                                    <i class="fa-light fa-angle-right"
                                                                                                         style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                     <div
                                                                                                         style="clear:both;">
@@ -4287,7 +4287,7 @@
                                                                                                 class="supervisor-menu-icon"
                                                                                                 (click)="showSupervisorMenu(dr5)">
                                                                                                 <i
-                                                                                                    class="far fa-fw fa-ellipsis-v"></i>
+                                                                                                    class="fa-regular fa-fw fa-ellipsis-v"></i>
                                                                                             </div>
                                                                                             -->
                                                                                             <i [ngClass]="userTypeIconHash[myOrgUserHash[dr5].userType]"
@@ -4304,13 +4304,13 @@
                                                                                         </div>
                                                                                         <div *ngIf="!collapsedNodes.includes(dr5) && myOrgUserHash[dr5]?.userType === 'supervisor'"
                                                                                             (click)="collapseNode(dr5, true)">
-                                                                                            <i class="fal fa-minus-circle"
+                                                                                            <i class="fa-light fa-minus-circle"
                                                                                                 style="font-size:14px;cursor:pointer;"></i>
                                                                                         </div>
                                                                                         <div *ngIf="collapsedNodes.includes(dr5) && myOrgUserHash[dr5]?.userType === 'supervisor'"
                                                                                             (click)="collapseNode(dr5, false)"
                                                                                             style="margin:0 8px;">
-                                                                                            <i class="far fa-plus-circle"
+                                                                                            <i class="fa-regular fa-plus-circle"
                                                                                                 nz-tooltip
                                                                                                 nzTooltipTitle="Expand Suborganization"
                                                                                                 nzTooltipPlacement="right"
@@ -4629,7 +4629,7 @@
                                                                                                         [ngStyle]="{'left': getMenuXPlacement(dr6), 'top': getMenuYPlacement(dr6)}">
                                                                                                         <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                                                                             (click)="hideSupervisorMenu(dr6)">
-                                                                                                            <i class="fal fa-times"
+                                                                                                            <i class="fa-light fa-times"
                                                                                                                 style="font-size:20px;color:red;"></i>
                                                                                                         </div>
                                                                                                         <div
@@ -4751,7 +4751,7 @@
                                                                                                                 <span
                                                                                                                     style="float:left;">User
                                                                                                                     Status</span>
-                                                                                                                <i class="fal fa-angle-right"
+                                                                                                                <i class="fa-light fa-angle-right"
                                                                                                                     style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                                 <div
                                                                                                                     style="clear:both;">
@@ -4787,7 +4787,7 @@
                                                                                                                     style="float:left;">User
                                                                                                                     Training
                                                                                                                     Status</span>
-                                                                                                                <i class="fal fa-angle-right"
+                                                                                                                <i class="fa-light fa-angle-right"
                                                                                                                     style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                                 <div
                                                                                                                     style="clear:both;">
@@ -4823,7 +4823,7 @@
                                                                                                                 <span
                                                                                                                     style="float:left;">Job
                                                                                                                     Title</span>
-                                                                                                                <i class="fal fa-angle-right"
+                                                                                                                <i class="fa-light fa-angle-right"
                                                                                                                     style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                                 <div
                                                                                                                     style="clear:both;">
@@ -4855,7 +4855,7 @@
                                                                                                                 <span
                                                                                                                     style="float:left;">User
                                                                                                                     Type</span>
-                                                                                                                <i class="fal fa-angle-right"
+                                                                                                                <i class="fa-light fa-angle-right"
                                                                                                                     style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                                 <div
                                                                                                                     style="clear:both;">
@@ -4890,7 +4890,7 @@
                                                                                                                     style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                                                                                 <span
                                                                                                                     style="float:left;">Training</span>
-                                                                                                                <i class="fal fa-angle-right"
+                                                                                                                <i class="fa-light fa-angle-right"
                                                                                                                     style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                                 <div
                                                                                                                     style="clear:both;">
@@ -4951,7 +4951,7 @@
                                                                                                             class="supervisor-menu-icon"
                                                                                                             (click)="showSupervisorMenu(dr6)">
                                                                                                             <i
-                                                                                                                class="far fa-fw fa-ellipsis-v"></i>
+                                                                                                                class="fa-regular fa-fw fa-ellipsis-v"></i>
                                                                                                         </div>
                                                                                                         -->
                                                                                                         <i [ngClass]="userTypeIconHash[myOrgUserHash[dr6]?.userType]"
@@ -4972,14 +4972,14 @@
                                                                                                         nz-tooltip
                                                                                                         nzTooltipTitle="Collapse Suborganization"
                                                                                                         nzTooltipPlacement="right">
-                                                                                                        <i class="fal fa-minus-circle"
+                                                                                                        <i class="fa-light fa-minus-circle"
                                                                                                             style="font-size:14px;cursor:pointer;"></i>
                                                                                                     </div>
                                                                                                     <div *ngIf="collapsedNodes.includes(dr6) && myOrgUserHash[dr6]?.userType === 'supervisor'"
                                                                                                         (click)="collapseNode(dr6, false)"
                                                                                                         style="margin:0 8px;"
                                                                                                         [id]="dr6">
-                                                                                                        <i class="far fa-plus-circle"
+                                                                                                        <i class="fa-regular fa-plus-circle"
                                                                                                             nz-tooltip
                                                                                                             nzTooltipTitle="Expand Suborganization"
                                                                                                             nzTooltipPlacement="right"
@@ -5301,7 +5301,7 @@
                                                                                                                     [ngStyle]="{'left': getMenuXPlacement(dr7), 'top': getMenuYPlacement(dr7)}">
                                                                                                                     <div style="position:absolute;top:10px;right:10px;cursor:pointer;"
                                                                                                                         (click)="hideSupervisorMenu(dr7)">
-                                                                                                                        <i class="fal fa-times"
+                                                                                                                        <i class="fa-light fa-times"
                                                                                                                             style="font-size:20px;color:red;"></i>
                                                                                                                     </div>
                                                                                                                     <div
@@ -5424,7 +5424,7 @@
                                                                                                                             <span
                                                                                                                                 style="float:left;">User
                                                                                                                                 Status</span>
-                                                                                                                            <i class="fal fa-angle-right"
+                                                                                                                            <i class="fa-light fa-angle-right"
                                                                                                                                 style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                                             <div
                                                                                                                                 style="clear:both;">
@@ -5460,7 +5460,7 @@
                                                                                                                                 style="float:left;">User
                                                                                                                                 Training
                                                                                                                                 Status</span>
-                                                                                                                            <i class="fal fa-angle-right"
+                                                                                                                            <i class="fa-light fa-angle-right"
                                                                                                                                 style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                                             <div
                                                                                                                                 style="clear:both;">
@@ -5496,7 +5496,7 @@
                                                                                                                             <span
                                                                                                                                 style="float:left;">Job
                                                                                                                                 Title</span>
-                                                                                                                            <i class="fal fa-angle-right"
+                                                                                                                            <i class="fa-light fa-angle-right"
                                                                                                                                 style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                                             <div
                                                                                                                                 style="clear:both;">
@@ -5528,7 +5528,7 @@
                                                                                                                             <span
                                                                                                                                 style="float:left;">User
                                                                                                                                 Type</span>
-                                                                                                                            <i class="fal fa-angle-right"
+                                                                                                                            <i class="fa-light fa-angle-right"
                                                                                                                                 style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                                             <div
                                                                                                                                 style="clear:both;">
@@ -5563,7 +5563,7 @@
                                                                                                                                 style="float:left;font-size:14px;margin-top:3px;margin-right:10px;"></i>
                                                                                                                             <span
                                                                                                                                 style="float:left;">Training</span>
-                                                                                                                            <i class="fal fa-angle-right"
+                                                                                                                            <i class="fa-light fa-angle-right"
                                                                                                                                 style="float:right;font-size:18px;margin-right:5px;"></i>
                                                                                                                             <div
                                                                                                                                 style="clear:both;">
@@ -5624,7 +5624,7 @@
                                                                                                                         class="supervisor-menu-icon"
                                                                                                                         (click)="showSupervisorMenu(dr7)">
                                                                                                                         <i
-                                                                                                                            class="far fa-fw fa-ellipsis-v"></i>
+                                                                                                                            class="fa-regular fa-fw fa-ellipsis-v"></i>
                                                                                                                     </div>
                                                                                                                 -->
                                                                                                                     <i [ngClass]="userTypeIconHash[myOrgUserHash[dr7]?.userType]"
@@ -5644,13 +5644,13 @@
                                                                                                                     nz-tooltip
                                                                                                                     nzTooltipTitle="Collapse Suborganization"
                                                                                                                     nzTooltipPlacement="right">
-                                                                                                                    <i class="fal fa-minus-circle"
+                                                                                                                    <i class="fa-light fa-minus-circle"
                                                                                                                         style="font-size:14px;cursor:pointer;"></i>
                                                                                                                 </div>
                                                                                                                 <div *ngIf="collapsedNodes.includes(dr7)"
                                                                                                                     (click)="collapseNode(dr7, false)"
                                                                                                                     style="margin:0 8px;">
-                                                                                                                    <i class="far fa-plus-circle"
+                                                                                                                    <i class="fa-regular fa-plus-circle"
                                                                                                                         nz-tooltip
                                                                                                                         nzTooltipTitle="Expand Suborganization"
                                                                                                                         nzTooltipPlacement="right"
@@ -5975,7 +5975,7 @@
                                                                                                                                     class="supervisor-menu-icon"
                                                                                                                                     (click)="showSupervisorMenu(dr8)">
                                                                                                                                     <i
-                                                                                                                                        class="far fa-fw fa-ellipsis-v"></i>
+                                                                                                                                        class="fa-regular fa-fw fa-ellipsis-v"></i>
                                                                                                                                 </div>
                                                                                                                                 <i [ngClass]="userTypeIconHash[myOrgUserHash[dr8]?.userType]"
                                                                                                                                     [ngStyle]="{'color': getStatusColor(dr8)}"></i>

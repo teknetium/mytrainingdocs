@@ -114,7 +114,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'One Click Deploy',
-      class: ['fal fa-rocket-launch red medium super'],
+      class: ['fa-light fa-rocket-launch red medium super'],
       blurb: 'Deploy to your entire organization in a matter of minutes, not weeks!',
       learnMore: '',
 //      videoLink: 'onboarding'
@@ -123,14 +123,14 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Use Existing Content',
-      class: ['fal fa-file-word dodgerblue small super small-gap-right',
-        'fal fa-file-powerpoint firebrick small super small-gap-right',
-        'fal fa-file-excel green small super small-gap-right',
-        'fal fa-file-pdf red small super small-gap-right',
-        'fal fa-file-video blueviolet small super small-gap-right',
-        'fal fa-file-image orange small super small-gap-right',
-        'fal fa-file-code black small super small-gap-right',
-        'far fa-ellipsis-h black small sub'],
+      class: ['fa-light fa-file-word dodgerblue small super small-gap-right',
+        'fa-light fa-file-powerpoint firebrick small super small-gap-right',
+        'fa-light fa-file-excel green small super small-gap-right',
+        'fa-light fa-file-pdf red small super small-gap-right',
+        'fa-light fa-file-video blueviolet small super small-gap-right',
+        'fa-light fa-file-image orange small super small-gap-right',
+        'fa-light fa-file-code black small super small-gap-right',
+        'fa-regular fa-ellipsis-h black small sub'],
       blurb: 'Our training template supports the viewing of all common document formats (17 in all) without the application that created them.',
       learnMore: '',
 //      videoLink: 'leverageExistingContent'
@@ -139,7 +139,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Dynamic Interactive Org Chart',
-      class: ['fal fa-sitemap orange medium super'],
+      class: ['fa-light fa-sitemap orange medium super'],
       blurb: 'Manage users, assign trainings, monitor status, and send messages all from within our unique org chart.',
       learnMore: '',
 //      videoLink: 'orgChart'
@@ -148,7 +148,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Assessments Made Easy',
-      class: ['fal fa-ballot-check fuchsia medium super'],
+      class: ['fa-light fa-ballot-check fuchsia medium super'],
       blurb: 'Quickly and easily add assessments to your trainings.  ',
       learnMore: '',
 //      videoLink: 'assessment'
@@ -157,7 +157,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     { 
       focus: false,
       title: 'Cloud Based',
-      class: ['fal fa-cloud skyblue medium'],
+      class: ['fa-light fa-cloud skyblue medium'],
       blurb: 'No software to install locally.  Your employees, volunteers, and customers can access their training from anywhere at any time.',
       learnMore: '',
       videoLink: null
@@ -165,7 +165,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Custom Notifications',
-      class: ['fal fa-bell-on green medium'],
+      class: ['fa-light fa-bell-on green medium'],
       blurb: 'You control who receives notifications and when they receive them.',
       learnMore: '',
       videoLink: null
@@ -173,7 +173,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Manage Training Versions',
-      class: ['fal fa-code-branch blueviolet medium'],
+      class: ['fa-light fa-code-branch blueviolet medium'],
       blurb: 'Browse training update history.  Multiple types of training updates: major (reset status), minor (notify only) and bug fix (silent)',
       learnMore: '',
       videoLink: null
@@ -181,7 +181,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     {
       focus: false,
       title: 'Reduced Legal Liability',
-      class: ['fal fa-balance-scale-right redorange medium'],
+      class: ['fa-light fa-balance-scale-right redorange medium'],
       blurb: 'Reduced legal exposure when all employees and volunteers are appropriately trained/certified.',
       learnMore: '',
       videoLink: null

@@ -49,34 +49,34 @@
                 [ngClass]="{'current-nav': currentPage === 'home'}" nz-tooltip nzTooltipTitle="Home"
                 nzTooltipPlacement="bottom">
                 <a routerLink="/home" routerLinkActive="active-link">
-                    <i class="far fa-fw fa-home-lg" style="font-size:24px;vertical-align: middle;"></i>
+                    <i class="fa-regular fa-fw fa-home-lg" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
                 class="nav-badge" [ngClass]="{'current-nav': currentPage === 'myteam'}" nz-tooltip
                 nzTooltipTitle="My Organization" nzTooltipPlacement="bottom">
                 <a routerLink="/myteam" routerLinkActive="active-link">
-                    <i class="far fa-fw fa-sitemap" style="font-size:24px;vertical-align: middle;"></i>
+                    <i class="fa-regular fa-fw fa-sitemap" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor'" nz-menu-item nzMatchRouter
                 class="nav-badge" [ngClass]="{'current-nav': currentPage === 'mytrainings'}" nz-tooltip
                 nzTooltipTitle="My Trainings" nzTooltipPlacement="bottom">
                 <a routerLink="/mytrainings" routerLinkActive="active-link">
-                    <i class="far fa-fw fa-file-certificate" style="font-size:24px;vertical-align: middle;"></i>
+                    <i class="fa-regular fa-fw fa-file-certificate" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
             <li *ngIf="(authenticatedUser$ | async)?.userType === 'supervisor' || (authenticatedUser$ | async)?.teamAdmin"
                 nz-menu-item nzMatchRouter class="nav-badge" [ngClass]="{'current-nav': currentPage === 'trainings'}"
                 nz-tooltip nzTooltipTitle="All Trainings" nzTooltipPlacement="bottom">
                 <a routerLink="/trainings" routerLinkActive="active-link">
-                    <i class="far fa-fw fa-graduation-cap" style="font-size:24px;vertical-align: middle;"></i>
+                    <i class="fa-regular fa-fw fa-graduation-cap" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
             <li nz-menu-item nz-tooltip nzTooltipTitle="Contact Us" nzTooltipPlacement="bottom" class="nav-badge"
                 [ngClass]="{'current-nav': currentPage === 'contactus'}">
                 <a routerLink="/contactus" routerLinkActive="active-link">
-                    <i class="far fa-fw fa-user-headset" style="font-size:24px;vertical-align: middle;"></i>
+                    <i class="fa-regular fa-fw fa-user-headset" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
             <li nz-menu-item class="navbar-rhs" nz-dropdown [nzDropdownMenu]="profile" [nzTrigger]="'hover'"
@@ -141,10 +141,10 @@
                 nzPlacement="bottomRight">
                 <span class="pointer">
                     <a>
-                        <i *ngIf="dropDownAlerts.length === 0" class="far fa-fw fa-bell"
+                        <i *ngIf="dropDownAlerts.length === 0" class="fa-regular fa-fw fa-bell"
                             style="font-size:20px;color:#000000;vertical-align: middle;"></i>
                         <nz-badge *ngIf="dropDownAlerts.length > 0" [nzCount]="dropDownAlerts.length">
-                            <i *ngIf="dropDownAlerts.length > 0" class="far fa-fw fa-bell-on"
+                            <i *ngIf="dropDownAlerts.length > 0" class="fa-regular fa-fw fa-bell-on"
                                 style="font-size:30px;color:blue;vertical-align: middle;"></i>
                         </nz-badge>
                     </a>
