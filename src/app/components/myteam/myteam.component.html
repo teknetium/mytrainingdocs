@@ -837,7 +837,7 @@
                     <div style="display:block;padding:4px 20px 0 10px;" *ngFor="let uid of recipientUidList; index as i"
                         (mouseenter)="currentRecipient(uid)"
                         [ngClass]="{'current-recipient': currentRecipientUid === uid}">
-                        {{ myOrgUserHash[uid].firstName }} {{ myOrgUserHash[uid].lastName }}
+                        {{ myOrgUserHash[uid]?.firstName }} {{ myOrgUserHash[uid]?.lastName }}
 
                         <i *ngIf="currentRecipientUid === uid" nz-icon nzType="close-circle" [nzTheme]="'twotone'"
                             [nzTwotoneColor]="'red'" nz-popconfirm nzPopconfirmTitle="Remove this recipient?"

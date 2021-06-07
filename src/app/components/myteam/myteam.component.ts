@@ -2139,6 +2139,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   handleSendMessageCancel() {
+    console.log('send message cancelled');
     this.showMessageModal = false;
   }
 
@@ -2212,7 +2213,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       this.recipientUidList = cloneDeep(this.userIdsSelected);
     }
     this.hideSupervisorMenu(uid);
-    this.userIdsSelected = [];
   }
 
   getSelectedTrainingIconClass(tid: string): string {
