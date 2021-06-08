@@ -16,6 +16,7 @@ export interface UserModel {
   userStatus: 'notInvited' | 'pending' | 'active' | 'inactive' | 'error' | 'none'
   trainingStatus: 'upToDate' | 'pastDue' | 'none',
   jobTitle: string,
+  tags: string,
   profilePicUrl: string,
   supervisorId: string,
   directReports: string[],

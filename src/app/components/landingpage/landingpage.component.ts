@@ -44,6 +44,21 @@ interface timeComponents {
         animate('300ms')
       ]),
     ]),
+    trigger('textFade', [
+      // ...
+      state('invisible', style({
+        'opacity': '0'
+      })),
+      state('visible', style({
+        'opacity': '1.0',
+      })),
+      transition('visible => invisible', [
+        animate('800ms')
+      ]),
+      transition('invisible => visible', [
+        animate('800ms')
+      ]),
+    ]),
     trigger('featureSlide', [
       // ...
       state('closed', style({
@@ -69,6 +84,8 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   vgApi: VgAPI;
   taskVideo$: Observable<SafeResourceUrl>;
   showTaskVideoModal = false;
+
+  costArray = ['Employee Churn', 'Non Compliance', 'Sexual Harrassment'];
 
   features = [
     {
@@ -363,6 +380,11 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     }
   ]
 
+  endInterval = true;
+  costIndex = 0;
+  costCount = 0;
+  currentCostItem = this.costArray[this.costIndex];
+
   @ViewChild(NzCarouselComponent, { static: false }) myCarousel: NzCarouselComponent;
 
   carouselState: string = 'active';
@@ -377,6 +399,23 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     this.ngxScrollToDuration = 2000;
     this.ngxScrollToEasing = 'easeOutCubic';
     this.ngxScrollToOffset = 0;
+  }
+
+  fadeIn() {
+    this.currentCostItem = this.costArray[this.costCount++ % this.costArray.length];
+    this.endInterval = false;
+    setTimeout(() => {
+      this.fadeOut();
+    }, 4500);
+
+  }
+
+  fadeOut() {
+    this.endInterval = true;
+    setTimeout(() => {
+      this.fadeIn();
+    }, 800);
+
   }
 
   ngOnInit() {
@@ -404,6 +443,8 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
         this.naydo = true;
       }
     });
+
+    this.fadeIn();
 
 
     this.timeLeft$ = interval(1000).pipe(

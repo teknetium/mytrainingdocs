@@ -23,6 +23,7 @@ const userSchema = new Schema({
   orgAdmin: { type: Boolean, required: false },
   appAdmin: { type: Boolean, required: false },
   jobTitle: { type: String, required: false },
+  tags: { type: String, required: false },
   userStatus: { type: String, required: false },
   trainingStatus: { type: String, required: false },
   profilePicUrl: { type: String, required: false },

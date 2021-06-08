@@ -240,7 +240,8 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       showAlerts: true,
       showTasks: true
     },
-    jobTitle: ''
+    jobTitle: '',
+    tags: ''
   }
   message: TemplateMessageModel;
   //  userIdSelected = '';

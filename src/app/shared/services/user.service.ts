@@ -220,6 +220,7 @@ export class UserService {
                         userStatus: 'active',
                         trainingStatus: 'none',
                         jobTitle: '',
+                        tags: '',
                         profilePicUrl: '',
                         supervisorId: null,
                         directReports: [],
