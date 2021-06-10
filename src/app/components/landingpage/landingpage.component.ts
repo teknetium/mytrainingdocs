@@ -14,6 +14,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
 import { map, shareReplay } from "rxjs/operators";
 import { NzCarouselComponent } from 'ng-zorro-antd/carousel';
+import { timeStamp } from 'console';
 
 
 interface timeComponents {
@@ -384,6 +385,10 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   costIndex = 0;
   costCount = 0;
   currentCostItem = this.costArray[this.costIndex];
+  percentTime = 0;
+  limitTime = 3500;
+  totalTime = 0;
+  intervalTime = 20;
 
   @ViewChild(NzCarouselComponent, { static: false }) myCarousel: NzCarouselComponent;
 
@@ -404,9 +409,17 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   fadeIn() {
     this.currentCostItem = this.costArray[this.costCount++ % this.costArray.length];
     this.endInterval = false;
-    setTimeout(() => {
-      this.fadeOut();
-    }, 4500);
+    let intervalId = setInterval(() => {
+      if (this.percentTime === 100) {
+        clearInterval(intervalId);
+        this.percentTime = 0;
+        this.totalTime = 0
+        this.fadeOut();
+      } else {
+        this.totalTime += this.intervalTime;
+        this.percentTime = (this.totalTime / this.limitTime) * 100;
+      }
+    }, this.intervalTime);
 
   }
 
