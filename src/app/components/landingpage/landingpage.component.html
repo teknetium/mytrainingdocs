@@ -250,32 +250,6 @@
       </div>
     </div>
 
-    <div style="text-align:center;padding-top:6vw;width:100%;font-size:2.5vw;color:black;font-weight:200;">
-      <div style="display:inline-block;">
-        How Much Does
-      </div>
-      <div [@textFade]="endInterval ? 'invisible' : 'visible'" style="font-weight:600;display:inline-block;">
-        &nbsp;&nbsp; {{currentCostItem}}&nbsp;&nbsp;
-      </div>
-      <div style="display:inline-block;">
-        Cost Your Business?
-      </div>
-      <!--
-      <i class="fa-solid fa-play-circle opaque" style="cursor:pointer;text-align:center;font-size:3vw;color:black;"
-        (click)="loadVideo('explainer')"></i>
-        -->
-    </div>
-    <div style="font-size:2.5vw;color:black;margin-top: 3vw;margin-bottom: 3vw;font-weight:200;">
-      Well trained employees all but eliminate these costs!
-    </div>
-    <div style="font-size:2vw;color:black;margin-top: 3vw;margin-bottom: 3vw;font-weight:200;">
-      <span style="color:red;font-size:2vw;">my</span>
-      <span style="color:black;font-size:2vw;">Training</span>
-      <span style="color:red;font-size:2vw;">docs</span>
-      is a pragmatic solution to training your employees.
-      <br>
-      Powerful. Simple. Easy to use.
-    </div>
     <!--
     <div style="font-size:1.5vw;color:black;margin-top: 3vw;">
       At less than $5 per user per month for our full feature plan, can you afford to not join?
@@ -362,9 +336,36 @@
         Log In
       </div>
     </div>
-    <!--
     <section class="section bg-light">
-      <div class="row">
+      <div>
+        <div class="col-lg-12"
+          style="text-align:center;padding-top:6vw;width:100%;font-size:2.5vw;color:black;font-weight:200;">
+          <div style="display:inline-block;">
+            How Much Does
+          </div>
+          <div [@textFade]="endInterval ? 'invisible' : 'visible'" style="font-weight:600;display:inline-block;">
+            &nbsp;&nbsp; {{currentCostItem}}&nbsp;&nbsp;
+          </div>
+          <div style="display:inline-block;">
+            Cost Your Business?
+          </div>
+          <!--
+          <i class="fa-solid fa-play-circle opaque" style="cursor:pointer;text-align:center;font-size:3vw;color:black;"
+            (click)="loadVideo('explainer')"></i>
+            -->
+        </div>
+        <div style="font-size:2.5vw;color:black;margin-top: 3vw;margin-bottom: 3vw;font-weight:200;text-align: center;">
+          Well trained employees all but eliminate these costs!
+        </div>
+        <div style="font-size:2vw;color:black;margin-top: 3vw;margin-bottom: 3vw;font-weight:200;text-align: center;">
+          <span style="color:red;font-size:2vw;">my</span>
+          <span style="color:black;font-size:2vw;">Training</span>
+          <span style="color:red;font-size:2vw;">docs</span>
+          is a pragmatic solution to training your employees.
+          <br>
+          Powerful. Simple. Easy to use.
+        </div>
+        <!--
         <div class="col-lg-12">
           <div class="text-center" style="font-size:1.5vw;padding:0 5% 2% 5%;">
             < !--
@@ -387,9 +388,9 @@
             -- >
           </div>
         </div>
+        -->
       </div>
     </section>
-    -->
     <section class="section">
       <div class="row">
         <nz-carousel [nzEffect]="'scrollx'" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" style="height:35vw;"
