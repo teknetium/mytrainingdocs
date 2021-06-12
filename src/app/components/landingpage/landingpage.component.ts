@@ -353,7 +353,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   featureSlides = [
     {
       image: "assets/images/teamworkX.jpeg",
-      text: "Empower your teams to easily and quickly create thier own trainings."
+      text: "Empower your teams to easily and quickly create their own trainings."
     },
     {
       image: "assets/images/docsToTraining.jpeg",
@@ -369,7 +369,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     },
     {
       image: "assets/images/work-from-home3.jpeg",
-      text: "Access your training from anywhere at anytime."
+      text: "Access your trainings from anywhere at anytime."
     },
     {
       image: "assets/images/myOrgChart.jpeg",
