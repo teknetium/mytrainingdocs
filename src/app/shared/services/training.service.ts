@@ -366,6 +366,8 @@ export class TrainingService {
       iconClass: 'fad fa-graduation-cap',
       iconColor: '#ff0000',
       iconSource: 'fontawesome',
+      bgColor: '',
+      bgImage: '',
       pages: [page],
       interestList: [this.authenticatedUser.email],
       shared: false,

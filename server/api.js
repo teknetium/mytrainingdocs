@@ -107,8 +107,8 @@ module.exports = function(app, config) {
   }
 
 
-  const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId org iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
-  const trainingListProjection = "_id title versions type category subcategory owner description teamId org iconType iconClass iconColor iconSource dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
+  const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId org iconType iconClass iconColor iconSource bgColor bgImage dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
+  const trainingListProjection = "_id title versions type category subcategory owner description teamId org iconType iconClass iconColor iconSource bgColor bgImage dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const userTrainingListProjection = "_id tid uid teamId orgId status notifySchedule dueDate timeToDate dateCompleted assessmentResponses trainingVersion certImage";
   const userListProjection = "_id uid empId userType userStatus jobTitle trainingStatus firstName lastName email emailVerified teamAdmin orgAdmin appAdmin teamId org supervisorId directReports profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
@@ -507,6 +507,8 @@ module.exports = function(app, config) {
       iconClass: req.body.iconClass,
       iconColor: req.body.iconColor,
       iconSource: req.body.iconSource,
+      bgColor: req.body.bgColor,
+      bgImage: req.body.bgImage,
       pages: req.body.pages,
       status: req.body.status,
       interestList: req.body.interestList,
@@ -549,6 +551,8 @@ module.exports = function(app, config) {
       training.iconClass = req.body.iconClass;
       training.iconColor = req.body.iconColor;
       training.iconSource = req.body.iconSource;
+      training.bgColor = req.body.bgColor;
+      training.bgImage = req.body.bgImage;
       training.files = req.body.files;
       training.pages = req.body.pages;
       training.status = req.body.status;
@@ -622,6 +626,8 @@ module.exports = function(app, config) {
         iconClass: req.body.iconClass,
         iconColor: req.body.iconColor,
         iconSource: req.body.iconSource,
+        bgColor: req.body.bgColor,
+        bgImage: req.body.bgImage,
         pages: req.body.pages,
         status: req.body.status,
         interestList: req.body.interestList,

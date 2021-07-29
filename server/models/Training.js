@@ -78,6 +78,8 @@ const trainingSchema = new Schema({
   iconClass: { type: String, required: true },
   iconColor: { type: String, required: true },
   iconSource: { type: String, required: true },
+  bgColor: { type: String, required: false },
+  bgImage: { type: String, required: false },
   pages: [pageSchema],
   interestList: [String],
   shared: { type: Boolean },

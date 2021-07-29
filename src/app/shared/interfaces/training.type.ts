@@ -21,6 +21,8 @@ export interface TrainingModel {
   iconClass: string;
   iconColor: string;
   iconSource: string;
+  bgColor: string;
+  bgImage: string;
   pages: Page[];
   interestList: string[];
   shared: boolean;

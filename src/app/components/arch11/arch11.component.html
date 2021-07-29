@@ -1,0 +1,69 @@
+<div class="page">
+  <div class="navbar">
+    <div class="hamburger">
+      <i class="fa-solid fa-bars"></i>
+    </div>
+    <div class="logo">
+      <span style="">
+      Arch 11
+      </span>
+    </div>
+  </div>
+  <div class="carousel">
+    <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" style="height:50vw;">
+      <div nz-carousel-content *ngFor="let item of images" style="text-align: center;height:50vw;">
+            <img style="text-align: center;display:inline-block;" [src]="item.image" height="100%">
+      </div>
+    </nz-carousel>
+  </div>
+  <div class="project-bar">
+    <div class="filter-bar">
+      <nz-select [(ngModel)]="selectedType" nzAllowClear nzPlaceHolder="Type"  nzSize="small" style="width:160px;margin-right:10px;">
+        <nz-option nzValue="residential" nzLabel="Residential"></nz-option>
+        <nz-option nzValue="commercial" nzLabel="Commercial"></nz-option>
+      </nz-select>
+      <nz-select [(ngModel)]="selectedMateria" nzAllowClear nzPlaceHolder="Material" nzSize="small" style="width:160px;margin-right:10px;">
+        <nz-option nzValue="bamboo" nzLabel="Bamboo"></nz-option>
+        <nz-option nzValue="concrete" nzLabel="Concrete"></nz-option>
+      </nz-select>
+      <nz-select [(ngModel)]="selectedLocation" nzAllowClear nzPlaceHolder="Location" nzSize="small" style="width:160px;margin-right:10px;">
+        <nz-option nzValue="boulder" nzLabel="Boulder"></nz-option>
+        <nz-option nzValue="denver" nzLabel="Denver"></nz-option>
+        <nz-option nzValue="switzerland" nzLabel="Switzerland"></nz-option>
+      </nz-select>
+      <nz-select [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Architectural Elements" nzSize="small" style="width: 250px;margin-right:10px;">
+        <nz-option nzValue="glass" nzLabel="Glass"></nz-option>
+        <nz-option nzValue="cantilever" nzLabel="Cantilever"></nz-option>
+      </nz-select>
+    </div>
+    <div *ngFor="let project of projects" class="project" style="display:inline-block;margin-right:.4vw">
+        <img style="background-color: white;text-align: center;" [src]="project.thumbnail" height="80">
+
+    </div>
+  </div>
+  <div class="project-details">
+
+  </div>
+  <!--
+        <nz-carousel [nzEffect]="'scrollx'" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" style="width:100%;height:60vw;"
+          (nzBeforeChange)="beforeUpdateDot($event)" [nzDotRender]="dotTemplate" nzDotPosition="bottom">
+          <div nz-carousel-content *ngFor="let item of images; index as imageIndex" style="width:100%;height:60vw;text-align: center;">
+            <img style="background-color: white;text-align: center;" [src]="item.image"
+              height="40%">
+              < !--
+            <p style="float:right;width:50%;height:20vw;font-size:2vw;color:black;padding:15% 5%; margin-right:3vw;">
+              {{item.text}}
+            </p>
+            -- >
+          </div>
+        </nz-carousel>
+        <ng-template #dotTemplate let-index>
+          <div style="text-align: center;width:100%;background-color: white;">
+            <i class="fa-circle"
+              style="display:inline-block;font-size:14px;cursor:pointer;margin-right:5px;color:blueviolet;margin-bottom:20px;"
+              [ngClass]="{'current-slide': currentSlide === index, 'fa-solid': currentSlide === index, 'far': currentSlide !== index }"
+              (click)="goTo(index)"></i>
+          </div>
+        </ng-template>
+        -->
+</div>

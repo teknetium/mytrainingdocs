@@ -1,0 +1,64 @@
+.page {
+  background-color: white;
+}
+
+[nz-carousel-content] {
+        text-align: center;
+        height: 600px;
+        line-height: 160px;
+        background: white;
+        color: #fff;
+        overflow: hidden;
+}
+
+.carousel {
+
+}
+
+.navbar {
+  z-index: 10;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  background: rgb(0,0,0,.6);
+  width:100%;
+  height: 3vw;
+  padding:.4vw;
+  color:white;
+}
+
+.hamburger {
+  position:fixed;
+  left: 1vw;
+  font-size:1.5vw;
+  cursor:pointer;
+}
+
+.logo {
+  position:fixed;
+  right: 1vw;
+  font-size: 2vw;
+}
+
+.project-bar {
+  margin-top: .6vw;
+  background-color: white;
+}
+
+.project {
+  opacity: .3;
+  width:100px;
+  height:100px;
+  overflow: hidden;
+}
+
+.project:hover {
+  opacity: 1;
+}
+
+.filter-bar {
+  width: 100%;
+  background-color: #f1f1f1;
+  padding:5px;
+}

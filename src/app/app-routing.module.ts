@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes, Router, PreloadingStrategy, PreloadAllModules } from '@angular/router';
 import { NewAppComponent } from './new-app/new-app.component';
 import { LandingpageComponent } from './components/landingpage/landingpage.component';
+import { Arch11Component } from './components/arch11/arch11.component';
 import { CallbackComponent } from './components/callback/callback.component';
 import { PaymentCallbackComponent } from './components/payment-callback/payment-callback.component';
 import { SignupComponent } from './components/signup/signup.component';
@@ -62,6 +63,10 @@ const appRoutes: Routes = [
     {
         path: 'landingpage',
         component: LandingpageComponent,
+    },
+    {
+        path: 'arch11',
+        component: Arch11Component,
     },
     {
         path: 'naydo',

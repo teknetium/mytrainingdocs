@@ -77,168 +77,195 @@
         -->
     <div class="production">
         <div style="position:relative;background-color: #eeeeee;border:1px solid #dddddd;padding:10px 20px;width:100%;">
-                        <div style="float:left;width:15%;">
-                            <nz-radio-group  *ngIf="production === 'false'" [(ngModel)]="mode" 
-                                style="float:left;">
-                                <label nz-radio-button nzValue="Edit" nz-tooltip nzTooltipTitle="Edit"
-                                    nzTooltipPlacement="bottom">
-                                    <i class="fa-solid fa-pencil" style="font-size:18px;"></i></label>
-                                <label nz-radio-button nzValue="Preview" nz-tooltip nzTooltipTitle="Preview"
-                                    nzTooltipPlacement="bottom">
-                                    <i class="fa-solid fa-camera-viewfinder" style="font-size:18px;"></i></label>
-                            </nz-radio-group>
-                            <div *ngIf="production === 'true'">
-                                &nbsp;
-                            </div>
-                        </div>
-                        <div style="float:left;width:70%;text-align: center;">
-                            <div style="display:inline-block;">
-                                <i *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit'"
-                                    [ngClass]="selectedTraining?.iconClass" nz-tooltip
-                                    nzTooltipTitle="click to change icon"
-                                    style="display: inline-block;font-size:38px;cursor: pointer;vertical-align: middle;"
-                                    [ngStyle]="{'color': selectedTraining?.iconColor}" (click)="showIconSelectModal()"
-                                    joyrideStep="Step1-header" stepPosition="bottom" title="Training Icon"
-                                    text="This is how you will identify this training outside of this editor.">
-                                </i>
-                                <i *ngIf="selectedTraining?.status === 'locked' || mode === 'Preview'"
-                                    [ngClass]="selectedTraining?.iconClass"
-                                    style="display: inline-block;font-size:38px;vertical-align: middle;"
-                                    [ngStyle]="{'color': selectedTraining?.iconColor}">
-                                </i>
-                                <i *ngIf="selectedTraining?.type === 'recurring'" class="fa-regular fa-redo-alt"
-                                    style="display: inline-block;font-size:12px;vertical-align: top;">
-                                </i>
-                            </div>
-                            <div style="display: inline-block;width:fit-content;margin-left:10px;"
-                                joyrideStep="Step2-header" stepPosition="bottom" title="Training Title"
-                                text="This is the title of the Training.">
-                                <input *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit'"
-                                    style="display:inline-block;color:#000000;width:500px;font-size:18px;" nz-input
-                                    [(ngModel)]="selectedTraining.title" nzSize="default"
-                                    (keydown.enter)="saveTraining(true)" (blur)="saveTraining(true)" />
-                                <div *ngIf="selectedTraining.status === 'locked' || mode === 'Preview'"
-                                    style="display:inline-block;width:fit-content;">
-                                    <span
-                                        style="font-size:30px;vertical-align: middle;">&nbsp;{{selectedTraining?.title}}</span>
-                                </div>
-                            </div>
-                            <div *ngIf="production === 'false' && mode === 'Edit'" style="display:inline-block;font-size:12px;color:#000000;vertical-align: bottom;margin-left:10px;line-height: 30px;"
-                                joyrideStep="Step3-header" stepPosition="bottom" title="Training Version"
-                                text="This dropdown menu contains a listing of all versions of this training.  Selecting an item in this list, loads that version of the training in this editor.  Only the latest version is editable.">
-                                <span
-                                    style="display:inline-block;font-size:12px;color:#000000;">Version&nbsp;&nbsp;:&nbsp;&nbsp;</span>
+            <div style="float:left;width:15%;">
+                <div *ngIf="production === 'false'">
+                    <nz-radio-group [(ngModel)]="mode" style="float:left;">
+                        <label nz-radio-button nzValue="Edit" nz-tooltip nzTooltipTitle="Edit"
+                            nzTooltipPlacement="bottom">
+                            <i class="fa-solid fa-pencil" style="font-size:18px;"></i></label>
+                        <label nz-radio-button nzValue="Preview" nz-tooltip nzTooltipTitle="Preview"
+                            nzTooltipPlacement="bottom">
+                            <i class="fa-solid fa-camera-viewfinder" style="font-size:18px;"></i></label>
+                    </nz-radio-group>
 
-                                <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click" nzPlacement="bottomRight"
-                                    style="display:inline-block;font-size:12px;color:blue;">
-                                    <span style="font-size:12px;">
-                                        {{ versionFormatter(selectedTraining?.versions[0]?.version)}}</span>
-                                    &nbsp;&nbsp;<span *ngIf="selectedTraining?.status === 'unlocked'"
-                                        style="font-size:12px;opacity:.5;">(being
-                                        edited)</span>
-                                    <i nz-icon nzType="down"
-                                        style="margin-left:5px;font-size:12px;vertical-align: middle;"></i>
-                                </a>
-                                <nz-dropdown-menu #menu="nzDropdownMenu" style="z-index:100010;display:inline-block;">
-                                    <ul nz-menu nzSelectable>
-                                        <li *ngFor="let version of selectedTrainingVersions; index as i"
-                                            style="font-size:12px;" nz-menu-item (click)="loadVersion(version, i)">
-                                            <span
-                                                style="display:inline-block;font-size:12px;margin-right:20px;">v&nbsp;{{versionFormatter(version?.version)}}</span>
-                                            &nbsp;&nbsp;<span *ngIf="" style="font-size:14px;color:#bbbbbb;">(being
-                                                edited)</span>
-                                            <span
-                                                style="display:inline-block;font-size:12px;">{{versionFormatter(version?.changeLog)}}</span>
-                                        </li>
-                                    </ul>
-                                </nz-dropdown-menu>
-                            </div>
-                            <div *ngIf="mode === 'Edit' && production === 'false'"
-                                style="display: inline-block;width:fit-content;margin-left:10px;"
-                                joyrideStep="Step4-header" stepPosition="bottom" title="Training State"
-                                text="This is the state of the training.  Locked (read only) or Unlocked.">
-                                <i *ngIf="selectedTraining?.status === 'unlocked'" nz-icon nzType="unlock"
-                                    [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-                                    style="font-size:30px;vertical-align: middle;" nz-tooltip
-                                    nzTooltipTitle="This training is unlocked" nzTooltipPlacement="bottom"></i>
-                                <i *ngIf="selectedTraining.status === 'locked'" nz-icon nzType="lock"
-                                    [nzTheme]="'twotone'" [nzTwotoneColor]="'red'"
-                                    style="font-size:26px;vertical-align: middle;margin-left:10px;" nz-tooltip
-                                    nzTooltipTitle="This training is locked" nzTooltipPlacement="bottom">
-                                </i>
-                            </div>
-                        </div>
-                        <div style="float:right;margin-top:5px;">
-                            <button *ngIf="selectedTraining?.status === 'locked' && currentVersionIndex === 0 && mode === 'Edit' && production === 'false'"
-                                (click)="unlockTraining()" class="header-icon" nz-button nzType="default"
-                                nzShape="circle" nz-tooltip nzTooltipTitle="Unlock (edit) Training">
-                                <i nz-icon nzType="unlock" theme="twotone" [nzTwotoneColor]="'blue'"
-                                    style="vertical-align: top;"></i>
-                            </button>
-                            <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit' && production === 'false'" nz-button
-                                nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Save As New Version" nzTooltipPlacement="bottom"
-                                class="header-icon" (click)="save()" joyrideStep="Step7-header" stepPosition="bottom"
-                                title="Save a new version"
-                                text="Create a new version of this training.  For versions after 1.0.0, you will be asked to indicate the significance of the changes you have made to the training.">
-                                <i nz-icon nzType="lock" theme="twotone" [nzTwotoneColor]="'blue'"
-                                    style="vertical-align: top;">
-                                </i>
-                            </button>
-                            <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit' && production === 'false'" nz-button
-                                nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Configure Training" nzTooltipPlacement="bottom"
-                                class="header-icon" (click)="showTrainingConfig = true" joyrideStep="Step8-header"
-                                stepPosition="bottom" title="Training Configuration"
-                                text="Selecting this button opens the training configuraton panel. This is where you set a variety of training properties.">
-                                <i nz-icon nzType="setting" theme="twotone" [nzTwotoneColor]="'blue'"
-                                    style="vertical-align: top;">
-                                </i>
-                            </button>
-                            <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit' && production === 'false'" nz-button
-                                nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Discard Changes" nzTooltipPlacement="bottom"
-                                style="color:blue;" class="header-icon" (click)="showRollbackConfirm()"
-                                joyrideStep="Step9-header" stepPosition="bottom" title="Discard Current Changes"
-                                text="Selecting this button discards all changes made since unlocking this training.">
-                                <i nz-icon nzType="rollback" theme="outline" style="vertical-align: top;">
-                                </i>
-                            </button>
-                            <button nz-button nzType="default" nzShape="circle" nz-tooltip
-                                nzTooltipTitle="Close Training" nzTooltipPlacement="bottom" class="header-icon" (click)="closeViewer()"
-                                joyrideStep="Step10-header" stepPosition="bottom" title="Close Training"
-                                text="Selecting this button closes the training.">
-                                <i nz-icon nzType="close" theme="outline" style="vertical-align: top;color:red;">
-                                </i>
-                            </button>
-                        </div>
-                        <div style="clear:both;"></div>
+    <nz-select nzAllowClear nzPlaceHolder="Version" [(ngModel)]="selectedOS" [nzCustomTemplate]="custom">
+        <nz-option *ngFor="let version of selectedTrainingVersions; index as i" nzCustomContent nzLabel="Windows" nzValue="windows"><i nz-icon nzType="windows"></i> Windows
+        </nz-option>
+        <nz-option nzCustomContent nzLabel="Mac" nzValue="mac"><i nz-icon nzType="apple"></i> Mac</nz-option>
+        <nz-option nzCustomContent nzLabel="Android" nzValue="android"><i nz-icon nzType="android"></i> Android
+        </nz-option>
+    </nz-select>
+                    <button nz-button nz-dropdown [nzDropdownMenu]="versionMenu">
+                    <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click" nzPlacement="bottomRight"
+                        style="display:inline-block;font-size:12px;color:blue;">
+                        <span style="font-size:12px;">
+                            {{ versionFormatter(selectedTraining?.versions[0]?.version)}}</span>
+                        &nbsp;&nbsp;<span *ngIf="selectedTraining?.status === 'unlocked'" style="font-size:12px;opacity:.5;">(being
+                            edited)</span>
+                        <i nz-icon nzType="down" style="margin-left:5px;font-size:12px;vertical-align: middle;"></i>
+                    </a>
+
+                    </button>
+                    <nz-dropdown-menu #versionMenu="nzDropdownMenu" style="z-index:100010;display:inline-block;">
+                        <ul nz-menu nzSelectable>
+                            <li *ngFor="let version of selectedTrainingVersions; index as i" style="font-size:12px;" nz-menu-item
+                                (click)="loadVersion(version, i)">
+                                <span
+                                    style="display:inline-block;font-size:12px;margin-right:20px;">v&nbsp;{{versionFormatter(version?.version)}}</span>
+                                &nbsp;&nbsp;<span *ngIf="" style="font-size:14px;color:#bbbbbb;">(being
+                                    edited)</span>
+                                <span style="display:inline-block;font-size:12px;">{{versionFormatter(version?.changeLog)}}</span>
+                            </li>
+                        </ul>
+                    </nz-dropdown-menu>
+                </div>
+                <div *ngIf="production === 'true'">
+                    &nbsp;
+                </div>
+            </div>
+            <div style="float:left;width:70%;text-align: center;">
+                <div style="display:inline-block;">
+                    <i *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit'"
+                        [ngClass]="selectedTraining?.iconClass" nz-tooltip nzTooltipTitle="click to change icon"
+                        style="display: inline-block;font-size:38px;cursor: pointer;vertical-align: middle;"
+                        [ngStyle]="{'color': selectedTraining?.iconColor}" (click)="showIconSelectModal()"
+                        joyrideStep="Step1-header" stepPosition="bottom" title="Training Icon"
+                        text="This is how you will identify this training outside of this editor.">
+                    </i>
+                    <i *ngIf="selectedTraining?.status === 'locked' || mode === 'Preview'"
+                        [ngClass]="selectedTraining?.iconClass"
+                        style="display: inline-block;font-size:38px;vertical-align: middle;"
+                        [ngStyle]="{'color': selectedTraining?.iconColor}">
+                    </i>
+                    <i *ngIf="selectedTraining?.type === 'recurring'" class="fa-regular fa-redo-alt"
+                        style="display: inline-block;font-size:12px;vertical-align: top;">
+                    </i>
+                </div>
+                <div style="display: inline-block;width:fit-content;margin-left:10px;" joyrideStep="Step2-header"
+                    stepPosition="bottom" title="Training Title" text="This is the title of the Training.">
+                    <input *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit'"
+                        style="display:inline-block;color:#000000;width:500px;font-size:18px;" nz-input
+                        [(ngModel)]="selectedTraining.title" nzSize="default" (keydown.enter)="saveTraining(true)"
+                        (blur)="saveTraining(true)" />
+                    <div *ngIf="selectedTraining.status === 'locked' || mode === 'Preview'"
+                        style="display:inline-block;width:fit-content;">
+                        <span style="font-size:30px;vertical-align: middle;">&nbsp;{{selectedTraining?.title}}</span>
+                    </div>
+                </div>
+                <div *ngIf="production === 'false' && mode === 'Edit'"
+                    style="display:inline-block;font-size:12px;color:#000000;vertical-align: bottom;margin-left:10px;line-height: 30px;"
+                    joyrideStep="Step3-header" stepPosition="bottom" title="Training Version"
+                    text="This dropdown menu contains a listing of all versions of this training.  Selecting an item in this list, loads that version of the training in this editor.  Only the latest version is editable.">
+                    <span
+                        style="display:inline-block;font-size:12px;color:#000000;">Version&nbsp;&nbsp;:&nbsp;&nbsp;</span>
+
+                    <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click" nzPlacement="bottomRight"
+                        style="display:inline-block;font-size:12px;color:blue;">
+                        <span style="font-size:12px;">
+                            {{ versionFormatter(selectedTraining?.versions[0]?.version)}}</span>
+                        &nbsp;&nbsp;<span *ngIf="selectedTraining?.status === 'unlocked'"
+                            style="font-size:12px;opacity:.5;">(being
+                            edited)</span>
+                        <i nz-icon nzType="down" style="margin-left:5px;font-size:12px;vertical-align: middle;"></i>
+                    </a>
+                    <nz-dropdown-menu #menu="nzDropdownMenu" style="z-index:100010;display:inline-block;">
+                        <ul nz-menu nzSelectable>
+                            <li *ngFor="let version of selectedTrainingVersions; index as i" style="font-size:12px;"
+                                nz-menu-item (click)="loadVersion(version, i)">
+                                <span
+                                    style="display:inline-block;font-size:12px;margin-right:20px;">v&nbsp;{{versionFormatter(version?.version)}}</span>
+                                &nbsp;&nbsp;<span *ngIf="" style="font-size:14px;color:#bbbbbb;">(being
+                                    edited)</span>
+                                <span
+                                    style="display:inline-block;font-size:12px;">{{versionFormatter(version?.changeLog)}}</span>
+                            </li>
+                        </ul>
+                    </nz-dropdown-menu>
+                </div>
+                <div *ngIf="mode === 'Edit' && production === 'false'"
+                    style="display: inline-block;width:fit-content;margin-left:10px;" joyrideStep="Step4-header"
+                    stepPosition="bottom" title="Training State"
+                    text="This is the state of the training.  Locked (read only) or Unlocked.">
+                    <i *ngIf="selectedTraining?.status === 'unlocked'" nz-icon nzType="unlock" [nzTheme]="'twotone'"
+                        [nzTwotoneColor]="'#52c41a'" style="font-size:30px;vertical-align: middle;" nz-tooltip
+                        nzTooltipTitle="This training is unlocked" nzTooltipPlacement="bottom"></i>
+                    <i *ngIf="selectedTraining.status === 'locked'" nz-icon nzType="lock" [nzTheme]="'twotone'"
+                        [nzTwotoneColor]="'red'" style="font-size:26px;vertical-align: middle;margin-left:10px;"
+                        nz-tooltip nzTooltipTitle="This training is locked" nzTooltipPlacement="bottom">
+                    </i>
+                </div>
+            </div>
+            <div style="float:right;margin-top:5px;">
+                <button
+                    *ngIf="selectedTraining?.status === 'locked' && currentVersionIndex === 0 && mode === 'Edit' && production === 'false'"
+                    (click)="unlockTraining()" class="header-icon" nz-button nzType="default" nzShape="circle"
+                    nz-tooltip nzTooltipTitle="Unlock (edit) Training">
+                    <i nz-icon nzType="unlock" theme="twotone" [nzTwotoneColor]="'blue'"
+                        style="vertical-align: top;"></i>
+                </button>
+                <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit' && production === 'false'"
+                    nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Save As New Version"
+                    nzTooltipPlacement="bottom" class="header-icon" (click)="save()" joyrideStep="Step7-header"
+                    stepPosition="bottom" title="Save a new version"
+                    text="Create a new version of this training.  For versions after 1.0.0, you will be asked to indicate the significance of the changes you have made to the training.">
+                    <i nz-icon nzType="lock" theme="twotone" [nzTwotoneColor]="'blue'" style="vertical-align: top;">
+                    </i>
+                </button>
+                <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit' && production === 'false'"
+                    nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Configure Training"
+                    nzTooltipPlacement="bottom" class="header-icon" (click)="showTrainingConfig = true"
+                    joyrideStep="Step8-header" stepPosition="bottom" title="Training Configuration"
+                    text="Selecting this button opens the training configuraton panel. This is where you set a variety of training properties.">
+                    <i nz-icon nzType="setting" theme="twotone" [nzTwotoneColor]="'blue'" style="vertical-align: top;">
+                    </i>
+                </button>
+                <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit' && production === 'false'"
+                    nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Discard Changes"
+                    nzTooltipPlacement="bottom" style="color:blue;" class="header-icon" (click)="showRollbackConfirm()"
+                    joyrideStep="Step9-header" stepPosition="bottom" title="Discard Current Changes"
+                    text="Selecting this button discards all changes made since unlocking this training.">
+                    <i nz-icon nzType="rollback" theme="outline" style="vertical-align: top;">
+                    </i>
+                </button>
+                <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Close Training"
+                    nzTooltipPlacement="bottom" class="header-icon" (click)="closeViewer()" joyrideStep="Step10-header"
+                    stepPosition="bottom" title="Close Training" text="Selecting this button closes the training.">
+                    <i nz-icon nzType="close" theme="outline" style="vertical-align: top;color:red;">
+                    </i>
+                </button>
+            </div>
+            <div style="clear:both;"></div>
         </div>
-            <nz-modal [(nzVisible)]="showAssessmentAlert" nzTitle="Assessment Error  xxx" nzCancelDisabled="true"
-                (nzOnOk)="assessmentErrorOk()">
-                <p></p>
-            </nz-modal>
-            <nz-modal [(nzVisible)]="messageDialogVisible" nzTitle="Email Interest List"
-                (nzOnCancel)="handleEmailInterestListCancel()" (nzOnOk)="emailInterestList()">
-                <div style="display:block;padding-top:5px;" *ngFor="let email of selectedTraining?.interestList; index as i">
-                    {{ email }}
-                    <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-popconfirm
-                        nzPopconfirmTitle="Delete this email address?" [nzPopconfirmTrigger]="'click'"
-                        [nzPopconfirmPlacement]="'right'" (nzOnConfirm)="deleteInterestListItem(i)"
-                        style="font-size:14px;vertical-align: baseline; margin-left:10px;"></i>
-                </div>
-                <div style="z-index: 1000;background-color: white;">
-                    <label style="margin-bottom: 3px;font-size:12px;color:#aaaaaa;">Subject</label>
-                    <input nz-input type="text" placeholder="Subject" ngDefaultControl [(ngModel)]="subject"
-                        style="margin-bottom:10px;">
-                    <label style="margin-bottom: 3px;font-size:12px;color:#aaaaaa;">Message</label>
-                    <textarea rows="4" nz-input [(ngModel)]="messageBody"></textarea>
-                </div>
-            </nz-modal>
-            
-            <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800"
-                (nzOnCancel)="handleIconSelectCancel()" [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled"
-                (nzOnOk)="handleIconSelectConfirm()">
-                <app-icon-picker [currentIconClass]="selectedTraining?.iconClass" [currentColor]="selectedTraining?.iconColor"
-                    (icon)="setIcon($event)" [height]="browserInnerHeight - 300" style="width:100%;"></app-icon-picker>
-            </nz-modal>
+        <nz-modal [(nzVisible)]="showAssessmentAlert" nzTitle="Assessment Error  xxx" nzCancelDisabled="true"
+            (nzOnOk)="assessmentErrorOk()">
+            <p></p>
+        </nz-modal>
+        <nz-modal [(nzVisible)]="messageDialogVisible" nzTitle="Email Interest List"
+            (nzOnCancel)="handleEmailInterestListCancel()" (nzOnOk)="emailInterestList()">
+            <div style="display:block;padding-top:5px;"
+                *ngFor="let email of selectedTraining?.interestList; index as i">
+                {{ email }}
+                <i nz-icon nzType="delete" [nzTheme]="'twotone'" [nzTwotoneColor]="'red'" nz-popconfirm
+                    nzPopconfirmTitle="Delete this email address?" [nzPopconfirmTrigger]="'click'"
+                    [nzPopconfirmPlacement]="'right'" (nzOnConfirm)="deleteInterestListItem(i)"
+                    style="font-size:14px;vertical-align: baseline; margin-left:10px;"></i>
+            </div>
+            <div style="z-index: 1000;background-color: white;">
+                <label style="margin-bottom: 3px;font-size:12px;color:#aaaaaa;">Subject</label>
+                <input nz-input type="text" placeholder="Subject" ngDefaultControl [(ngModel)]="subject"
+                    style="margin-bottom:10px;">
+                <label style="margin-bottom: 3px;font-size:12px;color:#aaaaaa;">Message</label>
+                <textarea rows="4" nz-input [(ngModel)]="messageBody"></textarea>
+            </div>
+        </nz-modal>
+
+        <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800"
+            (nzOnCancel)="handleIconSelectCancel()" [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled"
+            (nzOnOk)="handleIconSelectConfirm()">
+            <app-icon-picker [currentIconClass]="selectedTraining?.iconClass"
+                [currentColor]="selectedTraining?.iconColor" (icon)="setIcon($event)"
+                [height]="browserInnerHeight - 300" style="width:100%;"></app-icon-picker>
+        </nz-modal>
 
         <!--
         <div [ngClass]="{'training-header': production === 'false', 'production-training-header': production === 'true'}"

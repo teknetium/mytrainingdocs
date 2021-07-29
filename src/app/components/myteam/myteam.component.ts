@@ -40,6 +40,22 @@ import { IfStmt } from '@angular/compiler';
   styleUrls: ['./myteam.component.css'],
   // changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
+    trigger('hideNode', [
+      // ...
+      state('hide', style({
+        'opacity': '0',
+        'display': 'none'
+      })),
+      state('show', style({
+        'opacity': '1.0',
+      })),
+      transition('show => hide', [
+        animate('400ms')
+      ]),
+      transition('hide => show', [
+        animate('400ms')
+      ]),
+    ]),
     trigger('legendSlide', [
       // ...
       state('closed', style({
@@ -1313,6 +1329,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
   orgChartDirectionHash = {};
   myOrgUserIds: string[] = [];
+  visibleDrListHash = {};
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -1903,6 +1920,14 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
   next(): void {
     this.currentStep += 1;
+  }
+
+  hideNode(uid: string, supervisorId: string): boolean {
+    if (this.orgChartSelectionList.length > 0 && this.nodeStatHash[uid]?.selectedCnt === 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   done(): void {
@@ -2818,15 +2843,20 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.userService.buildOrgChart(this.authenticatedUser._id, false);
   }
 
-  isFirst(index) {
-    if (index === 0) {
+  isFirst(uid: string, supervisorId: string): boolean {
+    let visibleDrList = this.visibleDrListHash[supervisorId];
+    if (!visibleDrList) {
+
+    }
+    console.log('isFirst ', visibleDrList);
+    if(visibleDrList && visibleDrList.length > 0 && visibleDrList[0] === uid) {
       return true;
     } else {
       return false;
     }
   }
 
-  isLast(list, index) {
+  isLast(list: string[], index: number): boolean {
     if (index === list.length - 1) {
       return true;
     } else {
@@ -3312,6 +3342,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
   selectUsersFromOrg(uid: string) {
     this.userIdsSelected = [];
+    this.visibleDrListHash = {};
     if (this.myOrgUserObjs.length > 0) {
       for (let user of this.myOrgUserObjs) {
         let nodeStatsObj = this.nodeStatHash[user._id];
@@ -3321,7 +3352,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       }
     }
     this.selectUsersFromDirectReports(this.myOrgUserHash[uid], []);
-    /// remove uid from the list of selected users cause thats what we wamt
+    /// remove uid from the list of selected users cause thats what we want
     if (this.userIdsSelected.indexOf(uid) >= 0) {
       this.userIdsSelected.splice(this.userIdsSelected.indexOf(uid), 1);
     }
@@ -3333,36 +3364,42 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   selectUsersFromDirectReports(user: UserModel, uidList: string[]) {
+    if (!this.visibleDrListHash[user.supervisorId]) {
+      this.visibleDrListHash[user.supervisorId] = [];
+    }
     let found = false;
     if (this.currentFilter === 'JobTitle:' + user.jobTitle) {
       this.userIdsSelected.push(user._id);
+      this.visibleDrListHash[user.supervisorId].push(user._id);
       found = true;
     }
     if (this.currentFilter === 'UserType:' + user.userType) {
       this.userIdsSelected.push(user._id);
+      this.visibleDrListHash[user.supervisorId].push(user._id);
       found = true;
     }
     if (this.currentFilter === 'UserStatus:' + user.userStatus) {
       this.userIdsSelected.push(user._id);
+      this.visibleDrListHash[user.supervisorId].push(user._id);
       found = true;
     }
     if (this.currentFilter === 'UserTrainingStatus:' + user.trainingStatus) {
       this.userIdsSelected.push(user._id);
+      this.visibleDrListHash[user.supervisorId].push(user._id);
       found = true;
     }
     if (this.currentFilter.startsWith('Training:')) {
       let tmpArray = this.currentFilter.split(':');
       let tid = tmpArray[1];
-      //      console.log('selectUsersFromDirectReports...TRAINING - ', tid, this.uidTidUTHash);
 
       let utList = this.uidUTHash[user._id];
 
       if (utList) {
-//        console.log('selectUsersFromDirectReports', utList);
 
         for (let ut of utList) {
           if (ut.tid === tid) {
             this.userIdsSelected.push(user._id);
+            this.visibleDrListHash[user.supervisorId].push(user._id);
             found = true;
           }
         }
