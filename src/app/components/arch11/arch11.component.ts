@@ -90,31 +90,80 @@ export class Arch11Component extends BaseComponent implements OnInit {
 
   projects = [
     {
-      title: 'Foo',
+      title: 'House 59',
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      thumbnail: 'assets/images/arch11-images/one.jpeg',
+      thumbnail: 'assets/images/arch11-images/alder-2-1600x900-q80.jpeg',
+      images: ['assets/images/arch11-images/alder-2-1600x900-q80.jpeg', 'assets/images/arch11-images/alder-1-2800x1575-q80.jpeg', 'assets/images/arch11-images/2290_5-1600x900-q80.jpeg', 'assets/images/arch11-images/alder-6-2800x1575-q80.jpeg', 'assets/images/arch11-images/alder-7-2800x1575-q80.jpeg', 'assets/images/arch11-images/alder-9-2800x1575-q80.jpeg', 'assets/images/arch11-images/alder-15-2800x1575-q80.jpeg']
+    },
+    {
+      title: 'Syncline House',
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      thumbnail: 'assets/images/arch11-images/syncline-house-1-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
     },
     {
       title: 'Foo',
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      thumbnail: 'assets/images/arch11-images/one.jpeg',
+      thumbnail: 'assets/images/arch11-images/taylor-mountain-1-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
     },
     {
       title: 'Foo',
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      thumbnail: 'assets/images/arch11-images/one.jpeg',
+      thumbnail: 'assets/images/arch11-images/dihedral-house-3-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
     },
     {
       title: 'Foo',
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      thumbnail: 'assets/images/arch11-images/one.jpeg',
+      thumbnail: 'assets/images/arch11-images/odgen-1-1600x900-q80.jpeg',
+      images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
+    },
+    {
+      title: 'Foo',
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      thumbnail: 'assets/images/arch11-images/observatory-park-1-1600x900-q80.jpeg',
+      images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
+    },
+    {
+      title: 'Foo',
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      thumbnail: 'assets/images/arch11-images/sandburg-2-1600x900-q80.jpeg',
+      images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
+    },
+    {
+      title: 'Foo',
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      thumbnail: 'assets/images/arch11-images/polo-club-2-1600x900-q80.jpeg',
+      images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
+    },
+    {
+      title: 'Foo',
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      thumbnail: 'assets/images/arch11-images/lodgepole-retreat-1-1600x900-q80.jpeg',
+      images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
+    },
+    {
+      title: 'Foo',
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      thumbnail: 'assets/images/arch11-images/grid-house-15-1600x900-q80.jpeg',
+      images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
+    },
+    {
+      title: 'Foo',
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      thumbnail: 'assets/images/arch11-images/geneva-3-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
     },
   ]
@@ -357,6 +406,38 @@ export class Arch11Component extends BaseComponent implements OnInit {
     {
       image: "assets/images/arch11-images/four.jpeg",
       text: "Empower your teams to easily and quickly create their own trainings."
+    },
+    {
+      image: "assets/images/arch11-images/five.jpeg",
+      text: "Empower your teams to easily and quickly create their own trainings."
+    },
+    {
+      image: "assets/images/arch11-images/six.jpeg",
+      text: "Empower your teams to easily and quickly create their own trainings."
+    },
+    {
+      image: "assets/images/arch11-images/seven.jpeg",
+      text: "Empower your teams to easily and quickly create their own trainings."
+    },
+    {
+      image: "assets/images/arch11-images/eight.jpeg",
+      text: "Empower your teams to easily and quickly create their own trainings."
+    },
+    {
+      image: "assets/images/arch11-images/nine.jpeg",
+      text: "Empower your teams to easily and quickly create their own trainings."
+    },
+    {
+      image: "assets/images/arch11-images/ten.jpeg",
+      text: "Empower your teams to easily and quickly create their own trainings."
+    },
+    {
+      image: "assets/images/arch11-images/eleven.jpeg",
+      text: "Empower your teams to easily and quickly create their own trainings."
+    },
+    {
+      image: "assets/images/arch11-images/twelve.jpeg",
+      text: "Empower your teams to easily and quickly create their own trainings."
     }
   ]
   featureSlides = [
@@ -398,6 +479,9 @@ export class Arch11Component extends BaseComponent implements OnInit {
   limitTime = 3500;
   totalTime = 0;
   intervalTime = 20;
+  page = 'home';
+  currentProject = this.projects[0];
+  currentProjectIndex = 0;
 
   @ViewChild(NzCarouselComponent, { static: false }) myCarousel: NzCarouselComponent;
 
@@ -438,6 +522,15 @@ export class Arch11Component extends BaseComponent implements OnInit {
       this.fadeIn();
     }, 800);
 
+  }
+
+  selectProject(index) {
+    this.currentProject = this.projects[index];
+    this.currentProjectIndex = index;
+  }
+
+  goToPage(page) {
+    this.page = page;
   }
 
   ngOnInit() {

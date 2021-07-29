@@ -33,32 +33,100 @@
   left: 1vw;
   font-size:1.5vw;
   cursor:pointer;
+  opacity:1;
+}
+
+.work {
+  background-color: white;
+}
+
+.nav-elements {
+  position:fixed;
+  left: 5vw;
+  font-size:1vw;
+}
+
+.nav-element:hover {
+  opacity:1;
+}
+
+.nav-element {
+  display: inline-block;
+  margin-right: 3vw;
+  font-weight:100;
+  letter-spacing:3px;
+  cursor:pointer;
+  opacity:.3;
 }
 
 .logo {
   position:fixed;
   right: 1vw;
   font-size: 2vw;
+  letter-spacing:3px;
+  opacity:1;
 }
 
 .project-bar {
   margin-top: .6vw;
   background-color: white;
+  margin-top: 40px;
+}
+
+.projects {
+  padding:5px;
+  overflow:auto;
+  white-space:nowrap;
 }
 
 .project {
-  opacity: .3;
-  width:100px;
-  height:100px;
+  width:154px;
+  height:154px;
   overflow: hidden;
+  display:inline-block;
+  cursor:pointer;
+  border: 2px solid white;
 }
 
 .project:hover {
-  opacity: 1;
+  opacity: 1 !important;
+  border: 2px solid black;
 }
 
 .filter-bar {
   width: 100%;
-  background-color: #f1f1f1;
+  background-color: white;
   padding:5px;
+}
+
+.page-banner {
+  height:7vw;
+  overflow: hidden;
+}
+
+.page-label {
+  position:fixed;
+  top: 3.4vw;
+  left:50px;
+  font-size: 2vw;
+  font-weight: 300;
+  letter-spacing: 3px;
+  color:black;
+}
+
+.selected-project {
+  opacity:1 !important;
+}
+
+.notselected-project {
+  opacity:.4;
+}
+
+.project-details {
+  padding:20px;
+}
+
+.project-title {
+  font-size:24px;
+  letter-spacing: 2px;
 }
