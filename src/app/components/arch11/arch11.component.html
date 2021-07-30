@@ -1,10 +1,9 @@
 <div class="page">
   <div class="navbar">
-    <!--
     <div class="hamburger">
-      <i class="fa-solid fa-bars"></i>
+      <i class="fa-solid fa-bars" (click)="showNav = true"></i>
     </div>
-    -->
+    <!--
     <div class="nav-elements">
       <div class="nav-element" (click)="goToPage('home')">
         Home
@@ -27,6 +26,35 @@
       <div class="nav-element" (click)="goToPage('contacts')">
         Contacts
       </div>
+    </div>
+    -->
+    <nz-drawer [nzClosable]="true" [nzVisible]="showNav" nzPlacement="left" (nzOnClose)="showNav = false">
+      <div class="nav-elements">
+        <div class="nav-element" (click)="goToPage('home')">
+          Home
+        </div>
+        <div class="nav-element" (click)="goToPage('work')">
+          Work
+        </div>
+        <div class="nav-element" (click)="goToPage('awards')">
+          Awards
+        </div>
+        <div class="nav-element" (click)="goToPage('publications')">
+          Publications
+        </div>
+        <div class="nav-element" (click)="goToPage('postings')">
+          Postings
+        </div>
+        <div class="nav-element" (click)="goToPage('studio')">
+          Studio
+        </div>
+        <div class="nav-element" (click)="goToPage('contacts')">
+          Contacts
+        </div>
+      </div>
+    </nz-drawer>
+    <div *ngIf="page === 'work'" style="position:fixed;left:5vw;font-size:2vw;letter-spacing: 3px;">
+      Work
     </div>
     <div class="logo">
       <span>
@@ -62,12 +90,14 @@
     </div>
   </div>
   <div *ngIf="page === 'work'" class="work">
+    <!--
     <div class="page-banner">
       <img src="assets/images/arch11-images/banner.jpeg" width="100%">
       <div class="page-label">
-        WORK
+        Work
       </div>
     </div>
+    -->
     <div class="project-bar">
       <div class="filter-bar">
         <nz-select [(ngModel)]="selectedType" nzAllowClear nzPlaceHolder="Type" nzSize="small"
@@ -95,29 +125,33 @@
         </nz-select>
       </div>
       <div class="projects">
-        <div *ngFor="let project of projects; index as projectIndex" class="project" style="display:inline-block;margin-right:.4vw" (click)="selectProject(projectIndex)" nz-tooltip
-        [nzTooltipTitle]="project.title" nzTooltipPlacement="bottom">
-          <img style="background-color: white;text-align: center;" [src]="project.thumbnail" height="150" [ngClass]="{'selected-project': currentProjectIndex === projectIndex, 'notselected-project': currentProjectIndex !== projectIndex}">
+        <div *ngFor="let project of projects; index as projectIndex" class="project"
+          style="display:inline-block;margin-right:.4vw" (click)="selectProject(projectIndex)" nz-tooltip
+          [nzTooltipTitle]="project.title" nzTooltipPlacement="bottom">
+          <img style="background-color: white;text-align: center;" [src]="project.thumbnail" height="150"
+            [ngClass]="{'selected-project': currentProjectIndex === projectIndex, 'notselected-project': currentProjectIndex !== projectIndex}">
         </div>
       </div>
     </div>
     <div class="project-details">
-      <span class="project-title">
-      {{ currentProject.title }}
-      </span>
-      <nz-tabset>
-        <nz-tab nzTitle="Project Photos">
-          <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" style="height:50vw;">
-            <div nz-carousel-content *ngFor="let image of currentProject.images" style="text-align: center;height:60vw;">
-              <img style="text-align: center;display:inline-block;" [src]="image" height="100%">
-            </div>
-          </nz-carousel>
+      <div class="project-title">
+        {{ currentProject.title }}
+      </div>
+      <div style="height:80%;">
+        <nz-tabset>
+          <nz-tab nzTitle="Project Photos">
+            <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" >
+              <div nz-carousel-content *ngFor="let image of currentProject.images" style="text-align: center;">
+                <img style="text-align: center;display:inline-block;" [src]="image" height="100%">
+              </div>
+            </nz-carousel>
 
-        </nz-tab>
-        <nz-tab nzTitle="Project Description">
-          
-        </nz-tab>
-      </nz-tabset>
+          </nz-tab>
+          <nz-tab nzTitle="Project Description">
+
+          </nz-tab>
+        </nz-tabset>
+      </div>
     </div>
   </div>
   <!--

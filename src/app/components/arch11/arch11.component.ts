@@ -482,6 +482,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
   page = 'home';
   currentProject = this.projects[0];
   currentProjectIndex = 0;
+  showNav = false;
 
   @ViewChild(NzCarouselComponent, { static: false }) myCarousel: NzCarouselComponent;
 
@@ -531,6 +532,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
 
   goToPage(page) {
     this.page = page;
+    this.showNav = false;
   }
 
   ngOnInit() {
