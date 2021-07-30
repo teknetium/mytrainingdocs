@@ -483,6 +483,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
   currentProject = this.projects[0];
   currentProjectIndex = 0;
   showNav = false;
+  showFilters = false;
 
   @ViewChild(NzCarouselComponent, { static: false }) myCarousel: NzCarouselComponent;
 

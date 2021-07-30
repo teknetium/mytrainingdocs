@@ -53,8 +53,37 @@
         </div>
       </div>
     </nz-drawer>
-    <div *ngIf="page === 'work'" style="position:fixed;left:5vw;font-size:2vw;letter-spacing: 3px;">
-      Work
+    <nz-drawer [nzClosable]="true" [nzVisible]="showFilters" nzPlacement="bottom" (nzOnClose)="showFilters = false">
+      <nz-select [(ngModel)]="selectedType" nzAllowClear nzPlaceHolder="Type" nzSize="small"
+        style="width:160px;margin-right:10px;">
+        <nz-option nzValue="residential" nzLabel="Residential"></nz-option>
+        <nz-option nzValue="commercial" nzLabel="Commercial"></nz-option>
+        <nz-option nzValue="unbuilt" nzLabel="Unbuilt"></nz-option>
+        <nz-option nzValue="inTheWorks" nzLabel="In the Works"></nz-option>
+      </nz-select>
+      <nz-select [(ngModel)]="selectedMateria" nzAllowClear nzPlaceHolder="Material" nzSize="small"
+        style="width:160px;margin-right:10px;">
+        <nz-option nzValue="bamboo" nzLabel="Bamboo"></nz-option>
+        <nz-option nzValue="concrete" nzLabel="Concrete"></nz-option>
+      </nz-select>
+      <nz-select [(ngModel)]="selectedLocation" nzAllowClear nzPlaceHolder="Location" nzSize="small"
+        style="width:160px;margin-right:10px;">
+        <nz-option nzValue="boulder" nzLabel="Boulder"></nz-option>
+        <nz-option nzValue="denver" nzLabel="Denver"></nz-option>
+        <nz-option nzValue="switzerland" nzLabel="Switzerland"></nz-option>
+      </nz-select>
+      <nz-select [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Architectural Elements" nzSize="small"
+        style="width: 250px;margin-right:10px;">
+        <nz-option nzValue="glass" nzLabel="Glass"></nz-option>
+        <nz-option nzValue="cantilever" nzLabel="Cantilever"></nz-option>
+      </nz-select>
+    </nz-drawer>
+    <div *ngIf="page === 'work'" style="position:fixed;left:5vw;">
+      <i class="fa-regular fa-filter" style="font-size:2vw;display:inline-block;margin-right:20px;cursor:pointer;" (click)="showFilters = true" nz-tooltip nzTooltipTitle="Show Project Filters" nzTooltipPlacement="bottom">
+      </i>
+      <div style="font-size:2vh;display:inline-block;letter-spacing: 3px;">
+        Work
+      </div>
     </div>
     <div class="logo">
       <span>
@@ -72,11 +101,11 @@
     </div>
     <div style="padding:5vw 20vw;display:block;">
       <div
-        style="font-size:26px;color:black;font-weight:200;display:inline-block;margin-bottom:3vw;letter-spacing:3px;">
+        style="font-size:26px;color:black;font-weight:200;display:inline-block;margin-bottom:3vh;letter-spacing:3px;">
         We design modern environments for play, work, living and learning.<br>
       </div>
       <div
-        style="font-size:14px;color:black;font-weight:200;display:block;margin-bottom:3vw;width:80%;letter-spacing:2px;">
+        style="font-size:14px;color:black;font-weight:200;display:block;margin-bottom:3vh;width:80%;letter-spacing:2px;">
         From our studios in Denver and Boulder Colorado, we design modern architecture; environments for play, work,
         living and
         learning. We work between the intimate scale of the bespoke luxury-residence and the complexity of a commercial
@@ -84,7 +113,7 @@
       </div>
 
       <div
-        style="font-size:14px;color:black;font-weight:250;display:block;width:70%;margin-bottom:3vw;letter-spacing:2px;">
+        style="font-size:14px;color:black;font-weight:250;display:block;width:70%;margin-bottom:3vh;letter-spacing:2px;">
         Our work heightens the experience of the everyday.
       </div>
     </div>
@@ -99,36 +128,16 @@
     </div>
     -->
     <div class="project-bar">
+
       <div class="filter-bar">
-        <nz-select [(ngModel)]="selectedType" nzAllowClear nzPlaceHolder="Type" nzSize="small"
-          style="width:160px;margin-right:10px;">
-          <nz-option nzValue="residential" nzLabel="Residential"></nz-option>
-          <nz-option nzValue="commercial" nzLabel="Commercial"></nz-option>
-          <nz-option nzValue="unbuilt" nzLabel="Unbuilt"></nz-option>
-          <nz-option nzValue="inTheWorks" nzLabel="In the Works"></nz-option>
-        </nz-select>
-        <nz-select [(ngModel)]="selectedMateria" nzAllowClear nzPlaceHolder="Material" nzSize="small"
-          style="width:160px;margin-right:10px;">
-          <nz-option nzValue="bamboo" nzLabel="Bamboo"></nz-option>
-          <nz-option nzValue="concrete" nzLabel="Concrete"></nz-option>
-        </nz-select>
-        <nz-select [(ngModel)]="selectedLocation" nzAllowClear nzPlaceHolder="Location" nzSize="small"
-          style="width:160px;margin-right:10px;">
-          <nz-option nzValue="boulder" nzLabel="Boulder"></nz-option>
-          <nz-option nzValue="denver" nzLabel="Denver"></nz-option>
-          <nz-option nzValue="switzerland" nzLabel="Switzerland"></nz-option>
-        </nz-select>
-        <nz-select [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Architectural Elements" nzSize="small"
-          style="width: 250px;margin-right:10px;">
-          <nz-option nzValue="glass" nzLabel="Glass"></nz-option>
-          <nz-option nzValue="cantilever" nzLabel="Cantilever"></nz-option>
-        </nz-select>
+        <!--
+        -->
       </div>
       <div class="projects">
         <div *ngFor="let project of projects; index as projectIndex" class="project"
           style="display:inline-block;margin-right:.4vw" (click)="selectProject(projectIndex)" nz-tooltip
           [nzTooltipTitle]="project.title" nzTooltipPlacement="bottom">
-          <img style="background-color: white;text-align: center;" [src]="project.thumbnail" height="150"
+          <img style="background-color: white;text-align: center;" [src]="project.thumbnail" height="100%"
             [ngClass]="{'selected-project': currentProjectIndex === projectIndex, 'notselected-project': currentProjectIndex !== projectIndex}">
         </div>
       </div>
@@ -137,11 +146,12 @@
       <div class="project-title">
         {{ currentProject.title }}
       </div>
-      <div style="height:80%;">
+      <div style="height:60vh;">
         <nz-tabset>
           <nz-tab nzTitle="Project Photos">
-            <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" >
-              <div nz-carousel-content *ngFor="let image of currentProject.images" style="text-align: center;">
+            <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay">
+              <div nz-carousel-content *ngFor="let image of currentProject.images" style="text-align: center;"
+                style="height:50vh;">
                 <img style="text-align: center;display:inline-block;" [src]="image" height="100%">
               </div>
             </nz-carousel>

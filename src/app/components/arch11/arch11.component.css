@@ -83,8 +83,8 @@
 }
 
 .project {
-	width: 154px;
-	height: 154px;
+	width: 15vh;
+	height: 15vh;
 	overflow: hidden;
 	display: inline-block;
 	cursor: pointer;
@@ -126,12 +126,12 @@
 }
 
 .project-details {
-	height: 90%;
+	height: 70vh;
 }
 
 .project-title {
 	font-size: 24px;
 	letter-spacing: 2px;
-  height:10%;
+  height:10vh;
   padding:20px;
 }
