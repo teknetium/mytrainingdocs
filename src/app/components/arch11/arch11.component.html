@@ -99,49 +99,87 @@
         </nz-select>
       </div>
     </nz-drawer>
-    <div *ngIf="page === 'work'" style="position:fixed;left:5vw;">
-      <i class="fa-regular fa-filter" style="font-size:24px;display:inline-block;margin-right:20px;cursor:pointer;"
-        (click)="showFilters = true" nz-tooltip nzTooltipTitle="Show Project Filters" nzTooltipPlacement="bottom">
-      </i>
+    <div *ngIf="page !== 'home'" style="position:fixed;left:5vw;">
       <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
-        Work
+        {{ pageLabelHash[page] }}
       </div>
     </div>
+    <!--
+    <div *ngIf="page === 'awards'" style="position:fixed;left:5vw;">
+      <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
+        Awards
+      </div>
+    </div>
+    <div *ngIf="page === 'publications'" style="position:fixed;left:5vw;">
+      <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
+        Publications
+      </div>
+    </div>
+    <div *ngIf="page === 'postings'" style="position:fixed;left:5vw;">
+      <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
+        Postings
+      </div>
+    </div>
+    <div *ngIf="page === 'studio'" style="position:fixed;left:5vw;">
+      <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
+        Studio
+      </div>
+    </div>
+    <div *ngIf="page === 'contacts'" style="position:fixed;left:5vw;">
+      <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
+        Contacts
+      </div>
+    </div>
+    -->
     <div class="logo">
       <span>
         Arch 11
       </span>
     </div>
   </div>
-  <div *ngIf="page === 'home'">
-    <div class="carousel">
-      <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" style="height:60vw;">
-        <div nz-carousel-content *ngFor="let item of images" style="text-align: center;height:60vw;">
-          <img style="text-align: center;display:inline-block;" [src]="item.image" height="100%">
-        </div>
-      </nz-carousel>
-    </div>
-    <div style="padding:5vw 20vw;display:block;">
-      <div
-        style="font-size:26px;color:black;font-weight:200;display:inline-block;margin-bottom:3vh;letter-spacing:3px;">
-        We design modern environments for play, work, living and learning.<br>
-      </div>
-      <div
-        style="font-size:14px;color:black;font-weight:200;display:block;margin-bottom:3vh;width:80%;letter-spacing:2px;">
-        From our studios in Denver and Boulder Colorado, we design modern architecture; environments for play, work,
-        living and
-        learning. We work between the intimate scale of the bespoke luxury-residence and the complexity of a commercial
-        headquarter, artfully crafting each to place.
+  <div style="width:100%;height:100%;">
+    <div *ngIf="page === 'work'" class="toolbar">
+      <div *ngIf="page === 'work'">
+        <i class="fa-regular fa-filter" style="font-size:18px;float:left;cursor:pointer;" (click)="showFilters = true"
+          nz-tooltip nzTooltipTitle="Show Project Filters" nzTooltipPlacement="bottom">
+        </i>
+        <i class="fa-regular fa-magnifying-glass" style="float:right;font-size:18px;cursor:pointer;"
+          (click)="showFilters = true" nz-tooltip nzTooltipTitle="Show Project Filters" nzTooltipPlacement="bottom">
+        </i>
+        <div style="clear: both;"></div>
       </div>
 
-      <div
-        style="font-size:14px;color:black;font-weight:250;display:block;width:70%;margin-bottom:3vh;letter-spacing:2px;">
-        Our work heightens the experience of the everyday.
+    </div>
+    <div *ngIf="page === 'home'">
+      <div class="carousel">
+        <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" style="height:60vw;">
+          <div nz-carousel-content *ngFor="let item of images" style="text-align: center;height:60vw;">
+            <img style="text-align: center;display:inline-block;" [src]="item.image" height="100%">
+          </div>
+        </nz-carousel>
+      </div>
+      <div style="padding:5vw 20vw;display:block;">
+        <div
+          style="font-size:26px;color:black;font-weight:200;display:inline-block;margin-bottom:3vh;letter-spacing:3px;">
+          We design modern environments for play, work, living and learning.<br>
+        </div>
+        <div
+          style="font-size:14px;color:black;font-weight:200;display:block;margin-bottom:3vh;width:80%;letter-spacing:2px;">
+          From our studios in Denver and Boulder Colorado, we design modern architecture; environments for play, work,
+          living and
+          learning. We work between the intimate scale of the bespoke luxury-residence and the complexity of a
+          commercial
+          headquarter, artfully crafting each to place.
+        </div>
+
+        <div
+          style="font-size:14px;color:black;font-weight:250;display:block;width:70%;margin-bottom:3vh;letter-spacing:2px;">
+          Our work heightens the experience of the everyday.
+        </div>
       </div>
     </div>
-  </div>
-  <div *ngIf="page === 'work'" class="work">
-    <!--
+    <div *ngIf="page === 'work'" class="work">
+      <!--
     <div class="page-banner">
       <img src="assets/images/arch11-images/banner.jpeg" width="100%">
       <div class="page-label">
@@ -149,40 +187,57 @@
       </div>
     </div>
     -->
-    <div class="project-bar">
+      <div class="project-bar">
 
-      <div class="filter-bar">
-        <!--
+        <div class="filter-bar">
+          <!--
         -->
+        </div>
+        <div class="projects">
+          <div *ngFor="let project of projects; index as projectIndex" class="project"
+            style="display:inline-block;margin-right:.4vw" (click)="selectProject(projectIndex)" nz-tooltip
+            [nzTooltipTitle]="project.title" nzTooltipPlacement="bottom">
+            <img style="background-color: white;text-align: center;" [src]="project.thumbnail" height="100%"
+              [ngClass]="{'selected-project': currentProjectIndex === projectIndex, 'notselected-project': currentProjectIndex !== projectIndex}">
+          </div>
+        </div>
       </div>
-      <div class="projects">
-        <div *ngFor="let project of projects; index as projectIndex" class="project"
-          style="display:inline-block;margin-right:.4vw" (click)="selectProject(projectIndex)" nz-tooltip
-          [nzTooltipTitle]="project.title" nzTooltipPlacement="bottom">
-          <img style="background-color: white;text-align: center;" [src]="project.thumbnail" height="100%"
-            [ngClass]="{'selected-project': currentProjectIndex === projectIndex, 'notselected-project': currentProjectIndex !== projectIndex}">
+      <div class="project-details">
+        <div class="project-title">
+          {{ currentProject.title }}
+        </div>
+        <div style="height:60vh;">
+          <nz-tabset>
+            <nz-tab nzTitle="Project Photos">
+              <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay">
+                <div nz-carousel-content *ngFor="let image of currentProject.images"
+                  style="text-align: center;height:50vh;overflow-x: scroll;">
+                  <img style="text-align: center;display:inline-block;" [src]="image" height="100%">
+                </div>
+              </nz-carousel>
+
+            </nz-tab>
+            <nz-tab nzTitle="Project Description">
+
+            </nz-tab>
+          </nz-tabset>
         </div>
       </div>
     </div>
-    <div class="project-details">
-      <div class="project-title">
-        {{ currentProject.title }}
-      </div>
-      <div style="height:60vh;">
-        <nz-tabset>
-          <nz-tab nzTitle="Project Photos">
-            <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay">
-              <div nz-carousel-content *ngFor="let image of currentProject.images" style="text-align: center;height:50vh;overflow-x: scroll;">
-                <img style="text-align: center;display:inline-block;" [src]="image" height="100%">
-              </div>
-            </nz-carousel>
-
-          </nz-tab>
-          <nz-tab nzTitle="Project Description">
-
-          </nz-tab>
-        </nz-tabset>
-      </div>
+    <div *ngIf="page === 'awards'" style="width:100%; height:100%;">
+      <iframe src="https://arch11.com/awards" title="Awards" width="100%" height="100%"></iframe>
+    </div>
+    <div *ngIf="page === 'publications'" style="width:100%; height:100%;">
+      <iframe src="https://arch11.com/publication" title="Publications" width="100%" height="100%"></iframe>
+    </div>
+    <div *ngIf="page === 'postings'" style="width:100%; height:100%;">
+      <iframe src="https://arch11.com/postings" title="Postings" width="100%" height="100%"></iframe>
+    </div>
+    <div *ngIf="page === 'studio'" style="width:100%; height:100%;">
+      <iframe src="https://arch11.com/studio" title="Awards" width="100%" height="100%"></iframe>
+    </div>
+    <div *ngIf="page === 'contacts'" style="width:100%; height:100%;">
+      <iframe src="https://arch11.com/contact" title="Awards" width="100%" height="100%"></iframe>
     </div>
   </div>
   <!--
