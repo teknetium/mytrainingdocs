@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { Arch11Component } from './arch11.component';
 import { ScrollToModule, ScrollToService } from '@nicky-lenaers/ngx-scroll-to';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
-import { NzAddOnModule, NzDrawerModule, NzRadioModule, NzCardModule, NzIconModule, NzAvatarModule, NzInputModule, NzModalModule, NzButtonModule, NzToolTipModule, NzProgressModule, NzDropDownModule, NzSelectModule, NzTabsModule } from 'ng-zorro-antd';
+import { NzAddOnModule, NzDrawerModule, NzRadioModule, NzCardModule, NzIconModule, NzAvatarModule, NzInputModule, NzModalModule, NzButtonModule, NzToolTipModule, NzProgressModule, NzDropDownModule, NzSelectModule, NzTabsModule, NzPopoverModule } from 'ng-zorro-antd';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzGridModule } from 'ng-zorro-antd/grid';
@@ -43,6 +43,7 @@ import { VgControlsModule } from 'videogular2/compiled/controls';
     NzTabsModule,
     NzRadioModule,
     NzSelectModule,
+    NzPopoverModule,
     NzProgressModule
   ],
   exports: [

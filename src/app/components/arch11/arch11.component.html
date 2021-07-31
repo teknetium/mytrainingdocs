@@ -53,35 +53,57 @@
         </div>
       </div>
     </nz-drawer>
-    <nz-drawer [nzClosable]="true" [nzVisible]="showFilters" nzPlacement="bottom" (nzOnClose)="showFilters = false">
-      <nz-select [(ngModel)]="selectedType" nzAllowClear nzPlaceHolder="Type" nzSize="small"
-        style="width:160px;margin-right:10px;">
-        <nz-option nzValue="residential" nzLabel="Residential"></nz-option>
-        <nz-option nzValue="commercial" nzLabel="Commercial"></nz-option>
-        <nz-option nzValue="unbuilt" nzLabel="Unbuilt"></nz-option>
-        <nz-option nzValue="inTheWorks" nzLabel="In the Works"></nz-option>
-      </nz-select>
-      <nz-select [(ngModel)]="selectedMateria" nzAllowClear nzPlaceHolder="Material" nzSize="small"
-        style="width:160px;margin-right:10px;">
-        <nz-option nzValue="bamboo" nzLabel="Bamboo"></nz-option>
-        <nz-option nzValue="concrete" nzLabel="Concrete"></nz-option>
-      </nz-select>
-      <nz-select [(ngModel)]="selectedLocation" nzAllowClear nzPlaceHolder="Location" nzSize="small"
-        style="width:160px;margin-right:10px;">
-        <nz-option nzValue="boulder" nzLabel="Boulder"></nz-option>
-        <nz-option nzValue="denver" nzLabel="Denver"></nz-option>
-        <nz-option nzValue="switzerland" nzLabel="Switzerland"></nz-option>
-      </nz-select>
-      <nz-select [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Architectural Elements" nzSize="small"
-        style="width: 250px;margin-right:10px;">
-        <nz-option nzValue="glass" nzLabel="Glass"></nz-option>
-        <nz-option nzValue="cantilever" nzLabel="Cantilever"></nz-option>
-      </nz-select>
+    <nz-drawer [nzClosable]="true" [nzVisible]="showFilters" nzPlacement="top" [nzHeight]="150"
+      (nzOnClose)="showFilters = false">
+      <div style="display: inline-block;">
+        <div style="display: block;">
+          Project Type
+        </div>
+        <nz-select [(ngModel)]="selectedType" nzAllowClear nzPlaceHolder="Select Type" nzSize="small"
+          style="width:160px;margin-right:10px;display: block;">
+          <nz-option nzValue="residential" nzLabel="Residential"></nz-option>
+          <nz-option nzValue="commercial" nzLabel="Commercial"></nz-option>
+          <nz-option nzValue="unbuilt" nzLabel="Unbuilt"></nz-option>
+          <nz-option nzValue="inTheWorks" nzLabel="In the Works"></nz-option>
+        </nz-select>
+      </div>
+      <div style="display: inline-block;">
+        <div style="display: block;">
+          Materials
+        </div>
+        <nz-select [(ngModel)]="selectedMateria" nzAllowClear nzPlaceHolder="Select Material" nzSize="small"
+          style="width:160px;margin-right:10px;display: block;">
+          <nz-option nzValue="bamboo" nzLabel="Bamboo"></nz-option>
+          <nz-option nzValue="concrete" nzLabel="Concrete"></nz-option>
+        </nz-select>
+      </div>
+      <div style="display: inline-block;">
+        <div style="display: block;">
+          Location
+        </div>
+        <nz-select [(ngModel)]="selectedLocation" nzAllowClear nzPlaceHolder="Select Location" nzSize="small"
+          style="width:160px;margin-right:10px;display: block;">
+          <nz-option nzValue="boulder" nzLabel="Boulder"></nz-option>
+          <nz-option nzValue="denver" nzLabel="Denver"></nz-option>
+          <nz-option nzValue="switzerland" nzLabel="Switzerland"></nz-option>
+        </nz-select>
+      </div>
+      <div style="display: inline-block;">
+        <div style="display: block;">
+          Architectural Elements
+        </div>
+        <nz-select [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Select Architectural Element" nzSize="small"
+          style="width: 250px;margin-right:10px;display: block;">
+          <nz-option nzValue="glass" nzLabel="Glass"></nz-option>
+          <nz-option nzValue="cantilever" nzLabel="Cantilever"></nz-option>
+        </nz-select>
+      </div>
     </nz-drawer>
     <div *ngIf="page === 'work'" style="position:fixed;left:5vw;">
-      <i class="fa-regular fa-filter" style="font-size:2vw;display:inline-block;margin-right:20px;cursor:pointer;" (click)="showFilters = true" nz-tooltip nzTooltipTitle="Show Project Filters" nzTooltipPlacement="bottom">
+      <i class="fa-regular fa-filter" style="font-size:24px;display:inline-block;margin-right:20px;cursor:pointer;"
+        (click)="showFilters = true" nz-tooltip nzTooltipTitle="Show Project Filters" nzTooltipPlacement="bottom">
       </i>
-      <div style="font-size:2vh;display:inline-block;letter-spacing: 3px;">
+      <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
         Work
       </div>
     </div>
@@ -150,8 +172,7 @@
         <nz-tabset>
           <nz-tab nzTitle="Project Photos">
             <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay">
-              <div nz-carousel-content *ngFor="let image of currentProject.images" style="text-align: center;"
-                style="height:50vh;">
+              <div nz-carousel-content *ngFor="let image of currentProject.images" style="text-align: center;height:50vh;overflow-x: scroll;">
                 <img style="text-align: center;display:inline-block;" [src]="image" height="100%">
               </div>
             </nz-carousel>

@@ -91,80 +91,141 @@ export class Arch11Component extends BaseComponent implements OnInit {
   projects = [
     {
       title: 'House 59',
+      shortDesc: `Working directly with three separate clients,
+      Arch11 designed these townhomes to the eccentricities of each
+      of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
       thumbnail: 'assets/images/arch11-images/alder-2-1600x900-q80.jpeg',
-      images: ['assets/images/arch11-images/alder-2-1600x900-q80.jpeg', 'assets/images/arch11-images/alder-1-2800x1575-q80.jpeg', 'assets/images/arch11-images/2290_5-1600x900-q80.jpeg', 'assets/images/arch11-images/alder-6-2800x1575-q80.jpeg', 'assets/images/arch11-images/alder-7-2800x1575-q80.jpeg', 'assets/images/arch11-images/alder-9-2800x1575-q80.jpeg', 'assets/images/arch11-images/alder-15-2800x1575-q80.jpeg']
+      images: ['assets/images/arch11-images/alder-2-1600x900-q80.jpeg', 'assets/images/arch11-images/alder-1-2800x1575-q80.jpeg', 'assets/images/arch11-images/2290_5-1600x900-q80.jpeg', 'assets/images/arch11-images/alder-6-2800x1575-q80.jpeg', 'assets/images/arch11-images/alder-7-2800x1575-q80.jpeg', 'assets/images/arch11-images/alder-9-2800x1575-q80.jpeg', 'assets/images/arch11-images/alder-15-2800x1575-q80.jpeg'],
+      tags: ['Residential', 'Boulder']
     },
     {
       title: 'Syncline House',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
       thumbnail: 'assets/images/arch11-images/syncline-house-1-1600x900-q80.jpeg',
-      images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
+      images: ['assets/images/arch11-images/syncline-house-1-1600x900-q80.jpeg', 'assets/images/arch11-images/syncline-house-2-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-3-2800x1575-q80.jpeg',
+        'assets/images/arch11-images/syncline-house-4-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-5-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-6-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-7.2-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-8-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-9-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-10-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-12-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-14-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-15-2800x1575-q80.jpeg'],
+      tags: ['Residential', 'Boulder']
     },
     {
       title: 'Foo',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
+      tags: ['Residential', 'Boulder'],
       thumbnail: 'assets/images/arch11-images/taylor-mountain-1-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
     },
     {
       title: 'Foo',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
+      tags: ['Residential', 'Boulder'],
       thumbnail: 'assets/images/arch11-images/dihedral-house-3-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
     },
     {
       title: 'Foo',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
+      tags: ['Residential', 'Boulder'],
       thumbnail: 'assets/images/arch11-images/odgen-1-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
     },
     {
       title: 'Foo',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
+      tags: ['Residential', 'Boulder'],
       thumbnail: 'assets/images/arch11-images/observatory-park-1-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
     },
     {
       title: 'Foo',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
+      tags: ['Residential', 'Boulder'],
       thumbnail: 'assets/images/arch11-images/sandburg-2-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
     },
     {
       title: 'Foo',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
+      tags: ['Residential', 'Boulder'],
       thumbnail: 'assets/images/arch11-images/polo-club-2-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
     },
     {
       title: 'Foo',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
+      tags: ['Residential', 'Boulder'],
       thumbnail: 'assets/images/arch11-images/lodgepole-retreat-1-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
     },
     {
       title: 'Foo',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
+      tags: ['Residential', 'Boulder'],
       thumbnail: 'assets/images/arch11-images/grid-house-15-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
     },
     {
       title: 'Foo',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
+      tags: ['Residential', 'Boulder'],
       thumbnail: 'assets/images/arch11-images/geneva-3-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg', 'assets/images/arch11-images/one.jpeg']
+    },
+    {
+      title: 'DynaEnergetics',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      tags: ['Commercial', 'Boulder'],
+      thumbnail: 'assets/images/arch11-images/dyna-1-1600x900-q80.jpeg',
+      images: []
+    },
+    {
+      title: 'Foo',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      tags: ['Commercial', 'Boulder'],
+      thumbnail: 'assets/images/arch11-images/roth-denver-2-1600x900-q80.jpeg',
+      images: []
+    },
+    {
+      title: 'Foo',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      tags: ['Commercial', 'Boulder'],
+      thumbnail: 'assets/images/arch11-images/corrida-12-1600x900-q80.jpeg',
+      images: []
+    },
+    {
+      title: 'Foo',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      tags: ['Commercial', 'Boulder'],
+      thumbnail: 'assets/images/arch11-images/909-walnut-triptych-1600x900-q80.jpeg',
+      images: []
     },
   ]
 
