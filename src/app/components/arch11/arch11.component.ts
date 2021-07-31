@@ -551,6 +551,8 @@ export class Arch11Component extends BaseComponent implements OnInit {
     publications: 'Publications',
     postings: 'Postings',
     studio: 'Studio',
+    team: 'Team',
+    process: 'Process',
     contacts: 'Contacts'
   }
 

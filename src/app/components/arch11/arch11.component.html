@@ -48,6 +48,12 @@
         <div class="nav-element" (click)="goToPage('studio')">
           Studio
         </div>
+        <div class="nav-element" (click)="goToPage('team')">
+          Team
+        </div>
+        <div class="nav-element" (click)="goToPage('process')">
+          Process
+        </div>
         <div class="nav-element" (click)="goToPage('contacts')">
           Contacts
         </div>
@@ -99,7 +105,7 @@
         </nz-select>
       </div>
     </nz-drawer>
-    <div *ngIf="page !== 'home'" style="position:fixed;left:5vw;">
+    <div *ngIf="page !== 'home'" style="position:fixed;left:60px;">
       <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
         {{ pageLabelHash[page] }}
       </div>
@@ -235,6 +241,12 @@
     </div>
     <div *ngIf="page === 'studio'" style="width:100%; height:100%;">
       <iframe src="https://arch11.com/studio" title="Awards" width="100%" height="100%"></iframe>
+    </div>
+    <div *ngIf="page === 'team'" style="width:100%; height:100%;">
+      <iframe src="https://arch11.com/studio/team" title="Awards" width="100%" height="100%"></iframe>
+    </div>
+    <div *ngIf="page === 'process'" style="width:100%; height:100%;">
+      <iframe src="https://arch11.com/studio/process" title="Awards" width="100%" height="100%"></iframe>
     </div>
     <div *ngIf="page === 'contacts'" style="width:100%; height:100%;">
       <iframe src="https://arch11.com/contact" title="Awards" width="100%" height="100%"></iframe>
