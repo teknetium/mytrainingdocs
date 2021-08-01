@@ -24,19 +24,28 @@ interface timeComponents {
   daysToDday: number;
 }
 
+interface projectModel {
+  title: string,
+  shortDesc: string,
+  description: string,
+  thumbnail: string,
+  images: string[],
+  tags: string[]
+}
+
 @Component({
   selector: 'app-arch11',
   templateUrl: './arch11.component.html',
   styleUrls: ['./arch11.component.css'],
   encapsulation: ViewEncapsulation.Emulated,
   animations: [
-    trigger('videoSlide', [
+    trigger('filterBarSlide', [
       // ...
       state('closed', style({
-        'margin-top': '-100vw'
+        'bottom': '100px'
       })),
       state('open', style({
-        'margin-top': '2vw',
+        'bottom': '-100px',
       })),
       transition('open => closed', [
         animate('300ms')
@@ -88,7 +97,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
 
   costArray = ['Employee Churn', 'Non Compliance', 'Sexual Harrassment'];
 
-  projects = [
+  projects: projectModel[] = [
     {
       title: 'House 59',
       shortDesc: `Working directly with three separate clients,
@@ -98,7 +107,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       have a special workflow for attaching image of certificate.`,
       thumbnail: 'assets/images/arch11-images/alder-2-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/alder-2-1600x900-q80.jpeg', 'assets/images/arch11-images/alder-1-2800x1575-q80.jpeg', 'assets/images/arch11-images/2290_5-1600x900-q80.jpeg', 'assets/images/arch11-images/alder-6-2800x1575-q80.jpeg', 'assets/images/arch11-images/alder-7-2800x1575-q80.jpeg', 'assets/images/arch11-images/alder-9-2800x1575-q80.jpeg', 'assets/images/arch11-images/alder-15-2800x1575-q80.jpeg'],
-      tags: ['Residential', 'Boulder']
+      tags: ['residential', 'boulder']
     },
     {
       title: 'Syncline House',
@@ -108,14 +117,14 @@ export class Arch11Component extends BaseComponent implements OnInit {
       thumbnail: 'assets/images/arch11-images/syncline-house-1-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/syncline-house-1-1600x900-q80.jpeg', 'assets/images/arch11-images/syncline-house-2-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-3-2800x1575-q80.jpeg',
         'assets/images/arch11-images/syncline-house-4-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-5-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-6-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-7.2-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-8-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-9-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-10-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-12-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-14-2800x1575-q80.jpeg', 'assets/images/arch11-images/syncline-house-15-2800x1575-q80.jpeg'],
-      tags: ['Residential', 'Boulder']
+      tags: ['residential', 'boulder']
     },
     {
       title: 'Taylor Mountain',
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['Residential', 'Boulder'],
+      tags: ['residential', 'boulder'],
       thumbnail: 'assets/images/arch11-images/taylor-mountain-1-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/taylor-mountain-1-1600x900-q80.jpeg']
     },
@@ -124,7 +133,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['Residential', 'Boulder'],
+      tags: ['residential', 'boulder'],
       thumbnail: 'assets/images/arch11-images/dihedral-house-3-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/dihedral-house-3-1600x900-q80.jpeg']
     },
@@ -133,7 +142,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['Residential', 'Boulder'],
+      tags: ['residential', 'boulder'],
       thumbnail: 'assets/images/arch11-images/odgen-1-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/odgen-1-1600x900-q80.jpeg']
     },
@@ -142,7 +151,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['Residential', 'Boulder'],
+      tags: ['residential', 'boulder'],
       thumbnail: 'assets/images/arch11-images/observatory-park-1-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/observatory-park-1-1600x900-q80.jpeg']
     },
@@ -151,7 +160,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['Residential', 'Boulder'],
+      tags: ['residential', 'denver'],
       thumbnail: 'assets/images/arch11-images/sandburg-2-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/sandburg-2-1600x900-q80.jpeg']
     },
@@ -160,7 +169,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['Residential', 'Boulder'],
+      tags: ['residential', 'denver'],
       thumbnail: 'assets/images/arch11-images/polo-club-2-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/polo-club-2-1600x900-q80.jpeg']
     },
@@ -169,7 +178,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['Residential', 'Boulder'],
+      tags: ['residential', 'boulder'],
       thumbnail: 'assets/images/arch11-images/lodgepole-retreat-1-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/lodgepole-retreat-1-1600x900-q80.jpeg']
     },
@@ -178,7 +187,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['Residential', 'Boulder'],
+      tags: ['residential', 'boulder'],
       thumbnail: 'assets/images/arch11-images/grid-house-15-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/grid-house-15-1600x900-q80.jpeg']
     },
@@ -187,7 +196,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['Residential', 'Boulder'],
+      tags: ['residential', 'boulder'],
       thumbnail: 'assets/images/arch11-images/geneva-3-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/geneva-3-1600x900-q80.jpeg']
     },
@@ -196,7 +205,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['Commercial', 'Boulder'],
+      tags: ['commercial', 'denver'],
       thumbnail: 'assets/images/arch11-images/dyna-1-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/dyna-1-1600x900-q80.jpeg']
     },
@@ -205,7 +214,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['Commercial', 'Boulder'],
+      tags: ['commercial', 'boulder'],
       thumbnail: 'assets/images/arch11-images/roth-denver-2-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/roth-denver-2-1600x900-q80.jpeg']
     },
@@ -214,7 +223,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['Commercial', 'Boulder'],
+      tags: ['commercial', 'denver'],
       thumbnail: 'assets/images/arch11-images/corrida-12-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/corrida-12-1600x900-q80.jpeg']
     },
@@ -223,7 +232,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['Commercial', 'Boulder'],
+      tags: ['commercial', 'boulder'],
       thumbnail: 'assets/images/arch11-images/909-walnut-triptych-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/909-walnut-triptych-1600x900-q80.jpeg']
     },
@@ -556,6 +565,13 @@ export class Arch11Component extends BaseComponent implements OnInit {
     contacts: 'Contacts'
   }
 
+  selectedType: string;
+  selectedMaterial: string;
+  selectedLocation: string;
+  selectedArchElements: string;
+  filters = [];
+  filteredProjects: projectModel[] = this.projects;
+
   @ViewChild(NzCarouselComponent, { static: false }) myCarousel: NzCarouselComponent;
 
   carouselState: string = 'active';
@@ -598,8 +614,45 @@ export class Arch11Component extends BaseComponent implements OnInit {
   }
 
   selectProject(index) {
-    this.currentProject = this.projects[index];
+    this.currentProject = this.filteredProjects[index];
     this.currentProjectIndex = index;
+  }
+
+  filterChanged(event) {
+
+    let filterArray = [];
+    this.filteredProjects = [];
+    if (this.selectedType) {
+      filterArray.push(this.selectedType);
+    }
+    if (this.selectedMaterial) {
+      filterArray.push(this.selectedMaterial);
+    }
+    if (this.selectedLocation) {
+      filterArray.push(this.selectedLocation);
+    }
+    if (this.selectedArchElements) {
+      filterArray.push(this.selectedArchElements);
+    }
+
+    console.log(filterArray);
+
+    let filtersFound = true;
+    if (filterArray.length > 0) {
+      for (let project of this.projects) {
+        for (let filter of filterArray) {
+          if (project.tags.indexOf(filter) < 0) {
+            filtersFound = false;
+            break;
+          }
+        }
+        if (filtersFound) {
+          this.filteredProjects.push(project);
+        } else {
+          filtersFound = true;
+        }
+      }
+    }
   }
 
   goToPage(page) {

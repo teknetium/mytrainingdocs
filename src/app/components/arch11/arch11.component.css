@@ -1,6 +1,7 @@
 .page {
 	background-color: white;
   height: 100%;
+  position:relative;
 }
 
 [nz-carousel-content] {
@@ -41,6 +42,7 @@
 .work {
 	background-color: white;
   height:100%;
+  padding-top:60px;
 }
 
 .toolbar {
@@ -79,12 +81,15 @@
 .project-bar {
 	background-color: white;
 	height: 20%;
+  position:relative;
+  z-index: 100;
 }
 
 .projects {
 	padding: 5px;
 	overflow: auto;
 	white-space: nowrap;
+  display: block;
 }
 
 .project {
@@ -107,6 +112,7 @@
 	width: 100%;
 	background-color: white;
 	padding: 5px;
+  position:relative;
 }
 
 .page-banner {
