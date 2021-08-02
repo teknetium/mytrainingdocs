@@ -239,7 +239,7 @@
           <div>
             <nz-tabset style="height:60vh">
               <nz-tab nzTitle="Project Photos">
-                <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" sty>
+                <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" [ngStyle]="{'height': projectDetailHeight}">
                   <div nz-carousel-content *ngFor="let image of currentProject?.images"
                     style="text-align: center;height:50vh;overflow-x: scroll;">
                     <img style="text-align: center;display:inline-block;" [src]="image" [height]="projectDetailHeight">
