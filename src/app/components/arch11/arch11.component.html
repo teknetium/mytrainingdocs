@@ -216,7 +216,7 @@
             <div style="clear: both;"></div>
           </div>
         </div>
-        <div class="projects" *ngIf="filteredProjects.length > 0" >
+        <div class="projects" *ngIf="filteredProjects.length > 0">
           <div *ngFor="let project of filteredProjects; index as projectIndex" class="project"
             style="display:inline-block;margin-right:.4vw" (click)="selectProject(projectIndex)" nz-tooltip
             [nzTooltipTitle]="project.title" nzTooltipPlacement="bottom">
@@ -224,12 +224,17 @@
               [ngClass]="{'selected-project': currentProjectIndex === projectIndex, 'notselected-project': currentProjectIndex !== projectIndex}">
           </div>
         </div>
-          <div *ngIf="filteredProjects.length === 0" style="padding: 20px;font-size:26px;color:red;">
-            No Matching Projects Found
-          </div>
+        <div *ngIf="filteredProjects.length === 0" style="padding: 20px;font-size:26px;color:red;">
+          No Matching Projects Found
+        </div>
         <div class="project-details" *ngIf="filteredProjects.length > 0">
           <div class="project-title">
+            <span style="margin-right:20px;">
             {{ currentProject?.title }}
+            </span>
+            <nz-tag [nzColor]="'geekblue'" *ngFor="let tag of currentProject?.tags"  style="vertical-align: middle;">{{ tag }}</nz-tag>
+          </div>
+          <div style="display:inline-block;padding: 20px;">
           </div>
           <div>
             <nz-tabset style="height:60vh">
