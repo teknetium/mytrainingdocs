@@ -210,7 +210,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       images: ['assets/images/arch11-images/dyna-1-1600x900-q80.jpeg']
     },
     {
-      title: 'Foo',
+      title: 'Roth Living Showroom & Headquarters',
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
@@ -219,7 +219,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       images: ['assets/images/arch11-images/roth-denver-2-1600x900-q80.jpeg']
     },
     {
-      title: 'Foo',
+      title: 'Corrida',
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
@@ -228,13 +228,58 @@ export class Arch11Component extends BaseComponent implements OnInit {
       images: ['assets/images/arch11-images/corrida-12-1600x900-q80.jpeg']
     },
     {
-      title: 'Foo',
+      title: '909 Walnut',
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
       tags: ['commercial', 'boulder'],
       thumbnail: 'assets/images/arch11-images/909-walnut-triptych-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/909-walnut-triptych-1600x900-q80.jpeg']
+    },
+    {
+      title: 'Place re: Place',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      tags: ['unbuilt', 'boulder'],
+      thumbnail: 'assets/images/arch11-images/placereplace-5-1600x900-q80.jpeg',
+      images: ['assets/images/arch11-images/placereplace-5-1600x900-q80.jpeg']
+    },
+    {
+      title: 'Whisky Still',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      tags: ['unbuilt', 'boulder'],
+      thumbnail: 'assets/images/arch11-images/whiskey-still_1-1600x900-q80.jpeg',
+      images: ['assets/images/arch11-images/whiskey-still_1-1600x900-q80.jpeg']
+    },
+    {
+      title: 'Park Pavilions',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      tags: ['unbuilt', 'boulder'],
+      thumbnail: 'assets/images/arch11-images/04-pm-int-1600x900-q80.jpeg',
+      images: ['assets/images/arch11-images/04-pm-int-1600x900-q80.jpeg']
+    },
+    {
+      title: 'Meadow Pavilion',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      tags: ['unbuilt', 'boulder'],
+      thumbnail: 'assets/images/arch11-images/turner-2-1600x900-q80.jpeg',
+      images: ['assets/images/arch11-images/turner-2-1600x900-q80.jpeg']
+    },
+    {
+      title: 'Partners Group',
+      shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
+      description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
+      have a special workflow for attaching image of certificate.`,
+      tags: ['unbuilt', 'boulder'],
+      thumbnail: 'assets/images/arch11-images/partners-group-3-1600x900-q80.jpeg',
+      images: ['assets/images/arch11-images/partners-group-3-1600x900-q80.jpeg']
     },
   ]
 
@@ -462,19 +507,19 @@ export class Arch11Component extends BaseComponent implements OnInit {
   currentSlide = 0;
   images = [
     {
-      image: "assets/images/arch11-images/one.jpeg",
+      image: "assets/images/arch11-images/orchard-1-2800x1575-q80.jpeg",
       text: "Empower your teams to easily and quickly create their own trainings."
     },
     {
-      image: "assets/images/arch11-images/two.jpeg",
+      image: "assets/images/arch11-images/303-canyon-1-2800x1575-q80.jpeg",
       text: "Empower your teams to easily and quickly create their own trainings."
     },
     {
-      image: "assets/images/arch11-images/three.jpeg",
+      image: "assets/images/arch11-images/alder-1-2800x1575-q80.jpeg",
       text: "Empower your teams to easily and quickly create their own trainings."
     },
     {
-      image: "assets/images/arch11-images/four.jpeg",
+      image: "assets/images/arch11-images/dyna-11-2800x1575-q80.jpeg",
       text: "Empower your teams to easily and quickly create their own trainings."
     },
     {
