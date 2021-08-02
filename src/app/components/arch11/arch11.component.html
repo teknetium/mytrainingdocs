@@ -216,7 +216,7 @@
             <div style="clear: both;"></div>
           </div>
         </div>
-        <div class="projects">
+        <div class="projects" *ngIf="filteredProjects.length > 0" >
           <div *ngFor="let project of filteredProjects; index as projectIndex" class="project"
             style="display:inline-block;margin-right:.4vw" (click)="selectProject(projectIndex)" nz-tooltip
             [nzTooltipTitle]="project.title" nzTooltipPlacement="bottom">
@@ -224,17 +224,20 @@
               [ngClass]="{'selected-project': currentProjectIndex === projectIndex, 'notselected-project': currentProjectIndex !== projectIndex}">
           </div>
         </div>
-        <div class="project-details">
-          <div class="project-title">
-            {{ currentProject.title }}
+          <div *ngIf="filteredProjects.length === 0" style="padding: 20px;font-size:26px;color:red;">
+            No Matching Projects Found
           </div>
-          <div style="height:60vh;">
-            <nz-tabset>
+        <div class="project-details" *ngIf="filteredProjects.length > 0">
+          <div class="project-title">
+            {{ currentProject?.title }}
+          </div>
+          <div>
+            <nz-tabset style="height:60vh">
               <nz-tab nzTitle="Project Photos">
-                <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay">
-                  <div nz-carousel-content *ngFor="let image of currentProject.images"
+                <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" sty>
+                  <div nz-carousel-content *ngFor="let image of currentProject?.images"
                     style="text-align: center;height:50vh;overflow-x: scroll;">
-                    <img style="text-align: center;display:inline-block;" [src]="image" height="100%">
+                    <img style="text-align: center;display:inline-block;" [src]="image" [height]="projectDetailHeight">
                   </div>
                 </nz-carousel>
 

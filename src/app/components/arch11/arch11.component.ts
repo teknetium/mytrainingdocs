@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, HostListener } from '@angular/core';
 import { Location } from '@angular/common';
 import { AuthService } from '../../shared/services/auth.service';
 import { UserService } from '../../shared/services/user.service';
@@ -565,12 +565,32 @@ export class Arch11Component extends BaseComponent implements OnInit {
     contacts: 'Contacts'
   }
 
+  browserInnerHeight;
+  projectDetailHeight;
+
   selectedType: string;
   selectedMaterial: string;
   selectedLocation: string;
   selectedArchElements: string;
   filters = [];
   filteredProjects: projectModel[] = this.projects;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.browserInnerHeight = window.innerHeight;
+    this.projectDetailHeight = this.browserInnerHeight * .5;
+    /*
+    if (this.orgChartWidth < 800) {
+      this.orgChartContainerSize = 'small';
+    } else if (this.orgChartWidth < 900) {
+      this.orgChartContainerSize = 'medium';
+    } else {
+      this.orgChartContainerSize = 'large';
+    }
+    this.peopleCntArray = this.peopleCntHash[this.orgChartContainerSize];
+    */
+  }
+
 
   @ViewChild(NzCarouselComponent, { static: false }) myCarousel: NzCarouselComponent;
 
@@ -586,6 +606,9 @@ export class Arch11Component extends BaseComponent implements OnInit {
     this.ngxScrollToDuration = 2000;
     this.ngxScrollToEasing = 'easeOutCubic';
     this.ngxScrollToOffset = 0;
+
+    this.browserInnerHeight = window.innerHeight;
+    this.projectDetailHeight = this.browserInnerHeight * .5;
   }
 
   fadeIn() {
@@ -652,6 +675,16 @@ export class Arch11Component extends BaseComponent implements OnInit {
           filtersFound = true;
         }
       }
+    } else {
+      this.filteredProjects = this.projects;
+    }
+
+    if (this.filteredProjects.length === 0) {
+      this.currentProject = null;
+      this.currentProjectIndex = -1;
+    } else {
+      this.currentProject = this.filteredProjects[0];
+      this.currentProjectIndex = 0;
     }
   }
 
