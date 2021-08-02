@@ -79,12 +79,12 @@
 
 .project-bar {
 	background-color: white;
-	height: 20%;
   position:relative;
   z-index: 100;
 }
 
 .projects {
+	height: 10vh;
 	padding: 5px;
 	overflow: auto;
 	white-space: nowrap;

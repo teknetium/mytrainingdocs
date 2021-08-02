@@ -624,16 +624,6 @@ export class Arch11Component extends BaseComponent implements OnInit {
   onResize(event) {
     this.browserInnerHeight = window.innerHeight;
     this.projectDetailHeight = this.browserInnerHeight * .6;
-    /*
-    if (this.orgChartWidth < 800) {
-      this.orgChartContainerSize = 'small';
-    } else if (this.orgChartWidth < 900) {
-      this.orgChartContainerSize = 'medium';
-    } else {
-      this.orgChartContainerSize = 'large';
-    }
-    this.peopleCntArray = this.peopleCntHash[this.orgChartContainerSize];
-    */
   }
 
 

@@ -218,7 +218,7 @@
         </div>
         <div class="projects" *ngIf="filteredProjects.length > 0">
           <div *ngFor="let project of filteredProjects; index as projectIndex" class="project"
-            style="display:inline-block;margin-right:.4vw" (click)="selectProject(projectIndex)" nz-tooltip
+            style="display:inline-block;margin-right:.4vw;height:100%;" (click)="selectProject(projectIndex)" nz-tooltip
             [nzTooltipTitle]="project.title" nzTooltipPlacement="bottom">
             <img style="background-color: white;text-align: center;" [src]="project.thumbnail" height="100%"
               [ngClass]="{'selected-project': currentProjectIndex === projectIndex, 'notselected-project': currentProjectIndex !== projectIndex}">
@@ -237,11 +237,11 @@
           <div style="display:inline-block;padding: 20px;">
           </div>
           <div>
-            <nz-tabset style="height:60vh">
+            <nz-tabset >
               <nz-tab nzTitle="Project Photos">
-                <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" [ngStyle]="{'height': projectDetailHeight}">
+                <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" [ngStyle]="{'height.px': projectDetailHeight + 20}">
                   <div nz-carousel-content *ngFor="let image of currentProject?.images"
-                    style="text-align: center;height:50vh;overflow-x: scroll;">
+                    style="text-align: center;height:50vh;overflow-x: scroll;" >
                     <img style="text-align: center;display:inline-block;" [src]="image" [height]="projectDetailHeight">
                   </div>
                 </nz-carousel>
