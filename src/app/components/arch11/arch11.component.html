@@ -4,7 +4,7 @@
       <i class="fa-solid fa-bars" (click)="showNav = true"></i>
     </div>
     <div *ngIf="page === 'work'" class="filterToggle">
-      <i class="fa-regular fa-filter" (click)="showFilters = !showFilters"></i>
+      <i class="fa-regular fa-filter" (click)="showFilters = !showFilters" nz-tooltip nzTooltipTitle="Show Project Filters" nzTooltipPlacement="right"></i>
     </div>
     <nz-drawer [nzClosable]="true" [nzVisible]="showNav" nzPlacement="left" (nzOnClose)="showNav = false">
       <div class="nav-elements">

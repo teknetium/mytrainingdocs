@@ -624,7 +624,11 @@ export class Arch11Component extends BaseComponent implements OnInit {
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.browserInnerHeight = window.innerHeight;
-    this.projectDetailHeight = this.browserInnerHeight * .65;
+    if (this.browserInnerHeight < 950) {
+      this.projectDetailHeight = this.browserInnerHeight * .60;
+    } else {
+      this.projectDetailHeight = this.browserInnerHeight * .65;
+    }
   }
 
 
@@ -644,7 +648,11 @@ export class Arch11Component extends BaseComponent implements OnInit {
     this.ngxScrollToOffset = 0;
 
     this.browserInnerHeight = window.innerHeight;
-    this.projectDetailHeight = this.browserInnerHeight * .65;
+    if (this.browserInnerHeight < 950) {
+      this.projectDetailHeight = this.browserInnerHeight * .55;
+    } else {
+      this.projectDetailHeight = this.browserInnerHeight * .65;
+    }
   }
 
   fadeIn() {
