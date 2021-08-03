@@ -619,11 +619,12 @@ export class Arch11Component extends BaseComponent implements OnInit {
   selectedArchElements: string;
   filters = [];
   filteredProjects: projectModel[] = this.projects;
+  filterArray: string[];
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.browserInnerHeight = window.innerHeight;
-    this.projectDetailHeight = this.browserInnerHeight * .6;
+    this.projectDetailHeight = this.browserInnerHeight * .65;
   }
 
 
@@ -643,7 +644,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
     this.ngxScrollToOffset = 0;
 
     this.browserInnerHeight = window.innerHeight;
-    this.projectDetailHeight = this.browserInnerHeight * .6;
+    this.projectDetailHeight = this.browserInnerHeight * .65;
   }
 
   fadeIn() {
@@ -676,29 +677,33 @@ export class Arch11Component extends BaseComponent implements OnInit {
     this.currentProjectIndex = index;
   }
 
+  removeFilter(item) {
+    console.log("removeFilter" , item);
+  }
+
   filterChanged(event) {
 
-    let filterArray = [];
+    this.filterArray = [];
     this.filteredProjects = [];
     if (this.selectedType) {
-      filterArray.push(this.selectedType);
+      this.filterArray.push(this.selectedType);
     }
     if (this.selectedMaterial) {
-      filterArray.push(this.selectedMaterial);
+      this.filterArray.push(this.selectedMaterial);
     }
     if (this.selectedLocation) {
-      filterArray.push(this.selectedLocation);
+      this.filterArray.push(this.selectedLocation);
     }
     if (this.selectedArchElements) {
-      filterArray.push(this.selectedArchElements);
+      this.filterArray.push(this.selectedArchElements);
     }
 
-    console.log(filterArray);
+    console.log(this.filterArray);
 
     let filtersFound = true;
-    if (filterArray.length > 0) {
+    if (this.filterArray.length > 0) {
       for (let project of this.projects) {
-        for (let filter of filterArray) {
+        for (let filter of this.filterArray) {
           if (project.tags.indexOf(filter) < 0) {
             filtersFound = false;
             break;
@@ -721,6 +726,8 @@ export class Arch11Component extends BaseComponent implements OnInit {
       this.currentProject = this.filteredProjects[0];
       this.currentProjectIndex = 0;
     }
+
+    this.showFilters = false;
   }
 
   goToPage(page) {

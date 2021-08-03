@@ -32,7 +32,14 @@
 
 .hamburger {
 	position: fixed;
-	left: 1vw;
+	left: 20px;
+	font-size: 24px;
+	cursor: pointer;
+	opacity: 1;
+}
+.filterToggle {
+	position: fixed;
+	left: 60px;
 	font-size: 24px;
 	cursor: pointer;
 	opacity: 1;
@@ -41,7 +48,7 @@
 .work {
 	background-color: white;
   height:100%;
-  padding-top:60px;
+  padding-top:75px;
 }
 
 .toolbar {
@@ -80,7 +87,6 @@
 .project-bar {
 	background-color: white;
   position:relative;
-  z-index: 100;
 }
 
 .projects {
