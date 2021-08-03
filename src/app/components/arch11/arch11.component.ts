@@ -135,7 +135,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       have a special workflow for attaching image of certificate.`,
       tags: ['residential', 'boulder', 'concrete'],
       thumbnail: 'assets/images/arch11-images/dihedral-house-3-1600x900-q80.jpeg',
-      images: ['assets/images/arch11-images/dihedral-house-3-1600x900-q80.jpeg']
+      images: ['assets/images/arch11-images/dihedral-house-3-1600x900-q80.jpeg', 'assets/images/arch11-images/dihedral-house-2-2800x1575-q80.jpeg', 'assets/images/arch11-images/dihedral-house-1-2800x1575-q80.jpeg', 'assets/images/arch11-images/dihedral-house-4-2800x1575-q80.jpeg', 'assets/images/arch11-images/dihedral-house-11-2800x1575-q80.jpeg', 'assets/images/arch11-images/dihedral-house-5-2800x1575-q80.jpeg', 'assets/images/arch11-images/dihedral-house-6-2800x1575-q80.jpeg', 'assets/images/arch11-images/dihedral-house-7-2800x1575-q80.jpeg', 'assets/images/arch11-images/dihedral-house-8-2800x1575-q80.jpeg', 'assets/images/arch11-images/dihedral-house-9-2800x1575-q80.jpeg', 'assets/images/arch11-images/dihedral-house-10-2800x1575-q80.jpeg', 'assets/images/arch11-images/dihedral-house-12-2800x1575-q80.jpeg', 'assets/images/arch11-images/dihedral-house-13-2800x1575-q80.jpeg', 'assets/images/arch11-images/dihedral-house-14-2800x1575-q80.jpeg']
     },
     {
       title: 'Ogden Street',
