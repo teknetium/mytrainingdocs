@@ -1,7 +1,7 @@
 .page {
 	background-color: white;
-  height: 100%;
-  position:relative;
+	height: 100%;
+	position: relative;
 }
 
 [nz-carousel-content] {
@@ -22,12 +22,12 @@
 	top: 0;
 	left: 0;
 	right: 0;
-  background-image: url('../../../assets/images/arch11-images/banner.jpeg');
-/*  background: rgb(255, 255, 255, .7); */
+	background-image: url('../../../assets/images/arch11-images/banner.jpeg');
+	/*  background: rgb(255, 255, 255, .7); */
 	width: 100%;
 	height: 60px;
-	color:black;
-  opacity: .7;
+	color: black;
+	opacity: .7;
 }
 
 .hamburger {
@@ -35,31 +35,38 @@
 	left: 20px;
 	font-size: 24px;
 	cursor: pointer;
-	opacity: 1;
 }
 .filterToggle {
 	position: fixed;
 	left: 60px;
 	font-size: 24px;
 	cursor: pointer;
-	opacity: 1;
+  display: inline-block;
 }
-
+/*
+.fullscreen {
+	position: fixed;
+	top: 20px;
+	left: 120px;
+	font-size: 24px;
+	cursor: pointer;
+}
+*/
 .work {
 	background-color: white;
-  height:100%;
-  padding-top:75px;
+	height: 100%;
+	padding-top: 75px;
 }
 
 .toolbar {
-  padding:10px;
-  margin-top:60px;
-  background-color: #f5f5f5;
+	padding: 10px;
+	margin-top: 60px;
+	background-color: #f5f5f5;
 }
 
 .nav-elements {
 	font-size: 16px;
-  margin-top:40px;
+	margin-top: 40px;
 }
 
 .nav-element:hover {
@@ -68,9 +75,9 @@
 
 .nav-element {
 	display: block;
-  padding:10px;
+	padding: 10px;
 	margin-bottom: 20px;
-	font-weight: 200;
+	font-weight: 400;
 	letter-spacing: 3px;
 	cursor: pointer;
 }
@@ -81,12 +88,12 @@
 	font-size: 40px;
 	letter-spacing: 3px;
 	opacity: 1;
-  color:black;
+	color: black;
 }
 
 .project-bar {
 	background-color: white;
-  position:relative;
+	position: relative;
 }
 
 .projects {
@@ -94,12 +101,12 @@
 	padding: 5px;
 	overflow: auto;
 	white-space: nowrap;
-  display: block;
+	display: block;
 }
 
 .project {
 	height: 15vh;
-  /*
+	/*
 	width: 15vh;
 	overflow: hidden;
   */
@@ -117,7 +124,7 @@
 	width: 100%;
 	background-color: white;
 	padding: 5px;
-  position:relative;
+	position: relative;
 }
 
 .page-banner {
@@ -150,7 +157,16 @@
 .project-title {
 	font-size: 2vh;
 	letter-spacing: 2px;
-  height:6vh;
-  padding:1.5vh;
-  display:inline-block;
+	height: 6vh;
+	padding: 1.5vh;
+	display: inline-block;
+}
+
+.fullscreen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+  height:100%;
+  z-index:1000;
 }

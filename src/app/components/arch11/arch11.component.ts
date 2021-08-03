@@ -133,7 +133,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
       shortDesc: `Working directly with three separate clients, Arch11 designed these townhomes to the eccentricities of each of the occupants: a builder, a tech maven, and a graphic designer turned fly fisherman.`,
       description: `Support for both one-time and recurring trainings.  Recurring trainings (certification)
       have a special workflow for attaching image of certificate.`,
-      tags: ['residential', 'boulder'],
+      tags: ['residential', 'boulder', 'concrete'],
       thumbnail: 'assets/images/arch11-images/dihedral-house-3-1600x900-q80.jpeg',
       images: ['assets/images/arch11-images/dihedral-house-3-1600x900-q80.jpeg']
     },
@@ -611,6 +611,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
   }
 
   browserInnerHeight;
+  browserInnerWidth;
   projectDetailHeight;
 
   selectedType: string;
@@ -620,10 +621,13 @@ export class Arch11Component extends BaseComponent implements OnInit {
   filters = [];
   filteredProjects: projectModel[] = this.projects;
   filterArray: string[];
+  projectFullScreen = false;
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.browserInnerHeight = window.innerHeight;
+    this.browserInnerWidth = window.innerWidth;
+
     if (this.browserInnerHeight < 900) {
       this.projectDetailHeight = this.browserInnerHeight * .55;
     } else if (this.browserInnerHeight < 1100) {

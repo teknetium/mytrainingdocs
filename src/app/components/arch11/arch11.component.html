@@ -1,10 +1,20 @@
 <div class="page">
+                <nz-carousel *ngIf="projectFullScreen" [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay"
+                  style="position:fixed;top:0;left:0;width:100%;height:100%;">
+                  <div nz-carousel-content *ngFor="let image of currentProject?.images" style="">
+                    <img  [src]="image" [width]="browserInnerWidth">
+                  </div>
+                </nz-carousel>
   <div class="navbar">
     <div class="hamburger">
       <i class="fa-solid fa-bars" (click)="showNav = true"></i>
     </div>
     <div *ngIf="page === 'work'" class="filterToggle">
-      <i class="fa-regular fa-filter" (click)="showFilters = !showFilters" nz-tooltip nzTooltipTitle="Show Project Filters" nzTooltipPlacement="right"></i>
+      <i class="fa-regular fa-filter" (click)="showFilters = !showFilters" nz-tooltip
+        nzTooltipTitle="Show Project Filters" nzTooltipPlacement="right"></i>
+        <!--
+      <i class="fa-regular fa-arrows-maximize" (click)="projectFullScreen = !projectFullScreen" style="margin-left:20px;"></i>
+      -->
     </div>
     <nz-drawer [nzClosable]="true" [nzVisible]="showNav" nzPlacement="left" (nzOnClose)="showNav = false">
       <div class="nav-elements">
@@ -269,16 +279,17 @@
             <span style="margin-right:20px;">
               {{ currentProject?.title }}
             </span>
-            <nz-tag [nzColor]="'geekblue'" *ngFor="let tag of currentProject?.tags" style="vertical-align: baseline;">{{
-              tag
-              }}</nz-tag>
+            <nz-tag [nzColor]="'geekblue'" *ngFor="let tag of currentProject?.tags" style="vertical-align: baseline;">
+              {{ tag }}
+            </nz-tag>
           </div>
           <div style="display:inline-block;padding: 20px;">
           </div>
-          <div>
+          <div style="position:relative;">
             <nz-tabset>
               <nz-tab nzTitle="Project Photos">
-                <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay"
+
+                <nz-carousel *ngIf="!projectFullScreen" [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay"
                   [ngStyle]="{'height.px': projectDetailHeight}">
                   <div nz-carousel-content *ngFor="let image of currentProject?.images"
                     style="text-align: center;height:50vh;overflow-x: scroll;">
