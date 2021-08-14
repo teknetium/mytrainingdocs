@@ -1,18 +1,31 @@
 <div class="page">
-                <nz-carousel *ngIf="projectFullScreen" [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay"
-                  style="position:fixed;top:0;left:0;width:100%;height:100%;">
-                  <div nz-carousel-content *ngFor="let image of currentProject?.images" style="">
-                    <img  [src]="image" [width]="browserInnerWidth">
-                  </div>
-                </nz-carousel>
+  <nz-carousel *ngIf="projectFullScreen" [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay"
+    style="position:fixed;top:0;left:0;width:100%;height:100%;">
+    <div nz-carousel-content *ngFor="let image of currentProject?.images" style="">
+      <img [src]="image" [width]="browserInnerWidth">
+    </div>
+  </nz-carousel>
+  <div *ngIf="page === 'work'" class="projects">
+
+    <i class="fa-regular fa-filter" (click)="showFilters = !showFilters" nz-tooltip
+      nzTooltipTitle="Show Project Filters" nzTooltipPlacement="right"
+      style="position:fixed;font-size:28px;left:10px;bottom:15vh;"></i>
+    <div *ngFor="let project of filteredProjects; index as projectIndex" class="project"
+      style="display:inline-block;margin-right:.4vw;height:100%;" (click)="selectProject(projectIndex)" nz-tooltip
+      [nzTooltipTitle]="project.title" nzTooltipPlacement="bottom">
+      <img style="background-color: white;text-align: center;" [src]="project.thumbnail" height="100%"
+        [ngClass]="{'selected-project': currentProjectIndex === projectIndex, 'notselected-project': currentProjectIndex !== projectIndex}">
+    </div>
+    <div *ngIf="filteredProjects.length === 0" style="padding: 20px;font-size:26px;color:red;">
+      No Matching Projects Found
+    </div>
+  </div>
   <div class="navbar">
     <div class="hamburger">
       <i class="fa-solid fa-bars" (click)="showNav = true"></i>
     </div>
     <div *ngIf="page === 'work'" class="filterToggle">
-      <i class="fa-regular fa-filter" (click)="showFilters = !showFilters" nz-tooltip
-        nzTooltipTitle="Show Project Filters" nzTooltipPlacement="right"></i>
-        <!--
+      <!--
       <i class="fa-regular fa-arrows-maximize" (click)="projectFullScreen = !projectFullScreen" style="margin-left:20px;"></i>
       -->
     </div>
@@ -47,7 +60,7 @@
         </div>
       </div>
     </nz-drawer>
-    <nz-drawer [nzClosable]="true" [nzVisible]="showFilters" nzPlacement="top" [nzHeight]="150"
+    <nz-drawer [nzClosable]="true" [nzVisible]="showFilters" nzPlacement="bottom" [nzHeight]="250"
       (nzOnClose)="showFilters = false">
       <div style="display: inline-block;">
         <div style="display: block;">
@@ -95,40 +108,6 @@
         </nz-select>
       </div>
     </nz-drawer>
-    <!--
-    <div *ngIf="page !== 'home'" style="position:fixed;left:48%;">
-      <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
-        {{ pageLabelHash[page] }}
-      </div>
-    </div>
-  -->
-    <!--
-    <div *ngIf="page === 'awards'" style="position:fixed;left:5vw;">
-      <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
-        Awards
-      </div>
-    </div>
-    <div *ngIf="page === 'publications'" style="position:fixed;left:5vw;">
-      <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
-        Publications
-      </div>
-    </div>
-    <div *ngIf="page === 'postings'" style="position:fixed;left:5vw;">
-      <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
-        Postings
-      </div>
-    </div>
-    <div *ngIf="page === 'studio'" style="position:fixed;left:5vw;">
-      <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
-        Studio
-      </div>
-    </div>
-    <div *ngIf="page === 'contacts'" style="position:fixed;left:5vw;">
-      <div style="font-size:24px;display:inline-block;letter-spacing: 3px;">
-        Contacts
-      </div>
-    </div>
-    -->
     <div class="logo">
       <span>
         Arch 11
@@ -179,6 +158,7 @@
       </div>
     </div>
     <div *ngIf="page === 'work'" class="work">
+      <!--
       <div style="height:30px;">
         <div style="display:inline;padding:10px 10px 20px 10px;font-size:18px;letter-spacing: 2px;">
           {{ filteredProjects?.length }} Projects
@@ -192,6 +172,7 @@
           </nz-tag>
         </div>
       </div>
+      -->
       <!--
     <div class="page-banner">
       <img src="assets/images/arch11-images/banner.jpeg" width="100%">
@@ -200,7 +181,7 @@
       </div>
     </div>
     -->
-      <div class="project-bar">
+      <div>
         <!--
         <div class="filter-bar">
           <div style="background-color: white;display: block;">
@@ -263,6 +244,7 @@
           </div>
         </div>
         -->
+        <!--
         <div class="projects" *ngIf="filteredProjects.length > 0">
           <div *ngFor="let project of filteredProjects; index as projectIndex" class="project"
             style="display:inline-block;margin-right:.4vw;height:100%;" (click)="selectProject(projectIndex)" nz-tooltip
@@ -273,33 +255,36 @@
         </div>
         <div *ngIf="filteredProjects.length === 0" style="padding: 20px;font-size:26px;color:red;">
           No Matching Projects Found
-        </div>
+        </div>-->
         <div class="project-details" *ngIf="filteredProjects.length > 0">
-          <div class="project-title">
-            <span style="margin-right:20px;">
-              {{ currentProject?.title }}
-            </span>
-            <nz-tag [nzColor]="'geekblue'" *ngFor="let tag of currentProject?.tags" style="vertical-align: baseline;">
-              {{ tag }}
-            </nz-tag>
-          </div>
           <div style="display:inline-block;padding: 20px;">
           </div>
-          <div style="position:relative;">
-            <nz-tabset>
+          <div [ngStyle]="{'width.px': browserInnerWidth, 'height.px': projectDetailHeight}">
+            <nz-tabset style="position: fixed;top:0;left:0;right:0;height:80%;" nzTabPosition="bottom">
               <nz-tab nzTitle="Project Photos">
 
-                <nz-carousel *ngIf="!projectFullScreen" [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay"
-                  [ngStyle]="{'height.px': projectDetailHeight}">
+                <nz-carousel [nzEffect]="effect" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay"
+                  [ngStyle]="{'width.px': browserInnerWidth }" style="height:100%;">
                   <div nz-carousel-content *ngFor="let image of currentProject?.images"
-                    style="text-align: center;height:50vh;overflow-x: scroll;">
-                    <img style="text-align: center;display:inline-block;" [src]="image" [height]="projectDetailHeight">
+                  [ngStyle]="{'width.px': browserInnerWidth}">
+                    <img style="text-align: center;display:inline-block;" [src]="image" [width]="browserInnerWidth">
                   </div>
                 </nz-carousel>
 
+                <div class="project-title">
+                  <span style="margin-right:20px;">
+                    {{ currentProject?.title }}
+                  </span>
+                  <!--
+                  <nz-tag [nzColor]="'geekblue'" *ngFor="let tag of currentProject?.tags"
+                    style="vertical-align: baseline;">
+                    {{ tag }}
+                  </nz-tag>
+                  -->
+                </div>
               </nz-tab>
               <nz-tab nzTitle="Project Description">
-
+                <div [ngStyle]="{'height.px': projectDetailHeight}" style="height:0%;width:100%;"></div>
               </nz-tab>
             </nz-tabset>
           </div>

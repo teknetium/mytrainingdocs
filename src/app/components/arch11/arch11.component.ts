@@ -653,6 +653,7 @@ export class Arch11Component extends BaseComponent implements OnInit {
     this.ngxScrollToEasing = 'easeOutCubic';
     this.ngxScrollToOffset = 0;
 
+    this.browserInnerWidth = window.innerWidth;
     this.browserInnerHeight = window.innerHeight;
     if (this.browserInnerHeight < 900) {
       this.projectDetailHeight = this.browserInnerHeight * .55;
