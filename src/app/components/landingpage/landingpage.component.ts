@@ -313,14 +313,14 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   userCnt = 150;
   monthlyCost = 0;
   planCostPerUserHash = {
-    basic: [5, 4, 3],
-    pro: [8, 6, 4],
-    expert: [12, 9, 6]
+    basic: [3, 0, 0],
+    pro: [4, 0, 0],
+    expert: [5, 0, 0]
   };
   userRange = [100, 300];
   discounts = {
     nonProfit: .25,
-    conference: .15
+    conference: .20
   }
   monthlyCostHash = {
     earlyAccess: 0,
@@ -522,6 +522,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
     let planCost = 0;
     for (let plan of plans) {
       let cost: number;
+      /*
       if (userCnt <= this.userRange[0]) {
         this.monthlyCostHash[plan] = userCnt * this.planCostPerUserHash[plan][0];
       } else if (userCnt <= this.userRange[1]) {
@@ -533,6 +534,8 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
           (this.userRange[1] - this.userRange[0]) * this.planCostPerUserHash[plan][1] +
           (userCnt - this.userRange[1]) * this.planCostPerUserHash[plan][2];
       }
+      */
+      this.monthlyCostHash[plan] = userCnt * this.planCostPerUserHash[plan][0];
     }
   }
 

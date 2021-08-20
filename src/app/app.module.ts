@@ -22,7 +22,6 @@ import { VgOverlayPlayModule } from 'videogular2/compiled/overlay-play';
 import { SettingsModule } from './components/settings/settings.module';
 import { JoyrideModule, JoyrideService} from 'ngx-joyride';
 import { LandingpageModule } from './components/landingpage/landingpage.module';
-import { Arch11Module } from './components/arch11/arch11.module';
 import { DocsModule } from './components/docs/docs.module';
 import { VerifyEmailModule } from './components/verify-email/verify-email.module';
 import { MyLoaderModule } from './components/my-loader/my-loader.module';
@@ -62,7 +61,6 @@ registerLocaleData(en);
         VgOverlayPlayModule,
         SettingsModule,
         LandingpageModule,
-        Arch11Module,
         VerifyEmailModule,
         DocsModule,
         NzStepsModule,
