@@ -347,7 +347,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   public timeLeft$: Observable<timeComponents>;
 
   showPlanInfo = false;
-  nonProfitVar = 'true';
+  nonProfitVar = 'false';
 
   currentSlide = 0;
   featureSlides = [
