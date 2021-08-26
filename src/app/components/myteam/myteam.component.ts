@@ -2244,7 +2244,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   getSelectedTrainingIconClass(tid: string): string {
     //    console.log('getSelectedTrainingIconClass', tid);
     if (!this.allTrainingIdHash[tid]) {
-      return 'fa-solid fa-graduation-cap';
+      return 'fa-light fa-circle-dashed';
     }
     return this.allTrainingIdHash[tid].versions[0].iconClass;
   }

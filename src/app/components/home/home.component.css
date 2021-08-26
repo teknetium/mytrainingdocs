@@ -54,3 +54,14 @@
 .task-item:hover {
 	background-color: #f1f1f1;
 }
+
+.stat {
+	border: 1px solod #dddddd;
+	padding:5px;	
+	height:100px;
+}
+
+hr {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}

@@ -85,7 +85,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     pastDue: '#fee5e0',
     completed: '#8df8fe'
   }
-  userCardTitle = 'My Team';
+  userCardTitle = 'My Organization';
   homePageWidth = 100;
   tasks$: Observable<string[]>
   taskHash$: Observable<TaskHash>;
@@ -94,8 +94,13 @@ export class HomeComponent extends BaseComponent implements OnInit {
   taskHash: TaskHash;
   taskStepContentHash: TaskStepContentHash;
   taskWizardHash = {};
-
-
+  pastDueUserCount = 0;
+  trainingsDue = 0;
+  trainingsCompleted = 0;
+  activeUsers = 0;
+  inactiveUsers = 0;
+  notInvitedUsers = 0;
+  pendingUsers = 0;
 
 
   constructor(
@@ -174,6 +179,25 @@ export class HomeComponent extends BaseComponent implements OnInit {
         return;
       }
       this.myOrgUsers = users;
+
+      for (let user of this.myOrgUsers) {
+        if (user.trainingStatus === 'pastDue') {
+          this.pastDueUserCount++;
+        }
+        if (user.userStatus === 'active') {
+          this.activeUsers++;
+        }
+        if (user.userStatus === 'inactive') {
+          this.inactiveUsers++;
+        }
+        if (user.userStatus === 'pending') {
+          this.pendingUsers++;
+        }
+        if (user.userStatus === 'notInvited') {
+          this.notInvitedUsers++;
+        }
+      }
+
     });
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {

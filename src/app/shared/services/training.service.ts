@@ -363,7 +363,7 @@ export class TrainingService {
       jobTitle: '',
       description: 'This is a useless description',
       image: 'assets/images/others/bb.jpg',
-      iconClass: 'fad fa-graduation-cap',
+      iconClass: 'fal fa-circle-dashed',
       iconColor: '#ff0000',
       iconSource: 'fontawesome',
       bgColor: '',
@@ -385,7 +385,7 @@ export class TrainingService {
       ownerId: this.authenticatedUser._id,
       dateCreated: new Date().getTime(),
       title: 'New Training',
-      iconClass: 'fad fa-graduation-cap',
+      iconClass: 'fal fa-circle-dashed',
       iconColor: '#ff0000',
     };
     newTraining.versions.unshift(newTrainingVersionObj);
