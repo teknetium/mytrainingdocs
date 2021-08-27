@@ -32,71 +32,89 @@
     <div *ngIf="authenticatedUser?.userType === 'supervisor'">
         <div style="width:100%;display:block;">
             <hr>
-            <div style="text-align: center;">
-                <h3> User Status </h3>
-            </div>
-            <div style="width:100%;display:flex;flex-wrap: wrap;align-content: space-around;">
-                <div style="background-color:#fafafa;height:100px;padding:20px;margin:10px;border:1px solid #eaeaea;">
-                    <div style="width:160px;">
-                        <i class="fas fa-user" style="font-size:24px;color:blue;margin-right:20px;"></i>
-                        <span style="font-size:14px;white-space: nowrap;overflow: hidden;vertical-align: bottom">Active
+            <div>
+                <div style="width:100%;display:flex;flex-wrap: wrap;align-content: space-around;">
+                    <div style="background-color:#fafafa;padding:20px;margin:10px;border:1px solid #cccccc;">
+                        <span style="display:block;font-size:14px;">Active
                             Users</span>
+                        <div style="text-align: center;padding-top:10px;line-height:24px;">
+                            <i class="fas fa-user"
+                                style="display:inline-block;font-size:24px;color:blue;margin-right:20px;"></i>
+                            <div style="display:inline-block;font-size:24px;">
+                                {{activeUsers}}
+                            </div>
+                        </div>
                     </div>
-                    <div style="text-align: center;font-size:24px;">
-                        {{activeUsers}}
-                    </div>
-                </div>
-                <div style="background-color:#fafafa;height:100px;padding:20px;margin:10px;border:1px solid #eaeaea;">
-                    <div style="width:160px;">
-                        <i class="fas fa-user" style="font-size:24px;color:#aaaaaa;margin-right:20px;"></i>
-                        <span
-                            style="font-size:14px;white-space: nowrap;overflow: hidden;vertical-align: bottom">Inactive
+                    <div style="background-color:#fafafa;padding:20px;margin:10px;border:1px solid #cccccc;">
+                        <span style="display:block;font-size:14px;">Inactive
                             Users</span>
+                        <div style="text-align: center;padding-top:10px;line-height:24px;">
+                            <i class="fas fa-user" style="display:inline-block;font-size:24px;color:#aaaaaa;margin-right:20px;"></i>
+                            <div style="display:inline-block;font-size:24px;">
+                                {{inactiveUsers}}
+                            </div>
+                        </div>
                     </div>
-                    <div style="text-align: center;font-size:24px;">
-                        {{inactiveUsers}}
+                    <div style="background-color:#fafafa;padding:20px;margin:10px;border:1px solid #cccccc;">
+                        <span style="display:block;font-size:14px;">Unregistered Users</span>
+                        <div style="text-align: center;padding-top:10px;line-height:24px;">
+                            <i class="fas fa-user" style="display:inline-block;font-size:24px;color:fuchsia;margin-right:20px;"></i>
+                            <div style="display:inline-block;font-size:24px;">
+                                {{notInvitedUsers}}
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div style="background-color:#fafafa;height:100px;padding:20px;margin:10px;border:1px solid #eaeaea;">
-                    <div style="width:200px;">
-                        <i class="fas fa-user" style="font-size:24px;color:fuchsia;margin-right:20px;"></i>
-                        <span style="font-size:14px;white-space: nowrap;overflow: hidden;vertical-align: bottom;">Not
-                            Invited Users</span>
+                    <div style="background-color:#fafafa;padding:20px;margin:10px;border:1px solid #cccccc;">
+                        <span style="display:block;font-size:14px;">Pending Registration Completion</span>
+                        <div style="text-align: center;padding-top:10px;line-height:24px;">
+                            <i class="fas fa-user" style="display:inline-block;font-size:24px;color:orange;margin-right:20px;"></i>
+                            <div style="display:inline-block;font-size:24px;">
+                                {{pendingUsers}}
+                            </div>
+                        </div>
                     </div>
-                    <div style="text-align: center;font-size:24px;">
-                        {{notInvitedUsers}}
-                    </div>
-                </div>
-                <div style="background-color:#fafafa;height:100px;padding:20px;margin:10px;border:1px solid #eaeaea;">
-                    <div style="width:300px;">
-                        <i class="fas fa-user" style="font-size:24px;color:orange;margin-right:20px;"></i>
-                        <span style="font-size:14px;">Pending Registration Completion</span>
-                    </div>
-                    <div style="text-align: center;font-size:24px;">
-                        {{pendingUsers}}
+                    <div style="background-color:#fafafa;padding:20px;margin:10px;border:1px solid #cccccc;">
+                        <span style="display:block;font-size:14px;">Past Due Users</span>
+                        <div style="text-align: center;padding-top:10px;line-height:24px;">
+                            <i class="fas fa-user" style="display:inline-block;font-size:24px;color:red;margin-right:20px;"></i>
+                            <div style="display:inline-block;font-size:24px;">
+                                {{pastDueUserCount}}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <hr>
-            <div style="text-align: center;">
-                <h3> User Training Status </h3>
-            </div>
-            <div style="width:100%;display:flex;flex-wrap: wrap;align-content: space-around;">
-                <div style="background-color:#fafafa;height:100px;padding:20px;margin:10px;border:1px solid #eaeaea;">
-                    <div style="width:160px;">
-                        <i class="fas fa-user" style="font-size:24px;color:red;margin-right:20px;"></i>
-                        <span style="font-size:14px;">Past Due Users</span>
-                    </div>
-                    <div style="text-align: center;font-size:24px;">
-                        {{pastDueUserCount}}
+                    <!--
+            <div>
+                <div>
+                    <h3> User Training Status </h3>
+                </div>
+                <div style="width:100%;display:flex;flex-wrap: wrap;align-content: space-around;">
+                    <div
+                        style="background-color:#fafafa;height:100px;padding:20px;margin:10px;border:1px solid #eaeaea;">
+                        <div style="width:160px;">
+                            <i class="fas fa-user" style="font-size:24px;color:red;margin-right:20px;"></i>
+                            <span style="font-size:14px;">Past Due Users</span>
+                        </div>
+                        <div style="text-align: center;font-size:24px;">
+                            {{pastDueUserCount}}
+                        </div>
                     </div>
                 </div>
             </div>
-            <hr>
-            <div style="text-align: center;">
-                <h3> Training Status </h3>
-            </div>
+                    -->
             <div style="width:100%;display:flex;flex-wrap: wrap;align-content: space-around;">
+                    <div style="background-color:#fafafa;padding:20px;margin:10px;border:1px solid #cccccc;">
+                        <span style="display:block;font-size:14px;">Published Trainings</span>
+                        <div style="text-align: center;padding-top:10px;line-height:24px;">
+                            <i class="fas fa-graduation-cap" style="display:inline-block;font-size:24px;color:black;margin-right:20px;"></i>
+                            <div style="display:inline-block;font-size:24px;">
+                                {{trainings.length}}
+                            </div>
+                        </div>
+                    </div>
+                    <!--
                 <div style="background-color:#fafafa;height:100px;padding:20px;margin:10px;border:1px solid #eaeaea;">
                     <div style="width:200px;">
                         <i class="fas fa-graduation-cap" style="font-size:24px;color:black;margin-right:20px;"></i>
@@ -106,6 +124,7 @@
                         {{trainings.length}}
                     </div>
                 </div>
+                -->
             </div>
             <hr>
             <nz-range-picker [nzSize]="size" style="margin-top: 10px;"></nz-range-picker>
