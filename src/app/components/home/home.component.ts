@@ -102,7 +102,6 @@ export class HomeComponent extends BaseComponent implements OnInit {
   notInvitedUsers = 0;
   pendingUsers = 0;
 
-
   constructor(
     private auth: AuthService,
     private taskWizardService: TaskWizardService,

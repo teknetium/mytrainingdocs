@@ -2100,6 +2100,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   collapseAllSubOrgs(uid: string) {
+    this.collapsedNodes.push(uid);
     this.collapseDirectReports(uid);
     this.hideSupervisorMenu(uid);
     setTimeout(() => this.centerIt(uid), 500);
