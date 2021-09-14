@@ -1814,7 +1814,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       */
 
       this.authenticatedUser = user;
-//      this.collapsedNodes.push(this.authenticatedUser._id);
+      this.collapsedNodes.push(this.authenticatedUser._id);
 
       this.displayMode[this.authenticatedUser._id] = 'UserStatus';
 
