@@ -29,6 +29,7 @@ export class SignupComponent extends BaseComponent implements OnInit {
 
     this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
       this.email = params.get('id');
+      console.log("signup ", this.email);
       this._auth0.authorize({ action: 'signup', login_hint: this.email });
     });
 

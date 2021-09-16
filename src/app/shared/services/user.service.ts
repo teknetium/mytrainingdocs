@@ -224,6 +224,7 @@ export class UserService {
                         profilePicUrl: '',
                         supervisorId: null,
                         directReports: [],
+                        reportChain: [],
                         userData: {},
                         settings: {
                           statusList: [],
@@ -318,22 +319,24 @@ export class UserService {
     }
     this.messageService.sendMessages(message, [toAddr], null, false);
   }
-  sendRegistrationInvitation(org: string) {
-    this.sendRegistrationInvitations$(org).subscribe(users => {
+  sendRegistrationInvitation(uid: string) {
+    let org = this.allOrgUserHash[uid].org;
+    this.sendRegistrationInvitations$(uid).subscribe(users => {
 
       if (users) {
         for (let user of users) {
           this.allOrgUserHash[user._id] = user;
         }
         this.myOrgHashBS$.next(this.allOrgUserHash);
+        this.myOrgUsersBS$.next(this.allOrgUsers);
       }
 
       console.log('sendRegistrationInvitation...', users);
     });
   }
-  sendRegistrationInvitations$(org: string): Observable<UserModel[]> {
+  sendRegistrationInvitations$(uid: string): Observable<UserModel[]> {
     return this.http
-      .get<UserModel[]>(`${ENV.BASE_API}registrationmessage/${org}`, {
+      .get<UserModel[]>(`${ENV.BASE_API}registrationmessage/${uid}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(
@@ -499,9 +502,11 @@ export class UserService {
     this.uidReportChainHash[userId] = reportChain;
     let user = this.allOrgUserHash[userId];
 
+
     if (!user) {
       console.log('buildUserNode ', userId, this.allOrgUserHash);
     }
+    user.reportChain = reportChain;
     let userNode = <OrgChartNode>{
       _id: user._id,
       fName: user.firstName,

@@ -110,7 +110,7 @@ module.exports = function(app, config) {
   const trainingArchiveProjection = "_id title versions type category subcategory owner description teamId org iconType iconClass iconColor iconSource bgColor bgImage dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const trainingListProjection = "_id title versions type category subcategory owner description teamId org iconType iconClass iconColor iconSource bgColor bgImage dateCreated pages estimatedTimeToComplete jobTitle status interestList shared isValid isDirty useFinalAssessment notifySchedule expirationDate";
   const userTrainingListProjection = "_id tid uid teamId orgId status notifySchedule dueDate timeToDate dateCompleted assessmentResponses trainingVersion certImage";
-  const userListProjection = "_id uid empId userType userStatus jobTitle trainingStatus firstName lastName email emailVerified teamAdmin orgAdmin appAdmin teamId org supervisorId directReports profilePicUrl settings";
+  const userListProjection = "_id uid empId userType userStatus jobTitle trainingStatus firstName lastName email emailVerified teamAdmin orgAdmin appAdmin teamId org supervisorId directReports reportChain profilePicUrl settings";
   const fileListProjection = "_id name size teamId mimeType iconColor iconSource iconType iconClass description versions";
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const docProjection = '_id productId productVersion author featureName sections images';
@@ -158,7 +158,7 @@ module.exports = function(app, config) {
     });
     res.status(200).send({ count: msgs.length });
   });
-  app.get("/api/registrationmessage/:org", (req, res) => {
+  app.get("/api/registrationmessage/:uid", (req, res) => {
     let msg = {
       to: null,
       from: 'greg@mytrainingdocs.com',
@@ -168,8 +168,8 @@ module.exports = function(app, config) {
         email: null
       }
     };
-  
-    User.find({org: req.params.org, userStatus: 'notInvited'},
+
+    User.find({reportChain: req.params.uid, userStatus: 'notInvited'},
       userListProjection, (err, users) => {
         if (err) {
           return res.status(500).send({ message: err.message });
@@ -178,7 +178,7 @@ module.exports = function(app, config) {
           users.forEach(user => {
             user.userStatus = 'pending'
             msg.to = user.email;
-            msg.dynamicTemplateData.email = user.email;
+            msg.dynamicTemplateData.completeRegistrationLink = "https://mytrainingdocs.com/signup/" + encodeURIComponent(user.email);
             sgMail.send(msg)
               .then(() => {
                 console.log('/api/registrationmessage ... success', user.email);
@@ -188,7 +188,7 @@ module.exports = function(app, config) {
               });
           });
 
-          User.updateMany({ org: req.params.org, userStatus: 'notInvited' }, { userStatus: 'pending' }, (err2, responseObj) => {
+          User.updateMany({ reportChain: req.params.uid, userStatus: 'notInvited' }, { userStatus: 'pending' }, (err2, responseObj) => {
             if (err2) {
               return res.status(500).send({ message: err2.message });
             }
@@ -422,6 +422,45 @@ module.exports = function(app, config) {
       return res.status(500).send({ message: "no userTraining records found" });
     });
   });
+
+  //
+  // Set reportChain in user object
+  //
+  app.get("/api/daily/reportchain", (req, res) => {
+    let userHash = {};
+    let errorArr = [];
+
+    User.find({}, userListProjection, (err, users) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+
+      users.map(user => {
+        userHash[user._id] = user;
+      })
+
+      if (users) {
+        users.forEach(user => {
+          let reportChainUser;
+          reportChainUser = user;
+          user.reportChain = [];
+          while (reportChainUser.supervisorId) {
+            user.reportChain.push(reportChainUser.supervisorId);
+            reportChainUser = userHash[reportChainUser.supervisorId];
+          }
+          user.save(err2 => {
+            if (err2) {
+              errorArr.push(user._id);
+            }
+          });
+        })
+      }
+
+      res.status(200).send({ message: "Report Chain Created", errors: errorArr });
+
+    })
+  });
+
 
   //
   // WatchList API
@@ -1046,6 +1085,7 @@ module.exports = function(app, config) {
         profilePicUrl: req.body.profilePicUrl,
         supervisorId: req.body.supervisorId,
         directReports: req.body.directReports,
+        reportChain: req.body.reportChain,
         settings: req.body.settings,
       });
 //      user.save((err2) => {
@@ -1093,6 +1133,7 @@ module.exports = function(app, config) {
       user.profilePicUrl = req.body.profilePicUrl;
       user.supervisorId = req.body.supervisorId;
       user.directReports = req.body.directReports;
+      user.reportChain = req.body.reportChain;
       user.settings = req.body.settings;
       user._id = req.body._id;
 

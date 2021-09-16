@@ -29,6 +29,7 @@ const userSchema = new Schema({
   profilePicUrl: { type: String, required: false },
   supervisorId: { type: String, required: false },
   directReports: { type: [String], required: false },
+  reportChain: { type: [String], required: false },
   settings: { type: Object, required: false }
 });
 

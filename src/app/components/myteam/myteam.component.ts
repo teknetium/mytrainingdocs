@@ -246,6 +246,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     profilePicUrl: '',
     supervisorId: null,
     directReports: [],
+    reportChain: [],
     userData: {},
     settings: {
       statusList: [],
@@ -2635,7 +2636,9 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   sendRegistrationEmail() {
-    this.userService.sendRegistrationInvitation(this.authenticatedUser.org);
+    let rootUid = this.orgChartSelections[0].rootUid;
+    console.log("sending registration message to uninvited in ", rootUid);
+    this.userService.sendRegistrationInvitation(rootUid);
     this.registrationInvitationsSent = true;
   }
 

@@ -20,6 +20,7 @@ export interface UserModel {
   profilePicUrl: string,
   supervisorId: string,
   directReports: string[],
+  reportChain: string[],
   userData: {},
   settings: {
     statusList: string[],

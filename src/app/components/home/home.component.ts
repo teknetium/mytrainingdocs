@@ -179,6 +179,12 @@ export class HomeComponent extends BaseComponent implements OnInit {
       }
       this.myOrgUsers = users;
 
+      this.pastDueUserCount = 0;
+      this.activeUsers = 0;
+      this.inactiveUsers = 0;
+      this.pendingUsers = 0;
+      this.notInvitedUsers = 0;
+
       for (let user of this.myOrgUsers) {
         if (user.trainingStatus === 'pastDue') {
           this.pastDueUserCount++;
