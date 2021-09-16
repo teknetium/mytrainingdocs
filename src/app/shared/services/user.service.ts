@@ -328,7 +328,7 @@ export class UserService {
           this.allOrgUserHash[user._id] = user;
         }
         this.myOrgHashBS$.next(this.allOrgUserHash);
-        this.myOrgUsersBS$.next(this.allOrgUsers);
+//        this.myOrgUsersBS$.next(Object.values(this.allOrgUserHash));
       }
 
       console.log('sendRegistrationInvitation...', users);

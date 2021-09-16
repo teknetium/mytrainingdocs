@@ -42,6 +42,7 @@ export interface TrainingStat {
 export class HomeComponent extends BaseComponent implements OnInit {
   uidUTHash$: Observable<UidUTHash>;
   uidUTHash = {};
+
   sessionLog$: Observable<UTSession[]>;
   sessionLog: UTSession[];
   filteredSessionLog: UTSession[];
@@ -68,6 +69,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
   myTeam: UserModel[] = [];
   teamTrainingHash$: Observable<TrainingIdHash>;
   myOrgUsers$: Observable<UserModel[]>;
+  myOrgHash$: Observable<UserIdHash>;
   myOrgUsers: UserModel[] = [];
   teamTrainingHash = {};
   trainings: TrainingModel[];
@@ -114,6 +116,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     private router: Router
   ) {
     super();
+    this.myOrgHash$ = this.userService.getOrgHashStream();
     this.myOrgUsers$ = this.userService.getMyOrgUsersStream();
     this.sessionLog$ = this.userTrainingService.getSessionLogStream();
     this.uidUTHash$ = this.userTrainingService.getUidUTHashStream();
@@ -173,11 +176,11 @@ export class HomeComponent extends BaseComponent implements OnInit {
       }
       this.sessionLog = sessionLog;
     });
-    this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(users => {
-      if (!users) {
+    this.myOrgHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgHash => {
+      if (!myOrgHash) {
         return;
       }
-      this.myOrgUsers = users;
+      this.myOrgUsers = Object.values(myOrgHash);
 
       this.pastDueUserCount = 0;
       this.activeUsers = 0;
