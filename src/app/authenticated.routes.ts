@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { MyteamComponent } from './components/myteam/myteam.component';
-import { DocsComponent } from './components/docs/docs.component';
 import { ContactUsComponent } from './components/contact-us/contact-us.component';
+import { MessagesComponent } from './components/messages/messages.component';
 
 
 export const AuthenticatedROUTES: Routes = [
@@ -55,6 +55,10 @@ export const AuthenticatedROUTES: Routes = [
     {
         path: 'contactus',
         component: ContactUsComponent,
+    },
+    {
+        path: 'messages',
+        component: MessagesComponent,
     },
     /*
     {

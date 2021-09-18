@@ -15,6 +15,10 @@ import * as cloneDeep from 'lodash/cloneDeep';
 })
 export class MessageService {
 
+  inbox: MessageModel[] = [];
+  sent: MessageModel[] = [];
+  inboxBS$ = new BehaviorSubject<MessageModel[]>([]);
+  sentBS$ = new BehaviorSubject<MessageModel[]>([]);
   msg: MessageModel;
   templateHash = {
     resetTrainingStatus: 'd-b4679d4de1fb41e18d1e2487995f9bdf',
@@ -82,7 +86,15 @@ export class MessageService {
     }
   }
   */
+  
+  getInboxStream(): Observable<MessageModel[]> {
+    return this.inboxBS$.asObservable();
+  }
 
+  getSentStream(): Observable<MessageModel[]> {
+    return this.sentBS$.asObservable();
+  }
+    
   postMessages$(msgs: MessageModel[]): Observable<any> {
     return this.http
       .post<MessageModel[]>(`${ENV.BASE_API}message`, msgs, {

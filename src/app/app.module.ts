@@ -31,6 +31,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpErrorInterceptor } from './shared/interceptor/error-interceptor.service';
 import { PaymentCallbackModule } from './components/payment-callback/payment-callback.module';
 import { ContactUsModule } from './components/contact-us/contact-us.module';
+import { MessagesModule } from './components/messages/messages.module';
 
 const ngZorroConfig: NzConfig = {
     message: { nzTop: 300 },
@@ -62,7 +63,7 @@ registerLocaleData(en);
         SettingsModule,
         LandingpageModule,
         VerifyEmailModule,
-        DocsModule,
+        MessagesModule,
         NzStepsModule,
         NzRadioModule,
         NzSpinModule,

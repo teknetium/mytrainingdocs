@@ -142,6 +142,12 @@ export class UserService {
     this.action = 'init';
 
     this.org$ = this.orgService.getOrgStream();
+    this.org$.subscribe({
+      next: (org) => {
+        this.orgObj = org;
+      },
+      error: () => { }
+    })
     this.authenticatedUserProfile$ = this.auth.getAuthenticatedUserProfileStream();
     this.authenticatedUserProfile$.subscribe({
       next: (profile) => {
@@ -190,8 +196,9 @@ export class UserService {
                       this.userTrainingService.getOrgUserTrainings(this.authenticatedUser.org);
                     } else {
                       let domain: string = profile.email.substring(profile.email.indexOf('@') + 1, profile.email.indexOf('.'));
-                      let orgObject = <OrgModel>{
+                      this.orgObj = <OrgModel>{
                         _id: String(new Date().getTime()),
+                        name: domain,
                         domain: domain,
                         adminIds: [profile.email],
                         owner: profile.email,
@@ -201,7 +208,7 @@ export class UserService {
                         userCount: 1
                       }
 
-                      this.orgService.createOrg(cloneDeep(orgObject));
+                      this.orgService.createOrg(cloneDeep(this.orgObj));
 
                       this.authenticatedUser = <UserModel>{
                         _id: profile.email,
@@ -320,8 +327,8 @@ export class UserService {
     this.messageService.sendMessages(message, [toAddr], null, false);
   }
   sendRegistrationInvitation(uid: string) {
-    let org = this.allOrgUserHash[uid].org;
-    this.sendRegistrationInvitations$(uid).subscribe(users => {
+    let orgName = this.orgObj.name;
+    this.sendRegistrationInvitations$(uid, orgName).subscribe(users => {
 
       if (users) {
         for (let user of users) {
@@ -334,9 +341,9 @@ export class UserService {
       console.log('sendRegistrationInvitation...', users);
     });
   }
-  sendRegistrationInvitations$(uid: string): Observable<UserModel[]> {
+  sendRegistrationInvitations$(uid: string, orgName: string): Observable<UserModel[]> {
     return this.http
-      .get<UserModel[]>(`${ENV.BASE_API}registrationmessage/${uid}`, {
+      .get<UserModel[]>(`${ENV.BASE_API}registrationmessage/${uid}/${orgName}`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .pipe(

@@ -115,7 +115,7 @@ module.exports = function(app, config) {
   const eventListProjection = "_id title type userId teamId desc mark creationDate actionDate  ";
   const docProjection = '_id productId productVersion author featureName sections images';
   const commentListProjection = "_id tid version author text rating date";
-  const orgListProjection = "_id domain adminIds owner planId planName createDate userCount";
+  const orgListProjection = "_id name domain adminIds owner planId planName createDate userCount";
   const watchListProjection = "_id type items ownerId createDate listName";
   const messageProjection = "_id state category subCategory to from subject text html mbox trainingId";
   const assessmentListProjection = "_id type title owner description timeLimit isFinal passingGrade items";
@@ -158,16 +158,15 @@ module.exports = function(app, config) {
     });
     res.status(200).send({ count: msgs.length });
   });
-  app.get("/api/registrationmessage/:uid", (req, res) => {
+  app.get("/api/registrationmessage/:uid/:org", (req, res) => {
     let msg = {
       to: null,
       from: 'greg@mytrainingdocs.com',
       subject: 'Please Register',
       templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
-      dynamicTemplateData: {
-        email: null
-      }
+      dynamicTemplateData: {}
     };
+    let orgName = req.params.org;
 
     User.find({reportChain: req.params.uid, userStatus: 'notInvited'},
       userListProjection, (err, users) => {
@@ -176,9 +175,21 @@ module.exports = function(app, config) {
         }
         if (users) {
           users.forEach(user => {
-            user.userStatus = 'pending'
-            msg.to = user.email;
-            msg.dynamicTemplateData.completeRegistrationLink = "https://mytrainingdocs.com/signup/" + encodeURIComponent(user.email);
+            user.userStatus = 'pending';
+            msg = {
+              templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
+              to: user.email,
+              from: 'greg@mytrainingdocs.com',
+              dynamicTemplateData: {
+                subject: "Please Register",
+                header: "Please Register",
+                text: "You have been invited to join " + orgName + "'s training system.",
+                c2aText: "Register",
+                email: user.email,
+                orgName: orgName,
+                completeRegistrationLink: "https://mytrainingdocs.com/signup/" + encodeURIComponent(user.email),
+              }
+            }
             sgMail.send(msg)
               .then(() => {
                 console.log('/api/registrationmessage ... success', user.email);
@@ -1445,6 +1456,7 @@ module.exports = function(app, config) {
   });
   app.post("/api/orgs/new/", jwtCheck, (req, res) => {
     const org = new Org({
+      name: req.body.name,
       domain: req.body.domain,
       adminIds: req.body.adminIds,
       createDate: req.body.createDate,
@@ -1463,6 +1475,7 @@ module.exports = function(app, config) {
   });
   app.put("/api/orgs/update/", jwtCheck, (req, res) => {
     const org = new Org({
+      name: req.body.name,
       domain: req.body.domain,
       adminIds: req.body.adminIds,
       createDate: req.body.createDate,
@@ -1480,6 +1493,7 @@ module.exports = function(app, config) {
         return res.status(400).send({ message: "Org not found." });
       }
       orgObj._id = req.body._id;
+      orgObj.name = req.body.name;
       orgObj.domain = req.body.domain;
       orgObj.adminIds = req.body.adminIds;
       orgObj.createDate = req.body.createDate;

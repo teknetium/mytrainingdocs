@@ -73,6 +73,12 @@
                     <i class="fa-regular fa-fw fa-graduation-cap" style="font-size:24px;vertical-align: middle;"></i>
                 </a>
             </li>
+            <li nz-menu-item nz-tooltip nzTooltipTitle="Messages" nzTooltipPlacement="bottom" class="nav-badge"
+                [ngClass]="{'current-nav': currentPage === 'messages'}">
+                <a routerLink="/messages" routerLinkActive="active-link">
+                    <i class="fa-regular fa-fw fa-envelope" style="font-size:24px;vertical-align: middle;"></i>
+                </a>
+            </li>
             <li nz-menu-item nz-tooltip nzTooltipTitle="Contact Us" nzTooltipPlacement="bottom" class="nav-badge"
                 [ngClass]="{'current-nav': currentPage === 'contactus'}">
                 <a routerLink="/contactus" routerLinkActive="active-link">
