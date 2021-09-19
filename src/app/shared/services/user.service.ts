@@ -198,7 +198,7 @@ export class UserService {
                       let domain: string = profile.email.substring(profile.email.indexOf('@') + 1, profile.email.indexOf('.'));
                       this.orgObj = <OrgModel>{
                         _id: String(new Date().getTime()),
-                        name: domain,
+                        name: domain.charAt(0).toUpperCase() + domain.slice(1),
                         domain: domain,
                         adminIds: [profile.email],
                         owner: profile.email,

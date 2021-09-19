@@ -167,6 +167,7 @@ module.exports = function(app, config) {
       dynamicTemplateData: {}
     };
     let orgName = req.params.org;
+    orgName = orgName.charAt(0).toUpperCase() + orgName.slice(1);
 
     User.find({reportChain: req.params.uid, userStatus: 'notInvited'},
       userListProjection, (err, users) => {
@@ -181,13 +182,14 @@ module.exports = function(app, config) {
               to: user.email,
               from: 'greg@mytrainingdocs.com',
               dynamicTemplateData: {
-                subject: "Please Register",
+                subject: orgName + " - Please Register",
                 header: "Please Register",
                 text: "You have been invited to join " + orgName + "'s training system.",
                 c2aText: "Register",
                 email: user.email,
                 orgName: orgName,
-                completeRegistrationLink: "https://mytrainingdocs.com/signup/" + encodeURIComponent(user.email),
+//                completeRegistrationLink: "https://mytrainingdocs.com/signup/" + encodeURIComponent(user.email),
+                completeRegistrationLink: "https://mytrainingdocs.com/",
               }
             }
             sgMail.send(msg)
