@@ -183,13 +183,12 @@ module.exports = function(app, config) {
               from: 'greg@mytrainingdocs.com',
               dynamicTemplateData: {
                 subject: orgName + " - Please Register",
-                header: "Please Register",
+                header: "Registration",
                 text: "You have been invited to join " + orgName + "'s training system.",
-                c2aText: "Register",
+                c2aText: "Please Register",
+                c2aLink: "https://mytrainingdocs.com/signup/" + encodeURIComponent(user.email),
                 email: user.email,
                 orgName: orgName,
-//                completeRegistrationLink: "https://mytrainingdocs.com/signup/" + encodeURIComponent(user.email),
-                completeRegistrationLink: "https://mytrainingdocs.com/",
               }
             }
             sgMail.send(msg)

@@ -34,6 +34,10 @@ const appRoutes: Routes = [
     */
 
     {
+        path: 'signup/:id',
+        component: SignupComponent
+    },
+    {
         path: 'callback',
         component: CallbackComponent,
     },
@@ -52,10 +56,6 @@ const appRoutes: Routes = [
         component: VerifyEmailComponent
     },
     {
-        path: 'signup/:id',
-        component: SignupComponent
-    },
-    {
         path: 'login',
         component: LoginComponent
     },
@@ -67,7 +67,8 @@ const appRoutes: Routes = [
         path: 'naydo',
         component: LandingpageComponent,
     },
-//    {
+    { path: "**", redirectTo: "/", pathMatch: "full" }
+    //    {
 //        path: 'docs',
 //        component: DocsComponent,
 //    },

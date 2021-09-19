@@ -27,6 +27,8 @@ export class SignupComponent extends BaseComponent implements OnInit {
   constructor(private route: ActivatedRoute ) { 
     super();
 
+    console.log("signup ", this.email);
+
     this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
       this.email = params.get('id');
       console.log("signup ", this.email);
