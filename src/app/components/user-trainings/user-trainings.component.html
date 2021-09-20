@@ -122,7 +122,7 @@
     </nz-table>
     <div *ngIf="userTrainings?.length === 0" style="text-align: center;padding:20px;">
         <span style="font-size:16px;display:block;font-weight:300;">
-            No trainings have been assigned to {{selectedUser.firstName}}.</span>
+            No trainings have been assigned to {{selectedUser?.firstName}}.</span>
     </div>
     <nz-modal [(nzVisible)]="markCompletedModalIsVisible" nzTitle="Congratulations!" nzWidth="800"
         (nzOnCancel)="handleMarkAsCompletedCancel()" (nzOnOk)="markTrainingAsComplete(selectedTraining)"
