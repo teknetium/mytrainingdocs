@@ -2639,7 +2639,10 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     let rootUid = this.orgChartSelections[0].rootUid;
     console.log("sending registration message to uninvited in ", rootUid);
     this.userService.sendRegistrationInvitation(rootUid);
-    this.registrationInvitationsSent = true;
+    if (rootUid === this.authenticatedUser._id) {
+      this.registrationInvitationsSent = true;
+    }
+    this.removeSelectionByUid(this.orgChartSelections[0].rootUid);
   }
 
 

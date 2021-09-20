@@ -331,14 +331,17 @@ export class UserService {
     this.sendRegistrationInvitations$(uid, orgName).subscribe(users => {
 
       if (users) {
+
+        this.loadData(this.authenticatedUser.org, null);
+      }
+        /*
         for (let user of users) {
           this.allOrgUserHash[user._id] = user;
         }
         this.myOrgHashBS$.next(this.allOrgUserHash);
 //        this.myOrgUsersBS$.next(Object.values(this.allOrgUserHash));
-      }
+*/
 
-      console.log('sendRegistrationInvitation...', users);
     });
   }
   sendRegistrationInvitations$(uid: string, orgName: string): Observable<UserModel[]> {

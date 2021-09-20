@@ -59,7 +59,7 @@ app.set("port", port);
 // Set static-deprecated path to Angular app in dist
 // Don"t run in dev
 if (process.env.NODE_ENV !== "dev") {
-  app.use("/", express.static(path.join(__dirname, "./dist")));
+  app.use("/", express.static(path.join(__dirname, "/dist")));
 }
 
 /*

@@ -193,10 +193,8 @@ module.exports = function(app, config) {
             }
             sgMail.send(msg)
               .then(() => {
-                console.log('/api/registrationmessage ... success', user.email);
               })
               .catch((error) => {
-                console.error(error)
               });
           });
 
