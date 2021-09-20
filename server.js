@@ -37,7 +37,7 @@ monDb.once("open", function callback() {
   console.info("Connected to MongoDB:", config.MONGO_URI);
 });
 
-mongoose.set("debug", true);
+mongoose.set("debug", false);
 /*
  |--------------------------------------
  | App

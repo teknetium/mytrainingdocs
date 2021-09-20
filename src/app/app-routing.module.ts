@@ -34,7 +34,7 @@ const appRoutes: Routes = [
     */
 
     {
-        path: 'signup/:id',
+        path: 'signup',
         component: SignupComponent
     },
     {
