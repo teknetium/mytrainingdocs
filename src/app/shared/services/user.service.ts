@@ -332,6 +332,12 @@ export class UserService {
 
       if (users) {
 
+        let alert = <AlertModel>{
+          type: 'success',
+          message: 'Sent registration invitation to ' + users.length + ' users.'
+        }
+        this.notifyService.showAlert(cloneDeep(alert));
+
         this.loadData(this.authenticatedUser.org, null);
       }
         /*
