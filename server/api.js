@@ -186,7 +186,7 @@ module.exports = function(app, config) {
                 header: "Registration",
                 text: "You have been invited to join " + orgName + "'s training system.",
                 c2aText: "Please Register",
-                c2aLink: "https://mytrainingdocs.com/signup/",
+                c2aLink: "https://mytrainingdocs.com/signup/" + encodeURI(user.email),
                 email: user.email,
                 orgName: orgName,
               }
