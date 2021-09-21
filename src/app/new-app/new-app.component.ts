@@ -774,6 +774,11 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.orgService.setPlan(this.myPlan);
   }
 
+  orgNameChanged(newName: string) {
+    this.orgObj.name = newName;
+    this.orgService.updateOrg(this.orgObj);
+  }
+
   handleUpgradeToProOk() {
     if (this.orgObj.adminIds.includes(this.authenticatedUser._id)) {
       this.orgObj.planId = 'pro';

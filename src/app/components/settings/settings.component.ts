@@ -21,7 +21,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       name: 'grey',
       primary: 'white',
       secondary: '#999999',
-      bgColor: '#e9e9e9',
+      bgColor: '#d0d0d0',
     },
     {
       name: 'green',

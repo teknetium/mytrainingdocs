@@ -159,13 +159,7 @@ module.exports = function(app, config) {
     res.status(200).send({ count: msgs.length });
   });
   app.get("/api/registrationmessage/:uid/:org", (req, res) => {
-    let msg = {
-      to: null,
-      from: 'greg@mytrainingdocs.com',
-      subject: 'Please Register',
-      templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
-      dynamicTemplateData: {}
-    };
+    let msg = {};
     let orgName = req.params.org;
     orgName = orgName.charAt(0).toUpperCase() + orgName.slice(1);
 
@@ -180,7 +174,7 @@ module.exports = function(app, config) {
             msg = {
               templateId: 'd-2d4430d31eee4a929344c8aa05e4afc7',
               to: user.email,
-              from: 'greg@mytrainingdocs.com',
+              from: 'My Training Docs <support@mytrainingdocs.com>',
               dynamicTemplateData: {
                 subject: orgName + " - Please Register",
                 header: "Registration",
