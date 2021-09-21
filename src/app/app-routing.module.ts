@@ -14,7 +14,11 @@ import { TrainingViewerComponent } from './components/training-viewer/training-v
 
 
 const appRoutes: Routes = [
-    {   
+    {
+        path: 'signup/:id',
+        component: SignupComponent
+    },
+    {
         path: '',
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
@@ -33,10 +37,6 @@ const appRoutes: Routes = [
     },
     */
 
-    {
-        path: 'signup',
-        component: SignupComponent
-    },
     {
         path: 'callback',
         component: CallbackComponent,
