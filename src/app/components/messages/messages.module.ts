@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MessagesComponent } from './messages.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NzModalModule, NzInputModule, NzIconModule, NzCardModule, NzBadgeModule, NzListModule, NzAvatarModule, NzToolTipModule, NzTimelineComponent, NzTimelineModule, NzDatePickerModule, NzAlertModule, NzDropDownModule, NzCalendarModule, NzTabsModule, NzEmptyModule, NzButtonModule } from 'ng-zorro-antd';
+import { NzModalModule, NzInputModule, NzIconModule, NzCardModule, NzBadgeModule, NzListModule, NzAvatarModule, NzToolTipModule, NzTimelineComponent, NzTimelineModule, NzDatePickerModule, NzAlertModule, NzDropDownModule, NzCalendarModule, NzTabsModule, NzEmptyModule, NzButtonModule, NzAutocompleteModule } from 'ng-zorro-antd';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 
 @NgModule({
@@ -18,7 +18,8 @@ import { NgZorroAntdModule } from 'ng-zorro-antd';
     NzToolTipModule,
     NzTimelineModule,
     NzEmptyModule,
-    NzButtonModule
+    NzButtonModule,
+    NzInputModule,NzAutocompleteModule
   ],
   exports: [
     MessagesComponent

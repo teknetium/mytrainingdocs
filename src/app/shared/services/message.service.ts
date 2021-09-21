@@ -103,6 +103,15 @@ export class MessageService {
         catchError((error) => this._handleError(error))
       );
   }
+  postMessage$(msgs: MessageModel[]): Observable<any> {
+    return this.http
+      .post<MessageModel[]>(`${ENV.BASE_API}message`, msgs, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .pipe(
+        catchError((error) => this._handleError(error))
+      );
+  }
   /*
   postTemplateMessages$(msgs: TemplateMessageModel[]): Observable<any> {
     return this.http
