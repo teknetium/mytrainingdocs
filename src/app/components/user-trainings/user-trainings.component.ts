@@ -204,6 +204,7 @@ export class UserTrainingsComponent extends BaseComponent implements OnInit {
 
       if (userTrainings.length > 0) {
         userId = userTrainings[0].uid;
+        this.uidUTHash[userId] = userTrainings;
         this.userTrainings = userTrainings;
         for (let userTraining of userTrainings) {
           this.utIdHash[userTraining._id] = userTraining;

@@ -152,6 +152,7 @@ export class UserTrainingService {
 
     ut.timeToDate += session.stopTime - session.startTime;
     this.saveUserTraining(ut);
+    this.getUTForUser(ut.uid);
     this.utSessionHash[ut.tid] = null;
     this.postUTSession$(session).subscribe(utSession => {
       this.sessionLog.push(utSession);
