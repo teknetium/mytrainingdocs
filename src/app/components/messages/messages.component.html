@@ -10,8 +10,11 @@
             <div style="clear:both;"></div>
         </div>
     </div>
-    <div class="messages">
-        <div *ngIf="!composeMsg" class="message-headers">
+    <div *ngIf="!composeMsg" class="messages">
+        <div style="text-align: center;font-size:22px;font-weight: 500;margin-bottom:10px;">
+            {{currentMbox}}
+        </div>
+        <div class="message-headers">
             <div *ngIf="mBoxes[currentMbox].length > 0">
 
             </div>
