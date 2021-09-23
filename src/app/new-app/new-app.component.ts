@@ -389,9 +389,9 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   plan = '';
   monthlyCost = 0;
   planCostPerUserHash = {
-    basic: [4, 0, 0],
-    pro: [6, 0, 0],
-    expert: [8, 0, 0]
+    basic: [2, 0, 0],
+    pro: [3, 0, 0],
+    expert: [4, 0, 0]
     /*
     basic: [5, 4, 3],
     pro: [8, 6, 4],

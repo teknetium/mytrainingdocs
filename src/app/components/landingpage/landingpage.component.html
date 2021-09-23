@@ -221,7 +221,7 @@
           <div>
             <span style="font-size:1vw;vertical-align:super;color:chartreuse;">only </span>
             <span style="font-size:1.5vw;vertical-align:super;color:chartreuse;">$</span>
-            <span style="font-size:2.5vw;font-weight:400;color:chartreuse;">995</span><br>
+            <span style="font-size:2.5vw;font-weight:400;color:chartreuse;">499</span><br>
             <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="earlyAccess">
               <button nz-button nzShape="round" nzType="default" id="checkout-button" nzGhost
                 style="color:chartreuse;font-size:1.5vw;border:1px solid chartreuse;margin-top:5%;">
@@ -591,6 +591,7 @@
           </div>
         </div>
         <div class="row align-items-center">
+        <!--
           <div class="col-md-12">
             <div *ngIf="showPriceEditor">
               <div style="margin-top:20px;">
@@ -665,7 +666,7 @@
                 </div>
               </div>
             </div>
-            <!--
+            < !--
             <div style="width: 100%;text-align: center;margin:2vw 0;">
               <nz-radio-group [(ngModel)]="nonProfitVar" (ngModelChange)="toggleNonProfit($event)"
                 style="display:inline-block;">
@@ -677,9 +678,10 @@
                 </label>
               </nz-radio-group>
             </div>
-          -->
+          -- >
           </div>
-
+          -->
+<!--
           <div class="col-md-3">
             <nz-card class="price-card">
               <div>
@@ -691,31 +693,8 @@
                       <div style="margin:10px 0;width:100%;">
                         <div style="display:block;width:100%;color:black;">
                           <span style="color:#aaaaaa;font-size:2vw;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:3vw;font-weight:400;">995</span>
+                          <span style="color:black;font-size:3vw;font-weight:400;">499</span>
                         </div>
-                        <!--
-                        <div style="display:block;height:2vw;width:100%;color:#aaaaaa;font-size:.8vw;">
-                          Ends December 31, 2021
-                        </div>
-                        -->
-                        <!--
-                        <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['expert'][0]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['expert'][1]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['expert'][2]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:.8vw;font-weight:300;"> /user /mo</span>
-                        </div>
-                        <div style="display:block;width:100%;font-size:.8vw;font-weight:300;color:#aaaaaa;">
-                          <= {{userRange[0]}} users &nbsp;|&nbsp; {{userRange[0] + 1}}-{{userRange[1]}} users &nbsp;|&nbsp;>
-                            {{userRange[1]}} users
-                        </div>
-                        -->
                       </div>
                     </div>
                     <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
@@ -834,14 +813,6 @@
                   </div>
                 </div>
               </div>
-              <!--
-                        <div style="margin-top:40px;">
-                          <h1>14 Day Free Trial</h1>
-                          <span style="color:#aaaaaa;font-size:12px;">No Credit Card Required</span>
-                          <br>
-                          <span style="color:#aaaaaa;font-size:12px;">Cancel Anytime</span>
-                        </div>
-                        -->
               <div style="margin-top:60px;">
                 <div>
                   <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="earlyAccess"
@@ -852,51 +823,34 @@
                     </button>
                   </a>
                 </div>
-                <!--
-                <div>
-                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="earlyAccess"
-                    style="display: inline-block;">
-                    <button nz-button nzShape="round" nzType="primary" id="checkout-button" style="display: inline-block;"
-                      disabled>Select
-                      Plan
-                    </button>
-                  </a>
-                </div>
-                -->
               </div>
             </nz-card>
           </div>
+          -->
           <!-- BASIC -->
-          <div class="col-md-3">
+          <div class="col-md-4">
             <nz-card class="price-card">
               <div style="text-align: center;">
                 <div class="media align-items-center" style="display:block;">
                   <i class="fa-duotone fa-user" style="font-size:2.5vw;color:green;margin-bottom:5px;"></i>
                   <div style="text-align: center;">
-                    <span style="font-size:1.5vw;">Basic</span>
+                    <span style="font-size:1.5vw;;display:block;">Basic</span>
+                    <div style="text-align: left;font-size:12px;margin:10px 0;height:60px;">
+                      For teams and organizations interested in taking the first step towards streamlining training and supporting remote employees.
+                    </div>
                     <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
                       <div style="margin:10px 0;width:100%;">
                         <div style="display:block;width:100%;color:black;">
                           <span style="color:#aaaaaa;font-size:2vw;font-weight:300;vertical-align: super;">$</span>
                           <span style="color:black;font-size:3vw;font-weight:400;">{{planCostPerUserHash['basic'][0]}}</span>
-                          <!--
-                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['basic'][1]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['basic'][2]}}
-                          </span>
-                          -->
-                          <span style="color:#aaaaaa;font-size:.8vw;font-weight:300;">/user /mo</span>
+                          <span style="color:#aaaaaa;font-size:1.2vw;font-weight:300;">/user /mo</span>
                         </div>
-                        <!--
-                        <div style="height:2vw;display:block;width:100%;font-size:.8vw;font-weight:300;color:#aaaaaa;">
-                          <= {{userRange[0]}} users &nbsp;|&nbsp; {{userRange[0] + 1}}-{{userRange[1]}} users
-                            &nbsp;|&nbsp;> {{userRange[1]}} users
-                        </div>
-                        -->
                       </div>
                     </div>
+                    <div style="padding:10px;height:50px;">
+                    
+                    </div>
+                    <!--
                     <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
                       style="height:12vw;width:100%;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:.5vw;">
                       <span style="font-size:1.5vw;">{{userCnt}} Users</span>
@@ -989,6 +943,7 @@
                         </tbody>
                       </nz-table>
                     </div>
+                  -->
                   </div>
                   <div style="text-align: left;margin-top:40px;">
                     <div style="width:100%;">
@@ -1020,6 +975,14 @@
                         </span>
                         <span class="pricing-line-item-desc">
                           Assessments
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fa-solid fa-times" style="color:red;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc">
+                          Custom Notifications
                         </span>
                       </div>
                       <div class="pricing-line-item-category">
@@ -1096,20 +1059,18 @@
                   </div>
                 </div>
               </div>
-              <!--
               <div style="margin-top:40px;">
                 <h1>14 Day Free Trial</h1>
                 <span style="color:#aaaaaa;font-size:12px;">No Credit Card Required</span>
                 <br>
                 <span style="color:#aaaaaa;font-size:12px;">Cancel Anytime</span>
               </div>
-            -->
               <div style="margin-top:60px;">
                 <div>
-                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="free-basic-plan"
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="basic-plan"
                     style="display: inline-block;">
                     <button nz-button nzShape="round" nzType="primary" id="checkout-button"
-                      style="display: inline-block;" disabled>Select
+                      style="display: inline-block;">Select
                       Plan
                     </button>
                   </a>
@@ -1118,39 +1079,29 @@
             </nz-card>
           </div>
           <!-- Pro -->
-          <div class="col-md-3">
+          <div class="col-md-4">
             <nz-card class="price-card">
-              <div>
+              <div style="text-align: center;">
                 <div class="media align-items-center" style="display:block;">
                   <i class="fa-duotone fa-user-tie" style="font-size:2.5vw;color:red;margin-bottom:5px;"></i>
                   <div style="text-align: center;">
-                    <span style="font-size:1.5vw;">Pro</span>
+                    <div style="font-size:1.5vw;display:block;">Pro</div>
+                    <div style="text-align: left;font-size:12px;margin:10px 0;height:60px;">
+                      For teams and organizations with a more significant and critical training requirement.
+                    </div>
                     <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
                       <div style="margin:10px 0;width:100%;">
                         <div style="display:block;width:100%;color:black;">
                           <span style="color:#aaaaaa;font-size:2vw;font-weight:300;vertical-align: super;">$</span>
                           <span style="color:black;font-size:3vw;font-weight:400;">{{planCostPerUserHash['pro'][0]}}</span>
-                            <!--
-                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['pro'][0]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['pro'][1]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['pro'][2]}}
-                          </span>
-                          -->
-                          <span style="color:#aaaaaa;font-size:.8vw;font-weight:300;">/user /mo</span>
+                          <span style="color:#aaaaaa;font-size:1.2vw;font-weight:300;">/user /mo</span>
                         </div>
-                        <!--
-                        <div style="height:2vw;display:block;width:100%;font-size:.8vw;font-weight:300;color:#aaaaaa;">
-                          <= {{userRange[0]}} users &nbsp;|&nbsp; {{userRange[0] + 1}}-{{userRange[1]}} users
-                            &nbsp;|&nbsp;>
-                            {{userRange[1]}} users
-                        </div>
-                        -->
                       </div>
                     </div>
+                    <div style="padding:10px;height:50px;">
+
+                    </div>
+                    <!--
                     <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
                       style="height:12vw;width:100%;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:.5vw;">
                       <span style="font-size:1.5vw;">{{userCnt}} Users</span>
@@ -1239,16 +1190,17 @@
                               <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{((monthlyCostHash['pro'] -
                                 (monthlyCostHash['pro'] * discounts.conference)) /
                                 userCnt)?.toFixed(2)}}</span>
-                                <!--
+                                < !--
                               <span *ngIf="userCnt > 0"
                                 style="font-family: monospace;color:blue;">{{(monthlyCostHash['pro'] /
                                 userCnt)?.toFixed(2)}}</span>
-                                -->
+                                -- >
                             </td>
                           </tr>
                         </tbody>
                       </nz-table>
                     </div>
+                    -->
                   </div>
                   <div style="text-align: left;margin-top:40px;">
                     <div style="width:100%;">
@@ -1280,6 +1232,14 @@
                         </span>
                         <span class="pricing-line-item-desc">
                           Assessments
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fa-solid fa-times" style="color:red;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc">
+                          Custom Notifications
                         </span>
                       </div>
                       <div class="pricing-line-item-category">
@@ -1356,20 +1316,18 @@
                   </div>
                 </div>
               </div>
-              <!--
               <div style="margin-top:40px;">
                 <h1>14 Day Free Trial</h1>
                 <span style="color:#aaaaaa;font-size:12px;">No Credit Card Required</span>
                 <br>
                 <span style="color:#aaaaaa;font-size:12px;">Cancel Anytime</span>
               </div>
-              -->
               <div style="margin-top:60px;">
                 <div style="margin-top:10%;">
-                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="free-pro-plan"
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="pro-plan"
                     style="display: inline-block;">
                     <button nz-button nzShape="round" nzType="primary" id="checkout-button"
-                      style="display: inline-block;" disabled>Select
+                      style="display: inline-block;" >Select
                       Plan
                     </button>
                     <!--
@@ -1384,39 +1342,29 @@
             </nz-card>
           </div>
           <!-- Expert -->
-          <div class="col-md-3">
+          <div class="col-md-4">
             <nz-card class="price-card">
               <div>
                 <div class="media align-items-center" style="display:block;">
                   <i class="fa-duotone fa-user-graduate" style="font-size:2.5vw;color:blueviolet;margin-bottom:5px;"></i>
                   <div style="text-align: center;">
-                    <span style="font-size:1.5vw;">Expert</span>
+                    <span style="font-size:1.5vw;;display:block;">Expert</span>
+                    <div style="text-align: left;font-size:12px;margin:10px 0;height:60px;">
+                      For teams and organizations interested in efficiently managing demanding employee training needs.
+                    </div>
                     <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
                       <div style="margin:10px 0;width:100%;">
                         <div style="display:block;width:100%;color:black;">
                           <span style="color:#aaaaaa;font-size:2vw;font-weight:300;vertical-align: super;">$</span>
                           <span style="color:black;font-size:3vw;font-weight:400;">{{planCostPerUserHash['expert'][0]}}</span>
-                          <!--
-                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['expert'][0]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['expert'][1]}}
-                          </span>
-                          <span style="color:#aaaaaa;font-size:1.4vw;font-weight:300;vertical-align: super;">$</span>
-                          <span style="color:black;font-size:2vw;font-weight:400;">{{planCostPerUserHash['expert'][2]}}
-                          </span>
-                          -->
-                          <span style="color:#aaaaaa;font-size:.8vw;font-weight:300;">/user /mo</span>
+                          <span style="color:#aaaaaa;font-size:1.2vw;font-weight:300;">/user /mo</span>
                         </div>
-                        <!--
-                        <div style="height:2vw;display:block;width:100%;font-size:.8vw;font-weight:300;color:#aaaaaa;">
-                          <= {{userRange[0]}} users &nbsp;|&nbsp; {{userRange[0] + 1}}-{{userRange[1]}} users
-                            &nbsp;|&nbsp;>
-                            {{userRange[1]}} users
-                        </div>
-                        -->
                       </div>
                     </div>
+                    <div style="padding:10px;height:50px;">
+                      <i>Contact Sales for Enterprise pricing</i>
+                    </div>
+                    <!--
                     <div [ngClass]="{'naydo-box': naydo, 'regular-box': !naydo}"
                       style="height:12vw;width:100%;border:1px solid #aaaaaa;background-color: #f5f5f5;padding:.5vw;">
                       <span style="font-size:1.5vw;">{{userCnt}} Users</span>
@@ -1505,16 +1453,17 @@
                               <span *ngIf="userCnt > 0" style="font-family: monospace;color:blue;">{{((monthlyCostHash['expert'] -
                                 (monthlyCostHash['expert'] * discounts.conference)) /
                                 userCnt)?.toFixed(2)}}</span>
-                                <!--
+                                < !--
                               <span *ngIf="userCnt > 0"
                                 style="font-family: monospace;color:blue;">{{(monthlyCostHash['expert'] /
                                 userCnt)?.toFixed(2)}}</span>
-                                -->
+                                -- >
                             </td>
                           </tr>
                         </tbody>
                       </nz-table>
                     </div>
+                    -->
                   </div>
                   <div style="text-align: left;margin-top:40px;">
                     <div style="width:100%;">
@@ -1546,6 +1495,14 @@
                         </span>
                         <span class="pricing-line-item-desc">
                           Assessments
+                        </span>
+                      </div>
+                      <div class="pricing-line-item-indented">
+                        <span class="pricing-line-item-icon">
+                          <i class="fa-solid fa-check" style="color:#52c41a;"></i>
+                        </span>
+                        <span class="pricing-line-item-desc">
+                          Custom Notifications
                         </span>
                       </div>
                       <div class="pricing-line-item-category">
@@ -1622,20 +1579,18 @@
                   </div>
                 </div>
               </div>
-              <!--
               <div style="margin-top:40px;">
                 <h1>14 Day Free Trial</h1>
                 <span style="color:#aaaaaa;font-size:12px;">No Credit Card Required</span>
                 <br>
                 <span style="color:#aaaaaa;font-size:12px;">Cancel Anytime</span>
               </div>
-              -->
               <div style="margin-top:60px;">
                 <div>
-                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="free-expert-plan"
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="expert-plan"
                     style="display: inline-block;">
                     <button nz-button nzShape="round" nzType="primary" id="checkout-button"
-                      style="display: inline-block;" disabled>Select
+                      style="display: inline-block;" >Select
                       Plan
                     </button>
                     <!--

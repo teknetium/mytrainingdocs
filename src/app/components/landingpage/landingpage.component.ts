@@ -310,12 +310,12 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   explainerVidIsVisible = false;
   planSelected = false;
   plan = '';
-  userCnt = 150;
+  userCnt = 25;
   monthlyCost = 0;
   planCostPerUserHash = {
-    basic: [4, 0, 0],
-    pro: [6, 0, 0],
-    expert: [8, 0, 0]
+    basic: [10, 0, 0],
+    pro: [14, 0, 0],
+    expert: [18, 0, 0]
   };
   userRange = [100, 300];
   discounts = {
