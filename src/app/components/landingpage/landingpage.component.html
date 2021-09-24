@@ -149,7 +149,7 @@
     <img *ngIf="naydo" src="assets/images/WelcomeStarBurst.png" style="position:absolute;top:60%;left:5%;z-index:1;"
       width="40%">
       -->
-      <!--
+
     <div class="special-offer">
       <div style="position: relative;">
         <div *ngIf="showEarlyAccessDetails" class="early-access-details">
@@ -201,13 +201,22 @@
             <span style="display:block;font-weight:400;">Join Early Access!</span>
             <span style="display:block;font-size:1vw;font-weight:400;margin-bottom:5px;">Ends December 31, 2021</span>
           </div>
-          <div style="display:block;text-align:center;margin-top:2vw;">
+          <div style="display:block;text-align:center;margin-top:2vw;color:cyan;">
+            <!--
             <button nz-button nzShape="round" nzType="default" nzGhost nzSize="small"
               style="color:black;font-size:vw;border:1px solid black;" (click)="showEarlyAccessDetails = true">
               Learn More
             </button>
+            -->
+            Join during the Early Access period and get 50% off through the end of the year.
+            <br>
+            <br>
+            <span style="text-align: center;">
+            Use coupon code <span style="color:chartreuse;">EarlyAccess</span>
+            </span>
           </div>
           <div class="special-offer-text">
+            <!--
             <div style="text-align: left;">
               <ul>
                 <li>4 hours consulting time</li>
@@ -215,10 +224,12 @@
                 <li>input on key features</li>
               </ul>
             </div>
+            -->
           </div>
-          < !--
+          <!--
           <div style="display:block;font-size:1vw;color:black;">Learn More</div>
-          -- >
+          -->
+          <!--
           <div>
             <span style="font-size:1vw;vertical-align:super;color:chartreuse;">only </span>
             <span style="font-size:1.5vw;vertical-align:super;color:chartreuse;">$</span>
@@ -230,8 +241,9 @@
               </button>
             </a>
           </div>
+          -->
         </div>
-        < !--
+        <!--
         <div class="timer" *ngIf="(timeLeft$ | async) as t; else sorry" style="color:black;">
           <br>
           <span style="font-size: 1.1vw;"> Offer Expires May 1, 2021 </span>
@@ -247,10 +259,9 @@
             {{t.secondsToDday}}</span>
           <span style="font-size:1vw;">sec</span>
         </div>
--- >
+-->
       </div>
     </div>
--->
     <!--
     <div style="font-size:1.5vw;color:black;margin-top: 3vw;">
       At less than $5 per user per month for our full feature plan, can you afford to not join?
@@ -261,13 +272,13 @@
     -->
     <div style="position:relative;">
       <img src="assets/images/landing-banner.png" width="100%" height="100%">
-      <div style="position: absolute;top:12vw;left:10vw;font-size:2.5vw;color:black;">
+      <div style="position: absolute;top:10vw;left:10vw;font-size:2.5vw;color:black;">
         Training people is hard.
       </div>
-      <div style="position: absolute;top:16vw;left:10vw;font-size:2.5vw;color:black;">
+      <div style="position: absolute;top:14vw;left:10vw;font-size:2.5vw;color:black;">
         We can help!
       </div>
-      <div style="position: absolute;top:22vw;left:10vw;font-size:2.5vw;color:black;">
+      <div style="position: absolute;top:20vw;left:10vw;font-size:2.5vw;color:black;">
         <i class="fa-solid fa-play-circle opaque" style="cursor:pointer;text-align:center;font-size:2.5vw;color:black;"
           (click)="loadVideo('explainer')"></i>
       </div>
