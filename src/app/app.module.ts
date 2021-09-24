@@ -66,6 +66,7 @@ registerLocaleData(en);
         MessagesModule,
         NzStepsModule,
         NzRadioModule,
+        NzTabsModule,
         NzSpinModule,
         MyLoaderModule,
         JoyrideModule.forRoot()

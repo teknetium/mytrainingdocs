@@ -329,11 +329,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   listOfUsers = [];
   userNameHash = {};
   planHash = {
-    earlyAccess: {
-      name: 'Early Access',
-      icon: 'fa-duotone fa-user-hard-hat',
-      color: 'deepskyblue'
-    },
     basic: {
       name: 'Basic',
       icon: 'fa-duotone fa-user',
@@ -389,9 +384,9 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   plan = '';
   monthlyCost = 0;
   planCostPerUserHash = {
-    basic: [2, 0, 0],
-    pro: [3, 0, 0],
-    expert: [4, 0, 0]
+    basic: [10, 0, 0],
+    pro: [14, 0, 0],
+    expert: [18, 0, 0]
     /*
     basic: [5, 4, 3],
     pro: [8, 6, 4],
@@ -412,6 +407,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     pro: 0,
     expert: 0
   };
+
+  planIndex = 2;
+  type = 'card';
+  currentPlanDetails = 'basic';
 
 
   constructor(
@@ -763,6 +762,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
     })
   };
+
+  changePlan(plan) {
+    console.log("changePlan", plan);
+  }
 
   onAlertClose(index: number) {
     this.alerts.splice(index, 1);
