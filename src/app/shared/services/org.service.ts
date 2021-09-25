@@ -59,11 +59,13 @@ export class OrgService {
     this.orgBS$.next(this.currentOrg);
   }
 
-  setPlan(plan) {
-    console.log('setPlan', this.currentOrg);
-    this.currentOrg.planId = plan;
-    this.updateOrg(this.currentOrg);
-    this.orgBS$.next(this.currentOrg);
+  setPlan(planId, planName) {
+    if (this.currentOrg) {
+      this.currentOrg.planId = planId;
+      this.currentOrg.planName = planName;
+      this.updateOrg(this.currentOrg);
+      this.orgBS$.next(this.currentOrg);
+    }
   }
 
   showUpgradeToProDialog(show: boolean) {

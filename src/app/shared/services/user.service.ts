@@ -195,6 +195,9 @@ export class UserService {
                       this.authenticatedUserBS$.next(this.authenticatedUser);
                       this.userTrainingService.getOrgUserTrainings(this.authenticatedUser.org);
                     } else {
+                      let planId = localStorage.getItem('planId');
+                      let planName = localStorage.getItem('planName');
+                      console.log('UserService ' + planId, planName);
                       let domain: string = profile.email.substring(profile.email.indexOf('@') + 1, profile.email.indexOf('.'));
                       this.orgObj = <OrgModel>{
                         _id: String(new Date().getTime()),
@@ -202,11 +205,14 @@ export class UserService {
                         domain: domain,
                         adminIds: [profile.email],
                         owner: profile.email,
-                        planId: '',
-                        planName: '',
+                        planId: planId,
+                        planName: planName,
                         createDate: new Date().getTime(),
                         userCount: 1
                       }
+
+                      localStorage.removeItem('planId');
+                      localStorage.removeItem('planName');
 
                       this.orgService.createOrg(cloneDeep(this.orgObj));
 

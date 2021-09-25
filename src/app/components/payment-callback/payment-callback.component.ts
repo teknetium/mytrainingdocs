@@ -45,6 +45,7 @@ export class PaymentCallbackComponent extends BaseComponent implements OnInit {
       localStorage.setItem('lastName', this.lName);
       localStorage.setItem('firstName', this.fName);
       localStorage.setItem('planId', this.planId);
+      localStorage.setItem('planName', this.planName);
     });
   }
 

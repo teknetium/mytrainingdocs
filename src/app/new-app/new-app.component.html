@@ -366,7 +366,7 @@
                                 </span>
                                 <span style="font-size:16px;width:50%;display:inline-block;">
                                     <nz-select [(ngModel)]="orgObj.planId" [nzCustomTemplate]="custom"
-                                        (ngModelChange)="changePlan($event)" style="width: 100%;">
+                                        (ngModelChange)="planChanged($event)" style="width: 100%;">
                                         <nz-option nzCustomContent nzValue="basic" nzLabel="Basic">
                                             <i class="fa-duotone fa-user" [ngStyle]="{'color': planHash['basic'].color}" style="font-size:16px;"></i>&nbsp;&nbsp;&nbsp;Basic
                                         </nz-option>
@@ -404,8 +404,7 @@
                                     Plan Details
                                 </span>
                                 <span style="font-size:16px;width:50%;display:inline-block;">
-                                    <nz-radio-group [(ngModel)]="currentPlanDetails"
-                                        (ngModelChange)="planChanged($event)">
+                                    <nz-radio-group [(ngModel)]="currentPlanDetails">
                                         <label nz-radio-button nzValue="basic" nz-tooltip nzTooltipTitle="Basic Plan">
                                             <i class="fa-duotone fa-user" style="font-size:16px;color:green;"></i>
                                         </label>

@@ -329,18 +329,18 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   listOfUsers = [];
   userNameHash = {};
   planHash = {
-    basic: {
-      name: 'Basic',
+    'basic': {
+      name: 'Basic Plan',
       icon: 'fa-duotone fa-user',
       color: 'green'
     },
-    pro: {
-      name: 'Pro',
+    'pro': {
+      name: 'Pro Plan',
       icon: 'fa-duotone fa-user-tie',
       color: 'red'
     },
-    expert: {
-      name: 'Expert',
+    'expert': {
+      name: 'Expert Plan',
       icon: 'fa-duotone fa-user-graduate',
       color: 'blueviolet'
     }
@@ -542,10 +542,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       if (this.authenticatedUser.firstName === '') {
         this.firstTimer = true;
         let fullName = localStorage.getItem('fullName');
-        let planId = localStorage.getItem('planId');
-        this.orgService.setPlan(planId);
         console.log('local storage for fullName ', fullName);
-        console.log('local storage for planId ', planId);
 
         if (fullName) {
           let nameParts: string[] = fullName.split(' ');
@@ -553,7 +550,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
             this.authenticatedUser.firstName = nameParts[0];
             this.authenticatedUser.lastName = nameParts[1];
           }
-          localStorage.removeItem('fullName');
+//          localStorage.removeItem('fullName');
         } else {
           this.showNewUserModal = true;
         }
@@ -777,7 +774,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   planChanged(plan: string) {
     this.myPlan = plan;
     console.log('planChanged', this.myPlan);
-    this.orgService.setPlan(this.myPlan);
+    this.orgService.setPlan(this.myPlan, this.planHash[plan].name);
   }
 
   orgNameChanged(newName: string) {
@@ -788,7 +785,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   handleUpgradeToProOk() {
     if (this.orgObj.adminIds.includes(this.authenticatedUser._id)) {
       this.orgObj.planId = 'pro';
-      this.orgService.setPlan('pro');
+      this.orgService.setPlan('pro', 'Pro Plan');
       let alert = <AlertModel>{
         type: 'success',
         message: 'You have successfully upgraded to the Pro plan.'
@@ -807,7 +804,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   handleUpgradeToExpertOk() {
     if (this.orgObj.adminIds.includes(this.authenticatedUser._id)) {
       this.orgObj.planId = 'expert';
-      this.orgService.setPlan('expert');
+      this.orgService.setPlan('expert', 'Expert Plan');
       let alert = <AlertModel>{
         type: 'success',
         message: 'You have successfully upgraded to the Expert plan.'

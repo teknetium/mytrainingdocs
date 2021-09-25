@@ -39,8 +39,6 @@ export class AuthService {
   uid: string;
 
   constructor(private router: Router) {
-    let planId = localStorage.getItem('planId');
-    console.log('AuthService ' + planId);
     //    this.isAuthenticated$.next(false);
     // If app auth token is not expired, request new token
     if (JSON.parse(localStorage.getItem('expires_at')) > Date.now()) {
@@ -49,6 +47,7 @@ export class AuthService {
   }
 
   setLoggedIn(value: boolean) {
+    
     // Update login status behavior subject
     this.loggedIn$.next(value);
     this.isAuthenticated$.next(value);
