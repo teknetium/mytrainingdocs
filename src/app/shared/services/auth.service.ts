@@ -36,14 +36,11 @@ export class AuthService {
   // Subscribe to token expiration stream
   refreshSub: Subscription;
   routeSub: Subscription;
-  userMetaData = {
-    firstName: '',
-    lastName: '',
-    role: '',
-  };
   uid: string;
 
   constructor(private router: Router) {
+    let planId = localStorage.getItem('planId');
+    console.log('AuthService ' + planId);
     //    this.isAuthenticated$.next(false);
     // If app auth token is not expired, request new token
     if (JSON.parse(localStorage.getItem('expires_at')) > Date.now()) {

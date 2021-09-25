@@ -541,8 +541,11 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       this.currentEmail = this.authenticatedUser.email;
       if (this.authenticatedUser.firstName === '') {
         this.firstTimer = true;
-        let fullName = localStorage.getItem(this.authenticatedUser.email);
-        console.log('local storage for ', this.authenticatedUser.email, fullName);
+        let fullName = localStorage.getItem('fullName');
+        let planId = localStorage.getItem('planId');
+        this.orgService.setPlan(planId);
+        console.log('local storage for fullName ', fullName);
+        console.log('local storage for planId ', planId);
 
         if (fullName) {
           let nameParts: string[] = fullName.split(' ');
@@ -550,7 +553,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
             this.authenticatedUser.firstName = nameParts[0];
             this.authenticatedUser.lastName = nameParts[1];
           }
-          localStorage.removeItem(this.authenticatedUser.email);
+          localStorage.removeItem('fullName');
         } else {
           this.showNewUserModal = true;
         }

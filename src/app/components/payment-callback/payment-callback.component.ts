@@ -14,6 +14,7 @@ export class PaymentCallbackComponent extends BaseComponent implements OnInit {
   fName: string;
   lName: string;
   planName: string;
+  planId: string;
   email: string;
   title: string;
 
@@ -34,12 +35,16 @@ export class PaymentCallbackComponent extends BaseComponent implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       this.fName = params['firstname'];
-      this.lName = params['firstname'];
+      this.lName = params['lastname'];
       this.planName = params['planName'];
+      this.planId = params['planId'];
       this.email = params['email'];
       this.title = "Thank you for subscribing to the " + this.planName + " plan.";
 
-      localStorage.setItem(this.email, this.fName + ' ' + this.lName);
+      localStorage.setItem('fullName', this.fName + ' ' + this.lName);
+      localStorage.setItem('lastName', this.lName);
+      localStorage.setItem('firstName', this.fName);
+      localStorage.setItem('planId', this.planId);
     });
   }
 
