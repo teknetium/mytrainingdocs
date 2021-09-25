@@ -368,13 +368,13 @@
                                     <nz-select [(ngModel)]="orgObj.planId" [nzCustomTemplate]="custom"
                                         (ngModelChange)="planChanged($event)" style="width: 100%;">
                                         <nz-option nzCustomContent nzValue="basic" nzLabel="Basic">
-                                            <i class="fa-duotone fa-user" [ngStyle]="{'color': planHash['basic'].color}" style="font-size:16px;"></i>&nbsp;&nbsp;&nbsp;Basic
+                                            <i class="fa-duotone fa-fw fa-user" [ngStyle]="{'color': planHash['basic'].color}" style="font-size:16px;"></i>&nbsp;&nbsp;&nbsp;Basic Plan
                                         </nz-option>
                                         <nz-option nzCustomContent nzValue="pro" nzLabel="Pro">
-                                            <i class="fa-duotone fa-user-tie" [ngStyle]="{'color': planHash['pro'].color}" style="font-size:16px;"></i>&nbsp;&nbsp;&nbsp;Pro
+                                            <i class="fa-duotone fa-fw fa-user-tie" [ngStyle]="{'color': planHash['pro'].color}" style="font-size:16px;"></i>&nbsp;&nbsp;&nbsp;Pro Plan
                                         </nz-option>
                                         <nz-option nzCustomContent nzValue="expert" nzLabel="Expert">
-                                            <i class="fa-duotone fa-user-graduate" [ngStyle]="{'color': planHash['expert'].color}" style="font-size:16px;"></i> &nbsp;&nbsp;&nbsp;Expert
+                                            <i class="fa-duotone fa-fw fa-user-graduate" [ngStyle]="{'color': planHash['expert'].color}" style="font-size:16px;"></i>&nbsp;&nbsp;&nbsp;Expert Plan
                                         </nz-option>
                                     </nz-select>
                                 </span>
@@ -386,7 +386,7 @@
                                     <!--
                                     <i  [ngStyle]="{'color': planHash[selected.nzValue].color}" [ngClass]="{'fa-duotone fa-user': selected.nzValue === 'basic', 'fa-duotone fa-user-tie': selected.nzValue === 'pro', 'fa-duotone fa-user-graduate': selected.nzValue === 'expert'}"></i>
                                     -->
-                                    <span>&nbsp;&nbsp;&nbsp;{{ selected.nzLabel }}</span>
+                                    <span>&nbsp;&nbsp;&nbsp;{{ selected.nzLabel }} Plan</span>
                                 </ng-template>
                             </div>
                             <!--
