@@ -144,7 +144,9 @@ export class UserService {
     this.org$ = this.orgService.getOrgStream();
     this.org$.subscribe({
       next: (org) => {
-        this.orgObj = org;
+        if (org) {
+          this.orgObj = org;
+        }
       },
       error: () => { }
     })
@@ -211,8 +213,8 @@ export class UserService {
                         userCount: 1
                       }
 
-                      localStorage.removeItem('planId');
-                      localStorage.removeItem('planName');
+//                      localStorage.removeItem('planId');
+//                      localStorage.removeItem('planName');
 
                       this.orgService.createOrg(cloneDeep(this.orgObj));
 

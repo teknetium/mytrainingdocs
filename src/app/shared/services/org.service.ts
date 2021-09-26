@@ -39,6 +39,9 @@ export class OrgService {
       return;
     }
     this.postOrg$(newOrg).subscribe(orgObj => {
+      if (!orgObj) {
+        return;
+      }
       console.log('createOrg', orgObj);
       this.currentOrg = orgObj;
       this.orgBS$.next(this.currentOrg);
