@@ -176,11 +176,10 @@ export class HomeComponent extends BaseComponent implements OnInit {
       }
       this.sessionLog = sessionLog;
     });
-    this.myOrgHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgHash => {
-      if (!myOrgHash) {
-        return;
-      }
-      this.myOrgUsers = Object.values(myOrgHash);
+
+
+    this.myOrgUsers$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgUsers => {
+      this.myOrgUsers = Object.values(myOrgUsers);
 
       this.pastDueUserCount = 0;
       this.activeUsers = 0;
@@ -207,6 +206,14 @@ export class HomeComponent extends BaseComponent implements OnInit {
       }
 
     });
+
+    this.myOrgHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(myOrgHash => {
+      if (!myOrgHash) {
+        return;
+      }
+    });
+
+
     this.authenticatedUser$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (!user) {
         return;
