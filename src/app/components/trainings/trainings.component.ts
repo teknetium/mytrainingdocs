@@ -110,9 +110,6 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
 //        console.log('trainings component:init');
         this.trainings = [];
         for (let training of allTrainings) {
-          if (training.teamId === 'mytrainingdocs' || training.teamId === 'shared') {
-            continue;
-          } else {
             this.trainings.push(training);
             this.commentService.getComments$(training._id).subscribe(comments => {
               this.commentHash[training._id] = comments;
@@ -122,7 +119,6 @@ export class TrainingsComponent extends BaseComponent implements OnInit, AfterVi
               }
               this.ratingHash[training._id] = ratingTotal / comments.length;
             })
-          }
         }
 //        this.trainingsDisplay = this.trainings;
       } else {

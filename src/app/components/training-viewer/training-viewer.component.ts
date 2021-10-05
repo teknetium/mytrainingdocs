@@ -1016,7 +1016,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       subCategory: 'registration',
       sentDate: new Date().getTime(),
       to: null,
-      from: 'greg@mytrainingdocs.com',
+      from: 'support@mytrainingdocs.com',
       templateId: 'd-b4679d4de1fb41e18d1e2487995f9bdf',
       dynamicTemplateData: null
     }
@@ -1045,7 +1045,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       subCategory: 'registration',
       sentDate: new Date().getTime(),
       to: null,
-      from: 'greg@mytrainingdocs.com',
+      from: 'support@mytrainingdocs.com',
       templateId: 'd-3d4ee355e8164a999bbd8a4dd3d106dc',
       dynamicTemplateData: null
     }
@@ -1339,9 +1339,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   */
   saveTraining(reload: boolean) {
     if (this.production === 'true') {
-      return;
-    }
-    if (this.selectedTraining.teamId === 'mytrainingdocs') {
       return;
     }
     this.trainingService.saveTraining(this.selectedTraining, false);

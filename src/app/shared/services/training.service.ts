@@ -112,6 +112,8 @@ export class TrainingService {
           this.allTrainingHashBS$.next(this.allTrainingHash);
 
           // Load system trainings
+
+          /*
           this.getTrainings$('mytrainingdocs').subscribe(systemTrainings => {
             if (!systemTrainings) {
               systemTrainings = [];
@@ -159,6 +161,7 @@ export class TrainingService {
               this.allTrainingHashBS$.next(this.allTrainingHash);
             });
           });
+          */
         });
       }
 

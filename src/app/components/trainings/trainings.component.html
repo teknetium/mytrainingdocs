@@ -224,7 +224,7 @@
       No Assessment Data
     </div>
   </nz-drawer>
-  <div *ngIf="trainings && trainings.length === 0" style="text-align: center;margin-top:40px;">
+  <div *ngIf="trainings && trainings?.length === 0" style="text-align: center;margin-top:40px;">
     <span style="font-size:20px;font-weight: 200;display:block;">You haven't created any trainings yet!</span>
     <button nz-button nzType="primary" nzSize="small" nzShape="round" (click)="newTraining()" style="margin-top: 20px;">
       Create a New Training
