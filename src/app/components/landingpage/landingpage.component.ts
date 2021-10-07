@@ -6,7 +6,7 @@ import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { UserModel } from '../../shared/interfaces/user.type';
 import { Router, NavigationEnd, ActivatedRoute, NavigationCancel, NavigationStart, NavigationError, Event as NavigationEvent } from '@angular/router';
 import { ScrollToAnimationEasing } from '@nicky-lenaers/ngx-scroll-to';
-import { VgAPI } from 'videogular2/compiled/core';
+import { VgApiService } from '@videogular/ngx-videogular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { TrainingService } from '../../shared/services/training.service';
@@ -82,7 +82,7 @@ interface timeComponents {
 
 export class LandingpageComponent extends BaseComponent implements OnInit {
 
-  vgApi: VgAPI;
+  vgApi: VgApiService;
   taskVideo$: Observable<SafeResourceUrl>;
   showTaskVideoModal = false;
 
@@ -629,7 +629,7 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   closeTaskVideoModal() {
     this.showTaskVideoModal = false;
   }
-  onPlayerReady(api: VgAPI) {
+  onPlayerReady(api: VgApiService) {
     this.vgApi = api;
 
     this.vgApi.getDefaultMedia().subscriptions.ended.subscribe(() => {

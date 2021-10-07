@@ -9,8 +9,8 @@ import { NzPopconfirmModule } from 'ng-zorro-antd';
 import { NzFormModule } from 'ng-zorro-antd';
 import { NzToolTipModule } from 'ng-zorro-antd';
 import { RouterModule } from '@angular/router';
-import { VgCoreModule } from 'videogular2/compiled/core';
-import { VgControlsModule } from 'videogular2/compiled/controls';
+import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { TrainingsRoutingModule } from './training-routing.module';
 import { TrainingViewerModule } from '../training-viewer/training-viewer.module';
 

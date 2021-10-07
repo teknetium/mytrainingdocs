@@ -15,7 +15,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FileModel, FilePlusModel } from 'src/app/shared/interfaces/file.type';
 import { UserModel, UserIdHash } from 'src/app/shared/interfaces/user.type';
 import { OrgService } from '../../shared/services/org.service';
-import { VgAPI } from 'videogular2/compiled/core';
+import { VgApiService } from '@videogular/ngx-videogular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { merge, take } from 'rxjs/operators';
 import { MessageService } from '../../shared/services/message.service';
@@ -97,7 +97,7 @@ import { environment } from '../../../environments/environment';
 })
 export class TrainingViewerComponent extends BaseComponent implements OnInit {
 
-  vgApi: VgAPI;
+  vgApi: VgApiService;
 
   fileExtensionHash = {
     doc: 'file-word',
@@ -1166,7 +1166,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
   }
 
-  onPlayerReady(api: VgAPI) {
+  onPlayerReady(api: VgApiService) {
     this.vgApi = api;
     /*
         this.vgApi.getDefaultMedia().subscriptions.loadedMetadata.subscribe(

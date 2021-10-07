@@ -19,7 +19,7 @@ import { TaskModel, TaskHash, TaskStepContentHash } from '../shared/interfaces/t
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { UidUserTrainingHash } from '../shared/interfaces/userTraining.type';
-import { VgAPI } from 'videogular2/compiled/core';
+import { VgApiService } from '@videogular/ngx-videogular/core';
 import { filter } from 'rxjs/operators';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { takeUntil } from 'rxjs/operators';
@@ -179,7 +179,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.contentWidth = Math.floor(window.innerWidth * .9);
   }
 
-  vgApi: VgAPI;
+  vgApi: VgApiService;
   isCollapsed = false;
   triggerTemplate: TemplateRef<void> | null = null;
 
@@ -864,7 +864,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       this.helpIsClosed = !this.helpIsClosed;
     }
   */
-  onPlayerReady(api: VgAPI) {
+  onPlayerReady(api: VgApiService) {
     this.vgApi = api;
     /*
         this.vgApi.getDefaultMedia().subscriptions.loadedMetadata.subscribe(
