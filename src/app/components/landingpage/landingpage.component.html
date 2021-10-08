@@ -238,7 +238,7 @@
         <i class="fa-solid fa-play-circle opaque" style="cursor:pointer;text-align:center;font-size:2.5vw;color:black;"
           (click)="loadVideo('explainer')"></i>
       </div>
-      <div style="position: absolute;top:30vw;left:2vw;padding:2vw;border-radius:.4vw;background: rgba(255, 255, 255, .4);width:50vw;">
+      <div style="position: absolute;top:27vw;left:2vw;padding:2vw;border-radius:.4vw;background: rgba(255, 255, 255, .4);width:50vw;">
         <div style="text-align:center;font-size:1.3vw;color:black;font-weight:200;">
           <div style="display:inline-block;">
             How Much Does
@@ -254,17 +254,27 @@
                   (click)="loadVideo('explainer')"></i>
                   -->
         </div>
-        <div style="font-size:1.3vw;color:black;margin-top: 2vw;margin-bottom: 3vw;font-weight:200;text-align: center;">
+        <div style="font-size:1.3vw;color:black;margin-top: 2vw;font-weight:200;text-align: center;">
           Well trained employees all but eliminate these costs!
         </div>
-        <div style="font-size:1.3vw;color:black;margin-top:2vw;margin-bottom: 3vw;font-weight:200;text-align: center;">
+        <div style="font-size:1.3vw;color:black;margin-top:2vw;font-weight:200;text-align: center;">
           <span style="color:red;">my</span>
           <span style="color:black;">Training</span>
-          <span style="color:red;">docs</span>
+          <span style="color:red;margin-bottom:3vw;">docs</span>
           was designed for first time Learning Management System (LMS) organizations with more than 100 employees.
           <br>
-          Reduce your training costs by a factor of
-          <span style="font-size: 3vw;"> 100!</span>
+          <br>
+          <span style="font-size:1.6vw;margin-top:3vw;">
+          Reduce your training costs by a factor of 100!
+          </span>
+
+          <br>
+          <br>
+          <a [ngxScrollTo]="destinations['price'].ngxScrollToDestination" [ngxScrollToDuration]="ngxScrollToDuration"
+             [ngxScrollToEasing]="ngxScrollToEasing" style="color:blue;margin-top:20px;">
+            Sign Me Up!
+            </a>
+
           <!--
           is a pragmatic solution to training your employees.
           <br>

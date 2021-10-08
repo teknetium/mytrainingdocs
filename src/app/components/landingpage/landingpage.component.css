@@ -1321,3 +1321,18 @@ textarea.form-control {
    display:inline-block;
    color:black;
  }
+
+ .signMeUpButton {
+    padding:5px;
+   border: 1px solid white;
+   text-align: center;
+   border-radius: 10px;
+   width:fit-content;
+ }
+
+  .signMeUpButton:hover {
+    padding:5px;
+   border: 1px solid black;
+   border-radius: 10px;
+   background: rgba(255, 255, 255, .4);
+ }

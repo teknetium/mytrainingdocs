@@ -352,6 +352,14 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   currentSlide = 0;
   featureSlides = [
     {
+      image: "assets/images/learning-paths.jpeg",
+      text: "Create your own custom learning paths."
+    },
+    {
+      image: "assets/images/live-stream8.jpeg",
+      text: "Live stream your trainings."
+    },
+    {
       image: "assets/images/teamworkX.jpeg",
       text: "Empower your teams to easily and quickly create their own trainings."
     },
