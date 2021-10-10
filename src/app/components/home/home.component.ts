@@ -14,8 +14,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from '../base.component';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
 import { TaskModel, TaskHash, TaskStepContentHash } from '../../shared/interfaces/task.type';
-import { TaskWizardService } from '../../shared/services/taskWizard.service';
-import { JoyrideService } from 'ngx-joyride';
 
 export interface UserStat {
   uid: string,
@@ -95,7 +93,6 @@ export class HomeComponent extends BaseComponent implements OnInit {
   tasks: string[];
   taskHash: TaskHash;
   taskStepContentHash: TaskStepContentHash;
-  taskWizardHash = {};
   pastDueUserCount = 0;
   trainingsDue = 0;
   trainingsCompleted = 0;
@@ -106,12 +103,10 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   constructor(
     private auth: AuthService,
-    private taskWizardService: TaskWizardService,
     private eventService: EventService,
     private userService: UserService,
     private trainingService: TrainingService,
     private userTrainingService: UserTrainingService,
-    private joyrideService: JoyrideService,
     private cd: ChangeDetectorRef,
     private router: Router
   ) {
@@ -123,9 +118,6 @@ export class HomeComponent extends BaseComponent implements OnInit {
     this.authenticatedUser$ = userService.getAuthenticatedUserStream();
 //    this.startTour$ = this.eventService.getStartTourStream();
     this.myTeamIdHash$ = this.userService.getMyTeamIdHashStream();
-    this.taskHash$ = this.taskWizardService.getTaskHashStream();
-    this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
-    this.tasks$ = this.taskWizardService.getTasksStream();
     this.teamTrainingHash$ = this.trainingService.getTeamTrainingHashStream();
   }
 
@@ -295,13 +287,6 @@ export class HomeComponent extends BaseComponent implements OnInit {
     this.router.navigate(['/myteam/' + uid]);
 //    this.userService.selectUser(uid);
   }
-/*
-  startTour() {
-    this.joyrideService.startTour(
-      { steps: ['step1', 'step2', 'step3', 'step4'] } // Your steps order
-    );
-  }
-  */
 
   onDateRangeChange(dateRange) {
     if (!this.sessionLog) {
@@ -329,11 +314,6 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   startTour(task: string) {
     console.log("startTour", task);
-    this.taskWizardService.startTour(task);
-    //    this.joyrideService.startTour({ steps: this.taskHash[task].steps });
-    // this.eventService.startTour(this.currentPage);
-    //    let toursteps = this.aboutThisPageHash[this.currentPage].tourSteps;
-    //    this.joyrideService.startTour(toursteps);
   }
 
   selectTraining(tid: string) {

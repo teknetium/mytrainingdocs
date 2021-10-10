@@ -7,7 +7,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TrainingsModule } from '../trainings/trainings.module';
 import { NzModalModule, NzInputModule, NzIconModule, NzCardModule, NzBadgeModule, NzListModule, NzAvatarModule, NzToolTipModule, NzTimelineComponent, NzTimelineModule, NzDatePickerModule, NzDropDownModule, NzCalendarModule, NzStatisticModule } from 'ng-zorro-antd';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
-import { JoyrideModule, JoyrideService } from 'ngx-joyride';
 
 @NgModule({
   declarations: [
@@ -26,7 +25,6 @@ import { JoyrideModule, JoyrideService } from 'ngx-joyride';
     NzListModule,
     NzAvatarModule,
     NzToolTipModule,
-    JoyrideModule,
     NzTimelineModule,
     NzDatePickerModule,
     NzBadgeModule,
@@ -41,7 +39,6 @@ import { JoyrideModule, JoyrideService } from 'ngx-joyride';
   ],
   providers:
     [
-    JoyrideService
   ]
 })
 export class HomeModule { }

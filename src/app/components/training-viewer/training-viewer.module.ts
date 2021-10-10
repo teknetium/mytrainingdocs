@@ -27,7 +27,6 @@ import { TrainingViewerComponent } from './training-viewer.component';
 import { PrettyJsonModule } from 'angular2-prettyjson';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzDrawerModule } from 'ng-zorro-antd';
-import { JoyrideModule, JoyrideService } from 'ngx-joyride';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import 'froala-editor/js/plugins.pkgd.min.js';
 
@@ -84,14 +83,12 @@ import 'froala-editor/js/plugins.pkgd.min.js';
     NzCollapseModule,
     PrettyJsonModule,
     NzDrawerModule,
-    JoyrideModule.forRoot(),
     ],
   exports: [
     TrainingViewerComponent,
   ],
   providers:
   [
-    JoyrideService
   ]
 })
 export class TrainingViewerModule { }

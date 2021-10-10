@@ -18,7 +18,6 @@ import { OrgService } from './shared/services/org.service';
 import { LoginModule } from './components/login/login.module';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { SettingsModule } from './components/settings/settings.module';
-import { JoyrideModule, JoyrideService} from 'ngx-joyride';
 import { LandingpageModule } from './components/landingpage/landingpage.module';
 import { DocsModule } from './components/docs/docs.module';
 import { VerifyEmailModule } from './components/verify-email/verify-email.module';
@@ -67,7 +66,6 @@ registerLocaleData(en);
         NzTabsModule,
         NzSpinModule,
         MyLoaderModule,
-        JoyrideModule.forRoot()
     ],
     providers: [
         //        { provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true },
@@ -86,7 +84,6 @@ registerLocaleData(en);
         AuthService,
         UserService,
         OrgService,
-        JoyrideService,
         LoaderService
     ],
     bootstrap: [AppComponent]

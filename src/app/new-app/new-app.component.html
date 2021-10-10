@@ -45,8 +45,7 @@
         </div>
         <ul nz-menu nzTheme="light" nzMode="horizontal"
             [ngStyle]="{'background-color': (authenticatedUser$ | async)?.settings.themeColor.bgColor, 'color': (authenticatedUser$ | async)?.settings.themeColor.primary }">
-            <li nz-menu-item nzMatchRouter class="nav-badge" joyrideStep="task0Step1"
-                [ngClass]="{'current-nav': currentPage === 'home'}" nz-tooltip nzTooltipTitle="Home"
+            <li nz-menu-item nzMatchRouter class="nav-badge" [ngClass]="{'current-nav': currentPage === 'home'}" nz-tooltip nzTooltipTitle="Home"
                 nzTooltipPlacement="bottom">
                 <a routerLink="/home" routerLinkActive="active-link">
                     <i class="fa-regular fa-fw fa-home-lg" style="font-size:24px;vertical-align: middle;"></i>

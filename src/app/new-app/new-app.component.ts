@@ -14,8 +14,6 @@ import { Router, NavigationEnd, NavigationCancel, NavigationStart, NavigationErr
 import { FileModel } from '../shared/interfaces/file.type';
 import { EventService } from '../shared/services/event.service';
 import { NotificationService } from '../shared/services/notification.service';
-import { TaskWizardService } from '../shared/services/taskWizard.service';
-import { TaskModel, TaskHash, TaskStepContentHash } from '../shared/interfaces/task.type';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { UidUserTrainingHash } from '../shared/interfaces/userTraining.type';
@@ -24,20 +22,10 @@ import { filter } from 'rxjs/operators';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../components/base.component';
-import { JoyrideService } from 'ngx-joyride';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import * as cloneDeep from 'lodash/cloneDeep';
 
-/*
-export interface Task {
-  desc: string,
-  url: string,
-  safeUrl: SafeResourceUrl,
-  mimeType: string,
-  poster: string
-}
-*/
 
 @Component({
   selector: 'new-app-root',
@@ -190,10 +178,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   docUrl$: Observable<SafeResourceUrl>;
   isConfirmDeleteModalVisible = false;
   editId: string | null;
-  taskVideo$ = new BehaviorSubject<SafeResourceUrl>(null);
-  //  taskBS$ = new BehaviorSubject<Task>(null);
-  //  task: Task = null;
-
 
   myTeamCnt = 0;
   trainingCnt = 0;
@@ -239,13 +223,10 @@ export class NewAppComponent extends BaseComponent implements OnInit {
   helpIsClosed = true;
   searchVisible: boolean = false;
   quickViewVisible: boolean = false;
-  showTaskVideoModal = false;
   currentPage = 'home';
   isPageInfoOpen = true;
   showNewUserModal = false;
   firstTimer = false;
-  currentTask = 1;
-  taskNames = [];
   pageNames = [];
   isVideoOpen = false;
   bannerColor = '#f1f1f1';
@@ -312,13 +293,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     success: "SUCCESS - ",
   }
 
-  tasks$: Observable<string[]>;
-  taskHash$: Observable<TaskHash>;
-  taskStepContentHash$: Observable<TaskStepContentHash>;
-  tasks: string[];
-  taskHash: TaskHash;
-  taskStepContentHash: TaskStepContentHash;
-  taskWizardHash = {};
   //  newLoading$: Observable<boolean>;
   org$: Observable<OrgModel>;
   orgObj: OrgModel;
@@ -420,8 +394,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     private trainingService: TrainingService,
     private userTrainingService: UserTrainingService,
     private router: Router,
-    private joyrideService: JoyrideService,
-    private taskWizardService: TaskWizardService,
     private eventService: EventService,
     private messageService: NzMessageService,
     private notificationService: NotificationService,
@@ -441,15 +413,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
         this.loading = false;
       }
 
-      /*
-      this.currentPage = event.url.substring(1);
-      console.log('Route', this.currentPage, event.url);
-      if (this.currentPage.indexOf('/') > -1) {
-      }
-      if (this.aboutThisPageHash[this.currentPage]) {
-        this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
-      }
-      */
 
     });
     this.httpErrors$ = this.userService.getHttpErrorStream();
@@ -462,9 +425,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.myDomainUser$ = this.userService.getMyDomainUsersStream();
     this.allTrainingIdHash$ = this.trainingService.getAllTrainingHashStream();
     this.alert$ = this.notificationService.getAlertStream();
-    this.tasks$ = this.taskWizardService.getTasksStream();
-    this.taskHash$ = this.taskWizardService.getTaskHashStream();
-    this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
     this.org$ = this.orgService.getOrgStream();
     this.myOrgUsers$ = this.userService.getMyOrgUsersStream();
     this.showUpgradeToProDialog$ = this.orgService.getShowUpgradeToProDialogStream();
@@ -491,13 +451,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     }, 12000);
 */
 
-    /*
-        this.pageNames = Object.keys(this.aboutThisPageHash);
-        for (let page of this.pageNames) {
-          this.taskHash[page] = Object.keys(this.aboutThisPageHash[page].taskHash);
-        }
-        this.taskNames = Object.keys(this.aboutThisPageHash[this.currentPage].taskHash);
-        */
 
     this.router.events.pipe(filter((event: any) => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       this.currentPage = event.url.substring(1);
@@ -555,14 +508,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
           this.showNewUserModal = true;
         }
 
-        //        this.showNewUserModal = true;
-        //        this.playTaskVideo('gettingStarted');
       }
-      // commented out the next line on 4/5/21      
-// commented out the next line on 4/5/21      
-      // commented out the next line on 4/5/21      
-// commented out the next line on 4/5/21      
-      // commented out the next line on 4/5/21      
       //      this.authenticatedUser = user;
       this.listOfSelectedUsers.push(this.authenticatedUser.firstName + ' ' + this.authenticatedUser.lastName);
       //      this.userTrainingService.initUserTrainingsForUser(user._id);
@@ -579,32 +525,7 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       */
     })
 
-    /*
-    this.tasks$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(tasks => {
-      if (!tasks) {
-        return;
-      }
 
-      this.tasks = tasks;
-    });
-    */
-
-    this.taskHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskHash => {
-      if (!taskHash) {
-        return;
-      }
-
-      this.taskHash = taskHash;
-    });
-
-    this.taskStepContentHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskStepContentHash => {
-      if (!taskStepContentHash) {
-        return;
-      }
-
-      this.taskStepContentHash = taskStepContentHash;
-      console.log("taskStepContentHash", this.taskStepContentHash);
-    });
 
     this.myTeamIdHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(teamIdHash => {
       if (!teamIdHash) {
@@ -630,15 +551,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
       this.messageService.error('HTTP Error: ' + this.currentHttpError, { nzDuration: 5000 });
       this.httpErrors.push(this.currentHttpError);
     })
-    /*
-        this.taskBS$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(task => {
-          if (!task) {
-            return;
-          }
-    
-          this.showTaskVideoModal = true;
-        })
-        */
 
     this.org$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgObj => {
       this.orgObj = orgObj;
@@ -847,13 +759,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
 
   }
 
-  closeTaskVideoModal() {
-    this.showTaskVideoModal = false;
-    if (this.firstTimer) {
-      this.showNewUserModal = true;
-    }
-  }
-
 
   toString(file) {
     //    return JSON.stringify(file);
@@ -908,30 +813,6 @@ export class NewAppComponent extends BaseComponent implements OnInit {
     this.showNewUserModal = false;
     //    this.login();
   }
-
-  startTour(task: string) {
-    console.log("startTour", task);
-    this.taskWizardService.startTour(task);
-    //    this.joyrideService.startTour({ steps: this.taskHash[task].steps });
-    // this.eventService.startTour(this.currentPage);
-    //    let toursteps = this.aboutThisPageHash[this.currentPage].tourSteps;
-    //    this.joyrideService.startTour(toursteps);
-  }
-  /*
-    playTaskVideo(taskName) {
-      if (!taskName) {
-        taskName = this.taskNames[0];
-      }
-      this.currentTask = taskName;
-      this.isVideoOpen = true;
-      this.task = this.aboutThisPageHash[this.currentPage].taskHash[taskName];
-      if (!this.task) {
-        return;
-      }
-      this.task.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(encodeURI(this.aboutThisPageHash[this.currentPage].taskHash[taskName].url));
-      this.taskBS$.next(this.task);
-    }
-    */
 
   handleUpdateUserCancel() {
     this.userPanelVisible = false;

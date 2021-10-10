@@ -6,7 +6,6 @@ import { MyteamComponent } from './myteam.component';
 import { UserTrainingsModule } from '../user-trainings/user-trainings.module';
 import { MyteamRoutingModule } from './myteam-routing.module';
 //import { NgxOrgChartModule } from 'ngx-org-chart';
-import { JoyrideModule, JoyrideService } from 'ngx-joyride';
 import { ProfileModule } from '../profile/profile.module';
 
 const ngZorroConfig: NzConfig = {
@@ -52,14 +51,12 @@ const ngZorroConfig: NzConfig = {
     NzCardModule,
     NzProgressModule,
     NzPopoverModule,
-    JoyrideModule,
   ],
   exports: [
     MyteamComponent,
   ],
   providers: [
     { provide: NZ_CONFIG, useValue: ngZorroConfig },
-   JoyrideService
   ]
 
 })

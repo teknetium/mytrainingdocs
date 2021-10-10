@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from "@angular/router";
 import { NgZorroAntdModule } from 'ng-zorro-antd';
-import { JoyrideModule, JoyrideService } from 'ngx-joyride';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { SearchPipe } from './pipes/search.pipe';
 import { AuthService } from './services/auth.service';
@@ -16,7 +15,6 @@ import { AuthService } from './services/auth.service';
         HttpClientModule,
         NgZorroAntdModule,
         PerfectScrollbarModule,
-        JoyrideModule,
         SearchPipe
     ],
     imports: [
@@ -29,8 +27,7 @@ import { AuthService } from './services/auth.service';
         SearchPipe,
     ],
     providers: [
-        AuthService,
-        JoyrideService
+        AuthService
     ]
 })
 

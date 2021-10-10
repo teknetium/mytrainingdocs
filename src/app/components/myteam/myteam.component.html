@@ -408,19 +408,6 @@
                                 nzTooltipPlacement="top">
                                 <i class="fa-solid fa-fw fa-user-check" style="font-size:18px;"></i>
                             </label>
-                            <!--
-                            <label nz-radio-button nzValue="Individual" nzTooltipPlacement nz-tooltip
-                                nzTooltipTitle="Select a Single User" nzTooltipPlacement="bottomLeft"
-                                joyrideStep="task1Step1" [stepContent]="stepContent"
-                                [stepContentParams]="taskStepContentHash?.task1Step1"
-                                (next)="onTaskWizardNext('task1Step1')">
-                                <i class="fa-solid fa-fw fa-user" style="font-size:18px;"></i>
-                            </label>
-                            <label nz-radio-button nzValue="Org" nz-tooltip nzTooltipTitle="Select by Suborganization"
-                                nzTooltipPlacement="bottomLeft">
-                                <i class="fa-solid fa-fw fa-users" style="font-size:18px;"></i>
-                            </label>
-                            -->
                             <label nz-radio-button nzValue="UserTrainingStatus" nz-tooltip
                                 nzTooltipTitle="Display User Training Status" nzTooltipPlacement="top">
                                 <i class="fa-solid fa-fw fa-user-graduate" style="font-size:18px;"></i>
@@ -979,9 +966,6 @@
                             </div>
 
                             <div (mouseenter)="setHoverData(authenticatedUser._id)" (mouseleave)="setHoverData(null)"
-                                joyrideStep="task1Step2" [stepContent]="stepContent"
-                                [stepContentParams]="taskStepContentHash?.task1Step2"
-                                (next)="onTaskWizardNext('task1Step2')"
                                 (click)="showSupervisorMenu(authenticatedUser._id)"
                                 [ngClass]="{'selected-node': (userIdsSelected.includes(authenticatedUser._id)), 'hover-node': authenticatedUser._id === currentHoverUid  || currentHoverReportChain.includes(authenticatedUser._id), 'non-supervisor-icon-node': myOrgUserHash[authenticatedUser._id]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[authenticatedUser._id]?.userType === 'supervisor'}">
                                 <!--

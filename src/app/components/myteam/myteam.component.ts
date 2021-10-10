@@ -7,7 +7,6 @@ import { TrainingService } from '../../shared/services/training.service';
 import { OrgService } from '../../shared/services/org.service';
 import { UserTrainingService } from '../../shared/services/userTraining.service';
 import { NotificationService } from '../../shared/services/notification.service';
-import { TaskWizardService } from '../../shared/services/taskWizard.service';
 import { TaskModel, TaskHash, TaskStepContentHash } from '../../shared/interfaces/task.type';
 import { UserTrainingModel, UidUTHash, TidUTHash, UidTidUTHash } from '../../shared/interfaces/userTraining.type';
 import { AlertModel } from '../../shared/interfaces/notification.type';
@@ -25,7 +24,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as cloneDeep from 'lodash/cloneDeep';
 import { BaseComponent } from '../base.component';
 import FlatfileImporter from "flatfile-csv-importer";
-import { JoyrideService } from 'ngx-joyride';
 import { NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd/dropdown';
 import { stringify } from 'querystring';
 // import * as names from '../../../assets/names.json';
@@ -1270,10 +1268,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   sentList = [];
   percentSent = 0;
   stepParamHash = {};
-  taskHash: TaskHash;
-  taskStepContentHash: TaskStepContentHash;
-  taskHash$: Observable<TaskHash>;
-  taskStepContentHash$: Observable<TaskStepContentHash>;
   showUserSearch = false;
   myPlan = null;
   org$: Observable<OrgModel>;
@@ -1341,8 +1335,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     private orgService: OrgService,
     private jobTitleService: JobTitleService,
     private userTrainingService: UserTrainingService,
-    private joyrideService: JoyrideService,
-    private taskWizardService: TaskWizardService,
     private notifyService: NotificationService,
     private messageService: NzMessageService,
     private route: ActivatedRoute,
@@ -1370,8 +1362,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.newUser$ = this.userService.getNewUserStream();
     this.jobTitles$ = this.jobTitleService.getJobTitleStream();
     this.userTrainings$ = this.userTrainingService.getUserTrainingStream();
-    this.taskHash$ = this.taskWizardService.getTaskHashStream();
-    this.taskStepContentHash$ = this.taskWizardService.getTaskStepContentHashStream();
     this.org$ = this.orgService.getOrgStream();
 
 
@@ -1434,13 +1424,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     });
 
 
-    this.taskHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskHash => {
-      if (!taskHash) {
-        return;
-      }
-
-      this.taskHash = taskHash;
-    });
     this.org$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(orgObj => {
       if (!orgObj) {
         return;
@@ -1484,15 +1467,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
         }
       }
       this.getOrgStats();
-    });
-
-    this.taskStepContentHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskStepContentHash => {
-      if (!taskStepContentHash) {
-        return;
-      }
-
-      this.taskStepContentHash = taskStepContentHash;
-      console.log("taskStepContentHash", this.taskStepContentHash);
     });
 
 
@@ -1897,23 +1871,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
 
     })
   }
-  /*
-    startTour(task) {
-      let steps = this.taskWizardHash[task];
-      this.joyrideService.startTour({ steps: steps, stepDefaultPosition: 'bottom', themeColor: '#0d1cb9' });
-    }
-  
-    task2Step2() {
-      this.collapsedNodes.splice(this.collapsedNodes.indexOf(this.authenticatedUser._id), 1);
-      for (let dr of this.authenticatedUser.directReports) {
-        if (this.myOrgUserHash[dr].userType === 'supervisor') {
-          this.taskItemHash['task2Step3'] = dr;
-          this.selectUser(dr, -1);
-          break;
-        }
-      }
-    }
-    */
 
   pre(): void {
     this.currentStep -= 1;
@@ -2005,24 +1962,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
       }, 1000);
     }
   }
-  /*
-    onTaskWizardNext(taskStep) {
-      switch (taskStep) {
-        case 'task1Step1': {
-          this.orgChartSelectMode = 'Individual';
-          break;
-        }
-        case 'task1Step2': {
-          this.userIdSelected = this.authenticatedUser._id;
-          break;
-        }
-        case 'task1Step3': {
-          this.showUserTrainingModal = true;
-          break;
-        }
-      }
-    }
-  */
   collapseOrg(uid: string) {
 
   }

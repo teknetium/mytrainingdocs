@@ -5,8 +5,7 @@
         nz-tooltip nzTooltipTitle="A little help"></i>
         -->
     <div style="display:block;">
-        <div joyrideStep="task0Step1" [stepContent]="stepContent" [stepContentParams]="taskStepContentHash?.task0Step1"
-            style="margin-bottom:20px;display: inline-block;">
+        <div style="margin-bottom:20px;display: inline-block;">
             <span style="font-weight: 200;font-size:28px;">
                 Welcome,
             </span>
@@ -300,8 +299,7 @@
             </ng-template>
             -->
             <!--
-            <nz-card style="float:left;width:32%;margin-right:1%;" nzTitle="Trainings" joyrideStep="task0Step3"
-                [stepContent]="stepContent" [stepContentParams]="taskStepContentHash?.task0Step2">
+            <nz-card style="float:left;width:32%;margin-right:1%;" nzTitle="Trainings">
                 <div *ngIf="trainings.length === 0">
                     <span style="font-weight:300;" (click)="goTo('/trainings')">
                         You have not created any trainings yet!<br>
@@ -344,7 +342,7 @@
         </div>
         <div style="width:100%;display:block;text-align: center;">
             <ng-template #titleTemplate>
-                <div joyrideStep="task0Step4" title="Team member training sessions">
+                <div title="Team member training sessions">
                     Training Sessions
                 </div>
                 <div style="display:block;width:100%;">

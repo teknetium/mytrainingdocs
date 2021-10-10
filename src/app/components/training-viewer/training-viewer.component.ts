@@ -27,7 +27,6 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { read } from 'fs';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
-import { JoyrideService } from 'ngx-joyride';
 import { AssessmentResponse, UserTrainingModel } from 'src/app/shared/interfaces/userTraining.type';
 import { OrgModel } from 'src/app/shared/interfaces/org.type';
 import { environment } from '../../../environments/environment';
@@ -189,7 +188,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     answers: []
   };
   showNext = false;
-  //  runningTour = false;
 
   @Input() mode = 'Edit';
   @Input() trainingStatus = 'unlocked';
@@ -326,7 +324,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
   embeddedPageDialogIsVisible = false;
   tourModalIsVisible = false;
-  //  startTour$: Observable<string>;
   viewingArchiveVersion = false;
   currentAssessmentId = null;
   editor;
@@ -340,7 +337,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   millisecondsPerDay = 86400000;
   notifyPeriod;
   showTrainingConfig = false;
-  tourStepsHash = {};
   //  showNoJobTitle = false;
   myTeam: string[];
   newVersionActionPanelDisabled = true;
@@ -366,12 +362,10 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     private userService: UserService,
     private userTrainingService: UserTrainingService,
     private messageService: MessageService,
-    private joyrideService: JoyrideService,
     private cd: ChangeDetectorRef,
     private message: NzMessageService,
     private authService: AuthService) {
     super();
-    //    this.startTour$ = this.eventService.getStartTourStream();
     this.assessmentItems$ = this.trainingService.getAssessmentItemStream();
     //    this.jobTitles$ = this.jobTitleService.getJobTitleStream();
     this.categories$ = this.trainingService.getCategoryStream();
@@ -393,9 +387,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.tourStepsHash['header'] = ['Step1-header', 'Step2-header', 'Step3-header', 'Step4-header', 'Step5-header', 'Step6-header', 'Step7-header', 'Step8-header', 'Step9-header', 'Step10-header'];
-    this.tourStepsHash['page-navigation'] = ['Step1-pn', 'Step2-pn', 'Step3-pn', 'Step4-pn', 'Step5-pn'];
-    this.tourStepsHash['training-intro'] = ['Step1-content'];
 
     console.log('ngOnInit');
 
@@ -431,19 +422,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     this.currentVersionIndex = 0;
     this.mode = 'Edit';
     this.currentTraining = null;
-    /*
-        this.startTour$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(data => {
-          if (data == 'trainings') {
-            this.tourModalIsVisible = true;
-          }
-        });
-        */
-    /*
-    this.jobTitles$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(jobTitles => {
-      this.jobTitles = jobTitles;
-      this.matchingJobTitles = this.jobTitles;
-    });
-    */
 
     this.categories$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(categories => {
       this.categories = categories;
@@ -1195,32 +1173,11 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
     }
   }
 
-  startTour(section) {
-    let steps = this.tourStepsHash[section];
-    this.joyrideService.startTour({ steps: steps });
-  }
 
   playVideo() {
     this.vgApi.play();
   }
 
-  /*
-    setCurrentStepPanel(newIndex) {
-      this.currentStep = newIndex;
-      //    this.runningTour = true;
-    }
-    */
-  /*
-    viewVersion(index) {
-      this.currentVersionIndex = index;
-      this.fileService.selectFsHandle(this.pageFileHash[this.currentPageId], index);
-    }
-    */
-  /*
-    setPage(page) {
-      this.currentPage = page;
-    }
-    */
 
   loadNextPage() {
     if (this.currentPageIndex < this.selectedTraining.pages.length - 1) {
@@ -1550,18 +1507,6 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
   handleEmailInterestListCancel() {
     this.messageDialogVisible = false;
   }
-  /*
-  beginTour() {
-    this.runningTour = true;
-  }
-  
-  endTour() {
-    this.currentStep = -1;
-    this.runningTour = false;
-    this.setValidation('trainingWizardTour', true);
-    this.saveTraining(false);
-  }
-  */
 
   movePageUp(page) {
     // can't move first page up
