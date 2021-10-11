@@ -2,20 +2,23 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { NzTableModule, NzTypographyModule, NzTabsModule, NzAnchorModule, NzRateModule, NzEmptyModule, NzAffixModule, NzCheckboxModule, NzSwitchModule, NzPopoverModule, NzCommentModule, NzAvatarModule, NzListModule, NzDropDownModule, NzStepsModule, NzCalendarModule, NzDatePickerModule, NzCollapseModule } from 'ng-zorro-antd';
-import { NzButtonModule } from 'ng-zorro-antd';
-import { NzIconModule } from 'ng-zorro-antd';
-import { NzTagModule } from 'ng-zorro-antd';
-import { NzDividerModule } from 'ng-zorro-antd';
-import { NzModalModule } from 'ng-zorro-antd';
-import { NzPopconfirmModule } from 'ng-zorro-antd';
-import { NzFormModule } from 'ng-zorro-antd';
-import { NzSelectModule } from 'ng-zorro-antd';
-import { NzToolTipModule } from 'ng-zorro-antd';
-import { NzRadioModule } from 'ng-zorro-antd';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { NzInputModule } from 'ng-zorro-antd';
-import { NzAlertModule } from 'ng-zorro-antd';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzRateModule } from 'ng-zorro-antd/rate';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { RouterModule } from '@angular/router';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { ScrollToModule } from '@nicky-lenaers/ngx-scroll-to';
@@ -54,31 +57,15 @@ import { UserTrainingsModule } from '../user-trainings/user-trainings.module';
     NzButtonModule,
     NzModalModule,
     NzIconModule,
-    NzStepsModule,
     NzButtonModule,
-    NzTypographyModule,
     NzTabsModule,
-    NzAnchorModule,
     ScrollToModule,
     NzRateModule,
     NzEmptyModule,
-    NzAffixModule,
     MyIconPickerModule,
     NzRateModule,
-    NzCheckboxModule,
-    NzSwitchModule,
-    NzPopoverModule,
-    NzCommentModule,
-    NzAvatarModule,
-    NzListModule,
-    NzDropDownModule,
     VgCoreModule,
     VgControlsModule,
-    NzSwitchModule,
-    NzCalendarModule,
-//    CalendarModule,
-    NzDatePickerModule,
-    NzCollapseModule,
     PrettyJsonModule,
     MyTrainingsRoutingModule,
     TrainingViewerModule,

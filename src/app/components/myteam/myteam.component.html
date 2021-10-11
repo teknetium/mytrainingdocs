@@ -1,5 +1,6 @@
 <nz-modal [(nzVisible)]="showBulkAddModal" nzTitle="Deploy Wizard" nzWidth="80%" [nzFooter]="null"
     (nzOnCancel)="showBulkAddModal = false" (nzOnOk)="showBulkAddModal = false">
+    <!--
     <ng-template #stepContent let-task="task" let-desc="description" let-title="title" let-content="content">
         <div style="width:500px;height:300px;">
             <div style="text-align:center;font-size:14px;color:blue;font-weight:500;">
@@ -13,7 +14,8 @@
             </div>
         </div>
     </ng-template>
-    <div style="width:100%;background-color: white;">
+    -->
+    <div *nzModalContent style="width:100%;background-color: white;">
         <div style="float:left;width:30%;">
             <nz-steps nzDirection="vertical" [nzCurrent]="currentStep">
                 <nz-step nzTitle="Overview"></nz-step>
@@ -169,7 +171,7 @@
 <div *ngIf="authenticatedUser && !showBulkAddModal" style="height:100%;">
     <nz-drawer [nzMaskClosable]="true" [nzVisible]="showLegend" nzPlacement="left" nzTitle="Legend" [nzWidth]="400"
         (nzOnClose)="showLegend = false">
-        <div>
+        <div *nzDrawerContent>
             <div class="legend-header">
                 DISPLAY MODE
             </div>
@@ -455,29 +457,31 @@
 
             <nz-modal [(nzVisible)]="showMessageModal" nzTitle="Send a Message to the Selected Users"
                 (nzOnCancel)="handleSendMessageCancel()" (nzOnOk)="sendMessage()" nzOkText="Send">
-                <label style="margin-bottom: 3px;font-size:12px;color:#999999;">Recipients ( {{
-                    recipientUidList.length }} )</label>
-                <div
-                    style="display:block;margin-bottom:10px;padding:5px;max-height:200px;height:fit-content;overflow: scroll;border:1px solid #999999;border-radius: 5px;">
-                    <div style="display:block;padding:4px 20px 0 10px;" *ngFor="let uid of recipientUidList; index as i"
-                        (mouseenter)="currentRecipient(uid)"
-                        [ngClass]="{'current-recipient': currentRecipientUid === uid}">
-                        {{ myOrgUserHash[uid]?.firstName }} {{ myOrgUserHash[uid]?.lastName }}
+                <div *nzModalContent>
+                    <label style="margin-bottom: 3px;font-size:12px;color:#999999;">Recipients ( {{
+                        recipientUidList.length }} )</label>
+                    <div
+                        style="display:block;margin-bottom:10px;padding:5px;max-height:200px;height:fit-content;overflow: scroll;border:1px solid #999999;border-radius: 5px;">
+                        <div style="display:block;padding:4px 20px 0 10px;"
+                            *ngFor="let uid of recipientUidList; index as i" (mouseenter)="currentRecipient(uid)"
+                            [ngClass]="{'current-recipient': currentRecipientUid === uid}">
+                            {{ myOrgUserHash[uid]?.firstName }} {{ myOrgUserHash[uid]?.lastName }}
 
-                        <i *ngIf="currentRecipientUid === uid" nz-icon nzType="close-circle" [nzTheme]="'twotone'"
-                            [nzTwotoneColor]="'red'" nz-popconfirm nzPopconfirmTitle="Remove this recipient?"
-                            [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'right'"
-                            (nzOnConfirm)="removeRecipient(i)"
-                            style="float:right;font-size:16px;cursor:pointer;vertical-align: middle;"></i>
+                            <i *ngIf="currentRecipientUid === uid" nz-icon nzType="close-circle" [nzTheme]="'twotone'"
+                                [nzTwotoneColor]="'red'" nz-popconfirm nzPopconfirmTitle="Remove this recipient?"
+                                [nzPopconfirmTrigger]="'click'" [nzPopconfirmPlacement]="'right'"
+                                (nzOnConfirm)="removeRecipient(i)"
+                                style="float:right;font-size:16px;cursor:pointer;vertical-align: middle;"></i>
 
+                        </div>
                     </div>
-                </div>
-                <div style="z-index: 1000;background-color: white;" (mouseenter)="currentRecipient('')">
-                    <label style="margin-bottom: 3px;font-size:12px;color:#999999;">Subject</label>
-                    <input nz-input type="text" placeholder="Subject" ngDefaultControl [(ngModel)]="msgSubject"
-                        style="margin-bottom:10px;">
-                    <label style="margin-bottom: 3px;font-size:12px;color:#999999;">Message</label>
-                    <textarea rows="4" nz-input [(ngModel)]="msgBody"></textarea>
+                    <div style="z-index: 1000;background-color: white;" (mouseenter)="currentRecipient('')">
+                        <label style="margin-bottom: 3px;font-size:12px;color:#999999;">Subject</label>
+                        <input nz-input type="text" placeholder="Subject" ngDefaultControl [(ngModel)]="msgSubject"
+                            style="margin-bottom:10px;">
+                        <label style="margin-bottom: 3px;font-size:12px;color:#999999;">Message</label>
+                        <textarea rows="4" nz-input [(ngModel)]="msgBody"></textarea>
+                    </div>
                 </div>
             </nz-modal>
             <div
@@ -615,7 +619,8 @@
                         <td style="text-align: center;padding:5px;">
                             <div *ngIf="selection?.type === 'UserStatus'">
                                 <div style="display: inline-block;vertical-align: middle;">
-                                    <i class="fa-solid fa-user" [ngStyle]="{'color': userStatusColorHash[selection.value]}"
+                                    <i class="fa-solid fa-user"
+                                        [ngStyle]="{'color': userStatusColorHash[selection.value]}"
                                         style="font-size:16px;z-index:1;float:left;line-height:16px;margin-right:10px;">
                                     </i>
                                 </div>
@@ -722,7 +727,7 @@
                 <nz-modal [nzVisible]="showOrgChartImageModal" nzTitle="Org Chart" nzWidth="80%"
                     (nzOnCancel)="showOrgChartImageModal = false" (nzOnOk)="downloadPNGImage()"
                     nzOkText="Download Image">
-                    <div style="text-align: center;">
+                    <div *nzModalContent style="text-align: center;">
                         <img #canvas width="100%">
                         <a #downloadPNGLink></a>
                     </div>
@@ -772,11 +777,13 @@
                                         Manage Current Trainings
                                     </li>
                                     <li (click)="editUser(authenticatedUser._id)" class="supervisor-menu-item">
-                                        <i class="fa-solid fa-fw fa-user-edit" style="font-size:14px;margin-right:10px;"></i>
+                                        <i class="fa-solid fa-fw fa-user-edit"
+                                            style="font-size:14px;margin-right:10px;"></i>
                                         Edit User Data
                                     </li>
                                     <li (click)="showMsgModal(authenticatedUser._id)" class="supervisor-menu-item">
-                                        <i class="fa-solid fa-fw fa-envelope" style="font-size:14px;margin-right:10px;"></i>
+                                        <i class="fa-solid fa-fw fa-envelope"
+                                            style="font-size:14px;margin-right:10px;"></i>
                                         Email User
                                     </li>
                                     <!--
@@ -948,7 +955,8 @@
                                         </div>
                                     </li>
                                     <li (click)="selectOrg(authenticatedUser._id)" class="supervisor-menu-item">
-                                        <i class="fa-solid fa-fw fa-users" style="font-size:14px;margin-right:10px;"></i>
+                                        <i class="fa-solid fa-fw fa-users"
+                                            style="font-size:14px;margin-right:10px;"></i>
                                         Select Entire Suborganization
                                     </li>
                                     <li (click)="removeSelectionByUid(authenticatedUser._id)"
@@ -1520,7 +1528,8 @@
                                         <div *ngIf="!collapsedNodes.includes(dr) && myOrgUserHash[dr]?.userType === 'supervisor'"
                                             (click)="collapseNode(dr, true)" nz-tooltip
                                             nzTooltipTitle="Collapse Suborganization" nzTooltipPlacement="right">
-                                            <i class="fa-light fa-minus-circle" style="font-size:14px;cursor:pointer;"></i>
+                                            <i class="fa-light fa-minus-circle"
+                                                style="font-size:14px;cursor:pointer;"></i>
                                         </div>
                                         <div *ngIf="collapsedNodes.includes(dr) && myOrgUserHash[dr]?.userType === 'supervisor'"
                                             (click)="collapseNode(dr, false)" style="margin:0 8px;"
@@ -2112,7 +2121,8 @@
                                                             <div nz-tooltip nzTooltipTitle="Total Users"
                                                                 nzTooltipPlacement="right"
                                                                 style="display:flex;justify-content:space-between;">
-                                                                <i class="fa-solid fa-users" style="font-size:18px;"></i>
+                                                                <i class="fa-solid fa-users"
+                                                                    style="font-size:18px;"></i>
                                                                 <div
                                                                     style="vertical-align: top;margin-left:20px;padding-right:5px;">
                                                                     {{nodeStatHash[dr2]?.userCnt}}
@@ -3279,7 +3289,8 @@
                                                                             <div *ngIf="collapsedNodes.includes(dr4) && myOrgUserHash[dr4]?.userType === 'supervisor'"
                                                                                 (click)="collapseNode(dr4, false)"
                                                                                 style="margin:0 8px;">
-                                                                                <i class="fa-regular fa-plus-circle" nz-tooltip
+                                                                                <i class="fa-regular fa-plus-circle"
+                                                                                    nz-tooltip
                                                                                     nzTooltipTitle="Expand Suborganization"
                                                                                     nzTooltipPlacement="right"
                                                                                     style="margin-top:4px;font-size:16px;color:red;cursor:pointer;"></i>
@@ -3367,7 +3378,8 @@
                                                                                                         style="font-size:16px;"
                                                                                                         [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                                                                 </div>
-                                                                                                <div class="training-status-rhs">
+                                                                                                <div
+                                                                                                    class="training-status-rhs">
                                                                                                     <span
                                                                                                         class="training-status-values"
                                                                                                         style="color:#46bd15;">{{nodeStatHash[dr4]?.trainingHash[training._id]?.upToDate?.length}}</span>
@@ -4021,7 +4033,8 @@
                                                                                                                     style="font-size:16px;"
                                                                                                                     [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                                                                             </div>
-                                                                                                            <div class="training-status-rhs">
+                                                                                                            <div
+                                                                                                                class="training-status-rhs">
                                                                                                                 <span
                                                                                                                     class="training-status-values"
                                                                                                                     style="color:#46bd15;">{{nodeStatHash[dr5]?.trainingHash[training._id]?.upToDate?.length}}</span>
@@ -4690,7 +4703,8 @@
                                                                                                                                 style="font-size:16px;"
                                                                                                                                 [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                                                                                         </div>
-                                                                                                                        <div class="training-status-rhs">
+                                                                                                                        <div
+                                                                                                                            class="training-status-rhs">
                                                                                                                             <span
                                                                                                                                 class="training-status-values"
                                                                                                                                 style="color:#46bd15;">{{nodeStatHash[dr6]?.trainingHash[training._id]?.upToDate?.length}}</span>
@@ -5361,7 +5375,8 @@
                                                                                                                                             style="font-size:16px;"
                                                                                                                                             [ngStyle]="{'color': getTrainingIconColor(training._id)}"></i>
                                                                                                                                     </div>
-                                                                                                                                    <div class="training-status-rhs">
+                                                                                                                                    <div
+                                                                                                                                        class="training-status-rhs">
                                                                                                                                         <span
                                                                                                                                             class="training-status-values"
                                                                                                                                             style="color:#46bd15;">{{nodeStatHash[dr7]?.trainingHash[training._id]?.upToDate?.length}}</span>
@@ -5638,203 +5653,205 @@
             </div>
             <nz-drawer [nzMaskClosable]="true" [nzVisible]="userPanelVisible" nzPlacement="right" nzTitle="User Profile"
                 [nzWidth]="1000" (nzOnClose)="closeUserPanel()">
-                <div *ngIf="selectedUser" style="display:block;width:100%;">
-                    <div style="display:block;width:90%;margin-bottom:5px;">
-                        <div style="display:inline-block;width:25%;text-align: right;">
-                            <label style="font-size:14px;color:#000000;">
-                                Status
-                            </label>
+                <div *nzDrawerContent>
+                    <div *ngIf="selectedUser" style="display:block;width:100%;">
+                        <div style="display:block;width:90%;margin-bottom:5px;">
+                            <div style="display:inline-block;width:25%;text-align: right;">
+                                <label style="font-size:14px;color:#000000;">
+                                    Status
+                                </label>
+                            </div>
+                            <div style="display:inline-block;width:70%;margin-left:20px;">
+                                <nz-radio-group [(ngModel)]="selectedUser.userStatus"
+                                    (ngModelChange)="statusChanged($event)">
+                                    <label nz-radio-button nzValue="active" style="color:blue;"
+                                        [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error' || selectedUser.userStatus === 'notInvited'">
+                                        Active
+                                    </label>
+                                    <label nz-radio-button nzValue="inactive" style="color:#aaaaaa;"
+                                        [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error' || selectedUser.userStatus === 'notInvited'">
+                                        Inactive
+                                    </label>
+                                    <label nz-radio-button nzValue="notInvited" nz-tooltip style="color:fuchsia;"
+                                        nzTooltipTitle="This status indicates that the registration invitation has not been sent."
+                                        [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive'">
+                                        Not Invited
+                                    </label>
+                                    <label nz-radio-button nzValue="pending" nz-tooltip style="color:orange;"
+                                        nzTooltipTitle="This status indicates the user has not completed the registration process."
+                                        [nzDisabled]="selectedUser.userStatus === 'notInvited' || selectedUser.userStatus === 'error' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive'">
+                                        Pending
+                                    </label>
+                                    <label nz-radio-button nzValue="error" nz-tooltip style="color:red;"
+                                        nzTooltipTitle="This status indicates the user has either a bad email address or a bad supervisor id."
+                                        [nzDisabled]="selectedUser.userStatus === 'notInvited' || selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive'">
+                                        Error
+                                    </label>
+                                </nz-radio-group>
+                            </div>
                         </div>
-                        <div style="display:inline-block;width:70%;margin-left:20px;">
-                            <nz-radio-group [(ngModel)]="selectedUser.userStatus"
-                                (ngModelChange)="statusChanged($event)">
-                                <label nz-radio-button nzValue="active" style="color:blue;"
-                                    [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error' || selectedUser.userStatus === 'notInvited'">
-                                    Active
+                        <div style="display:block;width:90%;margin-bottom:5px;">
+                            <div style="display:inline-block;width:25%;text-align: right;">
+                                <label style="font-size:14px;color:#000000;">
+                                    Training Status
                                 </label>
-                                <label nz-radio-button nzValue="inactive" style="color:#aaaaaa;"
-                                    [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error' || selectedUser.userStatus === 'notInvited'">
-                                    Inactive
-                                </label>
-                                <label nz-radio-button nzValue="notInvited" nz-tooltip style="color:fuchsia;"
-                                    nzTooltipTitle="This status indicates that the registration invitation has not been sent."
-                                    [nzDisabled]="selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'error' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive'">
-                                    Not Invited
-                                </label>
-                                <label nz-radio-button nzValue="pending" nz-tooltip style="color:orange;"
-                                    nzTooltipTitle="This status indicates the user has not completed the registration process."
-                                    [nzDisabled]="selectedUser.userStatus === 'notInvited' || selectedUser.userStatus === 'error' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive'">
-                                    Pending
-                                </label>
-                                <label nz-radio-button nzValue="error" nz-tooltip style="color:red;"
-                                    nzTooltipTitle="This status indicates the user has either a bad email address or a bad supervisor id."
-                                    [nzDisabled]="selectedUser.userStatus === 'notInvited' || selectedUser.userStatus === 'pending' || selectedUser.userStatus === 'active' || selectedUser.userStatus === 'inactive'">
-                                    Error
-                                </label>
-                            </nz-radio-group>
+                            </div>
+                            <div style="display:inline-block;width:70%;margin-left:20px;">
+                                <nz-radio-group [(ngModel)]="selectedUser.trainingStatus"
+                                    (ngModelChange)="trainingStatusChanged($event)">
+                                    <label nz-radio-button nzValue="none" style="color:black;">
+                                        None
+                                    </label>
+                                    <label nz-radio-button nzValue="upToDate" style="color:#52c41a;">
+                                        Up To Date
+                                    </label>
+                                    <label nz-radio-button nzValue="pastDue" nz-tooltip style="color:red;"
+                                        nzTooltipTitle="This status indicates that the registration invitation has not been sent.">
+                                        Past Due
+                                    </label>
+                                </nz-radio-group>
+                            </div>
                         </div>
-                    </div>
-                    <div style="display:block;width:90%;margin-bottom:5px;">
-                        <div style="display:inline-block;width:25%;text-align: right;">
-                            <label style="font-size:14px;color:#000000;">
-                                Training Status
-                            </label>
-                        </div>
-                        <div style="display:inline-block;width:70%;margin-left:20px;">
-                            <nz-radio-group [(ngModel)]="selectedUser.trainingStatus"
-                                (ngModelChange)="trainingStatusChanged($event)">
-                                <label nz-radio-button nzValue="none" style="color:black;">
-                                    None
-                                </label>
-                                <label nz-radio-button nzValue="upToDate" style="color:#52c41a;">
-                                    Up To Date
-                                </label>
-                                <label nz-radio-button nzValue="pastDue" nz-tooltip style="color:red;"
-                                    nzTooltipTitle="This status indicates that the registration invitation has not been sent.">
-                                    Past Due
-                                </label>
-                            </nz-radio-group>
-                        </div>
-                    </div>
 
-                    <div style="display:block;width:90%;">
-                        <div style="display:inline-block;width:25%;text-align: right;">
-                            <label style="font-size:14px;color:#000000;">
-                                Errors
-                            </label>
-                        </div>
-                        <div style="display:inline-block;width:70%;margin-left:20px;">
-                            <ul>
-                                <li *ngFor="let error of selectedUser.settings.statusList">{{error}}</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div style="display:block;width:90%;">
-                        <div style="display:inline-block;width:25%;text-align: right;">
-                            <label style="font-size:14px;color:#000000;">
-                                First Name
-                            </label>
-                        </div>
-                        <div style="display:inline-block;width:70%;margin-left:20px;">
-                            <input nz-input nzSize="small" type="text" placeholder="First Name" ngDefaultControl
-                                [(ngModel)]="selectedUser.firstName" style="margin-bottom:2px;">
-                        </div>
-                    </div>
-                    <div style="display:block;width:90%;">
-                        <div style="display:inline-block;width:25%;text-align: right;">
-                            <label style="font-size:14px;color:#000000;">
-                                Last Name
-                            </label>
-                        </div>
-                        <div style="display:inline-block;width:70%;margin-left:20px;">
-                            <input nz-input nzSize="small" type="text" placeholder="Last Name" ngDefaultControl
-                                [(ngModel)]="selectedUser.lastName" style="margin-bottom:2px;">
-                        </div>
-                    </div>
-                    <div style="display:block;width:90%;">
-                        <div style="display:inline-block;width:25%;text-align: right;">
-                            <label style="font-size:14px;color:#000000;">
-                                Email
-                            </label>
-                        </div>
-                        <div style="display:inline-block;width:70%;margin-left:20px;">
-                            <nz-input-group [nzSuffix]="suffixTemplate">
-                                <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl
-                                    [(ngModel)]="selectedUser.email" (ngModelChange)="checkUniqueEmail($event)"
-                                    style="margin-bottom:2px;" (keydown.enter)="checkUniqueEmail($event)"
-                                    (blur)="checkUniqueEmail($event)">
-                            </nz-input-group>
-                            <ng-template #suffixTemplate>
-                                <i *ngIf="!emailUnique" nz-icon nz-tooltip nzTooltipTitle="Extra information"
-                                    nzType="close-circle" [nzTheme]="'twotone'" nzTwotoneColor="red"></i>
-                                <i *ngIf="emailUnique" nz-icon nz-tooltip nzTooltipTitle="Extra information"
-                                    nzType="check-circle" [nzTheme]="'twotone'" nzTwotoneColor="#46bc16"></i>
-                            </ng-template>
-                        </div>
-                    </div>
-                    <div style="display:block;width:90%;">
-                        <div style="display:inline-block;width:25%;text-align: right;">
-                            <label style="font-size:14px;color:#000000;">
-                                Job Title
-                            </label>
-                        </div>
-                        <div style="display:inline-block;width:70%;margin-left:20px;">
-                            <input style="margin-bottom:2px;" placeholder="Job Title" nz-input
-                                [(ngModel)]="selectedUser.jobTitle" ngDefaultControl nzSize="small"
-                                (ngModelChange)="onJobTitleChange($event)" [nzAutocomplete]="auto"
-                                (keydown.enter)="setJobTitle($event)" (blur)="setJobTitle($event)" />
-                            <nz-autocomplete [nzDataSource]="matchingJobTitles" #auto></nz-autocomplete>
-                        </div>
-                    </div>
-                    <div *ngIf="selectedUser?._id !== authenticatedUser._id" style="display:block;width:90%;">
-                        <div style="display:inline-block;width:25%;text-align: right;">
-                            <label style="font-size:14px;color:#000000;">
-                                Supervisor
-                            </label>
-                        </div>
-                        <div style="display:inline-block;width:70%;margin-left:20px;">
-                            <input style="margin-bottom:2px;" nz-input placeholder="Supervisor Name"
-                                [(ngModel)]="supervisorName" nzSize="small"
-                                (ngModelChange)="onSupervisorNameChange($event)" [nzAutocomplete]="autoSupervisor" />
-                            <nz-autocomplete [nzDataSource]="matchingSupervisors" #autoSupervisor>
-                            </nz-autocomplete>
-                        </div>
-                    </div>
-                    <div style="display:block;margin-top:10px;width:90%;">
-                        <div style="float:left;width:25%;text-align: right;">
-                            <label>
-                                User Type
-                            </label>
-                        </div>
-                        <div style="display:inline-block;width:70%;margin-left:20px;">
-                            <nz-radio-group ngDefaultControl [(ngModel)]="selectedUser.userType"
-                                (ngModelChanged)="userChanged('userType')" style="margin-bottom:20px;">
-                                <label nz-radio nzValue="individualContributor" (click)="newSupervisorSelected(false)"
-                                    style="display:block;font-size:20px;">
-                                    <i class="fa-duotone fa-user" style="vertical-align: bottom;"></i>
-                                    <span style="margin-left:10px;font-size:12px;">Individual
-                                        Contributor</span>
+                        <div style="display:block;width:90%;">
+                            <div style="display:inline-block;width:25%;text-align: right;">
+                                <label style="font-size:14px;color:#000000;">
+                                    Errors
                                 </label>
-                                <label nz-radio nzValue="supervisor" (click)="newSupervisorSelected(true)"
-                                    style="display:block;font-size:20px;">
-                                    <i class="fa-duotone fa-user-tie" style="vertical-align: bottom;"></i>
-                                    <span style="margin-left:10px;font-size:12px;">Supervisor</span>
-                                </label>
-                                <label nz-radio nzValue="volunteer" (click)="newSupervisorSelected(false)"
-                                    style="display:block;font-size:20px;">
-                                    <i class="fa-duotone fa-user-cowboy" style="vertical-align: bottom;"></i>
-                                    <span style="margin-left:10px;font-size:12px;">Volunteer</span>
-                                </label>
-                                <label nz-radio nzValue="contractor" (click)="newSupervisorSelected(false)"
-                                    style="display:block;font-size:20px;">
-                                    <i class="fa-duotone fa-user-hard-hat" style="vertical-align: bottom;"></i>
-                                    <span style="margin-left:10px;font-size:12px;">Contractor</span>
-                                </label>
-                                <label nz-radio nzValue="customer" (click)="newSupervisorSelected(false)"
-                                    style="display:block;font-size:20px;">
-                                    <i class="fa-duotone fa-user-alien" style="vertical-align: bottom;"></i>
-                                    <span style="margin-left:10px;  font-size:12px;">Customer</span>
-                                </label>
-                            </nz-radio-group>
+                            </div>
+                            <div style="display:inline-block;width:70%;margin-left:20px;">
+                                <ul>
+                                    <li *ngFor="let error of selectedUser.settings.statusList">{{error}}</li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    <div style="display:block;margin-top:10px;width:90%;">
-                        <div style="display:inline-block;width:25%;text-align: right;">
+                        <div style="display:block;width:90%;">
+                            <div style="display:inline-block;width:25%;text-align: right;">
+                                <label style="font-size:14px;color:#000000;">
+                                    First Name
+                                </label>
+                            </div>
+                            <div style="display:inline-block;width:70%;margin-left:20px;">
+                                <input nz-input nzSize="small" type="text" placeholder="First Name" ngDefaultControl
+                                    [(ngModel)]="selectedUser.firstName" style="margin-bottom:2px;">
+                            </div>
                         </div>
-                        <div style="display:inline-block;width:70%;margin-left:20px;">
-                            <label nz-checkbox ngDefaultControl [(ngModel)]="selectedUser.teamAdmin"
-                                style="margin-top:5px;font-size:12px;" nz-tooltip
-                                nzTooltipTitle="Give this person the ability to create, update, delete trainings.">Training
-                                Admin
-                                Access</label>
+                        <div style="display:block;width:90%;">
+                            <div style="display:inline-block;width:25%;text-align: right;">
+                                <label style="font-size:14px;color:#000000;">
+                                    Last Name
+                                </label>
+                            </div>
+                            <div style="display:inline-block;width:70%;margin-left:20px;">
+                                <input nz-input nzSize="small" type="text" placeholder="Last Name" ngDefaultControl
+                                    [(ngModel)]="selectedUser.lastName" style="margin-bottom:2px;">
+                            </div>
                         </div>
-                    </div>
+                        <div style="display:block;width:90%;">
+                            <div style="display:inline-block;width:25%;text-align: right;">
+                                <label style="font-size:14px;color:#000000;">
+                                    Email
+                                </label>
+                            </div>
+                            <div style="display:inline-block;width:70%;margin-left:20px;">
+                                <nz-input-group [nzSuffix]="suffixTemplate">
+                                    <input nz-input nzSize="small" type="text" placeholder="Email" ngDefaultControl
+                                        [(ngModel)]="selectedUser.email" (ngModelChange)="checkUniqueEmail($event)"
+                                        style="margin-bottom:2px;" (keydown.enter)="checkUniqueEmail($event)"
+                                        (blur)="checkUniqueEmail($event)">
+                                </nz-input-group>
+                                <ng-template #suffixTemplate>
+                                    <i *ngIf="!emailUnique" nz-icon nz-tooltip nzTooltipTitle="Extra information"
+                                        nzType="close-circle" [nzTheme]="'twotone'" nzTwotoneColor="red"></i>
+                                    <i *ngIf="emailUnique" nz-icon nz-tooltip nzTooltipTitle="Extra information"
+                                        nzType="check-circle" [nzTheme]="'twotone'" nzTwotoneColor="#46bc16"></i>
+                                </ng-template>
+                            </div>
+                        </div>
+                        <div style="display:block;width:90%;">
+                            <div style="display:inline-block;width:25%;text-align: right;">
+                                <label style="font-size:14px;color:#000000;">
+                                    Job Title
+                                </label>
+                            </div>
+                            <div style="display:inline-block;width:70%;margin-left:20px;">
+                                <input style="margin-bottom:2px;" placeholder="Job Title" nz-input
+                                    [(ngModel)]="selectedUser.jobTitle" ngDefaultControl nzSize="small"
+                                    (ngModelChange)="onJobTitleChange($event)" [nzAutocomplete]="auto"
+                                    (keydown.enter)="setJobTitle($event)" (blur)="setJobTitle($event)" />
+                                <nz-autocomplete [nzDataSource]="matchingJobTitles" #auto></nz-autocomplete>
+                            </div>
+                        </div>
+                        <div *ngIf="selectedUser?._id !== authenticatedUser._id" style="display:block;width:90%;">
+                            <div style="display:inline-block;width:25%;text-align: right;">
+                                <label style="font-size:14px;color:#000000;">
+                                    Supervisor
+                                </label>
+                            </div>
+                            <div style="display:inline-block;width:70%;margin-left:20px;">
+                                <input style="margin-bottom:2px;" nz-input placeholder="Supervisor Name"
+                                    [(ngModel)]="supervisorName" nzSize="small"
+                                    (ngModelChange)="onSupervisorNameChange($event)"
+                                    [nzAutocomplete]="autoSupervisor" />
+                                <nz-autocomplete [nzDataSource]="matchingSupervisors" #autoSupervisor>
+                                </nz-autocomplete>
+                            </div>
+                        </div>
+                        <div style="display:block;margin-top:10px;width:90%;">
+                            <div style="float:left;width:25%;text-align: right;">
+                                <label>
+                                    User Type
+                                </label>
+                            </div>
+                            <div style="display:inline-block;width:70%;margin-left:20px;">
+                                <nz-radio-group ngDefaultControl [(ngModel)]="selectedUser.userType"
+                                    (ngModelChanged)="userChanged('userType')" style="margin-bottom:20px;">
+                                    <label nz-radio nzValue="individualContributor"
+                                        (click)="newSupervisorSelected(false)" style="display:block;font-size:20px;">
+                                        <i class="fa-duotone fa-user" style="vertical-align: bottom;"></i>
+                                        <span style="margin-left:10px;font-size:12px;">Individual
+                                            Contributor</span>
+                                    </label>
+                                    <label nz-radio nzValue="supervisor" (click)="newSupervisorSelected(true)"
+                                        style="display:block;font-size:20px;">
+                                        <i class="fa-duotone fa-user-tie" style="vertical-align: bottom;"></i>
+                                        <span style="margin-left:10px;font-size:12px;">Supervisor</span>
+                                    </label>
+                                    <label nz-radio nzValue="volunteer" (click)="newSupervisorSelected(false)"
+                                        style="display:block;font-size:20px;">
+                                        <i class="fa-duotone fa-user-cowboy" style="vertical-align: bottom;"></i>
+                                        <span style="margin-left:10px;font-size:12px;">Volunteer</span>
+                                    </label>
+                                    <label nz-radio nzValue="contractor" (click)="newSupervisorSelected(false)"
+                                        style="display:block;font-size:20px;">
+                                        <i class="fa-duotone fa-user-hard-hat" style="vertical-align: bottom;"></i>
+                                        <span style="margin-left:10px;font-size:12px;">Contractor</span>
+                                    </label>
+                                    <label nz-radio nzValue="customer" (click)="newSupervisorSelected(false)"
+                                        style="display:block;font-size:20px;">
+                                        <i class="fa-duotone fa-user-alien" style="vertical-align: bottom;"></i>
+                                        <span style="margin-left:10px;  font-size:12px;">Customer</span>
+                                    </label>
+                                </nz-radio-group>
+                            </div>
+                        </div>
+                        <div style="display:block;margin-top:10px;width:90%;">
+                            <div style="display:inline-block;width:25%;text-align: right;">
+                            </div>
+                            <div style="display:inline-block;width:70%;margin-left:20px;">
+                                <label nz-checkbox ngDefaultControl [(ngModel)]="selectedUser.teamAdmin"
+                                    style="margin-top:5px;font-size:12px;" nz-tooltip
+                                    nzTooltipTitle="Give this person the ability to create, update, delete trainings.">Training
+                                    Admin
+                                    Access</label>
+                            </div>
+                        </div>
 
-                    <hr>
+                        <hr>
 
-                    <div style="display:block;margin-top:20px;width:90%;text-align: center;">
-                        <div style="display:inline-block;width:60%;">
-                            <!--
+                        <div style="display:block;margin-top:20px;width:90%;text-align: center;">
+                            <div style="display:inline-block;width:60%;">
+                                <!--
                         <button nz-button nzSize="small" nzShape="round" (click)="handleCancel()" nzType="default"
                             style="margin: 10px;display:inline-block;">Cancel
                         </button>
@@ -5843,22 +5860,23 @@
                             Person
                         </button>
                         -->
-                            <button nz-button nzSize="small" nzShape="round" (click)="handleUpdateUser()"
-                                nzType="primary" style="margin: 10px;display:inline-block;">Update
-                                User
-                            </button>
+                                <button nz-button nzSize="small" nzShape="round" (click)="handleUpdateUser()"
+                                    nzType="primary" style="margin: 10px;display:inline-block;">Update
+                                    User
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!--
+                    <!--
             <app-profile></app-profile>
             -->
+                </div>
             </nz-drawer>
             <nz-modal [nzVisible]="showUserTrainingModal" [nzTitle]="assignTrainingTitle"
                 [nzCancelDisabled]="assignableTrainings.length === 0" (nzOnCancel)="handleCancelUserTraining()"
                 [nzOkDisabled]="!selectedTrainingId" (nzOnOk)="handleAssignUserTraining()"
                 style="width:500px;padding:10px;float:left;">
-                <div>
+                <div *nzModalContent>
                     <div style="background-color:white;display:inline-block;width:100%;">
                         <div *ngIf="assignableTrainings?.length === 0">
                             You have not created any trainings yet!<br> Head over to the <span style="color:blue;">All
@@ -5894,7 +5912,7 @@
             </nz-modal>
             <nz-modal [nzVisible]="manageCurrentTrainingsModal" [nzTitle]="manageTrainingsTitle" [nzCancelText]="null"
                 (nzOnOk)="handleOkManageCurrentTrainings()" nzWidth="1200" style="padding:10px;float:left;">
-                <div>
+                <div *nzModalContent>
                     <div
                         style="width:100%;overflow:scroll;text-align: left;background-color: white;border: 1px solid #eaab10;">
                         <app-user-trainings mode="admin" logSession="off"></app-user-trainings>

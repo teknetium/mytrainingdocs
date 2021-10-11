@@ -67,7 +67,7 @@
     </div>
     <nz-drawer [nzClosable]="false" [nzVisible]="userPanelVisible" nzPlacement="right" nzTitle="User Profile"
         (nzOnClose)="close()" [nzWidth]="500">
-        <div>
+        <div *nzDrawerContent>
             <input nz-input nzSize="small" type="text" placeholder="First Name" ngDefaultControl
                 [(ngModel)]="selectedUser.firstName" style="margin-bottom:2px;">
             <input nz-input nzSize="small" type="text" placeholder="Last Name" ngDefaultControl

@@ -2,12 +2,15 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TrainingsComponent } from './trainings.component';
-import { NzTableModule, NzTabsModule, NzRateModule, NzDrawerModule } from 'ng-zorro-antd';
-import { NzButtonModule } from 'ng-zorro-antd';
-import { NzIconModule } from 'ng-zorro-antd';
-import { NzPopconfirmModule } from 'ng-zorro-antd';
-import { NzFormModule } from 'ng-zorro-antd';
-import { NzToolTipModule } from 'ng-zorro-antd';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzRateModule } from 'ng-zorro-antd/rate';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { RouterModule } from '@angular/router';
 import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
@@ -30,7 +33,6 @@ import { TrainingViewerModule } from '../training-viewer/training-viewer.module'
     NzTableModule,
     NzButtonModule,
     NzIconModule,
-    NzButtonModule,
     NzTabsModule,
     NzRateModule, 
     VgCoreModule,

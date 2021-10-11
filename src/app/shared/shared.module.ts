@@ -3,7 +3,6 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from "@angular/router";
-import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { SearchPipe } from './pipes/search.pipe';
 import { AuthService } from './services/auth.service';
@@ -13,14 +12,12 @@ import { AuthService } from './services/auth.service';
         CommonModule,
         FormsModule,
         HttpClientModule,
-        NgZorroAntdModule,
         PerfectScrollbarModule,
         SearchPipe
     ],
     imports: [
         RouterModule,
         CommonModule,
-        NgZorroAntdModule,
         PerfectScrollbarModule
     ],
     declarations: [

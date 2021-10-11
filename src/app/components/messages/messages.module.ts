@@ -2,8 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MessagesComponent } from './messages.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NzModalModule, NzInputModule, NzIconModule, NzCardModule, NzBadgeModule, NzListModule, NzAvatarModule, NzToolTipModule, NzTimelineComponent, NzTimelineModule, NzDatePickerModule, NzAlertModule, NzDropDownModule, NzCalendarModule, NzTabsModule, NzEmptyModule, NzButtonModule, NzAutocompleteModule } from 'ng-zorro-antd';
-import { NgZorroAntdModule } from 'ng-zorro-antd';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 
 @NgModule({
   declarations: [
@@ -13,13 +17,12 @@ import { NgZorroAntdModule } from 'ng-zorro-antd';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    NzAutocompleteModule,
     NzIconModule,
-    NzTabsModule,
     NzToolTipModule,
-    NzTimelineModule,
     NzEmptyModule,
     NzButtonModule,
-    NzInputModule,NzAutocompleteModule
+    NzInputModule
   ],
   exports: [
     MessagesComponent

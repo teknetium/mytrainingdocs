@@ -4,7 +4,13 @@ import { CommonModule } from '@angular/common';
 import { LoaderInterceptor } from '../../shared/interceptor/loader-interceptor.service';
 import { LoaderService } from '../../shared/services/loader.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NzAvatarModule, NzButtonModule, NzCardModule, NzIconModule, NzListModule, NzSpinModule, NzTagModule } from 'ng-zorro-antd';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule} from 'ng-zorro-antd/card';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 
 
 @NgModule({

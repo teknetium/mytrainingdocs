@@ -3,7 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SettingsComponent } from './settings.component';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
-import { NzIconModule } from 'ng-zorro-antd';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 
 @NgModule({

@@ -4,8 +4,9 @@ import { MyteamModule } from '../myteam/myteam.module';
 import { ContactUsComponent } from './contact-us.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TrainingsModule } from '../trainings/trainings.module';
-import { NzModalModule, NzInputModule, NzIconModule, NzCardModule, NzBadgeModule, NzListModule, NzAvatarModule, NzToolTipModule, NzTimelineComponent, NzTimelineModule, NzDatePickerModule, NzAlertModule, NzDropDownModule, NzCalendarModule, NzTabsModule } from 'ng-zorro-antd';
-import { NgZorroAntdModule } from 'ng-zorro-antd';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,6 @@ import { NgZorroAntdModule } from 'ng-zorro-antd';
     NzIconModule,
     NzTabsModule,
     NzToolTipModule,
-    NzTimelineModule,
   ],
   exports: [
     ContactUsComponent

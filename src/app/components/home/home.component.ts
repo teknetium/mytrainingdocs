@@ -13,7 +13,6 @@ import { takeUntil } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from '../base.component';
 import { TrainingModel, TrainingIdHash } from '../../shared/interfaces/training.type';
-import { TaskModel, TaskHash, TaskStepContentHash } from '../../shared/interfaces/task.type';
 
 export interface UserStat {
   uid: string,
@@ -87,12 +86,6 @@ export class HomeComponent extends BaseComponent implements OnInit {
   }
   userCardTitle = 'My Organization';
   homePageWidth = 100;
-  tasks$: Observable<string[]>
-  taskHash$: Observable<TaskHash>;
-  taskStepContentHash$: Observable<TaskStepContentHash>;
-  tasks: string[];
-  taskHash: TaskHash;
-  taskStepContentHash: TaskStepContentHash;
   pastDueUserCount = 0;
   trainingsDue = 0;
   trainingsCompleted = 0;
@@ -219,22 +212,6 @@ export class HomeComponent extends BaseComponent implements OnInit {
         this.userTrainingService.getUTForTeam(this.authenticatedUser._id);
         this.userTrainingService.getUTSessionsForTeam(this.authenticatedUser._id);
       }
-    });
-    this.taskHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskHash => {
-      if (!taskHash) {
-        return;
-      }
-
-      this.taskHash = taskHash;
-    });
-
-    this.taskStepContentHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(taskStepContentHash => {
-      if (!taskStepContentHash) {
-        return;
-      }
-
-      this.taskStepContentHash = taskStepContentHash;
-      console.log("taskStepContentHash", this.taskStepContentHash);
     });
     this.teamTrainingHash$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(teamTrainingHash => {
       if (!teamTrainingHash) {

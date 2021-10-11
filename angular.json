@@ -29,6 +29,8 @@
                       ],
                       "styles": [
                         "./node_modules/@videogular/ngx-videogular/fonts/videogular.css",
+                        "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+                        "node_modules/ng-zorro-antd/resizable/style/index.min.css",
                         "src/styles.scss"
                     ],
                       "scripts": [

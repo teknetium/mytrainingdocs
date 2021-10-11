@@ -1,7 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgZorroAntdModule, NZ_I18N, en_US, NzBadgeModule, NzConfig, NZ_CONFIG, NzStepsModule, NzSpinModule, NzAlertModule, NzRadioModule, NzTabsModule } from 'ng-zorro-antd';
+import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzConfig, NZ_CONFIG } from 'ng-zorro-antd/core/config';
+import { NzStepsModule } from 'ng-zorro-antd/steps';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { registerLocaleData,  } from '@angular/common';
 import en from '@angular/common/locales/en';
 
@@ -29,6 +38,15 @@ import { HttpErrorInterceptor } from './shared/interceptor/error-interceptor.ser
 import { PaymentCallbackModule } from './components/payment-callback/payment-callback.module';
 import { ContactUsModule } from './components/contact-us/contact-us.module';
 import { MessagesModule } from './components/messages/messages.module';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzCardModule } from 'ng-zorro-antd/card';
 
 const ngZorroConfig: NzConfig = {
     message: { nzTop: 300 },
@@ -45,7 +63,6 @@ registerLocaleData(en);
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        NgZorroAntdModule,
         AppRoutingModule,
         SharedModule,
         CallbackModule,
@@ -54,8 +71,11 @@ registerLocaleData(en);
         HomeModule,
         LoginModule,
         NzBadgeModule,
+        NzSelectModule,
         NzAlertModule,
         NzTabsModule,
+        NzInputModule,
+        NzDrawerModule,
         VgOverlayPlayModule,
         SettingsModule,
         LandingpageModule,
@@ -63,9 +83,16 @@ registerLocaleData(en);
         MessagesModule,
         NzStepsModule,
         NzRadioModule,
-        NzTabsModule,
+        NzProgressModule,
+        NzDropDownModule,
+        NzTagModule,
+        NzCardModule,
+        NzAvatarModule,
+        NzModalModule,
+        NzLayoutModule,
         NzSpinModule,
         MyLoaderModule,
+        NzNotificationModule
     ],
     providers: [
         //        { provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true },

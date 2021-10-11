@@ -140,33 +140,33 @@
                     *ngIf="selectedTraining?.status === 'locked' && currentVersionIndex === 0 && mode === 'Edit' && production === 'false'"
                     (click)="unlockTraining()" class="header-icon" nz-button nzType="default" nzShape="circle"
                     nz-tooltip nzTooltipTitle="Unlock (edit) Training">
-                    <i nz-icon nzType="unlock" theme="twotone" [nzTwotoneColor]="'blue'"
+                    <i nz-icon nzType="unlock" nzTheme="twotone" [nzTwotoneColor]="'blue'"
                         style="vertical-align: top;"></i>
                 </button>
                 <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit' && production === 'false'"
                     nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Save As New Version"
                     nzTooltipPlacement="bottom" class="header-icon" (click)="save()" 
                     text="Create a new version of this training.  For versions after 1.0.0, you will be asked to indicate the significance of the changes you have made to the training.">
-                    <i nz-icon nzType="lock" theme="twotone" [nzTwotoneColor]="'blue'" style="vertical-align: top;">
+                    <i nz-icon nzType="lock" nzTheme="twotone" [nzTwotoneColor]="'blue'" style="vertical-align: top;">
                     </i>
                 </button>
                 <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit' && production === 'false'"
                     nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Configure Training"
                     nzTooltipPlacement="bottom" class="header-icon" (click)="showTrainingConfig = true"
                     text="Selecting this button opens the training configuraton panel. This is where you set a variety of training properties.">
-                    <i nz-icon nzType="setting" theme="twotone" [nzTwotoneColor]="'blue'" style="vertical-align: top;">
+                    <i nz-icon nzType="setting" nzTheme="twotone" [nzTwotoneColor]="'blue'" style="vertical-align: top;">
                     </i>
                 </button>
                 <button *ngIf="selectedTraining?.status === 'unlocked' && mode === 'Edit' && production === 'false'"
                     nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Discard Changes"
                     nzTooltipPlacement="bottom" style="color:blue;" class="header-icon" (click)="showRollbackConfirm()"
                     text="Selecting this button discards all changes made since unlocking this training.">
-                    <i nz-icon nzType="rollback" theme="outline" style="vertical-align: top;">
+                    <i nz-icon nzType="rollback" nzTheme="outline" style="vertical-align: top;">
                     </i>
                 </button>
                 <button nz-button nzType="default" nzShape="circle" nz-tooltip nzTooltipTitle="Close Training"
                     nzTooltipPlacement="bottom" class="header-icon" (click)="closeViewer()" text="Selecting this button closes the training.">
-                    <i nz-icon nzType="close" theme="outline" style="vertical-align: top;color:red;">
+                    <i nz-icon nzType="close" nzTheme="outline" style="vertical-align: top;color:red;">
                     </i>
                 </button>
             </div>
@@ -195,10 +195,10 @@
             </div>
         </nz-modal>
 
-        <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="800"
+        <nz-modal [(nzVisible)]="isIconSelectModalVisible" nzTitle="Select Icon" nzWidth="80%"
             (nzOnCancel)="handleIconSelectCancel()" [nzOkDisabled]="okDisabled" [nzCancelDisabled]="cancelDisabled"
             (nzOnOk)="handleIconSelectConfirm()">
-            <app-icon-picker [currentIconClass]="selectedTraining?.iconClass"
+            <app-icon-picker *nzModalContent [currentIconClass]="selectedTraining?.iconClass"
                 [currentColor]="selectedTraining?.iconColor" (icon)="setIcon($event)"
                 [height]="browserInnerHeight - 300" style="width:100%;"></app-icon-picker>
         </nz-modal>
@@ -266,15 +266,15 @@
                             </ul>
                         </li>
                         <li nz-menu-item (click)="addNewPage('url', 'none')">
-                            <i nz-icon nzType="global" theme="outline" style="vertical-align:top;font-size:16px;"></i>
+                            <i nz-icon nzType="global" nzTheme="outline" style="vertical-align:top;font-size:16px;"></i>
                             <span style="font-size:12px;">Embed a Web Page</span>
                         </li>
                         <li nz-menu-item (click)="addNewPage('text', 'html')">
-                            <i nz-icon nzType="html5" theme="outline" style="vertical-align:top;font-size:16px;"></i>
+                            <i nz-icon nzType="html5" nzTheme="outline" style="vertical-align:top;font-size:16px;"></i>
                             <span style="font-size:12px;">Create an HTML Page</span>
                         </li>
                         <li nz-menu-item (click)="addNewPage('assessment', 'none')">
-                            <i nz-icon nzType="file-done" theme="outline"
+                            <i nz-icon nzType="file-done" nzTheme="outline"
                                 style="vertical-align:top;font-size:16px;"></i>
                             <span style="font-size:12px;">Create an
                                 Assessment</span>
@@ -316,17 +316,17 @@
                     style="display:inline-block;padding:5px;"
                     [ngClass]="{'current-page': currentPageId === page?._id, 'page-icon-production':production === 'true', 'page-icon': production === 'false' && mode === 'Edit' }"
                     (click)="setCurrentPageFromIcon(page?._id)">
-                    <i *ngIf="page?.type === 'file'" nz-icon nzType="file-text" theme="outline"
+                    <i *ngIf="page?.type === 'file'" nz-icon nzType="file-text" nzTheme="outline"
                         style="display:block;font-size:22px;"></i>
-                    <i *ngIf="page?.type === 'url'" nz-icon nzType="global" theme="outline"
+                    <i *ngIf="page?.type === 'url'" nz-icon nzType="global" nzTheme="outline"
                         style="font-size:22px;display:block;"></i>
-                    <i *ngIf="page?.type === 'none'" nz-icon nzType="file-unknown" theme="outline"
+                    <i *ngIf="page?.type === 'none'" nz-icon nzType="file-unknown" nzTheme="outline"
                         style="font-size:22px;display:block;"></i>
-                    <i *ngIf="page?.type === 'assessment'" nz-icon nzType="file-done" theme="outline"
+                    <i *ngIf="page?.type === 'assessment'" nz-icon nzType="file-done" nzTheme="outline"
                         style="font-size:22px;display:block;"></i>
-                    <i *ngIf="page?.type === 'text'" nz-icon nzType="html5" theme="outline"
+                    <i *ngIf="page?.type === 'text'" nz-icon nzType="html5" nzTheme="outline"
                         style="font-size:22px;display:block;"></i>
-                    <i *ngIf="page?.type === 'training-intro'" nz-icon nzType="file" theme="outline"
+                    <i *ngIf="page?.type === 'training-intro'" nz-icon nzType="file" nzTheme="outline"
                         style="font-size:22px;display:block;"></i>
                     <span style="font-size:10px;">{{page?.title}}</span>
                 </div>
@@ -334,7 +334,7 @@
         </div>
         <nz-drawer [nzWidth]="600" nzTitle="Training Configuration" [nzClosable]="true" [nzVisible]="showTrainingConfig"
             nzPlacement="right" (nzOnClose)="showTrainingConfig = false">
-            <div class="config-page-row">
+            <div *nzDrawerContent class="config-page-row">
                 <div style="width:35%;text-align: right;display:inline-block;padding-right:10px;">
                     <label style="margin-bottom: 0;font-size:12px;color:#000000;">Type</label>
                 </div>
@@ -844,7 +844,7 @@
                                                                         <div>
                                                                             <div style="display: inline-block;">
                                                                                 <i nz-icon nzType="check-circle"
-                                                                                    theme="twotone"
+                                                                                    nzTheme="twotone"
                                                                                     [nzTwotoneColor]="'#52c41a'"
                                                                                     style="font-size: 24px;vertical-align: baseline;"></i>
                                                                                 <span
@@ -854,7 +854,7 @@
                                                                             </div>
                                                                             <div style="display: inline-block;">
                                                                                 <i nz-icon nzType="close-circle"
-                                                                                    theme="twotone"
+                                                                                    nzTheme="twotone"
                                                                                     [nzTwotoneColor]="'red'"
                                                                                     style="font-size: 24px;vertical-align: baseline;display:inline-block;"></i>
                                                                                 <span
@@ -945,19 +945,19 @@
                                                                                                 <i *ngIf="(assessmentResponseHash[itemIndex] !== null || assessmentResponseHash[itemIndex] !== undefined) && assessmentResponseHash[itemIndex] === choiceIndex && assessmentResponseHash[itemIndex] !== item?.correctChoice"
                                                                                                     nz-icon
                                                                                                     nzType="close-circle"
-                                                                                                    theme="twotone"
+                                                                                                    nzTheme="twotone"
                                                                                                     [nzTwotoneColor]="'red'"
                                                                                                     style="position:absolute;top:0;left:20px;font-size: 20px;vertical-align: top;"></i>
                                                                                                 <i *ngIf="(assessmentResponseHash[itemIndex] !== null || assessmentResponseHash[itemIndex] !== undefined) && assessmentResponseHash[itemIndex] === choiceIndex && assessmentResponseHash[itemIndex] === item?.correctChoice"
                                                                                                     nz-icon
                                                                                                     nzType="check-circle"
-                                                                                                    theme="twotone"
+                                                                                                    nzTheme="twotone"
                                                                                                     [nzTwotoneColor]="'#52c41a'"
                                                                                                     style="position:absolute;top:0;left:20px;font-size: 20px;vertical-align: top;"></i>
                                                                                                 <i *ngIf="showNext && item?.correctChoice === choiceIndex"
                                                                                                     nz-icon
                                                                                                     nzType="check-circle"
-                                                                                                    theme="twotone"
+                                                                                                    nzTheme="twotone"
                                                                                                     [nzTwotoneColor]="'#52c41a'"
                                                                                                     style="position:absolute;top:0;left:20px;font-size: 20px;vertical-align: top;"></i>
                                                                                                 <label nz-radio

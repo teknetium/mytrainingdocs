@@ -249,7 +249,7 @@
         </nz-modal>
         <nz-drawer nzWidth="700px" nzTitle="Settings" [nzClosable]="false" [nzVisible]="quickViewVisible"
             nzPlacement="right" (nzOnClose)="quickViewToggle()">
-            <nz-tabset>
+            <nz-tabset *nzDrawerContent>
                 <nz-tab nzTitle="Application">
                     <div style="padding-top:20px;">
                         <app-settings></app-settings>
@@ -345,18 +345,6 @@
                                     </ng-template>
 
 
-                                    <!--
-                        <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" class="user-search">
-                                                    <input type="text" nz-input placeholder="User Search" [(ngModel)]="userNameToSearchFor"
-                                                        (ngModelChange)="onUserSearchChange($event)" [nzAutocomplete]="autoUserSearch"
-                                                        style="border:1px solid white;" />
-                                                </nz-input-group>
-                                                <nz-autocomplete [nzDataSource]="matchingUsers" #autoUserSearch></nz-autocomplete>
-                                                <ng-template #suffixIconButton>
-                                                    <button nz-button nzType="primary" nzSearch style="z-index: 1000;height:41px;"><i nz-icon
-                                                            nzType="search"></i></button>
-                                                </ng-template>
-                                                -->
                                 </div>
                             </div>
                             <div style="display:block;width:100%;margin-bottom: 20px;">

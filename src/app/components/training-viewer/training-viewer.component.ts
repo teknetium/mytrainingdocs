@@ -21,9 +21,9 @@ import { merge, take } from 'rxjs/operators';
 import { MessageService } from '../../shared/services/message.service';
 import { EventService } from '../../shared/services/event.service';
 import { MessageModel, TemplateMessageModel } from '../../shared/interfaces/message.type';
-import { NzMessageService } from 'ng-zorro-antd';
 import * as cloneDeep from 'lodash/cloneDeep';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { read } from 'fs';
 import { takeUntil } from 'rxjs/operators';
 import { BaseComponent } from '../base.component';
@@ -1329,7 +1329,7 @@ export class TrainingViewerComponent extends BaseComponent implements OnInit {
       nzTitle: 'Revert back to the previous version?',
       nzContent: 'All changes you have made since unlocking this training will be lost',
       nzOkText: 'Yes, revert to previous version.',
-      nzOkType: 'danger',
+//      nzOkType: 'danger',
       nzOnOk: () => this.rollback(),
       nzCancelText: 'No',
       nzOnCancel: () => console.log('Cancel')
