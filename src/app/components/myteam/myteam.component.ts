@@ -2793,10 +2793,14 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     this.userService.selectAuthenticatedUser();
   }
 
+  getIconColor(uid: string): string {
+    return this.userTrainingStatusColorHash[this.myOrgUserHash[uid].trainingStatus];
+  }
+
   getStatusColor(uid: string): string {
-
     let ut: UserTrainingModel;
-
+    return this.userStatusColorHash[this.myOrgUserHash[uid].userStatus];
+/*
     if (this.displayMode[uid] === 'Training' && this.currentTrainingSelected) {
       if (this.uidTidUTHash) {
         let tidUTHash = this.uidTidUTHash[uid];
@@ -2814,6 +2818,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     } else if (this.myOrgUserHash[uid]) {
       return this.userTrainingStatusColorHash[this.myOrgUserHash[uid].trainingStatus];
     }
+    */
   }
 
   confirmUserTrainingDelete() {

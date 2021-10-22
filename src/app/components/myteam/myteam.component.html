@@ -1504,17 +1504,10 @@
                                             </ul>
                                         </div>
                                         <div (mouseenter)="setHoverData(dr)" (mouseleave)="setHoverData(null)"
-                                            (click)="showSupervisorMenu(dr)"
+                                            (click)="showSupervisorMenu(dr)" style="text-align: center;"
                                             [ngClass]="{'selected-node': userIdsSelected.includes(dr), 'hover-node': dr === currentHoverUid ||
                                         orgChartNodeHash[dr]?.extra.reportChain.includes(currentHoverUid) || currentHoverReportChain.includes(dr), 'non-supervisor-icon-node': myOrgUserHash[dr]?.userType !== 'supervisor', 'supervisor-icon-node': myOrgUserHash[dr]?.userType === 'supervisor', 'wide-node': myOrgUserHash[dr]?.userType !== 'supervisor' && currentHoverUid === dr}">
-                                            <!--
-                                            <div *ngIf="dr === currentHoverUid" class="supervisor-menu-icon"
-                                                (click)="showSupervisorMenu(dr)">
-                                                <i class="fa-regular fa-fw fa-ellipsis-v"></i>
-                                            </div>
-                                            -->
-                                            <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]"
-                                                [ngStyle]="{'color': getStatusColor(dr)}"></i>
+                                                <i [ngClass]="userTypeIconHash[myOrgUserHash[dr]?.userType]" [ngStyle]="{'color': getStatusColor(dr)}"></i>
                                             <span
                                                 *ngIf="myOrgUserHash[dr]?.userType === 'supervisor' || includeFullName"
                                                 [ngStyle]="{'font-size.px': textFontSize}"

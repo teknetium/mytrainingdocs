@@ -350,24 +350,32 @@
       </div>
     </div>
     <section class="section">
-      <div class="row">
-        <nz-carousel [nzEffect]="'scrollx'" nzAutoPlay="true" [nzAutoPlaySpeed]="carouselDelay" style="height:35vw;"
-          (nzBeforeChange)="beforeUpdateDot($event)" nzDotPosition="top">
-          <div nz-carousel-content *ngFor="let item of featureSlides; index as featureIndex">
-            <div>
-              <img [src]="item.image" height="350vw">
-            </div>
-            <div>
+      <div style="display: block;width:100%;margin-bottom:40px;">
+        <div *ngFor="let item of featureSlides; index as dotIndex" style="display: inline-block;margin-right:10px;">
+          <div>
+            <i class="fa-circle"
+              [ngClass]="{'current-slide': currentSlide === dotIndex, 'fa-solid': currentSlide === dotIndex, 'far': currentSlide !== dotIndex }"
+              (click)="goTo(dotIndex)" style=""></i>
+          </div>
+        </div>
+
+      </div>
+      <nz-carousel [nzEffect]="'scrollx'" [nzDotRender]="dotTemplate" nzAutoPlay="true"
+        [nzAutoPlaySpeed]="carouselDelay" nzDots="false" style="height: 500px;"
+        (nzBeforeChange)="beforeUpdateDot($event)" nzDotPosition="top">
+        <div nz-carousel-content *ngFor="let item of featureSlides; index as featureIndex"
+          style="text-align: center;height:300px;line-height:300px;">
+          <div style="">
+            <div style="text-align: center;font-size:2.0vh;">
+              <img [src]="item.image" height="300" style="display: inline-block;">
+              <br>
+              <p style="width:80%;display:inline-block;">
               {{item.text}}
+              </p>
             </div>
           </div>
-        </nz-carousel>
-        <ng-template #dotTemplate let-index>
-          <i class="fa-circle"
-            [ngClass]="{'current-slide': currentSlide === index, 'fa-solid': currentSlide === index, 'far': currentSlide !== index }"
-            (click)="goTo(index)"></i>
-        </ng-template>
-      </div>
+        </div>
+      </nz-carousel>
     </section>
     <section class="section bg-light" id="features">
       <div class="row">

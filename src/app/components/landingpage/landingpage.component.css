@@ -1338,11 +1338,3 @@ textarea.form-control {
  }
 
 
-[nz-carousel-content] {
-  text-align: center;
-  height: 400px;
-  line-height: 400px;
-  background: white;
-  overflow: hidden;
-  color:blue;
-}
