@@ -131,9 +131,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   contentHeight: number;
   contentWidth: number;
 
-  @ViewChild('orgChart') orgChart!: ElementRef;
-  @ViewChild('canvas') canvas!: ElementRef;
-  @ViewChild('downloadPNGLink') downloadPNGLink!: ElementRef;
 
 
   @HostListener('window:resize', ['$event'])
@@ -530,8 +527,12 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   myOrgUserIds: string[] = [];
   visibleDrListHash = {};
 
-
   nameList = [];
+
+  @ViewChild('orgChart') orgChart!: ElementRef;
+  @ViewChild('canvas') canvas!: ElementRef;
+  @ViewChild('downloadPNGLink') downloadPNGLink!: ElementRef;
+
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -578,6 +579,7 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
   // ElementRef { nativeElement: <input> }    console.log(this.justCollapsedNode);
   ngAfterViewInit() {
   }
+
 
   ngOnInit() {
 
@@ -1153,7 +1155,6 @@ export class MyteamComponent extends BaseComponent implements OnInit, AfterViewI
     if (this.orgObj.planId === 'basic') {
       this.orgService.showUpgradeToProDialog(true);
     } else {
-      this.canvas.nativeElement.src = '';
       // The org chart looks better without the selected-node class
       let tmpUserIdsSelected = Object.assign([], this.userIdsSelected);
       this.userIdsSelected = [];
