@@ -20,7 +20,7 @@
   border: 1px solid #dddddd !important;
   background-color: white;
 }
-
+/*
 [nz-carousel-content] {
         text-align: center;
         height: 400px;
@@ -28,6 +28,7 @@
         overflow: hidden;
         background: white;
       }
+      */
 
 .current-slide {
   color:blue;

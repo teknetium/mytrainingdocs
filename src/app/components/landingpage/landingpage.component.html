@@ -360,19 +360,20 @@
         </div>
 
       </div>
-      <nz-carousel [nzEffect]="'scrollx'" [nzDotRender]="dotTemplate" nzAutoPlay="true"
-        [nzAutoPlaySpeed]="carouselDelay" nzDots="false" style="height: 500px;"
-        (nzBeforeChange)="beforeUpdateDot($event)" nzDotPosition="top">
+      <nz-carousel [nzEffect]="'scrollx'" [nzDotRender]="dotTemplate" nzAutoPlay="true" style="height:450px;width:100%;"
+        [nzAutoPlaySpeed]="carouselDelay" nzDots="false" (nzBeforeChange)="beforeUpdateDot($event)" nzDotPosition="top">
         <div nz-carousel-content *ngFor="let item of featureSlides; index as featureIndex"
-          style="text-align: center;height:300px;line-height:300px;">
-          <div style="">
-            <div style="text-align: center;font-size:2.0vh;">
-              <img [src]="item.image" height="300" style="display: inline-block;">
-              <br>
-              <p style="width:80%;display:inline-block;">
+          style="">
+          <div style="display:flex;flex-wrap: wrap;align-items: center;justify-content:space-around;width:100%;">
+            <div style="">
+              <img [src]="item.image" height="300" style="">
+            </div>
+            <div style="width:35%;">
+              <p style="font-size:2.0vh;margin-top:20%;color:black;">
               {{item.text}}
               </p>
             </div>
+            <div style="clear: both;"></div>
           </div>
         </div>
       </nz-carousel>
