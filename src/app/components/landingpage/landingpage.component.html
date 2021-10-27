@@ -450,9 +450,9 @@
             <nz-card class="price-card">
               <div style="text-align: center;">
                 <div class="media align-items-center" style="display:block;">
-                  <i class="fa-duotone fa-user" style="font-size:2.5vw;color:green;margin-bottom:5px;"></i>
+                  <i class="fa-duotone fa-user" style="font-size:2.5vh;color:green;margin-bottom:5px;"></i>
                   <div style="text-align: center;">
-                    <span style="font-size:1.5vw;;display:block;">Basic</span>
+                    <span style="font-size:1.8vh;;display:block;">Basic</span>
                     <div style="text-align: left;font-size:12px;margin:10px 0;height:60px;">
                       For teams and organizations interested in taking the first step towards streamlining training and
                       supporting remote employees.
@@ -460,10 +460,14 @@
                     <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
                       <div style="margin:10px 0;width:100%;">
                         <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:2vw;font-weight:300;vertical-align: super;">$</span>
+                          
+                          <span style="color:black;font-size:3vh;font-weight:400;">Free</span>
+                          <!--
+                          <span style="color:#aaaaaa;font-size:2vh;font-weight:300;vertical-align: super;">$</span>
                           <span
-                            style="color:black;font-size:3vw;font-weight:400;">{{planCostPerUserHash['basic'][0]}}</span>
-                          <span style="color:#aaaaaa;font-size:1.2vw;font-weight:300;">/user /mo</span>
+                            style="color:black;font-size:3vh;font-weight:400;">{{planCostPerUserHash['basic'][0]}}</span>
+                          <span style="color:#aaaaaa;font-size:2vh;font-weight:300;">/user /mo</span>
+                          -->
                         </div>
                       </div>
                     </div>
@@ -518,7 +522,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           User Training Status
                         </span>
                       </div>
@@ -526,7 +530,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-times" style="color:red;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Collapsible Organization
                         </span>
                       </div>
@@ -534,7 +538,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-times" style="color:red;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Save as PNG Image
                         </span>
                       </div>
@@ -542,7 +546,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-times" style="color:red;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Group Assignment
                         </span>
                       </div>
@@ -550,7 +554,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-times" style="color:red;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Group Messaging
                         </span>
                       </div>
@@ -561,7 +565,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Knowledge Base
                         </span>
                       </div>
@@ -569,7 +573,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-times" style="color:red;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Live Chat Support
                         </span>
                       </div>
@@ -577,7 +581,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-times" style="color:red;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Prioritized Support
                         </span>
                       </div>
@@ -593,7 +597,7 @@
               </div>
               <div style="margin-top:60px;">
                 <div>
-                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="basic"
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="basic-flat-plan"
                     style="display: inline-block;">
                     <button nz-button nzShape="round" nzType="primary" id="checkout-button"
                       style="display: inline-block;">Select
@@ -609,19 +613,19 @@
             <nz-card class="price-card">
               <div style="text-align: center;">
                 <div class="media align-items-center" style="display:block;">
-                  <i class="fa-duotone fa-user-tie" style="font-size:2.5vw;color:red;margin-bottom:5px;"></i>
+                  <i class="fa-duotone fa-user-tie" style="font-size:2.5vh;color:red;margin-bottom:5px;"></i>
                   <div style="text-align: center;">
-                    <div style="font-size:1.5vw;display:block;">Pro</div>
+                    <div style="font-size:1.8vh;display:block;">Pro</div>
                     <div style="text-align: left;font-size:12px;margin:10px 0;height:60px;">
                       For teams and organizations with a more significant and critical training requirement.
                     </div>
                     <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
                       <div style="margin:10px 0;width:100%;">
                         <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:2vw;font-weight:300;vertical-align: super;">$</span>
+                          <span style="color:#aaaaaa;font-size:2vh;font-weight:300;vertical-align: super;">$</span>
                           <span
-                            style="color:black;font-size:3vw;font-weight:400;">{{planCostPerUserHash['pro'][0]}}</span>
-                          <span style="color:#aaaaaa;font-size:1.2vw;font-weight:300;">/user /mo</span>
+                            style="color:black;font-size:3vh;font-weight:400;">{{planCostPerUserHash['pro'][0]}}</span>
+                          <span style="color:#aaaaaa;font-size:2vh;font-weight:300;">/month</span>
                         </div>
                       </div>
                     </div>
@@ -676,7 +680,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           User Training Status
                         </span>
                       </div>
@@ -684,7 +688,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Collapsible Organization
                         </span>
                       </div>
@@ -692,7 +696,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Save as PNG Image
                         </span>
                       </div>
@@ -700,7 +704,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-times" style="color:red;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Group Assignment
                         </span>
                       </div>
@@ -708,7 +712,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-times" style="color:red;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Group Messaging
                         </span>
                       </div>
@@ -719,7 +723,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Knowledge Base
                         </span>
                       </div>
@@ -727,7 +731,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Live Chat Support
                         </span>
                       </div>
@@ -735,7 +739,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-times" style="color:red;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Prioritized Support
                         </span>
                       </div>
@@ -751,7 +755,7 @@
               </div>
               <div style="margin-top:60px;">
                 <div style="margin-top:10%;">
-                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="pro"
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="pro-flat-plan"
                     style="display: inline-block;">
                     <button nz-button nzShape="round" nzType="primary" id="checkout-button"
                       style="display: inline-block;">Select
@@ -774,24 +778,26 @@
               <div>
                 <div class="media align-items-center" style="display:block;">
                   <i class="fa-duotone fa-user-graduate"
-                    style="font-size:2.5vw;color:blueviolet;margin-bottom:5px;"></i>
+                    style="font-size:2.5vh;color:blueviolet;margin-bottom:5px;"></i>
                   <div style="text-align: center;">
-                    <span style="font-size:1.5vw;;display:block;">Expert</span>
+                    <span style="font-size:1.8vh;;display:block;">Expert</span>
                     <div style="text-align: left;font-size:12px;margin:10px 0;height:60px;">
                       For teams and organizations interested in efficiently managing demanding employee training needs.
                     </div>
                     <div *ngIf="plans === 'monthly'" style="width:90%;display:inline-block;">
                       <div style="margin:10px 0;width:100%;">
                         <div style="display:block;width:100%;color:black;">
-                          <span style="color:#aaaaaa;font-size:2vw;font-weight:300;vertical-align: super;">$</span>
+                          <span style="color:#aaaaaa;font-size:2vh;font-weight:300;vertical-align: super;">$</span>
                           <span
-                            style="color:black;font-size:3vw;font-weight:400;">{{planCostPerUserHash['expert'][0]}}</span>
-                          <span style="color:#aaaaaa;font-size:1.2vw;font-weight:300;">/user /mo</span>
+                            style="color:black;font-size:3vh;font-weight:400;">{{planCostPerUserHash['expert'][0]}}</span>
+                          <span style="color:#aaaaaa;font-size:2vh;font-weight:300;">/month</span>
                         </div>
                       </div>
                     </div>
                     <div style="padding:10px;height:50px;">
+                      <!--
                       <i><a href="mailto:sales@mytrainingdocs.com">Contact Sales</a> for Enterprise Pricing</i>
+                      -->
 
                     </div>
                   </div>
@@ -842,7 +848,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           User Training Status
                         </span>
                       </div>
@@ -850,7 +856,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Collapsible Organization
                         </span>
                       </div>
@@ -858,7 +864,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Save as PNG Image
                         </span>
                       </div>
@@ -866,7 +872,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Group Assignment
                         </span>
                       </div>
@@ -874,7 +880,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Group Messaging
                         </span>
                       </div>
@@ -885,7 +891,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Knowledge Base
                         </span>
                       </div>
@@ -893,7 +899,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Live Chat Support
                         </span>
                       </div>
@@ -901,7 +907,7 @@
                         <span class="pricing-line-item-icon">
                           <i class="fa-solid fa-check" style="color:#52c41a;"></i>
                         </span>
-                        <span class="pricing-line-item-desc-indented">
+                        <span class="pricing-line-item-desc">
                           Prioritized Support
                         </span>
                       </div>
@@ -917,7 +923,7 @@
               </div>
               <div style="margin-top:60px;">
                 <div>
-                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="expert"
+                  <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="expert-flat-plan"
                     style="display: inline-block;">
                     <button nz-button nzShape="round" nzType="primary" id="checkout-button"
                       style="display: inline-block;">Select

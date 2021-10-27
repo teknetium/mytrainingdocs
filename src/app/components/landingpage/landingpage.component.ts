@@ -313,9 +313,9 @@ export class LandingpageComponent extends BaseComponent implements OnInit {
   userCnt = 25;
   monthlyCost = 0;
   planCostPerUserHash = {
-    basic: [10, 0, 0],
-    pro: [14, 0, 0],
-    expert: [18, 0, 0]
+    basic: [0, 0, 0],
+    pro: [99, 0, 0],
+    expert: [199, 0, 0]
   };
   userRange = [100, 300];
   discounts = {

@@ -1286,7 +1286,7 @@ textarea.form-control {
    display:block;
    margin-top:.5vw;
    font-weight:500;
-   font-size:1vw;
+   font-size:1.2vh;
    color: #5488ed;
    border-bottom:1px solid #5488ed;
  }
@@ -1306,19 +1306,19 @@ textarea.form-control {
  }
  
  .pricing-line-item-icon {
-   font-size:1vw !important;
+   font-size:1.2vh !important;
    display:inline-block;
-   width:2vw;
+   width:2vh;
  }
 
  .pricing-line-item-desc {
-   font-size:1vw !important;
+   font-size:1.1vh !important;
    display:inline-block;
    color:black;
  }
 
  .pricing-line-item-desc-indented {
-   font-size:1vw !important;
+   font-size:1.2vw !important;
    display:inline-block;
    color:black;
  }
